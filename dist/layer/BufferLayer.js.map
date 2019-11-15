@@ -1,1 +1,0 @@
-{"version":3,"file":"BufferLayer.js","sourceRoot":"","sources":["../../src/layer/BufferLayer.ts"],"names":[],"mappings":";;AACA,mCAAgC;AAChC,yCAAsC;AAItC,MAAsB,WAAsD,SAAQ,aAAU;IAE1F,YAAY,OAAe,QAAQ;QAC/B,KAAK,CAAC,IAAI,CAAC,CAAC;QACZ,IAAI,CAAC,gBAAgB,CAAC,mBAAQ,CAAC,IAAI,CAAC,CAAC;QACrC,IAAI,CAAC,iBAAiB,CAAC,mBAAQ,CAAC,IAAI,CAAC,CAAC;IAC1C,CAAC;CAcJ;AApBD,kCAoBC"}
