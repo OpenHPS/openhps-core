@@ -10,7 +10,7 @@ export class ObjectDataManager extends DataManager<Object>{
     protected _objects: Map<string,Object> = new Map();
 
     constructor() {
-        super(Object);
+        super();
     }
 
     /**

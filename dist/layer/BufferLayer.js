@@ -8,14 +8,6 @@ class BufferLayer extends Layer_1.Layer {
         this.setInputFlowType(FlowType_1.FlowType.PUSH);
         this.setOutputFlowType(FlowType_1.FlowType.PULL);
     }
-    push(data, options) {
-        return new Promise((resolve, reject) => {
-        });
-    }
-    pull(options) {
-        return new Promise((resolve, reject) => {
-        });
-    }
 }
 exports.BufferLayer = BufferLayer;
 //# sourceMappingURL=BufferLayer.js.map

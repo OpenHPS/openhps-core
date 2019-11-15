@@ -3,12 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Layer_1 = require("./layer/Layer");
 const PushOptions_1 = require("./layer/PushOptions");
 const PullOptions_1 = require("./layer/PullOptions");
-const ObjectManager_1 = require("./managers/ObjectManager");
 class Model extends Layer_1.Layer {
     constructor(name = "model") {
         super(name);
         this._layers = new Array();
-        this._objectManager = new ObjectManager_1.ObjectManager();
     }
     push(data, options = PushOptions_1.PushOptions.DEFAULT) {
         return new Promise((resolve, reject) => {
@@ -71,6 +69,9 @@ class Model extends Layer_1.Layer {
             return this._layers[this._layers.length - 1].getOutputFlowType();
         }
         return null;
+    }
+    addDataManager(manager) {
+        this._managers.set(null, manager);
     }
     clear() {
         this._layers = new Array();

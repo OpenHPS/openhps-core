@@ -1,8 +1,9 @@
 export class DataManager<T> {
     private _typeName: string;
 
-    constructor(type : new () => T) {
-        this._typeName = type.name;
+    constructor() {
+        //type : new () => T
+     //   this._typeName = type.name;
     }
 
     /**

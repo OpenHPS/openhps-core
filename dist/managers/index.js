@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ObjectManager_1 = require("./ObjectManager");
-exports.ObjectManager = ObjectManager_1.ObjectManager;
+var ObjectDataManager_1 = require("./ObjectDataManager");
+exports.ObjectDataManager = ObjectDataManager_1.ObjectDataManager;
+var DataManager_1 = require("./DataManager");
+exports.DataManager = DataManager_1.DataManager;
 //# sourceMappingURL=index.js.map

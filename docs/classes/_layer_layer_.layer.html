@@ -108,6 +108,9 @@
 							<li>
 								<a href="_layer_processinglayer_.processinglayer.html" class="tsd-signature-type">ProcessingLayer</a>
 							</li>
+							<li>
+								<a href="_layer_bufferlayer_.bufferlayer.html" class="tsd-signature-type">BufferLayer</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
@@ -125,10 +128,11 @@
 						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_layer_layer_.layer.html#_flowtype" class="tsd-kind-icon">_flow<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_layer_layer_.layer.html#_inputflowtype" class="tsd-kind-icon">_input<wbr>Flow<wbr>Type</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_layer_layer_.layer.html#_model" class="tsd-kind-icon">_model</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_layer_layer_.layer.html#_name" class="tsd-kind-icon">_name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_layer_layer_.layer.html#_nextlayer" class="tsd-kind-icon">_next<wbr>Layer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_layer_layer_.layer.html#_outputflowtype" class="tsd-kind-icon">_output<wbr>Flow<wbr>Type</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_layer_layer_.layer.html#_prevlayer" class="tsd-kind-icon">_prev<wbr>Layer</a></li>
 							</ul>
 						</section>
@@ -136,13 +140,18 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#getflowtype" class="tsd-kind-icon">get<wbr>Flow<wbr>Type</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#getinputflowtype" class="tsd-kind-icon">get<wbr>Input<wbr>Flow<wbr>Type</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#getmodel" class="tsd-kind-icon">get<wbr>Model</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#getnextlayer" class="tsd-kind-icon">get<wbr>Next<wbr>Layer</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#getoutputflowtype" class="tsd-kind-icon">get<wbr>Output<wbr>Flow<wbr>Type</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#getpreviouslayer" class="tsd-kind-icon">get<wbr>Previous<wbr>Layer</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#predict" class="tsd-kind-icon">predict</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#process" class="tsd-kind-icon">process</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#pull" class="tsd-kind-icon">pull</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#push" class="tsd-kind-icon">push</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#setinputflowtype" class="tsd-kind-icon">set<wbr>Input<wbr>Flow<wbr>Type</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#setmodel" class="tsd-kind-icon">set<wbr>Model</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#setnextlayer" class="tsd-kind-icon">set<wbr>Next<wbr>Layer</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#setoutputflowtype" class="tsd-kind-icon">set<wbr>Output<wbr>Flow<wbr>Type</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_layer_layer_.layer.html#setpreviouslayer" class="tsd-kind-icon">set<wbr>Previous<wbr>Layer</a></li>
 							</ul>
 						</section>
@@ -161,7 +170,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in layer/Layer.ts:14</li>
+									<li>Defined in layer/Layer.ts:17</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -170,7 +179,7 @@
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> name: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;default&quot;</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> flowType: <a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a><span class="tsd-signature-symbol"> =&nbsp;FlowType.PUSH</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> flowType: <a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a><span class="tsd-signature-symbol"> =&nbsp;FlowType.UNSPECIFIED</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_layer_layer_.layer.html" class="tsd-signature-type">Layer</a></h4>
@@ -181,12 +190,12 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_flowtype" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _flow<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">_flow<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a></div>
+					<a name="_inputflowtype" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _input<wbr>Flow<wbr>Type</h3>
+					<div class="tsd-signature tsd-kind-icon">_input<wbr>Flow<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in layer/Layer.ts:10</li>
+							<li>Defined in layer/Layer.ts:12</li>
 						</ul>
 					</aside>
 				</section>
@@ -196,7 +205,7 @@
 					<div class="tsd-signature tsd-kind-icon">_model<span class="tsd-signature-symbol">:</span> <a href="_model_.model.html" class="tsd-signature-type">Model</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in layer/Layer.ts:12</li>
+							<li>Defined in layer/Layer.ts:15</li>
 						</ul>
 					</aside>
 				</section>
@@ -206,7 +215,7 @@
 					<div class="tsd-signature tsd-kind-icon">_name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in layer/Layer.ts:11</li>
+							<li>Defined in layer/Layer.ts:14</li>
 						</ul>
 					</aside>
 				</section>
@@ -216,7 +225,17 @@
 					<div class="tsd-signature tsd-kind-icon">_next<wbr>Layer<span class="tsd-signature-symbol">:</span> <a href="_layer_layer_.layer.html" class="tsd-signature-type">Layer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">K</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in layer/Layer.ts:14</li>
+							<li>Defined in layer/Layer.ts:17</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_outputflowtype" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _output<wbr>Flow<wbr>Type</h3>
+					<div class="tsd-signature tsd-kind-icon">_output<wbr>Flow<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in layer/Layer.ts:13</li>
 						</ul>
 					</aside>
 				</section>
@@ -226,7 +245,7 @@
 					<div class="tsd-signature tsd-kind-icon">_prev<wbr>Layer<span class="tsd-signature-symbol">:</span> <a href="_layer_layer_.layer.html" class="tsd-signature-type">Layer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in layer/Layer.ts:13</li>
+							<li>Defined in layer/Layer.ts:16</li>
 						</ul>
 					</aside>
 				</section>
@@ -243,12 +262,34 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in layer/Layer.ts:50</li>
+									<li>Defined in layer/Layer.ts:63</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Get data flow type</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getinputflowtype" class="tsd-anchor"></a>
+					<h3>get<wbr>Input<wbr>Flow<wbr>Type</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Input<wbr>Flow<wbr>Type<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in layer/Layer.ts:86</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get input data flow type</p>
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a></h4>
@@ -265,7 +306,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in layer/Layer.ts:43</li>
+									<li>Defined in layer/Layer.ts:48</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -287,7 +328,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in layer/Layer.ts:36</li>
+									<li>Defined in layer/Layer.ts:41</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -309,7 +350,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in layer/Layer.ts:72</li>
+									<li>Defined in layer/Layer.ts:115</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -318,6 +359,28 @@
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="_layer_layer_.layer.html" class="tsd-signature-type">Layer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">K</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getoutputflowtype" class="tsd-anchor"></a>
+					<h3>get<wbr>Output<wbr>Flow<wbr>Type</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Output<wbr>Flow<wbr>Type<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in layer/Layer.ts:93</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get output data flow type</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -331,7 +394,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in layer/Layer.ts:57</li>
+									<li>Defined in layer/Layer.ts:100</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -344,29 +407,29 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="predict" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> predict</h3>
+					<a name="pull" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> pull</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">predict<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">K</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">pull<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="_layer_pulloptions_.pulloptions.html" class="tsd-signature-type">PullOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">K</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in layer/Layer.ts:25</li>
+									<li>Defined in layer/Layer.ts:36</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Predict the output using the provided input data</p>
+									<p>Pull the data from the previous layer and process it</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>data: <span class="tsd-signature-type">T</span></h5>
+									<h5>options: <a href="_layer_pulloptions_.pulloptions.html" class="tsd-signature-type">PullOptions</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Input data</p>
+										<p>Pull options</p>
 									</div>
 								</li>
 							</ul>
@@ -375,21 +438,21 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="process" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> process</h3>
+					<a name="push" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> push</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">process<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">K</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">push<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, options<span class="tsd-signature-symbol">: </span><a href="_layer_pushoptions_.pushoptions.html" class="tsd-signature-type">PushOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in layer/Layer.ts:31</li>
+									<li>Defined in layer/Layer.ts:30</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Process the output using the provided input data</p>
+									<p>Push the data to the layer</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -400,8 +463,76 @@
 										<p>Input data</p>
 									</div>
 								</li>
+								<li>
+									<h5>options: <a href="_layer_pushoptions_.pushoptions.html" class="tsd-signature-type">PushOptions</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Push options</p>
+									</div>
+								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">K</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setinputflowtype" class="tsd-anchor"></a>
+					<h3>set<wbr>Input<wbr>Flow<wbr>Type</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Input<wbr>Flow<wbr>Type<span class="tsd-signature-symbol">(</span>flowType<span class="tsd-signature-symbol">: </span><a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in layer/Layer.ts:71</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Set input flow type</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>flowType: <a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Flow type for input</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setmodel" class="tsd-anchor"></a>
+					<h3>set<wbr>Model</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Model<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><a href="_model_.model.html" class="tsd-signature-type">Model</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in layer/Layer.ts:56</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Set the model that the layer belongs to</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>model: <a href="_model_.model.html" class="tsd-signature-type">Model</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Model that the layer belongs to</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -415,7 +546,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in layer/Layer.ts:80</li>
+									<li>Defined in layer/Layer.ts:123</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -434,6 +565,37 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setoutputflowtype" class="tsd-anchor"></a>
+					<h3>set<wbr>Output<wbr>Flow<wbr>Type</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Output<wbr>Flow<wbr>Type<span class="tsd-signature-symbol">(</span>flowType<span class="tsd-signature-symbol">: </span><a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in layer/Layer.ts:79</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Set output flow type</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>flowType: <a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Flow type for output</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="setpreviouslayer" class="tsd-anchor"></a>
 					<h3>set<wbr>Previous<wbr>Layer</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -443,7 +605,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in layer/Layer.ts:65</li>
+									<li>Defined in layer/Layer.ts:108</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -488,6 +650,9 @@
 						<a href="../modules/_index_.html">&quot;index&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_layer_bufferlayer_.html">&quot;layer/<wbr>Buffer<wbr>Layer&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_layer_flowtype_.html">&quot;layer/<wbr>Flow<wbr>Type&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -497,10 +662,19 @@
 						<a href="../modules/_layer_layer_.html">&quot;layer/<wbr>Layer&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_layer_memorybufferlayer_.html">&quot;layer/<wbr>Memory<wbr>Buffer<wbr>Layer&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_layer_outputlayer_.html">&quot;layer/<wbr>Output<wbr>Layer&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_layer_processinglayer_.html">&quot;layer/<wbr>Processing<wbr>Layer&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_layer_pulloptions_.html">&quot;layer/<wbr>Pull<wbr>Options&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_layer_pushoptions_.html">&quot;layer/<wbr>Push<wbr>Options&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_layer_index_.html">&quot;layer/index&quot;</a>
@@ -517,6 +691,15 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_location_index_.html">&quot;location/index&quot;</a>
 					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_managers_datamanager_.html">&quot;managers/<wbr>Data<wbr>Manager&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_managers_objectdatamanager_.html">&quot;managers/<wbr>Object<wbr>Data<wbr>Manager&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_managers_index_.html">&quot;managers/index&quot;</a>
+					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
@@ -530,7 +713,7 @@
 								<a href="_layer_layer_.layer.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="_layer_layer_.layer.html#_flowtype" class="tsd-kind-icon">_flow<wbr>Type</a>
+								<a href="_layer_layer_.layer.html#_inputflowtype" class="tsd-kind-icon">_input<wbr>Flow<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_layer_layer_.layer.html#_model" class="tsd-kind-icon">_model</a>
@@ -542,10 +725,16 @@
 								<a href="_layer_layer_.layer.html#_nextlayer" class="tsd-kind-icon">_next<wbr>Layer</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_layer_layer_.layer.html#_outputflowtype" class="tsd-kind-icon">_output<wbr>Flow<wbr>Type</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_layer_layer_.layer.html#_prevlayer" class="tsd-kind-icon">_prev<wbr>Layer</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_layer_layer_.layer.html#getflowtype" class="tsd-kind-icon">get<wbr>Flow<wbr>Type</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_layer_layer_.layer.html#getinputflowtype" class="tsd-kind-icon">get<wbr>Input<wbr>Flow<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_layer_layer_.layer.html#getmodel" class="tsd-kind-icon">get<wbr>Model</a>
@@ -557,16 +746,28 @@
 								<a href="_layer_layer_.layer.html#getnextlayer" class="tsd-kind-icon">get<wbr>Next<wbr>Layer</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_layer_layer_.layer.html#getoutputflowtype" class="tsd-kind-icon">get<wbr>Output<wbr>Flow<wbr>Type</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_layer_layer_.layer.html#getpreviouslayer" class="tsd-kind-icon">get<wbr>Previous<wbr>Layer</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_layer_layer_.layer.html#predict" class="tsd-kind-icon">predict</a>
+								<a href="_layer_layer_.layer.html#pull" class="tsd-kind-icon">pull</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_layer_layer_.layer.html#process" class="tsd-kind-icon">process</a>
+								<a href="_layer_layer_.layer.html#push" class="tsd-kind-icon">push</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_layer_layer_.layer.html#setinputflowtype" class="tsd-kind-icon">set<wbr>Input<wbr>Flow<wbr>Type</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_layer_layer_.layer.html#setmodel" class="tsd-kind-icon">set<wbr>Model</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_layer_layer_.layer.html#setnextlayer" class="tsd-kind-icon">set<wbr>Next<wbr>Layer</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_layer_layer_.layer.html#setoutputflowtype" class="tsd-kind-icon">set<wbr>Output<wbr>Flow<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_layer_layer_.layer.html#setpreviouslayer" class="tsd-kind-icon">set<wbr>Previous<wbr>Layer</a>

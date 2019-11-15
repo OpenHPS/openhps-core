@@ -7,6 +7,10 @@ class OutputLayer extends Layer_1.Layer {
     constructor(name = "output", flowType = FlowType_1.FlowType.UNSPECIFIED) {
         super(name, flowType);
     }
+    push(data, options) {
+        return new Promise((resolve, reject) => {
+        });
+    }
     pull(options = PullOptions_1.PullOptions.DEFAULT) {
         return new Promise((resolve, reject) => {
             this.getPreviousLayer().pull(options).then(data => {

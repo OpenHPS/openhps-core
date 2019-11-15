@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>OutputLayer | @openhps/core</title>
+	<title>MemoryBufferLayer | @openhps/core</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,34 +56,27 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_layer_outputlayer_.html">&quot;layer/OutputLayer&quot;</a>
+					<a href="../modules/_layer_memorybufferlayer_.html">&quot;layer/MemoryBufferLayer&quot;</a>
 				</li>
 				<li>
-					<a href="_layer_outputlayer_.outputlayer.html">OutputLayer</a>
+					<a href="_layer_memorybufferlayer_.memorybufferlayer.html">MemoryBufferLayer</a>
 				</li>
 			</ul>
-			<h1>Class OutputLayer&lt;T&gt;</h1>
+			<h1>Class MemoryBufferLayer&lt;T, K&gt;</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<a href="#openhps-output-layer" id="openhps-output-layer" style="color: inherit; text-decoration: none;">
-							<h1>OpenHPS: Output Layer</h1>
-						</a>
-						<p>Output layer for storing data</p>
-					</div>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-type-parameters">
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
 					<li>
 						<h4>T<span class="tsd-signature-symbol">: </span><a href="_data_dataframe_.dataframe.html" class="tsd-signature-type">DataFrame</a></h4>
+					</li>
+					<li>
+						<h4>K<span class="tsd-signature-symbol">: </span><a href="_data_dataframe_.dataframe.html" class="tsd-signature-type">DataFrame</a></h4>
 					</li>
 				</ul>
 			</section>
@@ -91,10 +84,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_layer_layer_.layer.html" class="tsd-signature-type">Layer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>
+						<a href="_layer_bufferlayer_.bufferlayer.html" class="tsd-signature-type">BufferLayer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">K</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">OutputLayer</span>
+								<span class="target">MemoryBufferLayer</span>
 							</li>
 						</ul>
 					</li>
@@ -107,26 +100,32 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_layer_outputlayer_.outputlayer.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#_dataframes" class="tsd-kind-icon">_data<wbr>Frames</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_outputlayer_.outputlayer.html#getflowtype" class="tsd-kind-icon">get<wbr>Flow<wbr>Type</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_outputlayer_.outputlayer.html#getinputflowtype" class="tsd-kind-icon">get<wbr>Input<wbr>Flow<wbr>Type</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_outputlayer_.outputlayer.html#getmodel" class="tsd-kind-icon">get<wbr>Model</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_outputlayer_.outputlayer.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_outputlayer_.outputlayer.html#getnextlayer" class="tsd-kind-icon">get<wbr>Next<wbr>Layer</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_outputlayer_.outputlayer.html#getoutputflowtype" class="tsd-kind-icon">get<wbr>Output<wbr>Flow<wbr>Type</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_outputlayer_.outputlayer.html#getpreviouslayer" class="tsd-kind-icon">get<wbr>Previous<wbr>Layer</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_layer_outputlayer_.outputlayer.html#pull" class="tsd-kind-icon">pull</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_layer_outputlayer_.outputlayer.html#push" class="tsd-kind-icon">push</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_outputlayer_.outputlayer.html#setinputflowtype" class="tsd-kind-icon">set<wbr>Input<wbr>Flow<wbr>Type</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_outputlayer_.outputlayer.html#setmodel" class="tsd-kind-icon">set<wbr>Model</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_outputlayer_.outputlayer.html#setnextlayer" class="tsd-kind-icon">set<wbr>Next<wbr>Layer</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_outputlayer_.outputlayer.html#setoutputflowtype" class="tsd-kind-icon">set<wbr>Output<wbr>Flow<wbr>Type</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_outputlayer_.outputlayer.html#setpreviouslayer" class="tsd-kind-icon">set<wbr>Previous<wbr>Layer</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#getflowtype" class="tsd-kind-icon">get<wbr>Flow<wbr>Type</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#getinputflowtype" class="tsd-kind-icon">get<wbr>Input<wbr>Flow<wbr>Type</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#getmodel" class="tsd-kind-icon">get<wbr>Model</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#getnextlayer" class="tsd-kind-icon">get<wbr>Next<wbr>Layer</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#getoutputflowtype" class="tsd-kind-icon">get<wbr>Output<wbr>Flow<wbr>Type</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#getpreviouslayer" class="tsd-kind-icon">get<wbr>Previous<wbr>Layer</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#pull" class="tsd-kind-icon">pull</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#push" class="tsd-kind-icon">push</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#setinputflowtype" class="tsd-kind-icon">set<wbr>Input<wbr>Flow<wbr>Type</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#setmodel" class="tsd-kind-icon">set<wbr>Model</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#setnextlayer" class="tsd-kind-icon">set<wbr>Next<wbr>Layer</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#setoutputflowtype" class="tsd-kind-icon">set<wbr>Output<wbr>Flow<wbr>Type</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_layer_memorybufferlayer_.memorybufferlayer.html#setpreviouslayer" class="tsd-kind-icon">set<wbr>Previous<wbr>Layer</a></li>
 							</ul>
 						</section>
 					</div>
@@ -138,28 +137,38 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Output<wbr>Layer<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, flowType<span class="tsd-signature-symbol">?: </span><a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_layer_outputlayer_.outputlayer.html" class="tsd-signature-type">OutputLayer</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Memory<wbr>Buffer<wbr>Layer<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_layer_memorybufferlayer_.memorybufferlayer.html" class="tsd-signature-type">MemoryBufferLayer</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="_layer_layer_.layer.html">Layer</a>.<a href="_layer_layer_.layer.html#constructor">constructor</a></p>
+								<p>Overrides <a href="_layer_bufferlayer_.bufferlayer.html">BufferLayer</a>.<a href="_layer_bufferlayer_.bufferlayer.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in layer/OutputLayer.ts:11</li>
+									<li>Defined in layer/MemoryBufferLayer.ts:7</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> name: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;output&quot;</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> flowType: <a href="../enums/_layer_flowtype_.flowtype.html" class="tsd-signature-type">FlowType</a><span class="tsd-signature-symbol"> =&nbsp;FlowType.UNSPECIFIED</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> name: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;memorybuffer&quot;</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_layer_outputlayer_.outputlayer.html" class="tsd-signature-type">OutputLayer</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_layer_memorybufferlayer_.memorybufferlayer.html" class="tsd-signature-type">MemoryBufferLayer</a></h4>
 						</li>
 					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_dataframes" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _data<wbr>Frames</h3>
+					<div class="tsd-signature tsd-kind-icon">_data<wbr>Frames<span class="tsd-signature-symbol">:</span> <a href="_data_dataframe_.dataframe.html" class="tsd-signature-type">DataFrame</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in layer/MemoryBufferLayer.ts:7</li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -260,7 +269,7 @@
 					<a name="getnextlayer" class="tsd-anchor"></a>
 					<h3>get<wbr>Next<wbr>Layer</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Next<wbr>Layer<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_layer_layer_.layer.html" class="tsd-signature-type">Layer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Next<wbr>Layer<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_layer_layer_.layer.html" class="tsd-signature-type">Layer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">K</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -275,7 +284,7 @@
 									<p>Get next layer</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="_layer_layer_.layer.html" class="tsd-signature-type">Layer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_layer_layer_.layer.html" class="tsd-signature-type">Layer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">K</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -329,31 +338,31 @@
 					<a name="pull" class="tsd-anchor"></a>
 					<h3>pull</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">pull<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="_layer_pulloptions_.pulloptions.html" class="tsd-signature-type">PullOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">pull<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="_layer_pulloptions_.pulloptions.html" class="tsd-signature-type">PullOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">K</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="_layer_layer_.layer.html">Layer</a>.<a href="_layer_layer_.layer.html#pull">pull</a></p>
+								<p>Overrides <a href="_layer_bufferlayer_.bufferlayer.html">BufferLayer</a>.<a href="_layer_bufferlayer_.bufferlayer.html#pull">pull</a></p>
 								<ul>
-									<li>Defined in layer/OutputLayer.ts:32</li>
+									<li>Defined in layer/MemoryBufferLayer.ts:28</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Pull the data from the previous layer and output it</p>
+									<p>Pull the data from the previous layer and process it</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="_layer_pulloptions_.pulloptions.html" class="tsd-signature-type">PullOptions</a><span class="tsd-signature-symbol"> =&nbsp;PullOptions.DEFAULT</span></h5>
+									<h5>options: <a href="_layer_pulloptions_.pulloptions.html" class="tsd-signature-type">PullOptions</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Pull options</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">K</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -366,14 +375,14 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="_layer_layer_.layer.html">Layer</a>.<a href="_layer_layer_.layer.html#push">push</a></p>
+								<p>Overrides <a href="_layer_bufferlayer_.bufferlayer.html">BufferLayer</a>.<a href="_layer_bufferlayer_.bufferlayer.html#push">push</a></p>
 								<ul>
-									<li>Defined in layer/OutputLayer.ts:22</li>
+									<li>Defined in layer/MemoryBufferLayer.ts:18</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Push the data to the output</p>
+									<p>Push the data to the layer</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -463,7 +472,7 @@
 					<a name="setnextlayer" class="tsd-anchor"></a>
 					<h3>set<wbr>Next<wbr>Layer</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Next<wbr>Layer<span class="tsd-signature-symbol">(</span>nextLayer<span class="tsd-signature-symbol">: </span><a href="_layer_layer_.layer.html" class="tsd-signature-type">Layer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Next<wbr>Layer<span class="tsd-signature-symbol">(</span>nextLayer<span class="tsd-signature-symbol">: </span><a href="_layer_layer_.layer.html" class="tsd-signature-type">Layer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">K</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -481,7 +490,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>nextLayer: <a href="_layer_layer_.layer.html" class="tsd-signature-type">Layer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>nextLayer: <a href="_layer_layer_.layer.html" class="tsd-signature-type">Layer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">K</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -587,10 +596,10 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_layer_layer_.html">&quot;layer/<wbr>Layer&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/_layer_memorybufferlayer_.html">&quot;layer/<wbr>Memory<wbr>Buffer<wbr>Layer&quot;</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_layer_outputlayer_.html">&quot;layer/<wbr>Output<wbr>Layer&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -633,52 +642,55 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="_layer_outputlayer_.outputlayer.html" class="tsd-kind-icon">Output<wbr>Layer</a>
+						<a href="_layer_memorybufferlayer_.memorybufferlayer.html" class="tsd-kind-icon">Memory<wbr>Buffer<wbr>Layer</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_layer_outputlayer_.outputlayer.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#_dataframes" class="tsd-kind-icon">_data<wbr>Frames</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_layer_outputlayer_.outputlayer.html#getflowtype" class="tsd-kind-icon">get<wbr>Flow<wbr>Type</a>
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#getflowtype" class="tsd-kind-icon">get<wbr>Flow<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_layer_outputlayer_.outputlayer.html#getinputflowtype" class="tsd-kind-icon">get<wbr>Input<wbr>Flow<wbr>Type</a>
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#getinputflowtype" class="tsd-kind-icon">get<wbr>Input<wbr>Flow<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_layer_outputlayer_.outputlayer.html#getmodel" class="tsd-kind-icon">get<wbr>Model</a>
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#getmodel" class="tsd-kind-icon">get<wbr>Model</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_layer_outputlayer_.outputlayer.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_layer_outputlayer_.outputlayer.html#getnextlayer" class="tsd-kind-icon">get<wbr>Next<wbr>Layer</a>
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#getnextlayer" class="tsd-kind-icon">get<wbr>Next<wbr>Layer</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_layer_outputlayer_.outputlayer.html#getoutputflowtype" class="tsd-kind-icon">get<wbr>Output<wbr>Flow<wbr>Type</a>
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#getoutputflowtype" class="tsd-kind-icon">get<wbr>Output<wbr>Flow<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_layer_outputlayer_.outputlayer.html#getpreviouslayer" class="tsd-kind-icon">get<wbr>Previous<wbr>Layer</a>
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#getpreviouslayer" class="tsd-kind-icon">get<wbr>Previous<wbr>Layer</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_layer_outputlayer_.outputlayer.html#pull" class="tsd-kind-icon">pull</a>
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#pull" class="tsd-kind-icon">pull</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_layer_outputlayer_.outputlayer.html#push" class="tsd-kind-icon">push</a>
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#push" class="tsd-kind-icon">push</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_layer_outputlayer_.outputlayer.html#setinputflowtype" class="tsd-kind-icon">set<wbr>Input<wbr>Flow<wbr>Type</a>
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#setinputflowtype" class="tsd-kind-icon">set<wbr>Input<wbr>Flow<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_layer_outputlayer_.outputlayer.html#setmodel" class="tsd-kind-icon">set<wbr>Model</a>
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#setmodel" class="tsd-kind-icon">set<wbr>Model</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_layer_outputlayer_.outputlayer.html#setnextlayer" class="tsd-kind-icon">set<wbr>Next<wbr>Layer</a>
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#setnextlayer" class="tsd-kind-icon">set<wbr>Next<wbr>Layer</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_layer_outputlayer_.outputlayer.html#setoutputflowtype" class="tsd-kind-icon">set<wbr>Output<wbr>Flow<wbr>Type</a>
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#setoutputflowtype" class="tsd-kind-icon">set<wbr>Output<wbr>Flow<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_layer_outputlayer_.outputlayer.html#setpreviouslayer" class="tsd-kind-icon">set<wbr>Previous<wbr>Layer</a>
+								<a href="_layer_memorybufferlayer_.memorybufferlayer.html#setpreviouslayer" class="tsd-kind-icon">set<wbr>Previous<wbr>Layer</a>
 							</li>
 						</ul>
 					</li>

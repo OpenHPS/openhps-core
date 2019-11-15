@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AbsoluteLocation | @openhps/core</title>
+	<title>ObjectDataManager | @openhps/core</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_location_absolutelocation_.html">&quot;location/AbsoluteLocation&quot;</a>
+					<a href="../modules/_managers_objectdatamanager_.html">&quot;managers/ObjectDataManager&quot;</a>
 				</li>
 				<li>
-					<a href="_location_absolutelocation_.absolutelocation.html">AbsoluteLocation</a>
+					<a href="_managers_objectdatamanager_.objectdatamanager.html">ObjectDataManager</a>
 				</li>
 			</ul>
-			<h1>Class AbsoluteLocation</h1>
+			<h1>Class ObjectDataManager</h1>
 		</div>
 	</div>
 </header>
@@ -72,9 +72,11 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<a href="#openhps-absolute-location" id="openhps-absolute-location" style="color: inherit; text-decoration: none;">
-							<h1>OpenHPS: Absolute location</h1>
+						<a href="#openhps-object-data-manager" id="openhps-object-data-manager" style="color: inherit; text-decoration: none;">
+							<h1>OpenHPS: Object Data Manager</h1>
 						</a>
+						<p>The object manager manages the data of objects that are currently being
+						processed in the model and objects that need to be tracked.</p>
 					</div>
 				</div>
 			</section>
@@ -82,10 +84,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_location_location_.location.html" class="tsd-signature-type">Location</a>
+						<a href="_managers_datamanager_.datamanager.html" class="tsd-signature-type">DataManager</a><span class="tsd-signature-symbol">&lt;</span><a href="_object_.object.html" class="tsd-signature-type">Object</a><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">AbsoluteLocation</span>
+								<span class="target">ObjectDataManager</span>
 							</li>
 						</ul>
 					</li>
@@ -95,59 +97,60 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_managers_objectdatamanager_.objectdatamanager.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_location_absolutelocation_.absolutelocation.html#_lat" class="tsd-kind-icon">_lat</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_location_absolutelocation_.absolutelocation.html#_lng" class="tsd-kind-icon">_lng</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_location_absolutelocation_.absolutelocation.html#_mamsl" class="tsd-kind-icon">_mamsl</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="_managers_objectdatamanager_.objectdatamanager.html#_objects" class="tsd-kind-icon">_objects</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_location_absolutelocation_.absolutelocation.html#getaltitude" class="tsd-kind-icon">get<wbr>Altitude</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_location_absolutelocation_.absolutelocation.html#getlatitude" class="tsd-kind-icon">get<wbr>Latitude</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_location_absolutelocation_.absolutelocation.html#getlongitude" class="tsd-kind-icon">get<wbr>Longitude</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_location_absolutelocation_.absolutelocation.html#setaltitude" class="tsd-kind-icon">set<wbr>Altitude</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_location_absolutelocation_.absolutelocation.html#setlatitude" class="tsd-kind-icon">set<wbr>Latitude</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_location_absolutelocation_.absolutelocation.html#setlongitude" class="tsd-kind-icon">set<wbr>Longitude</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_location_absolutelocation_.absolutelocation.html#toecr" class="tsd-kind-icon">toECR</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_location_absolutelocation_.absolutelocation.html#fromecr" class="tsd-kind-icon">fromECR</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_managers_objectdatamanager_.objectdatamanager.html#findbyid" class="tsd-kind-icon">find<wbr>ById</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_managers_objectdatamanager_.objectdatamanager.html#gettypename" class="tsd-kind-icon">get<wbr>Type<wbr>Name</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_managers_objectdatamanager_.objectdatamanager.html#track" class="tsd-kind-icon">track</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_managers_objectdatamanager_.objectdatamanager.html#untrack" class="tsd-kind-icon">untrack</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Object<wbr>Data<wbr>Manager<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_managers_objectdatamanager_.objectdatamanager.html" class="tsd-signature-type">ObjectDataManager</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides <a href="_managers_datamanager_.datamanager.html">DataManager</a>.<a href="_managers_datamanager_.datamanager.html#constructor">constructor</a></p>
+								<ul>
+									<li>Defined in managers/ObjectDataManager.ts:10</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="_managers_objectdatamanager_.objectdatamanager.html" class="tsd-signature-type">ObjectDataManager</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_lat" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _lat</h3>
-					<div class="tsd-signature tsd-kind-icon">_lat<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+					<a name="_objects" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _objects</h3>
+					<div class="tsd-signature tsd-kind-icon">_objects<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="_object_.object.html" class="tsd-signature-type">Object</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new Map()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in location/AbsoluteLocation.ts:7</li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_lng" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _lng</h3>
-					<div class="tsd-signature tsd-kind-icon">_lng<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in location/AbsoluteLocation.ts:8</li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_mamsl" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _mamsl</h3>
-					<div class="tsd-signature tsd-kind-icon">_mamsl<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in location/AbsoluteLocation.ts:9</li>
+							<li>Defined in managers/ObjectDataManager.ts:10</li>
 						</ul>
 					</aside>
 				</section>
@@ -155,212 +158,110 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="getaltitude" class="tsd-anchor"></a>
-					<h3>get<wbr>Altitude</h3>
+					<a name="findbyid" class="tsd-anchor"></a>
+					<h3>find<wbr>ById</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Altitude<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon">find<wbr>ById<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_object_.object.html" class="tsd-signature-type">Object</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in location/AbsoluteLocation.ts:44</li>
+									<li>Defined in managers/ObjectDataManager.ts:20</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Get the altitude in meters above mean sea level</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="getlatitude" class="tsd-anchor"></a>
-					<h3>get<wbr>Latitude</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Latitude<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in location/AbsoluteLocation.ts:14</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Get latitude</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="getlongitude" class="tsd-anchor"></a>
-					<h3>get<wbr>Longitude</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Longitude<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in location/AbsoluteLocation.ts:29</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Get longitude</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="setaltitude" class="tsd-anchor"></a>
-					<h3>set<wbr>Altitude</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Altitude<span class="tsd-signature-symbol">(</span>mamsl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in location/AbsoluteLocation.ts:52</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Set the altitude</p>
+									<p>Find an object by its identifier</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>mamsl: <span class="tsd-signature-type">number</span></h5>
+									<h5>id: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Meters above mean sea level</p>
+										<p>Object identifier</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_object_.object.html" class="tsd-signature-type">Object</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="gettypename" class="tsd-anchor"></a>
+					<h3>get<wbr>Type<wbr>Name</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Type<wbr>Name<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_managers_datamanager_.datamanager.html">DataManager</a>.<a href="_managers_datamanager_.datamanager.html#gettypename">getTypeName</a></p>
+								<ul>
+									<li>Defined in managers/DataManager.ts:12</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get data manager type name</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="setlatitude" class="tsd-anchor"></a>
-					<h3>set<wbr>Latitude</h3>
+					<a name="track" class="tsd-anchor"></a>
+					<h3>track</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Latitude<span class="tsd-signature-symbol">(</span>lat<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">track<span class="tsd-signature-symbol">(</span>object<span class="tsd-signature-symbol">: </span><a href="_object_.object.html" class="tsd-signature-type">Object</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_object_.object.html" class="tsd-signature-type">Object</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in location/AbsoluteLocation.ts:22</li>
+									<li>Defined in managers/ObjectDataManager.ts:34</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Set latitude</p>
+									<p>Track a new object</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>lat: <span class="tsd-signature-type">number</span></h5>
+									<h5>object: <a href="_object_.object.html" class="tsd-signature-type">Object</a></h5>
 									<div class="tsd-comment tsd-typography">
+										<p>Object to track</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_object_.object.html" class="tsd-signature-type">Object</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="setlongitude" class="tsd-anchor"></a>
-					<h3>set<wbr>Longitude</h3>
+					<a name="untrack" class="tsd-anchor"></a>
+					<h3>untrack</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Longitude<span class="tsd-signature-symbol">(</span>lng<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">untrack<span class="tsd-signature-symbol">(</span>object<span class="tsd-signature-symbol">: </span><a href="_object_.object.html" class="tsd-signature-type">Object</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in location/AbsoluteLocation.ts:37</li>
+									<li>Defined in managers/ObjectDataManager.ts:45</li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Set longitude</p>
-								</div>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>lng: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-									</div>
+									<h5>object: <a href="_object_.object.html" class="tsd-signature-type">Object</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="toecr" class="tsd-anchor"></a>
-					<h3>toECR</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">toECR<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in location/AbsoluteLocation.ts:59</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Convert the point to an ECR point (Earth Centered Rotational)</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="fromecr" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> fromECR</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">fromECR<span class="tsd-signature-symbol">(</span>ecr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_location_absolutelocation_.absolutelocation.html" class="tsd-signature-type">AbsoluteLocation</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in location/AbsoluteLocation.ts:69</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Convert the ECR point to an absolute location</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>ecr: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Earth Centered Rotational</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_location_absolutelocation_.absolutelocation.html" class="tsd-signature-type">AbsoluteLocation</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -417,7 +318,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_layer_index_.html">&quot;layer/index&quot;</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_location_absolutelocation_.html">&quot;location/<wbr>Absolute<wbr>Location&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -432,7 +333,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_managers_datamanager_.html">&quot;managers/<wbr>Data<wbr>Manager&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/_managers_objectdatamanager_.html">&quot;managers/<wbr>Object<wbr>Data<wbr>Manager&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -445,40 +346,25 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_location_absolutelocation_.absolutelocation.html" class="tsd-kind-icon">Absolute<wbr>Location</a>
+						<a href="_managers_objectdatamanager_.objectdatamanager.html" class="tsd-kind-icon">Object<wbr>Data<wbr>Manager</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="_location_absolutelocation_.absolutelocation.html#_lat" class="tsd-kind-icon">_lat</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+								<a href="_managers_objectdatamanager_.objectdatamanager.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="_location_absolutelocation_.absolutelocation.html#_lng" class="tsd-kind-icon">_lng</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="_location_absolutelocation_.absolutelocation.html#_mamsl" class="tsd-kind-icon">_mamsl</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+								<a href="_managers_objectdatamanager_.objectdatamanager.html#_objects" class="tsd-kind-icon">_objects</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_location_absolutelocation_.absolutelocation.html#getaltitude" class="tsd-kind-icon">get<wbr>Altitude</a>
+								<a href="_managers_objectdatamanager_.objectdatamanager.html#findbyid" class="tsd-kind-icon">find<wbr>ById</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_managers_objectdatamanager_.objectdatamanager.html#gettypename" class="tsd-kind-icon">get<wbr>Type<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_location_absolutelocation_.absolutelocation.html#getlatitude" class="tsd-kind-icon">get<wbr>Latitude</a>
+								<a href="_managers_objectdatamanager_.objectdatamanager.html#track" class="tsd-kind-icon">track</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_location_absolutelocation_.absolutelocation.html#getlongitude" class="tsd-kind-icon">get<wbr>Longitude</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_location_absolutelocation_.absolutelocation.html#setaltitude" class="tsd-kind-icon">set<wbr>Altitude</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_location_absolutelocation_.absolutelocation.html#setlatitude" class="tsd-kind-icon">set<wbr>Latitude</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_location_absolutelocation_.absolutelocation.html#setlongitude" class="tsd-kind-icon">set<wbr>Longitude</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_location_absolutelocation_.absolutelocation.html#toecr" class="tsd-kind-icon">toECR</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="_location_absolutelocation_.absolutelocation.html#fromecr" class="tsd-kind-icon">fromECR</a>
+								<a href="_managers_objectdatamanager_.objectdatamanager.html#untrack" class="tsd-kind-icon">untrack</a>
 							</li>
 						</ul>
 					</li>
