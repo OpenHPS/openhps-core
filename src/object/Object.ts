@@ -1,13 +1,16 @@
-import { Location, AbsoluteLocation, RelativeLocation } from "./location";
+import { Location, AbsoluteLocation, RelativeLocation } from "../location";
 
 /**
  * # OpenHPS: Object
+ * An object is an instance that can be anything ranging from a person or asset to
+ * a more abstract object such as a Wi-Fi access point or room.
  */
 export class Object {
     private _id: string;
     private _displayName: string;
     private _absoluteLocation: AbsoluteLocation;
     private _relativeLocations: RelativeLocation[] = new Array();
+    private _size: number = 1;
 
     constructor(id: string){
         this._id = id;
@@ -50,4 +53,18 @@ export class Object {
         this._absoluteLocation = absoluteLocation;
     }
 
+    /**
+     * Get object size
+     */
+    public getSize() : number {
+        return this._size;
+    }
+
+    /**
+     * Set object size
+     * @param size Object size
+     */
+    public setSize(size: number) : void {
+        this._size = size;
+    }
 }
