@@ -2,10 +2,11 @@ import { Layer } from "./Layer";
 import { DataFrame } from "../data/DataFrame";
 import { FlowType } from "./FlowType";
 import { PushOptions } from "./PushOptions";
+import { PullOptions } from "./PullOptions";
 
 /**
  * # OpenHPS: Input Layer
- * Input layer from predicing and processing data
+ * Input layer for predicing and processing data
  */
 export abstract class InputLayer<T extends DataFrame> extends Layer<T,T> {
 
@@ -30,7 +31,8 @@ export abstract class InputLayer<T extends DataFrame> extends Layer<T,T> {
 
     /**
      * Pull the data from the input 
+     * @param options Pull options
      */
-    public abstract pull() : Promise<T>;
+    public abstract pull(options: PullOptions) : Promise<T>;
 
 }

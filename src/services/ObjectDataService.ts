@@ -1,16 +1,17 @@
-import { Object } from "../Object";
-import { DataManager } from "./DataManager";
+import { DataService } from "./DataService";
+import { Object } from "../data";
 
 /**
- * # OpenHPS: Object Data Manager
- * The object manager manages the data of objects that are currently being
+ * # OpenHPS: Object Data Service
+ * The object server manages the data of objects that are currently being
  * processed in the model and objects that need to be tracked.
  */
-export class ObjectDataManager extends DataManager<Object>{
+export class ObjectDataService extends DataService<Object>{
     protected _objects: Map<string,Object> = new Map();
 
     constructor() {
         super();
+   //     this.setType(Object);
     }
 
     /**

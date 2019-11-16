@@ -1,7 +1,7 @@
-import { Object } from "../Object";
+import { Object } from "./object";
 
 /**
- * # OpenHPS: Data Frame
+ * # OpenHPS: Data frame
  */
 export abstract class DataFrame {
     private _timestamp: number;
@@ -27,17 +27,17 @@ export abstract class DataFrame {
     }
 
     /**
-     * Get known tracked object
+     * Get known objects used in this data frame
      */
-    public getTrackedIndividuals(): Object[] {
+    public getObjects(): Object[] {
         return this._objects;
     }
 
     /**
-     * Add a new tracked object
-     * @param object 
+     * Add a new object relevant to this data frame
+     * @param object Relevant object
      */
-    public addTrackedIndividual(object: Object) {
+    public addObject(object: Object) {
         this._objects.push(object);
     }
 }

@@ -3,7 +3,7 @@ import { DataFrame } from "./data";
 import { FlowType } from "./layer/FlowType";
 import { PushOptions } from "./layer/PushOptions";
 import { PullOptions } from "./layer/PullOptions";
-import { DataManager } from "./managers";
+import { DataService } from "./services";
 
 /**
  * # OpenHPS: Model
@@ -20,7 +20,7 @@ import { DataManager } from "./managers";
  */
 export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T,K> {
     private _layers: Layer<any,any>[] = new Array<Layer<any,any>>();
-    private _managers: Map<string, DataManager<any>>;
+    private _services: Map<string, DataService<any>>;
 
     constructor(name: string = "model") {
         super(name);
@@ -124,8 +124,34 @@ export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T,K> 
         return null;
     }
 
-    public addDataManager(manager: DataManager<any>) : void {
-        this._managers.set(null,manager);
+    /**
+     * Get data service by data type
+     * @param dataType Data type
+     */
+    public getDataService<T>(dataType: { new (): T }) : DataService<T>{
+        if (this._services.has(dataType.name)){
+            return this._services.get(dataType.name);
+        }else{
+            return null;
+        }
+    }
+
+    /**
+     * Add data service to model
+     * @param service Data service
+     */
+    public addDataService(service: DataService<any>) : void {
+        this._services.set(null,service);
+    }
+
+    /**
+     * Remove data service from model
+     * @param dataType Data type
+     */
+    public removeDataService(dataType: { new (): any }) : void {
+        if (this._services.has(dataType.name)){
+            this._services.delete(dataType.name);
+        }
     }
 
     /**

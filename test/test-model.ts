@@ -1,1 +1,0 @@
-import { Model } from '../dist';

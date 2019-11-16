@@ -1,0 +1,1 @@
+import { Model } from '../src';

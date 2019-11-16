@@ -1,4 +1,4 @@
-import { Location, AbsoluteLocation, RelativeLocation } from "../location";
+import { AbsoluteLocation, RelativeLocation } from "../../location";
 
 /**
  * # OpenHPS: Object
@@ -66,5 +66,12 @@ export class Object {
      */
     public setSize(size: number) : void {
         this._size = size;
+    }
+
+    /**
+     * Get relative locations
+     */
+    public getRelativeLocations() : RelativeLocation[] {
+        return this._relativeLocations;
     }
 }

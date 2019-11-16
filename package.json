@@ -4,10 +4,11 @@
   "description": "Open Hybrid Positioning System",
   "main": "dist/index.js",
   "scripts": {
+    "test": "mocha",
     "clean": "node ./scripts/clean.js",
-    "compile": "npm run clean && npm run compile:typescript && npm run compile:typedoc",
-    "compile:typescript": "tsc",
-    "compile:typedoc": "typedoc --out docs src"
+    "build": "npm run clean && npm run build:typescript && npm run build:typedoc",
+    "build:typescript": "tsc",
+    "build:typedoc": "typedoc --out docs src"
   },
   "keywords": [
     "openhps",
