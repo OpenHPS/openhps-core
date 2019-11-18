@@ -14,10 +14,6 @@ export class ObjectDataService extends DataService<Object>{
    //     this.setType(Object);
     }
 
-    /**
-     * Find an object by its identifier
-     * @param id Object identifier
-     */
     public findById(id: string) : Promise<Object> {
         return new Promise<Object>((resolve,reject) => {
             if (this._objects.has(id)){
@@ -28,11 +24,13 @@ export class ObjectDataService extends DataService<Object>{
         });
     }
 
-    /**
-     * Track a new object
-     * @param object Object to track
-     */
-    public track(object: Object) : Promise<Object> {
+    public findAll() : Promise<Object[]> {
+        return new Promise<Object[]>((resolve,reject) => {
+
+        });
+    }
+
+    public create(object: Object) : Promise<Object> {
         return new Promise<Object>((resolve,reject) => {
             if (this._objects.has(object.getId())){
                 // Update existing data
@@ -43,7 +41,15 @@ export class ObjectDataService extends DataService<Object>{
         });
     }
 
-    public untrack(object: Object) : Promise<void> {
+    public update(object: Object) : Promise<Object> {
+        return new Promise<Object>((resolve,reject) => {
+            if (this._objects.has(object.getId())){
+                // Update existing data
+            }
+        });
+    }
+
+    public delete(object: Object) : Promise<void> {
         return new Promise<void>((resolve,reject) => {
 
         });

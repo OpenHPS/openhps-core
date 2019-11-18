@@ -1,4 +1,5 @@
-import { AbsoluteLocation, RelativeLocation } from "../../location";
+import { AbsoluteLocation, RelativeLocation } from "../location";
+import { Shape } from "./Shape";
 
 /**
  * # OpenHPS: Object
@@ -6,11 +7,11 @@ import { AbsoluteLocation, RelativeLocation } from "../../location";
  * a more abstract object such as a Wi-Fi access point or room.
  */
 export class Object {
-    private _id: string;
-    private _displayName: string;
-    private _absoluteLocation: AbsoluteLocation;
-    private _relativeLocations: RelativeLocation[] = new Array();
-    private _size: number = 1;
+    protected _id: string;
+    protected _displayName: string;
+    protected _absoluteLocation: AbsoluteLocation;
+    protected _relativeLocations: RelativeLocation[] = new Array();
+    protected _shape: Shape;
 
     constructor(id: string){
         this._id = id;
@@ -54,18 +55,18 @@ export class Object {
     }
 
     /**
-     * Get object size
+     * Get object shape
      */
-    public getSize() : number {
-        return this._size;
+    public getSize() : Shape {
+        return this._shape;
     }
 
     /**
-     * Set object size
-     * @param size Object size
+     * Set object shape
+     * @param size Object shape
      */
-    public setSize(size: number) : void {
-        this._size = size;
+    public setSize(shape: Shape) : void {
+        this._shape = shape;
     }
 
     /**

@@ -8,7 +8,7 @@
     "clean": "node ./scripts/clean.js",
     "build": "npm run clean && npm run build:typescript && npm run build:typedoc",
     "build:typescript": "tsc",
-    "build:typedoc": "typedoc --out docs src"
+    "build:typedoc": "typedoc --excludePrivate --hideGenerator --out docs src"
   },
   "keywords": [
     "openhps",

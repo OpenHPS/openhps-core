@@ -2,7 +2,7 @@
  * # OpenHPS: Location
  */
 export abstract class Location {
-    private _accuracy: number;
+    protected _accuracy: number;
 
     /**
      * Get location accuracy

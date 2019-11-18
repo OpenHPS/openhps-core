@@ -1,8 +1,8 @@
-import { Layer } from "./Layer";
-import { DataFrame } from "../data/DataFrame";
-import { FlowType } from "./FlowType";
-import { PushOptions } from "./PushOptions";
-import { PullOptions } from "./PullOptions";
+import { Layer } from "../Layer";
+import { DataFrame } from "../../data/DataFrame";
+import { FlowType } from "../FlowType";
+import { PushOptions } from "../PushOptions";
+import { PullOptions } from "../PullOptions";
 
 /**
  * # OpenHPS: Output Layer
@@ -22,6 +22,9 @@ export class OutputLayer<T extends DataFrame> extends Layer<T,T> {
     public push(data: T, options: PushOptions) : Promise<void> {
         return new Promise<void>((resolve,reject) => {
             // Store the objects contained in the output to the managers
+            data.getObjects().forEach(object => {
+                
+            });
         });
     }
 

@@ -40,4 +40,12 @@ export abstract class DataFrame {
     public addObject(object: Object) {
         this._objects.push(object);
     }
+
+    /**
+     * Remove an object from the data frame
+     * @param object Object to remove
+     */
+    public removeObject(object: Object) {
+        this._objects.
+    }
 }

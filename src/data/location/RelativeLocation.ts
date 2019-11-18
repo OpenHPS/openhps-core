@@ -4,7 +4,7 @@ import { Location } from "./Location";
  * # OpenHPS: Relative location
  */
 export class RelativeLocation extends Location {
-    private _referenceObject: Object;
+    protected _referenceObject: Object;
 
     /**
      * Get the reference object that this location is relative to

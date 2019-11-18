@@ -1,8 +1,8 @@
-import { Layer } from "./Layer";
-import { DataFrame } from "../data/DataFrame";
-import { FlowType } from "./FlowType";
-import { PushOptions } from "./PushOptions";
-import { PullOptions } from "./PullOptions";
+import { Layer } from "../Layer";
+import { DataFrame } from "../../data/DataFrame";
+import { FlowType } from "../FlowType";
+import { PushOptions } from "../PushOptions";
+import { PullOptions } from "../PullOptions";
 
 /**
  * # OpenHPS: Processing Layer

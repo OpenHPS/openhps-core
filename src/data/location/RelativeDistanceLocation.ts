@@ -1,7 +1,7 @@
 import { RelativeLocation } from "./RelativeLocation";
 
 export class RelativeDistanceLocation extends RelativeLocation {
-    private _distance: number;
+    protected _distance: number;
 
     /**
      * Get distance to relative object
