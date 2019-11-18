@@ -16,7 +16,12 @@ export abstract class Layer<T extends DataFrame, K extends DataFrame> {
     private _prevLayer: Layer<any,T>;
     private _nextLayer: Layer<K,any>;
 
-    constructor(name: string = "default",flowType: FlowType = FlowType.UNSPECIFIED) {
+    /**
+     * Create a new layer
+     * @param name Layer name
+     * @param flowType Layer in and out flow type
+     */
+    constructor(name: string = "default", flowType: FlowType = FlowType.UNSPECIFIED) {
         this._name = name;
         this._inputFlowType = flowType;
         this._outputFlowType = flowType;

@@ -1,4 +1,4 @@
-import { Location } from "../location";
+import { Location } from "../data/location";
 
 /**
  * # OpenHPS: Data Service

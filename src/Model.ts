@@ -3,7 +3,7 @@ import { DataFrame } from "./data";
 import { FlowType } from "./layer/FlowType";
 import { PushOptions } from "./layer/PushOptions";
 import { PullOptions } from "./layer/PullOptions";
-import { DataService } from "./services";
+import { DataService } from "./service";
 
 /**
  * # OpenHPS: Model

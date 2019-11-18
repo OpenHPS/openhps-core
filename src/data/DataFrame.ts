@@ -6,9 +6,29 @@ import { Object } from "./object";
 export abstract class DataFrame {
     private _timestamp: number;
     private _objects: Object[] = Array<Object>();
+    private _data: any;
 
-    constructor() {
+    constructor(json: any = null) {
         this.setTimestamp(Date.now());
+        this.parseJSON(json);
+    }
+
+    public parseJSON(json: any){
+        let data = json;
+        if (typeof json == "string"){
+            data = JSON.parse(json);
+        }
+        this._data = data;
+        if (this.getData().object != undefined){
+            
+        } 
+    }
+
+    /**
+     * Get data frame data
+     */
+    public getData() : any {
+        return this._data;
     }
 
     /**
@@ -46,6 +66,6 @@ export abstract class DataFrame {
      * @param object Object to remove
      */
     public removeObject(object: Object) {
-        this._objects.
+        this._objects.splice(this._objects.indexOf(object),1);
     }
 }
