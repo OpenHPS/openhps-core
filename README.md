@@ -15,6 +15,8 @@ processing layers that compute the sensory data to a more abstract, higher level
 Persistent data such as the previous location of tracked objects or calibration data is stored in services linked to a model. Each layer
 that is added to the model can read and write the data that is stored by the services.
 
+The framework is created by Maxim Van de Wynckel who is a PhD Student at the Vrije Universiteit Brussel.
+
 ## Main Concepts
 This section of the documentation explains the main concepts used in the OpenHPS framework. While most of these are
 specific to the core component hosted in this repository, they are used in other components as well.
@@ -47,3 +49,4 @@ An absolute location is a fixed location. This can be anything ranging from a ca
 or even celestial coordinate, but all objects using an absolute location have the same origin.
 
 ### DataService
+A data service is a way to keep persistent data between data frames or models.
