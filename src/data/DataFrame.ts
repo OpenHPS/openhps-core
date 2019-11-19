@@ -8,6 +8,10 @@ export abstract class DataFrame {
     private _objects: Object[] = Array<Object>();
     private _data: any;
 
+    /**
+     * Create a new data frame
+     * @param json Optional JSON to parse from
+     */
     constructor(json: any = null) {
         this.setTimestamp(Date.now());
         this.parseJSON(json);

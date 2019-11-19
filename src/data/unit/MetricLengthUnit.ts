@@ -1,4 +1,3 @@
-import { Unit } from "./Unit";
 import { LengthUnit } from "./LengthUnit";
 
 export class MetricLengthUnit extends LengthUnit {
