@@ -1,6 +1,5 @@
 import { Layer } from "./layer/Layer";
 import { DataFrame } from "./data";
-import { FlowType } from "./layer/FlowType";
 import { PushOptions } from "./layer/PushOptions";
 import { PullOptions } from "./layer/PullOptions";
 import { DataService } from "./service";
@@ -80,10 +79,6 @@ export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T,K> 
             let lastLayer = this._layers[this._layers.length - 1];
             // Check the output type of the last layer
     
-            // Check if the previous layer has the same flow type
-            if (lastLayer.getFlowType() != layer.getFlowType()){
-                throw new Error(`Flow type of layer '${layer.getName()}' does not match flow type of the previous layer '${lastLayer.getName()}'!`);
-            }
             lastLayer.setNextLayer(layer);
             layer.setPreviousLayer(lastLayer);
         }
@@ -102,26 +97,6 @@ export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T,K> 
         if (this._layers.length != 0){
             this._layers[0].setPreviousLayer(prevLayer);
         }
-    }
-
-    /**
-     * Get input data flow type
-     */
-    public getInputFlowType() : FlowType {
-        if (this._layers.length != 0){
-            return this._layers[0].getInputFlowType();
-        }
-        return null;
-    }
-
-    /**
-     * Get output data flow type
-     */
-    public getOutputFlowType() : FlowType {
-        if (this._layers.length != 0){
-            return this._layers[this._layers.length - 1].getOutputFlowType();
-        }
-        return null;
     }
 
     /**

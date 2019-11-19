@@ -1,6 +1,5 @@
 import { Model } from "../Model";
 import { DataFrame } from "../data/DataFrame";
-import { FlowType } from "./FlowType";
 import { PullOptions } from "./PullOptions";
 import { PushOptions } from "./PushOptions";
 
@@ -9,8 +8,6 @@ import { PushOptions } from "./PushOptions";
  * General Layer of the OpenHPS [[Model]]
  */
 export abstract class Layer<T extends DataFrame, K extends DataFrame> {
-    private _inputFlowType: FlowType;
-    private _outputFlowType: FlowType;
     private _name: string;
     private _model: Model<any,any>;
     private _prevLayer: Layer<any,T>;
@@ -21,10 +18,8 @@ export abstract class Layer<T extends DataFrame, K extends DataFrame> {
      * @param name Layer name
      * @param flowType Layer in and out flow type
      */
-    constructor(name: string = "default", flowType: FlowType = FlowType.UNSPECIFIED) {
+    constructor(name: string = "default") {
         this._name = name;
-        this._inputFlowType = flowType;
-        this._outputFlowType = flowType;
     }
 
     /**
@@ -60,43 +55,6 @@ export abstract class Layer<T extends DataFrame, K extends DataFrame> {
      */
     public setModel(model: Model<any,any>) : void {
         this._model = model;
-    }
-
-    /**
-     * Get data flow type
-     */
-    public getFlowType() : FlowType {
-        return this.getInputFlowType();
-    }
-
-    /**
-     * Set input flow type
-     * @param flowType Flow type for input
-     */
-    public setInputFlowType(flowType: FlowType) : void {
-        this._inputFlowType = flowType;
-    }
-
-    /**
-     * Set output flow type
-     * @param flowType Flow type for output
-     */
-    public setOutputFlowType(flowType: FlowType) : void {
-        this._outputFlowType = flowType;
-    }
-
-    /**
-     * Get input data flow type
-     */
-    public getInputFlowType() : FlowType {
-        return this._inputFlowType;
-    }
-
-    /**
-     * Get output data flow type
-     */
-    public getOutputFlowType() : FlowType {
-        return this._outputFlowType;
     }
 
     /**

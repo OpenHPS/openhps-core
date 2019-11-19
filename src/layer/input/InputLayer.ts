@@ -1,6 +1,5 @@
 import { Layer } from "../Layer";
 import { DataFrame } from "../../data/DataFrame";
-import { FlowType } from "../FlowType";
 import { PushOptions } from "../PushOptions";
 import { PullOptions } from "../PullOptions";
 
@@ -10,8 +9,8 @@ import { PullOptions } from "../PullOptions";
  */
 export abstract class InputLayer<T extends DataFrame> extends Layer<T,T> {
 
-    constructor(name: string = "input", flowType: FlowType = FlowType.UNSPECIFIED) {
-        super(name, flowType);
+    constructor(name: string = "input") {
+        super(name);
     }
 
     /**

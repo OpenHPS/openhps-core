@@ -1,6 +1,5 @@
 import { DataFrame } from "../../data";
 import { Layer } from "../Layer";
-import { FlowType } from "../FlowType";
 import { PushOptions } from "../PushOptions";
 import { PullOptions } from "../PullOptions";
 
@@ -8,8 +7,6 @@ export abstract class BufferLayer<T extends DataFrame, K extends DataFrame> exte
 
     constructor(name: string = "buffer") {
         super(name);
-        this.setInputFlowType(FlowType.PUSH);
-        this.setOutputFlowType(FlowType.PULL);
     }
 
     /**
