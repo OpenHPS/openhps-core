@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "mocha",
-    "test-jenkins": "jenkins-mocha",
+    "test:jenkins": "jenkins-mocha",
     "coverage": "nyc mocha",
     "lint": "tslint -c tslint.json --project tsconfig.json",
     "clean": "node ./scripts/clean.js",
