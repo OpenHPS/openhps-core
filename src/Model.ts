@@ -17,8 +17,8 @@ import { DataService } from "./service";
  * });
  * ```
  */
-export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T,K> {
-    private _layers: Layer<any,any>[] = new Array<Layer<any,any>>();
+export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T, K> {
+    private _layers: Array<Layer<any, any>> = new Array<Layer<any, any>>();
     private _services: Map<string, DataService<any>>;
 
     constructor(name: string = "model") {
@@ -68,7 +68,7 @@ export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T,K> 
      * Add a new layer to the model
      * @param layer Layer to add
      */
-    public addLayer(layer: Layer<any,any>) : Model<T,K> {
+    public addLayer(layer: Layer<any,any>) : Model<T, K> {
         // Get the previous layer
         if (this._layers.length == 0){
             // First layer
@@ -92,7 +92,7 @@ export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T,K> 
      * Set the previous layer or model
      * @param prevLayer Previous layer or model
      */
-    public setPreviousLayer(prevLayer: Layer<any,T>) : void {
+    public setPreviousLayer(prevLayer: Layer<any, T>) : void {
         super.setPreviousLayer(prevLayer);
         if (this._layers.length != 0){
             this._layers[0].setPreviousLayer(prevLayer);
@@ -132,8 +132,8 @@ export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T,K> 
     /**
      * Clear all layers in the model
      */
-    public clear() : Model<T,K> {
-        this._layers = new Array<Layer<any,any>>();
+    public clear() : Model<T, K> {
+        this._layers = new Array<Layer<any, any>>();
         return this;
     }
 }

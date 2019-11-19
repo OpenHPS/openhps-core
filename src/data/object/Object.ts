@@ -57,7 +57,7 @@ export class Object {
     /**
      * Get object shape
      */
-    public getSize() : Shape {
+    public getShape() : Shape {
         return this._shape;
     }
 
@@ -65,7 +65,7 @@ export class Object {
      * Set object shape
      * @param size Object shape
      */
-    public setSize(shape: Shape) : void {
+    public setShape(shape: Shape) : void {
         this._shape = shape;
     }
 
