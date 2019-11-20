@@ -30,14 +30,14 @@ export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T, K>
      * @param data Input data
      * @param options Push options
      */
-    public push(data: T, options: PushOptions = PushOptions.DEFAULT) : Promise<void> {
-        return new Promise<void>((resolve,reject) => {
+    public push(data: T, options: PushOptions = PushOptions.DEFAULT): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
             // Push the data to the first layer in the model
-            let firstLayer = this._layers[0];
-            if (firstLayer == null){
+            const firstLayer = this._layers[0];
+            if (firstLayer === null) {
                 throw new Error(`No layers added to the model '${this.getName()}'!`);
             }
-            firstLayer.push(data,options).then(result => {
+            firstLayer.push(data, options).then(result => {
                 resolve(result);
             }).catch(ex => {
                 reject(ex);
@@ -49,11 +49,11 @@ export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T, K>
      * Pull the data from the last layer in the model
      * @param options Pull options
      */
-    public pull(options: PullOptions = PullOptions.DEFAULT) : Promise<K> {
-        return new Promise<K>((resolve,reject) => {
+    public pull(options: PullOptions = PullOptions.DEFAULT): Promise<K> {
+        return new Promise<K>((resolve, reject) => {
             // Pull the data from the last layer in the model
-            let lastLayer = this._layers[this._layers.length - 1];
-            if (lastLayer == null){
+            const lastLayer = this._layers[this._layers.length - 1];
+            if (lastLayer === null) {
                 throw new Error(`No layers added to the model '${this.getName()}'!`);
             }
             lastLayer.pull(options).then(result => {
@@ -68,15 +68,15 @@ export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T, K>
      * Add a new layer to the model
      * @param layer Layer to add
      */
-    public addLayer(layer: Layer<any,any>) : Model<T, K> {
+    public addLayer(layer: Layer<any, any>): Model<T, K> {
         // Get the previous layer
-        if (this._layers.length == 0){
+        if (this._layers.length === 0) {
             // First layer
-            if (this.getPreviousLayer() != null){
+            if (this.getPreviousLayer() !== null) {
                 layer.setPreviousLayer(this.getPreviousLayer());
             }
-        }else{
-            let lastLayer = this._layers[this._layers.length - 1];
+        } else {
+            const lastLayer = this._layers[this._layers.length - 1];
             // Check the output type of the last layer
     
             lastLayer.setNextLayer(layer);
@@ -92,9 +92,9 @@ export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T, K>
      * Set the previous layer or model
      * @param prevLayer Previous layer or model
      */
-    public setPreviousLayer(prevLayer: Layer<any, T>) : void {
+    public setPreviousLayer(prevLayer: Layer<any, T>): void {
         super.setPreviousLayer(prevLayer);
-        if (this._layers.length != 0){
+        if (this._layers.length !== 0) {
             this._layers[0].setPreviousLayer(prevLayer);
         }
     }
@@ -103,10 +103,10 @@ export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T, K>
      * Get data service by data type
      * @param dataType Data type
      */
-    public getDataService<T>(dataType: { new (): T }) : DataService<T>{
-        if (this._services.has(dataType.name)){
+    public getDataService<D>(dataType: new () => D): DataService<D> {
+        if (this._services.has(dataType.name)) {
             return this._services.get(dataType.name);
-        }else{
+        } else {
             return null;
         }
     }
@@ -115,16 +115,16 @@ export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T, K>
      * Add data service to model
      * @param service Data service
      */
-    public addDataService(service: DataService<any>) : void {
-        this._services.set(null,service);
+    public addDataService(service: DataService<any>): void {
+        this._services.set(null, service);
     }
 
     /**
      * Remove data service from model
      * @param dataType Data type
      */
-    public removeDataService(dataType: { new (): any }) : void {
-        if (this._services.has(dataType.name)){
+    public removeDataService(dataType: new () => any): void {
+        if (this._services.has(dataType.name)) {
             this._services.delete(dataType.name);
         }
     }
@@ -132,7 +132,7 @@ export class Model<T extends DataFrame, K extends DataFrame> extends Layer<T, K>
     /**
      * Clear all layers in the model
      */
-    public clear() : Model<T, K> {
+    public clear(): Model<T, K> {
         this._layers = new Array<Layer<any, any>>();
         return this;
     }

@@ -13,21 +13,21 @@ export class Object {
     protected _relativeLocations: RelativeLocation[] = new Array();
     protected _shape: Shape;
 
-    constructor(id: string){
+    constructor(id: string) {
         this._id = id;
     }
 
     /**
      * Get the object identifier
      */
-    public getId() : string {
+    public getId(): string {
         return this._id;
     }
 
     /**
      * Get the object display name
      */
-    public getDisplayName() : string {
+    public getDisplayName(): string {
         return this._displayName;
     }
 
@@ -35,14 +35,14 @@ export class Object {
      * Set the display name of the object
      * @param displayName Object display name
      */
-    public setDisplayName(displayName: string) : void {
+    public setDisplayName(displayName: string): void {
         this._displayName = displayName;
     }
 
     /**
      * Get the absolute location of the object
      */
-    public getAbsoluteLocation() : AbsoluteLocation {
+    public getAbsoluteLocation(): AbsoluteLocation {
         return this._absoluteLocation;
     }
 
@@ -50,14 +50,14 @@ export class Object {
      * Set the absolute location of the object
      * @param absoluteLocation Absolute location of the object
      */
-    public setAbsoluteLocation(absoluteLocation: AbsoluteLocation) : void {
+    public setAbsoluteLocation(absoluteLocation: AbsoluteLocation): void {
         this._absoluteLocation = absoluteLocation;
     }
 
     /**
      * Get object shape
      */
-    public getShape() : Shape {
+    public getShape(): Shape {
         return this._shape;
     }
 
@@ -65,14 +65,14 @@ export class Object {
      * Set object shape
      * @param size Object shape
      */
-    public setShape(shape: Shape) : void {
+    public setShape(shape: Shape): void {
         this._shape = shape;
     }
 
     /**
      * Get relative locations
      */
-    public getRelativeLocations() : RelativeLocation[] {
+    public getRelativeLocations(): RelativeLocation[] {
         return this._relativeLocations;
     }
 }

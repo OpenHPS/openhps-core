@@ -1,9 +1,6 @@
 import { Shape } from "./Shape";
-import { LengthUnit } from "../unit/LengthUnit";
+import { SquareUnit } from "../unit/SquareUnit";
 
-export class Shape2D implements Shape {
-    private _x: number;
-    private _xUnit: LengthUnit;
-    private _y: number;
-    private _yUnit: LengthUnit;
+export interface Shape2D extends Shape {
+    getSquareSize(): number;
 }

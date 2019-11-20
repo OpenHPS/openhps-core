@@ -17,13 +17,13 @@ export abstract class DataFrame {
         this.parseJSON(json);
     }
 
-    public parseJSON(json: any){
+    public parseJSON(json: any) {
         let data = json;
-        if (typeof json == "string"){
+        if (typeof json === "string") {
             data = JSON.parse(json);
         }
         this._data = data;
-        if (this.getData().object != undefined){
+        if (this.getData().object !== undefined) {
             
         } 
     }
@@ -31,14 +31,14 @@ export abstract class DataFrame {
     /**
      * Get data frame data
      */
-    public getData() : any {
+    public getData(): any {
         return this._data;
     }
 
     /**
      * Get data frame timestamp (ISO 8601)
      */
-    public getTimestamp() : number {
+    public getTimestamp(): number {
         return this._timestamp;
     }
 
@@ -46,7 +46,7 @@ export abstract class DataFrame {
      * Set data frame timestamp (ISO 8601)
      * @param timestamp 
      */
-    public setTimestamp(timestamp: number) : void {
+    public setTimestamp(timestamp: number): void {
         this._timestamp = timestamp;
     }
 
@@ -70,6 +70,6 @@ export abstract class DataFrame {
      * @param object Object to remove
      */
     public removeObject(object: Object) {
-        this._objects.splice(this._objects.indexOf(object),1);
+        this._objects.splice(this._objects.indexOf(object), 1);
     }
 }

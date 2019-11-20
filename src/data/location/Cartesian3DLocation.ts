@@ -1,12 +1,12 @@
 import { Cartesian2DLocation } from "./Cartesian2DLocation";
 
-export class Cartesian3DLocation extends Cartesian2DLocation{
+export class Cartesian3DLocation extends Cartesian2DLocation {
     private _z: number;
 
     /**
      * Get Z coordinate
      */
-    public getZ() : number {
+    public getZ(): number {
         return this._z;
     }
 
@@ -14,7 +14,7 @@ export class Cartesian3DLocation extends Cartesian2DLocation{
      * Set Z coordinate
      * @param z Z coordinate
      */
-    public setZ(z: number) : void {
+    public setZ(z: number): void {
         this._z = z;
     }
 }

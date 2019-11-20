@@ -8,6 +8,5 @@ export class LoggerOutputLayer<T extends DataFrame> extends OutputLayer<T> {
         super(name);
         this._loggingFn = loggingFn;
     }
-
     
 }

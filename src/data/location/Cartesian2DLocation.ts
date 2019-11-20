@@ -1,13 +1,13 @@
 import { AbsoluteLocation } from "./AbsoluteLocation";
 
-export class Cartesian2DLocation extends AbsoluteLocation{
+export class Cartesian2DLocation extends AbsoluteLocation {
     private _x: number;
     private _y: number;
 
     /**
      * Get X coordinate
      */
-    public getX() : number {
+    public getX(): number {
         return this._x;
     }
 
@@ -15,14 +15,14 @@ export class Cartesian2DLocation extends AbsoluteLocation{
      * Set X coordinate
      * @param x X coordinate
      */
-    public setX(x: number) : void {
+    public setX(x: number): void {
         this._x = x;
     }
 
     /**
      * Get Y coordinate
      */
-    public getY() : number {
+    public getY(): number {
         return this._y;
     }
 
@@ -30,7 +30,7 @@ export class Cartesian2DLocation extends AbsoluteLocation{
      * Set Y coordinate
      * @param y Y coordinate
      */
-    public setY(y: number) : void {
+    public setY(y: number): void {
         this._y = y;
     }
 }

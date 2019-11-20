@@ -3,7 +3,7 @@ import { DataFrame } from "../../data";
 import { PushOptions } from "../PushOptions";
 import { PullOptions } from "../PullOptions";
 
-export class MemoryBufferLayer<T extends DataFrame, K extends DataFrame> extends BufferLayer<T,K> {
+export class MemoryBufferLayer<T extends DataFrame, K extends DataFrame> extends BufferLayer<T, K> {
     private _dataFrames: DataFrame[];
 
     constructor(name: string = "memorybuffer") {
@@ -15,8 +15,8 @@ export class MemoryBufferLayer<T extends DataFrame, K extends DataFrame> extends
      * @param data Input data
      * @param options Push options
      */
-    public push(data: T, options: PushOptions) : Promise<void> {
-        return new Promise<void>((resolve,reject) => {
+    public push(data: T, options: PushOptions): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
 
         });
     }
@@ -25,8 +25,8 @@ export class MemoryBufferLayer<T extends DataFrame, K extends DataFrame> extends
      * Pull the data from the previous layer and process it
      * @param options Pull options
      */
-    public pull(options: PullOptions) : Promise<K> {
-        return new Promise<K>((resolve,reject) => {
+    public pull(options: PullOptions): Promise<K> {
+        return new Promise<K>((resolve, reject) => {
 
         });
     }

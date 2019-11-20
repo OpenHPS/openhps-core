@@ -7,7 +7,7 @@ import { PullOptions } from "../PullOptions";
  * # OpenHPS: Output Layer
  * Output layer for storing data
  */
-export class OutputLayer<T extends DataFrame> extends Layer<T,T> {
+export class OutputLayer<T extends DataFrame> extends Layer<T, T> {
 
     constructor(name: string = "output") {
         super(name);
@@ -18,8 +18,8 @@ export class OutputLayer<T extends DataFrame> extends Layer<T,T> {
      * @param data Input data
      * @param options Push options
      */
-    public push(data: T, options: PushOptions) : Promise<void> {
-        return new Promise<void>((resolve,reject) => {
+    public push(data: T, options: PushOptions): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
             // Store the objects contained in the output to the managers
             data.getObjects().forEach(object => {
                 
@@ -31,8 +31,8 @@ export class OutputLayer<T extends DataFrame> extends Layer<T,T> {
      * Pull the data from the previous layer and output it
      * @param options Pull options
      */
-    public pull(options: PullOptions = PullOptions.DEFAULT) : Promise<T> {
-        return new Promise<T>((resolve,reject) => {
+    public pull(options: PullOptions = PullOptions.DEFAULT): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
             this.getPreviousLayer().pull(options).then(data => {
                 resolve(data);
             }).catch(ex => {

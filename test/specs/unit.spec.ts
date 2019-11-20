@@ -1,4 +1,4 @@
-import { MetricLengthUnit } from '../../src/data/unit';
+import { MetricLengthUnit, AngleUnit } from '../../src/data/unit';
 
 import { expect } from 'chai';
 import 'mocha';
@@ -38,5 +38,19 @@ describe('units', () => {
             });
 
         });
+    });
+
+    describe('angle', () => {
+
+        it('should convert from degrees to radians', () => {
+            const result = AngleUnit.DEGREES.convert(8594.366927, AngleUnit.RADIANS);
+            expect(result).to.equal(150.00000000065714);
+        });
+
+        it('should convert from radians to degrees', () => {
+            const result = AngleUnit.RADIANS.convert(2.617993878, AngleUnit.DEGREES);
+            expect(result).to.equal(150.00000000048735);
+        });
+
     });
 });

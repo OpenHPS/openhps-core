@@ -13,7 +13,7 @@ export class GeographicalLocation extends AbsoluteLocation {
     /**
      * Get latitude
      */
-    public getLatitude() : number {
+    public getLatitude(): number {
         return this._lat;
     }
 
@@ -21,14 +21,14 @@ export class GeographicalLocation extends AbsoluteLocation {
      * Set latitude
      * @param lat 
      */
-    public setLatitude(lat: number) : void {
+    public setLatitude(lat: number): void {
         this._lat = lat;
     }
 
     /**
      * Get longitude
      */
-    public getLongitude() : number {
+    public getLongitude(): number {
         return this._lng;
     }
 
@@ -36,14 +36,14 @@ export class GeographicalLocation extends AbsoluteLocation {
      * Set longitude
      * @param lng 
      */
-    public setLongitude(lng: number) : void {
+    public setLongitude(lng: number): void {
         this._lng = lng;
     }
 
     /**
      * Get the altitude in meters above mean sea level
      */
-    public getAltitude() : number {
+    public getAltitude(): number {
         return this._mamsl;
     }
 
@@ -51,7 +51,7 @@ export class GeographicalLocation extends AbsoluteLocation {
      * Set the altitude
      * @param mamsl Meters above mean sea level
      */
-    public setAltitude(mamsl: number) : void {
+    public setAltitude(mamsl: number): void {
         this._mamsl = mamsl;
     }
 
@@ -59,17 +59,16 @@ export class GeographicalLocation extends AbsoluteLocation {
      * Get the distance from this location to a destination
      * @param destination Destination location
      */
-    public distance(destination: GeographicalLocation) : number{
-        let R = 6371008;
-        let latRad_a = this.toRadians(this.getLatitude());
-        let latRad_b = this.toRadians(destination.getLatitude());
-        let Δlat = this.toRadians(destination.getLatitude()-this.getLatitude());
-        let Δlon = this.toRadians(destination.getLongitude()-this.getLongitude());
-        let a = Math.sin(Δlat/2) * Math.sin(Δlat/2) +
-                Math.cos(latRad_a) * Math.cos(latRad_b) *
-                Math.sin(Δlon/2) * Math.sin(Δlon/2);
-                let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        return R * c;
+    public distance(destination: GeographicalLocation): number {
+        const latRadA = this.toRadians(this.getLatitude());
+        const latRadB = this.toRadians(destination.getLatitude());
+        const Δlat = this.toRadians(destination.getLatitude() - this.getLatitude());
+        const Δlon = this.toRadians(destination.getLongitude() - this.getLongitude());
+        const a = Math.sin(Δlat / 2) * Math.sin(Δlat / 2) +
+                Math.cos(latRadA) * Math.cos(latRadB) *
+                Math.sin(Δlon / 2) * Math.sin(Δlon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return GeographicalLocation.EARTH_RADIUS * c;
     }
 
 
@@ -77,18 +76,18 @@ export class GeographicalLocation extends AbsoluteLocation {
      * Get the bearing in degrees from this location to a destination
      * @param destination Destination location
      */
-    public bearing(destination: GeographicalLocation) : number {
-        let lonRad_a = this.toRadians(this.getLongitude());
-        let latRad_a = this.toRadians(this.getLatitude());
-        let lonRad_b = this.toRadians(destination.getLongitude());
-        let latRad_b = this.toRadians(destination.getLatitude());
-        let y = Math.sin(lonRad_b-lonRad_a)*Math.cos(latRad_b);
-        let x = Math.cos(latRad_a) * Math.sin(latRad_b) -  Math.sin(latRad_a) * Math.cos(latRad_b) * Math.cos(lonRad_b - lonRad_a);
-        return this.toDegrees(Math.atan2(y,x));
+    public bearing(destination: GeographicalLocation): number {
+        const lonRadA = this.toRadians(this.getLongitude());
+        const latRadA = this.toRadians(this.getLatitude());
+        const lonRadB = this.toRadians(destination.getLongitude());
+        const latRadB = this.toRadians(destination.getLatitude());
+        const y = Math.sin(lonRadB - lonRadA) * Math.cos(latRadB);
+        const x = Math.cos(latRadA) * Math.sin(latRadB) -  Math.sin(latRadA) * Math.cos(latRadB) * Math.cos(lonRadB - lonRadA);
+        return this.toDegrees(Math.atan2(y, x));
     }
 
-    public getMidpointLocation(otherLocation: AbsoluteLocation) : Promise<AbsoluteLocation> {
-        return new Promise<AbsoluteLocation>((resolve,reject) => {
+    public getMidpointLocation(otherLocation: AbsoluteLocation): Promise<AbsoluteLocation> {
+        return new Promise<AbsoluteLocation>((resolve, reject) => {
        
         });
     }
@@ -96,9 +95,9 @@ export class GeographicalLocation extends AbsoluteLocation {
     /**
      * Convert the point to an ECR point (Earth Centered Rotational)
      */
-    public toECR() : number[] {
-        let point: number[] = new Array<number>();
-
+    public toECR(): number[] {
+        const point: number[] = new Array<number>();
+        point[0] = 1;
         return point;
     }
 
@@ -106,15 +105,15 @@ export class GeographicalLocation extends AbsoluteLocation {
      * Convert the ECR point to an absolute location
      * @param ecr Earth Centered Rotational
      */
-    public static fromECR(ecr: number[]) : AbsoluteLocation {
+    public static fromECR(ecr: number[]): AbsoluteLocation {
         return null;
     }
 
-    private toRadians(num: number) : number{
+    private toRadians(num: number): number {
         return num * (Math.PI / 180);
     }
 
-    private toDegrees(num: number) : number{
+    private toDegrees(num: number): number {
         return num * (180 / Math.PI);
     }
 }
