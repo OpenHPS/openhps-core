@@ -1,4 +1,4 @@
-import { Layer } from "../Layer";
+import { Layer } from "./Layer";
 import { DataFrame } from "../data/DataFrame";
 import { PushOptions } from "./PushOptions";
 import { PullOptions } from "./PullOptions";
