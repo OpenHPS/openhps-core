@@ -2,6 +2,7 @@ import { MetricLengthUnit, AngleUnit } from '../../src/data/unit';
 
 import { expect } from 'chai';
 import 'mocha';
+import { LengthUnit } from '../../src/data/unit/LengthUnit';
 
 describe('units', () => {
     describe('length', () => {
@@ -38,6 +39,22 @@ describe('units', () => {
             });
 
         });
+        describe('unspecified units', () => {
+
+            it('should convert from points to points', () => {
+                const result = LengthUnit.POINTS.convert(125, MetricLengthUnit.POINTS);
+                expect(result).to.equal(125);
+            });
+
+        });
+    });
+
+    describe('square', () => {
+
+    });
+
+    describe('volume', () => {
+
     });
 
     describe('angle', () => {

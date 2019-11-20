@@ -1,4 +1,5 @@
 import { AbsoluteLocation } from "./AbsoluteLocation";
+import { AngleUnit } from "../unit";
 
 /**
  * # OpenHPS: Geographical location
@@ -60,10 +61,10 @@ export class GeographicalLocation extends AbsoluteLocation {
      * @param destination Destination location
      */
     public distance(destination: GeographicalLocation): number {
-        const latRadA = this.toRadians(this.getLatitude());
-        const latRadB = this.toRadians(destination.getLatitude());
-        const Δlat = this.toRadians(destination.getLatitude() - this.getLatitude());
-        const Δlon = this.toRadians(destination.getLongitude() - this.getLongitude());
+        const latRadA = AngleUnit.DEGREES.convert(this.getLatitude(), AngleUnit.RADIANS);
+        const latRadB = AngleUnit.DEGREES.convert(destination.getLatitude(), AngleUnit.RADIANS);
+        const Δlat = AngleUnit.DEGREES.convert(destination.getLatitude() - this.getLatitude(), AngleUnit.RADIANS);
+        const Δlon = AngleUnit.DEGREES.convert(destination.getLongitude() - this.getLongitude(), AngleUnit.RADIANS);
         const a = Math.sin(Δlat / 2) * Math.sin(Δlat / 2) +
                 Math.cos(latRadA) * Math.cos(latRadB) *
                 Math.sin(Δlon / 2) * Math.sin(Δlon / 2);
@@ -77,13 +78,13 @@ export class GeographicalLocation extends AbsoluteLocation {
      * @param destination Destination location
      */
     public bearing(destination: GeographicalLocation): number {
-        const lonRadA = this.toRadians(this.getLongitude());
-        const latRadA = this.toRadians(this.getLatitude());
-        const lonRadB = this.toRadians(destination.getLongitude());
-        const latRadB = this.toRadians(destination.getLatitude());
+        const lonRadA = AngleUnit.DEGREES.convert(this.getLongitude(), AngleUnit.RADIANS);
+        const latRadA = AngleUnit.DEGREES.convert(this.getLatitude(), AngleUnit.RADIANS);
+        const lonRadB = AngleUnit.DEGREES.convert(destination.getLongitude(), AngleUnit.RADIANS);
+        const latRadB = AngleUnit.DEGREES.convert(destination.getLatitude(), AngleUnit.RADIANS);
         const y = Math.sin(lonRadB - lonRadA) * Math.cos(latRadB);
         const x = Math.cos(latRadA) * Math.sin(latRadB) -  Math.sin(latRadA) * Math.cos(latRadB) * Math.cos(lonRadB - lonRadA);
-        return this.toDegrees(Math.atan2(y, x));
+        return AngleUnit.RADIANS.convert(Math.atan2(y, x), AngleUnit.DEGREES);
     }
 
     public getMidpointLocation(otherLocation: AbsoluteLocation): Promise<AbsoluteLocation> {
@@ -107,13 +108,5 @@ export class GeographicalLocation extends AbsoluteLocation {
      */
     public static fromECR(ecr: number[]): AbsoluteLocation {
         return null;
-    }
-
-    private toRadians(num: number): number {
-        return num * (Math.PI / 180);
-    }
-
-    private toDegrees(num: number): number {
-        return num * (180 / Math.PI);
     }
 }

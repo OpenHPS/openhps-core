@@ -38,5 +38,24 @@
     "tslint": "^5.20.1",
     "typedoc": "^0.15.1",
     "typescript": "^3.7.2"
+  },
+  "nyc": {
+    "include": [
+      "src"
+    ],
+    "exclude": [
+      "test"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ],
+    "cache": true,
+    "all": true,
+    "check-coverage": true,
+    "report-dir": "./coverage"
   }
 }

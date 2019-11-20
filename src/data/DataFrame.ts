@@ -3,7 +3,7 @@ import { Object } from "./object";
 /**
  * # OpenHPS: Data frame
  */
-export abstract class DataFrame {
+export class DataFrame {
     private _timestamp: number;
     private _objects: Object[] = Array<Object>();
     private _data: any;
