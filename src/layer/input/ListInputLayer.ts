@@ -3,9 +3,9 @@ import { DataFrame } from "../../data";
 import { PullOptions } from "../PullOptions";
 
 export class ListInputLayer<T extends DataFrame> extends InputLayer<T> {
-    private _inputData: Array<T> = new Array<T>();
+    private _inputData: T[];
 
-    constructor(name: string = "list-input", inputData: Array<T>) {
+    constructor(name: string = "list-input", inputData: T[]) {
         super(name);
         this._inputData = inputData;
     }
