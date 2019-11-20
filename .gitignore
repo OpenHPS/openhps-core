@@ -4,3 +4,4 @@ dist/
 docs/
 coverage/
 artifacts/
+.nyc_output/
