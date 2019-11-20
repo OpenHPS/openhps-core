@@ -19,7 +19,7 @@ export class DefaultLayer<T extends DataFrame, K extends DataFrame> extends Laye
      */
     public push(data: T, options: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            reject(new LayerException(this._layer,"No next layer configured!"));
+            reject(new LayerException(this._layer, "No next layer configured!"));
         });
     }
 
@@ -29,7 +29,7 @@ export class DefaultLayer<T extends DataFrame, K extends DataFrame> extends Laye
      */
     public pull(options: PullOptions): Promise<K> {
         return new Promise<K>((resolve, reject) => {
-            reject(new LayerException(this._layer,"No previous layer configured!"));
+            reject(new LayerException(this._layer, "No previous layer configured!"));
         });
     }
 
