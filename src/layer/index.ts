@@ -1,4 +1,4 @@
-export { Layer } from './Layer';
+export * from './Layer';
 export * from './input';
 export * from './output';
 export * from './processing';

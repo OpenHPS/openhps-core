@@ -1,7 +1,7 @@
 import { AbsoluteLocation } from "./AbsoluteLocation";
 import { AngleUnit } from "../unit";
-import { ECRLocation } from "./ECRLocation";
 import { LengthUnit } from "../unit/LengthUnit";
+import { Cartesian3DLocation } from "./Cartesian3DLocation";
 
 /**
  * # OpenHPS: Geographical location
@@ -108,15 +108,25 @@ export class GeographicalLocation extends AbsoluteLocation {
     /**
      * Convert the point to an ECR point (Earth Centered Rotational)
      */
-    public toECR(): ECRLocation {
-        return new ECRLocation();
+    public toECR(): Cartesian3DLocation {
+        const ecr = new Cartesian3DLocation();
+        const phi = AngleUnit.DEGREES.convert(this.getLatitude(), AngleUnit.RADIANS);
+        const lambda = AngleUnit.DEGREES.convert(this.getLongitude(), AngleUnit.RADIANS);
+        // Convert ECR positions
+        ecr.setX(GeographicalLocation.EARTH_RADIUS * Math.cos(phi) * Math.cos(lambda));
+        ecr.setY(GeographicalLocation.EARTH_RADIUS * Math.cos(phi) * Math.sin(lambda));
+        ecr.setZ(GeographicalLocation.EARTH_RADIUS * Math.sin(phi));
+        return ecr;
     }
 
     /**
      * Convert the ECR point to an absolute location
      * @param ecrLocation Earth Centered Rotational
      */
-    public static fromECR(ecrLocation: ECRLocation): GeographicalLocation {
-        return ecrLocation.toGeoLocation();
+    public static fromECR(ecrLocation: Cartesian3DLocation): GeographicalLocation {
+        const geoLocation = new GeographicalLocation();
+        geoLocation.setLatitude(AngleUnit.RADIANS.convert(Math.asin(ecrLocation.getZ() / GeographicalLocation.EARTH_RADIUS), AngleUnit.DEGREES));
+        geoLocation.setLongitude(AngleUnit.RADIANS.convert(Math.atan2(ecrLocation.getY(), ecrLocation.getX()), AngleUnit.DEGREES));
+        return geoLocation;
     }
 }

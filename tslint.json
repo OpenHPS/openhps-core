@@ -1,5 +1,5 @@
 {
-    "extends": "tslint:latest",
+    "extends": ["tslint:latest", "tslint-no-circular-imports"],
     "rules": {
       "arrow-parens": false,
       "class-name": false,
