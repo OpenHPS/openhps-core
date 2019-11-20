@@ -1,4 +1,4 @@
-import { Object } from "./object";
+import { DataObject } from "./object";
 
 /**
  * # OpenHPS: Data frame
@@ -8,7 +8,7 @@ export class DataFrame {
     private _createdTimestamp: number;
     private _modifiedTimestamp: number;
     private _captureObject: Object;
-    private _objects: Object[] = Array<Object>();
+    private _objects: DataObject[] = Array<DataObject>();
     private _data: any;
 
     /**
@@ -104,7 +104,7 @@ export class DataFrame {
     /**
      * Get known objects used in this data frame
      */
-    public getObjects(): Object[] {
+    public getObjects(): DataObject[] {
         return this._objects;
     }
 
@@ -112,7 +112,7 @@ export class DataFrame {
      * Add a new object relevant to this data frame
      * @param object Relevant object
      */
-    public addObject(object: Object) {
+    public addObject(object: DataObject) {
         this._objects.push(object);
     }
 
@@ -120,7 +120,7 @@ export class DataFrame {
      * Remove an object from the data frame
      * @param object Object to remove
      */
-    public removeObject(object: Object) {
+    public removeObject(object: DataObject) {
         this._objects.splice(this._objects.indexOf(object), 1);
     }
 }

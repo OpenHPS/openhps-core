@@ -1,2 +1,2 @@
-export { Object } from './Object';
+export { DataObject } from './DataObject';
 export { Shape } from './Shape';

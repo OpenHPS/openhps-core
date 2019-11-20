@@ -2,11 +2,11 @@ import { AbsoluteLocation, RelativeLocation } from "../location";
 import { Shape } from "./Shape";
 
 /**
- * # OpenHPS: Object
+ * # OpenHPS: Data object
  * An object is an instance that can be anything ranging from a person or asset to
  * a more abstract object such as a Wi-Fi access point or room.
  */
-export class Object {
+export class DataObject {
     protected _id: string;
     protected _displayName: string;
     protected _absoluteLocation: AbsoluteLocation;
