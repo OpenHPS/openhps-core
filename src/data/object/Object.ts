@@ -12,6 +12,7 @@ export class Object {
     protected _absoluteLocation: AbsoluteLocation;
     protected _relativeLocations: RelativeLocation[] = new Array();
     protected _shape: Shape;
+    protected _connectedObjects: Object[];
 
     constructor(id: string) {
         this._id = id;

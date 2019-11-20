@@ -7,6 +7,7 @@ export class DataFrame {
     private _captureTimestamp: number;
     private _createdTimestamp: number;
     private _modifiedTimestamp: number;
+    private _captureObject: Object;
     private _objects: Object[] = Array<Object>();
     private _data: any;
 
@@ -31,6 +32,21 @@ export class DataFrame {
         if (this.getData().object !== undefined) {
             
         } 
+    }
+
+    /**
+     * Get the object that captured the data frame
+     */
+    public getCaptureObject(): Object {
+        return this._captureObject;
+    }
+
+    /**
+     * Set the object that captured the data frame
+     * @param captureObject Object that captured the data frame
+     */
+    public setCaptureObject(captureObject: Object): void {
+        this._captureObject = captureObject;
     }
 
     /**
