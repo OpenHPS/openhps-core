@@ -2,6 +2,7 @@ import { Model } from "../Model";
 import { DataFrame } from "../data/DataFrame";
 import { PullOptions } from "./PullOptions";
 import { PushOptions } from "./PushOptions";
+import { DefaultLayer } from "./DefaultLayer";
 
 /**
  * # OpenHPS: Layer
@@ -10,8 +11,8 @@ import { PushOptions } from "./PushOptions";
 export abstract class Layer<T extends DataFrame, K extends DataFrame> {
     private _name: string;
     private _model: Model<any, any>;
-    private _prevLayer: Layer<any, T>;
-    private _nextLayer: Layer<K, any>;
+    private _prevLayer: Layer<any, T> = new DefaultLayer<any, T>();
+    private _nextLayer: Layer<K, any> = new DefaultLayer<K, any>();
 
     /**
      * Create a new layer

@@ -17,12 +17,24 @@ export class RelativeLocation extends Location {
     }
 
     /**
-     * Get distance
+     * Get distance to reference object
      */
     public getDistance(): number {
         return this._distance;
     }
 
+    /**
+     * Get distance unit
+     */
+    public getDistanceUnit(): LengthUnit {
+        return this._distanceUnit;
+    }
+
+    /**
+     * Set distance to reference object
+     * @param distance Distance to reference object
+     * @param unit Length unit
+     */
     public setDistance(distance: number, unit: LengthUnit): void {
         this._distance = distance;
         this._distanceUnit = unit;

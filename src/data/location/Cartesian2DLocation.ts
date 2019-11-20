@@ -4,6 +4,13 @@ export class Cartesian2DLocation extends AbsoluteLocation {
     private _x: number;
     private _y: number;
 
+    constructor();
+    constructor(x?: number, y?: number) {
+        super();
+        this.setX(x);
+        this.setY(y);
+    }
+
     /**
      * Get X coordinate
      */
@@ -32,5 +39,9 @@ export class Cartesian2DLocation extends AbsoluteLocation {
      */
     public setY(y: number): void {
         this._y = y;
+    }
+
+    public getPoint(): number[] {
+        return [this.getX(), this.getY()];
     }
 }

@@ -1,5 +1,7 @@
 import { AbsoluteLocation } from "./AbsoluteLocation";
 import { AngleUnit } from "../unit";
+import { ECRLocation } from "./ECRLocation";
+import { LengthUnit } from "../unit/LengthUnit";
 
 /**
  * # OpenHPS: Geographical location
@@ -7,9 +9,10 @@ import { AngleUnit } from "../unit";
 export class GeographicalLocation extends AbsoluteLocation {
     protected _lat: number;
     protected _lng: number;
-    protected _mamsl: number;
+    protected _amsl: number;
+    protected _amslUnit: LengthUnit;
 
-    protected static EARTH_RADIUS: number = 6371008; 
+    public static EARTH_RADIUS: number = 6371008; 
 
     /**
      * Get latitude
@@ -42,18 +45,27 @@ export class GeographicalLocation extends AbsoluteLocation {
     }
 
     /**
-     * Get the altitude in meters above mean sea level
+     * Get the altitude above mean sea level
      */
     public getAltitude(): number {
-        return this._mamsl;
+        return this._amsl;
+    }
+
+    /**
+     * Get altitude unit
+     */
+    public getAltitudeUnit(): LengthUnit {
+        return this._amslUnit;
     }
 
     /**
      * Set the altitude
-     * @param mamsl Meters above mean sea level
+     * @param mamsl Above mean sea level
+     * @param unit Length unit
      */
-    public setAltitude(mamsl: number): void {
-        this._mamsl = mamsl;
+    public setAltitude(amsl: number, unit: LengthUnit): void {
+        this._amsl = amsl;
+        this._amslUnit = unit;
     }
 
     /**
@@ -87,8 +99,8 @@ export class GeographicalLocation extends AbsoluteLocation {
         return AngleUnit.RADIANS.convert(Math.atan2(y, x), AngleUnit.DEGREES);
     }
 
-    public getMidpointLocation(otherLocation: AbsoluteLocation): Promise<AbsoluteLocation> {
-        return new Promise<AbsoluteLocation>((resolve, reject) => {
+    public getMidpointLocation(otherLocation: GeographicalLocation): Promise<GeographicalLocation> {
+        return new Promise<GeographicalLocation>((resolve, reject) => {
        
         });
     }
@@ -96,17 +108,15 @@ export class GeographicalLocation extends AbsoluteLocation {
     /**
      * Convert the point to an ECR point (Earth Centered Rotational)
      */
-    public toECR(): number[] {
-        const point: number[] = new Array<number>();
-        point[0] = 1;
-        return point;
+    public toECR(): ECRLocation {
+        return new ECRLocation();
     }
 
     /**
      * Convert the ECR point to an absolute location
-     * @param ecr Earth Centered Rotational
+     * @param ecrLocation Earth Centered Rotational
      */
-    public static fromECR(ecr: number[]): AbsoluteLocation {
-        return null;
+    public static fromECR(ecrLocation: ECRLocation): GeographicalLocation {
+        return ecrLocation.toGeoLocation();
     }
 }

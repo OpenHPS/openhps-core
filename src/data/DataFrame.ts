@@ -4,7 +4,9 @@ import { Object } from "./object";
  * # OpenHPS: Data frame
  */
 export class DataFrame {
-    private _timestamp: number;
+    private _captureTimestamp: number;
+    private _createdTimestamp: number;
+    private _modifiedTimestamp: number;
     private _objects: Object[] = Array<Object>();
     private _data: any;
 
@@ -13,7 +15,10 @@ export class DataFrame {
      * @param json Optional JSON to parse from
      */
     constructor(json: any = null) {
-        this.setTimestamp(Date.now());
+        const timestamp = Date.now();
+        this.setCaptureTimestamp(timestamp);
+        this.setCreatedTimestamp(timestamp);
+        this.setModifiedTimestamp(timestamp);
         this.parseJSON(json);
     }
 
@@ -36,18 +41,48 @@ export class DataFrame {
     }
 
     /**
-     * Get data frame timestamp (ISO 8601)
+     * Get data frame capture timestamp (ISO 8601)
      */
-    public getTimestamp(): number {
-        return this._timestamp;
+    public getCaptureTimestamp(): number {
+        return this._captureTimestamp;
     }
 
     /**
-     * Set data frame timestamp (ISO 8601)
+     * Set data frame capture timestamp (ISO 8601)
      * @param timestamp 
      */
-    public setTimestamp(timestamp: number): void {
-        this._timestamp = timestamp;
+    public setCaptureTimestamp(timestamp: number): void {
+        this._captureTimestamp = timestamp;
+    }
+
+    /**
+     * Set data frame created timestamp (ISO 8601)
+     * @param timestamp 
+     */
+    public setCreatedTimestamp(timestamp: number): void {
+        this._createdTimestamp = timestamp;
+    }
+
+    /**
+     * Get data frame created timestamp (ISO 8601)
+     */
+    public getCreatedTimestamp(): number {
+        return this._createdTimestamp;
+    }
+    
+    /**
+     * Set data frame modified timestamp (ISO 8601)
+     * @param timestamp 
+     */
+    public setModifiedTimestamp(timestamp: number): void {
+        this._modifiedTimestamp = timestamp;
+    }
+
+    /**
+     * Get data frame modified timestamp (ISO 8601)
+     */
+    public getModifiedTimestamp(): number {
+        return this._modifiedTimestamp;
     }
 
     /**
