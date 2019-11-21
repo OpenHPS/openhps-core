@@ -9,7 +9,6 @@ export class DataFrame {
     private _modifiedTimestamp: number;
     private _captureObject: Object;
     private _objects: DataObject[] = Array<DataObject>();
-    private _data: any;
 
     /**
      * Create a new data frame
@@ -31,8 +30,7 @@ export class DataFrame {
         if (typeof json === "string") {
             data = JSON.parse(json);
         }
-        this._data = data;
-        if (this.getData().object !== undefined) {
+        if (data.object !== undefined) {
             
         } 
     }
@@ -50,13 +48,6 @@ export class DataFrame {
      */
     public setCaptureObject(captureObject: Object): void {
         this._captureObject = captureObject;
-    }
-
-    /**
-     * Get data frame data
-     */
-    public getData(): any {
-        return this._data;
     }
 
     /**

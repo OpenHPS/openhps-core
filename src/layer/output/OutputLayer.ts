@@ -24,6 +24,8 @@ export class OutputLayer<T extends DataFrame> extends Layer<T, T> {
             data.getObjects().forEach(object => {
                 
             });
+
+            resolve();
         });
     }
 
