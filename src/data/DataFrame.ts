@@ -24,6 +24,9 @@ export class DataFrame {
     }
 
     public parseJSON(json: any) {
+        if (json == null) {
+            return;
+        }
         let data = json;
         if (typeof json === "string") {
             data = JSON.parse(json);
