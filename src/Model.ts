@@ -1,6 +1,4 @@
 import { DataFrame } from "./data";
-import { PushOptions } from "./layer/PushOptions";
-import { PullOptions } from "./layer/PullOptions";
 import { DataService } from "./service";
 import { LayerContainer } from "./layer";
 

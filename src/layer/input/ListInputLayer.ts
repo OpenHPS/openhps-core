@@ -1,6 +1,6 @@
 import { InputLayer } from "./InputLayer";
 import { DataFrame } from "../../data";
-import { PullOptions } from "../PullOptions";
+import { PullOptions } from "../";
 
 export class ListInputLayer<T extends DataFrame> extends InputLayer<T> {
     private _inputData: T[];

@@ -1,24 +1,15 @@
-import { Layer } from "../Layer";
 import { DataFrame } from "../../data";
-import { PushOptions } from "../PushOptions";
-import { PullOptions } from "../PullOptions";
+import { DataOptions } from "../DataOptions";
+import { ProcessingLayer } from "./ProcessingLayer";
 
-export class NoiseFilterLayer<T extends DataFrame, K extends DataFrame> extends Layer<T, K> {
+export class NoiseFilterLayer<T extends DataFrame, K extends DataFrame> extends ProcessingLayer<T, K> {
     
     /**
-     * Push the data to the layer
-     * @param data Input data
-     * @param options Push options
+     * Process the data that was pushed or pulled from this layer
+     * @param data Data frame
+     * @param options Push/Pull options
      */
-    public push(data: T, options: PushOptions): Promise<void> {
-        return null;
-    }
-
-    /**
-     * Pull the data from the previous layer and process it
-     * @param options Pull options
-     */
-    public pull(options: PullOptions): Promise<K> {
+    public process(data: T, options: DataOptions): Promise<K> {
         return null;
     }
 

@@ -1,7 +1,6 @@
 import { Layer } from "../Layer";
 import { DataFrame } from "../../data/DataFrame";
-import { PushOptions } from "../PushOptions";
-import { PullOptions } from "../PullOptions";
+import { PullOptions, PushOptions } from "../";
 
 /**
  * # OpenHPS: Output Layer
