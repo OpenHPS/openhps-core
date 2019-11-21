@@ -1,9 +1,9 @@
+import { DataOptions } from "./DataOptions";
+
 /**
  * # OpenHPS: Pull options
  */
-export class PullOptions {
+export class PullOptions extends DataOptions{
     public static DEFAULT = new PullOptions();
     oid: string;
-    process: boolean = true;
-    batchSize: number = 1;
 }
