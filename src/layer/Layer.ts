@@ -128,18 +128,45 @@ export abstract class LayerContainer<T extends DataFrame, K extends DataFrame> e
         super(name);
     }
 
+
     /**
-     * Push the data to the container
+     * Push the data to the model
      * @param data Input data
      * @param options Push options
      */
-    public abstract push(data: T, options: PushOptions): Promise<void>;
+    public push(data: T, options: PushOptions = PushOptions.DEFAULT): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            // Push the data to the first layer in the container
+            const firstLayer = this.getLayers()[0];
+            if (firstLayer === null) {
+                throw new Error(`No layers added to the container '${this.getName()}'!`);
+            }
+            firstLayer.push(data, options).then(result => {
+                resolve(result);
+            }).catch(ex => {
+                reject(ex);
+            });
+        });
+    }
 
     /**
-     * Pull the data from the last layer in the container
+     * Pull the data from the last layer in the model
      * @param options Pull options
      */
-    public abstract pull(options: PullOptions): Promise<K>;
+    public pull(options: PullOptions = PullOptions.DEFAULT): Promise<K> {
+        return new Promise<K>((resolve, reject) => {
+            // Pull the data from the last layer in the container
+            const lastLayer = this.getLayers()[this.getLayers().length - 1];
+            if (lastLayer === null) {
+                throw new Error(`No layers added to the container '${this.getName()}'!`);
+            }
+            lastLayer.pull(options).then(result => {
+                resolve(result);
+            }).catch(ex => {
+                reject(ex);
+            });
+        });
+    }
 
     /**
      * Add a new layer to the model

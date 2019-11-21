@@ -20,45 +20,6 @@ export class Model<T extends DataFrame, K extends DataFrame> extends LayerContai
     }
 
     /**
-     * Push the data to the model
-     * @param data Input data
-     * @param options Push options
-     */
-    public push(data: T, options: PushOptions = PushOptions.DEFAULT): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            // Push the data to the first layer in the model
-            const firstLayer = this.getLayers()[0];
-            if (firstLayer === null) {
-                throw new Error(`No layers added to the model '${this.getName()}'!`);
-            }
-            firstLayer.push(data, options).then(result => {
-                resolve(result);
-            }).catch(ex => {
-                reject(ex);
-            });
-        });
-    }
-
-    /**
-     * Pull the data from the last layer in the model
-     * @param options Pull options
-     */
-    public pull(options: PullOptions = PullOptions.DEFAULT): Promise<K> {
-        return new Promise<K>((resolve, reject) => {
-            // Pull the data from the last layer in the model
-            const lastLayer = this.getLayers()[this.getLayers().length - 1];
-            if (lastLayer === null) {
-                throw new Error(`No layers added to the model '${this.getName()}'!`);
-            }
-            lastLayer.pull(options).then(result => {
-                resolve(result);
-            }).catch(ex => {
-                reject(ex);
-            });
-        });
-    }
-
-    /**
      * Get data service by data type
      * @param dataType Data type
      */
