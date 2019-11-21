@@ -48,6 +48,11 @@ export abstract class ProcessingLayer<T extends DataFrame, K extends DataFrame> 
         });
     }
 
+    /**
+     * Process the data that was pushed or pulled from this layer
+     * @param data Data frame
+     * @param options Push/Pull options
+     */
     public abstract process(data: T, options: DataOptions): Promise<K>;
 
 }
