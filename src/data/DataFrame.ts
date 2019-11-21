@@ -1,4 +1,4 @@
-import { DataObject } from "./object";
+import { DataObject, DataObjectCategory } from "./object";
 
 /**
  * # OpenHPS: Data frame
@@ -8,7 +8,8 @@ export class DataFrame {
     private _createdTimestamp: number;
     private _modifiedTimestamp: number;
     private _captureObject: Object;
-    private _objects: DataObject[] = Array<DataObject>();
+    private _categoryObjectsMap: Map<DataObjectCategory, DataObject[]> = new Map();
+    private _objects: DataObject[] = new Array<DataObject>();
 
     /**
      * Create a new data frame
@@ -98,15 +99,27 @@ export class DataFrame {
     /**
      * Get known objects used in this data frame
      */
-    public getObjects(): DataObject[] {
-        return this._objects;
+    public getObjects(category?: DataObjectCategory): DataObject[] {
+        if (category) {
+            return this._categoryObjectsMap.get(category);
+        } else {
+            return this._objects;
+        }
     }
 
     /**
      * Add a new object relevant to this data frame
      * @param object Relevant object
      */
-    public addObject(object: DataObject) {
+    public addObject(object: DataObject): void {
+        if (this._categoryObjectsMap.has(object.getCategory())) {
+            const categoryObjects = this._categoryObjectsMap.get(object.getCategory());
+            categoryObjects.push(object);
+        } else {
+            const categoryObjects = new Array<DataObject>();
+            categoryObjects.push(object);
+            this._categoryObjectsMap.set(object.getCategory(), categoryObjects);
+        }
         this._objects.push(object);
     }
 
@@ -114,7 +127,9 @@ export class DataFrame {
      * Remove an object from the data frame
      * @param object Object to remove
      */
-    public removeObject(object: DataObject) {
+    public removeObject(object: DataObject): void {
         this._objects.splice(this._objects.indexOf(object), 1);
+        const categoryObjects = this._categoryObjectsMap.get(object.getCategory());
+        categoryObjects.splice(categoryObjects.indexOf(object), 1);
     }
 }

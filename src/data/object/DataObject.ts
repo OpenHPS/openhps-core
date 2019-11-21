@@ -1,5 +1,6 @@
 import { AbsoluteLocation, RelativeLocation } from "../location";
 import { Shape } from "./Shape";
+import { DataObjectCategory } from "./DataObjectCategory";
 
 /**
  * # OpenHPS: Data object
@@ -13,6 +14,7 @@ export class DataObject {
     protected _relativeLocations: RelativeLocation[] = new Array();
     protected _shape: Shape;
     protected _connectedObjects: Object[];
+    protected _category: DataObjectCategory = DataObjectCategory.DEFAULT;
 
     constructor(id: string = null) {
         this._id = id;
@@ -75,5 +77,20 @@ export class DataObject {
      */
     public getRelativeLocations(): RelativeLocation[] {
         return this._relativeLocations;
+    }
+
+    /**
+     * Get object category
+     */
+    public getCategory(): DataObjectCategory {
+        return this._category;
+    }
+
+    /**
+     * Set object category
+     * @param category Data object category
+     */
+    public setCategory(category: DataObjectCategory): void {
+        this._category = category;
     }
 }
