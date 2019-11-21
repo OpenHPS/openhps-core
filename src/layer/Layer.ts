@@ -1,5 +1,5 @@
 import { DataFrame } from "../data/DataFrame";
-import { PushOptions, PullOptions } from "./";
+import { PushOptions, PullOptions } from "./DataOptions";
 import { LayerException } from "../exceptions";
 
 /**

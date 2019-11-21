@@ -1,6 +1,6 @@
 import { DataFrame } from "../../data";
 import { Layer } from "../Layer";
-import { PullOptions, PushOptions } from "../";
+import { PullOptions, PushOptions } from "../DataOptions";
 
 export abstract class BufferLayer<T extends DataFrame, K extends DataFrame> extends Layer<T, K> {
 

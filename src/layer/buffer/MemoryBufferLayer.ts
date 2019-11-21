@@ -1,6 +1,6 @@
 import { BufferLayer } from "./BufferLayer";
 import { DataFrame } from "../../data";
-import { PullOptions, PushOptions } from "../";
+import { PullOptions, PushOptions } from "../DataOptions";
 
 export class MemoryBufferLayer<T extends DataFrame, K extends DataFrame> extends BufferLayer<T, K> {
     private _dataFrames: DataFrame[];
