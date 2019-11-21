@@ -2,6 +2,12 @@
   "name": "@openhps/core",
   "version": "0.1.0",
   "description": "Open Hybrid Positioning System",
+  "author": "Maxim Van de Wynckel",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.wise.vub.ac.be/mvdewync/openhps-core.git#master"
+  },
   "main": "dist/index.js",
   "scripts": {
     "test": "mocha",
@@ -21,8 +27,6 @@
     "positioning",
     "system"
   ],
-  "author": "Maxim Van de Wynckel",
-  "license": "Apache-2.0",
   "dependencies": {
     "mathjs": "^6.2.1"
   },
@@ -30,6 +34,7 @@
     "@types/chai": "^4.2.5",
     "@types/mathjs": "^6.0.2",
     "@types/mocha": "^5.2.7",
+    "@types/node": "^12.12.11",
     "chai": "^4.2.0",
     "jenkins-mocha": "^8.0.0",
     "mocha": "^6.2.2",

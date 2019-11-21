@@ -10,16 +10,18 @@ import { LayerException } from "../exceptions";
 export abstract class Layer<T extends DataFrame, K extends DataFrame> {
     private _name: string;
     private _parent: LayerContainer<any, any>;
-    private _prevLayer: Layer<any, T> = new DefaultLayer<any, T>();
-    private _nextLayer: Layer<K, any> = new DefaultLayer<K, any>();
+    private _prevLayer: Layer<any, T>;
+    private _nextLayer: Layer<K, any>;
 
     /**
      * Create a new layer
      * @param name Layer name
      * @param flowType Layer in and out flow type
      */
-    constructor(name: string = "default") {
+    constructor(name: string = "default", prevLayer: Layer<any, T> = new DefaultLayer<any, T>(), nextLayer: Layer<K, any> = new DefaultLayer<K, any>()) {
         this._name = name;
+        this._prevLayer = prevLayer;
+        this._nextLayer = nextLayer;
     }
 
     /**
@@ -87,11 +89,12 @@ export abstract class Layer<T extends DataFrame, K extends DataFrame> {
         this._nextLayer = nextLayer;
     }
 }
+
 export class DefaultLayer<T extends DataFrame, K extends DataFrame> extends Layer<T, K> {
     private _layer: Layer<any, any>;
 
     constructor(name: string = "default", layer?: Layer<any, any>) {
-        super(name);
+        super(name, null, null);
         this._layer = layer;
     }
 
@@ -117,6 +120,7 @@ export class DefaultLayer<T extends DataFrame, K extends DataFrame> extends Laye
     }
 
 }
+
 export abstract class LayerContainer<T extends DataFrame, K extends DataFrame> extends Layer<T, K> {
     private _layers: Array<Layer<any, any>> = new Array<Layer<any, any>>();
 
