@@ -14,7 +14,7 @@ export class DataObject {
     protected _shape: Shape;
     protected _connectedObjects: Object[];
 
-    constructor(id: string) {
+    constructor(id: string = null) {
         this._id = id;
     }
 
