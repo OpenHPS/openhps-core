@@ -10,11 +10,6 @@ import { LayerContainer } from "./layer";
  * 
  * ## Usage
  * ```typescript
- * let model = new Model<...,...>();
- * model.addLayer(...);
- * model.process(...).then(result => {
- *  ...
- * });
  * ```
  */
 export class Model<T extends DataFrame, K extends DataFrame> extends LayerContainer<T, K> {
