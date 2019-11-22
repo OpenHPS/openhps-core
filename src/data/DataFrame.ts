@@ -97,6 +97,13 @@ export class DataFrame {
     }
 
     /**
+     * Update the modified timestamp
+     */
+    public updateModifiedTimestamp(): void {
+        this._modifiedTimestamp = Date.now();
+    }
+
+    /**
      * Get known objects used in this data frame
      */
     public getObjects(category?: DataObjectCategory): DataObject[] {
