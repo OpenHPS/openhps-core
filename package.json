@@ -10,9 +10,9 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "nyc mocha",
     "test:jenkins": "jenkins-mocha",
-    "coverage": "nyc mocha",
+    "coverage": "nyc report --reporter=cobertura",
     "lint": "tslint -c tslint.json --project tsconfig.json",
     "clean": "node ./scripts/clean.js",
     "build": "npm run clean && npm run build:typescript && npm run build:typedoc",
