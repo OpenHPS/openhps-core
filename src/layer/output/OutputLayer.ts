@@ -1,12 +1,12 @@
-import { Layer } from "../Layer";
 import { DataFrame } from "../../data/DataFrame";
-import { PullOptions, PushOptions } from "../DataOptions";
+import { PushOptions, DataOptions } from "../DataOptions";
+import { ProcessingLayer } from "../processing";
 
 /**
  * # OpenHPS: Output Layer
  * Output layer for storing data
  */
-export class OutputLayer<T extends DataFrame> extends Layer<T, T> {
+export class OutputLayer<T extends DataFrame> extends ProcessingLayer<T, T> {
 
     constructor(name: string = "output") {
         super(name);
@@ -19,25 +19,37 @@ export class OutputLayer<T extends DataFrame> extends Layer<T, T> {
      */
     public push(data: T, options: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            // Store the objects contained in the output to the managers
-            data.getObjects().forEach(object => {
-                
+            this.process(data, options).then(result => {
+                resolve(); // Sink, do not push to next layer
+            }).catch(ex => {
+                reject(ex);
             });
-
-            resolve();
         });
     }
 
     /**
-     * Pull the data from the previous layer and output it
-     * @param options Pull options
+     * Process the data that was pushed or pulled from this layer
+     * @param data Data frame
+     * @param options Push/Pull options
      */
-    public pull(options: PullOptions = PullOptions.DEFAULT): Promise<T> {
+    public process(data: T, options: DataOptions): Promise<T> {
         return new Promise<T>((resolve, reject) => {
-            this.getPreviousLayer().pull(options).then(data => {
-                resolve(data);
-            }).catch(ex => {
-                reject(ex);
+            data.getObjects().forEach(object => {
+                // @ts-ignore
+                const service = this.getParent().getDataServiceByObject(object);
+                if (object.getId() !== null) {
+                    service.update(object).then((_: void) => {
+                        resolve();
+                    }).catch((ex: any) => {
+                        reject(ex);
+                    });
+                } else {
+                    service.create(object).then((_: void) => {
+                        resolve();
+                    }).catch((ex: any) => {
+                        reject(ex);
+                    });
+                }
             });
         });
     }

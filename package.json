@@ -46,6 +46,10 @@
     "typescript": "^3.7.2"
   },
   "nyc": {
+    "branches": 20,
+    "lines": 20,
+    "functions": 20,
+    "statements": 20,
     "include": [
       "src"
     ],

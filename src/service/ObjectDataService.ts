@@ -10,8 +10,7 @@ export class ObjectDataService extends DataService<DataObject> {
     protected _objects: Map<string, DataObject> = new Map();
 
     constructor() {
-        super();
-   //     this.setType(Object);
+        super(DataObject);
     }
 
     public findById(id: string): Promise<DataObject> {
@@ -19,24 +18,25 @@ export class ObjectDataService extends DataService<DataObject> {
             if (this._objects.has(id)) {
                 resolve(this._objects.get(id));
             } else {
-                resolve(null);
+                reject();
             }
         });
     }
 
     public findAll(): Promise<DataObject[]> {
         return new Promise<DataObject[]>((resolve, reject) => {
-
+            resolve(Array.from(this._objects.values()));
         });
     }
 
     public create(object: DataObject): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
             if (this._objects.has(object.getId())) {
-                // Update existing data
+                reject();
             } else {
                 // Insert new object
                 this._objects.set(object.getId(), object);
+                resolve(object);
             }
         });
     }
@@ -45,13 +45,32 @@ export class ObjectDataService extends DataService<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
             if (this._objects.has(object.getId())) {
                 // Update existing data
+                if (this._objects.has(object.getId())) {
+                    // Update existing data
+                    this._objects.set(object.getId(), object);
+                    resolve(object);
+                } else {
+                   reject();
+                }
             }
         });
     }
 
-    public delete(object: DataObject): Promise<void> {
+    public delete(id: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
+            if (this._objects.has(id)) {
+                this._objects.delete(id);
+                resolve();
+            } else {
+                reject();
+            }
+        });
+    }
 
+    public deleteAll(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this._objects = new Map();
+            resolve();
         });
     }
 }
