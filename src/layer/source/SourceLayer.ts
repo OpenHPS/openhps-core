@@ -3,10 +3,10 @@ import { DataFrame } from "../../data/DataFrame";
 import { PullOptions, PushOptions } from "../DataOptions";
 
 /**
- * # OpenHPS: Input Layer
- * Input layer for predicing and processing data
+ * # OpenHPS: Source layer
+ * Input source layer for predicing and processing data
  */
-export abstract class InputLayer<T extends DataFrame> extends Layer<T, T> {
+export abstract class SourceLayer<T extends DataFrame> extends Layer<T, T> {
 
     constructor(name: string = "input") {
         super(name);
@@ -19,7 +19,7 @@ export abstract class InputLayer<T extends DataFrame> extends Layer<T, T> {
      */
     public push(data: T, options: PushOptions = PushOptions.DEFAULT): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this.getNextLayer().push(data, options).then(_ => {
+            this.getInputLayer().push(data, options).then(_ => {
                 resolve();
             }).catch(ex => {
                 reject(ex);

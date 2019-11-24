@@ -5,14 +5,11 @@ import 'mocha';
 
 describe('data object', () => {
     describe('service', () => {
-        var model: Model<DataFrame,DataFrame>;
         var objectDataService: ObjectDataService;
 
         before((done) => {
-            model = new Model();
-            model.addLayer(new OutputLayer());
-            objectDataService = model.getDataService(DataObject);
-            var object = new DataObject("1");
+            objectDataService = new ObjectDataService();
+            var object = new DataObject(null);
             object.setDisplayName("Test");
             objectDataService.create(object).then(savedObject => {
                 done();
@@ -54,6 +51,36 @@ describe('data object', () => {
         it('should find all items', () => {
             objectDataService.findAll().then(objects => {
                 expect(objects.length).to.be.gte(1);
+            });
+        });
+
+    });
+    describe('output layer', () => {
+        var model: Model<DataFrame,DataFrame>;
+        var objectDataService: ObjectDataService;
+        
+        before((done) => {
+            model = new Model();
+            model.addLayer(new OutputLayer());
+            objectDataService = model.getDataService(DataObject);
+            done();
+        });
+
+        it('should store objects at the output layer', (done) => {
+            var object = new DataObject("1");
+            object.setDisplayName("Test");
+            var frame = new DataFrame();
+            frame.addObject(object);
+            model.push(frame).then(_ => {
+                // Check if it is stored
+                objectDataService.findById("1").then(object => {
+                    expect(object.getDisplayName()).to.equal("Test");
+                    done();
+                }).catch(ex => {
+                    done(ex);
+                });
+            }).catch(ex => {
+                done(ex);
             });
         });
 

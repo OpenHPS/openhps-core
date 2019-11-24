@@ -43,15 +43,13 @@ export class ObjectDataService extends DataService<DataObject> {
 
     public update(object: DataObject): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
+            // Update existing data
             if (this._objects.has(object.getId())) {
                 // Update existing data
-                if (this._objects.has(object.getId())) {
-                    // Update existing data
-                    this._objects.set(object.getId(), object);
-                    resolve(object);
-                } else {
-                   reject();
-                }
+                this._objects.set(object.getId(), object);
+                resolve(object);
+            } else {
+                reject();
             }
         });
     }

@@ -33,24 +33,18 @@ export class OutputLayer<T extends DataFrame> extends ProcessingLayer<T, T> {
      * @param options Push/Pull options
      */
     public process(data: T, options: DataOptions): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
-            data.getObjects().forEach(object => {
+        return new Promise<T>(async (resolve, reject) => {
+            for (let i = 0 ; i < data.getObjects().length ; i++) {
+                const object = data.getObjects()[i]; 
                 // @ts-ignore
                 const service = this.getParent().getDataServiceByObject(object);
                 if (object.getId() !== null) {
-                    service.update(object).then((_: void) => {
-                        resolve();
-                    }).catch((ex: any) => {
-                        reject(ex);
-                    });
+                   await service.update(object);
                 } else {
-                    service.create(object).then((_: void) => {
-                        resolve();
-                    }).catch((ex: any) => {
-                        reject(ex);
-                    });
+                   await service.create(object);
                 }
-            });
+            }
+            resolve();
         });
     }
 

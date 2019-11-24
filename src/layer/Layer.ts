@@ -9,18 +9,17 @@ import { LayerException } from "../exceptions";
 export abstract class Layer<T extends DataFrame, K extends DataFrame> {
     private _name: string;
     private _parent: LayerContainer<any, any>;
-    private _prevLayer: Layer<any, T>;
-    private _nextLayer: Layer<K, any>;
+    private _input: Layer<any, T>;
+    private _output: Layer<K, any>;
 
     /**
      * Create a new layer
      * @param name Layer name
-     * @param flowType Layer in and out flow type
      */
-    constructor(name: string = "default", prevLayer: Layer<any, T> = new DefaultLayer<any, T>(), nextLayer: Layer<K, any> = new DefaultLayer<K, any>()) {
+    constructor(name: string = "default", input: Layer<any, T> = new DefaultLayer<any, T>(), output: Layer<K, any> = new DefaultLayer<K, any>()) {
         this._name = name;
-        this._prevLayer = prevLayer;
-        this._nextLayer = nextLayer;
+        this._input = input;
+        this._output = output;
     }
 
     /**
@@ -61,31 +60,31 @@ export abstract class Layer<T extends DataFrame, K extends DataFrame> {
     /**
      * Get previous layer
      */
-    public getPreviousLayer(): Layer<any, T> {
-        return this._prevLayer;
+    public getInputLayer(): Layer<any, T> {
+        return this._input;
     }
 
     /**
-     * Set the previous layer
-     * @param prevLayer Previous layer
+     * Set the input layer
+     * @param input Previous layer
      */
-    public setPreviousLayer(prevLayer: Layer<any, T>): void {
-        this._prevLayer = prevLayer;
+    public setInputLayer(input: Layer<any, T>): void {
+        this._input = input;
     }
 
     /**
-     * Get next layer
+     * Get the output layer
      */
-    public getNextLayer(): Layer<K, any> {
-        return this._nextLayer;
+    public getOutputLAyer(): Layer<K, any> {
+        return this._output;
     }
 
     /**
-     * Set the previous layer
-     * @param prevLayer Previous layer
+     * Set the output layer
+     * @param output Output layer
      */
-    public setNextLayer(nextLayer: Layer<K, any>): void {
-        this._nextLayer = nextLayer;
+    public setOutputLayer(output: Layer<K, any>): void {
+        this._output = output;
     }
 }
 
@@ -175,15 +174,15 @@ export abstract class LayerContainer<T extends DataFrame, K extends DataFrame> e
         // Get the previous layer
         if (this._layers.length === 0) {
             // First layer
-            if (this.getPreviousLayer() !== null) {
-                layer.setPreviousLayer(this.getPreviousLayer());
+            if (this.getInputLayer() !== null) {
+                layer.setInputLayer(this.getInputLayer());
             }
         } else {
             const lastLayer = this._layers[this._layers.length - 1];
             // Check the output type of the last layer
     
-            lastLayer.setNextLayer(layer);
-            layer.setPreviousLayer(lastLayer);
+            lastLayer.setOutputLayer(layer);
+            layer.setOutputLayer(lastLayer);
         }
         // Add the layer to the container
         layer.setParent(this);
@@ -192,17 +191,21 @@ export abstract class LayerContainer<T extends DataFrame, K extends DataFrame> e
     }
 
     /**
-     * Set the previous layer or model
-     * @param prevLayer Previous layer or model
+     * Set the input layer or model
+     * @param input Previous layer or model
      */
-    public setPreviousLayer(prevLayer: Layer<any, T>): void {
-        super.setPreviousLayer(prevLayer);
+    public setInputLayer(input: Layer<any, T>): void {
+        super.setInputLayer(input);
         if (this._layers.length !== 0) {
-            this._layers[0].setPreviousLayer(prevLayer);
+            this._layers[0].setInputLayer(input);
         }
     }
 
+    /**
+     * Get all layers in the container
+     */
     public getLayers(): Array<Layer<any, any>> {
         return this._layers;
     }
+    
 }

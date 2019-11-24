@@ -21,7 +21,7 @@ export abstract class ProcessingLayer<T extends DataFrame, K extends DataFrame> 
     public push(data: T, options: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.process(data, options).then(result => {
-                return this.getNextLayer().push(result, options);
+                return this.getInputLayer().push(result, options);
             }).then(_ => {
                 resolve();
             }).catch(ex => {
@@ -36,7 +36,7 @@ export abstract class ProcessingLayer<T extends DataFrame, K extends DataFrame> 
      */
     public pull(options: PullOptions): Promise<K> {
         return new Promise<K>((resolve, reject) => {
-            this.getPreviousLayer().pull(options).then(data => {
+            this.getInputLayer().pull(options).then(data => {
                 return this.process(data, options);
             }).then(result => {
                 resolve(result);

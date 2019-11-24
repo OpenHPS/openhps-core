@@ -1,5 +1,5 @@
 import { AbsoluteLocation, RelativeLocation } from "../location";
-import { Shape } from "./Shape";
+import { Shape } from "../geometry";
 import { DataObjectCategory } from "./DataObjectCategory";
 
 /**
@@ -15,6 +15,7 @@ export class DataObject {
     protected _shape: Shape;
     protected _connectedObjects: Object[];
     protected _category: DataObjectCategory = DataObjectCategory.DEFAULT;
+    protected _raw: any;
 
     constructor(id: string = null) {
         this._id = id;
@@ -25,6 +26,21 @@ export class DataObject {
      */
     public getId(): string {
         return this._id;
+    }
+
+    /**
+     * Get raw data object
+     */
+    public getRawData(): any {
+        return this._raw;
+    }
+
+    /**
+     * Set raw data object
+     * @param data Raw data
+     */
+    public setRawData(data: any): void {
+        this._raw = data;
     }
 
     /**

@@ -1,11 +1,12 @@
+import { Service } from "./Service";
+
 /**
  * # OpenHPS: Data service
  */
-export abstract class DataService<T> {
-    private _typeName: string;
+export abstract class DataService<T> extends Service {
 
     constructor(type: new () => T) {
-        this._typeName = type.name;
+        super(type.name);
     }
 
     public abstract findById(id: any): Promise<T>;
@@ -20,10 +21,4 @@ export abstract class DataService<T> {
 
     public abstract deleteAll(): Promise<void>;
 
-    /**
-     * Get data manager type name
-     */
-    public getTypeName() {
-        return this._typeName;
-    }
 }

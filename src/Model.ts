@@ -1,5 +1,5 @@
 import { DataFrame, DataObject } from "./data";
-import { DataService, ObjectDataService } from "./service";
+import { DataService, ObjectDataService, Service } from "./service";
 import { LayerContainer } from "./layer";
 
 /**
@@ -11,15 +11,35 @@ import { LayerContainer } from "./layer";
  * ```
  */
 export class Model<T extends DataFrame, K extends DataFrame> extends LayerContainer<T, K> {
-    private _services: Map<string, DataService<any>> = new Map();
+    private _services: Map<string, Service> = new Map();
 
     constructor(name: string = "model") {
         super(name);
-        this._addDefaultDataServices();
+        this._addDefaultServices();
     }
 
-    private _addDefaultDataServices(): void {
-        this.addDataService(new ObjectDataService());
+    private _addDefaultServices(): void {
+        this.addService(new ObjectDataService());
+    }
+
+    /**
+     * Get service by name
+     * @param name Service name
+     */
+    public getServiceByName<F extends Service>(name: string): F {
+        if (this._services.has(name)) {
+            return this._services.get(name) as F;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get service by name
+     * @param name Service name
+     */
+    public getServiceByClass<F extends Service>(serviceClass: F): F {
+        return this.getServiceByName(serviceClass.getName());
     }
 
     /**
@@ -27,11 +47,7 @@ export class Model<T extends DataFrame, K extends DataFrame> extends LayerContai
      * @param dataType Data type
      */
     public getDataService<D extends DataObject, F extends DataService<D>>(dataType: new () => D): F {
-        if (this._services.has(dataType.name)) {
-            return this._services.get(dataType.name) as F;
-        } else {
-            return null;
-        }
+        return this.getServiceByName(dataType.name);
     }
 
     /**
@@ -39,26 +55,22 @@ export class Model<T extends DataFrame, K extends DataFrame> extends LayerContai
      * @param dataObject Data object instance
      */
     public getDataServiceByObject<D extends DataObject, F extends DataService<D>>(dataObject: D): F {
-        if (this._services.has(dataObject.constructor.name)) {
-            return this._services.get(dataObject.constructor.name) as F;
-        } else {
-            return null;
-        }
+        return this.getServiceByName(dataObject.constructor.name);
     }
 
     /**
-     * Add data service to model
-     * @param service Data service
+     * Add service to model
+     * @param service Service
      */
-    public addDataService(service: DataService<any>): void {
-        this._services.set(service.getTypeName(), service);
+    public addService(service: Service): void {
+        this._services.set(service.getName(), service);
     }
 
     /**
-     * Remove data service from model
+     * Remove service from model
      * @param dataType Data type
      */
-    public removeDataService(dataType: new () => any): void {
+    public removeService(dataType: new () => any): void {
         if (this._services.has(dataType.name)) {
             this._services.delete(dataType.name);
         }

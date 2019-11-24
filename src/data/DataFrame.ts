@@ -4,12 +4,12 @@ import { DataObject, DataObjectCategory } from "./object";
  * # OpenHPS: Data frame
  */
 export class DataFrame {
-    private _captureTimestamp: number;
     private _createdTimestamp: number;
     private _modifiedTimestamp: number;
-    private _captureObject: Object;
+    private _source: DataObject;
     private _categoryObjectsMap: Map<DataObjectCategory, DataObject[]> = new Map();
     private _objects: DataObject[] = new Array<DataObject>();
+    private _raw: any;
 
     /**
      * Create a new data frame
@@ -17,53 +17,51 @@ export class DataFrame {
      */
     constructor(json: any = null) {
         const timestamp = Date.now();
-        this.setCaptureTimestamp(timestamp);
         this.setCreatedTimestamp(timestamp);
         this.setModifiedTimestamp(timestamp);
         this.parseJSON(json);
     }
 
-    public parseJSON(json: any) {
+    /**
+     * Parse the JSON object or string
+     * @param json JSON object or string
+     */
+    public parseJSON(json: any): void {
         if (json === null) {
             return;
         }
-        let data = json;
+        this._raw = json;
         if (typeof json === "string") {
-            data = JSON.parse(json);
+            this._raw = JSON.parse(json);
         }
-        if (data.object !== undefined) {
-            
+        if (this._raw.source !== undefined) {
+            this.setSource(this.parseDataObject(this._raw.source));
         } 
     }
 
-    /**
-     * Get the object that captured the data frame
-     */
-    public getCaptureObject(): Object {
-        return this._captureObject;
+    public parseDataObject(object: any): DataObject {
+        if (typeof object === "string") {
+            return new DataObject(object);
+        }
+        const dataObject = new DataObject();
+        const objectKeys = Object.keys(object);
+        dataObject.setRawData(object);
+        return dataObject;
     }
 
     /**
-     * Set the object that captured the data frame
-     * @param captureObject Object that captured the data frame
+     * Get the source object that captured the data frame
      */
-    public setCaptureObject(captureObject: Object): void {
-        this._captureObject = captureObject;
+    public getSource(): DataObject {
+        return this._source;
     }
 
     /**
-     * Get data frame capture timestamp (ISO 8601)
+     * Set the source object that captured the data frame
+     * @param source Object that captured the data frame
      */
-    public getCaptureTimestamp(): number {
-        return this._captureTimestamp;
-    }
-
-    /**
-     * Set data frame capture timestamp (ISO 8601)
-     * @param timestamp 
-     */
-    public setCaptureTimestamp(timestamp: number): void {
-        this._captureTimestamp = timestamp;
+    public setSource(source: DataObject): void {
+        this._source = source;
     }
 
     /**
@@ -138,5 +136,12 @@ export class DataFrame {
         this._objects.splice(this._objects.indexOf(object), 1);
         const categoryObjects = this._categoryObjectsMap.get(object.getCategory());
         categoryObjects.splice(categoryObjects.indexOf(object), 1);
+    }
+
+    /**
+     * Get raw data object
+     */
+    public getRawData(): any {
+        return this._raw;
     }
 }
