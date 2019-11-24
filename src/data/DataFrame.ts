@@ -1,9 +1,11 @@
 import { DataObject, DataObjectCategory } from "./object";
+import * as uuidv4 from 'uuid/v4';
 
 /**
- * # OpenHPS: Data frame
+ * Data frame that is passed through each layer in a model.
  */
 export class DataFrame {
+    private _uid: string = uuidv4();
     private _createdTimestamp: number;
     private _modifiedTimestamp: number;
     private _source: DataObject;
@@ -47,6 +49,13 @@ export class DataFrame {
         const objectKeys = Object.keys(object);
         dataObject.setRawData(object);
         return dataObject;
+    }
+
+    /**
+     * Get the data frame unique identifier
+     */
+    public getUID(): string {
+        return this._uid;
     }
 
     /**
