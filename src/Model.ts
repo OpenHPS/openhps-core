@@ -4,7 +4,6 @@ import { LayerContainer } from "./layer/Layer";
 import { ServiceContainer } from "./service/ServiceContainer";
 
 /**
- * # OpenHPS: Model
  * This model contains an [[InputLayer]], [[OutputLayer]] and one or more [[ProcessingLayer]]'s
  * 
  * ## Usage

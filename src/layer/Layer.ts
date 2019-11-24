@@ -3,8 +3,7 @@ import { PushOptions, PullOptions } from "./DataOptions";
 import { LayerException } from "../exceptions/LayerException";
 
 /**
- * # OpenHPS: Layer
- * General Layer of the OpenHPS [[Model]]
+ * General layer of the OpenHPS [[Model]].
  */
 export abstract class Layer<T extends DataFrame, K extends DataFrame> {
     private _name: string;
@@ -96,6 +95,9 @@ export abstract class Layer<T extends DataFrame, K extends DataFrame> {
     }
 }
 
+/**
+ * Dummy default layer that will throw an error when pushed or pulled to.
+ */
 export class DummyLayer<T extends DataFrame, K extends DataFrame> extends Layer<T, K> {
     private _layer: Layer<any, any>;
 
@@ -127,6 +129,9 @@ export class DummyLayer<T extends DataFrame, K extends DataFrame> extends Layer<
 
 }
 
+/**
+ * Layer container that can contain one or more layers on itself.
+ */
 export abstract class LayerContainer<T extends DataFrame, K extends DataFrame> extends Layer<T, K> {
     private _layers: Array<Layer<any, any>> = new Array<Layer<any, any>>();
 

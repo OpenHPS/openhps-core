@@ -2,10 +2,19 @@ import { OutputLayer } from "./OutputLayer";
 import { DataFrame } from "../../data";
 import { DataOptions } from "../DataOptions";
 
+/**
+ * This ouput layer will serialize the data frames pushed to this
+ * output layer, and log them to the console using the logging function
+ * specified in the constructor.
+ */
 export class LoggerOutputLayer<T extends DataFrame> extends OutputLayer<T> {
-    private _loggingFn: (log: string) => {};
+    private _loggingFn: (log: string) => void;
 
-    constructor(loggingFn: (log: string) => {}) {
+    /**
+     * Create a new logger output layer
+     * @param loggingFn Logging function
+     */
+    constructor(loggingFn: (log: string) => void = function(log: string) { console.log(log); }) {
         super();
         this._loggingFn = loggingFn;
     }
@@ -17,12 +26,12 @@ export class LoggerOutputLayer<T extends DataFrame> extends OutputLayer<T> {
      */
     public process(data: T, options: DataOptions): Promise<T> {
         return new Promise<T>(async (resolve, reject) => {
-            super.process(data, options).then(result => {
-                this._loggingFn(data.toString());
-                resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            // super.process(data, options).then(result => {
+            //     this._loggingFn(data.toString());
+            //     resolve();
+            // }).catch(ex => {
+            //     reject(ex);
+            // });
         });
     }
 

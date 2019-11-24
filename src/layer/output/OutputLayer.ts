@@ -4,8 +4,9 @@ import { ProcessingLayer } from "../processing";
 import { Model } from "../../Model";
 
 /**
- * # OpenHPS: Output Layer
- * Output layer for storing data
+ * Output layer that saves data objects contained in the pushed
+ * data frames. An output layer does not push the data frames
+ * to the next layer meaning you should only use this layer.
  */
 export class OutputLayer<T extends DataFrame> extends ProcessingLayer<T, T> {
 
