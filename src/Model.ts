@@ -1,6 +1,7 @@
 import { DataFrame, DataObject } from "./data";
 import { DataService, ObjectDataService, Service } from "./service";
-import { LayerContainer } from "./layer";
+import { LayerContainer } from "./layer/Layer";
+import { ServiceContainer } from "./service/ServiceContainer";
 
 /**
  * # OpenHPS: Model
@@ -10,7 +11,7 @@ import { LayerContainer } from "./layer";
  * ```typescript
  * ```
  */
-export class Model<T extends DataFrame, K extends DataFrame> extends LayerContainer<T, K> {
+export class Model<T extends DataFrame, K extends DataFrame> extends LayerContainer<T, K> implements ServiceContainer {
     private _services: Map<string, Service> = new Map();
 
     constructor(name: string = "model") {
@@ -63,6 +64,7 @@ export class Model<T extends DataFrame, K extends DataFrame> extends LayerContai
      * @param service Service
      */
     public addService(service: Service): void {
+        service.registerServiceContainer(this);
         this._services.set(service.getName(), service);
     }
 

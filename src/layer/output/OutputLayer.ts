@@ -1,6 +1,7 @@
 import { DataFrame } from "../../data/DataFrame";
 import { PushOptions, DataOptions } from "../DataOptions";
 import { ProcessingLayer } from "../processing";
+import { Model } from "../../Model";
 
 /**
  * # OpenHPS: Output Layer
@@ -35,8 +36,7 @@ export class OutputLayer<T extends DataFrame> extends ProcessingLayer<T, T> {
     public process(data: T, options: DataOptions): Promise<T> {
         return new Promise<T>(async (resolve, reject) => {
             for (const object of data.getObjects()) {
-                // @ts-ignore
-                const service = this.getParent().getDataServiceByObject(object);
+                const service = this.getParent<Model<any, any>>().getDataServiceByObject(object);
                 if (object.getUID() !== null) {
                     await service.update(object);
                 } else {

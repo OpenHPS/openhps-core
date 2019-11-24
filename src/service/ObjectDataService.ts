@@ -1,5 +1,5 @@
 import { DataService } from "./DataService";
-import { DataObject } from "../data";
+import { DataObject } from "../data/object/DataObject";
 
 /**
  * # OpenHPS: Object Data Service

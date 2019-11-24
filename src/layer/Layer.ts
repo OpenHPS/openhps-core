@@ -1,6 +1,6 @@
 import { DataFrame } from "../data/DataFrame";
 import { PushOptions, PullOptions } from "./DataOptions";
-import { LayerException } from "../exceptions";
+import { LayerException } from "../exceptions/LayerException";
 
 /**
  * # OpenHPS: Layer
@@ -51,15 +51,15 @@ export abstract class Layer<T extends DataFrame, K extends DataFrame> {
     }
 
     /**
-     * Get parent layer that the layer belongs to
+     * Get parent model that the layer belongs to
      */
-    public getParent(): LayerContainer<any, any> {
-        return this._parent;
+    public getParent<M extends LayerContainer<any, any>>(): M {
+        return this._parent as M;
     }
 
     /**
-     * Set the parent layer that the layer belongs to
-     * @param model Model that the layer belongs to
+     * Set the parent model that the layer belongs to
+     * @param parent Model that the layer belongs to
      */
     public setParent(parent: LayerContainer<any, any>): void {
         this._parent = parent;
