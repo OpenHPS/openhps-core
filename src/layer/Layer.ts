@@ -1,11 +1,13 @@
 import { DataFrame } from "../data/DataFrame";
 import { PushOptions, PullOptions } from "./DataOptions";
 import { LayerException } from "../exceptions/LayerException";
+import * as uuidv4 from 'uuid/v4';
 
 /**
  * General layer of the OpenHPS [[Model]].
  */
 export abstract class Layer<T extends DataFrame, K extends DataFrame> {
+    private _uid: string = uuidv4();
     private _name: string;
     private _parent: LayerContainer<any, any>;
     private _input: Layer<any, T>;
@@ -19,6 +21,13 @@ export abstract class Layer<T extends DataFrame, K extends DataFrame> {
         this._name = this.constructor.name;
         this._input = input;
         this._output = output;
+    }
+
+    /**
+     * Get unique identifier of layer
+     */
+    public getUID(): string {
+        return this._uid;
     }
 
     /**
