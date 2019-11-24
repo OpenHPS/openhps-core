@@ -14,6 +14,7 @@ export class LoggerOutputLayer<T extends DataFrame> extends OutputLayer<T> {
      * Create a new logger output layer
      * @param loggingFn Logging function
      */
+    /* tslint:disable:no-console */
     constructor(loggingFn: (log: string) => void = function(log: string) { console.log(log); }) {
         super();
         this._loggingFn = loggingFn;
