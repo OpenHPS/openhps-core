@@ -38,8 +38,8 @@ export class Model<T extends DataFrame, K extends DataFrame> extends LayerContai
      * Get service by name
      * @param name Service name
      */
-    public getServiceByClass<F extends Service>(serviceClass: F): F {
-        return this.getServiceByName(serviceClass.getName());
+    public getServiceByClass<F extends Service>(serviceClass:  new () => F): F {
+        return this.getServiceByName(serviceClass.name);
     }
 
     /**
