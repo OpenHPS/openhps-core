@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.wise.vub.ac.be/mvdewync/openhps-core.git#master"
+    "url": "git+https://gitlab.wise.vub.ac.be/mvdewync/openhps-core.git"
   },
   "main": "dist/index.js",
   "scripts": {
