@@ -37,9 +37,11 @@ A data frame is the container that is transmitted from layer to layer. It contai
 and a
 
 ### DataObject
-A Data Object is an abstract concept of any thing or being that can have an absolute location. An object on itself
+A data object is an abstract concept of any thing or being that can have an absolute location. An object on itself
 
 ### Location
+Location is an abstract concept to indicate the *position* of a data object. A distinction between relative and absolute locations
+is made.
 
 #### RelativeLocation
 A relative location is a location relative to another object. This can be relative based on the distance, angle or multiple factors
@@ -49,6 +51,6 @@ combined.
 An absolute location is a fixed location. This can be anything ranging from a cartesian coordinate to a geographical coordinate
 or even celestial coordinate, but all objects using an absolute location have the same origin.
 
-### DataService
-A data service is a way to keep data between data frames or different models. The implementation can be made to be persistent or
+### Server
+A service is a way to keep data between data frames or different models. The implementation can be made to be persistent or
 temporary.

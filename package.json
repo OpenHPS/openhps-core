@@ -1,12 +1,12 @@
 {
   "name": "@openhps/core",
   "version": "0.1.0",
-  "description": "Open Hybrid Positioning System",
+  "description": "Open Hybrid Positioning System - Core component",
   "author": "Maxim Van de Wynckel",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.wise.vub.ac.be/mvdewync/openhps-core.git"
+    "url": "git+https://gitlab.wise.vub.ac.be/mvdewync/openhps-core.git#production"
   },
   "main": "dist/index.js",
   "scripts": {
