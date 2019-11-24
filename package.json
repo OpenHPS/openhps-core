@@ -18,7 +18,7 @@
     "build": "npm run clean && npm run build:typescript && npm run build:typedoc",
     "build:typescript": "tsc",
     "build:typedoc": "typedoc --excludePrivate --hideGenerator --out docs src",
-    "release": "semantic-release --branch production"
+    "release": "semantic-release --branch origin/production"
   },
   "keywords": [
     "openhps",
