@@ -91,7 +91,7 @@ export abstract class Layer<T extends DataFrame, K extends DataFrame> {
     /**
      * Get the output layer
      */
-    public getOutputLAyer(): Layer<K, any> {
+    public getOutputLayer(): Layer<K, any> {
         return this._output;
     }
 
