@@ -34,14 +34,13 @@ export class OutputLayer<T extends DataFrame> extends ProcessingLayer<T, T> {
      */
     public process(data: T, options: DataOptions): Promise<T> {
         return new Promise<T>(async (resolve, reject) => {
-            for (let i = 0 ; i < data.getObjects().length ; i++) {
-                const object = data.getObjects()[i]; 
+            for (const object of data.getObjects()) {
                 // @ts-ignore
                 const service = this.getParent().getDataServiceByObject(object);
-                if (object.getId() !== null) {
-                   await service.update(object);
+                if (object.getUID() !== null) {
+                    await service.update(object);
                 } else {
-                   await service.create(object);
+                    await service.create(object);
                 }
             }
             resolve();

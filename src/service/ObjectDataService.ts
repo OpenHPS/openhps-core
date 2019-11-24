@@ -13,10 +13,10 @@ export class ObjectDataService extends DataService<DataObject> {
         super(DataObject);
     }
 
-    public findById(id: string): Promise<DataObject> {
+    public findById(uid: string): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
-            if (this._objects.has(id)) {
-                resolve(this._objects.get(id));
+            if (this._objects.has(uid)) {
+                resolve(this._objects.get(uid));
             } else {
                 reject();
             }
@@ -31,11 +31,15 @@ export class ObjectDataService extends DataService<DataObject> {
 
     public create(object: DataObject): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
-            if (this._objects.has(object.getId())) {
+            if (object.getUID() !== null && this._objects.has(object.getUID())) {
                 reject();
             } else {
                 // Insert new object
-                this._objects.set(object.getId(), object);
+                if (object.getUID() === null) {
+                    // Generate new ID if empty
+                    object.setUID(this.generateID());
+                }
+                this._objects.set(object.getUID(), object);
                 resolve(object);
             }
         });
@@ -43,10 +47,13 @@ export class ObjectDataService extends DataService<DataObject> {
 
     public update(object: DataObject): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
+            if (object.getUID() === null) {
+                reject();
+            }
             // Update existing data
-            if (this._objects.has(object.getId())) {
+            if (this._objects.has(object.getUID())) {
                 // Update existing data
-                this._objects.set(object.getId(), object);
+                this._objects.set(object.getUID(), object);
                 resolve(object);
             } else {
                 reject();
@@ -54,10 +61,10 @@ export class ObjectDataService extends DataService<DataObject> {
         });
     }
 
-    public delete(id: string): Promise<void> {
+    public delete(uid: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            if (this._objects.has(id)) {
-                this._objects.delete(id);
+            if (this._objects.has(uid)) {
+                this._objects.delete(uid);
                 resolve();
             } else {
                 reject();

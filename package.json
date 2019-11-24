@@ -10,9 +10,9 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "test": "nyc mocha",
+    "test": "mocha",
     "test:jenkins": "jenkins-mocha",
-    "coverage": "nyc report --reporter=cobertura",
+    "cover": "nyc mocha && nyc report --reporter=cobertura",
     "lint": "tslint -c tslint.json --project tsconfig.json",
     "clean": "node ./scripts/clean.js",
     "build": "npm run clean && npm run build:typescript && npm run build:typedoc",
@@ -28,13 +28,15 @@
     "system"
   ],
   "dependencies": {
-    "mathjs": "^6.2.1"
+    "mathjs": "^6.2.1",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "@types/chai": "^4.2.5",
     "@types/mathjs": "^6.0.2",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.11",
+    "@types/uuid": "^3.4.6",
     "chai": "^4.2.0",
     "jenkins-mocha": "^8.0.0",
     "mocha": "^6.2.2",

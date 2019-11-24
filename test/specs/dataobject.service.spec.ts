@@ -20,10 +20,10 @@ describe('data object', () => {
             var object = new DataObject("2");
             object.setDisplayName("Test");
             objectDataService.create(object).then(savedObject => {
-                expect(savedObject.getId()).to.equal("2");
+                expect(savedObject.getUID()).to.equal("2");
                 expect(savedObject.getDisplayName()).to.equal("Test");
                 objectDataService.findById("2").then(savedObject => {
-                    expect(savedObject.getId()).to.equal("2");
+                    expect(savedObject.getUID()).to.equal("2");
                     expect(savedObject.getDisplayName()).to.equal("Test");
                     done();
                 });
@@ -42,9 +42,13 @@ describe('data object', () => {
             var object = new DataObject("1");
             object.setDisplayName("Test");
             objectDataService.create(object).then(savedObject => {
-
+                objectDataService.create(object).then(savedObject => {
+                    done(new Error("No error thrown when created same object"));
+                }).catch(ex => {
+                    done();
+                });
             }).catch(ex => {
-                done();
+                done(new Error("Object was not created yet!"));
             });
         });
 
@@ -67,14 +71,14 @@ describe('data object', () => {
         });
 
         it('should store objects at the output layer', (done) => {
-            var object = new DataObject("1");
+            var object = new DataObject();
             object.setDisplayName("Test");
             var frame = new DataFrame();
             frame.addObject(object);
             model.push(frame).then(_ => {
                 // Check if it is stored
-                objectDataService.findById("1").then(object => {
-                    expect(object.getDisplayName()).to.equal("Test");
+                objectDataService.findAll().then(objects => {
+                    expect(objects[0].getDisplayName()).to.equal("Test");
                     done();
                 }).catch(ex => {
                     done(ex);

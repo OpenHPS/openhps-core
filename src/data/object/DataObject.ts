@@ -8,7 +8,7 @@ import { DataObjectCategory } from "./DataObjectCategory";
  * a more abstract object such as a Wi-Fi access point or room.
  */
 export class DataObject {
-    protected _id: string;
+    protected _uid: string;
     protected _displayName: string;
     protected _absoluteLocation: AbsoluteLocation;
     protected _relativeLocations: RelativeLocation[] = new Array();
@@ -17,15 +17,23 @@ export class DataObject {
     protected _category: DataObjectCategory = DataObjectCategory.DEFAULT;
     protected _raw: any;
 
-    constructor(id: string = null) {
-        this._id = id;
+    constructor(uid: string = null) {
+        this.setUID(uid);
     }
 
     /**
      * Get the object identifier
      */
-    public getId(): string {
-        return this._id;
+    public getUID(): string {
+        return this._uid;
+    }
+
+    /**
+     * Set the object identifier
+     * @param uid Object identifier
+     */
+    public setUID(uid: string) {
+        this._uid = uid;
     }
 
     /**
