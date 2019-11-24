@@ -10,6 +10,7 @@
   },
   "main": "dist/index.js",
   "scripts": {
+    "commit": "npx git-cz",
     "test": "mocha",
     "test:jenkins": "jenkins-mocha",
     "cover": "nyc mocha && nyc report --reporter=cobertura",
