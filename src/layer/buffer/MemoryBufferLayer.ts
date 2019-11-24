@@ -5,8 +5,8 @@ import { PullOptions, PushOptions } from "../DataOptions";
 export class MemoryBufferLayer<T extends DataFrame, K extends DataFrame> extends BufferLayer<T, K> {
     private _dataFrames: DataFrame[];
 
-    constructor(name: string = "memorybuffer") {
-        super(name);
+    constructor() {
+        super();
     }
 
     /**

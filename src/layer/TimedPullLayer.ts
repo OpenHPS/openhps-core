@@ -7,8 +7,8 @@ export class TimedPullLayer<T extends DataFrame, K extends DataFrame> extends La
     private _interval: number;
     private _intervalUnit: TimeUnit;
 
-    constructor(name: string = "", interval: number, intervalUnit: TimeUnit = TimeUnit.MICRO) {
-        super(name);
+    constructor(interval: number, intervalUnit: TimeUnit = TimeUnit.MICRO) {
+        super();
         this._interval = interval;
         this._intervalUnit = intervalUnit;
     }
@@ -42,7 +42,7 @@ export class TimedPullLayer<T extends DataFrame, K extends DataFrame> extends La
      * Pull the data from the previous layer and process it
      * @param options Pull options
      */
-    public pull(options: PullOptions): Promise<K> {
+    public pull(options: PullOptions = PullOptions.DEFAULT): Promise<K> {
         return new Promise<K>((resolve, reject) => {
             reject();
         });

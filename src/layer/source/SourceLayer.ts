@@ -8,8 +8,8 @@ import { PullOptions, PushOptions } from "../DataOptions";
  */
 export abstract class SourceLayer<T extends DataFrame> extends Layer<T, T> {
 
-    constructor(name: string = "input") {
-        super(name);
+    constructor() {
+        super();
     }
 
     /**

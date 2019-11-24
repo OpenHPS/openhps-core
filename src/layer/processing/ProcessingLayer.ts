@@ -9,8 +9,8 @@ import { DataOptions, PullOptions, PushOptions } from "../DataOptions";
  */
 export abstract class ProcessingLayer<T extends DataFrame, K extends DataFrame> extends Layer<T, K> {
 
-    constructor(name: string = "processor") {
-        super(name);
+    constructor() {
+        super();
     }
 
     /**

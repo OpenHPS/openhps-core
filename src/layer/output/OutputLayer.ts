@@ -8,8 +8,8 @@ import { ProcessingLayer } from "../processing";
  */
 export class OutputLayer<T extends DataFrame> extends ProcessingLayer<T, T> {
 
-    constructor(name: string = "output") {
-        super(name);
+    constructor() {
+        super();
     }
 
     /**

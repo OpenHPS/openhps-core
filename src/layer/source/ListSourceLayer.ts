@@ -5,8 +5,8 @@ import { PullOptions } from "../DataOptions";
 export class ListSourceLayer<T extends DataFrame> extends SourceLayer<T> {
     private _inputData: T[];
 
-    constructor(name: string = "list-input", inputData: T[]) {
-        super(name);
+    constructor(inputData: T[]) {
+        super();
         this._inputData = inputData;
     }
 

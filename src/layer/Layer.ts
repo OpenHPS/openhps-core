@@ -16,10 +16,18 @@ export abstract class Layer<T extends DataFrame, K extends DataFrame> {
      * Create a new layer
      * @param name Layer name
      */
-    constructor(name: string = "default", input: Layer<any, T> = new DefaultLayer<any, T>(), output: Layer<K, any> = new DefaultLayer<K, any>()) {
-        this._name = name;
+    constructor(input: Layer<any, T> = new DummyLayer<any, T>(), output: Layer<K, any> = new DummyLayer<K, any>()) {
+        this._name = this.constructor.name;
         this._input = input;
         this._output = output;
+    }
+
+    /**
+     * Set layer name
+     * @param name Layer name
+     */
+    public setName(name: string): void {
+        this._name = name;
     }
 
     /**
@@ -88,11 +96,11 @@ export abstract class Layer<T extends DataFrame, K extends DataFrame> {
     }
 }
 
-export class DefaultLayer<T extends DataFrame, K extends DataFrame> extends Layer<T, K> {
+export class DummyLayer<T extends DataFrame, K extends DataFrame> extends Layer<T, K> {
     private _layer: Layer<any, any>;
 
-    constructor(name: string = "default", layer?: Layer<any, any>) {
-        super(name, null, null);
+    constructor(layer?: Layer<any, any>) {
+        super(null, null);
         this._layer = layer;
     }
 
@@ -103,7 +111,7 @@ export class DefaultLayer<T extends DataFrame, K extends DataFrame> extends Laye
      */
     public push(data: T, options: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            reject(new LayerException("No next layer configured!"));
+            reject(new LayerException(`No next layer configured for layer ${this._layer.getName()}!`));
         });
     }
 
@@ -113,7 +121,7 @@ export class DefaultLayer<T extends DataFrame, K extends DataFrame> extends Laye
      */
     public pull(options: PullOptions): Promise<K> {
         return new Promise<K>((resolve, reject) => {
-            reject(new LayerException("No previous layer configured!"));
+            reject(new LayerException(`No previous layer configured for layer ${this._layer.getName()}!`));
         });
     }
 
@@ -123,7 +131,8 @@ export abstract class LayerContainer<T extends DataFrame, K extends DataFrame> e
     private _layers: Array<Layer<any, any>> = new Array<Layer<any, any>>();
 
     constructor(name: string) {
-        super(name);
+        super();
+        this.setName(name);
     }
 
 
