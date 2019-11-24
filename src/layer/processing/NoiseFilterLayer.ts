@@ -13,4 +13,13 @@ export class NoiseFilterLayer<T extends DataFrame, K extends DataFrame> extends 
         return null;
     }
 
+    /**
+     * Process the data that was pushed or pulled from this layer
+     * @param data Data frame
+     * @param options Push/Pull options
+     */
+    public predict(data: T, options: DataOptions): Promise<K> {
+        return null;
+    }
+
 }

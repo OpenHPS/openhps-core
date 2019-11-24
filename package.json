@@ -6,11 +6,11 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.wise.vub.ac.be/mvdewync/openhps-core.git#production"
+    "url": "git+https://gitlab.wise.vub.ac.be/mvdewync/openhps-core.git"
   },
   "main": "dist/index.js",
   "scripts": {
-    "commit": "npx git-cz",
+    "commit": "npm run build:typescript && npm run lint && npm run test && npx git-cz",
     "test": "mocha",
     "test:jenkins": "jenkins-mocha",
     "cover": "nyc mocha && nyc report --reporter=cobertura",

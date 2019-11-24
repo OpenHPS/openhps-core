@@ -24,7 +24,7 @@ export class TimedPullLayer<T extends DataFrame, K extends DataFrame> extends La
             }).catch(ex => {
                 rejects(ex);
             });
-        }, this._interval);
+        }, this._intervalUnit.convert(this._interval, TimeUnit.MICRO));
     }
 
     /**

@@ -3,8 +3,7 @@ import { DataFrame } from "../../data/DataFrame";
 import { PullOptions, PushOptions } from "../DataOptions";
 
 /**
- * # OpenHPS: Source layer
- * Input source layer for predicing and processing data
+ * Source layer that provides the data frames for the model.
  */
 export abstract class SourceLayer<T extends DataFrame> extends Layer<T, T> {
 

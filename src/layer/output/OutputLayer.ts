@@ -48,4 +48,10 @@ export class OutputLayer<T extends DataFrame> extends ProcessingLayer<T, T> {
         });
     }
 
+    public predict(data: T, options: DataOptions): Promise<T> {
+        return new Promise<T>(async (resolve, reject) => {
+            resolve();
+        });
+    }
+
 }

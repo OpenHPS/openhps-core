@@ -2,8 +2,12 @@ import { BufferLayer } from "./BufferLayer";
 import { DataFrame } from "../../data";
 import { PullOptions, PushOptions } from "../DataOptions";
 
-export class MemoryBufferLayer<T extends DataFrame, K extends DataFrame> extends BufferLayer<T, K> {
-    private _dataFrames: DataFrame[];
+/**
+ * Memory buffer that stores pushed data frames until a pull
+ * on the layer is received.
+ */
+export class MemoryBufferLayer<T extends DataFrame> extends BufferLayer<T, T> {
+    private _dataFrames: T[];
 
     constructor() {
         super();
@@ -16,7 +20,8 @@ export class MemoryBufferLayer<T extends DataFrame, K extends DataFrame> extends
      */
     public push(data: T, options: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-
+            this._dataFrames.push(data);
+            resolve();
         });
     }
 
@@ -24,9 +29,13 @@ export class MemoryBufferLayer<T extends DataFrame, K extends DataFrame> extends
      * Pull the data from the previous layer and process it
      * @param options Pull options
      */
-    public pull(options: PullOptions): Promise<K> {
-        return new Promise<K>((resolve, reject) => {
-
+    public pull(options: PullOptions): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
+            if (this._dataFrames.length !== 0) {
+                resolve(this._dataFrames.pop());
+            } else {
+                resolve(null);
+            }
         });
     }
 

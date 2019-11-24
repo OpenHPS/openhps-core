@@ -3,7 +3,6 @@ import { DataFrame } from "../../data/DataFrame";
 import { DataOptions, PullOptions, PushOptions } from "../DataOptions";
 
 /**
- * # OpenHPS: Processing Layer
  * The processing layer provides a layer than can sequentially process the results
  * from the previous layer.
  */
@@ -37,7 +36,11 @@ export abstract class ProcessingLayer<T extends DataFrame, K extends DataFrame> 
     public pull(options: PullOptions): Promise<K> {
         return new Promise<K>((resolve, reject) => {
             this.getInputLayer().pull(options).then(data => {
-                return this.process(data, options);
+                if (options.process) {
+                    return this.process(data, options);
+                } else {
+                    return this.predict(data, options);
+                }
             }).then(result => {
                 resolve(result);
             }).catch(ex => {
@@ -52,5 +55,12 @@ export abstract class ProcessingLayer<T extends DataFrame, K extends DataFrame> 
      * @param options Push/Pull options
      */
     public abstract process(data: T, options: DataOptions): Promise<K>;
+
+    /**
+     * Process the data that was pushed or pulled from this layer
+     * @param data Data frame
+     * @param options Push/Pull options
+     */
+    public abstract predict(data: T, options: DataOptions): Promise<K>;
 
 }

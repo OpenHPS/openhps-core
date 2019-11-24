@@ -7,7 +7,6 @@ export class ListSourceLayer<T extends DataFrame> extends SourceLayer<T> {
 
     constructor(inputData: T[]) {
         super();
-        this._inputData = inputData;
     }
 
     /**
@@ -16,7 +15,11 @@ export class ListSourceLayer<T extends DataFrame> extends SourceLayer<T> {
      */
     public pull(options: PullOptions): Promise<T> {
         return new Promise<T>((resolve, reject) => {
-            resolve(this._inputData.pop());
+            if (this._inputData.length !== 0) {
+                resolve(this._inputData.pop());
+            } else {
+                resolve(null);
+            }
         });
     }
 
