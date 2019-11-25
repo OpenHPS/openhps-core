@@ -39,4 +39,10 @@ export class MemoryBufferLayer<T extends DataFrame> extends BufferLayer<T, T> {
         });
     }
 
+    /**
+     * Get current buffer size
+     */
+    public getBufferSize(): number {
+        return this._dataFrames.length;
+    }
 }

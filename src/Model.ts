@@ -2,6 +2,8 @@ import { DataFrame, DataObject } from "./data";
 import { DataService, ObjectDataService, Service } from "./service";
 import { LayerContainer } from "./layer/Layer";
 import { ServiceContainer } from "./service/ServiceContainer";
+import * as cluster from 'cluster';
+import { Socket } from "net";
 
 /**
  * This model contains an [[InputLayer]], [[OutputLayer]] and one or more [[ProcessingLayer]]'s
@@ -12,10 +14,19 @@ import { ServiceContainer } from "./service/ServiceContainer";
  */
 export class Model<T extends DataFrame, K extends DataFrame> extends LayerContainer<T, K> implements ServiceContainer {
     private _services: Map<string, Service> = new Map();
+    private _workers: cluster.Worker[] = new Array();
 
+    /**
+     * Create a new OpenHPS model
+     * @param name Name of the model
+     */
     constructor(name: string = "model") {
         super(name);
         this._addDefaultServices();
+        if (!this.isMaster()) {
+            // Register worker events
+            process.on('message', this._onMasterMessage);
+        }
     }
 
     private _addDefaultServices(): void {
@@ -75,6 +86,39 @@ export class Model<T extends DataFrame, K extends DataFrame> extends LayerContai
         if (this._services.has(dataType.name)) {
             this._services.delete(dataType.name);
         }
+    }
+
+    /**
+     * Get all workers
+     */
+    public getWorkers(): cluster.Worker[] {
+        return this._workers;
+    }
+
+    /**
+     * Register a new worker to the model
+     * @param worker Worker process
+     */
+    public registerWorker(worker: cluster.Worker): void {
+        if (this.isMaster()) {
+            worker.on('message', this._onWorkerMessage);
+            this._workers.push(worker);
+        }
+    }
+
+    private _onWorkerMessage(message: any, handle: Socket): void {
+        
+    }
+
+    private _onMasterMessage(msg: any): void {
+        
+    }
+
+    /**
+     * Is this the master process
+     */
+    public isMaster(): boolean {
+        return cluster.isMaster;
     }
 
 }

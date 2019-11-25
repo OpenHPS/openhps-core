@@ -30,6 +30,7 @@
     "system"
   ],
   "dependencies": {
+    "cluster": "^0.7.7",
     "mathjs": "^6.2.1",
     "uuid": "^3.3.3"
   },

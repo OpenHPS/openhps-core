@@ -5,3 +5,4 @@ export * from './source';
 export * from './processing';
 export * from './buffer';
 export { LayerOptions } from './LayerOptions';
+export { BalanceLayerContainer } from './BalanceLayerContainer';

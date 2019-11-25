@@ -8,14 +8,14 @@ import { DataOptions } from "../DataOptions";
  * specified in the constructor.
  */
 export class LoggerOutputLayer<T extends DataFrame> extends OutputLayer<T> {
-    private _loggingFn: (log: string) => void;
+    private _loggingFn: (log: any) => void;
 
     /**
      * Create a new logger output layer
      * @param loggingFn Logging function
      */
     /* tslint:disable:no-console */
-    constructor(loggingFn: (log: string) => void = function(log: string) { console.log(log); }) {
+    constructor(loggingFn: (log: any) => void = function(log: any) { console.log(log); }) {
         super();
         this._loggingFn = loggingFn;
     }
@@ -26,13 +26,13 @@ export class LoggerOutputLayer<T extends DataFrame> extends OutputLayer<T> {
      * @param options Push/Pull options
      */
     public process(data: T, options: DataOptions): Promise<T> {
-        return new Promise<T>(async (resolve, reject) => {
-            // super.process(data, options).then(result => {
-            //     this._loggingFn(data.toString());
-            //     resolve();
-            // }).catch(ex => {
-            //     reject(ex);
-            // });
+        return new Promise<T>((resolve, reject) => {
+            super.process(data, options).then(result => {
+                this._loggingFn(result);
+                resolve();
+            }).catch(ex => {
+                reject(ex);
+            });
         });
     }
 
@@ -42,13 +42,13 @@ export class LoggerOutputLayer<T extends DataFrame> extends OutputLayer<T> {
      * @param options Push/Pull options
      */
     public predict(data: T, options: DataOptions): Promise<T> {
-        return new Promise<T>(async (resolve, reject) => {
-            // super.process(data, options).then(result => {
-            //     this._loggingFn(data.toString());
-            //     resolve();
-            // }).catch(ex => {
-            //     reject(ex);
-            // });
+        return new Promise<T>((resolve, reject) => {
+            super.predict(data, options).then(result => {
+                this._loggingFn(result.toString());
+                resolve();
+            }).catch(ex => {
+                reject(ex);
+            });
         });
     }
 
