@@ -1,47 +1,11 @@
-import { AbsoluteLocation } from "./AbsoluteLocation";
+import { Point2D } from "../geometry/Point2D";
+import { Location } from "./Location";
 
-export class Cartesian2DLocation extends AbsoluteLocation {
-    private _x: number;
-    private _y: number;
+/**
+ * Cartesian 2D location. This class extends a normal [[Point2D]]
+ * but implements a [[Location]]. This location can be used both as
+ * an absolute location or relative location.
+ */
+export class Cartesian2DLocation extends Point2D implements Location {
 
-    constructor();
-    constructor(x?: number, y?: number) {
-        super();
-        this.setX(x);
-        this.setY(y);
-    }
-
-    /**
-     * Get X coordinate
-     */
-    public getX(): number {
-        return this._x;
-    }
-
-    /**
-     * Set X coordinate
-     * @param x X coordinate
-     */
-    public setX(x: number): void {
-        this._x = x;
-    }
-
-    /**
-     * Get Y coordinate
-     */
-    public getY(): number {
-        return this._y;
-    }
-
-    /**
-     * Set Y coordinate
-     * @param y Y coordinate
-     */
-    public setY(y: number): void {
-        this._y = y;
-    }
-
-    public getPoint(): number[] {
-        return [this.getX(), this.getY()];
-    }
 }

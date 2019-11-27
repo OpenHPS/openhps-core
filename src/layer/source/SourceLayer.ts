@@ -5,7 +5,7 @@ import { PullOptions, PushOptions } from "../DataOptions";
 /**
  * Source layer that provides the data frames for the model.
  */
-export abstract class SourceLayer<T extends DataFrame> extends Layer<T, T> {
+export abstract class SourceLayer<Out extends DataFrame> extends Layer<Out, Out> {
 
     constructor() {
         super();
@@ -16,7 +16,7 @@ export abstract class SourceLayer<T extends DataFrame> extends Layer<T, T> {
      * @param data Input data
      * @param options Push options
      */
-    public push(data: T, options: PushOptions = PushOptions.DEFAULT): Promise<void> {
+    public push(data: Out, options: PushOptions = PushOptions.DEFAULT): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.getInputLayer().push(data, options).then(_ => {
                 resolve();
@@ -30,6 +30,6 @@ export abstract class SourceLayer<T extends DataFrame> extends Layer<T, T> {
      * Pull the data from the input 
      * @param options Pull options
      */
-    public abstract pull(options: PullOptions): Promise<T>;
+    public abstract pull(options: PullOptions): Promise<Out>;
 
 }

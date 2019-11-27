@@ -38,7 +38,12 @@ export class DataFrame {
         }
         if (this._raw.source !== undefined) {
             this.setSource(this.parseDataObject(this._raw.source));
-        } 
+        }
+        if (this._raw.objects !== undefined) {
+            this._raw.objects.forEach((rawObject: any) => {
+                this.addObject(this.parseDataObject(rawObject));
+            });
+        }
     }
 
     public parseDataObject(object: any): DataObject {

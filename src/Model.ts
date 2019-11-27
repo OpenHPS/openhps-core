@@ -124,6 +124,13 @@ class ModelImpl<In extends DataFrame, Out extends DataFrame> extends LayerContai
         return super.addLayer(layer) as ModelImpl<In, Out>;
     }
 
+    /**
+     * Set logger
+     */
+    public setLogger(logger: (level: string, log: any) => void): void {
+        super.setLogger(logger);
+    }
+
 }
 
 /**
@@ -133,6 +140,7 @@ class ModelImpl<In extends DataFrame, Out extends DataFrame> extends LayerContai
  * ```typescript
  * const model = new ModelBuilder()
  *      .withName("My Model")
+ *      .withLogger((level: string, log:any) => { console.log(log); })
  *      .withLayer(...)
  *      .withLayer(...)
  *      .withService(...)
@@ -144,6 +152,11 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> {
 
     constructor() {
         this._model = new ModelImpl<In, Out>();
+    }
+
+    public withLogger(logger: (level: string, log: any) => void): ModelBuilder<In, Out> {
+        this._model.setLogger(logger);
+        return this;
     }
 
     public withService(service: Service): ModelBuilder<In, Out> {

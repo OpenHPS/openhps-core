@@ -1,7 +1,7 @@
 import { LayerContainer, Layer } from "./Layer";
 import { DataFrame } from "../data";
 import { PushOptions, PullOptions } from "./DataOptions";
-import { LayerException } from "../exceptions";
+import { LayerException } from "./exceptions";
 
 /**
  * Balance layer. This layer will divide the workload of pushed data

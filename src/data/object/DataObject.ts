@@ -16,6 +16,7 @@ export class DataObject {
     protected _connectedObjects: Object[];
     protected _category: DataObjectCategory = DataObjectCategory.DEFAULT;
     protected _raw: any;
+    protected _layerData: Map<string, any> = new Map();
 
     constructor(uid: string = null) {
         this.setUID(uid);
@@ -116,5 +117,22 @@ export class DataObject {
      */
     public setCategory(category: DataObjectCategory): void {
         this._category = category;
+    }
+
+    /**
+     * Get layer data
+     * @param layerUID Layer UID 
+     */
+    public getLayerData(layerUID: string): any {
+        return this._layerData.get(layerUID);
+    }
+
+    /**
+     * Add layer data
+     * @param layerUID Layer UID 
+     * @param data Layer data to save
+     */
+    public setLayerData(layerUID: string, data: any): void {
+        this._layerData.set(layerUID, data);
     }
 }

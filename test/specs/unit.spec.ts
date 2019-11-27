@@ -1,4 +1,4 @@
-import { MetricLengthUnit, AngleUnit } from '../../src/data/unit';
+import { MetricLengthUnit, AngleUnit, SquareUnit, VolumeUnit } from '../../src/data/unit';
 
 import { expect } from 'chai';
 import 'mocha';
@@ -42,7 +42,7 @@ describe('units', () => {
         describe('unspecified units', () => {
 
             it('should convert from points to points', () => {
-                const result = LengthUnit.POINTS.convert(125, MetricLengthUnit.POINTS);
+                const result = LengthUnit.POINTS.convert(125, LengthUnit.POINTS);
                 expect(result).to.equal(125);
             });
 
@@ -50,11 +50,25 @@ describe('units', () => {
     });
 
     describe('square', () => {
+        describe('unspecified units', () => {
 
+            it('should convert from points to points', () => {
+                const result = SquareUnit.SQUARE_POINTS.convert(125, SquareUnit.SQUARE_POINTS);
+                expect(result).to.equal(125);
+            });
+
+        });
     });
 
     describe('volume', () => {
+        describe('unspecified units', () => {
 
+            it('should convert from points to points', () => {
+                const result = VolumeUnit.CUBIC_POINTS.convert(125, VolumeUnit.CUBIC_POINTS);
+                expect(result).to.equal(125);
+            });
+
+        });
     });
 
     describe('angle', () => {

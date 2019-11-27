@@ -4,7 +4,7 @@ import { LengthUnit } from "../unit/LengthUnit";
 /**
  * # OpenHPS: Relative location
  */
-export class RelativeLocation extends Location {
+export class RelativeLocation implements Location {
     protected _referenceObject: Object;
     protected _distance: number;
     protected _distanceUnit: LengthUnit;

@@ -8,6 +8,9 @@ import { DataOptions, PullOptions, PushOptions } from "../DataOptions";
  */
 export abstract class ProcessingLayer<In extends DataFrame, Out extends DataFrame> extends Layer<In, Out> {
 
+    /**
+     * Create a new processing layer
+     */
     constructor() {
         super();
     }

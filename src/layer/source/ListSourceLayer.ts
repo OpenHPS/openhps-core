@@ -5,10 +5,10 @@ import { PullOptions } from "../DataOptions";
 /**
  * Source layer that uses a list of data frames as the source.
  */
-export class ListSourceLayer<T extends DataFrame> extends SourceLayer<T> {
-    private _inputData: T[];
+export class ListSourceLayer<Out extends DataFrame> extends SourceLayer<Out> {
+    private _inputData: Out[];
 
-    constructor(inputData: T[]) {
+    constructor(inputData: Out[]) {
         super();
         this._inputData = inputData;
     }
@@ -17,8 +17,8 @@ export class ListSourceLayer<T extends DataFrame> extends SourceLayer<T> {
      * Pull the data from the input 
      * @param options Pull options
      */
-    public pull(options: PullOptions): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
+    public pull(options: PullOptions): Promise<Out> {
+        return new Promise<Out>((resolve, reject) => {
             if (this._inputData.length !== 0) {
                 resolve(this._inputData.pop());
             } else {

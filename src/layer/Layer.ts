@@ -1,6 +1,6 @@
 import { DataFrame } from "../data/DataFrame";
 import { PushOptions, PullOptions } from "./DataOptions";
-import { LayerException } from "../exceptions/LayerException";
+import { LayerException } from "./exceptions/LayerException";
 import * as uuidv4 from 'uuid/v4';
 
 /**
@@ -28,6 +28,10 @@ export abstract class Layer<T extends DataFrame, K extends DataFrame> {
         if (this._output !== null && this._output.constructor.name === "DummyLayer") {
             (this._output as DummyLayer<any, T>).setLayer(this);
         }
+        this.getLogger()("debug", {
+            message: "Layer has been constructed.",
+            layer: this
+        });
     }
 
     /**
@@ -147,6 +151,10 @@ class DummyLayer<T extends DataFrame, K extends DataFrame> extends Layer<T, K> {
      */
     public push(data: T, options: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
+            this.getLogger()("severe", {
+                message: "Push performed on layer without an output layer!",
+                layer: this._layer
+            });
             reject(new LayerException(`No next layer configured for layer '${this._layer.getName()}'#${this._layer.getUID()}!`));
         });
     }
@@ -157,6 +165,10 @@ class DummyLayer<T extends DataFrame, K extends DataFrame> extends Layer<T, K> {
      */
     public pull(options: PullOptions): Promise<K> {
         return new Promise<K>((resolve, reject) => {
+            this.getLogger()("severe", {
+                message: "Pull performed on layer without an input layer!",
+                layer: this._layer
+            });
             reject(new LayerException(`No previous layer configured for layer '${this._layer.getName()}'#${this._layer.getUID()}!`));
         });
     }

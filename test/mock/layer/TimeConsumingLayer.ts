@@ -1,4 +1,5 @@
-import { ProcessingLayer, DataFrame, DataOptions } from '../../../src';
+import { ProcessingLayer, DataOptions } from '../../../src/layer';
+import { DataFrame } from '../../../src/data';
 
 export class TimeConsumingLayer extends ProcessingLayer<DataFrame, DataFrame> {
 
@@ -11,7 +12,7 @@ export class TimeConsumingLayer extends ProcessingLayer<DataFrame, DataFrame> {
         return new Promise<DataFrame>((resolve, reject) => {
             setTimeout(() => {
                 resolve(data);
-            }, 100);
+            }, 10);
         });
     }
 
