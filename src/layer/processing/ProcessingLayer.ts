@@ -3,10 +3,10 @@ import { DataFrame } from "../../data/DataFrame";
 import { DataOptions, PullOptions, PushOptions } from "../DataOptions";
 
 /**
- * The processing layer provides a layer than can sequentially process the results
+ * The processing layer provides a layer than can process the results
  * from the previous layer.
  */
-export abstract class ProcessingLayer<T extends DataFrame, K extends DataFrame> extends Layer<T, K> {
+export abstract class ProcessingLayer<In extends DataFrame, Out extends DataFrame> extends Layer<In, Out> {
 
     constructor() {
         super();
@@ -17,7 +17,7 @@ export abstract class ProcessingLayer<T extends DataFrame, K extends DataFrame> 
      * @param data Input data
      * @param options Push options
      */
-    public push(data: T, options: PushOptions): Promise<void> {
+    public push(data: In, options: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.process(data, options).then(result => {
                 return this.getOutputLayer().push(result, options);
@@ -33,8 +33,8 @@ export abstract class ProcessingLayer<T extends DataFrame, K extends DataFrame> 
      * Pull the data from the previous layer and process it
      * @param options Pull options
      */
-    public pull(options: PullOptions): Promise<K> {
-        return new Promise<K>((resolve, reject) => {
+    public pull(options: PullOptions): Promise<Out> {
+        return new Promise<Out>((resolve, reject) => {
             this.getInputLayer().pull(options).then(data => {
                 if (options.process) {
                     return this.process(data, options);
@@ -54,14 +54,14 @@ export abstract class ProcessingLayer<T extends DataFrame, K extends DataFrame> 
      * @param data Data frame
      * @param options Push/Pull options
      */
-    public abstract process(data: T, options: DataOptions): Promise<K>;
+    public abstract process(data: In, options: DataOptions): Promise<Out>;
 
     /**
      * Process the data that was pushed or pulled from this layer
      * @param data Data frame
      * @param options Push/Pull options
      */
-    public predict(data: T, options: DataOptions): Promise<K> {
+    public predict(data: In, options: DataOptions): Promise<Out> {
         return this.process(data, options);
     }
 

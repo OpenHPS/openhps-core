@@ -2,11 +2,15 @@ import { SourceLayer } from "./SourceLayer";
 import { DataFrame } from "../../data";
 import { PullOptions } from "../DataOptions";
 
+/**
+ * Source layer that uses a list of data frames as the source.
+ */
 export class ListSourceLayer<T extends DataFrame> extends SourceLayer<T> {
     private _inputData: T[];
 
     constructor(inputData: T[]) {
         super();
+        this._inputData = inputData;
     }
 
     /**

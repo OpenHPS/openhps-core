@@ -12,6 +12,7 @@ export abstract class Layer<T extends DataFrame, K extends DataFrame> {
     private _parent: LayerContainer<any, any>;
     private _input: Layer<any, T>;
     private _output: Layer<K, any>;
+    private _logger: (level: string, log: any) => void = () => {};
 
     /**
      * Create a new layer
@@ -21,12 +22,26 @@ export abstract class Layer<T extends DataFrame, K extends DataFrame> {
         this._name = this.constructor.name;
         this._input = input;
         this._output = output;
-        if (this._input !== null && this._input.constructor.name == "DummyLayer"){
+        if (this._input !== null && this._input.constructor.name === "DummyLayer") {
             (this._input as DummyLayer<any, T>).setLayer(this);
         }
-        if (this._output !== null && this._output.constructor.name == "DummyLayer"){
+        if (this._output !== null && this._output.constructor.name === "DummyLayer") {
             (this._output as DummyLayer<any, T>).setLayer(this);
         }
+    }
+
+    /**
+     * Get logger
+     */
+    public getLogger(): (level: string, log: any) => void {
+        return this._logger;
+    }
+
+    /**
+     * Set logger
+     */
+    protected setLogger(logger: (level: string, log: any) => void): void {
+        this._logger = logger;
     }
 
     /**
@@ -202,7 +217,7 @@ export abstract class LayerContainer<T extends DataFrame, K extends DataFrame> e
      * Add a new layer to the model
      * @param layer Layer to add
      */
-    public addLayer(layer: Layer<any, any>): LayerContainer<T, K> {
+    protected addLayer(layer: Layer<any, any>): LayerContainer<T, K> {
         // Get the previous layer
         if (this._layers.length === 0) {
             // First layer
@@ -223,14 +238,6 @@ export abstract class LayerContainer<T extends DataFrame, K extends DataFrame> e
     }
 
     /**
-     * Add a new layer to the model
-     * @param layer Layer to add
-     */
-    public withLayer(layer: Layer<any, any>): LayerContainer<T, K> {
-        return this.addLayer(layer);
-    }
-
-    /**
      * Set the input layer or model
      * @param input Previous layer or model
      */
@@ -241,6 +248,10 @@ export abstract class LayerContainer<T extends DataFrame, K extends DataFrame> e
         }
     }
 
+    /**
+     * Set the output layer or model
+     * @param output Output layer
+     */
     public setOutputLayer(output: Layer<K, any>): void {
         super.setOutputLayer(output);
         if (this._layers.length !== 0) {

@@ -2,6 +2,7 @@ import { Model, DataFrame, ObjectDataService, OutputLayer, DataObject } from '..
 
 import { expect } from 'chai';
 import 'mocha';
+import { ModelBuilder } from '../../src/Model';
 
 describe('data object', () => {
     describe('service', () => {
@@ -64,8 +65,9 @@ describe('data object', () => {
         var objectDataService: ObjectDataService;
         
         before((done) => {
-            model = new Model();
-            model.addLayer(new OutputLayer());
+            model = new ModelBuilder()
+                .withLayer(new OutputLayer())
+                .build();
             objectDataService = model.getDataService(DataObject);
             done();
         });

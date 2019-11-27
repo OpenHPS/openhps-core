@@ -1,20 +1,62 @@
 import { DataFrame, DataObject } from "./data";
 import { DataService, ObjectDataService, Service } from "./service";
-import { LayerContainer } from "./layer/Layer";
+import { LayerContainer, Layer } from "./layer/Layer";
 import { ServiceContainer } from "./service/ServiceContainer";
-import * as cluster from 'cluster';
-import { Socket } from "net";
+import { PushOptions, PullOptions } from "./layer/DataOptions";
 
 /**
- * This model contains an [[InputLayer]], [[OutputLayer]] and one or more [[ProcessingLayer]]'s
+ * This model contains multiple [[Layer]]s, [[Service]]s to compute
+ * [[DataFrame]]s that are pushed or pulled from this model.
  * 
  * ## Usage
- * ```typescript
- * ```
+ * Please refer to [[ModelFactory]] for creating a new model
  */
-export class Model<T extends DataFrame, K extends DataFrame> extends LayerContainer<T, K> implements ServiceContainer {
+export interface Model<In extends DataFrame, Out extends DataFrame> extends ServiceContainer, LayerContainer<In, Out> {
+
+    /**
+     * Push the data to the model
+     * @param data Input data
+     * @param options Push options
+     */
+    push(data: In, options?: PushOptions): Promise<void>;
+
+    /**
+     * Pull the data from the last layer in the model
+     * @param options Pull options
+     */
+    pull(options?: PullOptions): Promise<Out>;
+
+    /**
+     * Get service by name
+     * @param name Service name
+     */
+    getServiceByName<F extends Service>(name: string): F;
+
+    /**
+     * Get service by name
+     * @param name Service name
+     */
+    getServiceByClass<F extends Service>(serviceClass: new () => F): F;
+
+    /**
+     * Get data service by data type
+     * @param dataType Data type
+     */
+    getDataService<D extends DataObject, F extends DataService<D>>(dataType: new () => D): F;
+
+    /**
+     * Get data service by data object
+     * @param dataObject Data object instance
+     */
+    getDataServiceByObject<D extends DataObject, F extends DataService<D>>(dataObject: D): F;
+
+}
+
+/**
+ * [[Model]] implementation
+ */
+class ModelImpl<In extends DataFrame, Out extends DataFrame> extends LayerContainer<In, Out> implements Model<In, Out> {
     private _services: Map<string, Service> = new Map();
-    private _workers: cluster.Worker[] = new Array();
 
     /**
      * Create a new OpenHPS model
@@ -23,20 +65,32 @@ export class Model<T extends DataFrame, K extends DataFrame> extends LayerContai
     constructor(name: string = "model") {
         super(name);
         this._addDefaultServices();
-        if (!this.isMaster()) {
-            // Register worker events
-            process.on('message', this._onMasterMessage);
-        }
     }
 
     private _addDefaultServices(): void {
         this.addService(new ObjectDataService());
     }
 
-    /**
-     * Get service by name
-     * @param name Service name
-     */
+    public push(data: In, options: PushOptions = PushOptions.DEFAULT): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            super.push(data, options).then(_ => {
+                resolve();
+            }).catch(ex => {
+                reject(ex);
+            });
+        });
+    }
+
+    public pull(options: PullOptions = PullOptions.DEFAULT): Promise<Out> {
+        return new Promise<Out>((resolve, reject) => {
+            super.pull(options).then(result => {
+                resolve(result);
+            }).catch(ex => {
+                reject(ex);
+            });
+        });
+    }
+
     public getServiceByName<F extends Service>(name: string): F {
         if (this._services.has(name)) {
             return this._services.get(name) as F;
@@ -45,26 +99,14 @@ export class Model<T extends DataFrame, K extends DataFrame> extends LayerContai
         }
     }
 
-    /**
-     * Get service by name
-     * @param name Service name
-     */
     public getServiceByClass<F extends Service>(serviceClass: new () => F): F {
         return this.getServiceByName(serviceClass.name);
     }
 
-    /**
-     * Get data service by data type
-     * @param dataType Data type
-     */
     public getDataService<D extends DataObject, F extends DataService<D>>(dataType: new () => D): F {
         return this.getServiceByName(dataType.name);
     }
 
-    /**
-     * Get data service by data object
-     * @param dataObject Data object instance
-     */
     public getDataServiceByObject<D extends DataObject, F extends DataService<D>>(dataObject: D): F {
         return this.getServiceByName(dataObject.constructor.name);
     }
@@ -78,47 +120,59 @@ export class Model<T extends DataFrame, K extends DataFrame> extends LayerContai
         this._services.set(service.getName(), service);
     }
 
-    /**
-     * Remove service from model
-     * @param dataType Data type
-     */
-    public removeService(dataType: new () => any): void {
-        if (this._services.has(dataType.name)) {
-            this._services.delete(dataType.name);
-        }
+    public addLayer(layer: Layer<any, any>): ModelImpl<In, Out> {
+        return super.addLayer(layer) as ModelImpl<In, Out>;
+    }
+
+}
+
+/**
+ * Model build to construct and build a [[Model]]
+ * 
+ * ## Usage
+ * ```typescript
+ * const model = new ModelBuilder()
+ *      .withName("My Model")
+ *      .withLayer(...)
+ *      .withLayer(...)
+ *      .withService(...)
+ *      .build();
+ * ```
+ */
+export class ModelBuilder<In extends DataFrame, Out extends DataFrame> {
+    private _model: ModelImpl<In, Out>;
+
+    constructor() {
+        this._model = new ModelImpl<In, Out>();
+    }
+
+    public withService(service: Service): ModelBuilder<In, Out> {
+        this._model.addService(service);
+        return this;
     }
 
     /**
-     * Get all workers
+     * Set the name of the model
+     * @param name Name of the model 
      */
-    public getWorkers(): cluster.Worker[] {
-        return this._workers;
+    public withName(name: string): ModelBuilder<In, Out> {
+        this._model.setName(name);
+        return this;
     }
 
     /**
-     * Register a new worker to the model
-     * @param worker Worker process
+     * Add a new layer to the model
+     * @param layer Layer to add
      */
-    public registerWorker(worker: cluster.Worker): void {
-        if (this.isMaster()) {
-            worker.on('message', this._onWorkerMessage);
-            this._workers.push(worker);
-        }
-    }
-
-    private _onWorkerMessage(message: any, handle: Socket): void {
-        
-    }
-
-    private _onMasterMessage(msg: any): void {
-        
+    public withLayer(layer: Layer<any, any>): ModelBuilder<In, Out> {
+        this._model.addLayer(layer);
+        return this;
     }
 
     /**
-     * Is this the master process
+     * Finalize the model
      */
-    public isMaster(): boolean {
-        return cluster.isMaster;
+    public build(): Model<In, Out> {
+        return this._model;
     }
-
 }

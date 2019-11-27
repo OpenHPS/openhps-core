@@ -11,7 +11,7 @@ export class TimeConsumingLayer extends ProcessingLayer<DataFrame, DataFrame> {
         return new Promise<DataFrame>((resolve, reject) => {
             setTimeout(() => {
                 resolve(data);
-            }, 1000);
+            }, 100);
         });
     }
 
