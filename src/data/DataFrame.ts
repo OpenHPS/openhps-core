@@ -27,7 +27,9 @@ export class DataFrame {
         const timestamp = Date.now();
         this.setCreatedTimestamp(timestamp);
         this.setModifiedTimestamp(timestamp);
-        if (data instanceof DataFrame) {
+        if (data === undefined) {
+            return;
+        } else if (data instanceof DataFrame) {
             // Copy contents of data frame
             this.uid = data.getUID();
             this.createdTimestamp = data.getCreatedTimestamp();
