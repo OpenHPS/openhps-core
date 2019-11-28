@@ -56,6 +56,14 @@ export abstract class Layer<T extends DataFrame, K extends DataFrame> {
     }
 
     /**
+     * Set unique identifier of layer
+     * @param uid Unique identifier
+     */
+    protected setUID(uid: string): void {
+        this._uid = uid;
+    }
+
+    /**
      * Set layer name
      * @param name Layer name
      */
