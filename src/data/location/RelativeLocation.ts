@@ -5,29 +5,29 @@ import { LengthUnit } from "../unit/LengthUnit";
  * # OpenHPS: Relative location
  */
 export class RelativeLocation implements Location {
-    protected _referenceObject: Object;
-    protected _distance: number;
-    protected _distanceUnit: LengthUnit;
+    protected referenceObject: Object;
+    protected distance: number;
+    protected distanceUnit: LengthUnit;
 
     /**
      * Get the reference object that this location is relative to
      */
     public getReferenceObject(): Object {
-        return this._referenceObject;
+        return this.referenceObject;
     }
 
     /**
      * Get distance to reference object
      */
     public getDistance(): number {
-        return this._distance;
+        return this.distance;
     }
 
     /**
      * Get distance unit
      */
     public getDistanceUnit(): LengthUnit {
-        return this._distanceUnit;
+        return this.distanceUnit;
     }
 
     /**
@@ -36,7 +36,7 @@ export class RelativeLocation implements Location {
      * @param unit Length unit
      */
     public setDistance(distance: number, unit: LengthUnit): void {
-        this._distance = distance;
-        this._distanceUnit = unit;
+        this.distance = distance;
+        this.distanceUnit = unit;
     }
 }

@@ -12,6 +12,7 @@ export class OutputLayer<T extends DataFrame> extends ProcessingLayer<T, T> {
 
     constructor() {
         super();
+        this.setOutputLayer(null);
     }
 
     /**
@@ -45,12 +46,20 @@ export class OutputLayer<T extends DataFrame> extends ProcessingLayer<T, T> {
                 }
             }
             resolve(data);
+            if (this.getOutputLayer() !== null) {
+                // Push to next layer without waiting for a response
+                this.getOutputLayer().push(data, options);
+            }
         });
     }
 
     public predict(data: T, options: DataOptions): Promise<T> {
         return new Promise<T>(async (resolve, reject) => {
             resolve(data);
+            if (this.getOutputLayer() !== null) {
+                // Push to next layer without waiting for a response
+                this.getOutputLayer().push(data, options);
+            }
         });
     }
 

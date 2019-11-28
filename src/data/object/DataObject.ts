@@ -8,15 +8,15 @@ import { DataObjectCategory } from "./DataObjectCategory";
  * a more abstract object such as a Wi-Fi access point or room.
  */
 export class DataObject {
-    protected _uid: string;
-    protected _displayName: string;
-    protected _absoluteLocation: AbsoluteLocation;
-    protected _relativeLocations: RelativeLocation[] = new Array();
-    protected _shape: Shape;
-    protected _connectedObjects: Object[];
-    protected _category: DataObjectCategory = DataObjectCategory.DEFAULT;
-    protected _raw: any;
-    protected _layerData: Map<string, any> = new Map();
+    protected uid: string;
+    protected displayName: string;
+    protected absoluteLocation: AbsoluteLocation;
+    protected relativeLocations: RelativeLocation[] = new Array();
+    protected shape: Shape;
+    protected connectedObjects: Object[];
+    protected category: DataObjectCategory = DataObjectCategory.DEFAULT;
+    protected raw: any;
+    protected layerData: Map<string, any> = new Map();
 
     constructor(uid: string = null) {
         this.setUID(uid);
@@ -26,7 +26,7 @@ export class DataObject {
      * Get the object identifier
      */
     public getUID(): string {
-        return this._uid;
+        return this.uid;
     }
 
     /**
@@ -34,14 +34,14 @@ export class DataObject {
      * @param uid Object identifier
      */
     public setUID(uid: string) {
-        this._uid = uid;
+        this.uid = uid;
     }
 
     /**
      * Get raw data object
      */
     public getRawData(): any {
-        return this._raw;
+        return this.raw;
     }
 
     /**
@@ -49,14 +49,14 @@ export class DataObject {
      * @param data Raw data
      */
     public setRawData(data: any): void {
-        this._raw = data;
+        this.raw = data;
     }
 
     /**
      * Get the object display name
      */
     public getDisplayName(): string {
-        return this._displayName;
+        return this.displayName;
     }
 
     /**
@@ -64,14 +64,14 @@ export class DataObject {
      * @param displayName Object display name
      */
     public setDisplayName(displayName: string): void {
-        this._displayName = displayName;
+        this.displayName = displayName;
     }
 
     /**
      * Get the absolute location of the object
      */
     public getAbsoluteLocation(): AbsoluteLocation {
-        return this._absoluteLocation;
+        return this.absoluteLocation;
     }
 
     /**
@@ -79,14 +79,14 @@ export class DataObject {
      * @param absoluteLocation Absolute location of the object
      */
     public setAbsoluteLocation(absoluteLocation: AbsoluteLocation): void {
-        this._absoluteLocation = absoluteLocation;
+        this.absoluteLocation = absoluteLocation;
     }
 
     /**
      * Get object shape
      */
     public getShape(): Shape {
-        return this._shape;
+        return this.shape;
     }
 
     /**
@@ -94,21 +94,21 @@ export class DataObject {
      * @param size Object shape
      */
     public setShape(shape: Shape): void {
-        this._shape = shape;
+        this.shape = shape;
     }
 
     /**
      * Get relative locations
      */
     public getRelativeLocations(): RelativeLocation[] {
-        return this._relativeLocations;
+        return this.relativeLocations;
     }
 
     /**
      * Get object category
      */
     public getCategory(): DataObjectCategory {
-        return this._category;
+        return this.category;
     }
 
     /**
@@ -116,7 +116,7 @@ export class DataObject {
      * @param category Data object category
      */
     public setCategory(category: DataObjectCategory): void {
-        this._category = category;
+        this.category = category;
     }
 
     /**
@@ -124,7 +124,7 @@ export class DataObject {
      * @param layerUID Layer UID 
      */
     public getLayerData(layerUID: string): any {
-        return this._layerData.get(layerUID);
+        return this.layerData.get(layerUID);
     }
 
     /**
@@ -133,6 +133,6 @@ export class DataObject {
      * @param data Layer data to save
      */
     public setLayerData(layerUID: string, data: any): void {
-        this._layerData.set(layerUID, data);
+        this.layerData.set(layerUID, data);
     }
 }

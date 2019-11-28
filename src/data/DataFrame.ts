@@ -5,23 +5,40 @@ import * as uuidv4 from 'uuid/v4';
  * Data frame that is passed through each layer in a model.
  */
 export class DataFrame {
-    private _uid: string = uuidv4();
-    private _createdTimestamp: number;
-    private _modifiedTimestamp: number;
-    private _source: DataObject;
+    protected uid: string = uuidv4();
+    protected createdTimestamp: number;
+    protected modifiedTimestamp: number;
+    protected source: DataObject;
+    protected objects: DataObject[] = new Array<DataObject>();
+    protected raw: any;
+
     private _categoryObjectsMap: Map<DataObjectCategory, DataObject[]> = new Map();
-    private _objects: DataObject[] = new Array<DataObject>();
-    private _raw: any;
 
     /**
-     * Create a new data frame
-     * @param json Optional JSON to parse from
+     * Create a new data frame based on another
+     * @param dataFrame Optional data frame to copy from
      */
-    constructor(json: any = null) {
+    constructor(dataFrame?: DataFrame)
+    /**
+     * Create a new data frame
+     * @param data Optional JSON to parse from
+     */
+    constructor(data?: any) {
         const timestamp = Date.now();
         this.setCreatedTimestamp(timestamp);
         this.setModifiedTimestamp(timestamp);
-        this.parseJSON(json);
+        if (data instanceof DataFrame) {
+            // Copy contents of data frame
+            this.uid = data.getUID();
+            this.createdTimestamp = data.getCreatedTimestamp();
+            this.modifiedTimestamp = data.getModifiedTimestamp();
+            this.source = data.getSource();
+            this.objects = data.getObjects();
+            this.raw = data.getRawData();
+        } else {
+            // Parse data
+            this.parseJSON(data);
+        }
     }
 
     /**
@@ -32,15 +49,15 @@ export class DataFrame {
         if (json === null) {
             return;
         }
-        this._raw = json;
+        this.raw = json;
         if (typeof json === "string") {
-            this._raw = JSON.parse(json);
+            this.raw = JSON.parse(json);
         }
-        if (this._raw.source !== undefined) {
-            this.setSource(this.parseDataObject(this._raw.source));
+        if (this.raw.source !== undefined) {
+            this.setSource(this.parseDataObject(this.raw.source));
         }
-        if (this._raw.objects !== undefined) {
-            this._raw.objects.forEach((rawObject: any) => {
+        if (this.raw.objects !== undefined) {
+            this.raw.objects.forEach((rawObject: any) => {
                 this.addObject(this.parseDataObject(rawObject));
             });
         }
@@ -60,14 +77,14 @@ export class DataFrame {
      * Get the data frame unique identifier
      */
     public getUID(): string {
-        return this._uid;
+        return this.uid;
     }
 
     /**
      * Get the source object that captured the data frame
      */
     public getSource(): DataObject {
-        return this._source;
+        return this.source;
     }
 
     /**
@@ -75,7 +92,7 @@ export class DataFrame {
      * @param source Object that captured the data frame
      */
     public setSource(source: DataObject): void {
-        this._source = source;
+        this.source = source;
     }
 
     /**
@@ -83,14 +100,14 @@ export class DataFrame {
      * @param timestamp 
      */
     public setCreatedTimestamp(timestamp: number): void {
-        this._createdTimestamp = timestamp;
+        this.createdTimestamp = timestamp;
     }
 
     /**
      * Get data frame created timestamp (ISO 8601)
      */
     public getCreatedTimestamp(): number {
-        return this._createdTimestamp;
+        return this.createdTimestamp;
     }
     
     /**
@@ -98,21 +115,21 @@ export class DataFrame {
      * @param timestamp 
      */
     public setModifiedTimestamp(timestamp: number): void {
-        this._modifiedTimestamp = timestamp;
+        this.modifiedTimestamp = timestamp;
     }
 
     /**
      * Get data frame modified timestamp (ISO 8601)
      */
     public getModifiedTimestamp(): number {
-        return this._modifiedTimestamp;
+        return this.modifiedTimestamp;
     }
 
     /**
      * Update the modified timestamp
      */
     public updateModifiedTimestamp(): void {
-        this._modifiedTimestamp = Date.now();
+        this.modifiedTimestamp = Date.now();
     }
 
     /**
@@ -122,7 +139,7 @@ export class DataFrame {
         if (category) {
             return this._categoryObjectsMap.get(category);
         } else {
-            return this._objects;
+            return this.objects;
         }
     }
 
@@ -139,7 +156,7 @@ export class DataFrame {
             categoryObjects.push(object);
             this._categoryObjectsMap.set(object.getCategory(), categoryObjects);
         }
-        this._objects.push(object);
+        this.objects.push(object);
     }
 
     /**
@@ -147,7 +164,7 @@ export class DataFrame {
      * @param object Object to remove
      */
     public removeObject(object: DataObject): void {
-        this._objects.splice(this._objects.indexOf(object), 1);
+        this.objects.splice(this.objects.indexOf(object), 1);
         const categoryObjects = this._categoryObjectsMap.get(object.getCategory());
         categoryObjects.splice(categoryObjects.indexOf(object), 1);
     }
@@ -156,6 +173,6 @@ export class DataFrame {
      * Get raw data object
      */
     public getRawData(): any {
-        return this._raw;
+        return this.raw;
     }
 }
