@@ -5,11 +5,11 @@ import { GraphImpl } from "./graph/_internal/implementations/GraphImpl";
 import { GraphPullOptions, GraphPushOptions } from "./utils";
 
 /**
- * This model contains multiple [[Layer]]s, [[Service]]s to compute
+ * This model contains multiple [[Node]]s, [[Service]]s to compute
  * [[DataFrame]]s that are pushed or pulled from this model.
  * 
  * ## Usage
- * Please refer to [[ModelFactory]] for creating a new model
+ * Please refer to [[ModelBuilder]] for creating a new model
  */
 export interface Model<In extends DataFrame, Out extends DataFrame> extends ServiceContainer, GraphImpl<In, Out> {
 

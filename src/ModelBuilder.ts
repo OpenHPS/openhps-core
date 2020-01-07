@@ -11,8 +11,8 @@ import { ModelImpl } from './graph/_internal/implementations/ModelImpl';
  * ```typescript
  * const model = new ModelBuilder()
  *      .withLogger((level: string, log:any) => { console.log(log); })
- *      .withLayer(...)
- *      .withLayer(...)
+ *      .to(...)
+ *      .to(...)
  *      .withService(...)
  *      .build();
  * ```

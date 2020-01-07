@@ -115,10 +115,22 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
      */
     public pull(options?: GraphPullOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
+            const callbackPromises = new Array();
             this._events.get('pull').forEach(callback => {
-                callback();
+                callbackPromises.push(callback(options));
             });
-            resolve();
+            Promise.resolve(callbackPromises).then(_ => {
+                resolve();
+            });
+            if (callbackPromises.length === 0) {
+                const pullPromises = new Array();
+                this.getInputNodes().forEach(node => {
+                    pullPromises.push(node.pull(options));
+                });
+                Promise.resolve(pullPromises).then(_ => {
+                    resolve();
+                });
+            }
         });
     }
 
@@ -132,12 +144,16 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
                 return reject();
             }
 
+            const callbackPromises = new Array();
             this._events.get('push').forEach(callback => {
-                const callbackPromise = callback(data, options);
-                Promise.resolve(callbackPromise).then(_ => {
-                    resolve();
-                });
+                callbackPromises.push(callback(data, options));
             });
+            Promise.resolve(callbackPromises).then(_ => {
+                resolve();
+            });
+            if (callbackPromises.length === 0) {
+                resolve();
+            }
         });
     }
 
