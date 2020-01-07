@@ -1,4 +1,4 @@
-import { Node } from "../";
+import { Node } from "../Node";
 import { DataFrame } from "../data/DataFrame";
 import { GraphPullOptions } from "../utils";
 
