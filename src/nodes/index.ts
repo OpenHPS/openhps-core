@@ -4,3 +4,5 @@ export * from './NamedNode';
 export * from './shapes';
 export * from './sink';
 export * from './source';
+export * from './SinkNode';
+export * from './SourceNode';

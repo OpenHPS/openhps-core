@@ -9,9 +9,9 @@ and object definitions.
 OpenHPS is a positioning framework design to support many different use cases ranging from simple positioning such as detecting the position
 of a pawn on a chessboard using RFID, to indoor positioning methods using cameras.
 
-At its core, the framework provides the ability to create a chain of models that each have an input and output layer. Sensory data is
-provided by passing a data frame through all layers in the model. Inbetween the input and output layer are a configurable amount of
-processing layers that compute the sensory data to a more abstract, higher level result.
+At its core, the framework provides the ability to create a chain of models that each have an input and output node. Sensory data is
+provided by passing a data frame through all nodes in the model. Inbetween the input and output node are a configurable amount of
+processing nodes that compute the sensory data to a more abstract, higher level result.
 
 Persistent data such as the previous location of tracked objects or calibration data is stored in services linked to a model. Each layer
 that is added to the model can read and write the data that is stored by the services.
@@ -22,8 +22,8 @@ The framework is created by Maxim Van de Wynckel who is a PhD Student at the Vri
 This section of the documentation explains the main concepts used in the OpenHPS framework. While most of these are
 specific to the core component hosted in this repository, they are used in other components as well.
 
-### Layer
-A layer is a concept that has an input and output data type. Data can be pushed to a layer or pulled from it by another.
+### Node
+A node is a concept that has an input and output data type. Data can be pushed to a layer or pulled from it by another.
 These layers perform a task in the chain of data processing and data abstraction.
 
 ### Model
