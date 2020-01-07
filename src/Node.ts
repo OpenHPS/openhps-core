@@ -152,7 +152,13 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
                 resolve();
             });
             if (callbackPromises.length === 0) {
-                resolve();
+                const pushPromises = new Array();
+                this.getOutputNodes().forEach(node => {
+                    pushPromises.push(node.push(data, options));
+                });
+                Promise.resolve(pushPromises).then(_ => {
+                    resolve();
+                });
             }
         });
     }

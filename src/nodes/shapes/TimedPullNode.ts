@@ -17,7 +17,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
      * Start the timed pull
      * @param options Pull options
      */
-    public start(options?: GraphPullOptions): void {
+    public start(options?: GraphPullOptions): TimedPullNode<InOut> {
         const timer: NodeJS.Timeout = setInterval(() => {
             const promises = new Array();
             this.getInputNodes().forEach(node => {
@@ -25,6 +25,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
             });
             Promise.resolve(promises);
         }, this._intervalUnit.convert(this._interval, TimeUnit.MICRO));
+        return this;
     }
 
 }
