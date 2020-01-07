@@ -1,6 +1,6 @@
 import { DataFrame } from "../data";
 import { Node } from "../Node";
-import { GraphPushOptions, GraphPullOptions } from "../utils";
+import { GraphPushOptions } from "../utils";
 
 export abstract class ProcessingNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
 
@@ -8,7 +8,6 @@ export abstract class ProcessingNode<In extends DataFrame, Out extends DataFrame
         super();
 
         this.on('push', this._onPush.bind(this));
-        this.on('pull', this._onPull.bind(this));
     }
 
     private _onPush(data: In, options?: GraphPushOptions): Promise<void> {
@@ -17,14 +16,6 @@ export abstract class ProcessingNode<In extends DataFrame, Out extends DataFrame
                 this.getOutputNodes().forEach(node => {
                     node.push(result, options);
                 });
-            });
-        });
-    }
-
-    private _onPull(options?: GraphPullOptions): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            this.getInputNodes().forEach(node => {
-                node.pull(options);
             });
         });
     }
