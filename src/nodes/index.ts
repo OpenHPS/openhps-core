@@ -6,3 +6,4 @@ export * from './sink';
 export * from './source';
 export * from './SinkNode';
 export * from './SourceNode';
+export * from './ProcessingNode';
