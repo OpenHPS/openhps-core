@@ -1,9 +1,8 @@
 import { DataService } from "./DataService";
-import { DataObject } from "../data/object/DataObject";
+import { DataObject } from "../data";
 
 /**
- * # OpenHPS: Object Data Service
- * The object server manages the data of objects that are currently being
+ * The object service manages the data of objects that are currently being
  * processed in the model and objects that need to be tracked.
  */
 export class ObjectDataService extends DataService<DataObject> {

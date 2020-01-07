@@ -1,6 +1,6 @@
 import { AbsoluteLocation } from "./AbsoluteLocation";
-import { AngleUnit } from "../unit";
-import { LengthUnit } from "../unit/LengthUnit";
+import { AngleUnit } from "../../utils/unit";
+import { LengthUnit } from "../../utils/unit/LengthUnit";
 import { Cartesian3DLocation } from "./Cartesian3DLocation";
 
 /**

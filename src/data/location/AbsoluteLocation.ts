@@ -1,5 +1,5 @@
 import { Location } from "./Location";
-import { LengthUnit } from "../unit/LengthUnit";
+import { LengthUnit } from "../../utils/unit/LengthUnit";
 
 /**
  * # OpenHPS: Absolute location

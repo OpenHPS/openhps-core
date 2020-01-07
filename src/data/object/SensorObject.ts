@@ -1,5 +1,5 @@
 import { DataObject } from "./DataObject";
-import { AngleUnit } from "../unit";
+import { AngleUnit } from "../../utils/unit";
 
 export class SensorObject extends DataObject {
     private _horizontalFOV: number[];

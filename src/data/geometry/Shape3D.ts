@@ -1,5 +1,5 @@
 import { Shape } from "./Shape";
-import { VolumeUnit } from "../unit/VolumeUnit";
+import { VolumeUnit } from "../../utils/unit/VolumeUnit";
 
 export interface Shape3D extends Shape {
     getVolume(): number;

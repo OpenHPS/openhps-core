@@ -1,10 +1,8 @@
 import { AbsoluteLocation, RelativeLocation } from "../location";
 import { Shape } from "../geometry";
-import { DataObjectCategory } from "./DataObjectCategory";
 
 /**
- * # OpenHPS: Data object
- * An object is an instance that can be anything ranging from a person or asset to
+ * A data object is an instance that can be anything ranging from a person or asset to
  * a more abstract object such as a Wi-Fi access point or room.
  */
 export class DataObject {
@@ -14,9 +12,8 @@ export class DataObject {
     protected relativeLocations: RelativeLocation[] = new Array();
     protected shape: Shape;
     protected connectedObjects: Object[];
-    protected category: DataObjectCategory = DataObjectCategory.DEFAULT;
     protected raw: any;
-    protected layerData: Map<string, any> = new Map();
+    protected nodeData: Map<string, any> = new Map();
 
     constructor(uid: string = null) {
         this.setUID(uid);
@@ -105,34 +102,19 @@ export class DataObject {
     }
 
     /**
-     * Get object category
+     * Get node data
+     * @param nodeUID Node UID 
      */
-    public getCategory(): DataObjectCategory {
-        return this.category;
+    public getNodeData(nodeUID: string): any {
+        return this.nodeData.get(nodeUID);
     }
 
     /**
-     * Set object category
-     * @param category Data object category
+     * Add node data
+     * @param nodeUID Node UID 
+     * @param data Node data to save
      */
-    public setCategory(category: DataObjectCategory): void {
-        this.category = category;
-    }
-
-    /**
-     * Get layer data
-     * @param layerUID Layer UID 
-     */
-    public getLayerData(layerUID: string): any {
-        return this.layerData.get(layerUID);
-    }
-
-    /**
-     * Add layer data
-     * @param layerUID Layer UID 
-     * @param data Layer data to save
-     */
-    public setLayerData(layerUID: string, data: any): void {
-        this.layerData.set(layerUID, data);
+    public setNodeData(nodeUID: string, data: any): void {
+        this.nodeData.set(nodeUID, data);
     }
 }

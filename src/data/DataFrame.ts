@@ -1,5 +1,5 @@
-import { DataObject, DataObjectCategory } from "./object";
 import * as uuidv4 from 'uuid/v4';
+import { DataObject } from './object/DataObject';
 
 /**
  * Data frame that is passed through each layer in a model.
@@ -11,8 +11,6 @@ export class DataFrame {
     protected source: DataObject;
     protected objects: DataObject[] = new Array<DataObject>();
     protected raw: any;
-
-    private _categoryObjectsMap: Map<DataObjectCategory, DataObject[]> = new Map();
 
     /**
      * Create a new data frame based on another
@@ -137,12 +135,8 @@ export class DataFrame {
     /**
      * Get known objects used in this data frame
      */
-    public getObjects(category?: DataObjectCategory): DataObject[] {
-        if (category) {
-            return this._categoryObjectsMap.get(category);
-        } else {
-            return this.objects;
-        }
+    public getObjects(): DataObject[] {
+        return this.objects;
     }
 
     /**
@@ -150,14 +144,6 @@ export class DataFrame {
      * @param object Relevant object
      */
     public addObject(object: DataObject): void {
-        if (this._categoryObjectsMap.has(object.getCategory())) {
-            const categoryObjects = this._categoryObjectsMap.get(object.getCategory());
-            categoryObjects.push(object);
-        } else {
-            const categoryObjects = new Array<DataObject>();
-            categoryObjects.push(object);
-            this._categoryObjectsMap.set(object.getCategory(), categoryObjects);
-        }
         this.objects.push(object);
     }
 
@@ -167,8 +153,6 @@ export class DataFrame {
      */
     public removeObject(object: DataObject): void {
         this.objects.splice(this.objects.indexOf(object), 1);
-        const categoryObjects = this._categoryObjectsMap.get(object.getCategory());
-        categoryObjects.splice(categoryObjects.indexOf(object), 1);
     }
 
     /**
