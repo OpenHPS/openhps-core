@@ -15,10 +15,12 @@ export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
             const servicePromises = new Array();
             for (const object of data.getObjects()) {
                 const service = (this.getGraph() as Model<any, any>).getDataServiceByObject(object);
-                if (object.getUID() !== null) {
-                    servicePromises.push(service.update(object));
-                } else {
-                    servicePromises.push(service.create(object));
+                if (service !== null && service !== undefined) { 
+                    if (object.getUID() !== null) {
+                        servicePromises.push(service.update(object));
+                    } else {
+                        servicePromises.push(service.create(object));
+                    }
                 }
             }
             if (servicePromises.length === 0) {
@@ -26,6 +28,8 @@ export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
             } else {
                 Promise.resolve(servicePromises).then(_ => {
                     resolve();
+                }).catch(ex => {
+                    reject(ex);
                 });
             }
         });
