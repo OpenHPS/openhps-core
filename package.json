@@ -8,6 +8,9 @@
     "type": "git",
     "url": "git+https://gitlab.wise.vub.ac.be/mvdewync/openhps-core.git"
   },
+  "publishConfig": {
+    "registry": "https://repo.mvdw-software.com/repository/npm-openhps/"
+  },
   "main": "dist/index.js",
   "scripts": {
     "commit": "npm run build:typescript && npm run lint && npm run test && npx git-cz",
