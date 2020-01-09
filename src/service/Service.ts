@@ -1,7 +1,7 @@
 import { ServiceContainer } from './ServiceContainer';
 
 /**
- * # OpenHPS: Service
+ * Service is accessible by each [[Node]] inside the [[Model]]
  */
 export abstract class Service {
     private _name: string;
