@@ -22,7 +22,8 @@
     "build": "npm run clean && npm run build:typescript && npm run build:typedoc",
     "build:typescript": "tsc",
     "build:typedoc": "typedoc --exclude **/_internal/**/* --excludePrivate --hideGenerator --out docs src",
-    "release": "semantic-release --branch origin/production"
+    "publish:development": "npm publish --tag alpha",
+    "publish:release": "semantic-release --branch master"
   },
   "keywords": [
     "openhps",
@@ -38,6 +39,7 @@
     "uuid": "^3.3.3"
   },
   "devDependencies": {
+    "@semantic-release/gitlab": "^4.1.0",
     "@types/chai": "^4.2.5",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.14",
@@ -46,8 +48,8 @@
     "jenkins-mocha": "^8.0.0",
     "mocha": "^6.1.2",
     "nyc": "^14.1.1",
-    "semantic-release": "^15.13.31",
     "ts-node": "^8.5.0",
+    "semantic-release": "^15.13.31",
     "tslint": "^5.20.1",
     "tslint-no-circular-imports": "^0.7.0",
     "typedoc": "^0.15.1",
