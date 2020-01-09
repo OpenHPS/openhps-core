@@ -22,8 +22,8 @@
     "build": "npm run clean && npm run build:typescript && npm run build:typedoc",
     "build:typescript": "tsc",
     "build:typedoc": "typedoc --exclude **/_internal/**/* --excludePrivate --hideGenerator --out docs src",
-    "publish:development": "npm publish --tag alpha",
-    "publish:release": "semantic-release --branch master"
+    "publish:development": "npm publish --tag dev",
+    "publish:release": "semantic-release --branch master && npm publish"
   },
   "keywords": [
     "openhps",
