@@ -2,7 +2,8 @@ import { DataFrame, DataObject } from "./data";
 import { DataService, Service } from "./service";
 import { ServiceContainer } from "./service/ServiceContainer";
 import { GraphImpl } from "./graph/_internal/implementations/GraphImpl";
-import { GraphPullOptions, GraphPushOptions } from "./utils";
+import { GraphPushOptions } from "./graph/GraphPushOptions";
+import { GraphPullOptions } from "./graph/GraphPullOptions";
 
 /**
  * This model contains multiple [[Node]]s, [[Service]]s to compute

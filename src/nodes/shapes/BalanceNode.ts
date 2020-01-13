@@ -1,6 +1,6 @@
 import { DataFrame } from "../../data";
 import { Node } from "../../Node";
-import { GraphPushOptions } from "../../utils";
+import { GraphPushOptions } from "../../graph/GraphPushOptions";
 import { AbstractNode } from "../../graph/interfaces";
 
 export class BalanceNode<InOut extends DataFrame> extends Node<InOut, InOut> {

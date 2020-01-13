@@ -1,7 +1,8 @@
 import * as uuidv4 from 'uuid/v4';
 import { AbstractNode } from "./graph/interfaces/AbstractNode";
 import { DataFrame } from "./data/DataFrame";
-import { GraphPushOptions, GraphPullOptions } from "./utils";
+import { GraphPushOptions } from "./graph/GraphPushOptions";
+import { GraphPullOptions } from "./graph/GraphPullOptions";
 import { AbstractGraph } from "./graph/interfaces/AbstractGraph";
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
 

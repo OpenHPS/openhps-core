@@ -1,6 +1,6 @@
 import { DataFrame } from "../../data/DataFrame";
 import { Node } from "../../Node";
-import { GraphPullOptions } from "../../utils";
+import { GraphPullOptions } from "../../graph/GraphPullOptions";
 import { TimeUnit } from "../../utils/unit";
 
 export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {

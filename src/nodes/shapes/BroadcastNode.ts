@@ -1,6 +1,6 @@
 import { DataFrame } from "../../data";
 import { Node } from "../../Node";
-import { GraphPushOptions } from "../../utils";
+import { GraphPushOptions } from "../../graph/GraphPushOptions";
 
 export class BroadcastNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 

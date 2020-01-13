@@ -1,6 +1,6 @@
 import { DataFrame } from "../data";
 import { Node } from "../Node";
-import { GraphPushOptions } from "../utils";
+import { GraphPushOptions } from "../graph/GraphPushOptions";
 
 export abstract class ProcessingNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
 

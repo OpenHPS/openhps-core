@@ -1,6 +1,6 @@
 import { DataFrame } from "../../data/DataFrame";
 import { SinkNode } from "../SinkNode";
-import { GraphPushOptions } from "../../utils";
+import { GraphPushOptions } from "../../graph/GraphPushOptions";
 
 /**
  * This sink node will serialize the data frames pushed to this

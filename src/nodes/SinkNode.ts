@@ -1,5 +1,5 @@
 import { Node } from "../Node";
-import { GraphOptions } from "../utils/GraphOptions";
+import { GraphOptions } from "../graph/GraphOptions";
 import { DataFrame } from "../data/DataFrame";
 import { Model } from "../Model";
 

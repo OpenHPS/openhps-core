@@ -1,6 +1,6 @@
 import { DataFrame } from "../../data/DataFrame";
 import { SourceNode } from "../SourceNode";
-import { GraphPullOptions } from "../../utils";
+import { GraphPullOptions } from "../../graph/GraphPullOptions";
 
 /**
  * This source node is initialised with an array of data. This data

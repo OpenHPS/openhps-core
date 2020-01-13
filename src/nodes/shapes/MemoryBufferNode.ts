@@ -1,6 +1,7 @@
 import { DataFrame } from "../../data/DataFrame";
 import { Node } from "../../Node";
-import { GraphPullOptions, GraphPushOptions } from "../../utils";
+import { GraphPushOptions } from "../../graph/GraphPushOptions";
+import { GraphPullOptions } from "../../graph/GraphPullOptions";
 
 export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _dataFrames: InOut[];

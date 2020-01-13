@@ -1,6 +1,6 @@
 import { Node } from "../Node";
 import { DataFrame } from "../data/DataFrame";
-import { GraphPullOptions } from "../utils";
+import { GraphPullOptions } from "../graph/GraphPullOptions";
 
 export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
 

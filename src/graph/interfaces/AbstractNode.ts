@@ -1,5 +1,6 @@
 import { DataFrame } from "../../data/DataFrame";
-import { GraphPullOptions, GraphPushOptions } from "../../utils";
+import { GraphPushOptions } from "../../graph/GraphPushOptions";
+import { GraphPullOptions } from "../../graph/GraphPullOptions";
 
 export interface AbstractNode<In extends DataFrame, Out extends DataFrame> {
     /**
