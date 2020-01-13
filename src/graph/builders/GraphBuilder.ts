@@ -39,6 +39,11 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame, Builder e
         return (this as unknown) as Builder;
     }
 
+    public deleteEdge(edge: AbstractEdge<any>): Builder {
+        this.graph.deleteEdge(edge);
+        return (this as unknown) as Builder;
+    }
+
     public build(): AbstractGraph<In, Out> {
         // Link last added nodes to the internal output of the graph
         this.previousNodes.forEach(prevNode => {
@@ -51,6 +56,9 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame, Builder e
             node.setLogger(this.graph.getLogger());
         });
         this.graph.validate();
+        this.graph.getNodes().forEach(node => {
+            node.trigger('build', this);
+        });
         return this.graph;
     }
 

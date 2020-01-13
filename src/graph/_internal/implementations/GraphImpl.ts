@@ -11,8 +11,8 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
     private _nodes: Map<string, Node<any, any>> = new Map();
     private _edges: Map<string, AbstractEdge<any>> = new Map();
     
-    public internalInput = new BroadcastNode<In>();
-    public internalOutput = new BroadcastNode<Out>();
+    public internalInput: Node<any, In> = new BroadcastNode<In>();
+    public internalOutput: Node<Out, any> = new BroadcastNode<Out>();
 
     constructor() {
         super();

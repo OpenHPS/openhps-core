@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Model, ModelBuilder, DataFrame } from '../../src';
+import { Model, ModelBuilder, DataFrame, NamedNode } from '../../src';
 import { LoggingSinkNode } from '../../src/nodes/sink/LoggingSinkNode';
 import { ListSourceNode } from '../../src/nodes/source/ListSourceNode';
 
@@ -15,6 +15,16 @@ describe('list source', () => {
                 .to(new LoggingSinkNode())
                 .build();
                 
+            done();
+        });
+
+        
+        it('should add a merge node internally', (done) => {
+            const model = new ModelBuilder()
+                .to(new ListSourceNode([]))
+                .to(new NamedNode("output"))
+                .build();
+            console.log(model.serialize());
             done();
         });
 

@@ -183,9 +183,9 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
      * Trigger an event
      * 
      * @param event Event name to trigger
-     * @param _ Parameters for event 
+     * @param _ Parameter for event 
      */
-    public trigger(event: string, ..._: any): Promise<void> {
+    public trigger(event: string, _?: any): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (this._events.has(event)) {
                 const callbacks = this._events.get(event);
