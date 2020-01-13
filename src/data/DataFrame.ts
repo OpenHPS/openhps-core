@@ -2,7 +2,7 @@ import * as uuidv4 from 'uuid/v4';
 import { DataObject } from './object/DataObject';
 
 /**
- * Data frame that is passed through each layer in a model.
+ * Data frame that is passed through each node in a model.
  */
 export class DataFrame {
     protected uid: string = uuidv4();
@@ -11,6 +11,7 @@ export class DataFrame {
     protected source: DataObject;
     protected objects: DataObject[] = new Array<DataObject>();
     protected raw: any;
+    protected priority: number = -1;
 
     /**
      * Create a new data frame based on another
@@ -135,8 +136,17 @@ export class DataFrame {
     /**
      * Get known objects used in this data frame
      */
-    public getObjects(): DataObject[] {
-        return this.objects;
+    public getObjects<T extends DataObject>(dataType?: new () => T): DataObject[] {
+        if (dataType === undefined) {
+            return this.objects;
+        } else {
+            const filteredObjects = new Array();
+            this.objects.forEach(object => {
+                if (object.constructor.name === dataType.name)
+                    filteredObjects.push(object);
+            });
+            return filteredObjects;
+        }
     }
 
     /**
@@ -160,5 +170,23 @@ export class DataFrame {
      */
     public getRawData(): any {
         return this.raw;
+    }
+
+    /**
+     * Get priority of the data frame.
+     * Priority is used when merging data frames from multiple streams.
+     * 
+     * @returns Number (higher is higher priority)
+     */
+    public getPriority(): number {
+        return this.priority;
+    } 
+
+    /**
+     * Set the priority of the data frame
+     * @param priority Priority number (higher number is higher priority)
+     */
+    public setPriority(priority: number): void {
+        this.priority = priority;
     }
 }
