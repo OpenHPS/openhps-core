@@ -23,8 +23,11 @@ export class LoggingSinkNode<In extends DataFrame> extends SinkNode<In> {
         this._loggingFn = loggingFn;
     }
     
-    public onPush(data: In, options?: GraphPushOptions): void {
-        this._loggingFn(data);
+    public onPush(data: In, options?: GraphPushOptions): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this._loggingFn(data);
+            resolve();
+        });
     }
     
 } 

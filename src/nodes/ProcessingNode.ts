@@ -13,9 +13,11 @@ export abstract class ProcessingNode<In extends DataFrame, Out extends DataFrame
     private _onPush(data: In, options?: GraphPushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.process(data, options).then(result => {
-                this.getOutputNodes().forEach(node => {
-                    node.push(result, options);
-                });
+                if (result !== null || result !== undefined) {
+                    this.getOutputNodes().forEach(node => {
+                        node.push(result, options);
+                    });
+                }
             });
         });
     }
