@@ -136,9 +136,9 @@ export class DataFrame {
     /**
      * Get known objects used in this data frame
      */
-    public getObjects<T extends DataObject>(dataType?: new () => T): DataObject[] {
+    public getObjects<T>(dataType?: new () => T): T[] {
         if (dataType === undefined) {
-            return this.objects;
+            return this.objects as unknown as T[];
         } else {
             const filteredObjects = new Array();
             this.objects.forEach(object => {

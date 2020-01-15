@@ -11,6 +11,11 @@ export class SensorObject extends DataObject {
         super();
     }
 
+    public merge(object: SensorObject): SensorObject {
+        
+        return this;
+    }
+
     /**
      * Get horizontal field of view of sensor
      */

@@ -7,3 +7,4 @@ export * from './source';
 export * from './SinkNode';
 export * from './SourceNode';
 export * from './ProcessingNode';
+export * from './processing';

@@ -75,11 +75,11 @@ export class GeographicalLocation extends AbsoluteLocation {
     public distance(destination: GeographicalLocation): number {
         const latRadA = AngleUnit.DEGREES.convert(this.getLatitude(), AngleUnit.RADIANS);
         const latRadB = AngleUnit.DEGREES.convert(destination.getLatitude(), AngleUnit.RADIANS);
-        const Δlat = AngleUnit.DEGREES.convert(destination.getLatitude() - this.getLatitude(), AngleUnit.RADIANS);
-        const Δlon = AngleUnit.DEGREES.convert(destination.getLongitude() - this.getLongitude(), AngleUnit.RADIANS);
-        const a = Math.sin(Δlat / 2) * Math.sin(Δlat / 2) +
+        const deltaLat = AngleUnit.DEGREES.convert(destination.getLatitude() - this.getLatitude(), AngleUnit.RADIANS);
+        const deltaLon = AngleUnit.DEGREES.convert(destination.getLongitude() - this.getLongitude(), AngleUnit.RADIANS);
+        const a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
                 Math.cos(latRadA) * Math.cos(latRadB) *
-                Math.sin(Δlon / 2) * Math.sin(Δlon / 2);
+                Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return GeographicalLocation.EARTH_RADIUS * c;
     }

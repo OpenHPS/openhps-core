@@ -11,12 +11,27 @@ export class DataObject {
     protected absoluteLocation: AbsoluteLocation;
     protected relativeLocations: RelativeLocation[] = new Array();
     protected shape: Shape;
-    protected connectedObjects: Object[];
     protected raw: any;
     protected nodeData: Map<string, any> = new Map();
 
     constructor(uid: string = null) {
         this.setUID(uid);
+    }
+
+    public merge(object: DataObject): DataObject {
+        if (object.getDisplayName() !== undefined)
+            this.displayName = object.displayName;
+        if (object.getShape() !== undefined)
+            this.shape = object.shape;
+        if (object.getAbsoluteLocation() !== undefined)
+            this.absoluteLocation = object.absoluteLocation;
+        object.relativeLocations.forEach(location => {
+            
+        });
+        object.nodeData.forEach((value, key) => {
+            this.nodeData.set(key, value);
+        });
+        return this;
     }
 
     /**

@@ -1,21 +1,33 @@
 import { Node } from "../Node";
 import { DataFrame } from "../data/DataFrame";
 import { GraphPullOptions } from "../graph/GraphPullOptions";
-import { ServiceMergeNode } from "./shapes/ServiceMergeNode";
+import { ServiceMergeNode } from "./processing/ServiceMergeNode";
 import { GraphBuilder, EdgeBuilder } from "../graph";
 
 export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
+    private _ignoreMerging: boolean;
 
-    constructor() {
+    /**
+     * Construct a new source node
+     * 
+     * @param ignoreMerging When set to true, the data frames will not be merged with
+     * services 
+     */
+    constructor(ignoreMerging: boolean = false) {
         super();
+        this._ignoreMerging = ignoreMerging;
         this.on('pull', this._onPull.bind(this));
         this.on('build', this._onBuild.bind(this));
     }
 
     private _onBuild(graphBuilder: GraphBuilder<any, any, any>): void {
+        if (this._ignoreMerging) {
+            return;
+        }
+
         // Add a service merge node between this node and output nodes
         const mergeNode = new ServiceMergeNode<Out>();
-        mergeNode.setName(this.getName() + "_server_merge");
+        mergeNode.setName(this.getName() + "_service_merge");
         mergeNode.setGraph(this.getGraph());
         graphBuilder.addNode(mergeNode);
         this.getGraph().getEdges().forEach(edge => {
