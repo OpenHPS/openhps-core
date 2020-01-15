@@ -136,7 +136,7 @@ export class DataFrame {
     /**
      * Get known objects used in this data frame
      */
-    public getObjects<T>(dataType?: new () => T): T[] {
+    public getObjects<T extends DataObject>(dataType?: new () => T): T[] {
         if (dataType === undefined) {
             return this.objects as unknown as T[];
         } else {
