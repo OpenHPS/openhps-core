@@ -11,7 +11,6 @@ export class DataObject {
     protected absoluteLocation: AbsoluteLocation;
     protected relativeLocations: RelativeLocation[] = new Array();
     protected shape: Shape;
-    protected raw: any;
     protected nodeData: Map<string, any> = new Map();
 
     constructor(uid: string = null) {
@@ -26,8 +25,10 @@ export class DataObject {
         if (object.getAbsoluteLocation() !== undefined)
             this.absoluteLocation = object.absoluteLocation;
         object.relativeLocations.forEach(location => {
-            
+            this.relativeLocations.push(location);
         });
+        if (object.getAbsoluteLocation() !== undefined)
+            this.absoluteLocation = object.absoluteLocation;
         object.nodeData.forEach((value, key) => {
             this.nodeData.set(key, value);
         });
@@ -47,21 +48,6 @@ export class DataObject {
      */
     public setUID(uid: string) {
         this.uid = uid;
-    }
-
-    /**
-     * Get raw data object
-     */
-    public getRawData(): any {
-        return this.raw;
-    }
-
-    /**
-     * Set raw data object
-     * @param data Raw data
-     */
-    public setRawData(data: any): void {
-        this.raw = data;
     }
 
     /**

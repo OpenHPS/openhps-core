@@ -1,4 +1,4 @@
-import { Model, ModelBuilder, DataFrame, ObjectDataService, DataObject } from '../../src';
+import { Model, ModelBuilder, DataFrame, ObjectDataService, DataObject, SensorObject, ServiceMergeNode } from '../../src';
 import { LoggingSinkNode } from '../../src/nodes/sink';
 
 import { expect } from 'chai';
@@ -60,6 +60,43 @@ describe('data object', () => {
         });
 
     });
+    describe('input layer', () => {
+        var model: Model<DataFrame, DataFrame>;
+        var objectDataService: ObjectDataService;
+        
+        before((done) => {
+            model = new ModelBuilder()
+                .to(new ServiceMergeNode())
+                .to(new LoggingSinkNode())
+                .build();
+            objectDataService = model.getDataService(DataObject);
+
+            var object = new SensorObject("123");
+            object.setDisplayName("Hello");
+            objectDataService.create(object).then(savedObject => {
+                done();
+            });
+        });
+
+        it('should load unknown objects', (done) => {
+            var object = new SensorObject("123");
+            var frame = new DataFrame();
+            frame.addObject(object);
+            model.push(frame).then(_ => {
+                // Check if it is stored
+                objectDataService.findAll().then(objects => {
+                    expect(objects[0].getDisplayName()).to.equal("Hello");
+                    done();
+                }).catch(ex => {
+                    done(ex);
+                });
+            }).catch(ex => {
+                done(ex);
+            });
+        });
+
+    });
+
     describe('output layer', () => {
         var model: Model<DataFrame, DataFrame>;
         var objectDataService: ObjectDataService;
@@ -81,6 +118,24 @@ describe('data object', () => {
                 // Check if it is stored
                 objectDataService.findAll().then(objects => {
                     expect(objects[0].getDisplayName()).to.equal("Test");
+                    done();
+                }).catch(ex => {
+                    done(ex);
+                });
+            }).catch(ex => {
+                done(ex);
+            });
+        });
+
+        it('should store unknown data objects at the output layer', (done) => {
+            var object = new SensorObject();
+            object.setDisplayName("Testabc");
+            var frame = new DataFrame();
+            frame.addObject(object);
+            model.push(frame).then(_ => {
+                // Check if it is stored
+                objectDataService.findAll().then(objects => {
+                    expect(objects[1].getDisplayName()).to.equal("Testabc");
                     done();
                 }).catch(ex => {
                     done(ex);

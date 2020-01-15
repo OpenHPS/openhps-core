@@ -7,12 +7,16 @@ export class SensorObject extends DataObject {
     private _verticalFOV: number[];
     private _verticalFOVUnit: AngleUnit = AngleUnit.DEGREES;
 
-    constructor() {
-        super();
+    constructor(uid?: string) {
+        super(uid);
     }
 
     public merge(object: SensorObject): SensorObject {
-        
+        super.merge(object);
+        if (object.getHorizontalFOV() !== undefined)
+            this._horizontalFOV = object._horizontalFOV;
+        if (object.getVerticalFOV() !== undefined)
+            this._verticalFOV = object._verticalFOV;
         return this;
     }
 

@@ -2,6 +2,7 @@ import { Node } from "../Node";
 import { GraphOptions } from "../graph/GraphOptions";
 import { DataFrame } from "../data/DataFrame";
 import { Model } from "../Model";
+import { DataObject } from "../data";
 
 export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
 
@@ -12,15 +13,17 @@ export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
     public push(data: In, options?: GraphOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.onPush(data, options).then(_1 => {
+                const defaultService = (this.getGraph() as Model<any, any>).getDataService(DataObject);
                 const servicePromises = new Array();
                 for (const object of data.getObjects()) {
-                    const service = (this.getGraph() as Model<any, any>).getDataServiceByObject(object);
-                    if (service !== null && service !== undefined) { 
-                        if (object.getUID() !== null) {
-                            servicePromises.push(service.update(object));
-                        } else {
-                            servicePromises.push(service.create(object));
-                        }
+                    let service = (this.getGraph() as Model<any, any>).getDataServiceByObject(object);
+                    if (service === null || service === undefined) { 
+                        service = defaultService;
+                    }
+                    if (object.getUID() !== null) {
+                        servicePromises.push(service.update(object));
+                    } else {
+                        servicePromises.push(service.create(object));
                     }
                 }
                 if (servicePromises.length === 0) {

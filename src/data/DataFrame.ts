@@ -7,10 +7,8 @@ import { DataObject } from './object/DataObject';
 export class DataFrame {
     protected uid: string = uuidv4();
     protected createdTimestamp: number;
-    protected modifiedTimestamp: number;
     protected source: DataObject;
     protected objects: DataObject[] = new Array<DataObject>();
-    protected raw: any;
     protected priority: number = -1;
 
     /**
@@ -25,21 +23,28 @@ export class DataFrame {
     constructor(data?: any) {
         const timestamp = Date.now();
         this.setCreatedTimestamp(timestamp);
-        this.setModifiedTimestamp(timestamp);
         if (data === undefined) {
             return;
         } else if (data instanceof DataFrame) {
             // Copy contents of data frame
             this.uid = data.getUID();
             this.createdTimestamp = data.getCreatedTimestamp();
-            this.modifiedTimestamp = data.getModifiedTimestamp();
             this.source = data.getSource();
             this.objects = data.getObjects();
-            this.raw = data.getRawData();
         } else {
             // Parse data
             this.parseJSON(data);
         }
+    }
+
+    public serialize(): any {
+        return {
+            uid: this.uid,
+            createdTimestamp: this.createdTimestamp,
+            source: this.source !== null ? this.source : null,
+            objects: this.objects,
+            priority: this.priority,
+        };
     }
 
     /**
@@ -50,15 +55,11 @@ export class DataFrame {
         if (json === null) {
             return;
         }
-        this.raw = json;
-        if (typeof json === "string") {
-            this.raw = JSON.parse(json);
+        if (json.source !== undefined) {
+            this.setSource(this.parseDataObject(json.source));
         }
-        if (this.raw.source !== undefined) {
-            this.setSource(this.parseDataObject(this.raw.source));
-        }
-        if (this.raw.objects !== undefined) {
-            this.raw.objects.forEach((rawObject: any) => {
+        if (json.objects !== undefined) {
+            json.objects.forEach((rawObject: any) => {
                 this.addObject(this.parseDataObject(rawObject));
             });
         }
@@ -70,7 +71,6 @@ export class DataFrame {
         }
         const dataObject = new DataObject();
         const objectKeys = Object.keys(object);
-        dataObject.setRawData(object);
         return dataObject;
     }
 
@@ -110,28 +110,6 @@ export class DataFrame {
     public getCreatedTimestamp(): number {
         return this.createdTimestamp;
     }
-    
-    /**
-     * Set data frame modified timestamp (ISO 8601)
-     * @param timestamp 
-     */
-    public setModifiedTimestamp(timestamp: number): void {
-        this.modifiedTimestamp = timestamp;
-    }
-
-    /**
-     * Get data frame modified timestamp (ISO 8601)
-     */
-    public getModifiedTimestamp(): number {
-        return this.modifiedTimestamp;
-    }
-
-    /**
-     * Update the modified timestamp
-     */
-    public updateModifiedTimestamp(): void {
-        this.modifiedTimestamp = Date.now();
-    }
 
     /**
      * Get known objects used in this data frame
@@ -164,14 +142,7 @@ export class DataFrame {
     public removeObject(object: DataObject): void {
         this.objects.splice(this.objects.indexOf(object), 1);
     }
-
-    /**
-     * Get raw data object
-     */
-    public getRawData(): any {
-        return this.raw;
-    }
-
+    
     /**
      * Get priority of the data frame.
      * Priority is used when merging data frames from multiple streams.
