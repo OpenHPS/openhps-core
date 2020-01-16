@@ -8,17 +8,13 @@ import { GraphPushOptions } from "../../graph/GraphPushOptions";
  * specified in the constructor.
  */
 export class LoggingSinkNode<In extends DataFrame> extends SinkNode<In> {
-    private _loggingFn: (log: In) => void;
+    private _loggingFn: (data: In) => void;
 
     /**
      * Create a new logger output sink
      * @param loggingFn Logging function
      */
-    /* tslint:disable:no-console */
-    constructor(loggingFn: (log: In) => void = function(log: In) { console.log({
-        message: `Output data frame`,
-        frame: log,
-    }); }) {
+    constructor(loggingFn: (data: In) => void = function(data: In) { }) {
         super();
         this._loggingFn = loggingFn;
     }

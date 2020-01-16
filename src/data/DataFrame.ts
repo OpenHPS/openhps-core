@@ -39,12 +39,20 @@ export class DataFrame {
 
     public serialize(): any {
         return {
+            _class: this.constructor.name,
             uid: this.uid,
             createdTimestamp: this.createdTimestamp,
-            source: this.source !== null ? this.source : null,
+            source: this.source !== null ? this.source.serialize() : null,
             objects: this.objects,
             priority: this.priority,
         };
+    }
+
+    public static deserialize(json: any): DataFrame {
+        /* tslint:disable */
+        let cls = (global as any)[json['_class']];
+        delete json['_class'];  // remove meta-property
+        return Object.setPrototypeOf(json, cls.prototype);
     }
 
     /**

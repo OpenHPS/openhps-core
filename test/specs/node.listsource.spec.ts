@@ -24,7 +24,6 @@ describe('list source', () => {
                 .to(new ListSourceNode([]))
                 .to(new NamedNode("output"))
                 .build();
-            console.log(model.serialize());
             done();
         });
 

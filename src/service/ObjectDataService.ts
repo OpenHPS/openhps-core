@@ -31,7 +31,8 @@ export class ObjectDataService extends DataService<DataObject> {
     public create(object: DataObject): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
             if (object.getUID() !== null && this._objects.has(object.getUID())) {
-                reject();
+                this._objects.set(object.getUID(), object);
+                resolve(object);
             } else {
                 // Insert new object
                 if (object.getUID() === null) {
@@ -46,8 +47,10 @@ export class ObjectDataService extends DataService<DataObject> {
 
     public update(object: DataObject): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
+                        // Insert new object
             if (object.getUID() === null) {
-                reject();
+                // Generate new ID if empty
+                object.setUID(this.generateID());
             }
             // Update existing data
             if (this._objects.has(object.getUID())) {
@@ -55,7 +58,8 @@ export class ObjectDataService extends DataService<DataObject> {
                 this._objects.set(object.getUID(), object);
                 resolve(object);
             } else {
-                reject();
+                this._objects.set(object.getUID(), object);
+                resolve(object);
             }
         });
     }

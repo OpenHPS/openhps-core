@@ -49,8 +49,14 @@ export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
         return new Promise<void>((resolve, reject) => {
             this.onPull(options).then(frame => {
                 if (frame !== null || frame !== undefined) {
+                    const promises = new Array();
                     this.getOutputNodes().forEach(node => {
-                        node.push(frame, options);
+                        promises.push(node.push(frame, options));
+                    });
+                    Promise.all(promises).then(_ => {
+                        resolve();
+                    }).catch(ex => {
+                        reject(ex);
                     });
                 }
             }).catch(ex => {

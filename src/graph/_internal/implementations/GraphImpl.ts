@@ -11,6 +11,8 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
     private _nodes: Map<string, Node<any, any>> = new Map();
     private _edges: Map<string, AbstractEdge<any>> = new Map();
     
+    private _flags: any = { ready: false };
+
     public internalInput: Node<any, In> = new BroadcastNode<In>();
     public internalOutput: Node<Out, any> = new BroadcastNode<Out>();
 
@@ -19,12 +21,33 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
         this.addNode(this.internalInput);
         this.addNode(this.internalOutput);
 
-        this.on('build', this._onBuild);
+        this.on('build', this._onBuild.bind(this));
+        this.on('ready', this._onReady.bind(this));
+        this.on('eventregister', this._onEventRegister.bind(this));
     }
 
-    private _onBuild() {
-        this.getNodes().forEach(node => {
-            node.trigger('build'); 
+    private _onReady(): void {
+        this._flags.ready = true;
+    }
+
+    private _onEventRegister(event: { event: string, callback: () => void }): void {
+        if (event.event === "ready" && this._flags.ready) {
+            Promise.resolve(event.callback());
+        }
+    }
+
+    private _onBuild(_: any): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const buildPromises = new Array();
+            this.getNodes().forEach(node => {
+                buildPromises.push(node.trigger('build', _));
+            });
+            Promise.all(buildPromises).then(_2 => {
+                this.trigger('ready');
+                resolve();
+            }).catch(ex => {
+                reject(ex);
+            });
         });
     }
 

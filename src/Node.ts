@@ -120,21 +120,34 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
             this._events.get('pull').forEach(callback => {
                 callbackPromises.push(callback(options));
             });
-            Promise.resolve(callbackPromises).then(_ => {
-                resolve();
-            });
+
             if (callbackPromises.length === 0) {
                 const pullPromises = new Array();
                 this.getInputNodes().forEach(node => {
                     pullPromises.push(node.pull(options));
                 });
-                Promise.resolve(pullPromises).then(_ => {
+
+                Promise.all(pullPromises).then(_ => {
                     resolve();
+                }).catch(ex => {
+                    reject(ex);
+                });
+            } else {
+                Promise.all(callbackPromises).then(_ => {
+                    resolve();
+                }).catch(ex => {
+                    reject(ex);
                 });
             }
         });
     }
 
+    /**
+     * Push data to the node
+     * 
+     * @param data Data frame to push
+     * @param options 
+     */
     public push(data: In, options?: GraphPushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (data === undefined || data === null) {
@@ -149,16 +162,23 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
             this._events.get('push').forEach(callback => {
                 callbackPromises.push(callback(data, options));
             });
-            Promise.resolve(callbackPromises).then(_ => {
-                resolve();
-            });
+
             if (callbackPromises.length === 0) {
                 const pushPromises = new Array();
                 this.getOutputNodes().forEach(node => {
                     pushPromises.push(node.push(data, options));
                 });
-                Promise.resolve(pushPromises).then(_ => {
+
+                Promise.all(pushPromises).then(_ => {
                     resolve();
+                }).catch(ex => {
+                    reject(ex);
+                });
+            } else {
+                Promise.all(callbackPromises).then(_ => {
+                    resolve();
+                }).catch(ex => {
+                    reject(ex);
                 });
             }
         });
@@ -177,6 +197,7 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
             const callbacks = new Array();
             this._events.set(event, callbacks);
         }
+        this.trigger('eventregister', { event, callback });
     }
 
     /**
@@ -189,18 +210,19 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
         return new Promise<void>((resolve, reject) => {
             if (this._events.has(event)) {
                 const callbacks = this._events.get(event);
-                const promises = new Array();
+                const triggerPromises = new Array<Promise<any>>();
                 callbacks.forEach(callback => {
-                    promises.push(callback(_));
+                    triggerPromises.push(callback(_));
                 });
-                Promise.resolve(callbacks).then(function(values: any[]) {
+                
+                Promise.all(triggerPromises).then(function(values: any[]) {
                     resolve();
+                }).catch(ex => {
+                    reject(ex);
                 });
-                if (promises.length === 0) {
-                    resolve();
-                }
+            } else {
+                resolve();
             }
-            resolve();
         });
     }
 

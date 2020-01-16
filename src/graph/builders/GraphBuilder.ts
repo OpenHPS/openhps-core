@@ -56,9 +56,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame, Builder e
             node.setLogger(this.graph.getLogger());
         });
         this.graph.validate();
-        this.graph.getNodes().forEach(node => {
-            node.trigger('build', this);
-        });
+        Promise.resolve(this.graph.trigger('build', this));
         return this.graph;
     }
 

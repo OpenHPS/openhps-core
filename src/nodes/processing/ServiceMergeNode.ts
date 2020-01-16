@@ -14,8 +14,14 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
             const model = (this.getGraph() as Model<any, any>);
             const defaultService = model.getDataService(DataObject);
             const promises = new Array();
-            data.getObjects(DataObject).forEach(object => {
-                promises.push(new Promise((resolve, reject) => {
+            const objects = new Array<DataObject>();
+            data.getObjects().forEach(object => {
+                objects.push(object);
+            });
+            if (data.getSource() !== undefined)
+                objects.push(data.getSource());
+            objects.forEach(object => {
+                promises.push(new Promise((objResolve, objReject) => {
                     let service = model.getDataServiceByObject(object);
                     if (service === null || service === undefined) {
                         service = defaultService;
@@ -23,16 +29,19 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
                     service.findById(object.getUID()).then(existingObject => {
                         existingObject.merge(object);
                         data.removeObject(object);
-                        return service.update(existingObject);
-                    }).then(savedObject => {
-                        data.addObject(savedObject);
-                        resolve();
+                        if (data.getSource() !== undefined && data.getSource().getUID() === existingObject.getUID()) {
+                            data.setSource(existingObject);
+                        } else {
+                            data.removeObject(object);
+                            data.addObject(existingObject);
+                        }
+                        objResolve();
                     }).catch(ex => {
-                        reject(ex);
+                        objReject(ex);
                     });
                 }));
             });
-            Promise.resolve(promises).then(_ => {
+            Promise.all(promises).then(_ => {
                 resolve(data);
             });
         });

@@ -17,6 +17,15 @@ export class DataObject {
         this.setUID(uid);
     }
 
+    public serialize(): any {
+        return {
+            _class: this.constructor.name,
+            uid: this.getUID(),
+            displayName: this.getDisplayName(),
+            absoluteLocation: this.absoluteLocation
+        };
+    }
+
     public merge(object: DataObject): DataObject {
         if (object.getDisplayName() !== undefined)
             this.displayName = object.displayName;

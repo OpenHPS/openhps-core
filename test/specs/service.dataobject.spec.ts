@@ -39,20 +39,6 @@ describe('data object', () => {
             });
         });
 
-        it('should throw an error when creating an existing object', (done) => {
-            var object = new DataObject("1");
-            object.setDisplayName("Test");
-            objectDataService.create(object).then(savedObject => {
-                objectDataService.create(object).then(savedObject => {
-                    done(new Error("No error thrown when created same object"));
-                }).catch(ex => {
-                    done();
-                });
-            }).catch(ex => {
-                done(new Error("Object was not created yet!"));
-            });
-        });
-
         it('should find all items', () => {
             objectDataService.findAll().then(objects => {
                 expect(objects.length).to.be.gte(1);
