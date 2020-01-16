@@ -22,12 +22,27 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
         this.addNode(this.internalOutput);
 
         this.on('build', this._onBuild.bind(this));
+        this.on('destroy', this._onDestroy.bind(this));
         this.on('ready', this._onReady.bind(this));
         this.on('eventregister', this._onEventRegister.bind(this));
     }
 
     private _onReady(): void {
         this._flags.ready = true;
+    }
+
+    private _onDestroy(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const destroyPromises = new Array();
+            this.getNodes().forEach(node => {
+                destroyPromises.push(node.trigger('destroy'));
+            });
+            Promise.all(destroyPromises).then(_2 => {
+                resolve();
+            }).catch(ex => {
+                reject(ex);
+            });
+        });
     }
 
     private _onEventRegister(event: { event: string, callback: () => void }): void {

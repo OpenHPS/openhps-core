@@ -24,6 +24,20 @@ export class WorkerProcessingNode<In extends DataFrame, Out extends DataFrame> e
         this._worker = new Worker(workerFile);
 
         this.on('build', this._onBuild.bind(this));
+        this.on('destroy', this._onDestroy.bind(this));
+    }
+
+    private _onDestroy(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (this._thread === undefined) {
+                return resolve();
+            }
+            Thread.terminate(this._thread).then(_ => {
+                resolve();
+            }).catch(ex => {
+                reject(ex);
+            });
+        });
     }
 
     private _onBuild(): Promise<void> {

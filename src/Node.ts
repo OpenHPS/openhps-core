@@ -17,6 +17,7 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
         this._events.set("push", new Array());
         this._events.set("pull", new Array());
         this._events.set("build", new Array());
+        this._events.set("destroy", new Array());
 
         this._name = this.constructor.name;
 
@@ -214,7 +215,6 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
                 callbacks.forEach(callback => {
                     triggerPromises.push(callback(_));
                 });
-                
                 Promise.all(triggerPromises).then(function(values: any[]) {
                     resolve();
                 }).catch(ex => {
