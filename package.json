@@ -1,6 +1,6 @@
 {
   "name": "@openhps/core",
-  "version": "1.0.0-alpha.8",
+  "version": "1.0.0-alpha.11",
   "description": "Open Hybrid Positioning System - Core component",
   "author": "Maxim Van de Wynckel",
   "license": "Apache-2.0",
@@ -21,9 +21,9 @@
     "build": "npm run clean && npm-run-all --parallel build:**",
     "build:typescript": "tsc",
     "build:typedoc": "typedoc --exclude **/_internal/**/* --excludePrivate --hideGenerator --out docs src",
-    "publish:development": "standard-version -m 'chore(development): %s' -m '[skip ci]' -a --prerelease alpha && npm publish --tag dev",
-    "publish:beta": "standard-version -m 'chore(beta): %s' -m '[skip ci]' -a --prerelease beta && npm publish --tag beta",
-    "publish:release": "standard-version -m 'chore(release): %s' -m '[skip ci]' -a && npm publish --tag latest"
+    "publish:development": "standard-version -m '%s' --prerelease alpha && npm publish --tag dev",
+    "publish:beta": "standard-version -m 'chore(release): %s [skip ci]' --prerelease beta && npm publish --tag beta",
+    "publish:release": "standard-version -m 'chore(release): %s [skip ci]' && npm publish --tag latest"
   },
   "keywords": [
     "openhps",
