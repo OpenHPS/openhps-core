@@ -29,6 +29,7 @@ export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
         const mergeNode = new ServiceMergeNode<Out>();
         mergeNode.name = this.name + "_service_merge";
         mergeNode.graph = this.graph;
+        mergeNode.logger = this.logger;
         graphBuilder.addNode(mergeNode);
         this.graph.edges.forEach(edge => {
             if (edge.inputNode === this) {
