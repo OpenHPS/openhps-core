@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.22](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.21...v1.0.0-alpha.22) (2020-01-17)
+
+
+### Bug Fixes
+
+* do not reject promise when findbyid fails ([5d9b7dc](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/5d9b7dcc31fe9284eed116cca3aa9dc094ea7d1e))
+* service merge node should not fail for unknown object ([29563fe](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/29563fe3927b88e0d94ad4cdb1cae861281c407a))
+
 ## [1.0.0-alpha.21](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.20...v1.0.0-alpha.21) (2020-01-17)
 
 
