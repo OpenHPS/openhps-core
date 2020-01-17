@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import * as uuidv4 from 'uuid/v4';
 import { DataObject } from './object/DataObject';
-import { jsonObject, jsonMember, jsonArrayMember } from 'typedjson';
+import { jsonObject, jsonMember, jsonArrayMember, TypedJSON } from 'typedjson';
 
 /**
  * Data frame that is passed through each node in a model.
@@ -38,6 +38,16 @@ export class DataFrame {
      */
     public getUID(): string {
         return this.uid;
+    }
+
+    public serialize(): string {
+        const serializer = new TypedJSON(Object.getPrototypeOf(this).constructor);
+        return serializer.stringify(this);
+    }
+
+    public static deserialize<T extends DataFrame>(serialized: string, dataType: new () => T): T {
+        const serializer = new TypedJSON(dataType);
+        return serializer.parse(serialized);
     }
 
     /**
