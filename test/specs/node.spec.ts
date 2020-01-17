@@ -6,7 +6,7 @@ describe('node', () => {
     describe('uid', () => {
         it('should not be null', () => {
             const node = new LoggingSinkNode();
-            expect(node.getUID()).to.not.equal(null);
+            expect(node.uid).to.not.equal(null);
         });
     });
 });

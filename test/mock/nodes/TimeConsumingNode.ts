@@ -10,7 +10,7 @@ export class TimeConsumingNode extends Node<DataFrame, DataFrame> {
     
     public onPush(data: DataFrame, options?: GraphPushOptions): void {
         setTimeout(() => {
-            this.getOutputNodes().forEach(node => {
+            this.outputNodes.forEach(node => {
                 node.push(data, options);
             });
         }, 10);

@@ -5,7 +5,7 @@ export class NamedNode<In extends DataFrame, Out extends DataFrame> extends Node
 
     constructor(name: string) {
         super();
-        this.setName(name);
+        this.name = name;
     }
 
 }

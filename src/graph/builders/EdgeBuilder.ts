@@ -11,12 +11,12 @@ export class EdgeBuilder<InOut extends DataFrame> {
     }
 
     public withInput(node: AbstractNode<any, InOut>): EdgeBuilder<InOut> {
-        this._edge.setInput(node);
+        this._edge.inputNode = node;
         return this;
     }
 
     public withOutput(node: AbstractNode<InOut, any>): EdgeBuilder<InOut> {
-        this._edge.setOutput(node);
+        this._edge.outputNode = node;
         return this;
     }
 

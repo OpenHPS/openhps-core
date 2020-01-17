@@ -11,7 +11,7 @@ export class EdgeImpl<InOut extends DataFrame> implements AbstractEdge<InOut> {
     /**
      * Get unique identifier of edge
      */
-    public getUID(): string {
+    public get uid(): string {
         return this._uid;
     }
 
@@ -19,31 +19,31 @@ export class EdgeImpl<InOut extends DataFrame> implements AbstractEdge<InOut> {
      * Set unique identifier of edge
      * @param uid Unique identifier
      */
-    public setUID(uid: string): void {
+    public set uid(uid: string) {
         this._uid = uid;
     }
 
-    public getInputNode(): AbstractNode<any, InOut> {
+    public get inputNode(): AbstractNode<any, InOut> {
         return this._inputNode;
     }
 
-    public getOutputNode(): AbstractNode<InOut, any> {
-        return this._outputNode;
-    }
-
-    public setInput(input: AbstractNode<any, InOut>): void {
+    public set inputNode(input: AbstractNode<any, InOut>) {
         this._inputNode = input;
     }
 
-    public setOutput(output: AbstractNode<InOut, any>): void {
+    public get outputNode(): AbstractNode<InOut, any> {
+        return this._outputNode;
+    }
+
+    public set outputNode(output: AbstractNode<InOut, any>) {
         this._outputNode = output;
     }
 
     public serialize(): Object {
         return {
             uid: this._uid,
-            input: this._inputNode.getUID(),
-            output: this._outputNode.getUID()
+            input: this._inputNode.uid,
+            output: this._outputNode.uid
         };
     }
 }

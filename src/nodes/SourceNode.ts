@@ -27,15 +27,15 @@ export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
 
         // Add a service merge node between this node and output nodes
         const mergeNode = new ServiceMergeNode<Out>();
-        mergeNode.setName(this.getName() + "_service_merge");
-        mergeNode.setGraph(this.getGraph());
+        mergeNode.name = this.name + "_service_merge";
+        mergeNode.graph = this.graph;
         graphBuilder.addNode(mergeNode);
-        this.getGraph().getEdges().forEach(edge => {
-            if (edge.getInputNode() === this) {
+        this.graph.edges.forEach(edge => {
+            if (edge.inputNode === this) {
                 graphBuilder.deleteEdge(edge);
                 graphBuilder.addEdge(new EdgeBuilder<Out>()
                     .withInput(mergeNode)
-                    .withOutput(edge.getOutputNode())
+                    .withOutput(edge.outputNode)
                     .build());
             }
         });
@@ -50,7 +50,7 @@ export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
             this.onPull(options).then(frame => {
                 if (frame !== null || frame !== undefined) {
                     const promises = new Array();
-                    this.getOutputNodes().forEach(node => {
+                    this.outputNodes.forEach(node => {
                         promises.push(node.push(frame, options));
                     });
                     Promise.all(promises).then(_ => {

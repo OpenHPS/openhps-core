@@ -11,7 +11,7 @@ describe('data object', () => {
         before((done) => {
             objectDataService = new ObjectDataService();
             var object = new DataObject(null);
-            object.setDisplayName("Test");
+            object.displayName = "Test";
             objectDataService.create(object).then(savedObject => {
                 done();
             });
@@ -19,13 +19,13 @@ describe('data object', () => {
         
         it('should store objects', (done) => {
             var object = new DataObject("2");
-            object.setDisplayName("Test");
+            object.displayName = "Test";
             objectDataService.create(object).then(savedObject => {
-                expect(savedObject.getUID()).to.equal("2");
-                expect(savedObject.getDisplayName()).to.equal("Test");
+                expect(savedObject.uid).to.equal("2");
+                expect(savedObject.displayName).to.equal("Test");
                 objectDataService.findById("2").then(savedObject => {
-                    expect(savedObject.getUID()).to.equal("2");
-                    expect(savedObject.getDisplayName()).to.equal("Test");
+                    expect(savedObject.uid).to.equal("2");
+                    expect(savedObject.displayName).to.equal("Test");
                     done();
                 });
             });
@@ -58,7 +58,7 @@ describe('data object', () => {
             objectDataService = model.getDataService(DataObject);
 
             var object = new SensorObject("123");
-            object.setDisplayName("Hello");
+            object.displayName = "Hello";
             objectDataService.create(object).then(savedObject => {
                 done();
             });
@@ -71,7 +71,7 @@ describe('data object', () => {
             model.push(frame).then(_ => {
                 // Check if it is stored
                 objectDataService.findAll().then(objects => {
-                    expect(objects[0].getDisplayName()).to.equal("Hello");
+                    expect(objects[0].displayName).to.equal("Hello");
                     done();
                 }).catch(ex => {
                     done(ex);
@@ -97,13 +97,13 @@ describe('data object', () => {
 
         it('should store objects at the output layer', (done) => {
             var object = new DataObject();
-            object.setDisplayName("Test");
+            object.displayName = "Test";
             var frame = new DataFrame();
             frame.addObject(object);
             model.push(frame).then(_ => {
                 // Check if it is stored
                 objectDataService.findAll().then(objects => {
-                    expect(objects[0].getDisplayName()).to.equal("Test");
+                    expect(objects[0].displayName).to.equal("Test");
                     done();
                 }).catch(ex => {
                     done(ex);
@@ -115,13 +115,13 @@ describe('data object', () => {
 
         it('should store unknown data objects at the output layer', (done) => {
             var object = new SensorObject();
-            object.setDisplayName("Testabc");
+            object.displayName = "Testabc";
             var frame = new DataFrame();
             frame.addObject(object);
             model.push(frame).then(_ => {
                 // Check if it is stored
                 objectDataService.findAll().then(objects => {
-                    expect(objects[1].getDisplayName()).to.equal("Testabc");
+                    expect(objects[1].displayName).to.equal("Testabc");
                     done();
                 }).catch(ex => {
                     done(ex);

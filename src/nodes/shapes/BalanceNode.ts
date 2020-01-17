@@ -10,12 +10,12 @@ export class BalanceNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     public push(data: InOut, options?: GraphPushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             let assigned = false;
-            this.getLogger()("debug", {
-                node: this.getUID(),
+            this.logger("debug", {
+                node: this.uid,
                 message: `Received data`,
                 data,
             });
-            for (const node of this.getOutputNodes()) {
+            for (const node of this.outputNodes) {
                 if (this._busyLayers.indexOf(node) === -1) {
                     // Node is not busy - perform push
                     this._busyLayers.push(node);
@@ -40,7 +40,7 @@ export class BalanceNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
     private _updateQueue() {
         if (this._queue.length !== 0) {
-            for (const node of this.getOutputNodes()) {
+            for (const node of this.outputNodes) {
                 if (this._busyLayers.indexOf(node) === -1) {
                     // Node is not busy - perform push
                     const queue: {data: InOut, options: GraphPushOptions, resolve: () => void, reject: (ex?: any) => void} = this._queue.pop();

@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import * as uuidv4 from 'uuid/v4';
 import { AbstractNode } from "./graph/interfaces/AbstractNode";
 import { DataFrame } from "./data/DataFrame";
@@ -5,13 +6,15 @@ import { GraphPushOptions } from "./graph/GraphPushOptions";
 import { GraphPullOptions } from "./graph/GraphPullOptions";
 import { AbstractGraph } from "./graph/interfaces/AbstractGraph";
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
+import { jsonObject, jsonMember } from './data';
 
+@jsonObject
 export class Node<In extends DataFrame, Out extends DataFrame> implements AbstractNode<In, Out> {
     private _uid: string = uuidv4();
     private _name: string;
     private _graph: AbstractGraph<any, any>;
     private _events: Map<string, Array<(..._: any) => any>> = new Map();
-    private _logger: (level: string, log: any) => void = () => {};
+    public logger: (level: string, log: any) => void = () => {};
 
     constructor() {
         this._events.set("push", new Array());
@@ -20,85 +23,73 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
         this._events.set("destroy", new Array());
 
         this._name = this.constructor.name;
-
-        this.getLogger()("debug", {
-            node: this.getUID(),
+        
+        this.logger("debug", {
+            node: this.uid,
             message: `Node has been constructed.`,
         });
     }
 
-    public getName(): string {
+    @jsonMember
+    public get name(): string {
         return this._name;
     }
 
-    public setName(name: string): void {
+    public set name(name: string) {
         this._name = name;
     }
 
-    public getGraph(): AbstractGraph<any, any> {
+    @jsonMember
+    public get graph(): AbstractGraph<any, any> {
         return this._graph;
     }
 
-    public setGraph(graph: AbstractGraph<any, any>): void {
+    public set graph(graph: AbstractGraph<any, any>) {
         this._graph = graph;
     }
 
-    private _getOutlets(): Array<AbstractEdge<Out>> {
+    private get outlets(): Array<AbstractEdge<Out>> {
         const edges = new Array();
-        this.getGraph().getEdges().forEach(edge => {
-            if (edge.getInputNode() === this) {
+        this.graph.edges.forEach(edge => {
+            if (edge.inputNode === this) {
                 edges.push(edge);
             }
         });
         return edges;
     }
 
-    private _getInlets(): Array<AbstractEdge<In>> {
+    private get inlets(): Array<AbstractEdge<In>> {
         const edges = new Array();
-        this.getGraph().getEdges().forEach(edge => {
-            if (edge.getOutputNode() === this) {
+        this.graph.edges.forEach(edge => {
+            if (edge.outputNode === this) {
                 edges.push(edge);
             }
         });
         return edges;
     }
 
-    public getOutputNodes(): Array<Node<any, any>> {
-        const edges = this._getOutlets();
+    public get outputNodes(): Array<Node<any, any>> {
+        const edges = this.outlets;
         const nodes = new Array();
         edges.forEach(edge => {
-            nodes.push(edge.getOutputNode());
+            nodes.push(edge.outputNode);
         });
         return nodes;
     }
 
-    public getInputNodes(): Array<Node<any, any>> {
-        const edges = this._getInlets();
+    public get inputNodes(): Array<Node<any, any>> {
+        const edges = this.inlets;
         const nodes = new Array();
         edges.forEach(edge => {
-            nodes.push(edge.getInputNode());
+            nodes.push(edge.inputNode);
         });
         return nodes;
-    }
-
-    /**
-     * Get logger
-     */
-    public getLogger(): (level: string, log: any) => void {
-        return this._logger;
-    }
-
-    /**
-     * Set logger
-     */
-    public setLogger(logger: (level: string, log: any) => void): void {
-        this._logger = logger;
     }
     
     /**
      * Get unique identifier of node
      */
-    public getUID(): string {
+    public get uid(): string {
         return this._uid;
     }
 
@@ -106,7 +97,7 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
      * Set unique identifier of node
      * @param uid Unique identifier
      */
-    public setUID(uid: string): void {
+    public set uid(uid: string) {
         this._uid = uid;
     }
 
@@ -124,7 +115,7 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
 
             if (callbackPromises.length === 0) {
                 const pullPromises = new Array();
-                this.getInputNodes().forEach(node => {
+                this.inputNodes.forEach(node => {
                     pullPromises.push(node.pull(options));
                 });
 
@@ -152,8 +143,8 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
     public push(data: In, options?: GraphPushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (data === undefined || data === null) {
-                this.getLogger()("warning", {
-                    node: this.getUID(),
+                this.logger("warning", {
+                    node: this.uid,
                     message: `Node received null data frame!`,
                 });
                 return reject();
@@ -166,7 +157,7 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
 
             if (callbackPromises.length === 0) {
                 const pushPromises = new Array();
-                this.getOutputNodes().forEach(node => {
+                this.outputNodes.forEach(node => {
                     pushPromises.push(node.push(data, options));
                 });
 
@@ -228,8 +219,8 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
 
     public serialize(): Object {
         return {
-            uid: this._uid,
-            name: this.getName()
+            uid: this.uid,
+            name: this.name
         };
     }
 

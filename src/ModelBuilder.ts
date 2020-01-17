@@ -24,11 +24,11 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
         super();
         this.graph = new ModelImpl<In, Out>();
         this.previousNodes = [this.graph.internalInput];
-        this.graph.setName("model");
+        this.graph.name = "model";
     }
 
     public withLogger(logger: (level: string, log: any) => void): ModelBuilder<In, Out> {
-        this.graph.setLogger(logger);
+        this.graph.logger = logger;
         return this;
     }
 

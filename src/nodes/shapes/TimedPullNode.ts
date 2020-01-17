@@ -20,7 +20,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     public start(options?: GraphPullOptions): TimedPullNode<InOut> {
         const timer: NodeJS.Timeout = setInterval(() => {
             const promises = new Array();
-            this.getInputNodes().forEach(node => {
+            this.inputNodes.forEach(node => {
                 promises.push(node.pull(options));
             });
             Promise.resolve(promises);

@@ -15,7 +15,7 @@ export abstract class ProcessingNode<In extends DataFrame, Out extends DataFrame
             this.process(data, options).then(result => {
                 if (result !== null && result !== undefined) {
                     const promises = new Array();
-                    this.getOutputNodes().forEach(node => {
+                    this.outputNodes.forEach(node => {
                         promises.push(node.push(result, options));
                     });
                     Promise.all(promises).then(_ => {

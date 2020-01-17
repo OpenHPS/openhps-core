@@ -9,15 +9,12 @@ import { jsonObject, jsonMember, jsonArrayMember, TypedJSON } from 'typedjson';
 @jsonObject
 export class DataFrame {
     @jsonMember
-    protected uid: string = uuidv4();
-    @jsonMember
-    protected createdTimestamp: number;
-    @jsonMember
-    protected source: DataObject;
+    private _uid: string = uuidv4();
+    private _createdTimestamp: number;
+    private _source: DataObject;
     @jsonArrayMember(DataObject)
-    protected objects: DataObject[] = new Array<DataObject>();
-    @jsonMember
-    protected priority: number = -1;
+    private _objects: DataObject[] = new Array<DataObject>();
+    private _priority: number = -1;
 
     /**
      * Create a new data frame based on another
@@ -30,14 +27,14 @@ export class DataFrame {
      */
     constructor() {
         const timestamp = Date.now();
-        this.setCreatedTimestamp(timestamp);
+        this.createdTimestamp = timestamp;
     }
 
     /**
      * Get the data frame unique identifier
      */
-    public getUID(): string {
-        return this.uid;
+    public get uid(): string {
+        return this._uid;
     }
 
     public serialize(): string {
@@ -53,31 +50,33 @@ export class DataFrame {
     /**
      * Get the source object that captured the data frame
      */
-    public getSource(): DataObject {
-        return this.source;
+    @jsonMember
+    public get source(): DataObject {
+        return this._source;
     }
 
     /**
      * Set the source object that captured the data frame
      * @param source Object that captured the data frame
      */
-    public setSource(source: DataObject): void {
-        this.source = source;
+    public set source(source: DataObject) {
+        this._source = source;
     }
 
     /**
      * Set data frame created timestamp (ISO 8601)
      * @param timestamp 
      */
-    public setCreatedTimestamp(timestamp: number): void {
-        this.createdTimestamp = timestamp;
+    public set createdTimestamp(timestamp: number) {
+        this._createdTimestamp = timestamp;
     }
 
     /**
      * Get data frame created timestamp (ISO 8601)
      */
-    public getCreatedTimestamp(): number {
-        return this.createdTimestamp;
+    @jsonMember
+    public get createdTimestamp(): number {
+        return this._createdTimestamp;
     }
 
     /**
@@ -85,10 +84,10 @@ export class DataFrame {
      */
     public getObjects<T extends DataObject>(dataType?: new () => T): T[] {
         if (dataType === undefined) {
-            return this.objects as unknown as T[];
+            return this._objects as unknown as T[];
         } else {
             const filteredObjects = new Array();
-            this.objects.forEach(object => {
+            this._objects.forEach(object => {
                 if (object.constructor.name === dataType.name)
                     filteredObjects.push(object);
             });
@@ -101,7 +100,7 @@ export class DataFrame {
      * @param object Relevant object
      */
     public addObject(object: DataObject): void {
-        this.objects.push(object);
+        this._objects.push(object);
     }
 
     /**
@@ -109,7 +108,7 @@ export class DataFrame {
      * @param object Object to remove
      */
     public removeObject(object: DataObject): void {
-        this.objects.splice(this.objects.indexOf(object), 1);
+        this._objects.splice(this._objects.indexOf(object), 1);
     }
     
     /**
@@ -118,15 +117,16 @@ export class DataFrame {
      * 
      * @returns Number (higher is higher priority)
      */
-    public getPriority(): number {
-        return this.priority;
+    @jsonMember
+    public get priority(): number {
+        return this._priority;
     } 
 
     /**
      * Set the priority of the data frame
      * @param priority Priority number (higher number is higher priority)
      */
-    public setPriority(priority: number): void {
-        this.priority = priority;
+    public set priority(priority: number) {
+        this._priority = priority;
     }
 }

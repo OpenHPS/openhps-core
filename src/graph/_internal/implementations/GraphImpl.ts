@@ -34,7 +34,7 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
     private _onDestroy(): Promise<void> {
         return new Promise((resolve, reject) => {
             const destroyPromises = new Array();
-            this.getNodes().forEach(node => {
+            this.nodes.forEach(node => {
                 destroyPromises.push(node.trigger('destroy'));
             });
             Promise.all(destroyPromises).then(_2 => {
@@ -54,7 +54,7 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
     private _onBuild(_: any): Promise<void> {
         return new Promise((resolve, reject) => {
             const buildPromises = new Array();
-            this.getNodes().forEach(node => {
+            this.nodes.forEach(node => {
                 buildPromises.push(node.trigger('build', _));
             });
             Promise.all(buildPromises).then(_2 => {
@@ -66,35 +66,35 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
         });
     }
 
-    public getEdges(): Array<AbstractEdge<any>> {
+    public get edges(): Array<AbstractEdge<any>> {
         return Array.from(this._edges.values());
     }
 
-    public getNodes(): Array<Node<any, any>> {
+    public get nodes(): Array<Node<any, any>> {
         return Array.from(this._nodes.values());
     }
 
     public addNode(node: Node<any, any>): void {
-        node.setGraph(this);
-        this._nodes.set(node.getUID(), node);
+        node.graph = this;
+        this._nodes.set(node.uid, node);
     }
 
     public addEdge(edge: AbstractEdge<any>): void {
-        this._edges.set(edge.getUID(), edge);
+        this._edges.set(edge.uid, edge);
     }
 
     public deleteEdge(edge: AbstractEdge<any>): void {
-        this._edges.delete(edge.getUID());
+        this._edges.delete(edge.uid);
     }
 
     public deleteNode(node: Node<any, any>): void {
-        this._nodes.delete(node.getUID());
+        this._nodes.delete(node.uid);
     }
 
     private _getNodeOutlets(node: Node<any, any>): Array<AbstractEdge<Out>> {
         const edges = new Array();
-        this.getEdges().forEach(edge => {
-            if (edge.getInputNode() === node) {
+        this.edges.forEach(edge => {
+            if (edge.inputNode === node) {
                 edges.push(edge);
             }
         });
@@ -103,8 +103,8 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
 
     private _getNodeInlets(node: Node<any, any>): Array<AbstractEdge<In>> {
         const edges = new Array();
-        this.getEdges().forEach(edge => {
-            if (edge.getOutputNode() === node) {
+        this.edges.forEach(edge => {
+            if (edge.outputNode === node) {
                 edges.push(edge);
             }
         });
@@ -113,26 +113,26 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
 
     public validate(): void {
         this._nodes.forEach(node => {
-            if (node.getGraph() === undefined) {
-                throw new ModelException(`Node ${node.getUID()} does not have a graph set!`);
+            if (node.graph === undefined) {
+                throw new ModelException(`Node ${node.uid} does not have a graph set!`);
             }
             if (this._getNodeInlets(node).length === 0 && this._getNodeOutlets(node).length === 0) {
-                throw new ModelException(`Node ${node.getUID()} is not connected to the graph!`);
+                throw new ModelException(`Node ${node.uid} is not connected to the graph!`);
             }
         });
         this._edges.forEach(edge => {
-            if (!this._nodes.has(edge.getInputNode().getUID())) {
-                throw new ModelException(`Node ${edge.getInputNode().getUID()} is used in an edge but not added to the graph!`);
+            if (!this._nodes.has(edge.inputNode.uid)) {
+                throw new ModelException(`Node ${edge.inputNode.uid} is used in an edge but not added to the graph!`);
             }
-            if (!this._nodes.has(edge.getOutputNode().getUID())) {
-                throw new ModelException(`Node ${edge.getOutputNode().getUID()} is used in an edge but not added to the graph!`);
+            if (!this._nodes.has(edge.outputNode.uid)) {
+                throw new ModelException(`Node ${edge.outputNode.uid} is used in an edge but not added to the graph!`);
             }
         });
-        if (!this._nodes.has(this.internalInput.getUID())) {
-            throw new ModelException(`Internal input node ${this.internalInput.getUID()} is not added to the graph!`);
+        if (!this._nodes.has(this.internalInput.uid)) {
+            throw new ModelException(`Internal input node ${this.internalInput.uid} is not added to the graph!`);
         }
-        if (!this._nodes.has(this.internalOutput.getUID())) {
-            throw new ModelException(`Internal output node ${this.internalOutput.getUID()} is not added to the graph!`);
+        if (!this._nodes.has(this.internalOutput.uid)) {
+            throw new ModelException(`Internal output node ${this.internalOutput.uid} is not added to the graph!`);
         }
     }
 
@@ -152,15 +152,15 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
     public serialize(): Object {
         const nodesSerialized = Array();
         const edgesSerialized = Array();
-        this.getNodes().forEach(node => {
+        this.nodes.forEach(node => {
             nodesSerialized.push(node.serialize());
         });
-        this.getEdges().forEach(edge => {
+        this.edges.forEach(edge => {
             edgesSerialized.push(edge.serialize());
         });
         return {
-            uid: this.getUID(),
-            name: this.getName(),
+            uid: this.uid,
+            name: this.name,
             nodes: nodesSerialized,
             edges: edgesSerialized
         };

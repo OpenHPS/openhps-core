@@ -6,11 +6,9 @@ export interface AbstractNode<In extends DataFrame, Out extends DataFrame> {
     /**
      * Get unique identifier of node
      */
-    getUID(): string;
+    uid: string;
 
-    getName(): string;
-
-    setName(name: string): void;
+    name: string;
     
     /**
      * Push data to the node
@@ -28,7 +26,5 @@ export interface AbstractNode<In extends DataFrame, Out extends DataFrame> {
     pull(options?: GraphPullOptions): Promise<void>;
 
     on(event: string, callback: () => any): void;
-    
-    serialize(): Object;
 
 }

@@ -8,41 +8,48 @@ import { jsonObject, jsonMember } from "typedjson";
  */
 @jsonObject
 export class RelativeLocation implements Location {
-    @jsonMember
-    protected referenceObject: Object;
-    @jsonMember
-    protected distance: number;
-    @jsonMember
-    protected distanceUnit: LengthUnit;
+    private _referenceObject: Object;
+    private _distance: number;
+    private _distanceUnit: LengthUnit;
 
     /**
      * Get the reference object that this location is relative to
      */
-    public getReferenceObject(): Object {
-        return this.referenceObject;
+    @jsonMember
+    public get referenceObject(): Object {
+        return this._referenceObject;
+    }
+
+    public set referenceObject(referenceObject: Object) {
+        this._referenceObject = referenceObject;
     }
 
     /**
      * Get distance to reference object
      */
-    public getDistance(): number {
-        return this.distance;
-    }
-
-    /**
-     * Get distance unit
-     */
-    public getDistanceUnit(): LengthUnit {
-        return this.distanceUnit;
+    @jsonMember
+    public get distance(): number {
+        return this._distance;
     }
 
     /**
      * Set distance to reference object
      * @param distance Distance to reference object
-     * @param unit Length unit
      */
-    public setDistance(distance: number, unit: LengthUnit): void {
-        this.distance = distance;
-        this.distanceUnit = unit;
+    public set distance(distance: number) {
+        this._distance = distance;
     }
+
+    /**
+     * Get distance unit
+     */
+    @jsonMember
+    public get distanceUnit(): LengthUnit {
+        return this._distanceUnit;
+    }
+
+    public set distanceUnit(distanceUnit: LengthUnit) {
+        this._distanceUnit = distanceUnit;
+    }
+
 }

@@ -30,16 +30,16 @@ export class ObjectDataService extends DataService<DataObject> {
 
     public create(object: DataObject): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
-            if (object.getUID() !== null && this._objects.has(object.getUID())) {
-                this._objects.set(object.getUID(), object);
+            if (object.uid !== null && this._objects.has(object.uid)) {
+                this._objects.set(object.uid, object);
                 resolve(object);
             } else {
                 // Insert new object
-                if (object.getUID() === null) {
+                if (object.uid === null) {
                     // Generate new ID if empty
-                    object.setUID(this.generateID());
+                    object.uid = this.generateID();
                 }
-                this._objects.set(object.getUID(), object);
+                this._objects.set(object.uid, object);
                 resolve(object);
             }
         });
@@ -48,17 +48,17 @@ export class ObjectDataService extends DataService<DataObject> {
     public update(object: DataObject): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
                         // Insert new object
-            if (object.getUID() === null) {
+            if (object.uid === null) {
                 // Generate new ID if empty
-                object.setUID(this.generateID());
+                object.uid = this.generateID();
             }
             // Update existing data
-            if (this._objects.has(object.getUID())) {
+            if (this._objects.has(object.uid)) {
                 // Update existing data
-                this._objects.set(object.getUID(), object);
+                this._objects.set(object.uid, object);
                 resolve(object);
             } else {
-                this._objects.set(object.getUID(), object);
+                this._objects.set(object.uid, object);
                 resolve(object);
             }
         });

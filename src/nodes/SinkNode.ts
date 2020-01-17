@@ -13,21 +13,21 @@ export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
     public push(data: In, options?: GraphOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.onPush(data, options).then(_1 => {
-                const defaultService = (this.getGraph() as Model<any, any>).getDataService(DataObject);
+                const defaultService = (this.graph as Model<any, any>).getDataService(DataObject);
                 const servicePromises = new Array();
                 const objects = new Array<DataObject>();
                 data.getObjects().forEach(object => {
                     objects.push(object);
                 });
-                if (data.getSource() !== undefined)
-                    objects.push(data.getSource());
+                if (data.source !== undefined)
+                    objects.push(data.source);
 
                 for (const object of objects) {
-                    let service = (this.getGraph() as Model<any, any>).getDataServiceByObject(object);
+                    let service = (this.graph as Model<any, any>).getDataServiceByObject(object);
                     if (service === null || service === undefined) { 
                         service = defaultService;
                     }
-                    if (object.getUID() !== null) {
+                    if (object.uid !== null) {
                         servicePromises.push(service.update(object));
                     } else {
                         servicePromises.push(service.create(object));

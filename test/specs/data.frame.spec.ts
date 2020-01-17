@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import 'mocha';
 import { ModelBuilder, Model, DataFrame, Node, DataObject } from '../../src';
 import { DummyDataFrame } from '../mock/data/DummyDataFrame';
+import { DummyDataObject } from '../mock/data/object/DummyDataObject';
 
 describe('data', () => {
     describe('frame', () => {
@@ -9,10 +10,11 @@ describe('data', () => {
         it('should be serializable and deserializable', (done) => {
             const dataFrame = new DummyDataFrame();
             dataFrame.addObject(new DataObject("123"));
-            dataFrame.setPriority(10);
-            const serialzed = dataFrame.serialize();
-            const deserialzed = DataFrame.deserialize(serialzed, DummyDataFrame);
-            console.log(deserialzed);
+            dataFrame.addObject(new DummyDataObject());
+            dataFrame.priority = 10;
+            const serialized = dataFrame.serialize();
+            const deserialized = DataFrame.deserialize(serialized, DummyDataFrame);
+            console.log(deserialized);
             done();
         });
 

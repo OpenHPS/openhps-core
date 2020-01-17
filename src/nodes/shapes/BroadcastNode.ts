@@ -12,7 +12,7 @@ export class BroadcastNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     public onPush(data: InOut, options?: GraphPushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const promises = new Array();
-            this.getOutputNodes().forEach(node => {
+            this.outputNodes.forEach(node => {
                 promises.push(node.push(data, options));
             });
             Promise.all(promises).then(_ => {

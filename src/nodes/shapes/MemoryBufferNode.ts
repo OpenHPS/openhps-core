@@ -14,7 +14,7 @@ export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut
 
     public onPull(options?: GraphPullOptions): void {
         if (this._dataFrames.length !== 0) {
-            this.getOutputNodes().forEach(node => {
+            this.outputNodes.forEach(node => {
                 node.push(this._dataFrames.pop(), options);
             });
         }

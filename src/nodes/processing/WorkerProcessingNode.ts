@@ -32,7 +32,7 @@ export class WorkerProcessingNode<In extends DataFrame, Out extends DataFrame> e
             if (this._thread === undefined) {
                 return resolve();
             }
-            Thread.terminate(this._thread).then(_ => {
+            Thread.terminate(this._thread).then((_: any) => {
                 resolve();
             }).catch(ex => {
                 reject(ex);
@@ -42,17 +42,17 @@ export class WorkerProcessingNode<In extends DataFrame, Out extends DataFrame> e
 
     private _onBuild(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this.getLogger()('debug', {
+            this.logger('debug', {
                 message: "Spawning new worker thread ..."
             });
             spawn(this._worker).then((thread: Thread) => {
                 this._thread = thread;
                 this._workerFn = (thread as any).process;
-                this.getLogger()('debug', {
+                this.logger('debug', {
                     message: "Worker thread spawned!",
                 });
                 resolve();
-            }).catch(ex => {
+            }).catch((ex: any) => {
                 reject(ex);
             });
         });

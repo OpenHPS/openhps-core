@@ -14,7 +14,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
      */
     constructor(name: string = "model") {
         super();
-        this.setName(name);
+        this.name = name;
         this._addDefaultServices();
     }
 
@@ -49,13 +49,6 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
     public addService(service: Service): void {
         service.registerServiceContainer(this);
         this._services.set(service.getName(), service);
-    }
-
-    /**
-     * Set logger
-     */
-    public setLogger(logger: (level: string, log: any) => void): void {
-        super.setLogger(logger);
     }
 
 }

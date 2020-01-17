@@ -10,36 +10,32 @@ import { jsonObject, jsonMember, jsonMapMember, jsonArrayMember } from 'typedjso
 @jsonObject
 export class DataObject {
     @jsonMember
-    protected uid: string;
-    @jsonMember
-    protected displayName: string;
-    @jsonMember
-    protected absoluteLocation: AbsoluteLocation;
-    @jsonArrayMember(RelativeLocation)
-    protected relativeLocations: RelativeLocation[] = new Array();
-    @jsonMember
-    protected shape: Shape;
+    private _uid: string;
+    private _displayName: string;
+    private _absoluteLocation: AbsoluteLocation;
+    private _relativeLocations: RelativeLocation[] = new Array();
+    private _shape: Shape;
     @jsonMapMember(String, Object)
-    protected nodeData: Map<string, Object> = new Map();
+    private _nodeData: Map<string, Object> = new Map();
 
     constructor(uid: string = null) {
-        this.setUID(uid);
+        this.uid = uid;
     }
 
     public merge(object: DataObject): DataObject {
-        if (object.getDisplayName() !== undefined)
+        if (object.displayName !== undefined)
             this.displayName = object.displayName;
-        if (object.getShape() !== undefined)
+        if (object.shape !== undefined)
             this.shape = object.shape;
-        if (object.getAbsoluteLocation() !== undefined)
+        if (object.absoluteLocation !== undefined)
             this.absoluteLocation = object.absoluteLocation;
         object.relativeLocations.forEach(location => {
             this.relativeLocations.push(location);
         });
-        if (object.getAbsoluteLocation() !== undefined)
+        if (object.absoluteLocation !== undefined)
             this.absoluteLocation = object.absoluteLocation;
-        object.nodeData.forEach((value, key) => {
-            this.nodeData.set(key, value);
+        object._nodeData.forEach((value, key) => {
+            this._nodeData.set(key, value);
         });
         return this;
     }
@@ -47,68 +43,76 @@ export class DataObject {
     /**
      * Get the object identifier
      */
-    public getUID(): string {
-        return this.uid;
+    public get uid(): string {
+        return this._uid;
     }
 
     /**
      * Set the object identifier
      * @param uid Object identifier
      */
-    public setUID(uid: string) {
-        this.uid = uid;
+    public set uid(uid: string) {
+        this._uid = uid;
     }
 
     /**
      * Get the object display name
      */
-    public getDisplayName(): string {
-        return this.displayName;
+    @jsonMember
+    public get displayName(): string {
+        return this._displayName;
     }
 
     /**
      * Set the display name of the object
      * @param displayName Object display name
      */
-    public setDisplayName(displayName: string): void {
-        this.displayName = displayName;
+    public set displayName(displayName: string) {
+        this._displayName = displayName;
     }
 
     /**
      * Get the absolute location of the object
      */
-    public getAbsoluteLocation(): AbsoluteLocation {
-        return this.absoluteLocation;
+    @jsonMember
+    public get absoluteLocation(): AbsoluteLocation {
+        return this._absoluteLocation;
     }
 
     /**
      * Set the absolute location of the object
      * @param absoluteLocation Absolute location of the object
      */
-    public setAbsoluteLocation(absoluteLocation: AbsoluteLocation): void {
-        this.absoluteLocation = absoluteLocation;
+    public set absoluteLocation(absoluteLocation: AbsoluteLocation) {
+        this._absoluteLocation = absoluteLocation;
     }
 
     /**
      * Get object shape
      */
-    public getShape(): Shape {
-        return this.shape;
+    @jsonMember
+    public get shape(): Shape {
+        return this._shape;
     }
 
     /**
      * Set object shape
      * @param size Object shape
      */
-    public setShape(shape: Shape): void {
-        this.shape = shape;
+    public set shape(shape: Shape) {
+        this._shape = shape;
     }
 
     /**
      * Get relative locations
      */
-    public getRelativeLocations(): RelativeLocation[] {
-        return this.relativeLocations;
+    @jsonArrayMember(RelativeLocation)
+    public get relativeLocations(): RelativeLocation[] {
+        return this._relativeLocations;
+    }
+
+    public set relativeLocations(relativeLocations: RelativeLocation[]) {
+        this._relativeLocations = relativeLocations;
     }
 
     /**
@@ -116,7 +120,7 @@ export class DataObject {
      * @param nodeUID Node UID 
      */
     public getNodeData(nodeUID: string): any {
-        return this.nodeData.get(nodeUID);
+        return this._nodeData.get(nodeUID);
     }
 
     /**
@@ -125,6 +129,6 @@ export class DataObject {
      * @param data Node data to save
      */
     public setNodeData(nodeUID: string, data: any): void {
-        this.nodeData.set(nodeUID, data);
+        this._nodeData.set(nodeUID, data);
     }
 }

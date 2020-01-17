@@ -6,21 +6,16 @@ export interface AbstractGraph<In extends DataFrame, Out extends DataFrame> exte
     /**
      * Get unique identifier of graph
      */
-    getUID(): string;
+    uid: string;
 
     /**
      * Get all the edges in the graph
      */
-    getEdges(): Array<AbstractEdge<any>>;
+    edges: Array<AbstractEdge<any>>;
 
     /**
      * Get all the nodes in the graph
      */
-    getNodes(): Array<AbstractNode<any, any>>;
-
-    /**
-     * Serialize the complete graph
-     */
-    serialize(): Object;
+    nodes: Array<AbstractNode<any, any>>;
 
 }
