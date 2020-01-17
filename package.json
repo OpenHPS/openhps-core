@@ -1,19 +1,18 @@
 {
   "name": "@openhps/core",
-  "version": "0.1.0",
+  "version": "1.0.0-alpha.0",
   "description": "Open Hybrid Positioning System - Core component",
   "author": "Maxim Van de Wynckel",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://git.mvdw-software.com/Maximvdw/openhps-core.git"
+    "url": "https://git.mvdw-software.com/Maximvdw/openhps-core.git"
   },
   "publishConfig": {
     "registry": "https://repo.mvdw-software.com/repository/npm-openhps/"
   },
   "main": "dist/index.js",
   "scripts": {
-    "commit": "npm run build:typescript && npm run lint && npm run test && npx git-cz",
     "test": "mocha --experimental-worker",
     "test:jenkins": "jenkins-mocha",
     "cover": "nyc mocha && nyc report --reporter=cobertura",
@@ -22,8 +21,9 @@
     "build": "npm run clean && npm-run-all --parallel build:**",
     "build:typescript": "tsc",
     "build:typedoc": "typedoc --exclude **/_internal/**/* --excludePrivate --hideGenerator --out docs src",
-    "publish:development": "npm publish --tag dev",
-    "publish:release": "semantic-release --branch master && npm publish"
+    "publish:development": "standard-version --prerelease alpha && npm publish --tag dev",
+    "publish:beta": "standard-version --prerelease beta && npm publish --tag beta",
+    "publish:release": "standard-version && npm publish --tag latest"
   },
   "keywords": [
     "openhps",
@@ -42,18 +42,20 @@
     "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "@semantic-release/gitlab": "^4.1.0",
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
     "@types/chai": "^4.2.5",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.14",
     "@types/uuid": "^3.4.6",
     "chai": "^4.2.0",
+    "husky": "^4.0.10",
     "jenkins-mocha": "^8.0.0",
     "mocha": "^6.1.2",
     "npm-run-all": "^4.1.5",
     "nyc": "^14.1.1",
-    "semantic-release": "^15.13.31",
     "shx": "^0.3.2",
+    "standard-version": "^7.0.1",
     "ts-node": "^8.5.0",
     "tslint": "^5.20.1",
     "tslint-no-circular-imports": "^0.7.0",
@@ -85,5 +87,17 @@
   },
   "engines": {
     "node": ">=12.0.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run test",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS --no-verify"
+    }
   }
 }
