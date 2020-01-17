@@ -27,10 +27,10 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
                         service = defaultService;
                     }
                     service.findById(object.uid).then(existingObject => {
-                        if (existingObject == null) {
+                        if (existingObject === null) {
                             objResolve();
                         }
-                        
+
                         existingObject.merge(object);
                         data.removeObject(object);
                         if (data.source !== undefined && data.source.uid === existingObject.uid) {
@@ -41,7 +41,8 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
                         }
                         objResolve();
                     }).catch(ex => {
-                        objReject(ex);
+                        // Ignore
+                        objResolve();
                     });
                 }));
             });

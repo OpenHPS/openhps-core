@@ -17,7 +17,7 @@ export class ObjectDataService extends DataService<DataObject> {
             if (this._objects.has(uid)) {
                 resolve(this._objects.get(uid));
             } else {
-                resolve(null);
+                reject(`Object with uid ${uid} not found!`);
             }
         });
     }
@@ -70,7 +70,7 @@ export class ObjectDataService extends DataService<DataObject> {
                 this._objects.delete(uid);
                 resolve();
             } else {
-                resolve();
+                reject(`Unable to delete! Object with uid ${uid} not found!`);
             }
         });
     }
