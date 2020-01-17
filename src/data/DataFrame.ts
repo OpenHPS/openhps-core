@@ -1,14 +1,22 @@
+import 'reflect-metadata';
 import * as uuidv4 from 'uuid/v4';
 import { DataObject } from './object/DataObject';
+import { jsonObject, jsonMember, jsonArrayMember } from 'typedjson';
 
 /**
  * Data frame that is passed through each node in a model.
  */
+@jsonObject
 export class DataFrame {
+    @jsonMember
     protected uid: string = uuidv4();
+    @jsonMember
     protected createdTimestamp: number;
+    @jsonMember
     protected source: DataObject;
+    @jsonArrayMember(DataObject)
     protected objects: DataObject[] = new Array<DataObject>();
+    @jsonMember
     protected priority: number = -1;
 
     /**
@@ -20,66 +28,9 @@ export class DataFrame {
      * Create a new data frame
      * @param data Optional JSON to parse from
      */
-    constructor(data?: any) {
+    constructor() {
         const timestamp = Date.now();
         this.setCreatedTimestamp(timestamp);
-        if (data === undefined) {
-            return;
-        } else if (data instanceof DataFrame) {
-            // Copy contents of data frame
-            this.uid = data.getUID();
-            this.createdTimestamp = data.getCreatedTimestamp();
-            this.source = data.getSource();
-            this.objects = data.getObjects();
-        } else {
-            // Parse data
-            this.parseJSON(data);
-        }
-    }
-
-    public serialize(): any {
-        return {
-            _class: this.constructor.name,
-            uid: this.uid,
-            createdTimestamp: this.createdTimestamp,
-            source: this.source !== null ? this.source.serialize() : null,
-            objects: this.objects,
-            priority: this.priority,
-        };
-    }
-
-    public static deserialize(json: any): DataFrame {
-        /* tslint:disable */
-        let cls = (global as any)[json['_class']];
-        delete json['_class'];  // remove meta-property
-        return Object.setPrototypeOf(json, cls.prototype);
-    }
-
-    /**
-     * Parse the JSON object or string
-     * @param json JSON object or string
-     */
-    public parseJSON(json: any): void {
-        if (json === null) {
-            return;
-        }
-        if (json.source !== undefined) {
-            this.setSource(this.parseDataObject(json.source));
-        }
-        if (json.objects !== undefined) {
-            json.objects.forEach((rawObject: any) => {
-                this.addObject(this.parseDataObject(rawObject));
-            });
-        }
-    }
-
-    public parseDataObject(object: any): DataObject {
-        if (typeof object === "string") {
-            return new DataObject(object);
-        }
-        const dataObject = new DataObject();
-        const objectKeys = Object.keys(object);
-        return dataObject;
     }
 
     /**

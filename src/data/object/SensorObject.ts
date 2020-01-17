@@ -2,10 +2,10 @@ import { DataObject } from "./DataObject";
 import { AngleUnit } from "../../utils/unit";
 
 export class SensorObject extends DataObject {
-    private _horizontalFOV: number[];
-    private _horizontalFOVUnit: AngleUnit = AngleUnit.DEGREES;
-    private _verticalFOV: number[];
-    private _verticalFOVUnit: AngleUnit = AngleUnit.DEGREES;
+    protected horizontalFOV: number[];
+    protected horizontalFOVUnit: AngleUnit = AngleUnit.DEGREES;
+    protected verticalFOV: number[];
+    protected verticalFOVUnit: AngleUnit = AngleUnit.DEGREES;
 
     constructor(uid?: string) {
         super(uid);
@@ -14,9 +14,9 @@ export class SensorObject extends DataObject {
     public merge(object: SensorObject): SensorObject {
         super.merge(object);
         if (object.getHorizontalFOV() !== undefined)
-            this._horizontalFOV = object._horizontalFOV;
+            this.horizontalFOV = object.horizontalFOV;
         if (object.getVerticalFOV() !== undefined)
-            this._verticalFOV = object._verticalFOV;
+            this.verticalFOV = object.verticalFOV;
         return this;
     }
 
@@ -24,7 +24,7 @@ export class SensorObject extends DataObject {
      * Get horizontal field of view of sensor
      */
     public getHorizontalFOV(): number[] {
-        return this._horizontalFOV;
+        return this.horizontalFOV;
     }
 
     /**
@@ -33,24 +33,24 @@ export class SensorObject extends DataObject {
      * @param unit Field of view units
      */
     public setHorizontalFOV(fov: number[], unit: AngleUnit = AngleUnit.DEGREES): void {
-        this._horizontalFOV = fov;
-        this._horizontalFOVUnit = unit;
+        this.horizontalFOV = fov;
+        this.horizontalFOVUnit = unit;
     }
 
     public getHorizontalFOVUnit(): AngleUnit {
-        return this._horizontalFOVUnit;
+        return this.horizontalFOVUnit;
     }
 
     public getVerticalFOV(): number[] {
-        return this._verticalFOV;
+        return this.verticalFOV;
     }
 
     public setVerticalFOV(fov: number[], unit: AngleUnit = AngleUnit.DEGREES): void {
-        this._verticalFOV = fov;
-        this._verticalFOVUnit = unit;
+        this.verticalFOV = fov;
+        this.verticalFOVUnit = unit;
     }
 
     public getVerticalFOVUnit(): AngleUnit {
-        return this._verticalFOVUnit;
+        return this.verticalFOVUnit;
     }
 }

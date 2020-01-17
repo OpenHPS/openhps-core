@@ -34,8 +34,10 @@
     "system"
   ],
   "dependencies": {
+    "reflect-metadata": "^0.1.13",
     "threads": "^1.0.0",
     "tiny-worker": "^2.3.0",
+    "typedjson": "^1.5.1",
     "uuid": "^3.3.3"
   },
   "devDependencies": {

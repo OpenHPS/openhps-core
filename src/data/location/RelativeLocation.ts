@@ -1,12 +1,18 @@
+import 'reflect-metadata';
 import { Location } from "./Location";
 import { LengthUnit } from "../../utils/unit/LengthUnit";
+import { jsonObject, jsonMember } from "typedjson";
 
 /**
- * # OpenHPS: Relative location
+ * Relative location to another reference object.
  */
+@jsonObject
 export class RelativeLocation implements Location {
+    @jsonMember
     protected referenceObject: Object;
+    @jsonMember
     protected distance: number;
+    @jsonMember
     protected distanceUnit: LengthUnit;
 
     /**

@@ -1,29 +1,29 @@
+import 'reflect-metadata';
 import { AbsoluteLocation, RelativeLocation } from "../location";
 import { Shape } from "../geometry";
+import { jsonObject, jsonMember, jsonMapMember, jsonArrayMember } from 'typedjson';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
  * a more abstract object such as a Wi-Fi access point or room.
  */
+@jsonObject
 export class DataObject {
+    @jsonMember
     protected uid: string;
+    @jsonMember
     protected displayName: string;
+    @jsonMember
     protected absoluteLocation: AbsoluteLocation;
+    @jsonArrayMember(RelativeLocation)
     protected relativeLocations: RelativeLocation[] = new Array();
+    @jsonMember
     protected shape: Shape;
-    protected nodeData: Map<string, any> = new Map();
+    @jsonMapMember(String, Object)
+    protected nodeData: Map<string, Object> = new Map();
 
     constructor(uid: string = null) {
         this.setUID(uid);
-    }
-
-    public serialize(): any {
-        return {
-            _class: this.constructor.name,
-            uid: this.getUID(),
-            displayName: this.getDisplayName(),
-            absoluteLocation: this.absoluteLocation
-        };
     }
 
     public merge(object: DataObject): DataObject {
