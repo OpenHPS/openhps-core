@@ -17,7 +17,7 @@ export class ObjectDataService extends DataService<DataObject> {
             if (this._objects.has(uid)) {
                 resolve(this._objects.get(uid));
             } else {
-                reject();
+                resolve(null);
             }
         });
     }
@@ -70,7 +70,7 @@ export class ObjectDataService extends DataService<DataObject> {
                 this._objects.delete(uid);
                 resolve();
             } else {
-                reject();
+                resolve();
             }
         });
     }

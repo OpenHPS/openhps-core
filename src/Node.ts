@@ -164,20 +164,12 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
                 Promise.all(pushPromises).then(_ => {
                     resolve();
                 }).catch(ex => {
-                    this.logger("error", {
-                        message: `Received an exception when forwarding push in node ${this.uid}!`,
-                        exception: ex
-                    });
                     reject(ex);
                 });
             } else {
                 Promise.all(callbackPromises).then(_ => {
                     resolve();
                 }).catch(ex => {
-                    this.logger("error", {
-                        message: `Received an exception when performing push in node ${this.uid}!`,
-                        exception: ex
-                    });
                     reject(ex);
                 });
             }

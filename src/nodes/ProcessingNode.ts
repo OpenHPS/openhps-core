@@ -27,6 +27,11 @@ export abstract class ProcessingNode<In extends DataFrame, Out extends DataFrame
                     resolve();
                 }
             }).catch(ex => {
+                if (ex === undefined) {
+                    this.logger("warning", {
+                        message: `Exception thrown in processing node ${this.uid} but no exception given!`
+                    });
+                }
                 reject(ex);
             });
         });
