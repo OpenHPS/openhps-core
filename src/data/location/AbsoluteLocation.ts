@@ -1,11 +1,16 @@
+import 'reflect-metadata';
 import { Location } from "./Location";
 import { LengthUnit } from "../../utils/unit/LengthUnit";
+import { jsonObject, jsonMember } from "typedjson";
 
 /**
- * # OpenHPS: Absolute location
+ * Absolute location
  */
+@jsonObject
 export class AbsoluteLocation implements Location {
+    @jsonMember
     protected accuracy: number;
+    @jsonMember
     protected accuracyUnit: LengthUnit;
 
     /**
