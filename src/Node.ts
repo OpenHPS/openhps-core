@@ -48,7 +48,7 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
         this._graph = graph;
     }
 
-    private get outlets(): Array<AbstractEdge<Out>> {
+    private _getOutlets(): Array<AbstractEdge<Out>> {
         const edges = new Array();
         this.graph.edges.forEach(edge => {
             if (edge.inputNode === this) {
@@ -58,7 +58,7 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
         return edges;
     }
 
-    private get inlets(): Array<AbstractEdge<In>> {
+    private _getInlets(): Array<AbstractEdge<In>> {
         const edges = new Array();
         this.graph.edges.forEach(edge => {
             if (edge.outputNode === this) {
@@ -69,7 +69,7 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
     }
 
     public get outputNodes(): Array<Node<any, any>> {
-        const edges = this.outlets;
+        const edges = this._getOutlets();
         const nodes = new Array();
         edges.forEach(edge => {
             nodes.push(edge.outputNode);
@@ -78,7 +78,7 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
     }
 
     public get inputNodes(): Array<Node<any, any>> {
-        const edges = this.inlets;
+        const edges = this._getInlets();
         const nodes = new Array();
         edges.forEach(edge => {
             nodes.push(edge.inputNode);
