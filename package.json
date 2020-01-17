@@ -38,12 +38,12 @@
     "threads": "^1.0.0",
     "tiny-worker": "^2.3.0",
     "typedjson": "^1.5.1",
-    "uuid": "^3.3.3"
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
-    "@types/chai": "^4.2.5",
+    "@types/chai": "^4.2.7",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.14",
     "@types/uuid": "^3.4.6",
@@ -55,11 +55,11 @@
     "nyc": "^14.1.1",
     "shx": "^0.3.2",
     "standard-version": "^7.0.1",
-    "ts-node": "^8.5.0",
+    "ts-node": "^8.6.2",
     "tslint": "^5.20.1",
     "tslint-no-circular-imports": "^0.7.0",
-    "typedoc": "^0.15.1",
-    "typescript": "^3.7.2"
+    "typedoc": "^0.15.8",
+    "typescript": "^3.7.5"
   },
   "nyc": {
     "branches": 20,
