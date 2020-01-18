@@ -4,10 +4,10 @@ import { RelativeLocation } from "./RelativeLocation";
 import { AngleUnit } from '../../utils';
 
 /**
- * Relevant location to another reference object measured in the angle.
+ * Relative location to another reference object measured in the angle.
  */
 @jsonObject
-export class RelevantAngleLocation extends RelativeLocation {
+export class RelativeAngleLocation extends RelativeLocation {
     private _angle: number;
     private _angleUnit: AngleUnit;
 

@@ -4,5 +4,5 @@ export { AbsoluteLocation } from './AbsoluteLocation';
 export { GeographicalLocation } from './GeographicalLocation';
 export { Cartesian2DLocation } from './Cartesian2DLocation';
 export { Cartesian3DLocation } from './Cartesian3DLocation';
-export { RelevantAngleLocation } from './RelevantAngleLocation';
-export { RelevantDistanceLocation } from './RelevantDistanceLocation';
+export { RelativeAngleLocation } from './RelativeAngleLocation';
+export { RelativeDistanceLocation } from './RelativeDistanceLocation';

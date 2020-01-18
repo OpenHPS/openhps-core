@@ -4,10 +4,10 @@ import { RelativeLocation } from "./RelativeLocation";
 import { LengthUnit } from "../../utils";
 
 /**
- * Relevant location to another reference object in distance.
+ * Relative location to another reference object in distance.
  */
 @jsonObject
-export class RelevantDistanceLocation extends RelativeLocation {
+export class RelativeDistanceLocation extends RelativeLocation {
     private _distance: number;
     private _distanceUnit: LengthUnit;
 
