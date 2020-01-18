@@ -59,6 +59,9 @@ export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
                     }).catch(ex => {
                         reject(ex);
                     });
+                } else {
+                    // No frame provided in pull
+                    resolve();
                 }
             }).catch(ex => {
                 reject(ex);
