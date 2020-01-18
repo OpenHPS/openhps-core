@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import { Location } from "./Location";
-import { LengthUnit } from "../../utils/unit/LengthUnit";
 import { jsonObject, jsonMember } from "typedjson";
 
 /**
@@ -8,17 +7,17 @@ import { jsonObject, jsonMember } from "typedjson";
  */
 @jsonObject
 export class RelativeLocation implements Location {
-    private _referenceObject: Object;
+    private _referenceObject: string;
 
     /**
      * Get the reference object that this location is relative to
      */
     @jsonMember
-    public get referenceObject(): Object {
+    public get referenceObject(): string {
         return this._referenceObject;
     }
 
-    public set referenceObject(referenceObject: Object) {
+    public set referenceObject(referenceObject: string) {
         this._referenceObject = referenceObject;
     }
 

@@ -8,6 +8,9 @@ import { AbstractGraph } from "./graph/interfaces/AbstractGraph";
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
 import { jsonObject, jsonMember } from './data';
 
+/**
+ * OpenHPS model node.
+ */
 @jsonObject
 export class Node<In extends DataFrame, Out extends DataFrame> implements AbstractNode<In, Out> {
     private _uid: string = uuidv4();
@@ -176,12 +179,18 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
         });
     }
 
+    public on(event: 'push', callback: (data: In, options?: GraphPushOptions) => any): void;
+    public on(event: 'pull', callback: (options?: GraphPullOptions) => any): void;
+    public on(event: 'build', callback: (graphBuild: any) => any): void;
+    public on(event: 'destroy', callback: () => any): void;
+    public on(event: 'ready', callback: () => any): void;
+    public on(event: 'eventregister', callback: () => any): void;
     /**
      * Register a new event
      * @param event Event name
      * @param callback Event callback
      */
-    public on(event: string, callback: () => any): void {
+    public on(event: string, callback: (_?: any) => any): void {
         if (this._events.has(event)) {
             const callbacks = this._events.get(event);
             callbacks.push(callback);
@@ -192,6 +201,12 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
         this.trigger('eventregister', { event, callback });
     }
 
+    public trigger(event: 'destroy', _?: any): Promise<void>;
+    public trigger(event: 'build', graphBuilder: any): Promise<void>;
+    public trigger(event: 'ready', _?: any): Promise<void>;
+    public trigger(event: 'eventregister', data: { event: string, callback: (_?: any) => any }): Promise<void>;
+    public trigger(event: 'pull', options?: GraphPullOptions): Promise<void>;
+    public trigger(event: 'push', data: In, options?: GraphPushOptions): Promise<void>;
     /**
      * Trigger an event
      * 

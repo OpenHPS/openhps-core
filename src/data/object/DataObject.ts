@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { AbsoluteLocation, RelativeLocation } from "../location";
 import { Shape } from "../geometry";
-import { jsonObject, jsonMember, jsonMapMember, jsonArrayMember } from 'typedjson';
+import { jsonObject, jsonMember, jsonMapMember, jsonArrayMember, TypedJSON } from 'typedjson';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -38,6 +38,24 @@ export class DataObject {
             this._nodeData.set(key, value);
         });
         return this;
+    }
+
+    /**
+     * Serialize the data object
+     */
+    public serialize(): string {
+        const serializer = new TypedJSON(Object.getPrototypeOf(this).constructor);
+        return serializer.stringify(this);
+    }
+
+    /**
+     * Deserialize the database
+     * @param serialized Serialized data frame
+     * @param dataType Data type to serialize to
+     */
+    public static deserialize<T extends DataObject>(serialized: string, dataType: new () => T): T {
+        const serializer = new TypedJSON(dataType);
+        return serializer.parse(serialized);
     }
 
     /**
