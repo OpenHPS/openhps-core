@@ -1,15 +1,20 @@
 import { DataService } from "./DataService";
 import { DataObject } from "../data";
+import * as uuidv4 from "uuid/v4";
 
 /**
  * The object service manages the data of objects that are currently being
  * processed in the model and objects that need to be tracked.
  */
-export class ObjectDataService extends DataService<DataObject> {
+export class DataObjectService extends DataService<DataObject> {
     protected _objects: Map<string, DataObject> = new Map();
 
     constructor() {
         super(DataObject);
+    }
+
+    protected generateID(): string {
+        return uuidv4();
     }
 
     public findById(uid: string): Promise<DataObject> {
@@ -17,7 +22,7 @@ export class ObjectDataService extends DataService<DataObject> {
             if (this._objects.has(uid)) {
                 resolve(this._objects.get(uid));
             } else {
-                reject(`Object with uid ${uid} not found!`);
+                reject(`Data object with uid ${uid} not found!`);
             }
         });
     }
@@ -70,7 +75,7 @@ export class ObjectDataService extends DataService<DataObject> {
                 this._objects.delete(uid);
                 resolve();
             } else {
-                reject(`Unable to delete! Object with uid ${uid} not found!`);
+                reject(`Unable to delete! Data object with uid ${uid} not found!`);
             }
         });
     }

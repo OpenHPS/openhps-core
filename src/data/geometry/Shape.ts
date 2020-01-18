@@ -2,7 +2,7 @@ import { AbsoluteLocation } from "../location";
 
 export interface Shape {
     /**
-     * Get center location of the shape
+     * The center of the shape as an absolute location
      */
-    getCenter(): AbsoluteLocation;
+    center: AbsoluteLocation;
 }

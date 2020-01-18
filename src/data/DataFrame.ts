@@ -37,11 +37,19 @@ export class DataFrame {
         return this._uid;
     }
 
+    /**
+     * Serialize the data frame
+     */
     public serialize(): string {
         const serializer = new TypedJSON(Object.getPrototypeOf(this).constructor);
         return serializer.stringify(this);
     }
 
+    /**
+     * Deserialize the database
+     * @param serialized Serialized data frame
+     * @param dataType Data type to serialize to
+     */
     public static deserialize<T extends DataFrame>(serialized: string, dataType: new () => T): T {
         const serializer = new TypedJSON(dataType);
         return serializer.parse(serialized);

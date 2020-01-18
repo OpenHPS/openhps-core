@@ -5,7 +5,6 @@ import { DataFrame } from "../../../data/DataFrame";
 import { ModelException } from "../../../exceptions";
 import { GraphPushOptions } from "../../GraphPushOptions";
 import { GraphPullOptions } from "../../GraphPullOptions";
-import { BroadcastNode } from "../../../nodes/shapes/BroadcastNode";
 
 export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> implements AbstractGraph<In, Out> {
     private _nodes: Map<string, Node<any, any>> = new Map();
@@ -13,8 +12,8 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
     
     private _flags: any = { ready: false };
 
-    public internalInput: Node<any, In> = new BroadcastNode<In>();
-    public internalOutput: Node<Out, any> = new BroadcastNode<Out>();
+    public internalInput: Node<any, In> = new Node<any, In>();
+    public internalOutput: Node<Out, any> = new Node<Out, any>();
 
     constructor() {
         super();

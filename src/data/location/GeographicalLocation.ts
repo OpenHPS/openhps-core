@@ -115,9 +115,9 @@ export class GeographicalLocation extends AbsoluteLocation {
         const phi = AngleUnit.DEGREES.convert(this.latitude, AngleUnit.RADIANS);
         const lambda = AngleUnit.DEGREES.convert(this.longitude, AngleUnit.RADIANS);
         // Convert ECR positions
-        ecr.setX(GeographicalLocation.EARTH_RADIUS * Math.cos(phi) * Math.cos(lambda));
-        ecr.setY(GeographicalLocation.EARTH_RADIUS * Math.cos(phi) * Math.sin(lambda));
-        ecr.setZ(GeographicalLocation.EARTH_RADIUS * Math.sin(phi));
+        ecr.x = GeographicalLocation.EARTH_RADIUS * Math.cos(phi) * Math.cos(lambda);
+        ecr.y = GeographicalLocation.EARTH_RADIUS * Math.cos(phi) * Math.sin(lambda);
+        ecr.z = GeographicalLocation.EARTH_RADIUS * Math.sin(phi);
         return ecr;
     }
 
@@ -127,8 +127,8 @@ export class GeographicalLocation extends AbsoluteLocation {
      */
     public static fromECR(ecrLocation: Cartesian3DLocation): GeographicalLocation {
         const geoLocation = new GeographicalLocation();
-        geoLocation.latitude = (AngleUnit.RADIANS.convert(Math.asin(ecrLocation.getZ() / GeographicalLocation.EARTH_RADIUS), AngleUnit.DEGREES));
-        geoLocation.longitude = (AngleUnit.RADIANS.convert(Math.atan2(ecrLocation.getY(), ecrLocation.getX()), AngleUnit.DEGREES));
+        geoLocation.latitude = (AngleUnit.RADIANS.convert(Math.asin(ecrLocation.z / GeographicalLocation.EARTH_RADIUS), AngleUnit.DEGREES));
+        geoLocation.longitude = (AngleUnit.RADIANS.convert(Math.atan2(ecrLocation.y, ecrLocation.x), AngleUnit.DEGREES));
         return geoLocation;
     }
 }

@@ -6,15 +6,15 @@ export class Point3D extends Point2D {
     constructor();
     constructor(x?: number, y?: number, z?: number) {
         super();
-        this.setX(x);
-        this.setY(y);
-        this.setZ(z);
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     /**
      * Get Z coordinate
      */
-    public getZ(): number {
+    public get z(): number {
         return this._z;
     }
 
@@ -22,11 +22,17 @@ export class Point3D extends Point2D {
      * Set Z coordinate
      * @param z Z coordinate
      */
-    public setZ(z: number): void {
+    public set z(z: number) {
         this._z = z;
     }
 
-    public getPoint(): number[] {
-        return [this.getX(), this.getY(), this.getZ()];
+    public get point(): number[] {
+        return [this.x, this.y, this.z];
+    }
+
+    public set point(point: number[]) {
+        this.x = point[0];
+        this.y = point[1];
+        this.z = point[2];
     }
 }

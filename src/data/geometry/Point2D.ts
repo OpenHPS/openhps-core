@@ -4,14 +4,14 @@ export class Point2D {
 
     constructor();
     constructor(x?: number, y?: number) {
-        this.setX(x);
-        this.setY(y);
+        this.x = x;
+        this.y = y;
     }
 
     /**
      * Get X coordinate
      */
-    public getX(): number {
+    public get x(): number {
         return this._x;
     }
 
@@ -19,14 +19,14 @@ export class Point2D {
      * Set X coordinate
      * @param x X coordinate
      */
-    public setX(x: number): void {
+    public set x(x: number) {
         this._x = x;
     }
 
     /**
      * Get Y coordinate
      */
-    public getY(): number {
+    public get y(): number {
         return this._y;
     }
 
@@ -34,11 +34,16 @@ export class Point2D {
      * Set Y coordinate
      * @param y Y coordinate
      */
-    public setY(y: number): void {
+    public set y(y: number) {
         this._y = y;
     }
 
-    public getPoint(): number[] {
-        return [this.getX(), this.getY()];
+    public get point(): number[] {
+        return [this.x, this.y];
+    }
+
+    public set point(point: number[]) {
+        this.x = point[0];
+        this.y = point[1];
     }
 }

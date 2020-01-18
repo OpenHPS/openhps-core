@@ -1,6 +1,5 @@
 import { DataFrame, DataObject } from "./data";
 import { DataService, Service } from "./service";
-import { ServiceContainer } from "./service/ServiceContainer";
 import { GraphImpl } from "./graph/_internal/implementations/GraphImpl";
 import { GraphPushOptions } from "./graph/GraphPushOptions";
 import { GraphPullOptions } from "./graph/GraphPullOptions";
@@ -12,7 +11,7 @@ import { GraphPullOptions } from "./graph/GraphPullOptions";
  * ## Usage
  * Please refer to [[ModelBuilder]] for creating a new model
  */
-export interface Model<In extends DataFrame, Out extends DataFrame> extends ServiceContainer, GraphImpl<In, Out> {
+export interface Model<In extends DataFrame, Out extends DataFrame> extends GraphImpl<In, Out> {
 
     /**
      * Push data to the model
@@ -33,24 +32,26 @@ export interface Model<In extends DataFrame, Out extends DataFrame> extends Serv
      * Get service by name
      * @param name Service name
      */
-    getServiceByName<F extends Service>(name: string): F;
+    findServiceByName<F extends Service>(name: string): F;
 
     /**
      * Get service by name
      * @param name Service name
      */
-    getServiceByClass<F extends Service>(serviceClass: new () => F): F;
+    findServiceByClass<F extends Service>(serviceClass: new () => F): F;
 
+    findDataServiceByName<F extends DataService<any>>(name: string): F;
+    
     /**
      * Get data service by data type
      * @param dataType Data type
      */
-    getDataService<D extends DataObject, F extends DataService<D>>(dataType: new () => D): F;
+    findDataService<D extends DataObject, F extends DataService<D>>(dataType: new () => D): F;
 
     /**
      * Get data service by data object
      * @param dataObject Data object instance
      */
-    getDataServiceByObject<D extends DataObject, F extends DataService<D>>(dataObject: D): F;
+    findDataServiceByObject<D extends DataObject, F extends DataService<D>>(dataObject: D): F;
 
 }

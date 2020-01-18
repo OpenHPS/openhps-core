@@ -12,7 +12,7 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
     public process(data: InOut, options: GraphPushOptions): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
             const model = (this.graph as Model<any, any>);
-            const defaultService = model.getDataService(DataObject);
+            const defaultService = model.findDataService(DataObject);
             const promises = new Array();
             const objects = new Array<DataObject>();
             data.getObjects().forEach(object => {
@@ -22,7 +22,7 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
                 objects.push(data.source);
             objects.forEach(object => {
                 promises.push(new Promise((objResolve, objReject) => {
-                    let service = model.getDataServiceByObject(object);
+                    let service = model.findDataServiceByObject(object);
                     if (service === null || service === undefined) {
                         service = defaultService;
                     }
@@ -46,6 +46,7 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
                     });
                 }));
             });
+
             if (promises.length === 0) {
                 resolve(data);
             } else {

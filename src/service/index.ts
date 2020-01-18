@@ -1,3 +1,3 @@
-export { ObjectDataService } from './ObjectDataService';
+export { DataObjectService } from './DataObjectService';
 export { DataService } from './DataService';
 export { Service } from './Service';

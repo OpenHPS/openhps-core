@@ -1,13 +1,13 @@
 import { Vector } from "./Vector";
 
 export class Vector2D implements Vector {
-    protected _x: number;
-    protected _y: number;
+    private _x: number;
+    private _y: number;
 
     /**
      * Get X component of the vector
      */
-    public getX(): number {
+    public get x(): number {
         return this._x;
     }
 
@@ -15,14 +15,14 @@ export class Vector2D implements Vector {
      * Set X component of the vector
      * @param x X component
      */
-    public setX(x: number): void {
+    public set x(x: number) {
         this._x = x;
     }
 
     /**
      * Get Y component of the vector
      */
-    public getY(): number {
+    public get y(): number {
         return this._y;
     }
 
@@ -30,7 +30,7 @@ export class Vector2D implements Vector {
      * Set Y component of the vector
      * @param y Y component
      */
-    public setY(y: number): void {
+    public set y(y: number) {
         this._y = y;
     }
 
@@ -39,8 +39,8 @@ export class Vector2D implements Vector {
      * @param vec Vector to add
      */
     public add(vec: Vector2D): Vector2D {
-        this._x += vec.getX();
-        this._y += vec.getY();
+        this.x += vec.x;
+        this.y += vec.y;
         return this;
     }
 
@@ -49,8 +49,8 @@ export class Vector2D implements Vector {
      * @param vec Vector to substract
      */
     public substract(vec: Vector2D): Vector2D {
-        this._x -= vec.getX();
-        this._y -= vec.getY();
+        this.x -= vec.x;
+        this.y -= vec.y;
         return this;
     }
 
@@ -59,8 +59,8 @@ export class Vector2D implements Vector {
      * @param vec Vector to multiply
      */
     public multiply(vec: Vector2D): Vector2D {
-        this._x *= vec.getX();
-        this._y *= vec.getY();
+        this.x *= vec.x;
+        this.y *= vec.y;
         return this;
     }
 
@@ -72,7 +72,7 @@ export class Vector2D implements Vector {
      * @return dot product
      */
     public dot(other: Vector2D): number {
-        return this._x * other._x + this._y * other._y;
+        return this.x * other.x + this.y * other.y;
     }
 
 }
