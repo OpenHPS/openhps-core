@@ -1,15 +1,20 @@
 import { Service } from "./Service";
-import * as uuidv4 from "uuid/v4";
 
 /**
  * Data service
  */
 export abstract class DataService<T> extends Service {
+    private _dataType: new () => T;
 
     constructor(type: new () => T) {
         super(type.name);
+        this._dataType = type;
     }
 
+    public getDataType(): new () => T {
+        return this._dataType;
+    }
+    
     public abstract findById(id: any): Promise<T>;
 
     public abstract findAll(): Promise<T[]>;
