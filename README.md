@@ -1,6 +1,6 @@
 [![Build Status](https://ci.mvdw-software.com/job/openhps-core/badge/icon)](https://ci.mvdw-software.com/job/openhps-core/)
-[![Tests](https://img.shields.io/jenkins/tests/http/ci.mvdw-software.com/job/openhps-core?compact_message)](http://ci.mvdw-software.com/job/openhps-core/lastCompletedBuild/testReport/)
-[![Coverage](https://img.shields.io/jenkins/coverage/cobertura/http/ci.mvdw-software.com/job/openhps-core)](http://ci.mvdw-software.com/view/OpenHPS/job/openhps-core/cobertura/)
+[![Tests](https://img.shields.io/jenkins/tests/http/ci.mvdw-software.com/job/openhps-core?compact_message)](https://ci.mvdw-software.com/job/openhps-core/lastCompletedBuild/testReport/)
+[![Coverage](https://img.shields.io/jenkins/coverage/cobertura/http/ci.mvdw-software.com/job/openhps-core)](https://ci.mvdw-software.com/view/OpenHPS/job/openhps-core/cobertura/)
 # OpenHPS: Core Component
 This project contains the core component for OpenHPS (Open Hybrid Positioning System). It includes concepts for creating the model, layers
 and object definitions.
@@ -51,6 +51,8 @@ combined.
 An absolute location is a fixed location. This can be anything ranging from a cartesian coordinate to a geographical coordinate
 or even celestial coordinate, but all objects using an absolute location have the same origin.
 
-### Server
+### Service
 A service is a way to keep data between data frames or different models. The implementation can be made to be persistent or
 temporary.
+
+## Data Service
