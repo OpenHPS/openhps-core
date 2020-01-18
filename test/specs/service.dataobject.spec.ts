@@ -1,4 +1,4 @@
-import { Model, ModelBuilder, DataFrame, ObjectDataService, DataObject, SensorObject, ServiceMergeNode } from '../../src';
+import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, SensorObject, ServiceMergeNode } from '../../src';
 import { LoggingSinkNode } from '../../src/nodes/sink';
 
 import { expect } from 'chai';
@@ -6,10 +6,10 @@ import 'mocha';
 
 describe('data object', () => {
     describe('service', () => {
-        var objectDataService: ObjectDataService;
+        var objectDataService: DataObjectService;
 
         before((done) => {
-            objectDataService = new ObjectDataService();
+            objectDataService = new DataObjectService();
             var object = new DataObject(null);
             object.displayName = "Test";
             objectDataService.create(object).then(savedObject => {
@@ -48,14 +48,14 @@ describe('data object', () => {
     });
     describe('input layer', () => {
         var model: Model<DataFrame, DataFrame>;
-        var objectDataService: ObjectDataService;
+        var objectDataService: DataObjectService;
         
         before((done) => {
             model = new ModelBuilder()
                 .to(new ServiceMergeNode())
                 .to(new LoggingSinkNode())
                 .build();
-            objectDataService = model.getDataService(DataObject);
+            objectDataService = model.findDataService(DataObject);
 
             var object = new SensorObject("123");
             object.displayName = "Hello";
@@ -85,13 +85,13 @@ describe('data object', () => {
 
     describe('output layer', () => {
         var model: Model<DataFrame, DataFrame>;
-        var objectDataService: ObjectDataService;
+        var objectDataService: DataObjectService;
         
         before((done) => {
             model = new ModelBuilder()
                 .to(new LoggingSinkNode())
                 .build();
-            objectDataService = model.getDataService(DataObject);
+            objectDataService = model.findDataService(DataObject);
             done();
         });
 
