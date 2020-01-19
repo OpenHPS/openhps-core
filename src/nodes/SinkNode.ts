@@ -30,7 +30,7 @@ export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
                     if (object.uid !== null) {
                         servicePromises.push(service.update(object));
                     } else {
-                        servicePromises.push(service.create(object));
+                        servicePromises.push(service.insert(object));
                     }
                 }
 

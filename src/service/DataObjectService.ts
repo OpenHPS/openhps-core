@@ -33,50 +33,56 @@ export class DataObjectService extends DataService<DataObject> {
         });
     }
 
-    public create(object: DataObject): Promise<DataObject> {
+    public insert(...objects: DataObject[]): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
-            if (object.uid !== null && this._objects.has(object.uid)) {
-                this._objects.set(object.uid, object);
-                resolve(object);
-            } else {
+            objects.forEach(object => {
+                if (object.uid !== null && this._objects.has(object.uid)) {
+                    this._objects.set(object.uid, object);
+                    resolve(object);
+                } else {
+                    // Insert new object
+                    if (object.uid === null) {
+                        // Generate new ID if empty
+                        object.uid = this.generateID();
+                    }
+                    this._objects.set(object.uid, object);
+                    resolve(object);
+                }
+            });
+        });
+    }
+
+    public update(...objects: DataObject[]): Promise<DataObject> {
+        return new Promise<DataObject>((resolve, reject) => {
+            objects.forEach(object => {
                 // Insert new object
                 if (object.uid === null) {
                     // Generate new ID if empty
                     object.uid = this.generateID();
                 }
-                this._objects.set(object.uid, object);
-                resolve(object);
-            }
-        });
-    }
-
-    public update(object: DataObject): Promise<DataObject> {
-        return new Promise<DataObject>((resolve, reject) => {
-                        // Insert new object
-            if (object.uid === null) {
-                // Generate new ID if empty
-                object.uid = this.generateID();
-            }
-            // Update existing data
-            if (this._objects.has(object.uid)) {
                 // Update existing data
-                this._objects.set(object.uid, object);
-                resolve(object);
-            } else {
-                this._objects.set(object.uid, object);
-                resolve(object);
-            }
+                if (this._objects.has(object.uid)) {
+                    // Update existing data
+                    this._objects.set(object.uid, object);
+                    resolve(object);
+                } else {
+                    this._objects.set(object.uid, object);
+                    resolve(object);
+                }
+            });
         });
     }
 
-    public delete(uid: string): Promise<void> {
+    public delete(...uids: string[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            if (this._objects.has(uid)) {
-                this._objects.delete(uid);
-                resolve();
-            } else {
-                reject(`Unable to delete! Data object with uid ${uid} not found!`);
-            }
+            uids.forEach(uid => {
+                if (this._objects.has(uid)) {
+                    this._objects.delete(uid);
+                    resolve();
+                } else {
+                    reject(`Unable to delete! Data object with uid ${uid} not found!`);
+                }
+            })
         });
     }
 
