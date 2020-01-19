@@ -33,56 +33,50 @@ export class DataObjectService extends DataService<DataObject> {
         });
     }
 
-    public insert(...objects: DataObject[]): Promise<DataObject> {
+    public insert(object: DataObject): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
-            objects.forEach(object => {
-                if (object.uid !== null && this._objects.has(object.uid)) {
-                    this._objects.set(object.uid, object);
-                    resolve(object);
-                } else {
-                    // Insert new object
-                    if (object.uid === null) {
-                        // Generate new ID if empty
-                        object.uid = this.generateID();
-                    }
-                    this._objects.set(object.uid, object);
-                    resolve(object);
-                }
-            });
-        });
-    }
-
-    public update(...objects: DataObject[]): Promise<DataObject> {
-        return new Promise<DataObject>((resolve, reject) => {
-            objects.forEach(object => {
+            if (object.uid !== null && this._objects.has(object.uid)) {
+                this._objects.set(object.uid, object);
+                resolve(object);
+            } else {
                 // Insert new object
                 if (object.uid === null) {
                     // Generate new ID if empty
                     object.uid = this.generateID();
                 }
-                // Update existing data
-                if (this._objects.has(object.uid)) {
-                    // Update existing data
-                    this._objects.set(object.uid, object);
-                    resolve(object);
-                } else {
-                    this._objects.set(object.uid, object);
-                    resolve(object);
-                }
-            });
+                this._objects.set(object.uid, object);
+                resolve(object);
+            }
         });
     }
 
-    public delete(...uids: string[]): Promise<void> {
+    public update(object: DataObject): Promise<DataObject> {
+        return new Promise<DataObject>((resolve, reject) => {
+            // Insert new object
+            if (object.uid === null) {
+                // Generate new ID if empty
+                object.uid = this.generateID();
+            }
+            // Update existing data
+            if (this._objects.has(object.uid)) {
+                // Update existing data
+                this._objects.set(object.uid, object);
+                resolve(object);
+            } else {
+                this._objects.set(object.uid, object);
+                resolve(object);
+            }
+        });
+    }
+
+    public delete(uid: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            uids.forEach(uid => {
-                if (this._objects.has(uid)) {
-                    this._objects.delete(uid);
-                    resolve();
-                } else {
-                    reject(`Unable to delete! Data object with uid ${uid} not found!`);
-                }
-            });
+            if (this._objects.has(uid)) {
+                this._objects.delete(uid);
+                resolve();
+            } else {
+                reject(`Unable to delete! Data object with uid ${uid} not found!`);
+            }
         });
     }
 
