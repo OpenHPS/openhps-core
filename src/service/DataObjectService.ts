@@ -82,7 +82,7 @@ export class DataObjectService extends DataService<DataObject> {
                 } else {
                     reject(`Unable to delete! Data object with uid ${uid} not found!`);
                 }
-            })
+            });
         });
     }
 

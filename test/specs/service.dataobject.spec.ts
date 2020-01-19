@@ -12,7 +12,7 @@ describe('data object', () => {
             objectDataService = new DataObjectService();
             var object = new DataObject(null);
             object.displayName = "Test";
-            objectDataService.create(object).then(savedObject => {
+            objectDataService.insert(object).then(savedObject => {
                 done();
             });
         });
@@ -20,7 +20,7 @@ describe('data object', () => {
         it('should store objects', (done) => {
             var object = new DataObject("2");
             object.displayName = "Test";
-            objectDataService.create(object).then(savedObject => {
+            objectDataService.insert(object).then(savedObject => {
                 expect(savedObject.uid).to.equal("2");
                 expect(savedObject.displayName).to.equal("Test");
                 objectDataService.findById("2").then(savedObject => {
@@ -59,7 +59,7 @@ describe('data object', () => {
 
             var object = new SensorObject("123");
             object.displayName = "Hello";
-            objectDataService.create(object).then(savedObject => {
+            objectDataService.insert(object).then(savedObject => {
                 done();
             });
         });
