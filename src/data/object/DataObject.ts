@@ -47,8 +47,8 @@ export class DataObject {
      * Serialize the data object
      */
     public serialize(): string {
-        const serializer = new TypedJSON(Object.getPrototypeOf(this).constructor);
-        return serializer.stringify(this);
+        const json = this.toJson();
+        return JSON.stringify(json);
     }
 
     /**
@@ -63,7 +63,9 @@ export class DataObject {
 
     public toJson(): any {
         const serializer = new TypedJSON(Object.getPrototypeOf(this).constructor);
-        return serializer.toPlainJson(this);
+        const json = serializer.toPlainJson(this) as any;
+        json.__type = this.constructor.name;
+        return json;
     }
 
     /**

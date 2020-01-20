@@ -44,8 +44,7 @@ export class DataFrame {
      * Serialize the data frame
      */
     public serialize(): string {
-        const serializer = new TypedJSON(Object.getPrototypeOf(this).constructor);
-        return serializer.stringify(this);
+        return JSON.stringify(this.toJson());
     }
 
     /**
@@ -60,7 +59,9 @@ export class DataFrame {
 
     public toJson(): any {
         const serializer = new TypedJSON(Object.getPrototypeOf(this).constructor);
-        return serializer.toPlainJson(this);
+        const json = serializer.toPlainJson(this) as any;
+        json.__type = this.constructor.name;
+        return json;
     }
 
     /**
