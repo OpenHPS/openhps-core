@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.39](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.38...v1.0.0-alpha.39) (2020-01-20)
+
+
+### Features
+
+* complete removed export of typedjson ([13f7c39](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/13f7c39dd775e8cf32ae9dacafd5041f634e97cd))
+
+
+### Bug Fixes
+
+* added semicolumn ([61e8a80](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/61e8a8078ce3f55fbf9a2c41ea40f3ab162eb4eb))
+
 ## [1.0.0-alpha.38](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.37...v1.0.0-alpha.38) (2020-01-20)
 
 
