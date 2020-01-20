@@ -10,6 +10,7 @@ describe('data', () => {
         it('should be serializable and deserializable', (done) => {
             const dataObject = new DataObject("123");
             dataObject.displayName = "abc";
+            dataObject.setNodeData('x', { test: [1, 2, 3] });
             const serialized = dataObject.serialize();
             const deserialized = DataObject.deserialize(serialized, DataObject);
             expect(dataObject.uid).to.equal(deserialized.uid);

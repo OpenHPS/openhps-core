@@ -15,8 +15,23 @@ export class DataObject {
     private _absoluteLocation: AbsoluteLocation;
     private _relativeLocations: RelativeLocation[] = new Array();
     private _shape: Shape;
-    @jsonMapMember(String, Object)
-    private _nodeData: Map<string, Object> = new Map();
+    @jsonMapMember(String, Object, { 
+        serializer: (map: Map<string, Object>) => {
+            const json = {};
+            map.forEach((value: Object, key: string) => {
+                (json as any)[key] = JSON.stringify(value);
+            });
+            return json;
+        },
+        deserializer: (json: any) => {
+            const map = new Map<string, any>();
+            Object.keys(json).forEach((key: string) => {
+                map.set(key, JSON.parse(json[key]));
+            });
+            return map;
+        }
+    })
+    private _nodeData: Map<string, any> = new Map();
 
     constructor(uid: string = null) {
         this.uid = uid;
