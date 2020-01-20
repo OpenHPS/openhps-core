@@ -17,6 +17,6 @@ export function SerializableObject<T>(options?: IJsonObjectOptions<T>): ClassDec
   return (target: Function) => {
     jsonObject(options)(target as ParameterlessConstructor<T>);
     // find root type meta info in TypedJSON, knownTypes needed to understand our type is from our hierarchy
-    findRootMetaInfo(target.prototype).knownTypes.add(target)
+    findRootMetaInfo(target.prototype).knownTypes.add(target);
   };
 }
