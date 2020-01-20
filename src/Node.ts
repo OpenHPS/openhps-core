@@ -6,7 +6,7 @@ import { GraphPushOptions } from "./graph/GraphPushOptions";
 import { GraphPullOptions } from "./graph/GraphPullOptions";
 import { AbstractGraph } from "./graph/interfaces/AbstractGraph";
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
-import { jsonMember, SerializableObject } from './data';
+import { SerializableObject, SerializableMember } from './data';
 
 /**
  * OpenHPS model node.
@@ -33,7 +33,7 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
         });
     }
 
-    @jsonMember
+    @SerializableMember()
     public get name(): string {
         return this._name;
     }
@@ -42,7 +42,6 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
         this._name = name;
     }
 
-    @jsonMember
     public get graph(): AbstractGraph<any, any> {
         return this._graph;
     }
@@ -92,6 +91,7 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
     /**
      * Get unique identifier of node
      */
+    @SerializableMember()
     public get uid(): string {
         return this._uid;
     }

@@ -1,13 +1,9 @@
 import 'reflect-metadata';
-import { jsonObject, TypedJSON } from 'typedjson';
+import { SerializableObject } from '../data';
+import { TypedJSON } from 'typedjson';
 
-@jsonObject
+@SerializableObject()
 export class GraphOptions {
-
-    constructor() {
-        const knownTypes = (GraphOptions.prototype as any)['__typedJsonJsonObjectMetadataInformation__'].knownTypes as Set<any>;
-        knownTypes.add(this.constructor);
-    }
 
     public serialize(): string {
         const serializer = new TypedJSON(Object.getPrototypeOf(this).constructor);

@@ -1,8 +1,9 @@
 import 'reflect-metadata';
 import { AbsoluteLocation, RelativeLocation } from "../location";
 import { Shape } from "../geometry";
-import { jsonMember, jsonMapMember, jsonArrayMember, TypedJSON } from 'typedjson';
+import { TypedJSON } from 'typedjson';
 import { SerializableObject } from '../decorators/SerializableObject';
+import { SerializableMember, SerializableArrayMember, SerializableMapMember } from '../decorators';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -10,28 +11,13 @@ import { SerializableObject } from '../decorators/SerializableObject';
  */
 @SerializableObject()
 export class DataObject {
-    @jsonMember
+    @SerializableMember()
     private _uid: string;
     private _displayName: string;
     private _absoluteLocation: AbsoluteLocation;
     private _relativeLocations: RelativeLocation[] = new Array();
     private _shape: Shape;
-    @jsonMapMember(String, Object, { 
-        serializer: (map: Map<string, Object>) => {
-            const json = {};
-            map.forEach((value: Object, key: string) => {
-                (json as any)[key] = JSON.stringify(value);
-            });
-            return json;
-        },
-        deserializer: (json: any) => {
-            const map = new Map<string, any>();
-            Object.keys(json).forEach((key: string) => {
-                map.set(key, JSON.parse(json[key]));
-            });
-            return map;
-        }
-    })
+    @SerializableMapMember(String, Object)
     private _nodeData: Map<string, any> = new Map();
 
     constructor(uid: string = null) {
@@ -99,7 +85,7 @@ export class DataObject {
     /**
      * Get the object display name
      */
-    @jsonMember
+    @SerializableMember()
     public get displayName(): string {
         return this._displayName;
     }
@@ -115,7 +101,7 @@ export class DataObject {
     /**
      * Get the absolute location of the object
      */
-    @jsonMember
+    @SerializableMember()
     public get absoluteLocation(): AbsoluteLocation {
         return this._absoluteLocation;
     }
@@ -131,7 +117,7 @@ export class DataObject {
     /**
      * Get object shape
      */
-    @jsonMember
+    @SerializableMember()
     public get shape(): Shape {
         return this._shape;
     }
@@ -147,7 +133,7 @@ export class DataObject {
     /**
      * Get relative locations
      */
-    @jsonArrayMember(RelativeLocation)
+    @SerializableArrayMember(RelativeLocation)
     public get relativeLocations(): RelativeLocation[] {
         return this._relativeLocations;
     }

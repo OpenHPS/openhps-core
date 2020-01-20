@@ -1,12 +1,12 @@
 import 'reflect-metadata';
-import { jsonObject, jsonMember } from "typedjson";
 import { RelativeLocation } from "./RelativeLocation";
 import { AngleUnit } from '../../utils';
+import { SerializableObject, SerializableMember } from '../decorators';
 
 /**
  * Relative location to another reference object measured in the angle.
  */
-@jsonObject
+@SerializableObject()
 export class RelativeAngleLocation extends RelativeLocation {
     private _angle: number;
     private _angleUnit: AngleUnit;
@@ -14,7 +14,7 @@ export class RelativeAngleLocation extends RelativeLocation {
     /**
      * Get angle to reference object
      */
-    @jsonMember
+    @SerializableMember()
     public get angle(): number {
         return this._angle;
     }
@@ -30,7 +30,7 @@ export class RelativeAngleLocation extends RelativeLocation {
     /**
      * Get angle unit
      */
-    @jsonMember
+    @SerializableMember()
     public get angleUnit(): AngleUnit {
         return this._angleUnit;
     }

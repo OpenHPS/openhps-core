@@ -1,19 +1,19 @@
 import 'reflect-metadata';
 import * as uuidv4 from 'uuid/v4';
 import { DataObject } from './object/DataObject';
-import { jsonMember, jsonArrayMember, TypedJSON } from 'typedjson';
-import { SerializableObject } from './decorators';
+import { SerializableObject, SerializableMember, SerializableArrayMember } from './decorators';
+import { TypedJSON } from 'typedjson';
 
 /**
  * Data frame that is passed through each node in a model.
  */
 @SerializableObject()
 export class DataFrame {
-    @jsonMember
+    @SerializableMember()
     private _uid: string = uuidv4();
     private _createdTimestamp: number;
     private _source: DataObject;
-    @jsonArrayMember(DataObject)
+    @SerializableArrayMember(DataObject)
     private _objects: DataObject[] = new Array();
     private _priority: number = -1;
 
@@ -65,7 +65,7 @@ export class DataFrame {
     /**
      * Get the source object that captured the data frame
      */
-    @jsonMember
+    @SerializableMember()
     public get source(): DataObject {
         return this._source;
     }
@@ -89,7 +89,7 @@ export class DataFrame {
     /**
      * Get data frame created timestamp (ISO 8601)
      */
-    @jsonMember
+    @SerializableMember()
     public get createdTimestamp(): number {
         return this._createdTimestamp;
     }
@@ -132,7 +132,7 @@ export class DataFrame {
      * 
      * @returns Number (higher is higher priority)
      */
-    @jsonMember
+    @SerializableMember()
     public get priority(): number {
         return this._priority;
     } 

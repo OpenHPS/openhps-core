@@ -1,18 +1,18 @@
 import 'reflect-metadata';
 import { Location } from "./Location";
-import { jsonObject, jsonMember } from "typedjson";
+import { SerializableObject, SerializableMember } from '../decorators';
 
 /**
  * Relative location to another reference object.
  */
-@jsonObject
+@SerializableObject()
 export class RelativeLocation implements Location {
     private _referenceObject: string;
 
     /**
      * Get the reference object that this location is relative to
      */
-    @jsonMember
+    @SerializableMember()
     public get referenceObject(): string {
         return this._referenceObject;
     }

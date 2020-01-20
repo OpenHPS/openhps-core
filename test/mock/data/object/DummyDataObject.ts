@@ -1,10 +1,9 @@
 import 'reflect-metadata';
-import { DataObject, jsonMember } from '../../../../src';
-import { SerializableObject } from '../../../../src/data/decorators/SerializableObject';
+import { DataObject, SerializableObject, SerializableMember } from '../../../../src';
 
 @SerializableObject()
 export class DummyDataObject extends DataObject {
-    @jsonMember
+    @SerializableMember()
     private flag: boolean = false;
 
 }

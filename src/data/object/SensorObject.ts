@@ -1,13 +1,17 @@
 import 'reflect-metadata';
 import { DataObject } from "./DataObject";
 import { AngleUnit } from "../../utils/unit";
-import { jsonObject } from "typedjson";
+import { SerializableObject, SerializableMember, SerializableMapMember, SerializableArrayMember } from '../decorators';
 
-@jsonObject
+@SerializableObject()
 export class SensorObject extends DataObject {
+    @SerializableArrayMember(Number)
     private _horizontalFOV: number[];
+    @SerializableMember()
     private _horizontalFOVUnit: AngleUnit = AngleUnit.DEGREES;
+    @SerializableArrayMember(Number)
     private _verticalFOV: number[];
+    @SerializableMember()
     private _verticalFOVUnit: AngleUnit = AngleUnit.DEGREES;
 
     constructor(uid?: string) {

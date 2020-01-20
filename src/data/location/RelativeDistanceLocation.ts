@@ -1,12 +1,12 @@
 import 'reflect-metadata';
-import { jsonObject, jsonMember } from "typedjson";
 import { RelativeLocation } from "./RelativeLocation";
 import { LengthUnit } from "../../utils";
+import { SerializableObject, SerializableMember } from '../decorators';
 
 /**
  * Relative location to another reference object in distance.
  */
-@jsonObject
+@SerializableObject()
 export class RelativeDistanceLocation extends RelativeLocation {
     private _distance: number;
     private _distanceUnit: LengthUnit;
@@ -14,7 +14,7 @@ export class RelativeDistanceLocation extends RelativeLocation {
     /**
      * Get distance to reference object
      */
-    @jsonMember
+    @SerializableMember()
     public get distance(): number {
         return this._distance;
     }
@@ -30,7 +30,7 @@ export class RelativeDistanceLocation extends RelativeLocation {
     /**
      * Get distance unit
      */
-    @jsonMember
+    @SerializableMember()
     public get distanceUnit(): LengthUnit {
         return this._distanceUnit;
     }

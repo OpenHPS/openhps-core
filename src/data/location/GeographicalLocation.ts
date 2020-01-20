@@ -2,10 +2,12 @@ import { AbsoluteLocation } from "./AbsoluteLocation";
 import { AngleUnit } from "../../utils/unit";
 import { LengthUnit } from "../../utils/unit/LengthUnit";
 import { Cartesian3DLocation } from "./Cartesian3DLocation";
+import { SerializableObject, SerializableMember } from "../decorators";
 
 /**
  * Geographical location
  */
+@SerializableObject()
 export class GeographicalLocation extends AbsoluteLocation {
     protected _lat: number;
     protected _lng: number;
@@ -14,9 +16,14 @@ export class GeographicalLocation extends AbsoluteLocation {
 
     public static EARTH_RADIUS: number = 6371008; 
 
+    constructor() {
+        super();
+    }
+
     /**
      * Get latitude
      */
+    @SerializableMember()
     public get latitude(): number {
         return this._lat;
     }
@@ -32,6 +39,7 @@ export class GeographicalLocation extends AbsoluteLocation {
     /**
      * Get longitude
      */
+    @SerializableMember()
     public get longitude(): number {
         return this._lng;
     }
@@ -47,6 +55,7 @@ export class GeographicalLocation extends AbsoluteLocation {
     /**
      * Get the altitude above mean sea level
      */
+    @SerializableMember()
     public get altitude(): number {
         return this._amsl;
     }
@@ -62,6 +71,7 @@ export class GeographicalLocation extends AbsoluteLocation {
     /**
      * Get altitude unit
      */
+    @SerializableMember()
     public get altitudeUnit(): LengthUnit {
         return this._amslUnit;
     }

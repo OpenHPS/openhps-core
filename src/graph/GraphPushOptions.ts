@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { GraphOptions } from "./GraphOptions";
-import { jsonObject } from 'typedjson';
+import { SerializableObject } from '../data';
 
-@jsonObject
+@SerializableObject()
 export class GraphPushOptions extends GraphOptions {
     
 }
