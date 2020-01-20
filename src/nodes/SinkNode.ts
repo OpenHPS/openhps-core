@@ -41,7 +41,7 @@ export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
                    frameService = model.findDataServiceByName("DataFrame"); 
                 }
               
-                if (frameService === null || frameService === undefined) { 
+                if (frameService !== null && frameService !== undefined) { 
                     servicePromises.push(frameService.update(data));
                 }
 
