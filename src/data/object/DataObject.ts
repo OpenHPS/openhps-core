@@ -20,6 +20,9 @@ export class DataObject {
 
     constructor(uid: string = null) {
         this.uid = uid;
+
+        const knownTypes = (DataObject.prototype as any)['__typedJsonJsonObjectMetadataInformation__'].knownTypes as Set<any>;
+        knownTypes.add(this.constructor);
     }
 
     public merge(object: DataObject): DataObject {
@@ -56,6 +59,11 @@ export class DataObject {
     public static deserialize<T extends DataObject>(serialized: string, dataType: new () => T): T {
         const serializer = new TypedJSON(dataType);
         return serializer.parse(serialized);
+    }
+
+    public toJson(): any {
+        const serializer = new TypedJSON(Object.getPrototypeOf(this).constructor);
+        return serializer.toPlainJson(this);
     }
 
     /**

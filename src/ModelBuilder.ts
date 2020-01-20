@@ -32,6 +32,10 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
         return this;
     }
 
+    /**
+     * Add a service to the model
+     * @param service Service to add
+     */
     public withService(service: Service): ModelBuilder<In, Out> {
         this.graph.addService(service);
         return this;

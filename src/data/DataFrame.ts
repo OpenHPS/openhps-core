@@ -13,7 +13,7 @@ export class DataFrame {
     private _createdTimestamp: number;
     private _source: DataObject;
     @jsonArrayMember(DataObject)
-    private _objects: DataObject[] = new Array<DataObject>();
+    private _objects: DataObject[] = new Array();
     private _priority: number = -1;
 
     /**
@@ -28,6 +28,9 @@ export class DataFrame {
     constructor() {
         const timestamp = Date.now();
         this.createdTimestamp = timestamp;
+
+        const knownTypes = (DataFrame.prototype as any)['__typedJsonJsonObjectMetadataInformation__'].knownTypes as Set<any>;
+        knownTypes.add(this.constructor);
     }
 
     /**
@@ -53,6 +56,11 @@ export class DataFrame {
     public static deserialize<T extends DataFrame>(serialized: string, dataType: new () => T): T {
         const serializer = new TypedJSON(dataType);
         return serializer.parse(serialized);
+    }
+
+    public toJson(): any {
+        const serializer = new TypedJSON(Object.getPrototypeOf(this).constructor);
+        return serializer.toPlainJson(this);
     }
 
     /**
