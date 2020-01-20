@@ -6,12 +6,12 @@ import { GraphPushOptions } from "./graph/GraphPushOptions";
 import { GraphPullOptions } from "./graph/GraphPullOptions";
 import { AbstractGraph } from "./graph/interfaces/AbstractGraph";
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
-import { jsonObject, jsonMember } from './data';
+import { jsonMember, SerializableObject } from './data';
 
 /**
  * OpenHPS model node.
  */
-@jsonObject
+@SerializableObject()
 export class Node<In extends DataFrame, Out extends DataFrame> implements AbstractNode<In, Out> {
     private _uid: string = uuidv4();
     private _name: string;

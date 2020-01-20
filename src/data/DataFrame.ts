@@ -1,12 +1,13 @@
 import 'reflect-metadata';
 import * as uuidv4 from 'uuid/v4';
 import { DataObject } from './object/DataObject';
-import { jsonObject, jsonMember, jsonArrayMember, TypedJSON } from 'typedjson';
+import { jsonMember, jsonArrayMember, TypedJSON } from 'typedjson';
+import { SerializableObject } from './decorators';
 
 /**
  * Data frame that is passed through each node in a model.
  */
-@jsonObject
+@SerializableObject()
 export class DataFrame {
     @jsonMember
     private _uid: string = uuidv4();
@@ -28,9 +29,6 @@ export class DataFrame {
     constructor() {
         const timestamp = Date.now();
         this.createdTimestamp = timestamp;
-
-        const knownTypes = (DataFrame.prototype as any)['__typedJsonJsonObjectMetadataInformation__'].knownTypes as Set<any>;
-        knownTypes.add(this.constructor);
     }
 
     /**

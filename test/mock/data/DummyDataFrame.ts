@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-import { DataFrame, jsonObject, jsonMember } from '../../../src';
+import { DataFrame, jsonMember, SerializableObject } from '../../../src';
 
-@jsonObject
+@SerializableObject()
 export class DummyDataFrame extends DataFrame {
     @jsonMember
     public testVariable: number = 54321;

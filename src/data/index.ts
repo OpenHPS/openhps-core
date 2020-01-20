@@ -4,4 +4,5 @@ export * from './object';
 export * from './location';
 export * from './geometry';
 export * from './exceptions';
-export { jsonObject, jsonMember, jsonArrayMember, jsonMapMember, jsonSetMember };
+export { jsonMember, jsonArrayMember, jsonMapMember, jsonSetMember };
+export * from './decorators';

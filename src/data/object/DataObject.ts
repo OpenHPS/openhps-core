@@ -1,13 +1,14 @@
 import 'reflect-metadata';
 import { AbsoluteLocation, RelativeLocation } from "../location";
 import { Shape } from "../geometry";
-import { jsonObject, jsonMember, jsonMapMember, jsonArrayMember, TypedJSON } from 'typedjson';
+import { jsonMember, jsonMapMember, jsonArrayMember, TypedJSON } from 'typedjson';
+import { SerializableObject } from '../decorators/SerializableObject';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
  * a more abstract object such as a Wi-Fi access point or room.
  */
-@jsonObject
+@SerializableObject()
 export class DataObject {
     @jsonMember
     private _uid: string;
@@ -35,9 +36,6 @@ export class DataObject {
 
     constructor(uid: string = null) {
         this.uid = uid;
-
-        const knownTypes = (DataObject.prototype as any)['__typedJsonJsonObjectMetadataInformation__'].knownTypes as Set<any>;
-        knownTypes.add(this.constructor);
     }
 
     public merge(object: DataObject): DataObject {

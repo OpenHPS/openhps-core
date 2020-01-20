@@ -14,8 +14,6 @@ describe('data', () => {
             dataFrame.priority = 10;
             const serialized = dataFrame.serialize();
             const deserialized = DataFrame.deserialize(serialized, DummyDataFrame);
-
-            console.log(deserialized)
             done();
         });
 
