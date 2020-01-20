@@ -13,7 +13,8 @@ export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
     public push(data: In, options?: GraphOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.onPush(data, options).then(_1 => {
-                const defaultService = (this.graph as Model<any, any>).findDataService(DataObject);
+                const model: Model<any, any> = (this.graph as Model<any, any>);
+                const defaultService = model.findDataService(DataObject);
                 const servicePromises = new Array();
                 const objects = new Array<DataObject>();
                 data.getObjects().forEach(object => {
@@ -23,7 +24,7 @@ export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
                     objects.push(data.source);
 
                 for (const object of objects) {
-                    let service = (this.graph as Model<any, any>).findDataServiceByObject(object);
+                    let service = model.findDataServiceByObject(object);
                     if (service === null || service === undefined) { 
                         service = defaultService;
                     }
@@ -32,6 +33,16 @@ export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
                     } else {
                         servicePromises.push(service.insert(object));
                     }
+                }
+
+                // Check if there are frame services
+                let frameService = model.findDataServiceByName(data.constructor.name);
+                if (frameService === null || frameService === undefined) { 
+                   frameService = model.findDataServiceByName("DataFrame"); 
+                }
+              
+                if (frameService === null || frameService === undefined) { 
+                    servicePromises.push(frameService.update(data));
                 }
 
                 if (servicePromises.length === 0) {
