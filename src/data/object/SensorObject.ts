@@ -8,10 +8,12 @@ export class SensorObject extends DataObject {
     @SerializableArrayMember(Number)
     private _horizontalFOV: number[];
     @SerializableMember({
-        serializer: function<U extends Unit>(object: U) {
+        serializer: <U extends Unit>(object: U) => {
+            // tslint:disable-next-line
             return { to: object.to.toString(), from: object.from.toString() };
         },
-        deserializer: function(json: { to: string, from: string}) {
+        deserializer: (json: { to: string, from: string}) => {
+            // tslint:disable-next-line
             return new AngleUnit(eval(json.to), eval(json.from));
         }
     })
@@ -19,10 +21,12 @@ export class SensorObject extends DataObject {
     @SerializableArrayMember(Number)
     private _verticalFOV: number[];
     @SerializableMember({
-        serializer: function<U extends Unit>(object: U) {
+        serializer: <U extends Unit>(object: U) => {
+            // tslint:disable-next-line
             return { to: object.to.toString(), from: object.from.toString() };
         },
-        deserializer: function(json: { to: string, from: string}) {
+        deserializer: (json: { to: string, from: string}) => {
+            // tslint:disable-next-line
             return new AngleUnit(eval(json.to), eval(json.from));
         }
     })
