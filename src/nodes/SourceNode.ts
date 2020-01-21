@@ -2,7 +2,7 @@ import { Node } from "../Node";
 import { DataFrame } from "../data/DataFrame";
 import { GraphPullOptions } from "../graph/GraphPullOptions";
 import { ServiceMergeNode } from "./processing/ServiceMergeNode";
-import { GraphBuilder, EdgeBuilder } from "../graph";
+import { GraphBuilder, EdgeBuilder, GraphPushOptions } from "../graph";
 
 export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
     private _ignoreMerging: boolean;
@@ -16,6 +16,7 @@ export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
     constructor(ignoreMerging: boolean = false) {
         super();
         this._ignoreMerging = ignoreMerging;
+        this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
         this.on('build', this._onBuild.bind(this));
     }
@@ -46,32 +47,40 @@ export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
             .build());
     }
 
+    private _onPush(frame: Out, options?: GraphPushOptions): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            if (frame !== null || frame !== undefined) {
+                const servicePromises = new Array();
+
+                const frameService = this.getDataFrameService(frame);
+                
+                if (frameService !== null && frameService !== undefined) { 
+                    // Update the frame
+                    servicePromises.push(frameService.update(frame));
+                }
+
+                const pushPromises = new Array();
+                this.outputNodes.forEach(node => {
+                    pushPromises.push(node.push(frame, options));
+                });
+                Promise.all(pushPromises).then(_ => {
+                    resolve();
+                }).catch(ex => {
+                    reject(ex);
+                });
+            } else {
+                // No frame provided in pull
+                resolve();
+            }
+        });
+    }
+
     private _onPull(options?: GraphPullOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.onPull(options).then(frame => {
-                if (frame !== null || frame !== undefined) {
-                    const servicePromises = new Array();
-
-                    const frameService = this.getDataFrameService(frame);
-                    
-                    if (frameService !== null && frameService !== undefined) { 
-                        // Update the frame
-                        servicePromises.push(frameService.update(frame));
-                    }
-
-                    const pushPromises = new Array();
-                    this.outputNodes.forEach(node => {
-                        pushPromises.push(node.push(frame, options));
-                    });
-                    Promise.all(pushPromises).then(_ => {
-                        resolve();
-                    }).catch(ex => {
-                        reject(ex);
-                    });
-                } else {
-                    // No frame provided in pull
-                    resolve();
-                }
+                return this.push(frame, options);
+            }).then(_ => {
+                resolve();
             }).catch(ex => {
                 reject(ex);
             });
