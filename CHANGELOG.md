@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.43](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.42...v1.0.0-alpha.43) (2020-01-21)
+
+
+### Bug Fixes
+
+* serialization of sensor object ([7150913](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/7150913283c38cd4501be01c058ede42dfc6a721))
+
 ## [1.0.0-alpha.42](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.41...v1.0.0-alpha.42) (2020-01-20)
 
 ## [1.0.0-alpha.41](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.38...v1.0.0-alpha.41) (2020-01-20)
