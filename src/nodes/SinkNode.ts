@@ -40,7 +40,7 @@ export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
                 
                 if (frameService !== null && frameService !== undefined) { 
                     // Update the frame
-                    servicePromises.push(frameService.update(data));
+                    servicePromises.push(frameService.delete(data.uid));
                 }
 
                 Promise.all(servicePromises).then(_2 => {
