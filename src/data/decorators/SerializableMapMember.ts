@@ -12,7 +12,6 @@ export function SerializableMapMember(keyConstructor: Function, valueConstructor
                 });
                 return map;
             };
-
             options.serializer = (map: Map<string, Object>) => {
                 const json = {};
                 map.forEach((value: Object, key: string) => {
@@ -21,6 +20,7 @@ export function SerializableMapMember(keyConstructor: Function, valueConstructor
                 return json;
             };
         }
+        
         jsonMapMember(keyConstructor, valueConstructor, options)(target, propertyKey);
     };
 }

@@ -1,17 +1,31 @@
 import 'reflect-metadata';
 import { DataObject } from "./DataObject";
-import { AngleUnit } from "../../utils/unit";
-import { SerializableObject, SerializableMember, SerializableMapMember, SerializableArrayMember } from '../decorators';
+import { AngleUnit, Unit } from "../../utils/unit";
+import { SerializableObject, SerializableMember, SerializableArrayMember } from '../decorators';
 
 @SerializableObject()
 export class SensorObject extends DataObject {
     @SerializableArrayMember(Number)
     private _horizontalFOV: number[];
-    @SerializableMember()
+    @SerializableMember({
+        serializer: function<U extends Unit>(object: U) {
+            return { to: object.to.toString(), from: object.from.toString() };
+        },
+        deserializer: function(json: { to: string, from: string}) {
+            return new AngleUnit(eval(json.to), eval(json.from));
+        }
+    })
     private _horizontalFOVUnit: AngleUnit = AngleUnit.DEGREES;
     @SerializableArrayMember(Number)
     private _verticalFOV: number[];
-    @SerializableMember()
+    @SerializableMember({
+        serializer: function<U extends Unit>(object: U) {
+            return { to: object.to.toString(), from: object.from.toString() };
+        },
+        deserializer: function(json: { to: string, from: string}) {
+            return new AngleUnit(eval(json.to), eval(json.from));
+        }
+    })
     private _verticalFOVUnit: AngleUnit = AngleUnit.DEGREES;
 
     constructor(uid?: string) {
