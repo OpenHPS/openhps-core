@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.46](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.45...v1.0.0-alpha.46) (2020-01-21)
+
+
+### Features
+
+* added frame service ([cb783f9](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/cb783f988bce39e662c99ef3e040de971dd04884))
+
 ## [1.0.0-alpha.45](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.44...v1.0.0-alpha.45) (2020-01-21)
 
 
