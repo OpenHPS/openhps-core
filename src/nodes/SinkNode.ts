@@ -36,24 +36,18 @@ export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
                 }
 
                 // Check if there are frame services
-                let frameService = model.findDataServiceByName(data.constructor.name);
-                if (frameService === null || frameService === undefined) { 
-                   frameService = model.findDataServiceByName("DataFrame"); 
-                }
-              
+                const frameService = this.getDataFrameService(data);
+                
                 if (frameService !== null && frameService !== undefined) { 
+                    // Update the frame
                     servicePromises.push(frameService.update(data));
                 }
 
-                if (servicePromises.length === 0) {
+                Promise.all(servicePromises).then(_2 => {
                     resolve();
-                } else {
-                    Promise.all(servicePromises).then(_2 => {
-                        resolve();
-                    }).catch(ex => {
-                        reject(ex);
-                    });
-                }
+                }).catch(ex => {
+                    reject(ex);
+                });
             }).catch(ex => {
                 reject(ex);
             });

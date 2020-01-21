@@ -2,6 +2,10 @@ import { DataFrame, DataObject } from "../../../data";
 import { Service, DataObjectService, DataService } from "../../../service";
 import { GraphImpl } from "./GraphImpl";
 import { Model } from "../../../Model";
+import { DataFrameService } from "../../../service/DataFrameService";
+import { GraphPushOptions } from "../../GraphPushOptions";
+import { SourceNode } from "../../../nodes";
+import { rejects } from "assert";
 
 /**
  * [[Model]] implementation
@@ -20,7 +24,8 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
     }
 
     private _addDefaultServices(): void {
-        this.addService(new DataObjectService());
+        this.addService(new DataObjectService<DataObject>());
+        this.addService(new DataFrameService<DataFrame>());
     }
 
     public findServiceByName<F extends Service>(name: string): F {
@@ -73,4 +78,28 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
         }
     }
 
+    public push(frame: In, options?: GraphPushOptions): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            // Merge the changes in the frame service
+            let frameService = this.findDataServiceByName(frame.constructor.name);
+            if (frameService === null || frameService === undefined) { 
+                frameService = this.findDataServiceByName("DataFrame"); 
+            }
+            const servicePromises = new Array();
+            if (frameService !== null && frameService !== undefined) { 
+                // Update the frame
+                servicePromises.push(frameService.update(frame));
+            }
+
+            Promise.all(servicePromises).then(_1 => {
+                this.internalInput.push(frame, options).then(_2 => {
+                    resolve();
+                }).catch(ex => {
+                    reject(ex);
+                });
+            }).catch(ex => {
+                reject(ex);
+            });
+        });
+    }
 }

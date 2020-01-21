@@ -6,19 +6,19 @@ import * as uuidv4 from "uuid/v4";
  * The object service manages the data of objects that are currently being
  * processed in the model and objects that need to be tracked.
  */
-export class DataObjectService extends DataService<DataObject> {
-    protected _objects: Map<string, DataObject> = new Map();
+export class DataObjectService<T extends DataObject | DataObject> extends DataService<T> {
+    protected _objects: Map<string, T> = new Map();
 
-    constructor() {
-        super(DataObject);
+    constructor(dataType: new () => T | DataObject = DataObject) {
+        super(dataType as new () => T);
     }
 
     protected generateID(): string {
         return uuidv4();
     }
 
-    public findById(uid: string): Promise<DataObject> {
-        return new Promise<DataObject>((resolve, reject) => {
+    public findById(uid: string): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
             if (this._objects.has(uid)) {
                 resolve(this._objects.get(uid));
             } else {
@@ -27,14 +27,14 @@ export class DataObjectService extends DataService<DataObject> {
         });
     }
 
-    public findAll(): Promise<DataObject[]> {
-        return new Promise<DataObject[]>((resolve, reject) => {
+    public findAll(): Promise<T[]> {
+        return new Promise<T[]>((resolve, reject) => {
             resolve(Array.from(this._objects.values()));
         });
     }
 
-    public insert(object: DataObject): Promise<DataObject> {
-        return new Promise<DataObject>((resolve, reject) => {
+    public insert(object: T): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
             if (object.uid !== null && this._objects.has(object.uid)) {
                 this._objects.set(object.uid, object);
                 resolve(object);
@@ -50,8 +50,8 @@ export class DataObjectService extends DataService<DataObject> {
         });
     }
 
-    public update(object: DataObject): Promise<DataObject> {
-        return new Promise<DataObject>((resolve, reject) => {
+    public update(object: T): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
             // Insert new object
             if (object.uid === null) {
                 // Generate new ID if empty

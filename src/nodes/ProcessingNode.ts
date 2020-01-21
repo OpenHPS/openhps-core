@@ -14,12 +14,32 @@ export abstract class ProcessingNode<In extends DataFrame, Out extends DataFrame
         return new Promise<void>((resolve, reject) => {
             this.process(data, options).then(result => {
                 if (result !== null && result !== undefined) {
-                    const promises = new Array();
-                    this.outputNodes.forEach(node => {
-                        promises.push(node.push(result, options));
-                    });
-                    Promise.all(promises).then(_ => {
-                        resolve();
+                    const servicePromises = new Array();
+
+                    const oldFrameService = this.getDataFrameService(data);
+                    const frameService = this.getDataFrameService(result);
+                    
+                    if (frameService !== null && frameService !== undefined) { 
+                        if (frameService.getName() !== oldFrameService.getName()) {
+                            // Delete frame from old service
+                            servicePromises.push(oldFrameService.delete(data.uid));
+                        }
+                      
+                        // Update the frame
+                        servicePromises.push(frameService.update(result));
+                    }
+
+                    // Push processed result to the next node
+                    Promise.all(servicePromises).then(_1 => {
+                        const pushPromises = new Array();
+                        this.outputNodes.forEach(node => {
+                            pushPromises.push(node.push(result, options));
+                        });
+                        Promise.all(pushPromises).then(_2 => {
+                            resolve();
+                        }).catch(ex => {
+                            reject(ex);
+                        });
                     }).catch(ex => {
                         reject(ex);
                     });

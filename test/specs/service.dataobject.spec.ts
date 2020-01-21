@@ -6,7 +6,7 @@ import 'mocha';
 
 describe('data object', () => {
     describe('service', () => {
-        var objectDataService: DataObjectService;
+        var objectDataService: DataObjectService<DataObject>;
 
         before((done) => {
             objectDataService = new DataObjectService();
@@ -48,7 +48,7 @@ describe('data object', () => {
     });
     describe('input layer', () => {
         var model: Model<DataFrame, DataFrame>;
-        var objectDataService: DataObjectService;
+        var objectDataService: DataObjectService<DataObject>;
         
         before((done) => {
             model = new ModelBuilder()
@@ -85,7 +85,7 @@ describe('data object', () => {
 
     describe('output layer', () => {
         var model: Model<DataFrame, DataFrame>;
-        var objectDataService: DataObjectService;
+        var objectDataService: DataObjectService<DataObject>;
         
         before((done) => {
             model = new ModelBuilder()

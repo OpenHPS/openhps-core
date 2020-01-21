@@ -50,11 +50,20 @@ export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
         return new Promise<void>((resolve, reject) => {
             this.onPull(options).then(frame => {
                 if (frame !== null || frame !== undefined) {
-                    const promises = new Array();
+                    const servicePromises = new Array();
+
+                    const frameService = this.getDataFrameService(frame);
+                    
+                    if (frameService !== null && frameService !== undefined) { 
+                        // Update the frame
+                        servicePromises.push(frameService.update(frame));
+                    }
+
+                    const pushPromises = new Array();
                     this.outputNodes.forEach(node => {
-                        promises.push(node.push(frame, options));
+                        pushPromises.push(node.push(frame, options));
                     });
-                    Promise.all(promises).then(_ => {
+                    Promise.all(pushPromises).then(_ => {
                         resolve();
                     }).catch(ex => {
                         reject(ex);

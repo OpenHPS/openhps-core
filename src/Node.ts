@@ -7,12 +7,13 @@ import { GraphPullOptions } from "./graph/GraphPullOptions";
 import { AbstractGraph } from "./graph/interfaces/AbstractGraph";
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
 import { SerializableObject, SerializableMember } from './data';
+import { DataFrameService } from './service/DataFrameService';
 
 /**
  * OpenHPS model node.
  */
 @SerializableObject()
-export class Node<In extends DataFrame, Out extends DataFrame> implements AbstractNode<In, Out> {
+export abstract class Node<In extends DataFrame, Out extends DataFrame> implements AbstractNode<In, Out> {
     private _uid: string = uuidv4();
     private _name: string;
     private _graph: AbstractGraph<any, any>;
@@ -230,6 +231,20 @@ export class Node<In extends DataFrame, Out extends DataFrame> implements Abstra
                 resolve();
             }
         });
+    }
+
+    /**
+     * Get data frame service for a specific frame
+     * @param frame Frame to get data frame service for
+     */
+    protected getDataFrameService<T extends DataFrame | DataFrame>(frame: T): DataFrameService<T> {
+        const model = (this.graph as any);
+        // Merge the changes in the frame service
+        let frameService = model.findDataServiceByName(frame.constructor.name) as DataFrameService<T>;
+        if (frameService === null || frameService === undefined) { 
+            frameService = model.findDataServiceByName("DataFrame"); 
+        }
+        return frameService;
     }
 
     public serialize(): Object {
