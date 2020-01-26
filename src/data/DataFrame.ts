@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import * as uuidv4 from 'uuid/v4';
 import { DataObject } from './object/DataObject';
-import { SerializableObject, SerializableMember, SerializableArrayMember } from './decorators';
+import { SerializableObject, SerializableMember, SerializableMapMember } from './decorators';
 import { TypedJSON } from 'typedjson';
 
 /**
@@ -13,8 +13,8 @@ export class DataFrame {
     private _uid: string = uuidv4();
     private _createdTimestamp: number;
     private _source: DataObject;
-    @SerializableArrayMember(DataObject)
-    private _objects: DataObject[] = new Array();
+    @SerializableMapMember(String, DataObject)
+    private _objects: Map<string, DataObject> = new Map();
     private _priority: number = -1;
 
     /**
@@ -115,7 +115,7 @@ export class DataFrame {
      * @param object Relevant object
      */
     public addObject(object: DataObject): void {
-        this._objects.push(object);
+        this._objects.set(object.uid, object);
     }
 
     /**
@@ -123,7 +123,7 @@ export class DataFrame {
      * @param object Object to remove
      */
     public removeObject(object: DataObject): void {
-        this._objects.splice(this._objects.indexOf(object), 1);
+        this._objects.delete(object.uid);
     }
     
     /**
