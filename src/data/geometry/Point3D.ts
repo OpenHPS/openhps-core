@@ -1,9 +1,11 @@
 import { Point2D } from "./Point2D";
+import { SerializableObject, SerializableMember } from "../decorators";
 
+@SerializableObject()
 export class Point3D extends Point2D {
+    @SerializableMember()
     private _z: number;
 
-    constructor();
     constructor(x?: number, y?: number, z?: number) {
         super();
         this.x = x;

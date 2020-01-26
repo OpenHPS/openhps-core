@@ -1,7 +1,17 @@
 import { Vector2D } from "./Vector2D";
+import { SerializableObject, SerializableMember } from "../decorators";
 
+@SerializableObject()
 export class Vector3D extends Vector2D {
+    @SerializableMember()
     private _z: number;
+
+    constructor(x?: number, y?: number, z?: number) {
+        super();
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
 
     /**
      * Get Z component of the vector

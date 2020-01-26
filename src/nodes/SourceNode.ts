@@ -78,7 +78,11 @@ export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
     private _onPull(options?: GraphPullOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.onPull(options).then(frame => {
-                return this.push(frame, options);
+                if (frame !== undefined && frame !== null) {
+                    return this.push(frame, options);
+                } else {
+                    resolve();
+                }
             }).then(_ => {
                 resolve();
             }).catch(ex => {

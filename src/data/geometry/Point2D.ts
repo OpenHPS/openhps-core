@@ -1,8 +1,12 @@
+import { SerializableObject, SerializableMember } from "../decorators";
+
+@SerializableObject()
 export class Point2D {
+    @SerializableMember()
     private _x: number;
+    @SerializableMember()
     private _y: number;
 
-    constructor();
     constructor(x?: number, y?: number) {
         this.x = x;
         this.y = y;

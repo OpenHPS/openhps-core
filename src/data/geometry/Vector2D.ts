@@ -1,8 +1,17 @@
 import { Vector } from "./Vector";
+import { SerializableObject, SerializableMember } from "../decorators";
 
+@SerializableObject()
 export class Vector2D implements Vector {
+    @SerializableMember()
     private _x: number;
+    @SerializableMember()
     private _y: number;
+
+    constructor(x?: number, y?: number) {
+        this.x = x;
+        this.y = y;
+    }
 
     /**
      * Get X component of the vector

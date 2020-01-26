@@ -8,23 +8,25 @@ describe('list source', () => {
     describe('layer', () => {
 
         it('should pop items from the list', (done) => {
-            const list = new Array<DataFrame>();
-
             const model = new ModelBuilder()
-                .to(new ListSourceNode(list))
-                .to(new LoggingSinkNode())
+                .to(new ListSourceNode([new DataFrame()]))
+                .to(new LoggingSinkNode((log) => {
+                    done();
+                }))
                 .build();
-                
-            done();
+            Promise.resolve(model.pull());
         });
 
         
         it('should add a merge node internally', (done) => {
             const model = new ModelBuilder()
-                .to(new ListSourceNode([]))
+                .to(new ListSourceNode([new DataFrame()]))
                 .to(new NamedNode("output"))
+                .to(new LoggingSinkNode((log) => {
+                    done();
+                }))
                 .build();
-            done();
+            Promise.resolve(model.pull());
         });
 
     });
