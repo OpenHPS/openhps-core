@@ -3,17 +3,29 @@ import { ProcessingNode } from "./ProcessingNode";
 import { GraphPushOptions } from "../graph";
 
 export abstract class ObjectProcessingNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
+    private _filter: Array<new () => any>;
 
-    constructor() {
+    constructor(filter?: Array<new () => any>) {
         super();
+        this._filter = filter;
     }
 
     public process(data: InOut, options?: GraphPushOptions): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
             const processObjectPromises = new Array();
-            data.getObjects().forEach(object => {
-                processObjectPromises.push(this.processObject(object));
-            });
+            if (this._filter === undefined) {
+                data.getObjects().forEach(object => {
+                    processObjectPromises.push(this.processObject(object));
+                });
+            } else {
+                data.getObjects().forEach(object => {
+                    this._filter.forEach(dataType => {
+                        if (object instanceof dataType) {
+                            processObjectPromises.push(this.processObject(object));
+                        }
+                    });
+                });
+            }
             Promise.all(processObjectPromises).then(objects => {
                 objects.forEach(object => {
                     data.addObject(object);
