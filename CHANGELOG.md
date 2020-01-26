@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.49](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.48...v1.0.0-alpha.49) (2020-01-26)
+
+
+### Features
+
+* added object processing node ([c3492c9](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/c3492c9d96f6edcb0c9fc1bdad8440100bd9af7c))
+
 ## [1.0.0-alpha.48](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.47...v1.0.0-alpha.48) (2020-01-21)
 
 
