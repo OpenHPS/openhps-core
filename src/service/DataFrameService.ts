@@ -8,6 +8,12 @@ export class DataFrameService<T extends DataFrame | DataFrame> extends DataServi
         super(dataType as new () => T);
     }
 
+    public findOne(filter: any): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
+       
+        });
+    }
+    
     public findById(uid: string): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             if (this._frames.has(uid)) {
@@ -18,7 +24,7 @@ export class DataFrameService<T extends DataFrame | DataFrame> extends DataServi
         });
     }
 
-    public findAll(): Promise<T[]> {
+    public findAll(filter?: any): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
             resolve(Array.from(this._frames.values()));
         });

@@ -17,6 +17,12 @@ export class DataObjectService<T extends DataObject | DataObject> extends DataSe
         return uuidv4();
     }
 
+    public findOne(filter: any): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
+       
+        });
+    }
+
     public findById(uid: string): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             if (this._objects.has(uid)) {
@@ -27,7 +33,7 @@ export class DataObjectService<T extends DataObject | DataObject> extends DataSe
         });
     }
 
-    public findAll(): Promise<T[]> {
+    public findAll(filter?: any): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
             resolve(Array.from(this._objects.values()));
         });

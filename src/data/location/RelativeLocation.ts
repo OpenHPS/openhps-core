@@ -7,18 +7,27 @@ import { SerializableObject, SerializableMember } from '../decorators';
  */
 @SerializableObject()
 export class RelativeLocation implements Location {
-    private _referenceObject: string;
+    private _referenceObjectUID: string;
+    private _referenceObjectType: string;
 
     /**
-     * Get the reference object that this location is relative to
+     * Get the reference object UID that this location is relative to
      */
     @SerializableMember()
-    public get referenceObject(): string {
-        return this._referenceObject;
+    public get referenceObjectUID(): string {
+        return this._referenceObjectUID;
     }
 
-    public set referenceObject(referenceObject: string) {
-        this._referenceObject = referenceObject;
+    public set referenceObjectUID(referenceObjectUID: string) {
+        this._referenceObjectUID = referenceObjectUID;
     }
 
+    @SerializableMember()
+    public get referenceObjectType(): string {
+        return this._referenceObjectType;
+    }
+
+    public set referenceObjectType(referenceObjectType: string) {
+        this._referenceObjectType = referenceObjectType;
+    }
 }

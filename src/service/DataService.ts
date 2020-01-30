@@ -15,9 +15,13 @@ export abstract class DataService<T> extends Service {
         return this._dataType;
     }
 
+    public abstract findOne(filter: any): Promise<T>;
+
     public abstract findById(id: any): Promise<T>;
 
     public abstract findAll(): Promise<T[]>;
+    
+    public abstract findAll(filter: any): Promise<T[]>;
 
     public abstract insert(object: T): Promise<T>;
 

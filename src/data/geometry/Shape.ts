@@ -1,4 +1,4 @@
-import { AbsoluteLocation } from "../location";
+import { AbsoluteLocation } from "../location/AbsoluteLocation";
 
 export interface Shape {
     /**

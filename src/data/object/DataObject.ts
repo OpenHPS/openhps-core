@@ -1,9 +1,9 @@
 import 'reflect-metadata';
-import { AbsoluteLocation, RelativeLocation } from "../location";
-import { Shape } from "../geometry";
+import { AbsoluteLocation } from "../location/AbsoluteLocation";
+import { RelativeLocation } from '../location/RelativeLocation';
+import { Shape } from "../geometry/Shape";
 import { TypedJSON } from 'typedjson';
-import { SerializableObject } from '../decorators/SerializableObject';
-import { SerializableMember, SerializableArrayMember, SerializableMapMember } from '../decorators';
+import { SerializableObject, SerializableMember, SerializableArrayMember, SerializableMapMember } from '../decorators';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to

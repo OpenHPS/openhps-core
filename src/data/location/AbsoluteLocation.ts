@@ -1,41 +1,31 @@
 import 'reflect-metadata';
 import { Location } from "./Location";
 import { LengthUnit } from "../../utils/unit/LengthUnit";
-import { SerializableObject, SerializableMember } from "../decorators";
 
 /**
  * Absolute location
  */
-@SerializableObject()
-export class AbsoluteLocation implements Location {
-    private _accuracy: number;
-    private _accuracyUnit: LengthUnit;
+export interface AbsoluteLocation extends Location {
 
     /**
-     * Get location accuracy
+     * Location accuracy
      */
-    @SerializableMember()
-    public get accuracy(): number {
-        return this._accuracy;
-    }
+    accuracy: number;
 
     /**
-     * Set location accuracy
-     * @param accuracy Location accuracy
+     * Accuracy unit
      */
-    public set accuracy(accuracy: number) {
-        this._accuracy = accuracy;
-    }
+    accuracyUnit: LengthUnit;
 
     /**
-     * Get accuracy unit
+     * Cartesian point conversion
      */
-    @SerializableMember()
-    public get accuracyUnit(): LengthUnit {
-        return this._accuracyUnit;
-    }
+    point: number[];
 
-    public set accuracyUnit(accuracyUnit: LengthUnit) {
-        this._accuracyUnit = accuracyUnit;
-    }
+    /**
+     * Midpoint to another location
+     * @param otherLocation Other location
+     */
+    midpoint(otherLocation: AbsoluteLocation, distanceSelf?: number, distanceOther?: number): Promise<AbsoluteLocation>;
+
 }

@@ -34,6 +34,7 @@
     "system"
   ],
   "dependencies": {
+    "mathjs": "^6.5.0",
     "reflect-metadata": "^0.1.13",
     "threads": "^1.0.0",
     "tiny-worker": "^2.3.0",
@@ -44,6 +45,7 @@
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
     "@types/chai": "^4.2.7",
+    "@types/mathjs": "^6.0.4",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.14",
     "@types/uuid": "^3.4.6",
