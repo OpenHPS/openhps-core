@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.56](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.55...v1.0.0-alpha.56) (2020-01-30)
+
+
+### Bug Fixes
+
+* changed undefined node data ([7680012](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/7680012d50ee87f05ef8b7c6686a932ad6b95aaa))
+
 ## [1.0.0-alpha.55](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.54...v1.0.0-alpha.55) (2020-01-30)
 
 
