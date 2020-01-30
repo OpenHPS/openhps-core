@@ -1,7 +1,5 @@
-import 'reflect-metadata';
 import { DataObject } from "./DataObject";
 import { AngleUnit, Unit } from "../../utils/unit";
-import { SensorValue } from '../../utils';
 
 export interface SensorObject extends DataObject {
    
@@ -10,12 +8,13 @@ export interface SensorObject extends DataObject {
      */
     horizontalFOV: number[];
 
-    horizontalFOVUnit(): AngleUnit;
+    /**
+     * Vertical field of view of the sensor
+     */
+    verticalFOV: number[];
 
-    verticalFOV(): number[];
-
-    verticalFOVUnit(): AngleUnit;
-
-    values: Map<string, SensorValue<any>>;
-
+    /**
+     * Field of view unit
+     */
+    fovUnit: AngleUnit;
 }

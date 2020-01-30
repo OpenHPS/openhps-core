@@ -1,5 +1,6 @@
 import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, SensorObject, ServiceMergeNode } from '../../src';
 import { LoggingSinkNode } from '../../src/nodes/sink';
+import { DummySensorObject } from '../mock/data/object/DummySensorObject';
 
 import { expect } from 'chai';
 import 'mocha';
@@ -57,7 +58,7 @@ describe('data object', () => {
                 .build();
             objectDataService = model.findDataService(DataObject);
 
-            var object = new SensorObject("123");
+            var object = new DummySensorObject("123");
             object.displayName = "Hello";
             objectDataService.insert(object).then(savedObject => {
                 done();
@@ -65,7 +66,7 @@ describe('data object', () => {
         });
 
         it('should load unknown objects', (done) => {
-            var object = new SensorObject("123");
+            var object = new DummySensorObject("123");
             var frame = new DataFrame();
             frame.addObject(object);
             model.push(frame).then(_ => {
@@ -114,7 +115,7 @@ describe('data object', () => {
         });
 
         it('should store unknown data objects at the output layer', (done) => {
-            var object = new SensorObject();
+            var object = new DummySensorObject();
             object.displayName = "Testabc";
             var frame = new DataFrame();
             frame.addObject(object);

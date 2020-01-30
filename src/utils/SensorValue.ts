@@ -7,6 +7,8 @@ export class SensorValue<U extends Unit> {
     private _raw: number;
     @SerializableMember()
     private _unit: U;
+    @SerializableMember()
+    private _filtered: number = undefined;
 
     constructor(raw: number, unit: U) {
         this.raw = raw;
@@ -27,5 +29,17 @@ export class SensorValue<U extends Unit> {
 
     public set raw(value: number) {
         this._raw = value;
+    }
+
+    public get filtered(): number {
+        return this._filtered;
+    }
+
+    public set filtered(value: number) {
+        this._filtered = value;
+    }
+
+    public isFiltered(): boolean {
+        return this._filtered !== undefined;
     }
 }
