@@ -1,5 +1,5 @@
 import { ObjectProcessingNode } from "../ObjectProcessingNode";
-import { DataFrame, DataObject, RelativeDistanceLocation } from "../../data";
+import { DataFrame, DataObject, RelativeDistanceLocation, SensorObject } from "../../data";
 import { Model } from "../../Model";
 
 /**
@@ -11,7 +11,7 @@ export class TrilaterationProcessingNode<InOut extends DataFrame> extends Object
         super(filter);
     }
 
-    public processObject(dataObject: DataObject): Promise<DataObject> {
+    public processObject(dataObject: SensorObject): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             const referencePromises = new Array();
             const index = new Map<string, RelativeDistanceLocation[]>();
