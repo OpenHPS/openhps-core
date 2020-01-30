@@ -1,19 +1,63 @@
-import { DataFrame, DataObject, SerializableObject, SerializableArrayMember } from "../../data";
-import { ObjectProcessingNode } from "../ObjectProcessingNode";
+import { DataFrame, SerializableObject, SensorObject, DataObject } from "../../data";
+import { ProcessingNode } from "../ProcessingNode";
+import { GraphPushOptions } from "../../graph";
+import { SensorValue } from "../../utils";
 
-export class BKFProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
+export class BKFProcessingNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
 
     constructor() {
         super();
     }
 
-    public processObject(dataObject: DataObject): Promise<DataObject> {
+    public process(frame: InOut, options?: GraphPushOptions): Promise<InOut> {
         return new Promise((resolve, reject) => {
-            // Extract all sensor values from the data object
+            // Extract all sensor values from the frame
+            const filterPromises = new Array();
+            Object.getOwnPropertyNames(frame).forEach(key => {
+                const property = (frame as any)[key];
+                if (property instanceof SensorValue) {
+                    // 1D sensor value
+                    filterPromises.push(this._filterValue(frame.source, `${key}`, property));
+                } else if (property instanceof Array) {
+                    // ND sensor value
+                    for (let i = 0 ; i < property.length ; i++) {
+                        if (property[i] instanceof SensorValue) {
+                            filterPromises.push(this._filterValue(frame.source, `${key}_${i}`, property[i]));
+                        }
+                    }
+                }
+            });
+
+            Promise.all(filterPromises).then(_ => {
+                resolve(frame);
+            }).catch(ex => {
+                reject(ex);
+            });
+        });
+    }
+
+    private _filterValue(source: DataObject, key: string, value: SensorValue): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            // Get existing filter
+            const nodeData = source.getNodeData(this.uid);
+            if (nodeData[key] === undefined) {
+                nodeData[key] = { R: 1, Q: 1, A: 1, B: 1, C: 1, x: NaN, cov: NaN };
+            }
+
+            const kf = new KalmanFilter(nodeData[key].R, nodeData[key].Q, nodeData[key].A, nodeData[key].B, nodeData[key].C, nodeData[key].x, nodeData[key].cov);
+            kf.filter(value.raw);
+            value.filtered = kf.measurement;
+
+            // Save the node data
+            nodeData[key].x = kf.measurement;
+            nodeData[key].cov = kf.covariance;
+            source.setNodeData(this.uid, nodeData);
+            resolve();
         });
     }
 
 }
+
 /**
  * Basic Kalman Filter
  * @author Wouter Bulten
@@ -21,7 +65,6 @@ export class BKFProcessingNode<InOut extends DataFrame> extends ObjectProcessing
  * @copyright Copyright 2015-2018 Wouter Bulten
  * @license MIT License
  */
-@SerializableObject()
 class KalmanFilter {
     /** Process noise */
     private _R: number;
@@ -39,13 +82,15 @@ class KalmanFilter {
     /** Covariance */
     private _cov: number;
 
-
-    constructor(R: number = 1, Q: number = 1, A: number = 1, B: number = 1, C: number = 1) {
+    constructor(R: number = 1, Q: number = 1, A: number = 1, B: number = 1, C: number = 1, x: number = NaN, cov: number = NaN) {
         this._R = R;
         this._Q = Q;
         this._A = A;
         this._B = B;
         this._C = C;
+
+        this._x = x;
+        this._cov = cov;
     }
 
     /**
@@ -96,23 +141,11 @@ class KalmanFilter {
      * Return the last filtered measurement
      * @return {Number}
      */
-    public lastMeasurement(): number {
+    public get measurement(): number {
         return this._x;
     }
 
-    /**
-     * Set measurement noise Q
-     * @param {Number} noise
-     */
-    public setMeasurementNoise(noise: number): void {
-        this._Q = noise;
-    }
-
-    /**
-     * Set the process noise R
-     * @param {Number} noise
-     */
-    public setProcessNoise(noise: number): void {
-        this._R = noise;
+    public get covariance(): number {
+        return this._cov;
     }
 }

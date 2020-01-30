@@ -7,7 +7,7 @@ export abstract class Unit {
      * @param toReference Lambda function to convert 'x' to the reference unit 
      * @param fromReference Lambda function to convert 'x' from the reference unit to the newly created unit
      */
-    constructor(toReference: (x: number) => number, fromReference: (x: number) => number) {
+    protected constructor(toReference: (x: number) => number, fromReference: (x: number) => number) {
         this._toReference = toReference;
         this._fromReference = fromReference;
     }

@@ -67,11 +67,29 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
     }
 
     public get edges(): Array<AbstractEdge<any>> {
+        if (this._edges === undefined) {
+            return [];
+        }
         return Array.from(this._edges.values());
     }
 
+    public set edges(edges: Array<AbstractEdge<any>>) {
+        edges.forEach(edge => {
+            this.addEdge(edge);
+        });
+    }
+
     public get nodes(): Array<Node<any, any>> {
+        if (this._nodes === undefined) {
+            return [];
+        }
         return Array.from(this._nodes.values());
+    }
+
+    public set nodes(nodes: Array<Node<any, any>>) {
+        nodes.forEach(node => {
+            this.addNode(node);
+        });
     }
 
     public addNode(node: Node<any, any>): void {
@@ -149,20 +167,4 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
         return this.internalInput.push(data, options);
     }
 
-    public serialize(): Object {
-        const nodesSerialized = Array();
-        const edgesSerialized = Array();
-        this.nodes.forEach(node => {
-            nodesSerialized.push(node.serialize());
-        });
-        this.edges.forEach(edge => {
-            edgesSerialized.push(edge.serialize());
-        });
-        return {
-            uid: this.uid,
-            name: this.name,
-            nodes: nodesSerialized,
-            edges: edgesSerialized
-        };
-    }
 }

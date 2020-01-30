@@ -1,4 +1,4 @@
-import { DataObject, SerializableObject, SerializableMember, SensorObject, AngleUnit } from '../../../../src';
+import { DataObject, SerializableObject, SensorObject, AngleUnit } from '../../../../src';
 
 @SerializableObject()
 export class DummySensorObject extends DataObject implements SensorObject {

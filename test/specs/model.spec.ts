@@ -9,7 +9,6 @@ describe('model', () => {
         it('should have an input and output by default', (done) => {
             const model = new ModelBuilder()
                 .build();
-            //console.log(model.serialize());
             done();
         });
 

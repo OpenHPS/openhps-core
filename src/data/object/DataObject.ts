@@ -147,6 +147,9 @@ export class DataObject {
      * @param nodeUID Node UID 
      */
     public getNodeData(nodeUID: string): any {
+        if (this._nodeData.get(nodeUID) === undefined) {
+            return {};
+        }
         return this._nodeData.get(nodeUID);
     }
 

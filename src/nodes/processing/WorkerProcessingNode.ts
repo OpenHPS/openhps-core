@@ -4,7 +4,7 @@ import { spawn, Thread, Worker } from "threads";
 import { GraphPushOptions } from "../../graph";
 
 /**
- * Processing node that uses threads from {@link threads#Thread | Thread}.
+ * Processing node that uses threads from {@link {threads#Thread} | Thread}.
  * 
  * ## Usage
  * ```typescript

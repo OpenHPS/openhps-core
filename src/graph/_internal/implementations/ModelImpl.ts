@@ -4,8 +4,6 @@ import { GraphImpl } from "./GraphImpl";
 import { Model } from "../../../Model";
 import { DataFrameService } from "../../../service/DataFrameService";
 import { GraphPushOptions } from "../../GraphPushOptions";
-import { SourceNode } from "../../../nodes";
-import { rejects } from "assert";
 
 /**
  * [[Model]] implementation

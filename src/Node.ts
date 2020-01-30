@@ -6,13 +6,11 @@ import { GraphPushOptions } from "./graph/GraphPushOptions";
 import { GraphPullOptions } from "./graph/GraphPullOptions";
 import { AbstractGraph } from "./graph/interfaces/AbstractGraph";
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
-import { SerializableObject, SerializableMember } from './data';
 import { DataFrameService } from './service/DataFrameService';
 
 /**
  * OpenHPS model node.
  */
-@SerializableObject()
 export abstract class Node<In extends DataFrame, Out extends DataFrame> implements AbstractNode<In, Out> {
     private _uid: string = uuidv4();
     private _name: string;
@@ -34,7 +32,6 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> implemen
         });
     }
 
-    @SerializableMember()
     public get name(): string {
         return this._name;
     }
@@ -92,7 +89,6 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> implemen
     /**
      * Get unique identifier of node
      */
-    @SerializableMember()
     public get uid(): string {
         return this._uid;
     }
@@ -245,13 +241,6 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> implemen
             frameService = model.findDataServiceByName("DataFrame"); 
         }
         return frameService;
-    }
-
-    public serialize(): Object {
-        return {
-            uid: this.uid,
-            name: this.name
-        };
     }
 
 }
