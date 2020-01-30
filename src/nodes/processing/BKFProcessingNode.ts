@@ -1,34 +1,52 @@
-import { DataFrame, SerializableObject, SensorObject, DataObject } from "../../data";
+import { DataFrame, DataObject } from "../../data";
 import { ProcessingNode } from "../ProcessingNode";
 import { GraphPushOptions } from "../../graph";
-import { SensorValue } from "../../utils";
+import { isNumber } from "util";
 
 export class BKFProcessingNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
+    private _properties: string[];
 
-    constructor() {
+    constructor(properties: string[] = null) {
         super();
+        this._properties = properties;
     }
 
     public process(frame: InOut, options?: GraphPushOptions): Promise<InOut> {
         return new Promise((resolve, reject) => {
             // Extract all sensor values from the frame
             const filterPromises = new Array();
-            Object.getOwnPropertyNames(frame).forEach(key => {
+            const filterProperties = new Array();
+            for (const key of Object.getOwnPropertyNames(frame)) {
+                // If defined, check if property key is listed
+                if (this._properties !== null && this._properties.indexOf(key) === -1) {
+                    continue;
+                }
+
                 const property = (frame as any)[key];
-                if (property instanceof SensorValue) {
+                if (isNumber(property)) {
                     // 1D sensor value
+                    filterProperties.push({ key });
                     filterPromises.push(this._filterValue(frame.source, `${key}`, property));
                 } else if (property instanceof Array) {
                     // ND sensor value
                     for (let i = 0 ; i < property.length ; i++) {
-                        if (property[i] instanceof SensorValue) {
+                        if (isNumber(property[i])) {
+                            filterProperties.push({ key, index: i });
                             filterPromises.push(this._filterValue(frame.source, `${key}_${i}`, property[i]));
                         }
                     }
                 }
-            });
+            }
 
-            Promise.all(filterPromises).then(_ => {
+            Promise.all(filterPromises).then((values: number[]) => {
+                for (let i = 0 ; i < values.length ; i++) {
+                    const propertyDetails = filterProperties[i];
+                    if (propertyDetails.index === undefined) {
+                        (frame as any)[propertyDetails.key] = values[i];
+                    } else {
+                        (frame as any)[propertyDetails.key][propertyDetails.index] = values[i];
+                    }
+                }
                 resolve(frame);
             }).catch(ex => {
                 reject(ex);
@@ -36,8 +54,8 @@ export class BKFProcessingNode<InOut extends DataFrame> extends ProcessingNode<I
         });
     }
 
-    private _filterValue(source: DataObject, key: string, value: SensorValue): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+    private _filterValue(source: DataObject, key: string, value: number): Promise<number> {
+        return new Promise<number>((resolve, reject) => {
             // Get existing filter
             const nodeData = source.getNodeData(this.uid);
             if (nodeData[key] === undefined) {
@@ -45,14 +63,13 @@ export class BKFProcessingNode<InOut extends DataFrame> extends ProcessingNode<I
             }
 
             const kf = new KalmanFilter(nodeData[key].R, nodeData[key].Q, nodeData[key].A, nodeData[key].B, nodeData[key].C, nodeData[key].x, nodeData[key].cov);
-            kf.filter(value.raw);
-            value.filtered = kf.measurement;
+            kf.filter(value);
 
             // Save the node data
             nodeData[key].x = kf.measurement;
             nodeData[key].cov = kf.covariance;
             source.setNodeData(this.uid, nodeData);
-            resolve();
+            resolve(kf.measurement);
         });
     }
 

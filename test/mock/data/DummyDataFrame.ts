@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { DataFrame, SerializableObject, SerializableMember, SensorValue } from '../../../src';
+import { DataFrame, SerializableObject, SerializableMember } from '../../../src';
 
 @SerializableObject()
 export class DummyDataFrame extends DataFrame {

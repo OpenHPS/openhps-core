@@ -11,8 +11,8 @@ describe('node', () => {
             const model = new ModelBuilder()
                 .to(new BKFProcessingNode())
                 .to(new LoggingSinkNode<DummySensorDataFrame>((frame) => {
-                    // console.log(frame.reading.filtered);
-                    if (frame.reading.filtered > 10) {
+                    console.log(frame.reading);
+                    if (frame.reading > 10) {
                         done();
                     }
                 }))
