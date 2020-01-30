@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.55](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.54...v1.0.0-alpha.55) (2020-01-30)
+
+
+### Bug Fixes
+
+* bkf on numbers instead of sensor values ([a77f650](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/a77f65082dc719c519b81f0dcb93430ec5fbd5f8))
+
 ## [1.0.0-alpha.54](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.53...v1.0.0-alpha.54) (2020-01-30)
 
 
