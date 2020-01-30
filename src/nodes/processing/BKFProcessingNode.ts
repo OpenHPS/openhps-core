@@ -57,7 +57,10 @@ export class BKFProcessingNode<InOut extends DataFrame> extends ProcessingNode<I
     private _filterValue(source: DataObject, key: string, value: number): Promise<number> {
         return new Promise<number>((resolve, reject) => {
             // Get existing filter
-            const nodeData = source.getNodeData(this.uid);
+            let nodeData = source.getNodeData(this.uid);
+            if (nodeData === undefined) {
+                nodeData = {};
+            }
             if (nodeData[key] === undefined) {
                 nodeData[key] = { R: 1, Q: 1, A: 1, B: 1, C: 1, x: NaN, cov: NaN };
             }
