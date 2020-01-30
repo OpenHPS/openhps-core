@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.52](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.51...v1.0.0-alpha.52) (2020-01-30)
+
+
+### Features
+
+* added boilerplate for trilateration processing ([0491f05](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/0491f05ad6f4de3b51e353293edcb5797c656b9f))
+
 ## [1.0.0-alpha.51](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.50...v1.0.0-alpha.51) (2020-01-26)
 
 ## [1.0.0-alpha.50](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.49...v1.0.0-alpha.50) (2020-01-26)
