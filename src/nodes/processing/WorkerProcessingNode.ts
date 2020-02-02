@@ -1,15 +1,16 @@
 import { DataFrame } from "../../data";
 import { ProcessingNode } from "../ProcessingNode";
-import { spawn, Thread, Worker } from "threads";
+import { spawn, Thread, Worker, expose } from "threads";
 import { GraphPushOptions } from "../../graph";
 
 /**
- * Processing node that uses threads from {@link {threads#Thread} | Thread}.
+ * Processing node that uses threads
  * 
  * ## Usage
  * ```typescript
- * 
+ * const processingNode = new WorkerProcessingNode('workerfile.ts');
  * ```
+ * The worker is spawned upon building the model.
  */
 export class WorkerProcessingNode<In extends DataFrame, Out extends DataFrame> extends ProcessingNode<In, Out> {
     private _worker: Worker;
@@ -18,9 +19,6 @@ export class WorkerProcessingNode<In extends DataFrame, Out extends DataFrame> e
 
     constructor(workerFile: string) {
         super();
-        // this._worker = new Worker(`require('ts-node').register(); require('${workerFile}'));`, {
-
-        // });
         this._worker = new Worker(workerFile);
 
         this.on('build', this._onBuild.bind(this));
@@ -63,7 +61,7 @@ export class WorkerProcessingNode<In extends DataFrame, Out extends DataFrame> e
             if (this._workerFn === undefined) {
                 reject("Worker thread not spawned yet!");
             }
-            this._workerFn(data, options).then((result: Out) => {
+            this._workerFn(data.toJson(), options).then((result: Out) => {
                 resolve(result);
             }).catch(ex => {
                 reject(ex);

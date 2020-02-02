@@ -3,6 +3,9 @@ import { ProcessingNode } from "../ProcessingNode";
 import { GraphPushOptions } from "../../graph";
 import { isNumber } from "util";
 
+/**
+ * Basic Kalman Filter processing node
+ */
 export class BKFProcessingNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
     private _properties: string[];
 

@@ -6,6 +6,7 @@ import { TimeUnit } from "../../utils/unit";
 export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _interval: number;
     private _intervalUnit: TimeUnit;
+    private _timer: NodeJS.Timeout;
 
     constructor(interval: number, intervalUnit: TimeUnit = TimeUnit.MICRO) {
         super();
@@ -18,7 +19,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
      * @param options Pull options
      */
     public start(options?: GraphPullOptions): TimedPullNode<InOut> {
-        const timer: NodeJS.Timeout = setInterval(() => {
+        this._timer = setInterval(() => {
             const promises = new Array();
             this.inputNodes.forEach(node => {
                 promises.push(node.pull(options));

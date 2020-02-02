@@ -3,7 +3,7 @@ import 'mocha';
 import { Model, ModelBuilder, DataFrame, WorkerProcessingNode } from '../../src';
 
 describe('node', () => {
-    describe('worker', () => {
+    describe('worker js', () => {
         
         it('should process data as a normal node', (done) => {
             const model = new ModelBuilder()
@@ -23,6 +23,26 @@ describe('node', () => {
             });
         }).timeout(3000);
 
+    });
+    describe('worker ts', () => {
+        
+        it('should process data as a normal node', (done) => {
+            const model = new ModelBuilder()
+                .to(new WorkerProcessingNode('../../../test/mock/nodes/WorkerTask.ts'))
+                .build();
+
+            model.on('ready', () => {
+                // Push three frames and wait for them to finish
+                Promise.all([
+                    model.push(new DataFrame()),
+                    model.push(new DataFrame()),
+                    model.push(new DataFrame())
+                ]).then(_ => {
+                    Promise.resolve(model.trigger('destroy'));
+                    done();
+                });
+            });
+        }).timeout(3000);
 
     });
 });
