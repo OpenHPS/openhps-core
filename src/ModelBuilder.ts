@@ -1,8 +1,8 @@
 import { Model } from "./Model";
 import { Service } from "./service";
 import { DataFrame } from "./data";
-import { GraphBuilder } from "./graph";
 import { ModelImpl } from './graph/_internal/implementations/ModelImpl';
+import { GraphBuilder } from "./graph";
 
 /**
  * Model build to construct and build a [[Model]]
@@ -27,6 +27,10 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
         this.graph.name = "model";
     }
 
+    /**
+     * Model logger
+     * @param logger Logging function 
+     */
     public withLogger(logger: (level: string, log: any) => void): ModelBuilder<In, Out> {
         this.graph.logger = logger;
         return this;

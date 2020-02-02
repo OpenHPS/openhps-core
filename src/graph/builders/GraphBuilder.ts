@@ -20,9 +20,9 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame, Builder e
             this.addNode(node);
             this.previousNodes.forEach(prevNode => {
                 this.graph.addEdge(new EdgeBuilder<any>()
-                .withInput(prevNode)
-                .withOutput(node)
-                .build());
+                    .withInput(prevNode)
+                    .withOutput(node)
+                    .build());
             });
         });
         this.previousNodes = nodes;

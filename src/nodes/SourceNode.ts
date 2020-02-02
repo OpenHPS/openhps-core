@@ -2,8 +2,12 @@ import { Node } from "../Node";
 import { DataFrame } from "../data/DataFrame";
 import { GraphPullOptions } from "../graph/GraphPullOptions";
 import { ServiceMergeNode } from "./processing/ServiceMergeNode";
-import { GraphBuilder, EdgeBuilder, GraphPushOptions } from "../graph";
+import { EdgeBuilder, GraphPushOptions } from "../graph";
+import { ModelBuilder } from "../ModelBuilder";
 
+/**
+ * Source node
+ */
 export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
     private _ignoreMerging: boolean;
 
@@ -21,7 +25,7 @@ export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
         this.on('build', this._onBuild.bind(this));
     }
 
-    private _onBuild(graphBuilder: GraphBuilder<any, any, any>): void {
+    private _onBuild(graphBuilder: ModelBuilder<any, any>): void {
         if (this._ignoreMerging) {
             return;
         }

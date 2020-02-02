@@ -4,6 +4,9 @@ import { DataFrame } from "../data/DataFrame";
 import { Model } from "../Model";
 import { DataObject } from "../data";
 
+/**
+ * Sink node
+ */
 export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
 
     constructor() {
