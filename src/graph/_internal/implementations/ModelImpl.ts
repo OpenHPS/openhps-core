@@ -19,6 +19,26 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
         super();
         this.name = name;
         this._addDefaultServices();
+
+        this.on("build", this._onModelBuild);
+    }
+
+    private _onModelBuild(_: any): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const buildPromises = new Array();
+            this._services.forEach(service => {
+                buildPromises.push(service.trigger('build', _));
+            });
+            this._dataServices.forEach(service => {
+                buildPromises.push(service.trigger('build', _));
+            });
+            Promise.all(buildPromises).then(_2 => {
+                this.trigger('ready');
+                resolve();
+            }).catch(ex => {
+                reject(ex);
+            });
+        });
     }
 
     private _addDefaultServices(): void {
