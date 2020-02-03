@@ -13,6 +13,7 @@ describe('data', () => {
             dataFrame.addObject(new DummyDataObject());
             const serialized = dataFrame.serialize();
             const deserialized = DataFrame.deserialize(serialized, DummyDataFrame);
+            expect(deserialized.getObjects().length).to.equal(dataFrame.getObjects().length);
             done();
         });
 
