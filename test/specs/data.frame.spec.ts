@@ -11,7 +11,6 @@ describe('data', () => {
             const dataFrame = new DummyDataFrame();
             dataFrame.addObject(new DataObject("123"));
             dataFrame.addObject(new DummyDataObject());
-            dataFrame.priority = 10;
             const serialized = dataFrame.serialize();
             const deserialized = DataFrame.deserialize(serialized, DummyDataFrame);
             done();

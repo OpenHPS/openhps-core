@@ -10,7 +10,7 @@ export class ListSourceNode<Out extends DataFrame> extends SourceNode<Out> {
     private _inputData: Out[];
 
     constructor(inputData: Out[]) {
-        super();
+        super(null);
         this._inputData = inputData;
     }
 

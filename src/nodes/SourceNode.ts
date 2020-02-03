@@ -4,11 +4,13 @@ import { GraphPullOptions } from "../graph/GraphPullOptions";
 import { ServiceMergeNode } from "./processing/ServiceMergeNode";
 import { EdgeBuilder, GraphPushOptions } from "../graph";
 import { ModelBuilder } from "../ModelBuilder";
+import { DataObject } from "../data";
 
 /**
  * Source node
  */
 export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
+    private _source: DataObject;
     private _ignoreMerging: boolean;
 
     /**
@@ -17,8 +19,10 @@ export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
      * @param ignoreMerging When set to true, the data frames will not be merged with
      * services 
      */
-    constructor(ignoreMerging: boolean = false) {
+    constructor(source: DataObject, ignoreMerging: boolean = false) {
         super();
+        this._source = source;
+        
         this._ignoreMerging = ignoreMerging;
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
@@ -93,6 +97,14 @@ export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
                 reject(ex);
             });
         });
+    }
+
+    public get source(): DataObject {
+        return this._source;
+    }
+
+    public set source(source: DataObject) {
+        this._source = source;
     }
 
     public abstract onPull(options?: GraphPullOptions): Promise<Out>;

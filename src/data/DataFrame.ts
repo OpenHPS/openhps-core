@@ -15,20 +15,15 @@ export class DataFrame {
     private _source: DataObject;
     @SerializableMapMember(String, DataObject)
     private _objects: Map<string, DataObject> = new Map();
-    private _priority: number = -1;
 
-    /**
-     * Create a new data frame based on another
-     * @param dataFrame Optional data frame to copy from
-     */
-    constructor(dataFrame?: DataFrame)
     /**
      * Create a new data frame
      * @param data Optional JSON to parse from
      */
-    constructor() {
+    constructor(source?: DataObject) {
         const timestamp = Date.now();
         this.createdTimestamp = timestamp;
+        this.source = source;
     }
 
     /**
@@ -124,24 +119,5 @@ export class DataFrame {
      */
     public removeObject(object: DataObject): void {
         this._objects.delete(object.uid);
-    }
-    
-    /**
-     * Get priority of the data frame.
-     * Priority is used when merging data frames from multiple streams.
-     * 
-     * @returns Number (higher is higher priority)
-     */
-    @SerializableMember()
-    public get priority(): number {
-        return this._priority;
-    } 
-
-    /**
-     * Set the priority of the data frame
-     * @param priority Priority number (higher number is higher priority)
-     */
-    public set priority(priority: number) {
-        this._priority = priority;
     }
 }
