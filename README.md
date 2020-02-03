@@ -2,7 +2,7 @@
 [![Tests](https://img.shields.io/jenkins/tests/http/ci.mvdw-software.com/job/openhps-core?compact_message)](https://ci.mvdw-software.com/job/openhps-core/lastCompletedBuild/testReport/)
 [![Coverage](https://img.shields.io/jenkins/coverage/cobertura/http/ci.mvdw-software.com/job/openhps-core)](https://ci.mvdw-software.com/view/OpenHPS/job/openhps-core/cobertura/)
 
-![logo](https://openhps.org/images/logo_text-64.png)
+[![logo](https://openhps.org/images/logo_text-64.png)](https://openhps.org/)
 
 # OpenHPS: Core Component
 This project contains the core component for OpenHPS (Open Hybrid Positioning System). It includes concepts for creating the model, nodes
