@@ -158,8 +158,6 @@ describe('dataset', () => {
                                 calculatedLocation.unit = expectedLocation.unit;
     
                                 expect(calculatedLocation).to.not.be.undefined;
-                                
-                                console.log(calculatedLocation.x + "," + calculatedLocation.y)
                             }
                         });
                     };
