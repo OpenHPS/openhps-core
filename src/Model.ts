@@ -40,18 +40,18 @@ export interface Model<In extends DataFrame, Out extends DataFrame> extends Grap
      */
     findServiceByClass<F extends Service>(serviceClass: new () => F): F;
 
-    findDataServiceByName<F extends DataService<any>>(name: string): F;
+    findDataServiceByName<F extends DataService<any, any>>(name: string): F;
     
     /**
      * Get data service by data type
      * @param dataType Data type
      */
-    findDataService<D extends DataObject, F extends DataService<D>>(dataType: new () => D): F;
+    findDataService<D extends DataObject, F extends DataService<any, D>>(dataType: new () => D): F;
 
     /**
      * Get data service by data object
      * @param dataObject Data object instance
      */
-    findDataServiceByObject<D extends DataObject, F extends DataService<D>>(dataObject: D): F;
+    findDataServiceByObject<D extends DataObject, F extends DataService<any, D>>(dataObject: D): F;
 
 }

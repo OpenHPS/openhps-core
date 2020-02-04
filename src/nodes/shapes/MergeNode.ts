@@ -17,7 +17,7 @@ export class MergeNode<In extends DataFrame, Out extends DataFrame> extends Node
             const frameService = this.getDataFrameService(data);
             if (frameService !== null && frameService !== undefined) { 
                 // Update the frame
-                servicePromises.push(frameService.update(data));
+                servicePromises.push(frameService.insert(data.uid, data));
             }
 
             Promise.all(servicePromises).then(_1 => {

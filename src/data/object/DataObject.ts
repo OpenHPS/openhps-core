@@ -5,6 +5,7 @@ import { Shape } from "../geometry/Shape";
 import { TypedJSON } from 'typedjson';
 import { SerializableObject, SerializableMember, SerializableArrayMember, SerializableMapMember } from '../decorators';
 import { findSerializableObjectByName } from '../decorators/SerializableObject';
+import * as uuidv4 from 'uuid/v4';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -21,7 +22,7 @@ export class DataObject {
     @SerializableMapMember(String, Object)
     private _nodeData: Map<string, any> = new Map();
 
-    constructor(uid: string = null) {
+    constructor(uid: string = uuidv4()) {
         this.uid = uid;
     }
 

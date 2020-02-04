@@ -10,7 +10,7 @@ import { GraphPushOptions } from "../../GraphPushOptions";
  */
 export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends GraphImpl<In, Out> implements Model<In, Out> {
     private _services: Map<string, Service> = new Map();
-    private _dataServices: Map<string, DataService<any>> = new Map();
+    private _dataServices: Map<string, DataService<any, any>> = new Map();
 
     /**
      * Create a new OpenHPS model
@@ -58,7 +58,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
         }
     }
 
-    public findDataServiceByName<F extends DataService<any>>(name: string): F {
+    public findDataServiceByName<F extends DataService<any, any>>(name: string): F {
         if (this._dataServices.has(name)) {
             return this._dataServices.get(name) as F;
         } else {
@@ -74,7 +74,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
      * Get data service by data type
      * @param dataType Data type
      */
-    public findDataService<D extends DataObject, F extends DataService<D>>(dataType: new () => D): F {
+    public findDataService<D extends DataObject, F extends DataService<any, D>>(dataType: new () => D): F {
         return this.findDataServiceByName(dataType.name);
     }
 
@@ -82,7 +82,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
      * Get data service by data object
      * @param dataObject Data object instance
      */
-    public findDataServiceByObject<D extends DataObject, F extends DataService<D>>(dataObject: D): F {
+    public findDataServiceByObject<D extends DataObject, F extends DataService<any, D>>(dataObject: D): F {
         return this.findDataServiceByName(dataObject.constructor.name);
     }
 
@@ -110,7 +110,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
             const servicePromises = new Array();
             if (frameService !== null && frameService !== undefined) { 
                 // Update the frame
-                servicePromises.push(frameService.update(frame));
+                servicePromises.push(frameService.insert(frame.uid, frame));
             }
 
             Promise.all(servicePromises).then(_1 => {

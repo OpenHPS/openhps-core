@@ -16,10 +16,12 @@ export class WorkerProcessingNode<In extends DataFrame, Out extends DataFrame> e
     private _worker: Worker;
     private _workerFn: (data: In, options?: GraphPushOptions) => Promise<Out>;
     private _thread: Thread;
-
-    constructor(workerFile: string) {
+    private _outputType: new () => Out | DataFrame;
+    
+    constructor(workerFile: string, outputType: new () => Out | DataFrame = DataFrame) {
         super();
         this._worker = new Worker(workerFile);
+        this._outputType = outputType;
 
         this.on('build', this._onBuild.bind(this));
         this.on('destroy', this._onDestroy.bind(this));
@@ -61,8 +63,8 @@ export class WorkerProcessingNode<In extends DataFrame, Out extends DataFrame> e
             if (this._workerFn === undefined) {
                 reject("Worker thread not spawned yet!");
             }
-            this._workerFn(data.toJson(), options).then((result: Out) => {
-                resolve(result);
+            this._workerFn(data.toJson(), options).then((result: any) => {
+                resolve(DataFrame.deserialize(result, this._outputType) as Out);
             }).catch(ex => {
                 reject(ex);
             });

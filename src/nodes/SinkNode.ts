@@ -3,6 +3,7 @@ import { GraphOptions } from "../graph/GraphOptions";
 import { DataFrame } from "../data/DataFrame";
 import { Model } from "../Model";
 import { DataObject } from "../data";
+import * as uuidv4 from 'uuid/v4';
 
 /**
  * Sink node
@@ -31,11 +32,10 @@ export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
                     if (service === null || service === undefined) { 
                         service = defaultService;
                     }
-                    if (object.uid !== null) {
-                        servicePromises.push(service.update(object));
-                    } else {
-                        servicePromises.push(service.insert(object));
+                    if (object.uid === null) {
+                        object.uid = uuidv4();
                     }
+                    servicePromises.push(service.insert(object.uid, object));
                 }
 
                 // Check if there are frame services

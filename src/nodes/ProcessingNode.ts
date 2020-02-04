@@ -29,7 +29,7 @@ export abstract class ProcessingNode<In extends DataFrame, Out extends DataFrame
                         }
                       
                         // Update the frame
-                        servicePromises.push(frameService.update(result));
+                        servicePromises.push(frameService.insert(result.uid, result));
                     }
 
                     // Push processed result to the next node
