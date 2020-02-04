@@ -19,6 +19,7 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> implemen
     public logger: (level: string, log: any) => void = () => {};
 
     constructor() {
+        this._events.set("ready", new Array());
         this._events.set("push", new Array());
         this._events.set("pull", new Array());
         this._events.set("build", new Array());
