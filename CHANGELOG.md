@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.69](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.68...v1.0.0-alpha.69) (2020-02-04)
+
+
+### Bug Fixes
+
+* added better serialization and data services ([035d5e8](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/035d5e841f95320a0e52a8fefd22947958dd9126))
+
 ## [1.0.0-alpha.68](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.67...v1.0.0-alpha.68) (2020-02-04)
 
 ## [1.0.0-alpha.67](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.66...v1.0.0-alpha.67) (2020-02-04)
