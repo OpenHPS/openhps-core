@@ -2,6 +2,9 @@ import { DataFrame, DataObject } from "../data";
 import { ProcessingNode } from "./ProcessingNode";
 import { GraphPushOptions } from "../graph";
 
+/**
+ * Processing node that processes each [[DataObject]] in a [[DataFrame]] individually
+ */
 export abstract class ObjectProcessingNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
     private _filter: Array<new () => any>;
 

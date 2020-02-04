@@ -166,7 +166,8 @@ describe('dataset', () => {
     
                     // Perform a pull
                     const promises = new Array();
-                    for (let i = 0 ; i < scanSourceNode.size ; i ++) {
+                    const size = scanSourceNode.size;
+                    for (let i = 0 ; i < size ; i++) {
                         promises.push(trackingModel.pull());
                     }
                     Promise.all(promises).then(_ => {

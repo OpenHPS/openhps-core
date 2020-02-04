@@ -8,7 +8,7 @@ import { DataObject } from "../../data";
  * is popped when pulling from this node.
  */
 export class ListSourceNode<Out extends DataFrame> extends SourceNode<Out> {
-    private _inputData: Out[];
+    private _inputData: Out[] = new Array();
 
     constructor(inputData: Out[], source: DataObject = null) {
         super(source);

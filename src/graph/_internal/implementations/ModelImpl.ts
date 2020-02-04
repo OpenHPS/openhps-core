@@ -20,7 +20,8 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
         this.name = name;
         this._addDefaultServices();
 
-        this.on("build", this._onModelBuild);
+        this.clearEvents("build");
+        this.on("build", this._onModelBuild.bind(this));
     }
 
     private _onModelBuild(_: any): Promise<void> {
@@ -31,6 +32,9 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
             });
             this._dataServices.forEach(service => {
                 buildPromises.push(service.trigger('build', _));
+            });
+            this.nodes.forEach(node => {
+                buildPromises.push(node.trigger('build', _));
             });
             Promise.all(buildPromises).then(_2 => {
                 this.trigger('ready');

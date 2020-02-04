@@ -230,6 +230,10 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> implemen
         });
     }
 
+    public clearEvents(event: string): void {
+        this._events.set(event, []);
+    }
+
     /**
      * Get data frame service for a specific frame
      * @param frame Frame to get data frame service for
