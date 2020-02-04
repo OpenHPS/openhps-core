@@ -2,6 +2,7 @@ import { AbsoluteLocation } from "./AbsoluteLocation";
 import { AngleUnit, MetricLengthUnit } from "../../utils/unit";
 import { LengthUnit } from "../../utils/unit/LengthUnit";
 import { SerializableObject, SerializableMember } from "../decorators";
+import { Cartesian3DLocation } from "./Cartesian3DLocation";
 
 /**
  * Geographical location
@@ -197,6 +198,25 @@ export class GeographicalLocation implements AbsoluteLocation {
                     reject(ex);
                 });
             }
+        });
+    }
+
+    public static trilaterate(points: GeographicalLocation[], distances: number[]): Promise<GeographicalLocation> {
+        return new Promise<GeographicalLocation>((resolve, reject) => {
+            const convertedPoints = new Array();
+            points.forEach(geopoint => {
+                const point = geopoint.point;
+                const convertedPoint = new Cartesian3DLocation(point[0], point[1], point[2]);
+                convertedPoints.push(convertedPoint);
+            });
+            GeographicalLocation.trilaterate(convertedPoints, distances).then(point3d => {
+                const geopoint = new GeographicalLocation();
+                geopoint.point = point3d.point;
+                geopoint.accuracy = points[0].accuracy;
+                resolve(geopoint);
+            }).catch(ex => {
+                reject(ex);
+            });
         });
     }
 

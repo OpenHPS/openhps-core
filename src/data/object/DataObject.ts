@@ -4,6 +4,7 @@ import { RelativeLocation } from '../location/RelativeLocation';
 import { Shape } from "../geometry/Shape";
 import { TypedJSON } from 'typedjson';
 import { SerializableObject, SerializableMember, SerializableArrayMember, SerializableMapMember } from '../decorators';
+import { findSerializableObjectByName } from '../decorators/SerializableObject';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -29,13 +30,6 @@ export class DataObject {
             this.displayName = object.displayName;
         if (object.shape !== undefined)
             this.shape = object.shape;
-        if (object.absoluteLocation !== undefined)
-            this.absoluteLocation = object.absoluteLocation;
-        object.relativeLocations.forEach(location => {
-            this.relativeLocations.push(location);
-        });
-        if (object.absoluteLocation !== undefined)
-            this.absoluteLocation = object.absoluteLocation;
         object._nodeData.forEach((value, key) => {
             this._nodeData.set(key, value);
         });
@@ -101,7 +95,14 @@ export class DataObject {
     /**
      * Get the absolute location of the object
      */
-    @SerializableMember()
+    @SerializableMember({
+        deserializer(raw: any): AbsoluteLocation {
+            if (raw === undefined) {
+                return undefined;
+            }
+            return new TypedJSON(findSerializableObjectByName(raw.__type)).parse(raw);
+        }
+    })
     public get absoluteLocation(): AbsoluteLocation {
         return this._absoluteLocation;
     }
@@ -133,7 +134,18 @@ export class DataObject {
     /**
      * Get relative locations
      */
-    @SerializableArrayMember(RelativeLocation)
+    @SerializableArrayMember(RelativeLocation, {
+        deserializer(rawArray: any[]): RelativeLocation[] {
+            const output = new Array();
+            rawArray.forEach(raw => {
+                if (raw === undefined) {
+                    return undefined;
+                }
+                output.push(new TypedJSON(findSerializableObjectByName(raw.__type)).parse(raw));
+            });
+            return output;
+        }
+    })
     public get relativeLocations(): RelativeLocation[] {
         return this._relativeLocations;
     }

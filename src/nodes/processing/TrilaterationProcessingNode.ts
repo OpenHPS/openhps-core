@@ -1,9 +1,13 @@
 import { ObjectProcessingNode } from "../ObjectProcessingNode";
-import { DataFrame, DataObject, RelativeDistanceLocation, SensorObject } from "../../data";
+import { DataFrame, DataObject, RelativeDistanceLocation, SensorObject, Cartesian3DLocation, Cartesian2DLocation, GeographicalLocation } from "../../data";
 import { Model } from "../../Model";
 
 /**
  * Trillateration processing node
+ * Supported location types:
+ * - [[Cartesian2DLocation]]
+ * - [[Cartesian3DLocation]]
+ * - [[GeographicalLocation]]
  */
 export class TrilaterationProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
 
@@ -41,10 +45,15 @@ export class TrilaterationProcessingNode<InOut extends DataFrame> extends Object
                 });
 
                 const objects = new Array<DataObject>();
+                const points = new Array();
+                const distances = new Array();
                 filteredRelativeLocations.forEach(filteredRelativeLocation => {
-                    objects.push(objectCache.get(filteredRelativeLocation.referenceObjectUID));
+                    const object = objectCache.get(filteredRelativeLocation.referenceObjectUID);
+                    objects.push(object);
+                    points.push(object.absoluteLocation);
+                    distances.push(filteredRelativeLocation.distance);
                 });
-            
+
                 switch (filteredRelativeLocations.length) {
                     /** Edge cases: 0, 1 or 2 */
                     case 0: // Unable to calculate absolute location
@@ -65,9 +74,37 @@ export class TrilaterationProcessingNode<InOut extends DataFrame> extends Object
                         });
                         break;
                     case 3: // Trilateration
-                        resolve(dataObject);
+                        switch (true) {
+                            case objects[0].absoluteLocation instanceof Cartesian3DLocation:
+                                Cartesian3DLocation.trilaterate(points, distances).then(location => {
+                                    dataObject.absoluteLocation = location;
+                                    resolve(dataObject);
+                                }).catch(ex => {
+                                    reject(ex);
+                                });
+                                break;
+                            case objects[0].absoluteLocation instanceof Cartesian2DLocation:
+                                Cartesian2DLocation.trilaterate(points, distances).then(location => {
+                                    dataObject.absoluteLocation = location;
+                                    resolve(dataObject);
+                                }).catch(ex => {
+                                    reject(ex);
+                                });
+                                break;
+                            case objects[0].absoluteLocation instanceof GeographicalLocation:
+                                GeographicalLocation.trilaterate(points, distances).then(location => {
+                                    dataObject.absoluteLocation = location;
+                                    resolve(dataObject);
+                                }).catch(ex => {
+                                    reject(ex);
+                                });
+                                break;
+                            default:
+                                resolve(dataObject);
+                        }
                         break;
                     default: // Trilatereation: Nonlinear Least Squares
+                        dataObject.absoluteLocation = objects[0].absoluteLocation;
                         resolve(dataObject);
                         break;
                 }

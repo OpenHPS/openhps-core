@@ -27,5 +27,4 @@ export interface AbsoluteLocation extends Location {
      * @param otherLocation Other location
      */
     midpoint(otherLocation: AbsoluteLocation, distanceSelf?: number, distanceOther?: number): Promise<AbsoluteLocation>;
-
 }

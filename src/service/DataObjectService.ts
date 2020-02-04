@@ -7,7 +7,7 @@ import * as uuidv4 from "uuid/v4";
  * processed in the model and objects that need to be tracked.
  */
 export class DataObjectService<T extends DataObject | DataObject> extends DataService<T> {
-    protected _objects: Map<string, T> = new Map();
+    protected _objects: Map<string, any> = new Map();
 
     constructor(dataType: new () => T | DataObject = DataObject) {
         super(dataType as new () => T);
@@ -26,23 +26,28 @@ export class DataObjectService<T extends DataObject | DataObject> extends DataSe
     public findById(uid: string): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             if (this._objects.has(uid)) {
-                resolve(this._objects.get(uid));
+                const deserializedObject = DataObject.deserialize(JSON.stringify(this._objects.get(uid)), this.getDataType());
+                resolve(deserializedObject);
             } else {
-                reject(`Data object with uid ${uid} not found!`);
+                reject(`${this.getDataType().name} with identifier #${uid} not found!`);
             }
         });
     }
 
     public findAll(filter?: any): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            resolve(Array.from(this._objects.values()));
+            const objects = new Array();
+            this._objects.forEach(serializedObject => {
+                objects.push(DataObject.deserialize(JSON.stringify(serializedObject), this.getDataType()));
+            });
+            resolve(objects);
         });
     }
 
     public insert(object: T): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             if (object.uid !== null && this._objects.has(object.uid)) {
-                this._objects.set(object.uid, object);
+                this._objects.set(object.uid, object.toJson());
                 resolve(object);
             } else {
                 // Insert new object
@@ -50,7 +55,8 @@ export class DataObjectService<T extends DataObject | DataObject> extends DataSe
                     // Generate new ID if empty
                     object.uid = this.generateID();
                 }
-                this._objects.set(object.uid, object);
+                
+                this._objects.set(object.uid, object.toJson());
                 resolve(object);
             }
         });
@@ -66,10 +72,10 @@ export class DataObjectService<T extends DataObject | DataObject> extends DataSe
             // Update existing data
             if (this._objects.has(object.uid)) {
                 // Update existing data
-                this._objects.set(object.uid, object);
+                this._objects.set(object.uid, object.toJson());
                 resolve(object);
             } else {
-                this._objects.set(object.uid, object);
+                this._objects.set(object.uid, object.toJson());
                 resolve(object);
             }
         });

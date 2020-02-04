@@ -1,4 +1,4 @@
-export * from './SerializableObject';
+export { SerializableObject } from './SerializableObject';
 export * from './SerializableMember';
 export * from './SerializableArrayMember';
 export * from './SerializableMapMember';

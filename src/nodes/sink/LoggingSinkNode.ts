@@ -1,27 +1,32 @@
 import { DataFrame } from "../../data/DataFrame";
 import { SinkNode } from "../SinkNode";
 import { GraphPushOptions } from "../../graph/GraphPushOptions";
+import { CallbackSinkNode } from "./CallbackSinkNode";
 
 /**
  * This sink node will serialize the data frames pushed to this
  * output layer, and log them to the console using the logging function
  * specified in the constructor.
  */
-export class LoggingSinkNode<In extends DataFrame> extends SinkNode<In> {
-    private _loggingFn: (data: In) => void;
-
+export class LoggingSinkNode<In extends DataFrame> extends CallbackSinkNode<In> {
     /**
      * Create a new logger output sink
      * @param loggingFn Logging function
      */
-    constructor(loggingFn: (data: In) => void = function(data: In) { }) {
+    constructor(loggingFn?: (data: In, options?: GraphPushOptions) => void) {
         super();
-        this._loggingFn = loggingFn;
+        if (loggingFn === undefined) {
+            loggingFn = (data: In, options?: GraphPushOptions) => {
+                this.logger("info", data);
+            };
+        }
+
+        this.callback = loggingFn;
     }
     
     public onPush(data: In, options?: GraphPushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this._loggingFn(data);
+            this.callback(data, options);
             resolve();
         });
     }
