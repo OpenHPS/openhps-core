@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.74](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.73...v1.0.0-alpha.74) (2020-02-05)
+
+
+### Features
+
+* added data service driver to data service ([66107ff](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/66107ff04918c669872ac930b531d377f624dc7b))
+* added data service driver to data service ([d590467](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/d59046729b981642c4fd33fac6c93035c0d42c56))
+
 ## [1.0.0-alpha.73](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.72...v1.0.0-alpha.73) (2020-02-05)
 
 
