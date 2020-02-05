@@ -2,6 +2,60 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.0.0-alpha.70 (2020-02-04)
+
+
+### Features
+
+* add frame service support ([5a9a4e5](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/5a9a4e51c49cbe33c99a4f382986ce24aa301154))
+* add frame service support ([44b209d](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/44b209d6fa8309e9fd5cf72f216561d95a357afb))
+* added boilerplate for trilateration processing ([0491f05](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/0491f05ad6f4de3b51e353293edcb5797c656b9f))
+* added filter option for object processing node ([ecaa747](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/ecaa74734d89bbe48afb1d182ada0922e9db0c6e))
+* added frame service ([cb783f9](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/cb783f988bce39e662c99ef3e040de971dd04884))
+* added object processing node ([c3492c9](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/c3492c9d96f6edcb0c9fc1bdad8440100bd9af7c))
+* added sensor object as interface ([912f4e7](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/912f4e70c19161a4163f8a93f7efdc73e1333e36))
+* added serialization for graph options ([5d11d90](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/5d11d9072230cc5b0fb1295fcb4ea52e96010e25))
+* basic kalman filter implemented ([90f4652](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/90f46523ce7c863484d082bf458658ec74c476f7))
+* complete removed export of typedjson ([13f7c39](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/13f7c39dd775e8cf32ae9dacafd5041f634e97cd))
+* sensor value ([d4c7699](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/d4c7699363e07d7b8e540df4c7049f9e6c6b509e))
+
+
+### Bug Fixes
+
+* 🐛 predict ([bb44671](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/bb44671f0c025c70acd101b76cd6439a2e950d12))
+* 🐛 Pull fix ([bc47d82](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/bc47d8246cde0beccfda55ff1523ed3efd0a8a45))
+* 🐛 UID for data frames ([82e48fd](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/82e48fdd71932f06b86fca42ff7527f98c5b56c8))
+* add type to dataframe and dataobject ([fe94cf3](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/fe94cf37f7ed5a6c9693d420b4749437d1e34a01))
+* added better serialization and data services ([035d5e8](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/035d5e841f95320a0e52a8fefd22947958dd9126))
+* added events for services ([e3c2cbe](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/e3c2cbe4a1595255e051b018f82513b830472866))
+* added get method for data type in a data service ([8eeb6f4](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/8eeb6f4060dee8a3afeacf35d835bf303ef61d8b))
+* added jsonobject to sensor object for serialization ([b2f8bda](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/b2f8bda71d810cdca34ebffdf085fff92911f390))
+* added known types manually ([d50e095](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/d50e095d8356974909a3656498c90dd396174b72))
+* added semicolumn ([61e8a80](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/61e8a8078ce3f55fbf9a2c41ea40f3ab162eb4eb))
+* added serializableobject ([dc3513d](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/dc3513dfc08752d0b293c21e36fd8224157acc9a))
+* bkf on numbers instead of sensor values ([a77f650](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/a77f65082dc719c519b81f0dcb93430ec5fbd5f8))
+* catch promise exceptions in service merger ([9ce5961](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/9ce5961e6cab27624256530e32abb72544e2a2dd))
+* changed undefined node data ([7680012](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/7680012d50ee87f05ef8b7c6686a932ad6b95aaa))
+* debug logging of exceptions in pushing ([233bc0c](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/233bc0ce8f4de92fd74f9f2fbd1db0409110f690))
+* deserializing and serializing of node data ([8a2ae72](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/8a2ae728fd30cc2be38867764dcaf264ffe59d54))
+* do not reject promise when findbyid fails ([5d9b7dc](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/5d9b7dcc31fe9284eed116cca3aa9dc094ea7d1e))
+* fixed the eval usage ([7e48e76](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/7e48e76245fa3fdc0d547106654387790e09ebc1))
+* removed priority and added source object requirement ([05421b7](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/05421b71afa45db2fc1c8b90ea7e4052837b95f0))
+* resolve promise when pull returns null frame ([53b8ed8](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/53b8ed8690f286ae51eb7bb529ad35bfa24aae27))
+* serialization issue fix ([08e3d6e](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/08e3d6e227ed983292361b7dee9df06140817150))
+* serialization of sensor object ([7150913](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/7150913283c38cd4501be01c058ede42dfc6a721))
+* service merge node should not fail for unknown object ([29563fe](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/29563fe3927b88e0d94ad4cdb1cae861281c407a))
+* set logger of merger after source ([698e742](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/698e742835294cba3489c9327a1023873a03ba57))
+* sink node does not delete frames ([3a36d38](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/3a36d38640f8ddf34e9b370d5b90518b92b3470d))
+* source node frame saving on push ([725c78b](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/725c78b7791cca6be7cdca40dd2d161181becb9d))
+
+## [1.0.0-alpha.69](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.68...v1.0.0-alpha.69) (2020-02-04)
+
+
+### Bug Fixes
+
+* added better serialization and data services ([035d5e8](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/035d5e841f95320a0e52a8fefd22947958dd9126))
+
 ## [1.0.0-alpha.68](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.67...v1.0.0-alpha.68) (2020-02-04)
 
 ## [1.0.0-alpha.67](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.66...v1.0.0-alpha.67) (2020-02-04)
