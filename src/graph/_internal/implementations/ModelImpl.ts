@@ -11,7 +11,7 @@ import { GraphPushOptions } from "../../GraphPushOptions";
 export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends GraphImpl<In, Out> implements Model<In, Out> {
     private _services: Map<string, Service> = new Map();
     private _dataServices: Map<string, DataService<any, any>> = new Map();
-    private _defaultDataServiceDriver: new (dataType: new () => any) => DataServiceDriver<any, any>;
+    private _defaultDataServiceDriver: { type: new (dataType: new () => any) => DataServiceDriver<any, any>, options?: any };
 
     /**
      * Create a new OpenHPS model
@@ -28,7 +28,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
     private _onModelBuild(_: any): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this._defaultDataServiceDriver === undefined) {
-                this.setDefaultDataServiceDriver(MemoryDataService);
+                this.setDefaultDataServiceDriver({ type: MemoryDataService });
             }
 
             const buildPromises = new Array();
@@ -40,7 +40,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
                 if (service.dataServiceDriver === undefined) {
                     service.dataServiceDriver = this._defaultDataServiceDriver;
                 }
-                
+
                 buildPromises.push(service.trigger('build', _));
             });
             this.nodes.forEach(node => {
@@ -96,7 +96,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
         return this.findDataServiceByName(dataObject.constructor.name);
     }
 
-    public setDefaultDataServiceDriver(dataServiceDriver: new (dataType: new () => any) => DataServiceDriver<any, any>): void {
+    public setDefaultDataServiceDriver(dataServiceDriver: { type: new (dataType: new () => any) => DataServiceDriver<any, any>, options?: any }): void {
         this._defaultDataServiceDriver = dataServiceDriver;
     }
 

@@ -8,8 +8,8 @@ import { DataObject } from "../data";
  */
 export class DataObjectService<T extends DataObject> extends DataService<string, DataObject> {
 
-    constructor(dataServiceDriver?: new (dataType: new () => T) => DataServiceDriver<string, T>, dataType: new () => T | DataObject = DataObject) {
-        super(dataServiceDriver, dataType as new () => T);
+    constructor(dataType: new () => T | DataObject = DataObject, dataServiceDriver?: new (dataType: new () => T, options?: any) => DataServiceDriver<string, T>, options?: any) {
+        super(dataType as new () => T, dataServiceDriver, options);
     }
 
 }

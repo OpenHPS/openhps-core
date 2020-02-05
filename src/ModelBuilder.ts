@@ -36,8 +36,8 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
         return this;
     }
 
-    public usingDataServiceDriver(driver: new (dataType: new () => any) => DataServiceDriver<any, any>): ModelBuilder<In, Out> {
-        this.graph.setDefaultDataServiceDriver(driver);
+    public usingDataServiceDriver(driver: new (dataType: new () => any, options?: any) => DataServiceDriver<any, any>, options?: any): ModelBuilder<In, Out> {
+        this.graph.setDefaultDataServiceDriver({ type: driver, options });
         return this;
     }
 

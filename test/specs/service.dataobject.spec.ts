@@ -10,7 +10,7 @@ describe('data object', () => {
         var objectDataService: DataObjectService<DataObject>;
 
         before((done) => {
-            objectDataService = new DataObjectService(MemoryDataService);
+            objectDataService = new DataObjectService(DataObject, MemoryDataService);
             var object = new DataObject();
             object.displayName = "Test";
             objectDataService.insert(object.uid, object).then(savedObject => {

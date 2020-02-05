@@ -4,8 +4,8 @@ import { DataServiceDriver } from "./DataServiceDriver";
 
 export class DataFrameService<T extends DataFrame> extends DataService<string, DataFrame> {
 
-    constructor(dataServiceDriver?: new (dataType: new () => T) => DataServiceDriver<string, T>, dataType: new () => T | DataFrame = DataFrame) {
-        super(dataServiceDriver, dataType as new () => T);
+    constructor(dataType: new () => T | DataFrame = DataFrame, dataServiceDriver?: new (dataType: new () => T, options?: any) => DataServiceDriver<string, T>, options?: any) {
+        super(dataType as new () => T, dataServiceDriver, options);
     }
 
 }
