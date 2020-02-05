@@ -1,5 +1,5 @@
 import { Model } from "./Model";
-import { Service } from "./service";
+import { Service, DataService, DataServiceDriver } from "./service";
 import { DataFrame } from "./data";
 import { ModelImpl } from './graph/_internal/implementations/ModelImpl';
 import { GraphBuilder } from "./graph";
@@ -36,11 +36,16 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
         return this;
     }
 
+    public usingDataServiceDriver(service: DataServiceDriver<any, any>): ModelBuilder<In, Out> {
+        this.graph.addService(service);
+        return this;
+    }
+
     /**
      * Add a service to the model
      * @param service Service to add
      */
-    public withService(service: Service): ModelBuilder<In, Out> {
+    public addService(service: Service): ModelBuilder<In, Out> {
         this.graph.addService(service);
         return this;
     }

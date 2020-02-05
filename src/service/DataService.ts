@@ -1,32 +1,54 @@
+import { DataServiceDriver } from "./DataServiceDriver";
 import { Service } from "./Service";
 
-/**
- * Data service
- */
-export abstract class DataService<I, T> extends Service {
+export class DataService<I, T> extends Service {
+    private _dataServiceDriver: new (dataType: new () => T) => DataServiceDriver<I, T>;
+    private _dataService: DataServiceDriver<I, T>;
     private _dataType: new () => T;
 
-    constructor(type: new () => T) {
-        super(type.name);
-        this._dataType = type;
+    constructor(dataServiceDriver: new (dataType: new () => T) => DataServiceDriver<I, T>, dataType: new () => T) {
+        super(dataType.name);
+        this._dataType = dataType;
+        this.dataServiceDriver = dataServiceDriver;
     }
 
-    public getDataType(): new () => T {
-        return this._dataType;
+    public get dataServiceDriver(): new (dataType: new () => T) => DataServiceDriver<I, T> {
+        return this._dataServiceDriver;
     }
 
-    public abstract findOne(filter: any): Promise<T>;
+    public set dataServiceDriver(dataServiceDriver: new (dataType: new () => T) => DataServiceDriver<I, T>) {
+        if (dataServiceDriver !== undefined) {
+            this._dataServiceDriver = dataServiceDriver;
+            this._dataService = new this._dataServiceDriver(this._dataType);
 
-    public abstract findById(id: I): Promise<T>;
+            this.on("build", (_?: any) => { this._dataService.trigger("build", _); });
+            this.on("destroy", (_?: any) => { this._dataService.trigger("destroy", _); });
+            this.on("ready", (_?: any) => { this._dataService.trigger("ready", _); });
+        }
+    }
 
-    public abstract findAll(): Promise<T[]>;
+    public findOne(filter: any): Promise<T> {
+        return this._dataService.findOne(filter);
+    }
     
-    public abstract findAll(filter: any): Promise<T[]>;
+    public findById(id: I): Promise<T> {
+        return this._dataService.findById(id);
+    }
 
-    public abstract insert(id: I, object: T): Promise<T>;
+    public findAll(filter?: any): Promise<T[]> {
+        return this._dataService.findAll(filter);
+    }
 
-    public abstract delete(id: I): Promise<void>;
+    public insert(id: I, object: T): Promise<T> {
+        return this._dataService.insert(id, object);
+    }
 
-    public abstract deleteAll(): Promise<void>;
+    public delete(id: I): Promise<void> {
+        return this._dataService.delete(id);
+    }
+
+    public deleteAll(): Promise<void> {
+        return this._dataService.deleteAll();
+    }
 
 }

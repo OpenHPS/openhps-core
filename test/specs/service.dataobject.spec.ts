@@ -1,4 +1,4 @@
-import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, SensorObject, ServiceMergeNode } from '../../src';
+import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, SensorObject, ServiceMergeNode, MemoryDataService } from '../../src';
 import { LoggingSinkNode } from '../../src/nodes/sink';
 import { DummySensorObject } from '../mock/data/object/DummySensorObject';
 
@@ -10,7 +10,7 @@ describe('data object', () => {
         var objectDataService: DataObjectService<DataObject>;
 
         before((done) => {
-            objectDataService = new DataObjectService();
+            objectDataService = new DataObjectService(MemoryDataService);
             var object = new DataObject();
             object.displayName = "Test";
             objectDataService.insert(object.uid, object).then(savedObject => {

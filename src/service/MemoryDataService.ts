@@ -1,12 +1,8 @@
-import { DataService } from "./DataService";
+import { DataServiceDriver } from "./DataServiceDriver";
 import { DataSerializer } from "../data/DataSerializer";
 
-export class MemoryDataService<I, T> extends DataService<I, T> {
+export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     protected _data: Map<I, any> = new Map();
-
-    constructor(dataType: new () => T) {
-        super(dataType as new () => T);
-    }
     
     public findOne(filter: any): Promise<T> {
         return new Promise<T>((resolve, reject) => {
@@ -19,7 +15,7 @@ export class MemoryDataService<I, T> extends DataService<I, T> {
             if (this._data.has(id)) {
                 resolve(DataSerializer.deserialize(this._data.get(id)));
             } else {
-                reject(`${this.getDataType().name} with identifier #${id} not found!`);
+                reject(`${this.dataType.name} with identifier #${id} not found!`);
             }
         });
     }
@@ -51,7 +47,7 @@ export class MemoryDataService<I, T> extends DataService<I, T> {
                 this._data.delete(id);
                 resolve();
             } else {
-                reject(`Unable to delete! ${this.getDataType().name} with identifier #${id} not found!`);
+                reject(`Unable to delete! ${this.dataType.name} with identifier #${id} not found!`);
             }
         });
     }

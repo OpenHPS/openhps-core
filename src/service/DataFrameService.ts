@@ -1,10 +1,11 @@
 import { DataFrame } from "../data";
-import { MemoryDataService } from "./MemoryDataService";
+import { DataService } from "./DataService";
+import { DataServiceDriver } from "./DataServiceDriver";
 
-export class DataFrameService<T extends DataFrame | DataFrame> extends MemoryDataService<string, T> {
-  
-    constructor(dataType: new () => T | DataFrame = DataFrame) {
-        super(dataType as new () => T);
+export class DataFrameService<T extends DataFrame> extends DataService<string, DataFrame> {
+
+    constructor(dataServiceDriver?: new (dataType: new () => T) => DataServiceDriver<string, T>, dataType: new () => T | DataFrame = DataFrame) {
+        super(dataServiceDriver, dataType as new () => T);
     }
 
 }

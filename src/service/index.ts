@@ -1,5 +1,7 @@
-export { DataObjectService } from './DataObjectService';
-export { DataService } from './DataService';
-export { Service } from './Service';
+export * from './DataObjectService';
+export * from './DataServiceDriver';
+export * from './Service';
 export * from './DataFrameService';
 export * from './MemoryDataService';
+export * from './DataServiceDriver';
+export * from './DataService';

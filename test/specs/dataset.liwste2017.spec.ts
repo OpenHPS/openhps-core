@@ -66,7 +66,7 @@ describe('dataset', () => {
             before((done) => {
                 trackingModel = new ModelBuilder()
                     // Use the data from the calibration model
-                    .withService(calibrationModel.findDataService(DataObject))
+                    .addService(calibrationModel.findDataService(DataObject))
                     .to(scanSourceNode)
                     .to(new TrilaterationProcessingNode<EvaluationDataFrame>())
                     .to(callbackNode)

@@ -1,5 +1,5 @@
 import { DataFrame, DataObject } from "../../../data";
-import { Service, DataObjectService, DataService } from "../../../service";
+import { Service, DataObjectService, DataService, DataServiceDriver, MemoryDataService } from "../../../service";
 import { GraphImpl } from "./GraphImpl";
 import { Model } from "../../../Model";
 import { DataFrameService } from "../../../service/DataFrameService";
@@ -11,6 +11,7 @@ import { GraphPushOptions } from "../../GraphPushOptions";
 export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends GraphImpl<In, Out> implements Model<In, Out> {
     private _services: Map<string, Service> = new Map();
     private _dataServices: Map<string, DataService<any, any>> = new Map();
+    private _defaultDataServiceDriver: new (dataType: new () => any) => DataServiceDriver<any, any>;
 
     /**
      * Create a new OpenHPS model
@@ -26,11 +27,20 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
 
     private _onModelBuild(_: any): Promise<void> {
         return new Promise((resolve, reject) => {
+            if (this._defaultDataServiceDriver === undefined) {
+                this.setDefaultDataServiceDriver(MemoryDataService);
+            }
+
             const buildPromises = new Array();
             this._services.forEach(service => {
                 buildPromises.push(service.trigger('build', _));
             });
             this._dataServices.forEach(service => {
+                // Check that the service has a driver
+                if (service.dataServiceDriver === undefined) {
+                    service.dataServiceDriver = this._defaultDataServiceDriver;
+                }
+                
                 buildPromises.push(service.trigger('build', _));
             });
             this.nodes.forEach(node => {
@@ -86,6 +96,10 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
         return this.findDataServiceByName(dataObject.constructor.name);
     }
 
+    public setDefaultDataServiceDriver(dataServiceDriver: new (dataType: new () => any) => DataServiceDriver<any, any>): void {
+        this._defaultDataServiceDriver = dataServiceDriver;
+    }
+
     /**
      * Add service to model
      * @param service Service
@@ -93,6 +107,9 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
     public addService(service: Service): void {
         if (service instanceof DataService) {
             // Data service
+            if (service.dataServiceDriver === undefined) {
+                service.dataServiceDriver = this._defaultDataServiceDriver;
+            }
             this._dataServices.set(service.getName(), service);
         } else {
             // Normal service
