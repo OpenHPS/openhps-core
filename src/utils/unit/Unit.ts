@@ -2,38 +2,55 @@ import { SerializableObject, SerializableMember } from "../../data/decorators";
 import * as crypto from 'crypto';
 
 @SerializableObject({
-    initializer: (sourceObject: Unit, rawSourceObject: Unit) => {
-        if (rawSourceObject._hash !== undefined) {
-            return Unit.findUnitByHash(rawSourceObject._hash);
+    initializer: <T extends Unit | Unit>(_: T, rawSourceObject: T) => {
+        if (rawSourceObject.hash !== undefined) {
+            const unit = Unit.findUnitByHash(rawSourceObject.hash);
+            if (unit === undefined) {
+                throw new Error(`Unit with hash ${rawSourceObject.hash} not found! Unable to deserialize!`);
+            }
+            return unit;
+        } else {
+            throw new Error(`Unit does not define a serialization hash! Unable to deserialize!`);
         }
-        return new Unit();
     }
 })
 export class Unit {
     private _toReference: (x: number) => number;
     private _fromReference: (x: number) => number;
-    @SerializableMember()
     private _hash: string;
 
     private static _units: Map<string, Unit> = new Map();
-
 
     /**
      * Create a new unit
      * @param toReference Lambda function to convert 'x' to the reference unit 
      * @param fromReference Lambda function to convert 'x' from the reference unit to the newly created unit
      */
-    constructor(toReference: (x: number) => number = (x) => x, fromReference: (x: number) => number = (x) => x) {
+    constructor(toReference?: (x: number) => number, fromReference?: (x: number) => number) {
         this._toReference = toReference;
         this._fromReference = fromReference;
 
-        this._hash = crypto.createHash('md5').update(`${this.constructor.name}${this._toReference.toString()}${this._fromReference.toString()}`).digest("hex");
+        if (toReference !== undefined && fromReference !== undefined) {
+            this._hash = crypto.createHash('md5').update(`${this.constructor.name}${this._toReference.toString()}${this._fromReference.toString()}`).digest("hex");
 
-        Unit._units.set(this.hash, this);
+            if (!Unit._units.has(this.hash)) {
+                Unit._units.set(this.hash, this);
+            }
+        }
     }
 
+    @SerializableMember()
     public get hash(): string {
         return this._hash;
+    }
+
+    public set hash(hash: string) {
+        if (this._hash === undefined) {
+            const existingUnit = Unit.findUnitByHash(hash);
+            this._toReference = existingUnit._toReference;
+            this._fromReference = existingUnit._toReference;
+            this._hash = hash;
+        }
     }
 
     public static findUnitByHash(hash: string): Unit {
@@ -49,11 +66,11 @@ export class Unit {
         return targetValue;
     }
 
-    public get to(): (x: number) => number {
+    protected get to(): (x: number) => number {
         return this._toReference;
     }
 
-    public get from(): (x: number) => number {
+    protected get from(): (x: number) => number {
         return this._fromReference;
     }
 }

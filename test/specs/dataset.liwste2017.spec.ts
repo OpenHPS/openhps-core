@@ -123,6 +123,7 @@ describe('dataset', () => {
                         data.getObjects().forEach(object => {
                             if (object.uid === "tracked") {
                                 let calculatedLocation: Cartesian2DLocation = object.absoluteLocation as Cartesian2DLocation;
+                                // Accurate control location
                                 const expectedLocation: Cartesian2DLocation = data.evaluationObjects.get(object.uid).absoluteLocation as Cartesian2DLocation;
                                 
                                 // Convert meters to cm
@@ -150,6 +151,7 @@ describe('dataset', () => {
                         data.getObjects().forEach(object => {
                             if (object.uid === "tracked") {
                                 let calculatedLocation: Cartesian2DLocation = object.absoluteLocation as Cartesian2DLocation;
+                                // Accurate control location
                                 const expectedLocation: Cartesian2DLocation = data.evaluationObjects.get(object.uid).absoluteLocation as Cartesian2DLocation;
     
                                 // Convert meters to cm

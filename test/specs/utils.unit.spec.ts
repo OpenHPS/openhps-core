@@ -10,6 +10,7 @@ describe('units', () => {
         const unit = new Unit((x) => x * 10000000, (x) => x / 1000000);
         const serializedUnit = DataSerializer.serialize(unit);
         const deserializedUnit = DataSerializer.deserialize<Unit>(serializedUnit);
+        expect(unit.hash).to.equal(deserializedUnit.hash);
         expect(unit.convert(158, MetricLengthUnit.MILLIMETER)).to.equal(deserializedUnit.convert(158, MetricLengthUnit.MILLIMETER));
     });
 

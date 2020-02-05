@@ -1,5 +1,7 @@
 import { VolumeUnit } from "./VolumeUnit";
+import { SerializableObject } from "../../data/decorators";
 
+@SerializableObject()
 export class MetricVolumeUnit extends VolumeUnit {
     public static CUBIC_MILLIMETERS: MetricVolumeUnit = new MetricVolumeUnit((x) => x, (x) => x);
     public static CUBIC_CENTIMETERS: MetricVolumeUnit = new MetricVolumeUnit((x) => x * 10, (x) => x / 10);

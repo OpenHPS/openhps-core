@@ -12,6 +12,7 @@
     "registry": "https://repo.mvdw-software.com/repository/npm-openhps/"
   },
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "mocha --experimental-worker",
     "test:jenkins": "jenkins-mocha",

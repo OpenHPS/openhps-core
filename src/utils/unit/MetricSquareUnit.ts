@@ -1,5 +1,7 @@
 import { SquareUnit } from "./SquareUnit";
+import { SerializableObject } from "../../data/decorators";
 
+@SerializableObject()
 export class MetricSquareUnit extends SquareUnit {
     public static SQUARE_MILLIMETERS: MetricSquareUnit = new MetricSquareUnit((x) => x, (x) => x);
     public static SQUARE_CENTIMETERS: MetricSquareUnit = new MetricSquareUnit((x) => x * 10, (x) => x / 10);

@@ -1,5 +1,7 @@
 import { LengthUnit } from "./LengthUnit";
+import { SerializableObject } from "../../data/decorators";
 
+@SerializableObject()
 export class MetricLengthUnit extends LengthUnit {
     public static MILLIMETER: MetricLengthUnit = new MetricLengthUnit((x) => x, (x) => x);
     public static CENTIMETER: MetricLengthUnit = new MetricLengthUnit((x) => x * 10, (x) => x / 10);

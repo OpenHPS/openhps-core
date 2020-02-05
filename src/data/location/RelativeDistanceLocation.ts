@@ -1,8 +1,6 @@
-import 'reflect-metadata';
 import { RelativeLocation } from "./RelativeLocation";
 import { LengthUnit, Unit } from "../../utils";
 import { SerializableObject, SerializableMember } from '../decorators';
-import { AbstractUnit } from '../../utils/unit/_internal/AbstractUnit';
 
 /**
  * Relative location to another reference object in distance.
@@ -37,15 +35,7 @@ export class RelativeDistanceLocation extends RelativeLocation {
     /**
      * Get distance unit
      */
-    @SerializableMember({
-        serializer: <U extends Unit>(object: U) => {
-            return { to: object.to.toString(), from: object.from.toString() };
-        },
-        deserializer: (json: { to: string, from: string}) => {
-            // tslint:disable-next-line
-            return new AbstractUnit(eval(json.to), eval(json.from));
-        }
-    })
+    @SerializableMember()
     public get distanceUnit(): LengthUnit {
         return this._distanceUnit;
     }
