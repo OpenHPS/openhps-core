@@ -22,7 +22,9 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
         this._addDefaultServices();
 
         this.clearEvents("build");
+        this.clearEvents("destroy");
         this.on("build", this._onModelBuild.bind(this));
+        this.on("destroy", this._onModelDestroy.bind(this));
     }
 
     private _onModelBuild(_: any): Promise<void> {
@@ -48,6 +50,26 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
             });
             Promise.all(buildPromises).then(_2 => {
                 this.trigger('ready');
+                resolve();
+            }).catch(ex => {
+                reject(ex);
+            });
+        });
+    }
+
+    private _onModelDestroy(_?: any): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const destroyPromises = new Array();
+            this._services.forEach(service => {
+                destroyPromises.push(service.trigger('destroy', _));
+            });
+            this._dataServices.forEach(service => {
+                destroyPromises.push(service.trigger('destroy', _));
+            });
+            this.nodes.forEach(node => {
+                destroyPromises.push(node.trigger('destroy', _));
+            });
+            Promise.all(destroyPromises).then(_2 => {
                 resolve();
             }).catch(ex => {
                 reject(ex);
