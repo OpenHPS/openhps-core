@@ -25,9 +25,9 @@ export class DataService<I, T> extends Service {
             this._dataServiceDriver = dataServiceDriver;
             this._dataService = new this._dataServiceDriver.type(this._dataType, dataServiceDriver.options);
 
-            this.on("build", (_?: any) => { this._dataService.trigger("build", _); });
-            this.on("destroy", (_?: any) => { this._dataService.trigger("destroy", _); });
-            this.on("ready", (_?: any) => { this._dataService.trigger("ready", _); });
+            this.on("build", (_?: any) => this._dataService.trigger("build", _));
+            this.on("destroy", (_?: any) => this._dataService.trigger("destroy", _));
+            this.on("ready", (_?: any) => this._dataService.trigger("ready", _));
         }
     }
 
