@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.77](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.76...v1.0.0-alpha.77) (2020-02-05)
+
+
+### Bug Fixes
+
+* incorrect promise chain of service driver ([7d82e35](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/7d82e35232b363ce5059790a90eef3a7d3c184ea))
+
 ## [1.0.0-alpha.76](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.75...v1.0.0-alpha.76) (2020-02-05)
 
 
