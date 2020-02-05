@@ -1,9 +1,18 @@
-import { LengthUnit, MetricLengthUnit, AngleUnit, SquareUnit, VolumeUnit } from '../../src/utils/unit';
+import { LengthUnit, MetricLengthUnit, AngleUnit, SquareUnit, VolumeUnit, Unit } from '../../src/utils/unit';
 
 import { expect } from 'chai';
 import 'mocha';
+import { DataSerializer } from '../../src/data/DataSerializer';
 
 describe('units', () => {
+
+    it('should be serializable', () => {
+        const unit = new Unit((x) => x * 10000000, (x) => x / 1000000);
+        const serializedUnit = DataSerializer.serialize(unit);
+        const deserializedUnit = DataSerializer.deserialize<Unit>(serializedUnit);
+        expect(unit.convert(158, MetricLengthUnit.MILLIMETER)).to.equal(deserializedUnit.convert(158, MetricLengthUnit.MILLIMETER));
+    });
+
     describe('length', () => {
         describe('metric units', () => {
 

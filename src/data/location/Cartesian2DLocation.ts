@@ -3,7 +3,6 @@ import { AbsoluteLocation } from "./AbsoluteLocation";
 import { LengthUnit, Unit } from "../../utils";
 import { SerializableMember, SerializableObject } from "../decorators";
 import { Cartesian3DLocation } from "./Cartesian3DLocation";
-import { AbstractUnit } from "../../utils/unit/_internal/AbstractUnit";
 
 /**
  * Cartesian 2D location. This class extends a normal [[Point2D]]
@@ -31,15 +30,7 @@ export class Cartesian2DLocation extends Point2D implements AbsoluteLocation {
         this._accuracy = accuracy;
     }
 
-    @SerializableMember({
-        serializer: <U extends Unit>(object: U) => {
-            return { to: object.to.toString(), from: object.from.toString() };
-        },
-        deserializer: (json: { to: string, from: string}) => {
-            // tslint:disable-next-line
-            return new AbstractUnit(eval(json.to), eval(json.from));
-        }
-    })
+    @SerializableMember()
     public get unit(): LengthUnit {
         return this._unit;
     }

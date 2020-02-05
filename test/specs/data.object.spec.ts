@@ -4,6 +4,7 @@ import { ModelBuilder, Model, DataFrame, Node, DataObject, SensorObject } from '
 import { DummyDataFrame } from '../mock/data/DummyDataFrame';
 import { DummyDataObject } from '../mock/data/object/DummyDataObject';
 import { DummySensorObject } from '../mock/data/object/DummySensorObject';
+import { DataSerializer } from '../../src/data/DataSerializer';
 
 describe('data', () => {
     describe('object', () => {
@@ -12,8 +13,8 @@ describe('data', () => {
             const dataObject = new DataObject("123");
             dataObject.displayName = "abc";
             dataObject.setNodeData('x', { test: [1, 2, 3] });
-            const serialized = dataObject.serialize();
-            const deserialized = DataObject.deserialize(serialized, DataObject);
+            const serialized = DataSerializer.serialize(dataObject);
+            const deserialized = DataSerializer.deserialize(serialized, DataObject);
             expect(dataObject.uid).to.equal(deserialized.uid);
             expect(dataObject.displayName).to.equal(deserialized.displayName);
             done();
@@ -28,8 +29,8 @@ describe('data', () => {
             dataObject.displayName = "abc";
             dataObject.setNodeData('x', { test: [1, 2, 3] });
             dataObject.horizontalFOV = [1, 1, 1];
-            const serialized = dataObject.serialize();
-            const deserialized = DataObject.deserialize(serialized, DummySensorObject);
+            const serialized = DataSerializer.serialize(dataObject);
+            const deserialized = DataSerializer.deserialize(serialized, DummySensorObject);
             expect(dataObject.uid).to.equal(deserialized.uid);
             expect(dataObject.displayName).to.equal(deserialized.displayName);
             expect(dataObject.horizontalFOV[0]).to.equal(1);

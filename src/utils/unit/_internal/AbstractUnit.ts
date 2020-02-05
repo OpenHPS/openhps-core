@@ -1,10 +1,6 @@
 import { Unit } from "../Unit";
+import { SerializableObject } from "../../../data";
 
 export class AbstractUnit extends Unit {
     public static UNKNOWN = new AbstractUnit((x) => x, (x) => x);
-
-    constructor(toReference: (x: number) => number, fromReference: (x: number) => number) {
-        super(toReference, fromReference);
-    }
-    
 } 

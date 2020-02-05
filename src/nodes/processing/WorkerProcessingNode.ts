@@ -2,6 +2,7 @@ import { DataFrame } from "../../data";
 import { ProcessingNode } from "../ProcessingNode";
 import { spawn, Thread, Worker, expose } from "threads";
 import { GraphPushOptions } from "../../graph";
+import { DataSerializer } from "../../data/DataSerializer";
 
 /**
  * Processing node that uses threads
@@ -63,8 +64,8 @@ export class WorkerProcessingNode<In extends DataFrame, Out extends DataFrame> e
             if (this._workerFn === undefined) {
                 reject("Worker thread not spawned yet!");
             }
-            this._workerFn(data.toJson(), options).then((result: any) => {
-                resolve(DataFrame.deserialize(result, this._outputType) as Out);
+            this._workerFn(DataSerializer.serialize(data), options).then((result: any) => {
+                resolve(DataSerializer.deserialize(result) as Out);
             }).catch(ex => {
                 reject(ex);
             });

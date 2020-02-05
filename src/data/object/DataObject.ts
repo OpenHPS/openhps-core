@@ -1,11 +1,10 @@
-import 'reflect-metadata';
 import { AbsoluteLocation } from "../location/AbsoluteLocation";
 import { RelativeLocation } from '../location/RelativeLocation';
 import { Shape } from "../geometry/Shape";
 import { TypedJSON } from 'typedjson';
 import { SerializableObject, SerializableMember, SerializableArrayMember, SerializableMapMember } from '../decorators';
-import { findSerializableObjectByName } from '../decorators/SerializableObject';
 import * as uuidv4 from 'uuid/v4';
+import { DataSerializer } from '../DataSerializer';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -36,32 +35,7 @@ export class DataObject {
         });
         return this;
     }
-
-    /**
-     * Serialize the data object
-     */
-    public serialize(): string {
-        const json = this.toJson();
-        return JSON.stringify(json);
-    }
-
-    /**
-     * Deserialize the database
-     * @param serialized Serialized data frame
-     * @param dataType Data type to serialize to
-     */
-    public static deserialize<T extends DataObject>(serialized: string, dataType: new () => T): T {
-        const serializer = new TypedJSON(dataType);
-        return serializer.parse(serialized);
-    }
-
-    public toJson(): any {
-        const serializer = new TypedJSON(Object.getPrototypeOf(this).constructor);
-        const json = serializer.toPlainJson(this) as any;
-        json.__type = this.constructor.name;
-        return json;
-    }
-
+    
     /**
      * Get the object identifier
      */
@@ -101,7 +75,7 @@ export class DataObject {
             if (raw === undefined) {
                 return undefined;
             }
-            return new TypedJSON(findSerializableObjectByName(raw.__type)).parse(raw);
+            return new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw);
         }
     })
     public get absoluteLocation(): AbsoluteLocation {
@@ -142,7 +116,7 @@ export class DataObject {
                 if (raw === undefined) {
                     return undefined;
                 }
-                output.push(new TypedJSON(findSerializableObjectByName(raw.__type)).parse(raw));
+                output.push(new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw));
             });
             return output;
         }

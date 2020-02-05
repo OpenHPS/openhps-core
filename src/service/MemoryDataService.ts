@@ -1,4 +1,5 @@
 import { DataService } from "./DataService";
+import { DataSerializer } from "../data/DataSerializer";
 
 export class MemoryDataService<I, T> extends DataService<I, T> {
     protected _data: Map<I, any> = new Map();
@@ -16,7 +17,7 @@ export class MemoryDataService<I, T> extends DataService<I, T> {
     public findById(id: I): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             if (this._data.has(id)) {
-                resolve(this.deserialize(this._data.get(id)));
+                resolve(DataSerializer.deserialize(this._data.get(id)));
             } else {
                 reject(`${this.getDataType().name} with identifier #${id} not found!`);
             }
@@ -27,7 +28,7 @@ export class MemoryDataService<I, T> extends DataService<I, T> {
         return new Promise<T[]>((resolve, reject) => {
             const data = new Array();
             this._data.forEach(serializedObject => {
-                data.push(this.deserialize(serializedObject));
+                data.push(DataSerializer.deserialize(serializedObject));
             });
             resolve(data);
         });
@@ -36,7 +37,7 @@ export class MemoryDataService<I, T> extends DataService<I, T> {
     public insert(id: I, object: T): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             if (id !== null) {
-                this._data.set(id, this.serialize(object));
+                this._data.set(id, DataSerializer.serialize(object));
                 resolve(object);
             } else {
                 resolve();

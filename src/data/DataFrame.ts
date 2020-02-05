@@ -1,8 +1,6 @@
-import 'reflect-metadata';
 import * as uuidv4 from 'uuid/v4';
 import { DataObject } from './object/DataObject';
 import { SerializableObject, SerializableMember, SerializableMapMember } from './decorators';
-import { TypedJSON } from 'typedjson';
 
 /**
  * Data frame that is passed through each node in a model.
@@ -31,30 +29,6 @@ export class DataFrame {
      */
     public get uid(): string {
         return this._uid;
-    }
-
-    /**
-     * Serialize the data frame
-     */
-    public serialize(): string {
-        return JSON.stringify(this.toJson());
-    }
-
-    /**
-     * Deserialize the database
-     * @param serialized Serialized data frame
-     * @param dataType Data type to serialize to
-     */
-    public static deserialize<T extends DataFrame>(serialized: string, dataType: new () => T): T {
-        const serializer = new TypedJSON(dataType);
-        return serializer.parse(serialized);
-    }
-
-    public toJson(): any {
-        const serializer = new TypedJSON(Object.getPrototypeOf(this).constructor);
-        const json = serializer.toPlainJson(this) as any;
-        json.__type = this.constructor.name;
-        return json;
     }
 
     /**
