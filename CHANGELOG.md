@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.82](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.81...v1.0.0-alpha.82) (2020-02-10)
+
+
+### Bug Fixes
+
+* frame deleting issue with multiple sinks ([0c8c15a](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/0c8c15a5cb6723b46bc3f8801e835c440adf8537))
+
 ## [1.0.0-alpha.81](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.80...v1.0.0-alpha.81) (2020-02-10)
 
 ## [1.0.0-alpha.80](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.79...v1.0.0-alpha.80) (2020-02-10)
