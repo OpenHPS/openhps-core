@@ -40,14 +40,22 @@ export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
 
                 // Check if there are frame services
                 const frameService = this.getDataFrameService(data);
-                
+                let framePromise: PromiseLike<void> = null;
                 if (frameService !== null && frameService !== undefined) { 
                     // Update the frame
-                    servicePromises.push(frameService.delete(data.uid));
+                    framePromise = frameService.delete(data.uid);
                 }
 
                 Promise.all(servicePromises).then(_2 => {
-                    resolve();
+                    if (framePromise !== null) {
+                        Promise.resolve(framePromise).then(_ => {
+                            resolve();
+                        }).catch(_ => {
+                            resolve(); // Ignore frame deleting issue
+                        });
+                    } else {
+                        resolve();
+                    }
                 }).catch(ex => {
                     reject(ex);
                 });
