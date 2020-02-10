@@ -18,13 +18,13 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame> extends Proc
             const processObjectPromises = new Array();
             if (this._filter === undefined) {
                 data.getObjects().forEach(object => {
-                    processObjectPromises.push(this.processObject(object));
+                    processObjectPromises.push(this.processObject(object, data));
                 });
             } else {
                 data.getObjects().forEach(object => {
                     this._filter.forEach(dataType => {
                         if (object instanceof dataType) {
-                            processObjectPromises.push(this.processObject(object));
+                            processObjectPromises.push(this.processObject(object, data));
                         }
                     });
                 });
@@ -40,6 +40,6 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame> extends Proc
         });
     }
 
-    public abstract processObject(dataObject: DataObject): Promise<DataObject>;
+    public abstract processObject(dataObject: DataObject, dataFrame?: InOut): Promise<DataObject>;
 
 }

@@ -2,6 +2,12 @@ import { DataFrame } from "../../data";
 import { Node } from "../../Node";
 import { GraphPushOptions, GraphPullOptions } from "../../graph";
 
+/**
+ * Data frame merge node
+ * 
+ * ## Usage
+ * Merging is done by determining the incoming edges
+ */
 export class MergeNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
 
     constructor() {

@@ -6,7 +6,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     
     public findOne(filter: any): Promise<T> {
         return new Promise<T>((resolve, reject) => {
-            
+            reject(new Error(`Unsupported opperation!`));
         });
     }
     
@@ -22,6 +22,10 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
 
     public findAll(filter?: any): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
+            if (filter !== undefined) {
+                return reject(new Error(`Unsupported opperation!`));
+            }
+            
             const data = new Array();
             this._data.forEach(serializedObject => {
                 data.push(DataSerializer.deserialize(serializedObject));

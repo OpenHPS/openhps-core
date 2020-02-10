@@ -12,7 +12,6 @@
     "include": [
       "models",
       "specs",
-      "utils", "balance.layer.spec.ts"
     ],
     "exclude": [
       "../node_modules",
