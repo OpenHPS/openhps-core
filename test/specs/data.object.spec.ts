@@ -28,12 +28,12 @@ describe('data', () => {
             const dataObject = new DummySensorObject("123");
             dataObject.displayName = "abc";
             dataObject.setNodeData('x', { test: [1, 2, 3] });
-            dataObject.horizontalFOV = [1, 1, 1];
+            dataObject.horizontalFOV = 15;
             const serialized = DataSerializer.serialize(dataObject);
             const deserialized = DataSerializer.deserialize(serialized, DummySensorObject);
             expect(dataObject.uid).to.equal(deserialized.uid);
             expect(dataObject.displayName).to.equal(deserialized.displayName);
-            expect(dataObject.horizontalFOV[0]).to.equal(1);
+            expect(dataObject.horizontalFOV).to.equal(15);
             done();
         });
 
