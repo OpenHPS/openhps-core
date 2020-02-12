@@ -1,5 +1,5 @@
 export * from './ServiceMergeNode';
 export * from './WorkerProcessingNode';
-export * from './TrilaterationProcessingNode';
+export * from './TrilaterationNode';
 export * from './BKFProcessingNode';
-export * from './TriangulationProcessingNode';
+export * from './TriangulationNode';
