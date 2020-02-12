@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.87](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.86...v1.0.0-alpha.87) (2020-02-12)
+
+
+### Bug Fixes
+
+* memory driver does not serialize ([b33c65b](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/b33c65bdb3349b1c652766e38df570c292cc1b56))
+
 ## [1.0.0-alpha.86](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.85...v1.0.0-alpha.86) (2020-02-12)
 
 
