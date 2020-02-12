@@ -7,7 +7,6 @@ import { GraphPullOptions } from "./graph/GraphPullOptions";
 import { AbstractGraph } from "./graph/interfaces/AbstractGraph";
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
 import { DataFrameService } from './service/DataFrameService';
-import { GraphBuilder } from './graph';
 
 /**
  * OpenHPS model node.
