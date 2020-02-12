@@ -13,7 +13,7 @@ import { GraphBuilder } from "./graph";
  *      .withLogger((level: string, log:any) => { console.log(log); })
  *      .to(...)
  *      .to(...)
- *      .withService(...)
+ *      .addService(...)
  *      .build();
  * ```
  */

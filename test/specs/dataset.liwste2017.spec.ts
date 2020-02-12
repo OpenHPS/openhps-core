@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, Model, DataFrame, DataObject, RelativeDistanceLocation, MetricLengthUnit, Cartesian2DLocation, StorageSinkNode, TrilaterationProcessingNode, CallbackSinkNode } from '../../src';
+import { ModelBuilder, Model, DataFrame, DataObject, RelativeDistanceLocation, MetricLengthUnit, Cartesian2DLocation, StorageSinkNode, TrilaterationNode, CallbackSinkNode } from '../../src';
 import { CSVDataSource } from '../mock/nodes/source/CSVDataSource';
 import { EvaluationDataFrame } from '../mock/data/EvaluationDataFrame';
 
@@ -68,7 +68,7 @@ describe('dataset', () => {
                     // Use the data from the calibration model
                     .addService(calibrationModel.findDataService(DataObject))
                     .to(scanSourceNode)
-                    .to(new TrilaterationProcessingNode<EvaluationDataFrame>())
+                    .to(new TrilaterationNode<EvaluationDataFrame>())
                     .to(callbackNode)
                     .build();
                     

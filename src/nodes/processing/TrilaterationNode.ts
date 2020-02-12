@@ -9,7 +9,7 @@ import { Model } from "../../Model";
  * - [[Cartesian3DLocation]]
  * - [[GeographicalLocation]]
  */
-export class TrilaterationProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
+export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
 
     constructor(filter?: Array<new() => any>) {
         super(filter);
