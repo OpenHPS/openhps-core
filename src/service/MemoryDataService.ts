@@ -1,8 +1,7 @@
 import { DataServiceDriver } from "./DataServiceDriver";
-import { DataSerializer } from "../data/DataSerializer";
 
 export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
-    protected _data: Map<I, any> = new Map();
+    protected _data: Map<I, T> = new Map();
     
     public findOne(filter: any): Promise<T> {
         return new Promise<T>((resolve, reject) => {
@@ -13,7 +12,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     public findById(id: I): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             if (this._data.has(id)) {
-                resolve(DataSerializer.deserialize(this._data.get(id)));
+                resolve(this._data.get(id));
             } else {
                 reject(`${this.dataType.name} with identifier #${id} not found!`);
             }
@@ -28,7 +27,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
             
             const data = new Array();
             this._data.forEach(serializedObject => {
-                data.push(DataSerializer.deserialize(serializedObject));
+                data.push(serializedObject);
             });
             resolve(data);
         });
@@ -37,7 +36,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     public insert(id: I, object: T): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             if (id !== null) {
-                this._data.set(id, DataSerializer.serialize(object));
+                this._data.set(id, object);
                 resolve(object);
             } else {
                 resolve();
