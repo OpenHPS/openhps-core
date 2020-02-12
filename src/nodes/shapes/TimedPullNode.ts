@@ -8,7 +8,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _intervalUnit: TimeUnit;
     private _timer: NodeJS.Timeout;
 
-    constructor(interval: number, intervalUnit: TimeUnit = TimeUnit.MICRO) {
+    constructor(interval: number, intervalUnit: TimeUnit = TimeUnit.MILLI) {
         super();
         this._interval = interval;
         this._intervalUnit = intervalUnit;
@@ -27,7 +27,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
                     promises.push(node.pull());
                 });
                 Promise.resolve(promises);
-            }, this._intervalUnit.convert(this._interval, TimeUnit.MICRO));
+            }, this._intervalUnit.convert(this._interval, TimeUnit.MILLI));
             resolve();
         });
     }
