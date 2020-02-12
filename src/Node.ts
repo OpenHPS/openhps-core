@@ -7,6 +7,7 @@ import { GraphPullOptions } from "./graph/GraphPullOptions";
 import { AbstractGraph } from "./graph/interfaces/AbstractGraph";
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
 import { DataFrameService } from './service/DataFrameService';
+import { GraphBuilder } from './graph';
 
 /**
  * OpenHPS model node.
@@ -19,14 +20,16 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> implemen
     public logger: (level: string, log: any) => void = () => {};
 
     constructor() {
+        // Initialise events
         this._events.set("ready", new Array());
         this._events.set("push", new Array());
         this._events.set("pull", new Array());
         this._events.set("build", new Array());
         this._events.set("destroy", new Array());
 
+        // Set the display name of the node to the type name
         this._name = this.constructor.name;
-        
+
         this.logger("debug", {
             node: this.uid,
             message: `Node has been constructed.`,
