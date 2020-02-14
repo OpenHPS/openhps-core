@@ -5,6 +5,7 @@ import { TypedJSON } from 'typedjson';
 import { SerializableObject, SerializableMember, SerializableArrayMember, SerializableMapMember } from '../decorators';
 import * as uuidv4 from 'uuid/v4';
 import { DataSerializer } from '../DataSerializer';
+import { ProcessingNode } from "../../nodes";
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -16,7 +17,7 @@ export class DataObject {
     private _uid: string;
     private _displayName: string;
     private _absoluteLocation: AbsoluteLocation;
-    private _relativeLocations: RelativeLocation[] = new Array();
+    private _relativeLocations: Map<string, RelativeLocation[]> = new Map();
     private _shape: Shape;
     @SerializableMapMember(String, Object)
     private _nodeData: Map<string, any> = new Map();
@@ -122,11 +123,32 @@ export class DataObject {
         }
     })
     public get relativeLocations(): RelativeLocation[] {
-        return this._relativeLocations;
+        const relativeLocations: RelativeLocation[] = new Array();
+        if (this._relativeLocations !== undefined) {
+            this._relativeLocations.forEach((values: RelativeLocation[]) => {
+                values.forEach(value => { relativeLocations.push(value); });
+            });
+        }
+        return relativeLocations;
     }
 
     public set relativeLocations(relativeLocations: RelativeLocation[]) {
-        this._relativeLocations = relativeLocations;
+        this._relativeLocations = new Map();
+        relativeLocations.forEach(relativeLocation => {
+            this.addRelativeLocation(relativeLocation);
+        });
+    }
+
+    public addRelativeLocation(relativeLocation: RelativeLocation): void {
+        if (this._relativeLocations.has(relativeLocation.referenceObjectUID)) {
+            this._relativeLocations.get(relativeLocation.referenceObjectUID).push(relativeLocation);
+        } else {
+            this._relativeLocations.set(relativeLocation.referenceObjectUID, new Array(relativeLocation));
+        }
+    }
+
+    public hasRelativeLocation(target: string): boolean{
+        return this._relativeLocations.has(target);
     }
 
     /**

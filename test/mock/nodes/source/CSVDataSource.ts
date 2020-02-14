@@ -22,7 +22,9 @@ export class CSVDataSource extends ListSourceNode<DataFrame> {
             .pipe(csv())
             .on('data', (row: any) => {
                 const frame = this._rowCallback(row);
-                frame.source = this.source;
+                if (frame.source === undefined) {
+                    frame.source = this.source;
+                }
                 inputData.push(frame);   
             })
             .on('end', () => {

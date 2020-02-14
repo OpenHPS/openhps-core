@@ -79,6 +79,14 @@ export class DataFrame {
         }
     }
 
+    public getObjectByUID<T extends DataObject>(uid: string): T {
+        return this._objects.get(uid) as T;
+    }
+
+    public hasObject(object: DataObject): boolean {
+        return this._objects.has(object.uid);
+    }
+
     /**
      * Add a new object relevant to this data frame
      * @param object Relevant object
