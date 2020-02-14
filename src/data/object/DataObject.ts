@@ -139,6 +139,10 @@ export class DataObject {
         });
     }
 
+    public removeRelativeLocation(relativeLocation: RelativeLocation): void {
+
+    }
+    
     public addRelativeLocation(relativeLocation: RelativeLocation): void {
         if (this._relativeLocations.has(relativeLocation.referenceObjectUID)) {
             this._relativeLocations.get(relativeLocation.referenceObjectUID).push(relativeLocation);
