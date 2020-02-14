@@ -15,6 +15,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
         this.on('push', this._onPush.bind(this));
         this.on('build', this._start.bind(this));
+        this.on('destroy', this._stop.bind(this));
     }
 
     private _onPush(data: InOut, options?: GraphPushOptions): Promise<void> {
@@ -23,7 +24,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
             this.outputNodes.forEach(node => {
                 pushPromises.push(node.push(data, options));
             });
-            
+
             Promise.all(pushPromises).then(_ => {
                 this._timer.refresh();
                 resolve();
@@ -47,6 +48,12 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
             }, this._intervalUnit.convert(this._interval, TimeUnit.MILLI));
             resolve();
         });
+    }
+
+    private _stop(): void {
+        if (this._timer !== undefined) {
+            clearTimeout(this._timer);
+        }
     }
 
 }

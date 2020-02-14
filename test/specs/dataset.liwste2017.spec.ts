@@ -173,7 +173,7 @@ describe('dataset', () => {
                     Promise.all(promises).then(_ => {
                         done();
                     });
-                }).timeout(20000);
+                }).timeout(2000);
     
             });
 
@@ -273,6 +273,12 @@ describe('dataset', () => {
             });
         });
 
+        after((done) => {
+            trackingModel.trigger('destroy').finally(() => {
+                done();
+            });
+        });    
+
         describe('trilateration', () => {
 
             before((done) => {
@@ -359,7 +365,7 @@ describe('dataset', () => {
                     Promise.all(promises).then(_ => {
                         done();
                     });
-                }).timeout(20000);
+                }).timeout(2000);
     
             });
 

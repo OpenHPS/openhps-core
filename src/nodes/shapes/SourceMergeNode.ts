@@ -28,6 +28,7 @@ export class SourceMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
         this._timeoutUnit = timeoutUnit;
 
         this.on('build', this._start.bind(this));
+        this.on('destroy', this._stop.bind(this));
     }
 
     /**
@@ -51,6 +52,12 @@ export class SourceMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
             }, this._timeoutUnit.convert(this._timeout, TimeUnit.MILLI));
             resolve();
         });
+    }
+
+    private _stop(): void {
+        if (this._timer !== undefined) {
+            clearTimeout(this._timer);
+        }
     }
 
     public process(data: InOut, options: GraphPushOptions): Promise<InOut> {
