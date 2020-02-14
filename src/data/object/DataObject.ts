@@ -5,7 +5,6 @@ import { TypedJSON } from 'typedjson';
 import { SerializableObject, SerializableMember, SerializableArrayMember, SerializableMapMember } from '../decorators';
 import * as uuidv4 from 'uuid/v4';
 import { DataSerializer } from '../DataSerializer';
-import { ProcessingNode } from "../../nodes";
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -142,7 +141,7 @@ export class DataObject {
     public removeRelativeLocation(relativeLocation: RelativeLocation): void {
 
     }
-    
+
     public addRelativeLocation(relativeLocation: RelativeLocation): void {
         if (this._relativeLocations.has(relativeLocation.referenceObjectUID)) {
             this._relativeLocations.get(relativeLocation.referenceObjectUID).push(relativeLocation);
@@ -151,7 +150,7 @@ export class DataObject {
         }
     }
 
-    public hasRelativeLocation(target: string): boolean{
+    public hasRelativeLocation(target: string): boolean {
         return this._relativeLocations.has(target);
     }
 
