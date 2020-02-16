@@ -2,9 +2,10 @@ import { Node } from "../Node";
 import { DataFrame } from "../data/DataFrame";
 import { GraphPullOptions } from "../graph/GraphPullOptions";
 import { ServiceMergeNode } from "./processing/ServiceMergeNode";
-import { EdgeBuilder, GraphPushOptions } from "../graph";
+import { GraphPushOptions } from "../graph/GraphPushOptions";
 import { ModelBuilder } from "../ModelBuilder";
 import { DataObject } from "../data";
+import { EdgeBuilder } from "../graph/builders/EdgeBuilder";
 
 /**
  * Source node

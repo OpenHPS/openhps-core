@@ -1,24 +1,83 @@
 import { EdgeBuilder } from "./EdgeBuilder";
 import { DataFrame } from "../../data/DataFrame";
 import { GraphImpl } from "../_internal/implementations/GraphImpl";
-import { EdgeImpl } from "../_internal/implementations/EdgeImpl";
 import { Node } from "../../Node";
 import { AbstractGraph } from "../interfaces/AbstractGraph";
-import { AbstractEdge } from "../interfaces/AbstractEdge";
+import { SourceNode, SinkNode } from "../../nodes";
+import { AbstractEdge } from "../interfaces";
 
 export class GraphBuilder<In extends DataFrame, Out extends DataFrame, Builder extends GraphBuilder<In, Out, any>> {
     protected graph: GraphImpl<In, Out>;
-    protected previousNodes: Array<Node<any, any>>;
 
-    constructor() {
+    protected constructor() {
         this.graph = new GraphImpl<In, Out>();
-        this.previousNodes = [this.graph.internalInput];
+    }
+
+    public static create<In extends DataFrame, Out extends DataFrame>(): GraphBuilder<In, Out, any> {
+        return new GraphBuilder<In, Out, any>();
     }
     
-    public to(...nodes: Array<Node<any, any>>): Builder {
+    public from(...nodes: Array<SourceNode<any>>): GraphShapeBuilder<Builder> {
         nodes.forEach(node => {
-            this.addNode(node);
+            this.graph.addNode(node);
+        });
+        return GraphShapeBuilder.create(this as unknown as Builder, this.graph, nodes.length === 0 ? [this.graph.internalInput] : nodes);
+    }
+
+    public addNode(node: Node<any, any>): Builder {
+        this.graph.addNode(node);
+        return this as unknown as Builder;
+    }
+
+    public addEdge(edge: AbstractEdge<any>): Builder {
+        this.graph.addEdge(edge);
+        return this as unknown as Builder;
+    }
+
+    public deleteEdge(edge: AbstractEdge<any>): Builder {
+        this.graph.deleteEdge(edge);
+        return this as unknown as Builder;
+    }
+
+    public deleteNode(node: Node<any, any>): Builder {
+        this.graph.deleteNode(node);
+        return this as unknown as Builder;
+    }
+
+    public build(): Promise<AbstractGraph<In, Out>> {
+        return new Promise((resolve, reject) => {
+            this.graph.nodes.forEach(node => {
+                node.logger = this.graph.logger;
+            });
+            this.graph.validate();
+            Promise.resolve(this.graph.trigger('build', this)).then(_ => {
+                resolve(this.graph);
+            }).catch(ex => {
+                reject(ex);
+            });
+        });
+    }
+}
+
+export class GraphShapeBuilder<Builder extends GraphBuilder<any, any, any>> {
+    protected graphBuilder: Builder;
+    protected previousNodes: Array<Node<any, any>>;
+    protected graph: GraphImpl<any, any>;
+
+    protected constructor(graphBuilder: Builder, graph: GraphImpl<any, any>, nodes: Array<Node<any, any>>) {
+        this.graphBuilder = graphBuilder;
+        this.previousNodes = nodes;
+        this.graph = graph;
+    }
+
+    public static create<Builder extends GraphBuilder<any, any, any>>(graphBuilder: Builder, graph: GraphImpl<any, any>, nodes: Array<Node<any, any>>) {
+        return new GraphShapeBuilder(graphBuilder, graph, nodes);
+    }
+
+    public via(...nodes: Array<Node<any, any>>): GraphShapeBuilder<Builder> {
+        nodes.forEach(node => {
             this.previousNodes.forEach(prevNode => {
+                this.graph.addNode(node);
                 this.graph.addEdge(new EdgeBuilder<any>()
                     .withInput(prevNode)
                     .withOutput(node)
@@ -26,38 +85,30 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame, Builder e
             });
         });
         this.previousNodes = nodes;
-        return (this as unknown) as Builder;
+        return this;
     }
 
-    public addNode(node: Node<any, any>): Builder {
-        this.graph.addNode(node);
-        return (this as unknown) as Builder;
-    }
-
-    public addEdge(edge: AbstractEdge<any>): Builder {
-        this.graph.addEdge(edge as EdgeImpl<any>);
-        return (this as unknown) as Builder;
-    }
-
-    public deleteEdge(edge: AbstractEdge<any>): Builder {
-        this.graph.deleteEdge(edge);
-        return (this as unknown) as Builder;
-    }
-
-    public build(): AbstractGraph<In, Out> {
-        // Link last added nodes to the internal output of the graph
-        this.previousNodes.forEach(prevNode => {
-            this.graph.addEdge(new EdgeBuilder<any>()
-            .withInput(prevNode)
-            .withOutput(this.graph.internalOutput)
-            .build());
-        });
-        this.graph.nodes.forEach(node => {
-            node.logger = this.graph.logger;
-        });
-        this.graph.validate();
-        Promise.resolve(this.graph.trigger('build', this));
-        return this.graph;
+    public to(...nodes: Array<SinkNode<any>>): Builder {
+        if (nodes.length !== 0) {
+            nodes.forEach(node => {
+                this.graph.addNode(node);
+                this.previousNodes.forEach(prevNode => {
+                    this.graph.addEdge(new EdgeBuilder<any>()
+                        .withInput(prevNode)
+                        .withOutput(node)
+                        .build());
+                });
+            });
+            this.previousNodes = nodes; 
+        } else {
+            this.previousNodes.forEach(prevNode => {
+                this.graph.addEdge(new EdgeBuilder<any>()
+                    .withInput(prevNode)
+                    .withOutput(this.graph.internalOutput)
+                    .build());
+            });
+        }
+        return this.graphBuilder;
     }
 
 }

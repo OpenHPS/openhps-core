@@ -8,28 +8,29 @@ import { GraphPushOptions, GraphPullOptions } from "../../graph";
 import { CallbackSourceNode } from "../source";
 
 let model: Model<any, any>;
-let input: Subject<{ options?: GraphPullOptions }> = new Subject();
-let output: Subject<{ data: any, options?: GraphPushOptions }> = new Subject();
+const input: Subject<{ options?: GraphPullOptions }> = new Subject();
+const output: Subject<{ data: any, options?: GraphPushOptions }> = new Subject();
 
 expose({
-    init(workerData: any) {
+    async init(workerData: any) {
         // Set global dir name
         __dirname = workerData.dirname;
         // Create model
+        // tslint:disable-next-line
         const builderCallback = eval(workerData.builderCallback);
-        const modelBuilder = new ModelBuilder();
-        modelBuilder.to(new CallbackSourceNode((options?: GraphPullOptions) => {
+        const modelBuilder = ModelBuilder.create();
+        const traversalBuilder = modelBuilder.from(new CallbackSourceNode((options?: GraphPullOptions) => {
             input.next({ options: DataSerializer.serialize(options) });
             return null;
         }));
 
         const path = require('path');
-        builderCallback(modelBuilder);
+        builderCallback(traversalBuilder);
 
-        modelBuilder.to(new CallbackSinkNode((data: any, options: GraphPushOptions) => {
+        traversalBuilder.to(new CallbackSinkNode((data: any, options: GraphPushOptions) => {
             output.next({ data: DataSerializer.serialize(data), options: DataSerializer.serialize(options) });
         }));
-        model = modelBuilder.build();
+        model = await modelBuilder.build();
     },
     pull(options: any): Promise<void> {
         return model.pull(DataSerializer.deserialize(options));

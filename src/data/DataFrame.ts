@@ -68,7 +68,11 @@ export class DataFrame {
      */
     public getObjects<T extends DataObject>(dataType?: new () => T): T[] {
         if (dataType === undefined) {
-            return this._objects as unknown as T[];
+            const filteredObjects = new Array();
+            this._objects.forEach(object => {
+                filteredObjects.push(object);
+            });
+            return filteredObjects;
         } else {
             const filteredObjects = new Array();
             this._objects.forEach(object => {

@@ -1,10 +1,10 @@
-import { DataFrame, DataSerializer } from "../data"
+import { DataFrame, DataSerializer } from "../data";
 import { GraphPushOptions, GraphPullOptions } from "../graph";
 import { Node } from "../Node";
-import { ModelBuilder } from "../ModelBuilder";
 import * as fs from 'fs';
 import { Thread, Worker, spawn } from "threads";
 import { Observable } from "threads/observable";
+import { GraphShapeBuilder } from "../graph/builders";
 
 /**
  * 
@@ -28,27 +28,24 @@ import { Observable } from "threads/observable";
  */
 export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
     private _worker: Worker;
+    private _thread: Thread;
+    private _builderCallback: (builder: GraphShapeBuilder<any>) => void;
+    private _dirname: string;
+
     private _pushFn: (data: In, options?: GraphPushOptions) => Promise<void>;
     private _pullFn: (options?: GraphPullOptions) => Promise<void>;
     private _initFn: (workerData: any) => Promise<void>;
     private _inputFn: () => Observable<{ options?: GraphPullOptions }>;
     private _outputFn: () => Observable<{ data: any, options?: GraphPushOptions }>;
-    private _thread: Thread;
-    private _builderCallback: (builder: ModelBuilder<any, any>) => void;
-    private _dirname: string;
 
-    constructor(builderCallback: (builder: ModelBuilder<any, any>) => void, dirname: string = __dirname) {
+    constructor(builderCallback: (builder: GraphShapeBuilder<any>) => void, dirname: string = __dirname) {
         super();
         this._builderCallback = builderCallback;
         this._dirname = dirname;
 
         const workerJS = '_internal/WorkerNodeRunner.js';
         const workerTS = '_internal/WorkerNodeRunner.ts';
-        if (fs.existsSync(workerJS)) {
-            this._worker = new Worker(workerJS);
-        } else {
-            this._worker = new Worker(workerTS);
-        }
+        this._worker = new Worker(fs.existsSync(workerJS) ? workerJS : workerTS);
         
         this.on('build', this._onBuild.bind(this));
         this.on('destroy', this._onDestroy.bind(this));

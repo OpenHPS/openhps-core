@@ -1,6 +1,6 @@
 import { DataFrame, DataObject } from "../../data";
 import { ProcessingNode } from "../ProcessingNode";
-import { GraphPushOptions } from "../../graph";
+import { GraphPushOptions } from "../../graph/GraphPushOptions";
 import { Model } from "../../Model";
 
 export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {

@@ -8,10 +8,11 @@ import { LoggingSinkNode } from '../../src/nodes/sink';
 describe('node', () => {
     describe('balance', () => {
 
-        it('should take 30ms to execute with one time consuming layer', (done) => {
-            const model = new ModelBuilder()
-                .to(new BalanceNode())
-                .to(new TimeConsumingNode())
+        it('should take 30ms to execute with one time consuming layer', async (done) => {
+            const model = await ModelBuilder.create()
+                .from()
+                .via(new BalanceNode())
+                .via(new TimeConsumingNode())
                 .to(new LoggingSinkNode())
                 .build();
             
@@ -24,17 +25,18 @@ describe('node', () => {
             ]).then(_ => {
                 const end = new Date().getTime();
                 const diff = end - start;
-                console.log(diff);
+                expect(diff).to.be.lessThan(50);
                 done();
             });
-        }).timeout(50);
+        });
 
-        it('should take 10ms to execute with 3 time consuming layers', (done) => {
-            const model = new ModelBuilder()
-            .to(new BalanceNode())
-            .to(new TimeConsumingNode(), new TimeConsumingNode(), new TimeConsumingNode())
-            .to(new LoggingSinkNode())
-            .build();
+        it('should take 10ms to execute with 3 time consuming layers', async (done) => {
+            const model = await ModelBuilder.create()
+                .from()
+                .via(new BalanceNode())
+                .via(new TimeConsumingNode(), new TimeConsumingNode(), new TimeConsumingNode())
+                .to(new LoggingSinkNode())
+                .build();
             // Push three frames and wait for them to finish
             const start = new Date().getTime();
             Promise.all([
@@ -44,17 +46,18 @@ describe('node', () => {
             ]).then(_ => {
                 const end = new Date().getTime();
                 const diff = end - start;
-                console.log(diff);
+                expect(diff).to.be.lessThan(20);
                 done();
             });
-        }).timeout(40);
+        });
 
-        it('should take 20ms to execute with 2 time consuming layers', (done) => {
-            const model = new ModelBuilder()
-            .to(new BalanceNode())
-            .to(new TimeConsumingNode(), new TimeConsumingNode())
-            .to(new LoggingSinkNode())
-            .build();
+        it('should take 20ms to execute with 2 time consuming layers', async (done) => {
+            const model = await ModelBuilder.create()
+                .from()
+                .via(new BalanceNode())
+                .via(new TimeConsumingNode(), new TimeConsumingNode())
+                .to(new LoggingSinkNode())
+                .build();
             // Push three frames and wait for them to finish
             const start = new Date().getTime();
             Promise.all([
@@ -64,10 +67,10 @@ describe('node', () => {
             ]).then(_ => {
                 const end = new Date().getTime();
                 const diff = end - start;
-                console.log(diff);
+                expect(diff).to.be.lessThan(30);
                 done();
             });
-        }).timeout(40);
+        });
 
 
     });

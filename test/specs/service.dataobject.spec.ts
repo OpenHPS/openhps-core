@@ -51,9 +51,10 @@ describe('data object', () => {
         var model: Model<DataFrame, DataFrame>;
         var objectDataService: DataObjectService<DataObject>;
         
-        before((done) => {
-            model = new ModelBuilder()
-                .to(new ServiceMergeNode())
+        before(async (done) => {
+            model = await ModelBuilder.create()
+                .from()
+                .via(new ServiceMergeNode())
                 .to(new LoggingSinkNode())
                 .build();
             objectDataService = model.findDataService(DataObject);
@@ -88,8 +89,9 @@ describe('data object', () => {
         var model: Model<DataFrame, DataFrame>;
         var objectDataService: DataObjectService<DataObject>;
         
-        before((done) => {
-            model = new ModelBuilder()
+        before(async (done) => {
+            model = await ModelBuilder.create()
+                .from()
                 .to(new LoggingSinkNode())
                 .build();
             objectDataService = model.findDataService(DataObject);

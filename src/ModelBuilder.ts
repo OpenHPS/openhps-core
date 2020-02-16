@@ -2,7 +2,8 @@ import { Model } from "./Model";
 import { Service, DataService, DataServiceDriver } from "./service";
 import { DataFrame } from "./data";
 import { ModelImpl } from './graph/_internal/implementations/ModelImpl';
-import { GraphBuilder } from "./graph";
+import { GraphBuilder } from "./graph/builders";
+import { rejects } from "assert";
 
 /**
  * Model build to construct and build a [[Model]]
@@ -20,11 +21,14 @@ import { GraphBuilder } from "./graph";
 export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends GraphBuilder<In, Out, ModelBuilder<In, Out>> {
     protected graph: ModelImpl<In, Out>;
 
-    constructor() {
+    private constructor() {
         super();
         this.graph = new ModelImpl<In, Out>();
-        this.previousNodes = [this.graph.internalInput];
         this.graph.name = "model";
+    }
+
+    public static create<In extends DataFrame, Out extends DataFrame>(): ModelBuilder<In, Out> {
+        return new ModelBuilder<In, Out>();
     }
 
     /**
@@ -53,9 +57,14 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
     /**
      * Finalize the model
      */
-    public build(): Model<In, Out> {
-        super.build();
-        return this.graph;
+    public build(): Promise<Model<In, Out>> {
+        return new Promise((resolve, reject) => {
+            super.build().then(_ => {
+                return this.graph;
+            }).catch(ex => {
+                rejects(ex);
+            });
+        });
     }
     
 }

@@ -18,10 +18,10 @@ describe('dataset', () => {
         /**
          * Initialize the data set and model
          */
-        before((done) => {
+        before(async (done) => {
             // Calibration model to set-up or train the model
-            calibrationModel = new ModelBuilder()
-                .to(new CSVDataSource("test/data/liwste2017/beacons.csv", (row: any) => {
+            calibrationModel = await ModelBuilder.create()
+                .from(new CSVDataSource("test/data/liwste2017/beacons.csv", (row: any) => {
                     const dataFrame = new DataFrame();
                     const beacon = new DataObject(`beacon_${row.Beacon}`);
                     beacon.absoluteLocation = new Cartesian2DLocation(parseFloat(row.X), parseFloat(row.Y));
@@ -105,13 +105,13 @@ describe('dataset', () => {
 
         describe('trilateration', () => {
 
-            before((done) => {
-                trackingModel = new ModelBuilder()
+            before(async (done) => {
+                trackingModel = await ModelBuilder.create()
                     // Use the data from the calibration model
                     .addService(calibrationModel.findDataService(DataObject))
-                    .to(scanSourceNodeA, scanSourceNodeB, scanSourceNodeC)
-                    .to(new SourceMergeNode(100, TimeUnit.MILLI))
-                    .to(new TrilaterationNode<EvaluationDataFrame>())
+                    .from(scanSourceNodeA, scanSourceNodeB, scanSourceNodeC)
+                    .via(new SourceMergeNode(100, TimeUnit.MILLI))
+                    .via(new TrilaterationNode<EvaluationDataFrame>())
                     .to(callbackNode)
                     .build();
                     

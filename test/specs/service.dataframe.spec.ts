@@ -7,8 +7,9 @@ describe('data frame service', () => {
         var model: Model<DataFrame, DataFrame>;
         var frameDataService: DataFrameService<DataFrame>;
         
-        before((done) => {
-            model = new ModelBuilder()
+        before(async (done) => {
+            model = await ModelBuilder.create()
+                .from()
                 .to(new LoggingSinkNode())
                 .build();
             frameDataService = model.findDataServiceByName("DataFrame");
