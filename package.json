@@ -40,7 +40,8 @@
     "threads": "^1.0.0",
     "tiny-worker": "^2.3.0",
     "typedjson": "^1.5.1",
-    "uuid": "^3.4.0"
+    "uuid": "^3.4.0",
+    "worker-thread": "^1.1.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",

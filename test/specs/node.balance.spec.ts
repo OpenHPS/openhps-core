@@ -16,14 +16,18 @@ describe('node', () => {
                 .build();
             
             // Push three frames and wait for them to finish
+            const start = new Date().getTime();
             Promise.all([
                 model.push(new DataFrame()),
                 model.push(new DataFrame()),
                 model.push(new DataFrame()),
             ]).then(_ => {
+                const end = new Date().getTime();
+                const diff = end - start;
+                console.log(diff);
                 done();
             });
-        }).timeout(40);
+        }).timeout(50);
 
         it('should take 10ms to execute with 3 time consuming layers', (done) => {
             const model = new ModelBuilder()
@@ -32,14 +36,18 @@ describe('node', () => {
             .to(new LoggingSinkNode())
             .build();
             // Push three frames and wait for them to finish
+            const start = new Date().getTime();
             Promise.all([
                 model.push(new DataFrame()),
                 model.push(new DataFrame()),
                 model.push(new DataFrame())
             ]).then(_ => {
+                const end = new Date().getTime();
+                const diff = end - start;
+                console.log(diff);
                 done();
             });
-        }).timeout(20);
+        }).timeout(40);
 
         it('should take 20ms to execute with 2 time consuming layers', (done) => {
             const model = new ModelBuilder()
@@ -48,14 +56,18 @@ describe('node', () => {
             .to(new LoggingSinkNode())
             .build();
             // Push three frames and wait for them to finish
+            const start = new Date().getTime();
             Promise.all([
                 model.push(new DataFrame()),
                 model.push(new DataFrame()),
                 model.push(new DataFrame())
             ]).then(_ => {
+                const end = new Date().getTime();
+                const diff = end - start;
+                console.log(diff);
                 done();
             });
-        }).timeout(30);
+        }).timeout(40);
 
 
     });

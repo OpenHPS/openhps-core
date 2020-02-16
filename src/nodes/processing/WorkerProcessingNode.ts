@@ -1,6 +1,6 @@
 import { DataFrame } from "../../data";
 import { ProcessingNode } from "../ProcessingNode";
-import { spawn, Thread, Worker, expose } from "threads";
+import { spawn, Thread, Worker } from "threads";
 import { GraphPushOptions } from "../../graph";
 import { DataSerializer } from "../../data/DataSerializer";
 
@@ -17,12 +17,10 @@ export class WorkerProcessingNode<In extends DataFrame, Out extends DataFrame> e
     private _worker: Worker;
     private _workerFn: (data: In, options?: GraphPushOptions) => Promise<Out>;
     private _thread: Thread;
-    private _outputType: new () => Out | DataFrame;
     
-    constructor(workerFile: string, outputType: new () => Out | DataFrame = DataFrame) {
+    constructor(workerFile: string) {
         super();
-        this._worker = new Worker(workerFile);
-        this._outputType = outputType;
+        this._worker = new Worker(workerFile, {});
 
         this.on('build', this._onBuild.bind(this));
         this.on('destroy', this._onDestroy.bind(this));
@@ -64,6 +62,7 @@ export class WorkerProcessingNode<In extends DataFrame, Out extends DataFrame> e
             if (this._workerFn === undefined) {
                 reject("Worker thread not spawned yet!");
             }
+
             this._workerFn(DataSerializer.serialize(data), options).then((result: any) => {
                 resolve(DataSerializer.deserialize(result) as Out);
             }).catch(ex => {

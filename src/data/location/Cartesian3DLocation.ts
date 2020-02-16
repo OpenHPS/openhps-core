@@ -3,6 +3,7 @@ import { AbsoluteLocation } from "./AbsoluteLocation";
 import { LengthUnit, Unit } from "../../utils";
 import { SerializableObject, SerializableMember } from "../decorators";
 import * as math from 'mathjs';
+
 /**
  * Cartesian 3D location. This class extends a normal [[Point3D]]
  * but implements a [[Location]]. This location can be used both as
