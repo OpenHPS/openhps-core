@@ -15,6 +15,8 @@ describe('data', () => {
             const serialized = DataSerializer.serialize(dataFrame);
             const deserialized = DataSerializer.deserialize(serialized, DummyDataFrame);
             expect(deserialized.getObjects().length).to.equal(dataFrame.getObjects().length);
+            expect(deserialized.getObjects()[0]).to.be.instanceOf(DataObject);
+            expect(deserialized.getObjects()[1]).to.be.instanceOf(DummyDataObject);
             done();
         });
 

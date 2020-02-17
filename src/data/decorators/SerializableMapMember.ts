@@ -3,7 +3,7 @@ import { IJsonMapMemberOptions } from "typedjson/js/typedjson/json-map-member";
 
 export function SerializableMapMember(keyConstructor: Function, valueConstructor: Function, options?: IJsonMapMemberOptions): PropertyDecorator {
     return (target: Object, propertyKey: string) => {
-        if (valueConstructor instanceof Object && options === undefined) {
+        if (valueConstructor === Object && options === undefined) {
             options = {};
             options.deserializer = (json: any) => {
                 const map = new Map<string, any>();

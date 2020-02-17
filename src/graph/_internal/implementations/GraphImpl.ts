@@ -130,6 +130,17 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
     }
 
     public validate(): void {
+        if (this.internalInput.outputNodes.length === 0) {
+            this.deleteNode(this.internalInput);
+        } else if (!this._nodes.has(this.internalInput.uid)) {
+            throw new ModelException(`Internal input node ${this.internalInput.uid} is not added to the graph!`);
+        }
+        if (this.internalOutput.inputNodes.length === 0) {
+            this.deleteNode(this.internalOutput);
+        } else if (!this._nodes.has(this.internalInput.uid)) {
+            throw new ModelException(`Internal output node ${this.internalOutput.uid} is not added to the graph!`);
+        }
+
         this._nodes.forEach(node => {
             if (node.graph === undefined) {
                 throw new ModelException(`Node ${node.uid} does not have a graph set!`);
@@ -146,12 +157,6 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
                 throw new ModelException(`Node ${edge.outputNode.uid} is used in an edge but not added to the graph!`);
             }
         });
-        if (!this._nodes.has(this.internalInput.uid)) {
-            throw new ModelException(`Internal input node ${this.internalInput.uid} is not added to the graph!`);
-        }
-        if (!this._nodes.has(this.internalOutput.uid)) {
-            throw new ModelException(`Internal output node ${this.internalOutput.uid} is not added to the graph!`);
-        }
     }
 
     /**

@@ -1,4 +1,3 @@
-import { Node } from "../Node";
 import { DataFrame } from "../data/DataFrame";
 import { GraphPullOptions } from "../graph/GraphPullOptions";
 import { ServiceMergeNode } from "./processing/ServiceMergeNode";
@@ -6,11 +5,12 @@ import { GraphPushOptions } from "../graph/GraphPushOptions";
 import { ModelBuilder } from "../ModelBuilder";
 import { DataObject } from "../data";
 import { EdgeBuilder } from "../graph/builders/EdgeBuilder";
+import { AbstractSourceNode } from "./_internal/interfaces/AbstractSourceNode";
 
 /**
  * Source node
  */
-export abstract class SourceNode<Out extends DataFrame> extends Node<Out, Out> {
+export abstract class SourceNode<Out extends DataFrame> extends AbstractSourceNode<Out> {
     private _source: DataObject;
     private _ignoreMerging: boolean;
 

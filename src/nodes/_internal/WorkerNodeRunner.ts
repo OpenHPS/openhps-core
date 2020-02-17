@@ -18,7 +18,7 @@ expose({
         // Create model
         // tslint:disable-next-line
         const builderCallback = eval(workerData.builderCallback);
-        const modelBuilder = ModelBuilder.create();
+        const modelBuilder = new ModelBuilder();
         const traversalBuilder = modelBuilder.from(new CallbackSourceNode((options?: GraphPullOptions) => {
             input.next({ options: DataSerializer.serialize(options) });
             return null;

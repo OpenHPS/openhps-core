@@ -51,19 +51,21 @@ describe('data object', () => {
         var model: Model<DataFrame, DataFrame>;
         var objectDataService: DataObjectService<DataObject>;
         
-        before(async (done) => {
-            model = await ModelBuilder.create()
+        before((done) => {
+            new ModelBuilder()
                 .from()
                 .via(new ServiceMergeNode())
                 .to(new LoggingSinkNode())
-                .build();
-            objectDataService = model.findDataService(DataObject);
+                .build().then(m => {
+                    model = m;
+                    objectDataService = model.findDataService(DataObject);
 
-            var object = new DummySensorObject("123");
-            object.displayName = "Hello";
-            objectDataService.insert(object.uid, object).then(savedObject => {
-                done();
-            });
+                    var object = new DummySensorObject("123");
+                    object.displayName = "Hello";
+                    objectDataService.insert(object.uid, object).then(savedObject => {
+                        done();
+                    });
+                });
         });
 
         it('should load unknown objects', (done) => {
@@ -89,13 +91,15 @@ describe('data object', () => {
         var model: Model<DataFrame, DataFrame>;
         var objectDataService: DataObjectService<DataObject>;
         
-        before(async (done) => {
-            model = await ModelBuilder.create()
+        before((done) => {
+            new ModelBuilder()
                 .from()
                 .to(new LoggingSinkNode())
-                .build();
-            objectDataService = model.findDataService(DataObject);
-            done();
+                .build().then(m => {
+                    model = m;
+                    objectDataService = model.findDataService(DataObject); 
+                    done();
+                });
         });
 
         it('should store objects at the output layer', (done) => {

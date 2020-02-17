@@ -1,14 +1,14 @@
-import { Node } from "../Node";
 import { GraphOptions } from "../graph/GraphOptions";
 import { DataFrame } from "../data/DataFrame";
 import { Model } from "../Model";
 import { DataObject } from "../data";
 import * as uuidv4 from 'uuid/v4';
+import { AbstractSinkNode } from "./_internal/interfaces/AbstractSinkNode";
 
 /**
  * Sink node
  */
-export abstract class SinkNode<In extends DataFrame> extends Node<In, In> {
+export abstract class SinkNode<In extends DataFrame> extends AbstractSinkNode<In> {
 
     constructor() {
         super();

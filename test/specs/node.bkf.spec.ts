@@ -8,7 +8,7 @@ describe('node', () => {
     describe('basic kalman filter', () => {
 
         it('should filter values in a data frame', (done) => {
-            ModelBuilder.create()
+            new ModelBuilder()
                 .from()
                 .via(new BKFProcessingNode())
                 .to(new LoggingSinkNode<DummySensorDataFrame>((frame) => {

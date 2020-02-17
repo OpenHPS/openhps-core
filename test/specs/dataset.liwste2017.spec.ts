@@ -15,9 +15,9 @@ describe('dataset', () => {
         /**
          * Initialize the data set and model
          */
-        before(async (done) => {
+        before((done) => {
             // Calibration model to set-up or train the model
-            calibrationModel = await ModelBuilder.create()
+            new ModelBuilder()
                 .from(new CSVDataSource("test/data/liwste2017/beacons.csv", (row: any) => {
                     const dataFrame = new DataFrame();
                     const beacon = new DataObject(`beacon_${row.Beacon}`);
@@ -27,55 +27,60 @@ describe('dataset', () => {
                     return dataFrame;
                 }))
                 .to(new StorageSinkNode())
-                .build();
-            
-            // Process the calibration
-            calibrationModel.on('ready', () => {
-                Promise.all([
-                    calibrationModel.pull(),
-                    calibrationModel.pull(),
-                    calibrationModel.pull(),
-                ]).then(_ => {
-                    callbackNode = new CallbackSinkNode<EvaluationDataFrame>();
-                    scanSourceNode = new CSVDataSource("test/data/liwste2017/scans.csv", (row: any) => {
-                        const dataFrame = new EvaluationDataFrame();
-                    
-                        const trackedObject = new DataObject("tracked");
-                        // The tracked object has three relative locations
-                        trackedObject.addRelativeLocation(new RelativeDistanceLocation("beacon_A", "DataObject", parseFloat(row['Distance A']), MetricLengthUnit.METER));
-                        trackedObject.addRelativeLocation(new RelativeDistanceLocation("beacon_B", "DataObject", parseFloat(row['Distance B']), MetricLengthUnit.METER));
-                        trackedObject.addRelativeLocation(new RelativeDistanceLocation("beacon_C", "DataObject", parseFloat(row['Distance C']), MetricLengthUnit.METER));
-                        dataFrame.addObject(trackedObject);
+                .build().then(model => {
+                    calibrationModel = model;
 
-                        // Control object
-                        const evaluationObject = new DataObject("tracked");
-                        evaluationObject.absoluteLocation = new Cartesian2DLocation(parseFloat(row['Position X']), parseFloat(row['Position Y']));
-                        (evaluationObject.absoluteLocation as Cartesian2DLocation).unit = MetricLengthUnit.CENTIMETER;
-                        dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
+                    // Process the calibration
+                    Promise.all([
+                        calibrationModel.pull(),
+                        calibrationModel.pull(),
+                        calibrationModel.pull(),
+                    ]).then(_ => {
+                        callbackNode = new CallbackSinkNode<EvaluationDataFrame>();
+                        scanSourceNode = new CSVDataSource("test/data/liwste2017/scans.csv", (row: any) => {
+                            const dataFrame = new EvaluationDataFrame();
+                        
+                            const trackedObject = new DataObject("tracked");
+                            // The tracked object has three relative locations
+                            trackedObject.addRelativeLocation(new RelativeDistanceLocation("beacon_A", "DataObject", parseFloat(row['Distance A']), MetricLengthUnit.METER));
+                            trackedObject.addRelativeLocation(new RelativeDistanceLocation("beacon_B", "DataObject", parseFloat(row['Distance B']), MetricLengthUnit.METER));
+                            trackedObject.addRelativeLocation(new RelativeDistanceLocation("beacon_C", "DataObject", parseFloat(row['Distance C']), MetricLengthUnit.METER));
+                            dataFrame.addObject(trackedObject);
 
-                        return dataFrame;
+                            // Control object
+                            const evaluationObject = new DataObject("tracked");
+                            evaluationObject.absoluteLocation = new Cartesian2DLocation(parseFloat(row['Position X']), parseFloat(row['Position Y']));
+                            (evaluationObject.absoluteLocation as Cartesian2DLocation).unit = MetricLengthUnit.CENTIMETER;
+                            dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
+
+                            return dataFrame;
+                        });
+
+                        done();
                     });
-
-                    done();
                 });
-            });
         });
 
         describe('trilateration', () => {
 
-            before(async (done) => {
-                trackingModel = await ModelBuilder.create()
+            before((done) => {
+                new ModelBuilder()
                     // Use the data from the calibration model
                     .addService(calibrationModel.findDataService(DataObject))
                     .from(scanSourceNode)
                     .via(new TrilaterationNode<EvaluationDataFrame>())
                     .to(callbackNode)
-                    .build();
-                    
-                trackingModel.on('ready', () => {
+                    .build().then(model => {
+                        trackingModel = model;
+                        done();
+                    });
+            });
+
+            after((done) => {
+                trackingModel.trigger('destroy').finally(() => {
                     done();
                 });
-            });
+            });    
 
             describe('calibration', () => {
 

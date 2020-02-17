@@ -7,6 +7,10 @@ export class DataSerializer {
         this._serializableTypes.set(type.name, type);
     }
 
+    public static get serializableTypes(): Array<new () => any> {
+        return Array.from(this._serializableTypes.values());
+    }
+
     public static findTypeByName(name: string): new () => any {
         return this._serializableTypes.get(name);
     }
@@ -26,6 +30,10 @@ export class DataSerializer {
             return undefined;
         }
         const detectedType = serializedData['__type'] !== undefined ? this.findTypeByName(serializedData['__type']) : Object;
-        return new TypedJSON(dataType === undefined ? detectedType : dataType).parse(serializedData);
+        const finalType = dataType === undefined ? detectedType : dataType;
+        if (finalType === undefined) {
+            return serializedData;
+        }
+        return new TypedJSON(finalType).parse(serializedData);
     }
 }

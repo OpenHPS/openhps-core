@@ -7,13 +7,12 @@ describe('data frame service', () => {
         var model: Model<DataFrame, DataFrame>;
         var frameDataService: DataFrameService<DataFrame>;
         
-        before(async (done) => {
-            model = await ModelBuilder.create()
+        before(async () => {
+            model = await new ModelBuilder()
                 .from()
                 .to(new LoggingSinkNode())
                 .build();
             frameDataService = model.findDataServiceByName("DataFrame");
-            done();
         });
     
         it('should delete frame at the output layer', (done) => {

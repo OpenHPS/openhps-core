@@ -3,25 +3,28 @@ import { DataFrame } from "../../data/DataFrame";
 import { GraphImpl } from "../_internal/implementations/GraphImpl";
 import { Node } from "../../Node";
 import { AbstractGraph } from "../interfaces/AbstractGraph";
-import { SourceNode, SinkNode } from "../../nodes";
 import { AbstractEdge } from "../interfaces";
+import { AbstractSourceNode } from '../../nodes/_internal/interfaces/AbstractSourceNode';
+import { AbstractSinkNode } from '../../nodes/_internal/interfaces/AbstractSinkNode';
 
 export class GraphBuilder<In extends DataFrame, Out extends DataFrame, Builder extends GraphBuilder<In, Out, any>> {
     protected graph: GraphImpl<In, Out>;
 
-    protected constructor() {
+    constructor() {
         this.graph = new GraphImpl<In, Out>();
     }
-
-    public static create<In extends DataFrame, Out extends DataFrame>(): GraphBuilder<In, Out, any> {
-        return new GraphBuilder<In, Out, any>();
-    }
     
-    public from(...nodes: Array<SourceNode<any>>): GraphShapeBuilder<Builder> {
+    public from(...nodes: Array<Node<any, any>>): GraphShapeBuilder<Builder> {
         nodes.forEach(node => {
             this.graph.addNode(node);
+            if (node instanceof AbstractSourceNode) {
+                this.graph.addEdge(new EdgeBuilder<any>()
+                    .withInput(this.graph.internalInput)
+                    .withOutput(node)
+                    .build());
+            }
         });
-        return GraphShapeBuilder.create(this as unknown as Builder, this.graph, nodes.length === 0 ? [this.graph.internalInput] : nodes);
+        return GraphShapeBuilder.createFromBuilder(this as unknown as Builder, this.graph, nodes.length === 0 ? [this.graph.internalInput] : nodes);
     }
 
     public addNode(node: Node<any, any>): Builder {
@@ -70,7 +73,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any, any>> {
         this.graph = graph;
     }
 
-    public static create<Builder extends GraphBuilder<any, any, any>>(graphBuilder: Builder, graph: GraphImpl<any, any>, nodes: Array<Node<any, any>>) {
+    public static createFromBuilder<Builder extends GraphBuilder<any, any, any>>(graphBuilder: Builder, graph: GraphImpl<any, any>, nodes: Array<Node<any, any>>) {
         return new GraphShapeBuilder(graphBuilder, graph, nodes);
     }
 
@@ -88,7 +91,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any, any>> {
         return this;
     }
 
-    public to(...nodes: Array<SinkNode<any>>): Builder {
+    public to(...nodes: Array<AbstractSinkNode<any>>): Builder {
         if (nodes.length !== 0) {
             nodes.forEach(node => {
                 this.graph.addNode(node);
@@ -98,6 +101,10 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any, any>> {
                         .withOutput(node)
                         .build());
                 });
+                this.graph.addEdge(new EdgeBuilder<any>()
+                    .withInput(node)
+                    .withOutput(this.graph.internalOutput)
+                    .build());
             });
             this.previousNodes = nodes; 
         } else {

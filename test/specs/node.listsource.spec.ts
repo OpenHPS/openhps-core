@@ -7,26 +7,28 @@ import { ListSourceNode } from '../../src/nodes/source/ListSourceNode';
 describe('list source', () => {
     describe('layer', () => {
 
-        it('should pop items from the list', async (done) => {
-            const model = await ModelBuilder.create()
+        it('should pop items from the list', (done) => {
+            new ModelBuilder()
                 .from(new ListSourceNode([new DataFrame()]))
                 .to(new LoggingSinkNode((log) => {
                     done();
                 }))
-                .build();
-            Promise.resolve(model.pull());
+                .build().then(model => {
+                    Promise.resolve(model.pull());
+                });
         });
 
         
-        it('should add a merge node internally', async (done) => {
-            const model = await ModelBuilder.create()
+        it('should add a merge node internally', (done) => {
+            new ModelBuilder()
                 .from(new ListSourceNode([new DataFrame()]))
                 .via(new NamedNode("output"))
                 .to(new LoggingSinkNode((log) => {
                     done();
                 }))
-                .build();
-            Promise.resolve(model.pull());
+                .build().then(model => {
+                    Promise.resolve(model.pull());
+                });
         });
 
     });
