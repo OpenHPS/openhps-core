@@ -36,7 +36,7 @@ export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessing
                 const filteredRelativeLocations = new Array<RelativeAngleLocation>();
                 const objectCache = new Map<string, DataObject>();
                 referenceObjects.forEach((referenceObject: DataObject) => {
-                    if (referenceObject.absoluteLocation !== undefined) {
+                    if (referenceObject.currentLocation !== undefined) {
                         objectCache.set(referenceObject.uid, referenceObject);
                         index.get(referenceObject.uid).forEach(relativeLocation => {
                             filteredRelativeLocations.push(relativeLocation);
@@ -50,7 +50,7 @@ export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessing
                 filteredRelativeLocations.forEach(filteredRelativeLocation => {
                     const object = objectCache.get(filteredRelativeLocation.referenceObjectUID);
                     objects.push(object);
-                    points.push(object.absoluteLocation);
+                    points.push(object.currentLocation);
                     angles.push(filteredRelativeLocation.angle);
                 });
 

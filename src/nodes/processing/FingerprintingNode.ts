@@ -20,14 +20,14 @@ export class FingerprintingNode<InOut extends DataFrame> extends ObjectProcessin
         return new Promise((resolve, reject) => {
             const fingerprintService = (this.graph as Model<any, any>).findServiceByClass(FingerprintingService);
             
-            if (dataObject.absoluteLocation !== undefined) {
+            if (dataObject.currentLocation !== undefined) {
                 // Perform fingerprint calibration
                 dataObject.relativeLocations.forEach(relativeLocation => {
                     if (relativeLocation instanceof RelativeDistanceLocation) {
                         const fingerprint = new Fingerprint();
                         fingerprint.referenceObject = relativeLocation.referenceObjectUID;
                         fingerprint.referenceValue = relativeLocation.distance;
-                        fingerprint.absoluteLocation = dataObject.absoluteLocation;
+                        fingerprint.absoluteLocation = dataObject.currentLocation;
                         fingerprint.createdTimestamp = dataFrame.createdTimestamp;
                         fingerprintService.insert(fingerprint.id, fingerprint);
                     }

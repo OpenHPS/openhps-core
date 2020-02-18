@@ -46,6 +46,7 @@
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
+    "@openhps/csv": "^1.0.0-alpha.0",
     "@types/chai": "^4.2.7",
     "@types/mathjs": "^6.0.4",
     "@types/mocha": "^5.2.7",

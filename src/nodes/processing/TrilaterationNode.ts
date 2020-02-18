@@ -36,7 +36,7 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
                 const filteredRelativeLocations = new Array<RelativeDistanceLocation>();
                 const objectCache = new Map<string, DataObject>();
                 referenceObjects.forEach((referenceObject: DataObject) => {
-                    if (referenceObject.absoluteLocation !== undefined) {
+                    if (referenceObject.currentLocation !== undefined) {
                         objectCache.set(referenceObject.uid, referenceObject);
                         index.get(referenceObject.uid).forEach(relativeLocation => {
                             filteredRelativeLocations.push(relativeLocation);
@@ -50,7 +50,7 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
                 filteredRelativeLocations.forEach(filteredRelativeLocation => {
                     const object = objectCache.get(filteredRelativeLocation.referenceObjectUID);
                     objects.push(object);
-                    points.push(object.absoluteLocation);
+                    points.push(object.currentLocation);
                     distances.push(filteredRelativeLocation.distance);
                 });
 
@@ -60,14 +60,14 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
                         resolve(dataObject);
                         break;
                     case 1: // Use relative location + accuracy
-                        dataObject.absoluteLocation = objects[0].absoluteLocation;
+                        dataObject.addPredictedLocation(objects[0].currentLocation);
                         resolve(dataObject);
                         break;
                     case 2: // Midpoint of two locations
                         const distanceA = filteredRelativeLocations[0].distance;
                         const distanceB = filteredRelativeLocations[1].distance;
-                        objects[0].absoluteLocation.midpoint(objects[1].absoluteLocation, distanceA, distanceB).then(midpoint => {
-                            dataObject.absoluteLocation = midpoint;
+                        objects[0].currentLocation.midpoint(objects[1].currentLocation, distanceA, distanceB).then(midpoint => {
+                            dataObject.addPredictedLocation(midpoint);
                             resolve(dataObject);
                         }).catch(ex => {
                             reject(ex);
@@ -75,25 +75,25 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
                         break;
                     case 3: // Trilateration
                         switch (true) {
-                            case objects[0].absoluteLocation instanceof Cartesian3DLocation:
+                            case objects[0].currentLocation instanceof Cartesian3DLocation:
                                 Cartesian3DLocation.trilaterate(points, distances).then(location => {
-                                    dataObject.absoluteLocation = location;
+                                    dataObject.addPredictedLocation(location);
                                     resolve(dataObject);
                                 }).catch(ex => {
                                     reject(ex);
                                 });
                                 break;
-                            case objects[0].absoluteLocation instanceof Cartesian2DLocation:
+                            case objects[0].currentLocation instanceof Cartesian2DLocation:
                                 Cartesian2DLocation.trilaterate(points, distances).then(location => {
-                                    dataObject.absoluteLocation = location;
+                                    dataObject.addPredictedLocation(location);
                                     resolve(dataObject);
                                 }).catch(ex => {
                                     reject(ex);
                                 });
                                 break;
-                            case objects[0].absoluteLocation instanceof GeographicalLocation:
+                            case objects[0].currentLocation instanceof GeographicalLocation:
                                 GeographicalLocation.trilaterate(points, distances).then(location => {
-                                    dataObject.absoluteLocation = location;
+                                    dataObject.addPredictedLocation(location);
                                     resolve(dataObject);
                                 }).catch(ex => {
                                     reject(ex);
@@ -104,7 +104,7 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
                         }
                         break;
                     default: // Trilatereation: Nonlinear Least Squares
-                        dataObject.absoluteLocation = objects[0].absoluteLocation;
+                        dataObject.addPredictedLocation(objects[0].currentLocation);
                         resolve(dataObject);
                         break;
                 }

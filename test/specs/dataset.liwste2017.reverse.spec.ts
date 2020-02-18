@@ -10,9 +10,9 @@ describe('dataset', () => {
         let calibrationModel: Model<DataFrame, DataFrame>;
         let trackingModel: Model<DataFrame, DataFrame>;
 
-        let scanSourceNodeA: CSVDataSource;
-        let scanSourceNodeB: CSVDataSource;
-        let scanSourceNodeC: CSVDataSource;
+        let scanSourceNodeA: CSVDataSource<any>;
+        let scanSourceNodeB: CSVDataSource<any>;
+        let scanSourceNodeC: CSVDataSource<any>;
 
         let callbackNode: CallbackSinkNode<DataFrame>;
 
@@ -25,8 +25,8 @@ describe('dataset', () => {
                 .from(new CSVDataSource("test/data/liwste2017/beacons.csv", (row: any) => {
                     const dataFrame = new DataFrame();
                     const beacon = new DataObject(`beacon_${row.Beacon}`);
-                    beacon.absoluteLocation = new Cartesian2DLocation(parseFloat(row.X), parseFloat(row.Y));
-                    (beacon.absoluteLocation as Cartesian2DLocation).unit = MetricLengthUnit.METER;
+                    beacon.currentLocation = new Cartesian2DLocation(parseFloat(row.X), parseFloat(row.Y));
+                    (beacon.currentLocation as Cartesian2DLocation).unit = MetricLengthUnit.METER;
                     dataFrame.addObject(beacon);
                     return dataFrame;
                 }))
@@ -50,8 +50,8 @@ describe('dataset', () => {
 
                             // Control object
                             const evaluationObject = new DataObject("tracked");
-                            evaluationObject.absoluteLocation = new Cartesian2DLocation(parseFloat(row['Position X']), parseFloat(row['Position Y']));
-                            (evaluationObject.absoluteLocation as Cartesian2DLocation).unit = MetricLengthUnit.CENTIMETER;
+                            evaluationObject.currentLocation = new Cartesian2DLocation(parseFloat(row['Position X']), parseFloat(row['Position Y']));
+                            (evaluationObject.currentLocation as Cartesian2DLocation).unit = MetricLengthUnit.CENTIMETER;
                             dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
 
                             return dataFrame;
@@ -67,8 +67,8 @@ describe('dataset', () => {
 
                             // Control object
                             const evaluationObject = new DataObject("tracked");
-                            evaluationObject.absoluteLocation = new Cartesian2DLocation(parseFloat(row['Position X']), parseFloat(row['Position Y']));
-                            (evaluationObject.absoluteLocation as Cartesian2DLocation).unit = MetricLengthUnit.CENTIMETER;
+                            evaluationObject.currentLocation = new Cartesian2DLocation(parseFloat(row['Position X']), parseFloat(row['Position Y']));
+                            (evaluationObject.currentLocation as Cartesian2DLocation).unit = MetricLengthUnit.CENTIMETER;
                             dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
 
                             return dataFrame;
@@ -84,8 +84,8 @@ describe('dataset', () => {
 
                             // Control object
                             const evaluationObject = new DataObject("tracked");
-                            evaluationObject.absoluteLocation = new Cartesian2DLocation(parseFloat(row['Position X']), parseFloat(row['Position Y']));
-                            (evaluationObject.absoluteLocation as Cartesian2DLocation).unit = MetricLengthUnit.CENTIMETER;
+                            evaluationObject.currentLocation = new Cartesian2DLocation(parseFloat(row['Position X']), parseFloat(row['Position Y']));
+                            (evaluationObject.currentLocation as Cartesian2DLocation).unit = MetricLengthUnit.CENTIMETER;
                             dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
 
                             return dataFrame;
@@ -136,9 +136,9 @@ describe('dataset', () => {
                     callbackNode.callback = (data: EvaluationDataFrame) => {
                         data.getObjects().forEach(object => {
                             if (object.uid === "tracked") {
-                                let calculatedLocation: Cartesian2DLocation = object.absoluteLocation as Cartesian2DLocation;
+                                let calculatedLocation: Cartesian2DLocation = object.predictedLocations[0] as Cartesian2DLocation;
                                 // Accurate control location
-                                const expectedLocation: Cartesian2DLocation = data.evaluationObjects.get(object.uid).absoluteLocation as Cartesian2DLocation;
+                                const expectedLocation: Cartesian2DLocation = data.evaluationObjects.get(object.uid).currentLocation as Cartesian2DLocation;
                                 
                                 // Convert meters to cm
                                 calculatedLocation.x = calculatedLocation.unit.convert(calculatedLocation.x, expectedLocation.unit);
@@ -164,10 +164,10 @@ describe('dataset', () => {
                     callbackNode.callback = (data: EvaluationDataFrame) => {
                         data.getObjects().forEach(object => {
                             if (object.uid === "tracked") {
-                                let calculatedLocation: Cartesian2DLocation = object.absoluteLocation as Cartesian2DLocation;
+                                let calculatedLocation: Cartesian2DLocation = object.predictedLocations[0] as Cartesian2DLocation;
                                 // Accurate control location
-                                const expectedLocation: Cartesian2DLocation = data.evaluationObjects.get(object.uid).absoluteLocation as Cartesian2DLocation;
-    
+                                const expectedLocation: Cartesian2DLocation = data.evaluationObjects.get(object.uid).currentLocation as Cartesian2DLocation;
+                                
                                 // Convert meters to cm
                                 calculatedLocation.x = calculatedLocation.unit.convert(calculatedLocation.x, expectedLocation.unit);
                                 calculatedLocation.y = calculatedLocation.unit.convert(calculatedLocation.y, expectedLocation.unit);

@@ -1,13 +1,13 @@
-import {DataFrame, DataObject, ListSourceNode } from "../../../../src";
+import { DataFrame, DataObject, ListSourceNode } from "../../../../src";
 import * as path from 'path';
 import * as fs from 'fs';
 import * as csv from 'csv-parser';
 
-export class CSVDataSource extends ListSourceNode<DataFrame> {
-    private _rowCallback: (row: any) => DataFrame;
+export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
+    private _rowCallback: (row: any) => Out;
     private _file: string;
     
-    constructor(file: string, rowCallback: (row: any) => DataFrame) {
+    constructor(file: string, rowCallback: (row: any) => Out) {
         super([], new DataObject(path.basename(file)));
         this._rowCallback = rowCallback;
         this._file = file;

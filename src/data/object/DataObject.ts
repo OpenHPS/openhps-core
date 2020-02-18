@@ -15,7 +15,9 @@ export class DataObject {
     @SerializableMember()
     private _uid: string;
     private _displayName: string;
-    private _absoluteLocation: AbsoluteLocation;
+    private _currentLocationUpdated: boolean = false;
+    private _currentLocation: AbsoluteLocation;
+    private _predictedLocations: AbsoluteLocation[] = new Array();
     private _relativeLocations: Map<string, RelativeLocation[]> = new Map();
     private _shape: Shape;
     @SerializableMapMember(String, Object)
@@ -30,6 +32,8 @@ export class DataObject {
             this.displayName = object.displayName;
         if (object.shape !== undefined)
             this.shape = object.shape;
+        if (object.currentLocation !== undefined)
+            this.currentLocation = object.currentLocation;
         object._nodeData.forEach((value, key) => {
             this._nodeData.set(key, value);
         });
@@ -78,16 +82,40 @@ export class DataObject {
             return new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw);
         }
     })
-    public get absoluteLocation(): AbsoluteLocation {
-        return this._absoluteLocation;
+    public get currentLocation(): AbsoluteLocation {
+        return this._currentLocation;
     }
 
     /**
      * Set the absolute location of the object
      * @param absoluteLocation Absolute location of the object
      */
-    public set absoluteLocation(absoluteLocation: AbsoluteLocation) {
-        this._absoluteLocation = absoluteLocation;
+    public set currentLocation(absoluteLocation: AbsoluteLocation) {
+        if (this._currentLocation !== undefined) {
+            this._currentLocationUpdated = true;
+        }
+        this._currentLocation = absoluteLocation;
+    }
+
+    public hasNewLocation(): boolean {
+        return this._currentLocationUpdated;
+    }
+
+    @SerializableArrayMember(Object)
+    public get predictedLocations(): AbsoluteLocation[] {
+        return this._predictedLocations;
+    }
+
+    public set predictedLocations(predictedLocations: AbsoluteLocation[]) {
+        this._predictedLocations = predictedLocations;
+    }
+
+    public addPredictedLocation(location: AbsoluteLocation): void {
+        this._predictedLocations.push(location);
+    }
+
+    public removePredictedLocation(location: AbsoluteLocation): void {
+        this._predictedLocations.splice(this._predictedLocations.indexOf(location), 1);
     }
 
     /**

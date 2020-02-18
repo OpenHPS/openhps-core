@@ -28,6 +28,12 @@ export abstract class SinkNode<In extends DataFrame> extends AbstractSinkNode<In
                     objects.push(data.source);
 
                 for (const object of objects) {
+                    // Check if current location needs to be updated
+                    if (object.predictedLocations.length !== 0 && (object.hasNewLocation() || object.currentLocation === undefined)) {
+                        // Choose the predicted location with the best accuracy
+                        object.currentLocation = object.predictedLocations[0];
+                    }
+
                     let service = model.findDataServiceByObject(object);
                     if (service === null || service === undefined) { 
                         service = defaultService;
