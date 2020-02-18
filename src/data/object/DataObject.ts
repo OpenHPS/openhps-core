@@ -101,7 +101,18 @@ export class DataObject {
         return this._currentLocationUpdated;
     }
 
-    @SerializableArrayMember(Object)
+    @SerializableArrayMember(Object, {
+        deserializer(raw: any): AbsoluteLocation[] {
+            if (raw === undefined) {
+                return new Array();
+            }
+            const predictions = new Array();
+            raw.forEach((obj: any) => {
+                predictions.push(new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw));
+            });
+            return predictions;
+        }
+    })
     public get predictedLocations(): AbsoluteLocation[] {
         return this._predictedLocations;
     }

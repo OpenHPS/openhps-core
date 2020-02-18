@@ -10,3 +10,4 @@ export * from './ProcessingNode';
 export * from './processing';
 export * from './ObjectProcessingNode';
 export * from './WorkerNode';
+export * from './CallbackNode';

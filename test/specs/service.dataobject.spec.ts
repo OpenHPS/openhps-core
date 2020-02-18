@@ -61,6 +61,7 @@ describe('data object', () => {
                     objectDataService = model.findDataService(DataObject);
 
                     var object = new DummySensorObject("123");
+                    object.addPredictedLocation(new Cartesian2DLocation(3,2));
                     object.displayName = "Hello";
                     objectDataService.insert(object.uid, object).then(savedObject => {
                         done();
