@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.96](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.95...v1.0.0-alpha.96) (2020-02-18)
+
+
+### Features
+
+* added geometry utilities for vectors ([2bb6204](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/2bb620430495ed7e9c691389fcb027d8bf268639))
+
 ## [1.0.0-alpha.95](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.94...v1.0.0-alpha.95) (2020-02-17)
 
 ## [1.0.0-alpha.94](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.93...v1.0.0-alpha.94) (2020-02-16)
