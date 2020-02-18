@@ -1,4 +1,4 @@
-import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, SensorObject, ServiceMergeNode, MemoryDataService } from '../../src';
+import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, SensorObject, ServiceMergeNode, MemoryDataService, Cartesian2DLocation } from '../../src';
 import { LoggingSinkNode } from '../../src/nodes/sink';
 import { DummySensorObject } from '../mock/data/object/DummySensorObject';
 
@@ -104,6 +104,7 @@ describe('data object', () => {
 
         it('should store objects at the output layer', (done) => {
             var object = new DataObject();
+            object.addPredictedLocation(new Cartesian2DLocation(1,2));
             object.displayName = "Test";
             var frame = new DataFrame();
             frame.addObject(object);
@@ -111,6 +112,8 @@ describe('data object', () => {
                 // Check if it is stored
                 objectDataService.findAll().then(objects => {
                     expect(objects[0].displayName).to.equal("Test");
+                    expect(objects[0].currentLocation).to.be.instanceOf(Cartesian2DLocation);
+                    expect(((objects[0].currentLocation) as Cartesian2DLocation).y).to.equal(2);
                     done();
                 }).catch(ex => {
                     done(ex);

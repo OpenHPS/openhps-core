@@ -29,7 +29,7 @@ export abstract class SinkNode<In extends DataFrame> extends AbstractSinkNode<In
 
                 for (const object of objects) {
                     // Check if current location needs to be updated
-                    if (object.predictedLocations.length !== 0 && (object.hasNewLocation() || object.currentLocation === undefined)) {
+                    if (object.predictedLocations.length !== 0 && !object.hasNewLocation()) {
                         // Choose the predicted location with the best accuracy
                         object.currentLocation = object.predictedLocations[0];
                     }
