@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.102](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.101...v1.0.0-alpha.102) (2020-02-18)
+
+
+### Features
+
+* added distance between two points ([9e9bf7a](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/9e9bf7a2cfe243eed18d30f07bf4a51848a3a240))
+
 ## [1.0.0-alpha.101](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.100...v1.0.0-alpha.101) (2020-02-18)
 
 
