@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.99](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.98...v1.0.0-alpha.99) (2020-02-18)
+
+
+### Features
+
+* added callback node ([b9c460f](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/b9c460f5997287640edf84c87f578ca4760e469a))
+
 ## [1.0.0-alpha.98](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.97...v1.0.0-alpha.98) (2020-02-18)
 
 
