@@ -33,7 +33,7 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
 
                         object.merge(existingObject);
                         if (data.source !== undefined && data.source.uid === existingObject.uid) {
-                            data.source = existingObject;
+                            data.source = object;
                         }
                         objResolve();
                     }).catch(ex => {
