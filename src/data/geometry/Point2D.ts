@@ -56,4 +56,8 @@ export class Point2D {
         this.x += vector.x;
         this.y += vector.y;
     }
+    
+    public distance(other: Point2D): number {
+        return Math.pow(Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2), 1 / 2.);
+    }
 }

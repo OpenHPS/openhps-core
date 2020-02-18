@@ -44,4 +44,8 @@ export class Point3D extends Point2D {
         this.y += vector.y;
         this.z += vector.z;
     }
+
+    public distance(other: Point3D): number {
+        return Math.pow(Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2) + Math.pow((other.z - this.z), 2), 1 / 2.);
+    }
 }
