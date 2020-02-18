@@ -23,7 +23,17 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _onPush(data: InOut, options?: GraphPushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.pushCallback(data, options);
-            resolve();
+            
+            const pushPromises = new Array();
+            this.outputNodes.forEach(node => {
+                pushPromises.push(node.push(data, options));
+            });
+
+            Promise.all(pushPromises).then(_ => {
+                resolve();
+            }).catch(ex => {
+                reject(ex);
+            });
         });
     }
     
