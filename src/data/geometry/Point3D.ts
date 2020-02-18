@@ -1,5 +1,6 @@
 import { Point2D } from "./Point2D";
 import { SerializableObject, SerializableMember } from "../decorators";
+import { Vector3D } from "./Vector3D";
 
 @SerializableObject()
 export class Point3D extends Point2D {
@@ -36,5 +37,11 @@ export class Point3D extends Point2D {
         this.x = point[0];
         this.y = point[1];
         this.z = point[2];
+    }
+
+    public applyVector(vector: Vector3D): void {
+        this.x += vector.x;
+        this.y += vector.y;
+        this.z += vector.z;
     }
 }

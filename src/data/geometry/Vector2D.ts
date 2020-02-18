@@ -84,4 +84,7 @@ export class Vector2D implements Vector {
         return this.x * other.x + this.y * other.y;
     }
 
+    public get point(): number[] {
+        return [this.x, this.y];
+    }
 }

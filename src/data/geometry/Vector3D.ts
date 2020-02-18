@@ -60,4 +60,9 @@ export class Vector3D extends Vector2D {
         this.z *= vec.z;
         return this;
     }
+
+    public get point(): number[] {
+        return [this.x, this.y, this.z];
+    }
+
 }

@@ -1,4 +1,5 @@
 import { SerializableObject, SerializableMember } from "../decorators";
+import { Vector2D } from "./Vector2D";
 
 @SerializableObject()
 export class Point2D {
@@ -49,5 +50,10 @@ export class Point2D {
     public set point(point: number[]) {
         this.x = point[0];
         this.y = point[1];
+    }
+
+    public applyVector(vector: Vector2D): void {
+        this.x += vector.x;
+        this.y += vector.y;
     }
 }
