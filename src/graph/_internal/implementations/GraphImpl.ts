@@ -35,7 +35,7 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
         return new Promise((resolve, reject) => {
             const destroyPromises = new Array();
             this.nodes.forEach(node => {
-                destroyPromises.push(node.trigger('destroy'));
+                destroyPromises.push(node.emit('destroy'));
             });
             Promise.all(destroyPromises).then(_2 => {
                 resolve();
@@ -55,10 +55,10 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
         return new Promise((resolve, reject) => {
             const buildPromises = new Array();
             this.nodes.forEach(node => {
-                buildPromises.push(node.trigger('build', _));
+                buildPromises.push(node.emit('build', _));
             });
             Promise.all(buildPromises).then(_2 => {
-                this.trigger('ready');
+                this.emit('ready');
                 resolve();
             }).catch(ex => {
                 reject(ex);

@@ -77,7 +77,7 @@ describe('dataset', () => {
             });
 
             after((done) => {
-                trackingModel.trigger('destroy').finally(() => {
+                trackingModel.emit('destroy').finally(() => {
                     done();
                 });
             });    

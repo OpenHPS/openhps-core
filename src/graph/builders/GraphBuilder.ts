@@ -53,7 +53,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame, Builder e
                 node.logger = this.graph.logger;
             });
             this.graph.validate();
-            Promise.resolve(this.graph.trigger('build', this)).then(_ => {
+            Promise.resolve(this.graph.emit('build', this)).then(_ => {
                 resolve(this.graph);
             }).catch(ex => {
                 reject(ex);

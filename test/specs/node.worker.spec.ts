@@ -18,7 +18,7 @@ describe('node', () => {
                         model.push(new DataFrame()),
                         model.push(new DataFrame())
                     ]).then(_ => {
-                        Promise.resolve(model.trigger('destroy'));
+                        Promise.resolve(model.emit('destroy'));
                         done();
                     });
                 });
@@ -38,7 +38,7 @@ describe('node', () => {
                         model.push(new DataFrame()),
                         model.push(new DataFrame())
                     ]).then(_ => {
-                        Promise.resolve(model.trigger('destroy'));
+                        Promise.resolve(model.emit('destroy'));
                         done();
                     });
                 });
@@ -71,7 +71,7 @@ describe('node', () => {
                         const end = new Date().getTime();
                         const diff = end - start;
                         expect(diff).to.be.lessThan(50);
-                        Promise.resolve(model.trigger('destroy'));
+                        Promise.resolve(model.emit('destroy'));
                         done();
                     });
                 });
@@ -101,7 +101,7 @@ describe('node', () => {
                         const end = new Date().getTime();
                         const diff = end - start;
                         expect(diff).to.be.lessThan(40);
-                        Promise.resolve(model.trigger('destroy'));
+                        Promise.resolve(model.emit('destroy'));
                         done();
                     });
                 });
@@ -131,7 +131,7 @@ describe('node', () => {
                         const end = new Date().getTime();
                         const diff = end - start;
                         expect(diff).to.be.lessThan(30);
-                        Promise.resolve(model.trigger('destroy'));
+                        Promise.resolve(model.emit('destroy'));
                         done();
                     });
                 });

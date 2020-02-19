@@ -35,7 +35,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
 
             const buildPromises = new Array();
             this._services.forEach(service => {
-                buildPromises.push(service.trigger('build', _));
+                buildPromises.push(service.emit('build', _));
             });
             this._dataServices.forEach(service => {
                 // Check that the service has a driver
@@ -43,13 +43,13 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
                     service.dataServiceDriver = this._defaultDataServiceDriver;
                 }
 
-                buildPromises.push(service.trigger('build', _));
+                buildPromises.push(service.emit('build', _));
             });
             this.nodes.forEach(node => {
-                buildPromises.push(node.trigger('build', _));
+                buildPromises.push(node.emit('build', _));
             });
             Promise.all(buildPromises).then(_2 => {
-                this.trigger('ready');
+                this.emit('ready');
                 resolve();
             }).catch(ex => {
                 reject(ex);
@@ -61,13 +61,13 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
         return new Promise((resolve, reject) => {
             const destroyPromises = new Array();
             this._services.forEach(service => {
-                destroyPromises.push(service.trigger('destroy', _));
+                destroyPromises.push(service.emit('destroy', _));
             });
             this._dataServices.forEach(service => {
-                destroyPromises.push(service.trigger('destroy', _));
+                destroyPromises.push(service.emit('destroy', _));
             });
             this.nodes.forEach(node => {
-                destroyPromises.push(node.trigger('destroy', _));
+                destroyPromises.push(node.emit('destroy', _));
             });
             Promise.all(destroyPromises).then(_2 => {
                 resolve();

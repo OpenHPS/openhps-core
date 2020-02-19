@@ -3,7 +3,7 @@
  */
 export abstract class Service {
     private _name: string;
-    private _events: Map<string, Array<(..._: any) => any>> = new Map();
+    private _events: Map<string, Array<{ callback: (..._: any) => any, once: boolean }>> = new Map();
     public logger: (level: string, log: any) => void = () => {};
 
     constructor(name: string = null) {
@@ -21,7 +21,7 @@ export abstract class Service {
         return this._name;
     }
 
-    public on(event: 'build', callback: () => any): void;
+    public on(event: 'build', callback: (graphBuild: any) => any): void;
     public on(event: 'destroy', callback: () => any): void;
     public on(event: 'ready', callback: () => any): void;
     /**
@@ -31,32 +31,62 @@ export abstract class Service {
      */
     public on(event: string, callback: (_?: any) => any): void {
         if (this._events.has(event)) {
-            const callbacks = this._events.get(event);
-            callbacks.push(callback);
+            const events = this._events.get(event);
+            events.push({ callback, once: false });
         } else {
-            const callbacks = new Array();
+            const callbacks = new Array({ callback, once: false });
             this._events.set(event, callbacks);
         }
     }
 
-    public trigger(event: 'destroy', _?: any): Promise<void>;
-    public trigger(event: 'build', _?: any): Promise<void>;
-    public trigger(event: 'ready', _?: any): Promise<void>;
+    public once(event: 'build', callback: (graphBuild: any) => any): void;
+    public once(event: 'destroy', callback: () => any): void;
+    public once(event: 'ready', callback: () => any): void;
     /**
-     * Trigger an event
+     * Register a new event
+     * @param event Event name
+     * @param callback Event callback
+     */
+    public once(event: string, callback: (_?: any) => any): void {
+        if (this._events.has(event)) {
+            const events = this._events.get(event);
+            events.push({ callback, once: true });
+        } else {
+            const callbacks = new Array({ callback, once: true });
+            this._events.set(event, callbacks);
+        }
+    }
+
+    public emit(event: 'destroy', _?: any): Promise<void>;
+    public emit(event: 'build', graphBuilder: any): Promise<void>;
+    public emit(event: 'ready', _?: any): Promise<void>;
+    /**
+     * Emit an event
      * 
      * @param event Event name to trigger
      * @param _ Parameter for event 
      */
-    public trigger(event: string, _?: any): Promise<void> {
+    public emit(event: string, _?: any): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (this._events.has(event)) {
-                const callbacks = this._events.get(event);
+                const events = this._events.get(event);
                 const triggerPromises = new Array<Promise<any>>();
-                callbacks.forEach(callback => {
-                    triggerPromises.push(callback(_));
+                const expiredCallbacks = new Array();
+                events.forEach(e => {
+                    triggerPromises.push(e.callback(_));
+                    // Remove events that should only trigger once
+                    if (e.once) {
+                        expiredCallbacks.push(e);
+                    }
                 });
                 Promise.all(triggerPromises).then(function(values: any[]) {
+                    // Remove events that should only trigger once
+                    if (expiredCallbacks.length !== 0) {
+                        expiredCallbacks.forEach(expiredCallback => {
+                            events.splice(events.indexOf(expiredCallback), 1);
+                        });
+                        this._events.set(event, events);
+                    }
                     resolve();
                 }).catch(ex => {
                     reject(ex);

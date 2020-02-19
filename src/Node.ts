@@ -15,7 +15,7 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> implemen
     private _uid: string = uuidv4();
     private _name: string;
     private _graph: AbstractGraph<any, any>;
-    private _events: Map<string, Array<(..._: any) => any>> = new Map();
+    private _events: Map<string, Array<{ callback: (..._: any) => any, once: boolean }>> = new Map();
     public logger: (level: string, log: any) => void = () => {};
 
     constructor() {
@@ -112,8 +112,8 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> implemen
     public pull(options?: GraphPullOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const callbackPromises = new Array();
-            this._events.get('pull').forEach(callback => {
-                callbackPromises.push(callback(options));
+            this._events.get('pull').forEach(event => {
+                callbackPromises.push(event.callback(options));
             });
 
             if (callbackPromises.length === 0) {
@@ -154,8 +154,8 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> implemen
             }
 
             const callbackPromises = new Array();
-            this._events.get('push').forEach(callback => {
-                callbackPromises.push(callback(data, options));
+            this._events.get('push').forEach(event => {
+                callbackPromises.push(event.callback(data, options));
             });
 
             if (callbackPromises.length === 0) {
@@ -192,36 +192,70 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> implemen
      */
     public on(event: string, callback: (_?: any) => any): void {
         if (this._events.has(event)) {
-            const callbacks = this._events.get(event);
-            callbacks.push(callback);
+            const events = this._events.get(event);
+            events.push({ callback, once: false });
         } else {
-            const callbacks = new Array();
+            const callbacks = new Array({ callback, once: false });
             this._events.set(event, callbacks);
         }
-        this.trigger('eventregister', { event, callback });
+        this.emit('eventregister', { event, callback });
     }
 
-    public trigger(event: 'destroy', _?: any): Promise<void>;
-    public trigger(event: 'build', graphBuilder: any): Promise<void>;
-    public trigger(event: 'ready', _?: any): Promise<void>;
-    public trigger(event: 'eventregister', data: { event: string, callback: (_?: any) => any }): Promise<void>;
-    public trigger(event: 'pull', options?: GraphPullOptions): Promise<void>;
-    public trigger(event: 'push', data: In, options?: GraphPushOptions): Promise<void>;
+    public once(event: 'push', callback: (data: In, options?: GraphPushOptions) => any): void;
+    public once(event: 'pull', callback: (options?: GraphPullOptions) => any): void;
+    public once(event: 'build', callback: (graphBuild: any) => any): void;
+    public once(event: 'destroy', callback: () => any): void;
+    public once(event: 'ready', callback: () => any): void;
+    public once(event: 'eventregister', callback: () => any): void;
     /**
-     * Trigger an event
+     * Register a new event
+     * @param event Event name
+     * @param callback Event callback
+     */
+    public once(event: string, callback: (_?: any) => any): void {
+        if (this._events.has(event)) {
+            const events = this._events.get(event);
+            events.push({ callback, once: true });
+        } else {
+            const callbacks = new Array({ callback, once: true });
+            this._events.set(event, callbacks);
+        }
+        this.emit('eventregister', { event, callback });
+    }
+
+    public emit(event: 'destroy', _?: any): Promise<void>;
+    public emit(event: 'build', graphBuilder: any): Promise<void>;
+    public emit(event: 'ready', _?: any): Promise<void>;
+    public emit(event: 'eventregister', data: { event: string, callback: (_?: any) => any }): Promise<void>;
+    public emit(event: 'pull', options?: GraphPullOptions): Promise<void>;
+    public emit(event: 'push', data: In, options?: GraphPushOptions): Promise<void>;
+    /**
+     * Emit an event
      * 
      * @param event Event name to trigger
      * @param _ Parameter for event 
      */
-    public trigger(event: string, _?: any): Promise<void> {
+    public emit(event: string, _?: any): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (this._events.has(event)) {
-                const callbacks = this._events.get(event);
+                const events = this._events.get(event);
                 const triggerPromises = new Array<Promise<any>>();
-                callbacks.forEach(callback => {
-                    triggerPromises.push(callback(_));
+                const expiredCallbacks = new Array();
+                events.forEach(e => {
+                    triggerPromises.push(e.callback(_));
+                    // Remove events that should only trigger once
+                    if (e.once) {
+                        expiredCallbacks.push(e);
+                    }
                 });
                 Promise.all(triggerPromises).then(function(values: any[]) {
+                    // Remove events that should only trigger once
+                    if (expiredCallbacks.length !== 0) {
+                        expiredCallbacks.forEach(expiredCallback => {
+                            events.splice(events.indexOf(expiredCallback), 1);
+                        });
+                        this._events.set(event, events);
+                    }
                     resolve();
                 }).catch(ex => {
                     reject(ex);
