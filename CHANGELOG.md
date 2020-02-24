@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.106](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.105...v1.0.0-alpha.106) (2020-02-24)
+
+
+### Features
+
+* added event emitter async ([a724e2a](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/a724e2ab2732b755288eea0ad9798f277512b286))
+
 ## [1.0.0-alpha.105](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.104...v1.0.0-alpha.105) (2020-02-22)
 
 
