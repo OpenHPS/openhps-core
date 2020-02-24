@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Model, ModelBuilder, DataFrame, WorkerProcessingNode, WorkerNode, CallbackSinkNode } from '../../src';
+import { Model, ModelBuilder, DataFrame, WorkerProcessingNode, WorkerNode, CallbackSinkNode } from '../../../src';
 import * as path from 'path';
 
 describe('node', () => {
@@ -51,7 +51,7 @@ describe('node', () => {
             new ModelBuilder()
                 .from()
                 .via(new WorkerNode((builder) => {
-                    const { TimeConsumingNode } = require(path.join(__dirname, '../mock/nodes/TimeConsumingNode'));
+                    const { TimeConsumingNode } = require(path.join(__dirname, '../../mock/nodes/TimeConsumingNode'));
                     builder.via(new TimeConsumingNode());
                 }, {
                     directory: __dirname,
@@ -70,8 +70,8 @@ describe('node', () => {
                     ]).then(_ => {
                         const end = new Date().getTime();
                         const diff = end - start;
-                        expect(diff).to.be.lessThan(50);
-                        Promise.resolve(model.emit('destroy'));
+                        expect(diff).to.be.lessThan(55);
+                        model.emit('destroy');
                         done();
                     });
                 });
@@ -81,7 +81,7 @@ describe('node', () => {
             new ModelBuilder()
                 .from()
                 .via(new WorkerNode((builder) => {
-                    const { TimeConsumingNode } = require(path.join(__dirname, '../mock/nodes/TimeConsumingNode'));
+                    const { TimeConsumingNode } = require(path.join(__dirname, '../../mock/nodes/TimeConsumingNode'));
                     builder.via(new TimeConsumingNode());
                 }, {
                     directory: __dirname,
@@ -101,7 +101,7 @@ describe('node', () => {
                         const end = new Date().getTime();
                         const diff = end - start;
                         expect(diff).to.be.lessThan(40);
-                        Promise.resolve(model.emit('destroy'));
+                        model.emit('destroy');
                         done();
                     });
                 });
@@ -111,7 +111,7 @@ describe('node', () => {
             new ModelBuilder()
                 .from()
                 .via(new WorkerNode((builder) => {
-                    const { TimeConsumingNode } = require(path.join(__dirname, '../mock/nodes/TimeConsumingNode'));
+                    const { TimeConsumingNode } = require(path.join(__dirname, '../../mock/nodes/TimeConsumingNode'));
                     builder.via(new TimeConsumingNode());
                 }, {
                     directory: __dirname,
@@ -131,7 +131,7 @@ describe('node', () => {
                         const end = new Date().getTime();
                         const diff = end - start;
                         expect(diff).to.be.lessThan(30);
-                        Promise.resolve(model.emit('destroy'));
+                        model.emit('destroy');
                         done();
                     });
                 });

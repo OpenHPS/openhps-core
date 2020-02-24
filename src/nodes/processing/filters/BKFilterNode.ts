@@ -42,7 +42,6 @@ export class KalmanFilterOptions extends FilterOptions {
     public C: number;
 }
 
-
 /**
  * Basic Kalman Filter
  * @author Wouter Bulten

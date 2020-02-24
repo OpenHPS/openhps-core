@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { RelativeLocation } from "./RelativeLocation";
 import { AngleUnit } from '../../utils';
 import { SerializableObject, SerializableMember } from '../decorators';
+import { DataObject } from '../object';
 
 /**
  * Relative location to another reference object measured in the angle.
@@ -10,6 +11,12 @@ import { SerializableObject, SerializableMember } from '../decorators';
 export class RelativeAngleLocation extends RelativeLocation {
     private _angle: number;
     private _angleUnit: AngleUnit;
+
+    constructor(referenceObject?: DataObject, angle?: number, angleUnit?: AngleUnit) {
+        super(referenceObject);
+        this._angle = angle;
+        this._angleUnit = angleUnit;
+    }
 
     /**
      * Get angle to reference object

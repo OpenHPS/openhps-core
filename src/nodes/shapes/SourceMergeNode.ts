@@ -27,7 +27,7 @@ export class SourceMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
         this._timeout = timeout;
         this._timeoutUnit = timeoutUnit;
 
-        this.on('build', this._start.bind(this));
+        this.once('build', this._start.bind(this));
         this.on('destroy', this._stop.bind(this));
     }
 
@@ -51,6 +51,7 @@ export class SourceMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
                 }
             }, this._timeoutUnit.convert(this._timeout, TimeUnit.MILLI));
             resolve();
+            this.emit('ready');
         });
     }
 

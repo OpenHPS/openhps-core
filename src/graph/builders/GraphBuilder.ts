@@ -53,11 +53,10 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame, Builder e
                 node.logger = this.graph.logger;
             });
             this.graph.validate();
-            Promise.resolve(this.graph.emit('build', this)).then(_ => {
+            this.graph.once('ready', () => {
                 resolve(this.graph);
-            }).catch(ex => {
-                reject(ex);
             });
+            this.graph.emit('build', this);
         });
     }
 }

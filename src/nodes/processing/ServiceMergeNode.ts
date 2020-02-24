@@ -42,7 +42,7 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
                     });
                 }));
             });
-
+            
             Promise.all(promises).then(_ => {
                 resolve(data);
             }).catch(ex => {

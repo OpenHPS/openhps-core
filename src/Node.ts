@@ -7,32 +7,41 @@ import { GraphPullOptions } from "./graph/GraphPullOptions";
 import { AbstractGraph } from "./graph/interfaces/AbstractGraph";
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
 import { DataFrameService } from './service/DataFrameService';
+import { AsyncEventEmitter } from './_internal/AsyncEventEmitter';
 
 /**
  * OpenHPS model node.
  */
-export abstract class Node<In extends DataFrame, Out extends DataFrame> implements AbstractNode<In, Out> {
+export abstract class Node<In extends DataFrame, Out extends DataFrame> extends AsyncEventEmitter implements AbstractNode<In, Out> {
     private _uid: string = uuidv4();
     private _name: string;
     private _graph: AbstractGraph<any, any>;
-    private _events: Map<string, Array<{ callback: (..._: any) => any, once: boolean }>> = new Map();
+    private _ready: boolean = false;
     public logger: (level: string, log: any) => void = () => {};
 
     constructor() {
-        // Initialise events
-        this._events.set("ready", new Array());
-        this._events.set("push", new Array());
-        this._events.set("pull", new Array());
-        this._events.set("build", new Array());
-        this._events.set("destroy", new Array());
-
+        super();
         // Set the display name of the node to the type name
         this._name = this.constructor.name;
 
         this.logger("debug", {
-            node: this.uid,
+            node: {
+                uid: this.uid,
+                name: this.name
+            },
             message: `Node has been constructed.`,
         });
+
+        this.prependOnceListener('build', () => { 
+            if (this.listeners('build').length === 0) { this.emit('ready'); } 
+        });
+        this.prependOnceListener('ready', () => {
+            this._ready = true;
+        });
+    }
+
+    public isReady(): boolean {
+        return this._ready;
     }
 
     public get name(): string {
@@ -112,8 +121,8 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> implemen
     public pull(options?: GraphPullOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const callbackPromises = new Array();
-            this._events.get('pull').forEach(event => {
-                callbackPromises.push(event.callback(options));
+            this.listeners('pull').forEach(callback => {
+                callbackPromises.push(callback(options));
             });
 
             if (callbackPromises.length === 0) {
@@ -147,15 +156,26 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> implemen
         return new Promise<void>((resolve, reject) => {
             if (data === undefined || data === null) {
                 this.logger("warning", {
-                    node: this.uid,
+                    node: {
+                        uid: this.uid,
+                        name: this.name
+                    },
                     message: `Node received null data frame!`,
                 });
                 return reject();
             }
 
+            this.logger("debug", {
+                node: {
+                    uid: this.uid,
+                    name: this.name
+                },
+                message: `Node received push`
+            });
+
             const callbackPromises = new Array();
-            this._events.get('push').forEach(event => {
-                callbackPromises.push(event.callback(data, options));
+            this.listeners('push').forEach(callback => {
+                callbackPromises.push(callback(data, options));
             });
 
             if (callbackPromises.length === 0) {
@@ -177,97 +197,6 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> implemen
                 });
             }
         });
-    }
-
-    public on(event: 'push', callback: (data: In, options?: GraphPushOptions) => any): void;
-    public on(event: 'pull', callback: (options?: GraphPullOptions) => any): void;
-    public on(event: 'build', callback: (graphBuild: any) => any): void;
-    public on(event: 'destroy', callback: () => any): void;
-    public on(event: 'ready', callback: () => any): void;
-    public on(event: 'eventregister', callback: () => any): void;
-    /**
-     * Register a new event
-     * @param event Event name
-     * @param callback Event callback
-     */
-    public on(event: string, callback: (_?: any) => any): void {
-        if (this._events.has(event)) {
-            const events = this._events.get(event);
-            events.push({ callback, once: false });
-        } else {
-            const callbacks = new Array({ callback, once: false });
-            this._events.set(event, callbacks);
-        }
-        this.emit('eventregister', { event, callback });
-    }
-
-    public once(event: 'push', callback: (data: In, options?: GraphPushOptions) => any): void;
-    public once(event: 'pull', callback: (options?: GraphPullOptions) => any): void;
-    public once(event: 'build', callback: (graphBuild: any) => any): void;
-    public once(event: 'destroy', callback: () => any): void;
-    public once(event: 'ready', callback: () => any): void;
-    public once(event: 'eventregister', callback: () => any): void;
-    /**
-     * Register a new event
-     * @param event Event name
-     * @param callback Event callback
-     */
-    public once(event: string, callback: (_?: any) => any): void {
-        if (this._events.has(event)) {
-            const events = this._events.get(event);
-            events.push({ callback, once: true });
-        } else {
-            const callbacks = new Array({ callback, once: true });
-            this._events.set(event, callbacks);
-        }
-        this.emit('eventregister', { event, callback });
-    }
-
-    public emit(event: 'destroy', _?: any): Promise<void>;
-    public emit(event: 'build', graphBuilder: any): Promise<void>;
-    public emit(event: 'ready', _?: any): Promise<void>;
-    public emit(event: 'eventregister', data: { event: string, callback: (_?: any) => any }): Promise<void>;
-    public emit(event: 'pull', options?: GraphPullOptions): Promise<void>;
-    public emit(event: 'push', data: In, options?: GraphPushOptions): Promise<void>;
-    /**
-     * Emit an event
-     * 
-     * @param event Event name to trigger
-     * @param _ Parameter for event 
-     */
-    public emit(event: string, _?: any): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            if (this._events.has(event)) {
-                const events = this._events.get(event);
-                const triggerPromises = new Array<Promise<any>>();
-                const expiredCallbacks = new Array();
-                events.forEach(e => {
-                    triggerPromises.push(e.callback(_));
-                    // Remove events that should only trigger once
-                    if (e.once) {
-                        expiredCallbacks.push(e);
-                    }
-                });
-                Promise.all(triggerPromises).then(function(values: any[]) {
-                    // Remove events that should only trigger once
-                    if (expiredCallbacks.length !== 0) {
-                        expiredCallbacks.forEach(expiredCallback => {
-                            events.splice(events.indexOf(expiredCallback), 1);
-                        });
-                        this._events.set(event, events);
-                    }
-                    resolve();
-                }).catch(ex => {
-                    reject(ex);
-                });
-            } else {
-                resolve();
-            }
-        });
-    }
-
-    public clearEvents(event: string): void {
-        this._events.set(event, []);
     }
 
     /**

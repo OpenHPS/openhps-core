@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Model, ModelBuilder, DataFrame, NamedNode } from '../../src';
-import { LoggingSinkNode } from '../../src/nodes/sink/LoggingSinkNode';
-import { ListSourceNode } from '../../src/nodes/source/ListSourceNode';
+import { Model, ModelBuilder, DataFrame, NamedNode } from '../../../src';
+import { LoggingSinkNode } from '../../../src/nodes/sink/LoggingSinkNode';
+import { ListSourceNode } from '../../../src/nodes/source/ListSourceNode';
 
 describe('list source', () => {
     describe('layer', () => {

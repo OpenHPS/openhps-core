@@ -12,6 +12,10 @@ const input: Subject<{ options?: GraphPullOptions }> = new Subject();
 const output: Subject<{ data: any, options?: GraphPushOptions }> = new Subject();
 
 expose({
+    /**
+     * Worker intiailize
+     * @param workerData Worker data containing model information 
+     */
     async init(workerData: any) {
         // Set global dir name
         __dirname = workerData.dirname;
@@ -32,9 +36,18 @@ expose({
         }));
         model = await modelBuilder.build();
     },
+    /**
+     * Pull from this work
+     * @param options 
+     */
     pull(options: any): Promise<void> {
         return model.pull(DataSerializer.deserialize(options));
     },
+    /**
+     * Push to this worker
+     * @param data 
+     * @param options 
+     */
     push(data: any, options: any): Promise<void> {
         return model.push(DataSerializer.deserialize(data), DataSerializer.deserialize(options));
     },

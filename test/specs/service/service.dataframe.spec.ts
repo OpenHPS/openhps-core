@@ -1,5 +1,5 @@
-import { Model, DataFrame, ModelBuilder, LoggingSinkNode, DataObject } from "../../src";
-import { DataFrameService } from "../../src/service/DataFrameService";
+import { Model, DataFrame, ModelBuilder, LoggingSinkNode, DataObject } from "../../../src";
+import { DataFrameService } from "../../../src/service/DataFrameService";
 import { expect } from 'chai';
 
 describe('data frame service', () => {

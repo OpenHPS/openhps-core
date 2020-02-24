@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { LoggingSinkNode } from '../../src/nodes/sink';
+import { LoggingSinkNode } from '../../../src/nodes/sink';
 
 describe('node', () => {
     describe('uid', () => {

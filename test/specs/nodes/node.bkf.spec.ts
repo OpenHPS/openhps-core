@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
-import { LoggingSinkNode, Model, ModelBuilder, DataFrame, BKFilterNode, DataObject } from '../../src';
-import { DummySensorDataFrame } from '../mock/data/DummySensorDataFrame';
+import { LoggingSinkNode, Model, ModelBuilder, DataFrame, BKFilterNode, DataObject } from '../../../src';
+import { DummySensorDataFrame } from '../../mock/data/DummySensorDataFrame';
 
 describe('node', () => {
     describe('basic kalman filter', () => {

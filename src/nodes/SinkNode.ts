@@ -16,7 +16,7 @@ export abstract class SinkNode<In extends DataFrame> extends AbstractSinkNode<In
 
     public push(data: In, options?: GraphOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this.onPush(data, options).then(_1 => {
+            this.onPush(data, options).then(() => {
                 const model: Model<any, any> = (this.graph as Model<any, any>);
                 const defaultService = model.findDataService(DataObject);
                 const servicePromises = new Array();
@@ -32,6 +32,11 @@ export abstract class SinkNode<In extends DataFrame> extends AbstractSinkNode<In
                     if (object.predictedLocations.length !== 0 && !object.hasNewLocation()) {
                         // Choose the predicted location with the best accuracy
                         object.currentLocation = object.predictedLocations[0];
+                        for (let i = 1 ; i < object.predictedLocations.length ; i++) {
+                            if (object.predictedLocations[i].accuracy < object.currentLocation.accuracy) {
+                                object.currentLocation = object.predictedLocations[i];
+                            }
+                        }
                     }
 
                     let service = model.findDataServiceByObject(object);
@@ -52,7 +57,7 @@ export abstract class SinkNode<In extends DataFrame> extends AbstractSinkNode<In
                     framePromise = frameService.delete(data.uid);
                 }
 
-                Promise.all(servicePromises).then(_2 => {
+                Promise.all(servicePromises).then(() => {
                     if (framePromise !== null) {
                         Promise.resolve(framePromise).then(_ => {
                             resolve();

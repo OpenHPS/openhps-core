@@ -1,19 +1,16 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, Model, DataFrame, DataObject, RelativeDistanceLocation, MetricLengthUnit, Cartesian2DLocation, StorageSinkNode, TrilaterationNode, CallbackSinkNode, SourceMergeNode, TimeUnit, WorkerNode, DataSerializer } from '../../src';
-import { CSVDataSource } from '../mock/nodes/source/CSVDataSource';
-import { EvaluationDataFrame } from '../mock/data/EvaluationDataFrame';
+import { ModelBuilder, Model, DataFrame, DataObject, RelativeDistanceLocation, MetricLengthUnit, Cartesian2DLocation, StorageSinkNode, CallbackSinkNode, SourceMergeNode, TimeUnit, WorkerNode, TrilaterationNode } from '../../../src';
+import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
+import { EvaluationDataFrame } from '../../mock/data/EvaluationDataFrame';
 import * as path from 'path';
 
 describe('dataset', () => {
-    describe('liwste2017 (reverse beacons)', () => {
+    describe('liwste2017', () => {
         let calibrationModel: Model<DataFrame, DataFrame>;
         let trackingModel: Model<DataFrame, DataFrame>;
 
-        let scanSourceNodeA: CSVDataSource<any>;
-        let scanSourceNodeB: CSVDataSource<any>;
-        let scanSourceNodeC: CSVDataSource<any>;
-
+        let scanSourceNode: CSVDataSource<any>;
         let callbackNode: CallbackSinkNode<DataFrame>;
 
         /**
@@ -33,20 +30,23 @@ describe('dataset', () => {
                 .to(new StorageSinkNode())
                 .build().then(model => {
                     calibrationModel = model;
+                    
+                    // Process the calibration
                     Promise.all([
                         calibrationModel.pull(),
                         calibrationModel.pull(),
                         calibrationModel.pull(),
                     ]).then(_ => {
                         callbackNode = new CallbackSinkNode<EvaluationDataFrame>();
-                        scanSourceNodeA = new CSVDataSource("test/data/liwste2017/scans.csv", (row: any) => {
+                        scanSourceNode = new CSVDataSource("test/data/liwste2017/scans.csv", (row: any) => {
                             const dataFrame = new EvaluationDataFrame();
                         
                             const trackedObject = new DataObject("tracked");
                             // The tracked object has three relative locations
-                            trackedObject.addRelativeLocation(new RelativeDistanceLocation("beacon_A", "DataObject", parseFloat(row['Distance A']), MetricLengthUnit.METER));
+                            trackedObject.addRelativeLocation(new RelativeDistanceLocation(new DataObject("beacon_A"), parseFloat(row['Distance A']), MetricLengthUnit.METER));
+                            trackedObject.addRelativeLocation(new RelativeDistanceLocation(new DataObject("beacon_B"), parseFloat(row['Distance B']), MetricLengthUnit.METER));
+                            trackedObject.addRelativeLocation(new RelativeDistanceLocation(new DataObject("beacon_C"), parseFloat(row['Distance C']), MetricLengthUnit.METER));
                             dataFrame.addObject(trackedObject);
-                            dataFrame.source = new DataObject("beacon_A");
 
                             // Control object
                             const evaluationObject = new DataObject("tracked");
@@ -56,41 +56,6 @@ describe('dataset', () => {
 
                             return dataFrame;
                         });
-                        scanSourceNodeB = new CSVDataSource("test/data/liwste2017/scans.csv", (row: any) => {
-                            const dataFrame = new EvaluationDataFrame();
-                        
-                            const trackedObject = new DataObject("tracked");
-                            // The tracked object has three relative locations
-                            trackedObject.addRelativeLocation(new RelativeDistanceLocation("beacon_B", "DataObject", parseFloat(row['Distance B']), MetricLengthUnit.METER));
-                            dataFrame.addObject(trackedObject);
-                            dataFrame.source = new DataObject("beacon_B");
-
-                            // Control object
-                            const evaluationObject = new DataObject("tracked");
-                            evaluationObject.currentLocation = new Cartesian2DLocation(parseFloat(row['Position X']), parseFloat(row['Position Y']));
-                            (evaluationObject.currentLocation as Cartesian2DLocation).unit = MetricLengthUnit.CENTIMETER;
-                            dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
-
-                            return dataFrame;
-                        });
-                        scanSourceNodeC = new CSVDataSource("test/data/liwste2017/scans.csv", (row: any) => {
-                            const dataFrame = new EvaluationDataFrame();
-                        
-                            const trackedObject = new DataObject("tracked");
-                            // The tracked object has three relative locations
-                            trackedObject.addRelativeLocation(new RelativeDistanceLocation("beacon_C", "DataObject", parseFloat(row['Distance C']), MetricLengthUnit.METER));
-                            dataFrame.addObject(trackedObject);
-                            dataFrame.source = new DataObject("beacon_C");
-
-                            // Control object
-                            const evaluationObject = new DataObject("tracked");
-                            evaluationObject.currentLocation = new Cartesian2DLocation(parseFloat(row['Position X']), parseFloat(row['Position Y']));
-                            (evaluationObject.currentLocation as Cartesian2DLocation).unit = MetricLengthUnit.CENTIMETER;
-                            dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
-
-                            return dataFrame;
-                        });
-
                         done();
                     });
                 });
@@ -98,12 +63,19 @@ describe('dataset', () => {
 
         describe('trilateration', () => {
 
-            before((done) => {
+            before(function(done) {
+                this.timeout(10000);
                 new ModelBuilder()
                     // Use the data from the calibration model
                     .addService(calibrationModel.findDataService(DataObject))
-                    .from(scanSourceNodeA, scanSourceNodeB, scanSourceNodeC)
-                    .via(new SourceMergeNode(100, TimeUnit.MILLI))
+                    .from(scanSourceNode)
+                    // .via(new WorkerNode((builder) => {
+                    //     const { TrilaterationNode } = require(path.join(__dirname, '../../../src'));
+                    //     const { EvaluationDataFrame } = require(path.join(__dirname, '../../mock/data/EvaluationDataFrame'));
+                    //     builder.via(new TrilaterationNode())
+                    // }, {
+                    //     directory: __dirname
+                    // }))
                     .via(new TrilaterationNode<EvaluationDataFrame>())
                     .to(callbackNode)
                     .build().then(model => {
@@ -112,20 +84,45 @@ describe('dataset', () => {
                     });
             });
 
-            after((done) => {
-                trackingModel.emit('destroy').finally(() => {
-                    done();
-                });
+            after(() => {
+                trackingModel.emit('destroy');
             });    
+
+            describe('calibration', () => {
+
+                it('should contain calibration data for beacon A', (done) => {
+                    trackingModel.findDataService(DataObject).findById("beacon_A").then(beacon => {
+                        expect(beacon).to.not.be.null;
+                        expect(beacon.currentLocation).to.be.instanceOf(Cartesian2DLocation);
+                        expect((beacon.currentLocation as Cartesian2DLocation).x).to.equal(0.10);
+                        done();
+                    });
+                });
+        
+                it('should contain calibration data for beacon B', (done) => {
+                    trackingModel.findDataService(DataObject).findById("beacon_B").then(beacon => {
+                        expect(beacon).to.not.be.null;
+                        expect(beacon.currentLocation).to.be.instanceOf(Cartesian2DLocation);
+                        expect((beacon.currentLocation as Cartesian2DLocation).x).to.equal(2.74);
+                        done();
+                    });
+                });
+        
+                it('should contain calibration data for beacon C', (done) => {
+                    trackingModel.findDataService(DataObject).findById("beacon_C").then(beacon => {
+                        expect(beacon).to.not.be.null;
+                        expect(beacon.currentLocation).to.be.instanceOf(Cartesian2DLocation);
+                        expect((beacon.currentLocation as Cartesian2DLocation).x).to.equal(1.22);
+                        done();
+                    });
+                });
+
+            });
             
             describe('raw', () => {
 
                 beforeEach((done) => {
-                    const resetPromises = new Array();
-                    resetPromises.push(scanSourceNodeA.reset());
-                    resetPromises.push(scanSourceNodeB.reset());
-                    resetPromises.push(scanSourceNodeC.reset());
-                    Promise.all(resetPromises).then(_ => {
+                    scanSourceNode.reset().then(_ => {
                         done();
                     }).catch(ex => {
                         done(ex);
@@ -180,7 +177,7 @@ describe('dataset', () => {
     
                     // Perform a pull
                     const promises = new Array();
-                    const size = scanSourceNodeA.size;
+                    const size = scanSourceNode.size;
                     for (let i = 0 ; i < size ; i++) {
                         promises.push(trackingModel.pull());
                     }

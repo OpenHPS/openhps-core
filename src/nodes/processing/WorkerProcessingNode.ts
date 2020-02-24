@@ -22,8 +22,8 @@ export class WorkerProcessingNode<In extends DataFrame, Out extends DataFrame> e
         super();
         this._worker = new Worker(workerFile, {});
 
-        this.on('build', this._onBuild.bind(this));
-        this.on('destroy', this._onDestroy.bind(this));
+        this.once('build', this._onBuild.bind(this));
+        this.once('destroy', this._onDestroy.bind(this));
     }
 
     private _onDestroy(): Promise<void> {
@@ -51,6 +51,7 @@ export class WorkerProcessingNode<In extends DataFrame, Out extends DataFrame> e
                     message: "Worker thread spawned!",
                 });
                 resolve();
+                this.emit('ready');
             }).catch((ex: any) => {
                 reject(ex);
             });

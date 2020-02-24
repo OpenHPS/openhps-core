@@ -27,7 +27,7 @@ export abstract class SourceNode<Out extends DataFrame> extends AbstractSourceNo
         this._ignoreMerging = ignoreMerging;
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
-        this.on('build', this._onBuild.bind(this));
+        this.once('build', this._onBuild.bind(this));
     }
 
     private _onBuild(graphBuilder: ModelBuilder<any, any>): void {
@@ -54,6 +54,8 @@ export abstract class SourceNode<Out extends DataFrame> extends AbstractSourceNo
             .withInput(this)
             .withOutput(mergeNode)
             .build());
+
+        this.emit('ready');
     }
 
     private _onPush(frame: Out, options?: GraphPushOptions): Promise<void> {

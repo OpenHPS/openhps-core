@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, Model, DataFrame, Node, DataObject } from '../../src';
-import { DummyDataFrame } from '../mock/data/DummyDataFrame';
-import { DummyDataObject } from '../mock/data/object/DummyDataObject';
-import { DataSerializer } from '../../src/data/DataSerializer';
+import { ModelBuilder, Model, DataFrame, Node, DataObject } from '../../../src';
+import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
+import { DummyDataObject } from '../../mock/data/object/DummyDataObject';
+import { DataSerializer } from '../../../src/data/DataSerializer';
 
 describe('data', () => {
     describe('frame', () => {

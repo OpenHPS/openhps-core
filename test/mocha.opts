@@ -2,4 +2,4 @@
 --require source-map-support/register
 --recursive
 
-test/specs/*.spec.ts
+test/specs/**/*.spec.ts

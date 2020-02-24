@@ -178,7 +178,10 @@ export class DataObject {
     }
 
     public removeRelativeLocation(relativeLocation: RelativeLocation): void {
-
+        if (this._relativeLocations.has(relativeLocation.referenceObjectUID)) {
+            const relativeLocations =  this._relativeLocations.get(relativeLocation.referenceObjectUID);
+            relativeLocations.splice(relativeLocations.indexOf(relativeLocation), 1);
+        }
     }
 
     public addRelativeLocation(relativeLocation: RelativeLocation): void {

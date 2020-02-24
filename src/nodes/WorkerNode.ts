@@ -43,22 +43,37 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         const workerTS = '_internal/WorkerNodeRunner.ts';
         this._worker = new Worker(fs.existsSync(workerJS) ? workerJS : workerTS);
         
-        this.on('build', this._onBuild.bind(this));
-        this.on('destroy', this._onDestroy.bind(this));
+        this.once('build', this._onBuild.bind(this));
+        this.once('destroy', this._onDestroy.bind(this));
         this.on('pull', this._onPull.bind(this));
         this.on('push', this._onPush.bind(this));
     }
 
     private _onPull(options?: GraphPullOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this._pool.queue((worker: any) => {
-                const pullFn: (options?: GraphPullOptions) => Promise<void> = worker.pull;
-                return pullFn(DataSerializer.serialize(options));
-            }).then(_ => {
-                resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            if (this._options.optimizedPull) {
+                // Do not pass the pull request to the worker
+                const pullPromises = new Array();
+                this.inputNodes.forEach(node => {
+                    pullPromises.push(node.pull(options));
+                });
+
+                Promise.all(pullPromises).then(_ => {
+                    resolve();
+                }).catch(ex => {
+                    reject(ex);
+                });
+            } else {
+                // Pass the pull request to the worker
+                this._pool.queue((worker: any) => {
+                    const pullFn: (options?: GraphPullOptions) => Promise<void> = worker.pull;
+                    return pullFn(DataSerializer.serialize(options));
+                }).then(_ => {
+                    resolve();
+                }).catch(ex => {
+                    reject(ex);
+                });
+            }
         });
     }
 
@@ -144,10 +159,12 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                     resolve();
                 }
             });
+            this.emit('ready');
         });
     }
 }
 export class WorkerNodeOptions {
     directory?: string = __dirname;
     poolSize?: number = os.cpus().length;
+    optimizedPull?: boolean = false;
 }

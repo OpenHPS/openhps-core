@@ -21,8 +21,8 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
         this.name = name;
         this._addDefaultServices();
 
-        this.clearEvents("build");
-        this.clearEvents("destroy");
+        this.removeAllListeners("build");
+        this.removeAllListeners("destroy");
         this.on("build", this._onModelBuild.bind(this));
         this.on("destroy", this._onModelDestroy.bind(this));
     }
@@ -35,7 +35,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
 
             const buildPromises = new Array();
             this._services.forEach(service => {
-                buildPromises.push(service.emit('build', _));
+                buildPromises.push(service.emitAsync('build'));
             });
             this._dataServices.forEach(service => {
                 // Check that the service has a driver
@@ -43,10 +43,10 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
                     service.dataServiceDriver = this._defaultDataServiceDriver;
                 }
 
-                buildPromises.push(service.emit('build', _));
+                buildPromises.push(service.emitAsync('build'));
             });
             this.nodes.forEach(node => {
-                buildPromises.push(node.emit('build', _));
+                buildPromises.push(node.emitAsync('build', _));
             });
             Promise.all(buildPromises).then(_2 => {
                 this.emit('ready');
@@ -132,10 +132,10 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
             if (service.dataServiceDriver === undefined) {
                 service.dataServiceDriver = this._defaultDataServiceDriver;
             }
-            this._dataServices.set(service.getName(), service);
+            this._dataServices.set(service.name, service);
         } else {
             // Normal service
-            this._services.set(service.getName(), service);
+            this._services.set(service.name, service);
         }
     }
 

@@ -12,7 +12,7 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
         this._rowCallback = rowCallback;
         this._file = file;
 
-        this.on("build", this._initCSV.bind(this));
+        this.once("build", this._initCSV.bind(this));
     }
 
     private _initCSV(_?: any): Promise<void> {

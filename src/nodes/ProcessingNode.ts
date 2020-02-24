@@ -23,7 +23,7 @@ export abstract class ProcessingNode<In extends DataFrame, Out extends DataFrame
                     const frameService = this.getDataFrameService(result);
                     
                     if (frameService !== null && frameService !== undefined) { 
-                        if (frameService.getName() !== oldFrameService.getName()) {
+                        if (frameService.name !== oldFrameService.name) {
                             // Delete frame from old service
                             servicePromises.push(oldFrameService.delete(data.uid));
                         }

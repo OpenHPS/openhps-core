@@ -14,8 +14,8 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
         this._intervalUnit = intervalUnit;
 
         this.on('push', this._onPush.bind(this));
-        this.on('build', this._start.bind(this));
-        this.on('destroy', this._stop.bind(this));
+        this.once('build', this._start.bind(this));
+        this.once('destroy', this._stop.bind(this));
     }
 
     private _onPush(data: InOut, options?: GraphPushOptions): Promise<void> {
@@ -47,6 +47,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
                 Promise.resolve(promises);
             }, this._intervalUnit.convert(this._interval, TimeUnit.MILLI));
             resolve();
+            this.emit('ready');
         });
     }
 

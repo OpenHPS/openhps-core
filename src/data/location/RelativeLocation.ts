@@ -10,9 +10,11 @@ export class RelativeLocation implements Location {
     private _referenceObjectUID: string;
     private _referenceObjectType: string;
 
-    constructor(referenceObjectUID?: string, referenceObjectType?: string) {
-        this.referenceObjectType = referenceObjectType;
-        this.referenceObjectUID = referenceObjectUID;
+    constructor(referenceObject?: any) {
+        if (referenceObject !== undefined) {
+            this.referenceObjectType = referenceObject.constructor.name;
+            this.referenceObjectUID = referenceObject.uid;
+        }
     }
 
     /**

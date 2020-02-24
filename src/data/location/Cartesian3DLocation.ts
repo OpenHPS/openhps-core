@@ -58,36 +58,50 @@ export class Cartesian3DLocation extends Point3D implements AbsoluteLocation {
 
     public static trilaterate(points: Cartesian3DLocation[], distances: number[]): Promise<Cartesian3DLocation> {
         return new Promise<Cartesian3DLocation>((resolve, reject) => {
-            const eX = math.divide(math.subtract(points[1].point, points[0].point), math.norm(math.subtract(points[1].point, points[0].point) as number[]));
-            const i = math.multiply(eX, math.subtract(points[2].point, points[0].point)) as number;
-            const eY = math.divide((math.subtract(math.subtract(points[2].point, points[0].point), math.multiply(i, eX))), math.norm(math.subtract(math.subtract(points[2].point, points[0].point) as number[], math.multiply(i, eX) as number[]) as number[]));
-            const j = math.multiply(eY, math.subtract(points[2].point, points[0].point)) as number;
-            const eZ = math.multiply(eX, eY) as number;
-            const d = math.norm(math.subtract(points[1].point, points[0].point) as number[]) as number;
-        
-            // Calculate coordinates
-            let AX = distances[0];
-            let BX = distances[1];
-            let CX = distances[2];
+            switch (points.length) {
+                case 0:
+                    resolve(null);
+                    break;
+                case 1:
+                    resolve(points[0]);
+                    break;
+                case 2:
+                    resolve(points[0].midpoint(points[1], distances[0], distances[1]));
+                    break;
+                case 3:
+                default:
+                    const eX = math.divide(math.subtract(points[1].point, points[0].point), math.norm(math.subtract(points[1].point, points[0].point) as number[]));
+                    const i = math.multiply(eX, math.subtract(points[2].point, points[0].point)) as number;
+                    const eY = math.divide((math.subtract(math.subtract(points[2].point, points[0].point), math.multiply(i, eX))), math.norm(math.subtract(math.subtract(points[2].point, points[0].point) as number[], math.multiply(i, eX) as number[]) as number[]));
+                    const j = math.multiply(eY, math.subtract(points[2].point, points[0].point)) as number;
+                    const eZ = math.multiply(eX, eY) as number;
+                    const d = math.norm(math.subtract(points[1].point, points[0].point) as number[]) as number;
+                
+                    // Calculate coordinates
+                    let AX = distances[0];
+                    let BX = distances[1];
+                    let CX = distances[2];
+                    
+                    let incr = -1;
+                    let x = 0;
+                    let y = 0;
+                    do {
+                        x = (Math.pow(AX, 2) - Math.pow(BX, 2) + Math.pow(d, 2)) / (2 * d);
+                        y = ((Math.pow(AX, 2) - Math.pow(CX, 2) + Math.pow(i, 2) + Math.pow(j, 2)) / (2 * j)) - ((i / j) * x);
+                        incr = Math.pow(AX, 2) - Math.pow(x, 2) - Math.pow(y, 2);
+                        // Increase distances
+                        AX += 0.10;
+                        BX += 0.10;
+                        CX += 0.10;
+                    } while (incr < 0);
+                    const z = Math.sqrt(incr);
             
-            let incr = -1;
-            let x = 0;
-            let y = 0;
-            do {
-                x = (Math.pow(AX, 2) - Math.pow(BX, 2) + Math.pow(d, 2)) / (2 * d);
-                y = ((Math.pow(AX, 2) - Math.pow(CX, 2) + Math.pow(i, 2) + Math.pow(j, 2)) / (2 * j)) - ((i / j) * x);
-                incr = Math.pow(AX, 2) - Math.pow(x, 2) - Math.pow(y, 2);
-                // Increase distances
-                AX += 0.10;
-                BX += 0.10;
-                CX += 0.10;
-            } while (incr < 0);
-            const z = Math.sqrt(incr);
-    
-            const point = new Cartesian3DLocation();
-            point.unit = points[0].unit;
-            point.point = math.add(points[0].point, math.add(math.add(math.multiply(eX, x), math.multiply(eY, y)), math.multiply(eZ, z))) as number[];
-            resolve(point);
+                    const point = new Cartesian3DLocation();
+                    point.unit = points[0].unit;
+                    point.point = math.add(points[0].point, math.add(math.add(math.multiply(eX, x), math.multiply(eY, y)), math.multiply(eZ, z))) as number[];
+                    resolve(point);
+                    break;
+            }
         });
     }
 

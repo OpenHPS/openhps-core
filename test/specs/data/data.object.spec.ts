@@ -1,10 +1,8 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, Model, DataFrame, Node, DataObject, SensorObject, RelativeDistanceLocation } from '../../src';
-import { DummyDataFrame } from '../mock/data/DummyDataFrame';
-import { DummyDataObject } from '../mock/data/object/DummyDataObject';
-import { DummySensorObject } from '../mock/data/object/DummySensorObject';
-import { DataSerializer } from '../../src/data/DataSerializer';
+import { DataObject, RelativeDistanceLocation } from '../../../src';
+import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
+import { DataSerializer } from '../../../src/data/DataSerializer';
 
 describe('data', () => {
     describe('object', () => {
@@ -13,9 +11,9 @@ describe('data', () => {
             const dataObject = new DataObject("123");
             dataObject.displayName = "abc";
             dataObject.setNodeData('x', { test: [1, 2, 3] });
-            dataObject.addRelativeLocation(new RelativeDistanceLocation("ref_a", "DataObject", 1));
-            dataObject.addRelativeLocation(new RelativeDistanceLocation("ref_b", "DataObject", 2));
-            dataObject.addRelativeLocation(new RelativeDistanceLocation("ref_c", "DataObject", 3));
+            dataObject.addRelativeLocation(new RelativeDistanceLocation(new DataObject("ref_a"), 1));
+            dataObject.addRelativeLocation(new RelativeDistanceLocation(new DataObject("ref_b"), 2));
+            dataObject.addRelativeLocation(new RelativeDistanceLocation(new DataObject("ref_c"), 3));
             const serialized = DataSerializer.serialize(dataObject);
             const deserialized = DataSerializer.deserialize(serialized, DataObject);
             expect(dataObject.uid).to.equal(deserialized.uid);

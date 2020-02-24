@@ -1,6 +1,6 @@
-import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, SensorObject, ServiceMergeNode, MemoryDataService, Cartesian2DLocation } from '../../src';
-import { LoggingSinkNode } from '../../src/nodes/sink';
-import { DummySensorObject } from '../mock/data/object/DummySensorObject';
+import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, SensorObject, ServiceMergeNode, MemoryDataService, Cartesian2DLocation } from '../../../src';
+import { LoggingSinkNode } from '../../../src/nodes/sink';
+import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 
 import { expect } from 'chai';
 import 'mocha';

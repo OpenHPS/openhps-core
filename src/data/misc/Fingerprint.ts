@@ -5,9 +5,9 @@ import * as crypto from 'crypto';
 @SerializableObject()
 export class Fingerprint {
     @SerializableMember()
-    public absoluteLocation: AbsoluteLocation;
+    public location: AbsoluteLocation;
     @SerializableMember()
-    public referenceObject: string;
+    public referenceObjectUID: string;
     @SerializableMember()
     public referenceValue: number;
     @SerializableMember()

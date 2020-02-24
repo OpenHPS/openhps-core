@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, Model, DataFrame, Node } from '../../src';
-import { NamedNode, SourceNode, ListSourceNode } from '../../src/nodes';
+import { ModelBuilder } from '../../src';
+import { NamedNode } from '../../src/nodes';
 
 describe('model', () => {
     describe('builder', () => {

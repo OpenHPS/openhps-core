@@ -55,7 +55,16 @@ export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessing
                 });
 
                 switch (filteredRelativeLocations.length) {
-                    
+                    case 0:
+                    case 1:
+                        resolve(dataObject);
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    default:
+                        break;
                 }
             }).catch(ex => {
                 reject(ex);

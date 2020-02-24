@@ -1,6 +1,8 @@
+import 'reflect-metadata';
 import { RelativeLocation } from "./RelativeLocation";
 import { LengthUnit, Unit } from "../../utils";
 import { SerializableObject, SerializableMember } from '../decorators';
+import { DataObject } from '../object';
 
 /**
  * Relative location to another reference object in distance.
@@ -10,8 +12,8 @@ export class RelativeDistanceLocation extends RelativeLocation {
     private _distance: number;
     private _distanceUnit: LengthUnit;
 
-    constructor(referenceObjectUID?: string, referenceObjectType?: string, distance?: number, distanceUnit?: LengthUnit) {
-        super(referenceObjectUID, referenceObjectType);
+    constructor(referenceObject?: DataObject, distance?: number, distanceUnit?: LengthUnit) {
+        super(referenceObject);
         this._distance = distance;
         this._distanceUnit = distanceUnit;
     }

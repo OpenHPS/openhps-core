@@ -55,29 +55,18 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
                 });
 
                 switch (filteredRelativeLocations.length) {
-                    /** Edge cases: 0, 1 or 2 */
                     case 0: // Unable to calculate absolute location
                         resolve(dataObject);
                         break;
                     case 1: // Use relative location + accuracy
-                        dataObject.addPredictedLocation(objects[0].currentLocation);
-                        resolve(dataObject);
-                        break;
                     case 2: // Midpoint of two locations
-                        const distanceA = filteredRelativeLocations[0].distance;
-                        const distanceB = filteredRelativeLocations[1].distance;
-                        objects[0].currentLocation.midpoint(objects[1].currentLocation, distanceA, distanceB).then(midpoint => {
-                            dataObject.addPredictedLocation(midpoint);
-                            resolve(dataObject);
-                        }).catch(ex => {
-                            reject(ex);
-                        });
-                        break;
                     case 3: // Trilateration
+                    default:
                         switch (true) {
                             case objects[0].currentLocation instanceof Cartesian3DLocation:
                                 Cartesian3DLocation.trilaterate(points, distances).then(location => {
-                                    dataObject.addPredictedLocation(location);
+                                    if (location !== null)
+                                        dataObject.addPredictedLocation(location);
                                     resolve(dataObject);
                                 }).catch(ex => {
                                     reject(ex);
@@ -85,7 +74,8 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
                                 break;
                             case objects[0].currentLocation instanceof Cartesian2DLocation:
                                 Cartesian2DLocation.trilaterate(points, distances).then(location => {
-                                    dataObject.addPredictedLocation(location);
+                                    if (location !== null)
+                                        dataObject.addPredictedLocation(location);
                                     resolve(dataObject);
                                 }).catch(ex => {
                                     reject(ex);
@@ -93,7 +83,8 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
                                 break;
                             case objects[0].currentLocation instanceof GeographicalLocation:
                                 GeographicalLocation.trilaterate(points, distances).then(location => {
-                                    dataObject.addPredictedLocation(location);
+                                    if (location !== null)
+                                        dataObject.addPredictedLocation(location);
                                     resolve(dataObject);
                                 }).catch(ex => {
                                     reject(ex);
@@ -102,10 +93,6 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
                             default:
                                 resolve(dataObject);
                         }
-                        break;
-                    default: // Trilatereation: Nonlinear Least Squares
-                        dataObject.addPredictedLocation(objects[0].currentLocation);
-                        resolve(dataObject);
                         break;
                 }
             }).catch(ex => {

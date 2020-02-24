@@ -1,8 +1,8 @@
-import { LengthUnit, MetricLengthUnit, AngleUnit, SquareUnit, VolumeUnit, Unit } from '../../src/utils/unit';
+import { LengthUnit, MetricLengthUnit, AngleUnit, SquareUnit, VolumeUnit, Unit } from '../../../src/utils/unit';
 
 import { expect } from 'chai';
 import 'mocha';
-import { DataSerializer } from '../../src/data/DataSerializer';
+import { DataSerializer } from '../../../src/data/DataSerializer';
 
 describe('units', () => {
 

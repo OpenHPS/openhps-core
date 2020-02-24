@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Point2D } from '../../src/data/geometry/Point2D';
+import { Point2D } from '../../../src/data/geometry/Point2D';
 import { TypedJSON } from 'typedjson';
-import { Point3D } from '../../src/data/geometry/Point3D';
-import { Vector2D, Vector3D } from '../../src';
+import { Point3D } from '../../../src/data/geometry/Point3D';
+import { Vector2D, Vector3D } from '../../../src';
 
 describe('data', () => {
     describe('geometry', () => {

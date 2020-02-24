@@ -1,5 +1,8 @@
 import { TypedJSON } from "typedjson";
 
+/**
+ * Data serializer
+ */
 export class DataSerializer {
     private static _serializableTypes: Map<string, new () => any> = new Map();
 
