@@ -1,6 +1,6 @@
 import { DataServiceDriver } from "./DataServiceDriver";
 
-export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
+export class MemoryDataServiceDriver<I, T> extends DataServiceDriver<I, T> {
     protected _data: Map<I, T> = new Map();
     
     public findOne(filter: any): Promise<T> {

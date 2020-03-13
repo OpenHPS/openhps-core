@@ -1,5 +1,5 @@
 import { DataFrame, DataObject } from "../../../data";
-import { Service, DataObjectService, DataService, DataServiceDriver, MemoryDataService } from "../../../service";
+import { Service, DataObjectService, DataService, DataServiceDriver, MemoryDataServiceDriver } from "../../../service";
 import { GraphImpl } from "./GraphImpl";
 import { Model } from "../../../Model";
 import { DataFrameService } from "../../../service/DataFrameService";
@@ -30,7 +30,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
     private _onModelBuild(_: any): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this._defaultDataServiceDriver === undefined) {
-                this.setDefaultDataServiceDriver({ type: MemoryDataService });
+                this.setDefaultDataServiceDriver({ type: MemoryDataServiceDriver });
             }
 
             const buildPromises = new Array();
