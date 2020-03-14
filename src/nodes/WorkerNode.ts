@@ -1,11 +1,9 @@
 import { DataFrame, DataSerializer } from "../data";
 import { GraphPushOptions, GraphPullOptions } from "../graph";
 import { Node } from "../Node";
-import * as fs from 'fs';
 import { Thread, Worker, spawn, Pool } from "threads";
 import { Observable } from "threads/observable";
 import { GraphShapeBuilder } from "../graph/builders";
-import * as os from 'os';
 import { PoolEvent } from "threads/dist/master/pool";
 
 /**
@@ -39,9 +37,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         this._builderCallback = builderCallback;
         this._options = options;
 
-        const workerJS = '_internal/WorkerNodeRunner.js';
-        const workerTS = '_internal/WorkerNodeRunner.ts';
-        this._worker = new Worker(fs.existsSync(workerJS) ? workerJS : workerTS);
+        this._worker = new Worker('_internal/WorkerNodeRunner');
         
         this.once('build', this._onBuild.bind(this));
         this.once('destroy', this._onDestroy.bind(this));
@@ -165,6 +161,6 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
 }
 export class WorkerNodeOptions {
     directory?: string = __dirname;
-    poolSize?: number = os.cpus().length;
+    poolSize?: number = 4;
     optimizedPull?: boolean = false;
 }
