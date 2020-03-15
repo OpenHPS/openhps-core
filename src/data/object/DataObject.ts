@@ -179,9 +179,16 @@ export class DataObject {
 
     public removeRelativeLocation(relativeLocation: RelativeLocation): void {
         if (this._relativeLocations.has(relativeLocation.referenceObjectUID)) {
-            const relativeLocations =  this._relativeLocations.get(relativeLocation.referenceObjectUID);
+            const relativeLocations = this._relativeLocations.get(relativeLocation.referenceObjectUID);
             relativeLocations.splice(relativeLocations.indexOf(relativeLocation), 1);
+            if (relativeLocations.length === 0) {
+                this._relativeLocations.delete(relativeLocation.referenceObjectUID);
+            }
         }
+    }
+
+    public removeRelativeLocations(referenceObjectUID: string): void {
+        this._relativeLocations.delete(referenceObjectUID);
     }
 
     public addRelativeLocation(relativeLocation: RelativeLocation): void {
