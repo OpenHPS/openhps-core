@@ -95,6 +95,12 @@ export class SourceMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
                     mergedFrame.addObject(object);
                 }
             });
+            // Merge properties
+            Object.getOwnPropertyNames(frame).forEach(propertyName => {
+                if ((mergedFrame as any)[propertyName] === undefined) {
+                    (mergedFrame as any)[propertyName] = (frame as any)[propertyName];
+                }
+            });
         }
         this._frameBuffer = new Map();
         return mergedFrame;
