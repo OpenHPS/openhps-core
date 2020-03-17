@@ -9,12 +9,14 @@ import { SerializableObject, SerializableMember } from '../decorators';
 export class RelativeLocation implements Location {
     private _referenceObjectUID: string;
     private _referenceObjectType: string;
+    private _referenceValue: number;
 
-    constructor(referenceObject?: any) {
+    constructor(referenceObject?: any, referenceValue?: number) {
         if (referenceObject !== undefined) {
             this.referenceObjectType = referenceObject.constructor.name;
             this.referenceObjectUID = referenceObject.uid;
         }
+        this.referenceValue = referenceValue;
     }
 
     /**
@@ -27,6 +29,15 @@ export class RelativeLocation implements Location {
 
     public set referenceObjectUID(referenceObjectUID: string) {
         this._referenceObjectUID = referenceObjectUID;
+    }
+
+    @SerializableMember()
+    public get referenceValue(): number {
+        return this._referenceValue;
+    }
+
+    public set referenceValue(value: number) {
+        this._referenceValue = value;
     }
 
     @SerializableMember()

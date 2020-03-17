@@ -32,6 +32,7 @@ export class RelativeDistanceLocation extends RelativeLocation {
      */
     public set distance(distance: number) {
         this._distance = distance;
+        this.referenceValue = distance;
     }
 
     /**

@@ -32,6 +32,7 @@ export class RelativeAngleLocation extends RelativeLocation {
      */
     public set angle(angle: number) {
         this._angle = angle;
+        this.referenceValue = angle;
     }
 
     /**

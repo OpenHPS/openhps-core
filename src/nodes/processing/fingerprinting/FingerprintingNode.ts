@@ -20,12 +20,10 @@ export class FingerprintingNode<InOut extends DataFrame> extends ObjectProcessin
                 // Perform fingerprint calibration
                 dataObject.relativeLocations.forEach(relativeLocation => {
                     if (relativeLocation instanceof RelativeDistanceLocation) {
-                        const fingerprint = new Fingerprint();
-                        fingerprint.referenceObjectUID = relativeLocation.referenceObjectUID;
-                        fingerprint.referenceValue = relativeLocation.distance;
-                        fingerprint.location = dataObject.currentLocation;
+                        const fingerprint = new Fingerprint(relativeLocation);
+                        fingerprint.currentLocation = dataObject.currentLocation;
                         fingerprint.createdTimestamp = dataFrame.createdTimestamp;
-                        fingerprintService.insert(fingerprint.id, fingerprint);
+                        fingerprintService.insert(fingerprint.uid, fingerprint);
                     }
                 });
             } else {
@@ -38,7 +36,7 @@ export class FingerprintingNode<InOut extends DataFrame> extends ObjectProcessin
                 });
                 const fingerprint: Fingerprint = null;
 
-                dataObject.addPredictedLocation(fingerprint.location);
+                dataObject.addPredictedLocation(fingerprint.currentLocation);
             }
         });
     }

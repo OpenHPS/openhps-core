@@ -22,9 +22,12 @@ export class DataObject {
     private _shape: Shape;
     @SerializableMapMember(String, Object)
     private _nodeData: Map<string, any> = new Map();
+    @SerializableMember()
+    public createdTimestamp: number;
 
     constructor(uid: string = uuidv4()) {
         this.uid = uid;
+        this.createdTimestamp = new Date().getTime();
     }
 
     public merge(object: DataObject): DataObject {
@@ -37,6 +40,9 @@ export class DataObject {
         object._nodeData.forEach((value, key) => {
             this._nodeData.set(key, value);
         });
+        if (this.createdTimestamp > object.createdTimestamp) {
+            this.createdTimestamp = object.createdTimestamp;
+        }
         return this;
     }
     
