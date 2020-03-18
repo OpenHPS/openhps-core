@@ -1,11 +1,16 @@
-import { DataServiceDriver } from "./DataServiceDriver";
+import { JSONPath } from 'jsonpath-plus';
+import { DataObjectServiceDriver } from "./DataObjectServiceDriver";
+import { AbsoluteLocation } from '../data';
 
-export class MemoryDataServiceDriver<I, T> extends DataServiceDriver<I, T> {
+export class MemoryDataServiceDriver<I, T> extends DataObjectServiceDriver<I, T> {
     protected _data: Map<I, T> = new Map();
     
+    public findByCurrentLocation(location: AbsoluteLocation): Promise<T[]> {
+        return this.findAll();
+    }
+
     public findOne(filter: any): Promise<T> {
         return new Promise<T>((resolve, reject) => {
-            reject(new Error(`Unsupported opperation!`));
         });
     }
     
@@ -22,7 +27,7 @@ export class MemoryDataServiceDriver<I, T> extends DataServiceDriver<I, T> {
     public findAll(filter?: any): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
             if (filter !== undefined) {
-                return reject(new Error(`Unsupported opperation!`));
+                return resolve(JSONPath({ path: filter, json: Array.from(this._data.values()) }));
             }
             
             const data = new Array();
@@ -60,5 +65,9 @@ export class MemoryDataServiceDriver<I, T> extends DataServiceDriver<I, T> {
             this._data = new Map();
             resolve();
         });
+    }
+
+    public get rawData(): Map<I, T> {
+        return this._data;
     }
 }

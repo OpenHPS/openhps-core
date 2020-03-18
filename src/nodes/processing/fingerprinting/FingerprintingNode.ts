@@ -14,18 +14,20 @@ export class FingerprintingNode<InOut extends DataFrame> extends ObjectProcessin
     
     public processObject(dataObject: DataObject, dataFrame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
+            // Fingerprinting service
             const fingerprintService = (this.graph as Model<any, any>).findServiceByClass(FingerprintingService);
             
             if (dataObject.currentLocation !== undefined) {
                 // Perform fingerprint calibration
+                const fingerprint = new Fingerprint();
+                fingerprint.createdTimestamp = dataFrame.createdTimestamp;
+                fingerprint.currentLocation = dataObject.currentLocation;
                 dataObject.relativeLocations.forEach(relativeLocation => {
                     if (relativeLocation instanceof RelativeDistanceLocation) {
-                        const fingerprint = new Fingerprint(relativeLocation);
-                        fingerprint.currentLocation = dataObject.currentLocation;
-                        fingerprint.createdTimestamp = dataFrame.createdTimestamp;
-                        fingerprintService.insert(fingerprint.uid, fingerprint);
+                        fingerprint.addRelativeLocation(relativeLocation);
                     }
                 });
+                fingerprintService.insert(fingerprint.uid, fingerprint);
             } else {
                 // Perform reverse fingerprinting
                 const distances = new Map<string, Number>();
@@ -34,9 +36,16 @@ export class FingerprintingNode<InOut extends DataFrame> extends ObjectProcessin
                         distances.set(relativeLocation.referenceObjectUID, relativeLocation.distance);
                     }
                 });
-                const fingerprint: Fingerprint = null;
+                fingerprintService.findAll().then(fingerprints => {
+                    fingerprints.forEach(fingerprint => {
+                        fingerprint.relativeLocations.forEach(relativeLocation => {
 
-                dataObject.addPredictedLocation(fingerprint.currentLocation);
+                        });
+                    });
+                }).catch(ex => {
+                    reject(ex);
+                });
+               // dataObject.addPredictedLocation(fingerprint.currentLocation);
             }
         });
     }

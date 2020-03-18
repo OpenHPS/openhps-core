@@ -3,7 +3,7 @@ import { Service } from "./Service";
 
 export class DataService<I, T> extends Service {
     private _dataServiceDriver: { type: new (dataType: new () => T, options?: any) => DataServiceDriver<I, T>, options?: any };
-    private _dataService: DataServiceDriver<I, T>;
+    protected dataService: DataServiceDriver<I, T>;
     private _dataType: new () => T;
 
     constructor(dataType: new () => T, driver: new (dataType: new () => T) => DataServiceDriver<I, T>, options?: any) {
@@ -23,36 +23,36 @@ export class DataService<I, T> extends Service {
 
         if (dataServiceDriver.type !== undefined) {
             this._dataServiceDriver = dataServiceDriver;
-            this._dataService = new this._dataServiceDriver.type(this._dataType, dataServiceDriver.options);
+            this.dataService = new this._dataServiceDriver.type(this._dataType, dataServiceDriver.options);
 
-            this.once("build", (_?: any) => this._dataService.emit("build", _));
-            this.once("destroy", (_?: any) => this._dataService.emit("destroy", _));
-            this._dataService.on("ready", () => this.emit('ready'));
+            this.once("build", (_?: any) => this.dataService.emit("build", _));
+            this.once("destroy", (_?: any) => this.dataService.emit("destroy", _));
+            this.dataService.on("ready", () => this.emit('ready'));
         }
     }
 
     public findOne(filter: any): Promise<T> {
-        return this._dataService.findOne(filter);
+        return this.dataService.findOne(filter);
     }
     
     public findById(id: I): Promise<T> {
-        return this._dataService.findById(id);
+        return this.dataService.findById(id);
     }
 
     public findAll(filter?: any): Promise<T[]> {
-        return this._dataService.findAll(filter);
+        return this.dataService.findAll(filter);
     }
 
     public insert(id: I, object: T): Promise<T> {
-        return this._dataService.insert(id, object);
+        return this.dataService.insert(id, object);
     }
 
     public delete(id: I): Promise<void> {
-        return this._dataService.delete(id);
+        return this.dataService.delete(id);
     }
 
     public deleteAll(): Promise<void> {
-        return this._dataService.deleteAll();
+        return this.dataService.deleteAll();
     }
 
 }

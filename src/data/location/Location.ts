@@ -4,5 +4,5 @@
  */
 // tslint:disable-next-line
 export interface Location {
-
+    timestamp: number;
 }

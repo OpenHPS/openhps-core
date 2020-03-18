@@ -5,7 +5,17 @@ import { LengthUnit } from "../../utils";
 @SerializableObject()
 export abstract class CelestialLocation implements AbsoluteLocation {
     private _accuracy: number;
+    private _timestamp: number = new Date().getTime();
 
+    @SerializableMember()
+    public get timestamp(): number {
+        return this._timestamp;
+    }
+
+    public set timestamp(timestamp: number) {
+        this._timestamp = timestamp;
+    }
+    
     /**
      * Get location accuracy
      */

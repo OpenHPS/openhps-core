@@ -10,6 +10,7 @@ export class RelativeLocation implements Location {
     private _referenceObjectUID: string;
     private _referenceObjectType: string;
     private _referenceValue: number;
+    private _timestamp: number = new Date().getTime();
 
     constructor(referenceObject?: any, referenceValue?: number) {
         if (referenceObject !== undefined) {
@@ -17,6 +18,15 @@ export class RelativeLocation implements Location {
             this.referenceObjectUID = referenceObject.uid;
         }
         this.referenceValue = referenceValue;
+    }
+
+    @SerializableMember()
+    public get timestamp(): number {
+        return this._timestamp;
+    }
+
+    public set timestamp(timestamp: number) {
+        this._timestamp = timestamp;
     }
 
     /**

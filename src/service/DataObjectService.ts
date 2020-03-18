@@ -1,6 +1,6 @@
-import { DataServiceDriver } from "./DataServiceDriver";
 import { DataService } from "./DataService";
 import { DataObject } from "../data";
+import { DataObjectServiceDriver } from "./DataObjectServiceDriver";
 
 /**
  * The object service manages the data of objects that are currently being
@@ -8,7 +8,7 @@ import { DataObject } from "../data";
  */
 export class DataObjectService<T extends DataObject> extends DataService<string, DataObject> {
 
-    constructor(dataType: new () => T | DataObject = DataObject, dataServiceDriver?: new (dataType: new () => T, options?: any) => DataServiceDriver<string, T>, options?: any) {
+    constructor(dataType: new () => T | DataObject = DataObject, dataServiceDriver?: new (dataType: new () => T, options?: any) => DataObjectServiceDriver<string, T>, options?: any) {
         super(dataType as new () => T, dataServiceDriver, options);
     }
 

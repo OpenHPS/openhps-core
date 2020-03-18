@@ -5,3 +5,5 @@ export * from './DataFrameService';
 export * from './MemoryDataServiceDriver';
 export * from './DataServiceDriver';
 export * from './DataService';
+export * from './DataObjectServiceDriver';
+export * from './FingerprintingService';

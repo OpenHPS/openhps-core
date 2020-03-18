@@ -14,11 +14,17 @@ export class GeographicalLocation implements AbsoluteLocation {
     private _amsl: number;
     private _amslUnit: LengthUnit;
     private _accuracy: number;
+    private _timestamp: number = new Date().getTime();
 
     public static EARTH_RADIUS: number = 6371008; 
 
-    constructor() {
-        
+    @SerializableMember()
+    public get timestamp(): number {
+        return this._timestamp;
+    }
+
+    public set timestamp(timestamp: number) {
+        this._timestamp = timestamp;
     }
 
     /**

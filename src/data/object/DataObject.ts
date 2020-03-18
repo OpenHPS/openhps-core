@@ -12,7 +12,6 @@ import { DataSerializer } from '../DataSerializer';
  */
 @SerializableObject()
 export class DataObject {
-    @SerializableMember()
     private _uid: string;
     private _displayName: string;
     private _currentLocationUpdated: boolean = false;
@@ -49,6 +48,7 @@ export class DataObject {
     /**
      * Get the object identifier
      */
+    @SerializableMember()
     public get uid(): string {
         return this._uid;
     }

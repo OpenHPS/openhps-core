@@ -35,6 +35,7 @@
     "system"
   ],
   "dependencies": {
+    "jsonpath-plus": "^3.0.0",
     "mathjs": "^6.5.0",
     "reflect-metadata": "^0.1.13",
     "threads": "^1.0.0",

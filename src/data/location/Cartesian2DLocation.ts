@@ -13,6 +13,16 @@ import { Cartesian3DLocation } from "./Cartesian3DLocation";
 export class Cartesian2DLocation extends Point2D implements AbsoluteLocation {
     private _accuracy: number;
     private _unit: LengthUnit = LengthUnit.POINTS;
+    private _timestamp: number = new Date().getTime();
+
+    @SerializableMember()
+    public get timestamp(): number {
+        return this._timestamp;
+    }
+
+    public set timestamp(timestamp: number) {
+        this._timestamp = timestamp;
+    }
 
     /**
      * Get location accuracy

@@ -1,8 +1,10 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataObject, RelativeDistanceLocation } from '../../../src';
+import { DataObject, RelativeDistanceLocation, Fingerprint, Cartesian2DLocation } from '../../../src';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 import { DataSerializer } from '../../../src/data/DataSerializer';
+import { JSONPath } from 'jsonpath-plus';
+import { isArray } from 'util';
 
 describe('data', () => {
     describe('object', () => {
@@ -21,6 +23,38 @@ describe('data', () => {
             done();
         });
 
+        describe('querying', () => {
+            var fingerprints: Map<string, DataObject> = new Map();
+
+            before(() => {
+                const beacons: Array<DataObject> = new Array();
+                for (let i = 0 ; i < 10 ; i ++) {
+                    const beacon = new DataObject();
+                    beacon.currentLocation = new Cartesian2DLocation(Math.floor(Math.random() * 500) + 0, Math.floor(Math.random() * 500) + 0);
+                    beacons.push(beacon);
+                }
+                const addFingerprint = (data: Fingerprint) => {
+                    fingerprints.set(data.uid, DataSerializer.serialize(data));
+                };
+
+                for (let i = 0 ; i < 250 ; i++) {
+                    const fingerprint = new Fingerprint()
+                    const nrLocations = Math.floor(Math.random() * 8) + 3;
+                    for (let j = 0 ; j < nrLocations ; j++) {
+                        const beacon = beacons[Math.floor(Math.random() * (beacons.length - 1)) + 0]
+                        if (!fingerprint.hasRelativeLocation(beacon.uid)) {
+                            fingerprint.addRelativeLocation(new RelativeDistanceLocation(beacon, Math.floor(Math.random() * 40) + 1))
+                        }
+                    }
+                    addFingerprint(fingerprint);
+                }
+            });
+
+            it('should be queryable', (done) => {
+                const result = JSONPath({path: '$[*].relativeLocations[?(@.distance <= 1)]^^^', json: Array.from(fingerprints.values())});
+                done();
+            });
+        });
     });
 
     describe('sensor object', () => {
