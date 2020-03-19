@@ -1,25 +1,45 @@
-import { DataObject, AbsoluteLocation } from "../data";
+import { DataObject, AbsoluteLocation, DataSerializer } from "../data";
 import { JSONPath } from 'jsonpath-plus';
 import { DataObjectService } from "./DataObjectService";
-
+import { isArray } from "util";
 
 export class MemoryDataObjectService<T extends DataObject> extends DataObjectService<T> {
     protected _data: Map<string, T> = new Map();
 
+    public findByDisplayName(displayName: string): Promise<T[]> {
+        return new Promise<T[]>((resolve, reject) => {
+            const result = JSONPath({ path: `$[?(@.displayName=="${displayName}")]`, json: Array.from(this._data.values()) });
+            const data = new Array();
+            if (isArray(result)) {
+                result.forEach(r => {
+                    data.push(DataSerializer.deserialize(r));
+                });
+            } else {
+                data.push(DataSerializer.deserialize(result));
+            }
+            resolve(data);
+        });
+    }
+
     public findByCurrentLocation(location: AbsoluteLocation): Promise<T[]> {
-        return null;
+        return new Promise<T[]>((resolve, reject) => {
+            const result = JSONPath({ path: `$[*?(JSON.stringify(currentLocation) == "${JSON.stringify(location)}")]`, json: Array.from(this._data.values()) });
+            resolve(result);
+        });
     }
 
     public findByPredictedLocation(location: AbsoluteLocation): Promise<T[]> {
-        return null;
+        return new Promise<T[]>((resolve, reject) => {
+
+        });
     }
 
-    public findById(id: string): Promise<T> {
+    public findByUID(uid: string): Promise<T> {
         return new Promise<T>((resolve, reject) => {
-            if (this._data.has(id)) {
-                resolve(this._data.get(id));
+            if (this._data.has(uid)) {
+                resolve(this._data.get(uid));
             } else {
-                reject(`${this.dataType.name} with identifier #${id} not found!`);
+                reject(`${this.dataType.name} with identifier #${uid} not found!`);
             }
         });
     }

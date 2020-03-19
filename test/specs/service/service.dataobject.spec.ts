@@ -25,7 +25,7 @@ describe('data object', () => {
             objectDataService.insert(object).then(savedObject => {
                 expect(savedObject.uid).to.equal("2");
                 expect(savedObject.displayName).to.equal("Test");
-                objectDataService.findById("2").then(savedObject => {
+                objectDataService.findByUID("2").then(savedObject => {
                     expect(savedObject.uid).to.equal("2");
                     expect(savedObject.displayName).to.equal("Test");
                     done();
@@ -34,7 +34,7 @@ describe('data object', () => {
         });
 
         it('should throw an error when quering non existing objects', (done) => {
-            objectDataService.findById("test").then(savedObject => {
+            objectDataService.findByUID("test").then(savedObject => {
                 
             }).catch(ex => {
                 done();

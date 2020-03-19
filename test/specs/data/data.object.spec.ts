@@ -38,6 +38,7 @@ describe('data', () => {
 
                 for (let i = 0 ; i < 250 ; i++) {
                     const fingerprint = new Fingerprint()
+                    fingerprint.currentLocation = new Cartesian2DLocation(Math.floor(Math.random() * 500) + 0, Math.floor(Math.random() * 500) + 0);
                     const nrLocations = Math.floor(Math.random() * 8) + 3;
                     for (let j = 0 ; j < nrLocations ; j++) {
                         const beacon = beacons[Math.floor(Math.random() * (beacons.length - 1)) + 0]
@@ -50,14 +51,12 @@ describe('data', () => {
             });
 
             it('should be queryable', (done) => {
-                const result = JSONPath({path: '$[*].relativeLocations[?(@.distance <= 1)]^^^', json: Array.from(fingerprints.values())});
+                const values = Array.from(fingerprints.values());
+                // const result = JSONPath({ path: `$[?(JSON.stringify(currentLocation) == "${JSON.stringify(values[1].currentLocation)}")]`, json: values });
+                // console.log(result);
                 done();
             });
 
-            it('should be convertable to array', (done) => {
-                console.log((JSONPath as any).toPathArray('$[*].relativeLocations[?(@.distance <= 1)]^^^'))
-                done();
-            });
         });
     });
 

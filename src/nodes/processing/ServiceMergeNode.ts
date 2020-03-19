@@ -26,7 +26,7 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
                     if (service === null || service === undefined) {
                         service = defaultService;
                     }
-                    service.findById(object.uid).then(existingObject => {
+                    service.findByUID(object.uid).then(existingObject => {
                         if (existingObject === null) {
                             objResolve();
                         }

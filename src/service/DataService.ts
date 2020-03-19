@@ -12,7 +12,7 @@ export abstract class DataService<I, T> extends Service {
         return this._dataType;
     }
     
-    public abstract findById(id: I): Promise<T>;
+    public abstract findByUID(uid: I): Promise<T>;
 
     public abstract findAll(): Promise<T[]>;
 

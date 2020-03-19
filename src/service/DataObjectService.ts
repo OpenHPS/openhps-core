@@ -11,18 +11,10 @@ export abstract class DataObjectService<T extends DataObject> extends DataServic
         super(dataType as new () => T, options);
     }
 
+    public abstract findByDisplayName(displayName: string): Promise<T[]>;
+
     public abstract findByCurrentLocation(location: AbsoluteLocation): Promise<T[]>;
 
     public abstract findByPredictedLocation(location: AbsoluteLocation): Promise<T[]>;
-    
-    public abstract findById(id: string): Promise<T>;
-
-    public abstract findAll(): Promise<T[]>;
-
-    public abstract insert(object: T): Promise<T>;
-
-    public abstract delete(id: string): Promise<void>;
-
-    public abstract deleteAll(): Promise<void>;
 
 }

@@ -76,13 +76,13 @@ export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessing
         const model = (this.graph as Model<any, any>);
         const defaultService = model.findDataService(DataObject);
         if (type === undefined) {
-            return defaultService.findById(uid);
+            return defaultService.findByUID(uid);
         }
         const service = model.findDataServiceByName(type);
         if (service === undefined) {
-            return defaultService.findById(uid);
+            return defaultService.findByUID(uid);
         } else {
-            return service.findById(uid);
+            return service.findByUID(uid);
         }
     }
 

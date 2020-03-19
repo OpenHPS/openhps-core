@@ -3,7 +3,6 @@ import 'mocha';
 import { ModelBuilder, Model, DataFrame, DataObject, RelativeDistanceLocation, MetricLengthUnit, Cartesian2DLocation, StorageSinkNode, CallbackSinkNode, SourceMergeNode, TimeUnit, WorkerNode, TrilaterationNode } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
 import { EvaluationDataFrame } from '../../mock/data/EvaluationDataFrame';
-import * as path from 'path';
 
 describe('dataset', () => {
     describe('liwste2017', () => {
@@ -91,7 +90,7 @@ describe('dataset', () => {
             describe('calibration', () => {
 
                 it('should contain calibration data for beacon A', (done) => {
-                    trackingModel.findDataService(DataObject).findById("beacon_A").then(beacon => {
+                    trackingModel.findDataService(DataObject).findByUID("beacon_A").then(beacon => {
                         expect(beacon).to.not.be.null;
                         expect(beacon.currentLocation).to.be.instanceOf(Cartesian2DLocation);
                         expect((beacon.currentLocation as Cartesian2DLocation).x).to.equal(0.10);
@@ -100,7 +99,7 @@ describe('dataset', () => {
                 });
         
                 it('should contain calibration data for beacon B', (done) => {
-                    trackingModel.findDataService(DataObject).findById("beacon_B").then(beacon => {
+                    trackingModel.findDataService(DataObject).findByUID("beacon_B").then(beacon => {
                         expect(beacon).to.not.be.null;
                         expect(beacon.currentLocation).to.be.instanceOf(Cartesian2DLocation);
                         expect((beacon.currentLocation as Cartesian2DLocation).x).to.equal(2.74);
@@ -109,7 +108,7 @@ describe('dataset', () => {
                 });
         
                 it('should contain calibration data for beacon C', (done) => {
-                    trackingModel.findDataService(DataObject).findById("beacon_C").then(beacon => {
+                    trackingModel.findDataService(DataObject).findByUID("beacon_C").then(beacon => {
                         expect(beacon).to.not.be.null;
                         expect(beacon.currentLocation).to.be.instanceOf(Cartesian2DLocation);
                         expect((beacon.currentLocation as Cartesian2DLocation).x).to.equal(1.22);

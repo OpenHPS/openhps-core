@@ -1,15 +1,62 @@
-import { DataFrame } from "../data";
+import { DataFrame, DataSerializer } from "../data";
 import { DataFrameService } from "./DataFrameService";
+import { JSONPath } from "jsonpath-plus";
+import { isArray } from "util";
 
 export class MemoryDataFrameService<T extends DataFrame> extends DataFrameService<T> {
     protected _data: Map<string, T> = new Map();
     
-    public findById(id: string): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
-            if (this._data.has(id)) {
-                resolve(this._data.get(id));
+    public findByDataObjectUID(uid: string): Promise<T[]> {
+        return new Promise<T[]>((resolve, reject) => {
+            const result = JSONPath({ path: `$[*].objects[?(@.uid == "${uid}")]`, json: Array.from(this._data.values()) });
+            const data = new Array();
+            if (isArray(result)) {
+                result.forEach(r => {
+                    data.push(DataSerializer.deserialize(r));
+                });
             } else {
-                reject(`${this.dataType.name} with identifier #${id} not found!`);
+                data.push(DataSerializer.deserialize(result));
+            }
+            resolve(data);
+        });
+    }
+
+    public findBefore(timestamp: number): Promise<T[]> {
+        return new Promise<T[]>((resolve, reject) => {
+            const result = JSONPath({ path: `$[?(@.createdTimestamp <= ${timestamp})]`, json: Array.from(this._data.values()) });
+            const data = new Array();
+            if (isArray(result)) {
+                result.forEach(r => {
+                    data.push(DataSerializer.deserialize(r));
+                });
+            } else {
+                data.push(DataSerializer.deserialize(result));
+            }
+            resolve(data);
+        });
+    }
+
+    public findAfter(timestamp: number): Promise<T[]> {
+        return new Promise<T[]>((resolve, reject) => {
+            const result = JSONPath({ path: `$[?(@.createdTimestamp > = ${timestamp})]`, json: Array.from(this._data.values()) });
+            const data = new Array();
+            if (isArray(result)) {
+                result.forEach(r => {
+                    data.push(DataSerializer.deserialize(r));
+                });
+            } else {
+                data.push(DataSerializer.deserialize(result));
+            }
+            resolve(data);
+        });
+    }
+
+    public findByUID(uid: string): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
+            if (this._data.has(uid)) {
+                resolve(this._data.get(uid));
+            } else {
+                reject(`${this.dataType.name} with identifier #${uid} not found!`);
             }
         });
     }
