@@ -2,7 +2,6 @@ import { DataFrame, DataObject } from "../../../data";
 import { Service, DataObjectService, DataService } from "../../../service";
 import { GraphImpl } from "./GraphImpl";
 import { Model } from "../../../Model";
-import { DataFrameService } from "../../../service/DataFrameService";
 import { GraphPushOptions } from "../../GraphPushOptions";
 import { MemoryDataObjectService } from "../../../service/MemoryDataObjectService";
 import { MemoryDataFrameService } from "../../../service/MemoryDataFrameService";
@@ -135,7 +134,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
             const servicePromises = new Array();
             if (frameService !== null && frameService !== undefined) { 
                 // Update the frame
-                servicePromises.push(frameService.insert(frame.uid, frame));
+                servicePromises.push(frameService.insert(frame));
             }
 
             Promise.all(servicePromises).then(_1 => {

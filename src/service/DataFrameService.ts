@@ -7,13 +7,11 @@ export abstract class DataFrameService<T extends DataFrame> extends DataService<
         super(dataType as new () => T, options);
     }
 
-    public abstract findOne(filter: any): Promise<T>;
-    
     public abstract findById(id: string): Promise<T>;
 
-    public abstract findAll(filter?: any): Promise<T[]>;
+    public abstract findAll(): Promise<T[]>;
 
-    public abstract insert(id: string, object: T): Promise<T>;
+    public abstract insert(object: T): Promise<T>;
 
     public abstract delete(id: string): Promise<void>;
 

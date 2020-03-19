@@ -14,14 +14,12 @@ export abstract class DataObjectService<T extends DataObject> extends DataServic
     public abstract findByCurrentLocation(location: AbsoluteLocation): Promise<T[]>;
 
     public abstract findByPredictedLocation(location: AbsoluteLocation): Promise<T[]>;
-
-    public abstract findOne(filter: any): Promise<T>;
     
     public abstract findById(id: string): Promise<T>;
 
-    public abstract findAll(filter?: any): Promise<T[]>;
+    public abstract findAll(): Promise<T[]>;
 
-    public abstract insert(id: string, object: T): Promise<T>;
+    public abstract insert(object: T): Promise<T>;
 
     public abstract delete(id: string): Promise<void>;
 

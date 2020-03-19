@@ -1,14 +1,8 @@
 import { DataFrame } from "../data";
-import { JSONPath } from 'jsonpath-plus';
 import { DataFrameService } from "./DataFrameService";
 
 export class MemoryDataFrameService<T extends DataFrame> extends DataFrameService<T> {
     protected _data: Map<string, T> = new Map();
-
-    public findOne(filter: any): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
-        });
-    }
     
     public findById(id: string): Promise<T> {
         return new Promise<T>((resolve, reject) => {
@@ -20,12 +14,8 @@ export class MemoryDataFrameService<T extends DataFrame> extends DataFrameServic
         });
     }
 
-    public findAll(filter?: any): Promise<T[]> {
+    public findAll(): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            if (filter !== undefined) {
-                return resolve(JSONPath({ path: filter, json: Array.from(this._data.values()) }));
-            }
-            
             const data = new Array();
             this._data.forEach(serializedObject => {
                 data.push(serializedObject);
@@ -34,10 +24,10 @@ export class MemoryDataFrameService<T extends DataFrame> extends DataFrameServic
         });
     }
 
-    public insert(id: string, object: T): Promise<T> {
+    public insert(object: T): Promise<T> {
         return new Promise<T>((resolve, reject) => {
-            if (id !== null) {
-                this._data.set(id, object);
+            if (object.uid !== null) {
+                this._data.set(object.uid, object);
                 resolve(object);
             } else {
                 resolve();

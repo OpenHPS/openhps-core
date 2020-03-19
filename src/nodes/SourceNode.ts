@@ -67,7 +67,7 @@ export abstract class SourceNode<Out extends DataFrame> extends AbstractSourceNo
                 
                 if (frameService !== null && frameService !== undefined) { 
                     // Update the frame
-                    servicePromises.push(frameService.insert(frame.uid, frame));
+                    servicePromises.push(frameService.insert(frame));
                 }
 
                 const pushPromises = new Array();

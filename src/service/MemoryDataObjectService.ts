@@ -14,11 +14,6 @@ export class MemoryDataObjectService<T extends DataObject> extends DataObjectSer
         return null;
     }
 
-    public findOne(filter: any): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
-        });
-    }
-    
     public findById(id: string): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             if (this._data.has(id)) {
@@ -29,12 +24,8 @@ export class MemoryDataObjectService<T extends DataObject> extends DataObjectSer
         });
     }
 
-    public findAll(filter?: any): Promise<T[]> {
+    public findAll(): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            if (filter !== undefined) {
-                return resolve(JSONPath({ path: filter, json: Array.from(this._data.values()) }));
-            }
-            
             const data = new Array();
             this._data.forEach(serializedObject => {
                 data.push(serializedObject);
@@ -43,10 +34,10 @@ export class MemoryDataObjectService<T extends DataObject> extends DataObjectSer
         });
     }
 
-    public insert(id: string, object: T): Promise<T> {
+    public insert(object: T): Promise<T> {
         return new Promise<T>((resolve, reject) => {
-            if (id !== null) {
-                this._data.set(id, object);
+            if (object.uid !== null) {
+                this._data.set(object.uid, object);
                 resolve(object);
             } else {
                 resolve();

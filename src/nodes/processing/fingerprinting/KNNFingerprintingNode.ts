@@ -26,7 +26,7 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends ObjectProces
                         fingerprint.addRelativeLocation(relativeLocation);
                     }
                 });
-                fingerprintService.insert(fingerprint.uid, fingerprint);
+                fingerprintService.insert(fingerprint);
             } else {
                 // Perform reverse fingerprinting
                 const distances = new Map<string, Number>();

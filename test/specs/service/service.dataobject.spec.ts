@@ -14,7 +14,7 @@ describe('data object', () => {
             objectDataService = new MemoryDataObjectService(DataObject);
             var object = new DataObject();
             object.displayName = "Test";
-            objectDataService.insert(object.uid, object).then(savedObject => {
+            objectDataService.insert(object).then(savedObject => {
                 done();
             });
         });
@@ -22,7 +22,7 @@ describe('data object', () => {
         it('should store objects', (done) => {
             var object = new DataObject("2");
             object.displayName = "Test";
-            objectDataService.insert(object.uid, object).then(savedObject => {
+            objectDataService.insert(object).then(savedObject => {
                 expect(savedObject.uid).to.equal("2");
                 expect(savedObject.displayName).to.equal("Test");
                 objectDataService.findById("2").then(savedObject => {
@@ -64,7 +64,7 @@ describe('data object', () => {
                     var object = new DummySensorObject("123");
                     object.addPredictedLocation(new Cartesian2DLocation(3,2));
                     object.displayName = "Hello";
-                    objectDataService.insert(object.uid, object).then(savedObject => {
+                    objectDataService.insert(object).then(savedObject => {
                         done();
                     });
                 });

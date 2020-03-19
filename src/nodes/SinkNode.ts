@@ -46,7 +46,7 @@ export abstract class SinkNode<In extends DataFrame> extends AbstractSinkNode<In
                     if (object.uid === null) {
                         object.uid = uuidv4();
                     }
-                    servicePromises.push(service.insert(object.uid, object));
+                    servicePromises.push(service.insert(object));
                 }
 
                 // Check if there are frame services
