@@ -3,8 +3,7 @@ import 'mocha';
 import { DataObject, RelativeDistanceLocation, Fingerprint, Cartesian2DLocation } from '../../../src';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 import { DataSerializer } from '../../../src/data/DataSerializer';
-import { JSONPath } from 'jsonpath-plus';
-import { isArray } from 'util';
+import { JSONPath, JSONPathClass } from 'jsonpath-plus';
 
 describe('data', () => {
     describe('object', () => {
@@ -52,6 +51,11 @@ describe('data', () => {
 
             it('should be queryable', (done) => {
                 const result = JSONPath({path: '$[*].relativeLocations[?(@.distance <= 1)]^^^', json: Array.from(fingerprints.values())});
+                done();
+            });
+
+            it('should be convertable to array', (done) => {
+                console.log((JSONPath as any).toPathArray('$[*].relativeLocations[?(@.distance <= 1)]^^^'))
                 done();
             });
         });

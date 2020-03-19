@@ -1,12 +1,17 @@
+import { DataObject, AbsoluteLocation } from "../data";
 import { JSONPath } from 'jsonpath-plus';
-import { DataObjectServiceDriver } from "./DataObjectServiceDriver";
-import { AbsoluteLocation } from '../data';
+import { DataObjectService } from "./DataObjectService";
 
-export class MemoryDataServiceDriver<I, T> extends DataObjectServiceDriver<I, T> {
-    protected _data: Map<I, T> = new Map();
-    
+
+export class MemoryDataObjectService<T extends DataObject> extends DataObjectService<T> {
+    protected _data: Map<string, T> = new Map();
+
     public findByCurrentLocation(location: AbsoluteLocation): Promise<T[]> {
-        return this.findAll();
+        return null;
+    }
+
+    public findByPredictedLocation(location: AbsoluteLocation): Promise<T[]> {
+        return null;
     }
 
     public findOne(filter: any): Promise<T> {
@@ -14,7 +19,7 @@ export class MemoryDataServiceDriver<I, T> extends DataObjectServiceDriver<I, T>
         });
     }
     
-    public findById(id: I): Promise<T> {
+    public findById(id: string): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             if (this._data.has(id)) {
                 resolve(this._data.get(id));
@@ -38,7 +43,7 @@ export class MemoryDataServiceDriver<I, T> extends DataObjectServiceDriver<I, T>
         });
     }
 
-    public insert(id: I, object: T): Promise<T> {
+    public insert(id: string, object: T): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             if (id !== null) {
                 this._data.set(id, object);
@@ -49,7 +54,7 @@ export class MemoryDataServiceDriver<I, T> extends DataObjectServiceDriver<I, T>
         });
     }
 
-    public delete(id: I): Promise<void> {
+    public delete(id: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (this._data.has(id)) {
                 this._data.delete(id);
@@ -66,8 +71,5 @@ export class MemoryDataServiceDriver<I, T> extends DataObjectServiceDriver<I, T>
             resolve();
         });
     }
-
-    public get rawData(): Map<I, T> {
-        return this._data;
-    }
+    
 }

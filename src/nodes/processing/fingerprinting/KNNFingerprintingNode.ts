@@ -1,7 +1,6 @@
 import { DataFrame, DataObject, RelativeDistanceLocation, Fingerprint } from "../../../data";
 import { ObjectProcessingNode } from "../../ObjectProcessingNode";
 import { Model } from "../../../Model";
-import { FingerprintingService } from "../../../service/FingerprintingService";
 
 /**
  * Fingerprinting processing node
@@ -15,7 +14,7 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends ObjectProces
     public processObject(dataObject: DataObject, dataFrame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             // Fingerprinting service
-            const fingerprintService = (this.graph as Model<any, any>).findServiceByClass(FingerprintingService);
+            const fingerprintService = (this.graph as Model<any, any>).findDataService(Fingerprint);
             
             if (dataObject.currentLocation !== undefined) {
                 // Perform fingerprint calibration

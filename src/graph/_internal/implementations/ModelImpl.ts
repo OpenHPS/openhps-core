@@ -1,9 +1,11 @@
 import { DataFrame, DataObject } from "../../../data";
-import { Service, DataObjectService, DataService, DataServiceDriver, MemoryDataServiceDriver } from "../../../service";
+import { Service, DataObjectService, DataService } from "../../../service";
 import { GraphImpl } from "./GraphImpl";
 import { Model } from "../../../Model";
 import { DataFrameService } from "../../../service/DataFrameService";
 import { GraphPushOptions } from "../../GraphPushOptions";
+import { MemoryDataObjectService } from "../../../service/MemoryDataObjectService";
+import { MemoryDataFrameService } from "../../../service/MemoryDataFrameService";
 
 /**
  * [[Model]] implementation
@@ -11,7 +13,6 @@ import { GraphPushOptions } from "../../GraphPushOptions";
 export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends GraphImpl<In, Out> implements Model<In, Out> {
     private _services: Map<string, Service> = new Map();
     private _dataServices: Map<string, DataService<any, any>> = new Map();
-    private _defaultDataServiceDriver: { type: new (dataType: new () => any) => DataServiceDriver<any, any>, options?: any };
 
     /**
      * Create a new OpenHPS model
@@ -29,20 +30,12 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
 
     private _onModelBuild(_: any): Promise<void> {
         return new Promise((resolve, reject) => {
-            if (this._defaultDataServiceDriver === undefined) {
-                this.setDefaultDataServiceDriver({ type: MemoryDataServiceDriver });
-            }
-
             const buildPromises = new Array();
             this._services.forEach(service => {
                 buildPromises.push(service.emitAsync('build'));
             });
             this._dataServices.forEach(service => {
                 // Check that the service has a driver
-                if (service.dataServiceDriver === undefined) {
-                    service.dataServiceDriver = this._defaultDataServiceDriver;
-                }
-
                 buildPromises.push(service.emitAsync('build'));
             });
             this.nodes.forEach(node => {
@@ -69,7 +62,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
             this.nodes.forEach(node => {
                 destroyPromises.push(node.emit('destroy', _));
             });
-            Promise.all(destroyPromises).then(_2 => {
+            Promise.all(destroyPromises).then(() => {
                 resolve();
             }).catch(ex => {
                 reject(ex);
@@ -78,8 +71,8 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
     }
 
     private _addDefaultServices(): void {
-        this.addService(new DataObjectService<DataObject>());
-        this.addService(new DataFrameService<DataFrame>());
+        this.addService(new MemoryDataObjectService<DataObject>());
+        this.addService(new MemoryDataFrameService<DataFrame>());
     }
 
     public findServiceByName<F extends Service>(name: string): F {
@@ -118,10 +111,6 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
         return this.findDataServiceByName(dataObject.constructor.name);
     }
 
-    public setDefaultDataServiceDriver(dataServiceDriver: { type: new (dataType: new () => any) => DataServiceDriver<any, any>, options?: any }): void {
-        this._defaultDataServiceDriver = dataServiceDriver;
-    }
-
     /**
      * Add service to model
      * @param service Service
@@ -129,9 +118,6 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
     public addService(service: Service): void {
         if (service instanceof DataService) {
             // Data service
-            if (service.dataServiceDriver === undefined) {
-                service.dataServiceDriver = this._defaultDataServiceDriver;
-            }
             this._dataServices.set(service.name, service);
         } else {
             // Normal service

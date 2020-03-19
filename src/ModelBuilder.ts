@@ -1,5 +1,5 @@
 import { Model } from "./Model";
-import { Service, DataServiceDriver } from "./service";
+import { Service } from "./service";
 import { DataFrame } from "./data";
 import { ModelImpl } from './graph/_internal/implementations/ModelImpl';
 import { GraphBuilder } from "./graph/builders/GraphBuilder";
@@ -32,11 +32,6 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
      */
     public withLogger(logger: (level: string, log: any) => void): ModelBuilder<In, Out> {
         this.graph.logger = logger;
-        return this;
-    }
-
-    public usingDataServiceDriver(driver: new (dataType: new () => any, options?: any) => DataServiceDriver<any, any>, options?: any): ModelBuilder<In, Out> {
-        this.graph.setDefaultDataServiceDriver({ type: driver, options });
         return this;
     }
 
