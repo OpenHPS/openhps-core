@@ -1,15 +1,18 @@
 import { ModelBuilder } from "../../ModelBuilder";
-import { expose } from "threads";
-import { DataSerializer } from "../../data";
+import { DataSerializer, DataObject } from "../../data";
 import { Model } from "../../Model";
 import { Subject, Observable } from 'threads/observable';
 import { CallbackSinkNode } from "../sink";
 import { GraphPushOptions, GraphPullOptions } from "../../graph";
 import { CallbackSourceNode } from "../source";
+import { expose } from "threads";
+import { WorkerDataObjectService } from "../../service/WorkerDataObjectService";
 
 let model: Model<any, any>;
 const input: Subject<{ options?: GraphPullOptions }> = new Subject();
 const output: Subject<{ data: any, options?: GraphPushOptions }> = new Subject();
+const serviceInput: Subject<{ id: string, serviceName: string, method: string, parameters: any }> = new Subject();
+const serviceOutput: Subject<{ id: string, success: boolean, result?: any}> = new Subject();
 
 expose({
     /**
@@ -23,6 +26,9 @@ expose({
         // tslint:disable-next-line
         const builderCallback = eval(workerData.builderCallback);
         const modelBuilder = new ModelBuilder();
+        // Add remote worker services
+        modelBuilder.addService(new WorkerDataObjectService(DataObject, serviceInput, serviceOutput));
+        // Add source node with input observable
         const traversalBuilder = modelBuilder.from(new CallbackSourceNode((options?: GraphPullOptions) => {
             input.next({ options: DataSerializer.serialize(options) });
             return null;
@@ -51,10 +57,22 @@ expose({
     push(data: any, options: any): Promise<void> {
         return model.push(DataSerializer.deserialize(data), DataSerializer.deserialize(options));
     },
+    /**
+     * Input observable for pull requests
+     */
     input(): Observable<{ options?: GraphPullOptions }> {
         return Observable.from(input);
     },
+    /**
+     * Output observable for push requests
+     */
     output(): Observable<{ data: any, options?: GraphPushOptions }> {
         return Observable.from(output);
+    },
+    serviceInput(): Observable<{ id: string, serviceName: string, method: string, parameters: any }> {
+        return Observable.from(serviceInput);
+    },
+    serviceOutput(id: string, success: boolean, result?: any) {
+        serviceOutput.next({ id, success, result });
     }
 });

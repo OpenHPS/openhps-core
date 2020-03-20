@@ -11,7 +11,8 @@ import { GraphBuilder } from "./graph/builders/GraphBuilder";
  * ```typescript
  * const model = new ModelBuilder()
  *      .withLogger((level: string, log:any) => { console.log(log); })
- *      .to(...)
+ *      .from(...)
+ *      .via(...)
  *      .to(...)
  *      .addService(...)
  *      .build();

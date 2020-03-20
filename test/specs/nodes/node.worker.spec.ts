@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Model, ModelBuilder, DataFrame, WorkerProcessingNode, WorkerNode, CallbackSinkNode } from '../../../src';
+import { Model, ModelBuilder, DataFrame, WorkerProcessingNode, WorkerNode, CallbackSinkNode, DataObject } from '../../../src';
 import * as path from 'path';
 
 describe('node', () => {
@@ -136,5 +136,35 @@ describe('node', () => {
                     });
                 });
         }).timeout(30000);
+
+        it('should be able to access services', (done) => {
+            new ModelBuilder()
+                .from()
+                .via(new WorkerNode((builder) => {
+                    const { DataServiceTestNode } = require(path.join(__dirname, '../../mock/nodes/DataServiceTestNode'));
+                    builder.via(new DataServiceTestNode());
+                }, {
+                    directory: __dirname,
+                    poolSize: 1
+                }))
+                .to(new CallbackSinkNode((data: DataFrame) => {
+                    expect(data.getObjects()[0].uid).to.equal("abc456");
+                    expect(data.getObjects()[0].displayName).to.equal("hello world");
+                }))
+                .build().then(model => {
+                    const dataService = model.findDataService(DataObject);
+                    dataService.insert(new DataObject("abc456")).then(() => {
+                        Promise.all([
+                            model.push(new DataFrame())
+                        ]).then(_ => {
+                            model.emit('destroy');
+                            dataService.findByUID("abc456").then(object => {
+                                expect(object.displayName).to.equal("hello world");
+                                done();
+                            });
+                        });
+                    });
+                });
+        }).timeout(50000);
     });
 });

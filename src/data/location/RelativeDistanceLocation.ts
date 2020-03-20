@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { RelativeLocation } from "./RelativeLocation";
 import { LengthUnit, Unit } from "../../utils";
 import { SerializableObject, SerializableMember } from '../decorators';

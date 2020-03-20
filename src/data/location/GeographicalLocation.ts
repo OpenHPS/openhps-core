@@ -14,6 +14,7 @@ export class GeographicalLocation implements AbsoluteLocation {
     private _amsl: number;
     private _amslUnit: LengthUnit;
     private _accuracy: number;
+    private _accuracyUnit: LengthUnit;
     private _timestamp: number = new Date().getTime();
 
     public static EARTH_RADIUS: number = 6371008; 
@@ -46,8 +47,13 @@ export class GeographicalLocation implements AbsoluteLocation {
     /**
      * Get accuracy unit
      */
+    @SerializableMember()
     public get accuracyUnit(): LengthUnit {
-        return LengthUnit.POINTS;
+        return this._accuracyUnit;
+    }
+
+    public set accuracyUnit(unit: LengthUnit) {
+        this._accuracyUnit = unit;
     }
 
     /**

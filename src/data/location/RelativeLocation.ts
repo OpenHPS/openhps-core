@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Location } from "./Location";
 import { SerializableObject, SerializableMember } from '../decorators';
 

@@ -2,9 +2,11 @@ import { DataFrame, DataSerializer } from "../data";
 import { GraphPushOptions, GraphPullOptions } from "../graph";
 import { Node } from "../Node";
 import { Thread, Worker, spawn, Pool } from "threads";
-import { Observable } from "threads/observable";
+import { Observable, Subject } from "threads/observable";
 import { GraphShapeBuilder } from "../graph/builders";
 import { PoolEvent } from "threads/dist/master/pool";
+import { Model } from "../Model";
+import { isArray } from "util";
 
 /**
  * 
@@ -31,6 +33,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
     private _pool: Pool<Thread>;
     private _builderCallback: (builder: GraphShapeBuilder<any>) => void;
     private _options: WorkerNodeOptions;
+    private _serviceOutputFn: (id: string, success: boolean, result?: any) => Promise<void>;
 
     constructor(builderCallback: (builder: GraphShapeBuilder<any>) => void, options: WorkerNodeOptions = new WorkerNodeOptions()) {
         super();
@@ -105,32 +108,16 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                 const initFn: (workerData: any) => Promise<void> = (thread as any).init;
                 const outputFn: () => Observable<{ data: any, options?: GraphPushOptions }> = (thread as any).output;
                 const inputFn: () => Observable<{ options?: GraphPullOptions }> = (thread as any).input;
+                const serviceInput: () => Observable<{ id: string, serviceName: string, method: string, parameters: any }> = (thread as any).serviceInput;
+                this._serviceOutputFn = (thread as any).serviceOutput;
 
                 this.logger('debug', {
                     message: "Worker thread spawned!",
                 });
 
-                inputFn().subscribe((value: any) => {
-                    const deserializedOptions = DataSerializer.deserialize(value.options) as GraphPullOptions;
-
-                    const pullPromises = new Array();
-                    this.inputNodes.forEach(node => {
-                        pullPromises.push(node.pull(deserializedOptions));
-                    });
-    
-                    Promise.all(pullPromises);
-                });
-                outputFn().subscribe((value: any) => {
-                    const deserializedData = DataSerializer.deserialize(value.data);
-                    const deserializedOptions = DataSerializer.deserialize(value.options);
-
-                    const pushPromises = new Array();
-                    this.outputNodes.forEach(node => {
-                        pushPromises.push(node.push(deserializedData, deserializedOptions));
-                    });
-    
-                    Promise.all(pushPromises);
-                });
+                inputFn().subscribe(this._onWorkerPull.bind(this));
+                outputFn().subscribe(this._onWorkerPush.bind(this));
+                serviceInput().subscribe(this._onWorkerService.bind(this));
 
                 initFn({
                     dirname: this._options.directory,
@@ -142,6 +129,60 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                 });
             });
         });
+    }
+
+    private _onWorkerService(value: { id: string, serviceName: string, method: string, parameters: any }): void {
+        const model = (this.graph as Model<any, any>);
+        const service = model.findDataServiceByName(value.serviceName);
+        if ((service as any)[value.method]) {
+            const serializedParams = value.parameters;
+            const params = new Array();
+            serializedParams.forEach((param: any) => {
+                if (param["__type"]) {
+                    params.push(DataSerializer.deserialize(param));
+                } else {
+                    params.push(param);
+                }
+            });
+            const promise = (service as any)[value.method](...params) as Promise<any>;
+            promise.then(_ => {
+                if (isArray(_)) {
+                    const result = new Array();
+                    _.forEach(r => {
+                        result.push(DataSerializer.serialize(r));
+                    });
+                    Promise.resolve(this._serviceOutputFn(value.id, true, result));
+                } else {
+                    const result = DataSerializer.serialize(_);
+                    Promise.resolve(this._serviceOutputFn(value.id, true, result));
+                }
+            }).catch(ex => {
+                Promise.resolve(this._serviceOutputFn(value.id, false, ex));
+            });
+        }
+    }
+
+    private _onWorkerPull(value: { options?: GraphPullOptions }): void {
+        const deserializedOptions = DataSerializer.deserialize(value.options) as GraphPullOptions;
+
+        const pullPromises = new Array();
+        this.inputNodes.forEach(node => {
+            pullPromises.push(node.pull(deserializedOptions));
+        });
+
+        Promise.all(pullPromises);
+    }
+
+    private _onWorkerPush(value: { data: any, options?: GraphPushOptions }): void {
+        const deserializedData = DataSerializer.deserialize(value.data);
+        const deserializedOptions = DataSerializer.deserialize(value.options);
+
+        const pushPromises = new Array();
+        this.outputNodes.forEach(node => {
+            pushPromises.push(node.push(deserializedData, deserializedOptions));
+        });
+
+        Promise.all(pushPromises);
     }
 
     private _onBuild(): Promise<void> {

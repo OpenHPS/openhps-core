@@ -29,27 +29,31 @@ export interface Model<In extends DataFrame, Out extends DataFrame> extends Grap
     pull(options?: GraphPullOptions): Promise<void>;
 
     /**
-     * Get service by name
+     * Find service by name
      * @param name Service name
      */
     findServiceByName<F extends Service>(name: string): F;
 
     /**
-     * Get service by name
+     * Find service by name
      * @param name Service name
      */
     findServiceByClass<F extends Service>(serviceClass: new () => F): F;
 
+    /**
+     * Find data service by name
+     * @param name Name of the data service
+     */
     findDataServiceByName<F extends DataService<any, any>>(name: string): F;
     
     /**
-     * Get data service by data type
+     * Find data service by data type
      * @param dataType Data type
      */
     findDataService<D extends DataObject, F extends DataService<any, D>>(dataType: new () => D): F;
 
     /**
-     * Get data service by data object
+     * Find data service by data object
      * @param dataObject Data object instance
      */
     findDataServiceByObject<D extends DataObject, F extends DataService<any, D>>(dataObject: D): F;
