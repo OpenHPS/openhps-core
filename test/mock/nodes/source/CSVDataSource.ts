@@ -6,11 +6,13 @@ import * as csv from 'csv-parser';
 export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
     private _rowCallback: (row: any) => Out;
     private _file: string;
+    private _headers: string[];
     
-    constructor(file: string, rowCallback: (row: any) => Out) {
+    constructor(file: string, rowCallback: (row: any) => Out, headers?: string[]) {
         super([], new DataObject(path.basename(file)));
         this._rowCallback = rowCallback;
         this._file = file;
+        this._headers = headers;
 
         this.once("build", this._initCSV.bind(this));
     }
@@ -19,7 +21,7 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
         return new Promise((resolve, reject) => {
             const inputData = new Array();
             fs.createReadStream(this._file)
-            .pipe(csv())
+            .pipe(csv(this._headers))
             .on('data', (row: any) => {
                 const frame = this._rowCallback(row);
                 if (frame.source === undefined) {
