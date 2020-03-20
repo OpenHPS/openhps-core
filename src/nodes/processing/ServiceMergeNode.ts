@@ -18,8 +18,6 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
             data.getObjects().forEach(object => {
                 objects.push(object);
             });
-            if (data.source !== undefined)
-                objects.push(data.source);
             objects.forEach(object => {
                 promises.push(new Promise((objResolve, objReject) => {
                     let service = model.findDataServiceByObject(object);

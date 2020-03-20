@@ -100,7 +100,7 @@ describe('node', () => {
                     ]).then(_ => {
                         const end = new Date().getTime();
                         const diff = end - start;
-                        expect(diff).to.be.lessThan(45);
+                        expect(diff).to.be.lessThan(50);
                         model.emit('destroy');
                         done();
                     });
@@ -130,7 +130,7 @@ describe('node', () => {
                     ]).then(_ => {
                         const end = new Date().getTime();
                         const diff = end - start;
-                        expect(diff).to.be.lessThan(35);
+                        expect(diff).to.be.lessThan(40);
                         model.emit('destroy');
                         done();
                     });

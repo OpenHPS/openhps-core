@@ -44,6 +44,7 @@ export class DataFrame {
      * @param source Object that captured the data frame
      */
     public set source(source: DataObject) {
+        this.addObject(source);
         this._source = source;
     }
 

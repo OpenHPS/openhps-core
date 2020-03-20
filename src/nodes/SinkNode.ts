@@ -24,8 +24,6 @@ export abstract class SinkNode<In extends DataFrame> extends AbstractSinkNode<In
                 data.getObjects().forEach(object => {
                     objects.push(object);
                 });
-                if (data.source !== undefined)
-                    objects.push(data.source);
 
                 for (const object of objects) {
                     // Check if current location needs to be updated
