@@ -97,6 +97,8 @@ export class DataFrame {
      * @param object Relevant object
      */
     public addObject(object: DataObject): void {
+        if (object === undefined)
+            return;
         this._objects.set(object.uid, object);
     }
 
