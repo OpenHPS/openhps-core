@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.117](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.116...v1.0.0-alpha.117) (2020-03-20)
+
+
+### Features
+
+* added worker frame service ([1908dbb](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/1908dbb5e3a2ed17d4341a84705c8727272ee9c1))
+* triangulation for 2D locations ([a54ae03](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/a54ae032dfaf77ab7ee77bfe574ad2c6014f5dd1))
+* worker service ([94c6f57](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/94c6f57bd4ec383f8d6f8cb4f1b1c2548c566de2))
+
 ## [1.0.0-alpha.116](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.115...v1.0.0-alpha.116) (2020-03-19)
 
 ## [1.0.0-alpha.115](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.114...v1.0.0-alpha.115) (2020-03-19)
