@@ -1,15 +1,15 @@
-import { DataObject, AbsoluteLocation, DataSerializer } from "../data";
-import { DataObjectService } from "./DataObjectService";
+import { DataSerializer, DataFrame } from "../data";
 import { Subject } from "threads/observable";
 import * as uuidv4 from 'uuid/v4';
 import { isArray } from "util";
+import { DataFrameService } from "./DataFrameService";
 
-export class WorkerDataObjectService<T extends DataObject> extends DataObjectService<T> {
+export class WorkerDataFrameService<T extends DataFrame> extends DataFrameService<T> {
     private _inputObservable: Subject<{ id: string, serviceName: string, method: string, parameters: any }>;
     private _outputObservable: Subject<{ id: string, success: boolean, result?: any}>;
     private _promises: Map<string, { resolve: (data?: any) => void, reject: (ex?: any) => void }> = new Map();
 
-    constructor(dataType: new () => T | DataObject = DataObject, 
+    constructor(dataType: new () => T | DataFrame = DataFrame, 
                 inputObservable: Subject<{ id: string, serviceName: string, method: string, parameters: any }>, 
                 outputObservable: Subject<{ id: string, success: boolean, result?: any}>,
                 options?: any) {
@@ -49,41 +49,41 @@ export class WorkerDataObjectService<T extends DataObject> extends DataObjectSer
         }
     }
 
-    public findByDisplayName(displayName: string): Promise<T[]> {
+    public findByDataObjectUID(uid: string): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
             const uuid = uuidv4();
             this._promises.set(uuid, { resolve, reject });
             this._inputObservable.next({
                 id: uuid,
                 serviceName: this.dataType.name,
-                method: "findByDisplayName",
-                parameters: [displayName]
+                method: "findByDataObjectUID",
+                parameters: [uid]
             });
         });
     }
 
-    public findByCurrentLocation(location: AbsoluteLocation): Promise<T[]> {
+    public findBefore(timestamp: number): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
             const uuid = uuidv4();
             this._promises.set(uuid, { resolve, reject });
             this._inputObservable.next({
                 id: uuid,
                 serviceName: this.dataType.name,
-                method: "findByCurrentLocation",
-                parameters: [DataSerializer.serialize(location)]
+                method: "findBefore",
+                parameters: [timestamp]
             });
         });
     }
 
-    public findByPredictedLocation(location: AbsoluteLocation): Promise<T[]> {
+    public findAfter(timestamp: number): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
             const uuid = uuidv4();
             this._promises.set(uuid, { resolve, reject });
             this._inputObservable.next({
                 id: uuid,
                 serviceName: this.dataType.name,
-                method: "findByPredictedLocation",
-                parameters: [DataSerializer.serialize(location)]
+                method: "findAfter",
+                parameters: [timestamp]
             });
         });
     }

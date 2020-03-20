@@ -1,5 +1,5 @@
 import { ModelBuilder } from "../../ModelBuilder";
-import { DataSerializer, DataObject } from "../../data";
+import { DataSerializer, DataObject, DataFrame } from "../../data";
 import { Model } from "../../Model";
 import { Subject, Observable } from 'threads/observable';
 import { CallbackSinkNode } from "../sink";
@@ -7,6 +7,7 @@ import { GraphPushOptions, GraphPullOptions } from "../../graph";
 import { CallbackSourceNode } from "../source";
 import { expose } from "threads";
 import { WorkerDataObjectService } from "../../service/WorkerDataObjectService";
+import { WorkerDataFrameService } from "../../service/WorkerDataFrameService";
 
 let model: Model<any, any>;
 const input: Subject<{ options?: GraphPullOptions }> = new Subject();
@@ -28,6 +29,7 @@ expose({
         const modelBuilder = new ModelBuilder();
         // Add remote worker services
         modelBuilder.addService(new WorkerDataObjectService(DataObject, serviceInput, serviceOutput));
+        modelBuilder.addService(new WorkerDataFrameService(DataFrame, serviceInput, serviceOutput));
         // Add source node with input observable
         const traversalBuilder = modelBuilder.from(new CallbackSourceNode((options?: GraphPullOptions) => {
             input.next({ options: DataSerializer.serialize(options) });
