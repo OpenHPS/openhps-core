@@ -1,6 +1,7 @@
-import { SensorObject, DataObject, DataFrame, RelativeAngleLocation } from "../../data";
+import { SensorObject, DataObject, DataFrame, RelativeAngleLocation, GeographicalLocation, Cartesian2DLocation, Cartesian3DLocation } from "../../data";
 import { ObjectProcessingNode } from "../ObjectProcessingNode";
 import { Model } from "../../Model";
+import { AngleUnit } from "../../utils";
 
 /**
  * Triangulation processing node
@@ -15,7 +16,7 @@ export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessing
         super(filter);
     }
 
-    public processObject(dataObject: SensorObject): Promise<DataObject> {
+    public processObject(dataObject: SensorObject, dataFrame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             const referencePromises = new Array();
             const index = new Map<string, RelativeAngleLocation[]>();
@@ -27,7 +28,7 @@ export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessing
                     } else {
                         index.set(relativeLocation.referenceObjectUID, [relativeLocation]);
                     }
-                    referencePromises.push(this._findObjectByName(relativeLocation.referenceObjectUID, relativeLocation.referenceObjectType));
+                    referencePromises.push(this._findObjectByName(relativeLocation.referenceObjectUID, relativeLocation.referenceObjectType, dataFrame));
                 }
             }
 
@@ -51,7 +52,7 @@ export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessing
                     const object = objectCache.get(filteredRelativeLocation.referenceObjectUID);
                     objects.push(object);
                     points.push(object.currentLocation);
-                    angles.push(filteredRelativeLocation.angle);
+                    angles.push(filteredRelativeLocation.angleUnit.convert(filteredRelativeLocation.angle, AngleUnit.RADIANS));
                 });
 
                 switch (filteredRelativeLocations.length) {
@@ -62,6 +63,23 @@ export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessing
                     case 2:
                         break;
                     case 3:
+                        switch (true) {
+                            case objects[0].currentLocation instanceof Cartesian3DLocation:
+                                break;
+                            case objects[0].currentLocation instanceof Cartesian2DLocation:
+                                Cartesian2DLocation.triangulate(points, angles).then(location => {
+                                    if (location !== null)
+                                        dataObject.addPredictedLocation(location);
+                                    resolve(dataObject);
+                                }).catch(ex => {
+                                    reject(ex);
+                                });
+                                break;
+                            case objects[0].currentLocation instanceof GeographicalLocation:
+                                break;
+                            default:
+                                resolve(dataObject);
+                        }
                         break;
                     default:
                         break;
@@ -72,7 +90,13 @@ export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessing
         });
     }
 
-    private _findObjectByName(uid: string, type: string): Promise<DataObject> {
+    private _findObjectByName(uid: string, type: string, dataFrame: InOut): Promise<DataObject> {
+        if (dataFrame.hasObject(new DataObject(uid))) {
+            return new Promise<DataObject>((resolve, reject) => {
+                resolve(dataFrame.getObjectByUID(uid));
+            });
+        }
+
         const model = (this.graph as Model<any, any>);
         const defaultService = model.findDataService(DataObject);
         if (type === undefined) {

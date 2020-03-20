@@ -15,7 +15,7 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
         super(filter);
     }
 
-    public processObject(dataObject: SensorObject): Promise<DataObject> {
+    public processObject(dataObject: SensorObject, dataFrame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             const referencePromises = new Array();
             const index = new Map<string, RelativeDistanceLocation[]>();
@@ -27,7 +27,7 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
                     } else {
                         index.set(relativeLocation.referenceObjectUID, [relativeLocation]);
                     }
-                    referencePromises.push(this._findObjectByName(relativeLocation.referenceObjectUID, relativeLocation.referenceObjectType));
+                    referencePromises.push(this._findObjectByName(relativeLocation.referenceObjectUID, relativeLocation.referenceObjectType, dataFrame));
                 }
             }
 
@@ -101,7 +101,13 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
         });
     }
 
-    private _findObjectByName(uid: string, type: string): Promise<DataObject> {
+    private _findObjectByName(uid: string, type: string, dataFrame: InOut): Promise<DataObject> {
+        if (dataFrame.hasObject(new DataObject(uid))) {
+            return new Promise<DataObject>((resolve, reject) => {
+                resolve(dataFrame.getObjectByUID(uid));
+            });
+        }
+
         const model = (this.graph as Model<any, any>);
         const defaultService = model.findDataService(DataObject);
         if (type === undefined) {

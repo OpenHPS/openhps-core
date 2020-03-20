@@ -20,6 +20,9 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame> extends Proc
                 data.getObjects().forEach(object => {
                     processObjectPromises.push(this.processObject(object, data));
                 });
+                if (data.source !== undefined) {
+                    processObjectPromises.push(this.processObject(data.source, data));
+                }
             } else {
                 data.getObjects().forEach(object => {
                     this._filter.forEach(dataType => {
@@ -28,6 +31,13 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame> extends Proc
                         }
                     });
                 });
+                if (data.source !== undefined) {
+                    this._filter.forEach(dataType => {
+                        if (data.source instanceof dataType) {
+                            processObjectPromises.push(this.processObject(data.source, data));
+                        }
+                    });
+                }
             }
             Promise.all(processObjectPromises).then(objects => {
                 objects.forEach(object => {

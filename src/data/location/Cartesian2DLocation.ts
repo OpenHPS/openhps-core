@@ -86,4 +86,41 @@ export class Cartesian2DLocation extends Point2D implements AbsoluteLocation {
         });
     }
 
+    /**
+     * Triangulate a cartesian 2d location
+     * 
+     * @source https://ieeexplore.ieee.org/document/6693716?tp=&arnumber=6693716
+     * @param points 
+     * @param angles 
+     */
+    public static triangulate(points: Cartesian2DLocation[], angles: number[]): Promise<Cartesian2DLocation> {
+        return new Promise<Cartesian2DLocation>((resolve, reject) => {
+            const x1 = points[0].x - points[1].x;
+            const y1 = points[0].y - points[1].y;
+            const x3 = points[2].x - points[1].x;
+            const y3 = points[2].y - points[1].y;
+    
+            const t12 = 1 / Math.tan(angles[1] - angles[0]);
+            const t23 = 1 / Math.tan(angles[2] - angles[1]);
+            const t31 = (1 - t12 * t23) / (t12 + t23);
+            
+            const x12 = x1 + t12 * y1;
+            const y12 = y1 - t12 * x1;
+            const x23 = x3 - t23 * y3;
+            const y23 = y3 + t23 * x3;
+            const x31 = (x3 + x1) + t31 * (y3 - y1);
+            const y31 = (y3 + y1) - t31 * (x3 - x1);
+    
+            const k31 = x1 * x3 + y1 * y3 + t31 * (x1 * y3 - x3 * y1);
+            const d = (x12 - x23) * (y23 - y31) - (y12 - y23) * (x23 - x31);
+            if (d === 0) {
+                return reject();
+            }
+            const xr = points[1].x + ((k31 * (y12 - y23)) / d);
+            const yr = points[1].y + ((k31 * (x23 - x12)) / d);
+            const point2d = new Cartesian2DLocation(xr, yr);
+            resolve(point2d);
+        });
+    }
+
 }
