@@ -28,7 +28,7 @@ export class SourceMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
         this._timeoutUnit = timeoutUnit;
 
         this.once('build', this._start.bind(this));
-        this.on('destroy', this._stop.bind(this));
+        this.once('destroy', this._stop.bind(this));
     }
 
     /**
@@ -43,7 +43,7 @@ export class SourceMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
                     this.outputNodes.forEach(node => {
                         pushPromises.push(node.push(mergedFrame));
                     });
-                    Promise.all(pushPromises).then(_2 => {
+                    Promise.all(pushPromises).then(() => {
                         resolve();
                     }).catch(ex => {
                         reject(ex);
@@ -57,7 +57,7 @@ export class SourceMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
 
     private _stop(): void {
         if (this._timer !== undefined) {
-            clearTimeout(this._timer);
+            clearInterval(this._timer);
         }
     }
 
@@ -67,7 +67,7 @@ export class SourceMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
                 return resolve();
             }
 
-            this._frameBuffer.set(data.source.uid, data);
+            this._frameBuffer.set(data.uid, data);
             if (this._frameBuffer.size >= this.inputNodes.length) {
                 this._timer.refresh();
                 resolve(this._merge());
@@ -89,6 +89,12 @@ export class SourceMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
                     const existingObject = mergedFrame.getObjectByUID(object.uid);
                     object.relativeLocations.forEach(value => {
                         existingObject.addRelativeLocation(value);
+                    });
+                    if (existingObject.currentLocation === undefined) {
+                        existingObject.currentLocation = object.currentLocation;
+                    }
+                    object.predictedLocations.forEach(value => {
+                        existingObject.addPredictedLocation(value);
                     });
                 } else {
                     // Add object

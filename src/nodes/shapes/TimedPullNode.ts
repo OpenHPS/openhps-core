@@ -53,7 +53,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
     private _stop(): void {
         if (this._timer !== undefined) {
-            clearTimeout(this._timer);
+            clearInterval(this._timer);
         }
     }
 

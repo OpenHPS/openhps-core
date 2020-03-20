@@ -41,7 +41,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         this._options = options;
 
         this._worker = new Worker('_internal/WorkerNodeRunner');
-        
+
         this.once('build', this._onBuild.bind(this));
         this.once('destroy', this._onDestroy.bind(this));
         this.on('pull', this._onPull.bind(this));

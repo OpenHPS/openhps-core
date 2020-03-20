@@ -157,9 +157,9 @@ describe('node', () => {
                         Promise.all([
                             model.push(new DataFrame())
                         ]).then(_ => {
-                            model.emit('destroy');
                             dataService.findByUID("abc456").then(object => {
                                 expect(object.displayName).to.equal("hello world");
+                                model.emit('destroy');
                                 done();
                             });
                         });
