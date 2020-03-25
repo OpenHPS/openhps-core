@@ -20,19 +20,22 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
     private _initCSV(_?: any): Promise<void> {
         return new Promise((resolve, reject) => {
             const inputData = new Array();
-            fs.createReadStream(this._file)
-            .pipe(csv(this._headers))
-            .on('data', (row: any) => {
-                const frame = this._rowCallback(row);
-                if (frame.source === undefined) {
-                    frame.source = this.source;
-                }
-                inputData.push(frame);   
-            })
-            .on('end', () => {
-                this.inputData = inputData;
-                resolve();
-            });
+            const stream = fs.createReadStream(this._file)
+                .pipe(csv(this._headers))
+                .on('data', (row: any) => {
+                    const frame = this._rowCallback(row);
+                    if (frame.source === undefined) {
+                        frame.source = this.source;
+                    }
+                    inputData.push(frame);   
+                })
+                .on('end', () => {
+                    this.inputData = inputData;
+                    stream.destroy();
+                })
+                .on('close', function (err: any) {
+                    resolve();
+                });
         });
     }
 

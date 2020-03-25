@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, Model, DataFrame, DataObject, RelativeDistanceLocation, MetricLengthUnit, Cartesian2DLocation, StorageSinkNode, TrilaterationNode, CallbackSinkNode, SourceMergeNode, TimeUnit, WorkerNode, DataSerializer } from '../../../src';
+import { ModelBuilder, ObjectMergeNode, Model, DataFrame, DataObject, RelativeDistanceLocation, MetricLengthUnit, Cartesian2DLocation, StorageSinkNode, TrilaterationNode, CallbackSinkNode, SourceMergeNode, TimeUnit, WorkerNode, DataSerializer } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
 import { EvaluationDataFrame } from '../../mock/data/EvaluationDataFrame';
 import * as path from 'path';
@@ -103,7 +103,9 @@ describe('dataset', () => {
                     // Use the data from the calibration model
                     .addService(calibrationModel.findDataService(DataObject))
                     .from(scanSourceNodeA, scanSourceNodeB, scanSourceNodeC)
-                    .via(new SourceMergeNode(100, TimeUnit.MILLI))
+                    .via(new ObjectMergeNode(
+                        (object: DataObject, frame: DataFrame) => { return frame.source.uid !== object.uid; }, 
+                        (frame: DataFrame) => { return frame.source.uid; }, 100, TimeUnit.MILLI))
                     .via(new TrilaterationNode<EvaluationDataFrame>())
                     .to(callbackNode)
                     .build().then(model => {

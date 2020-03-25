@@ -11,9 +11,6 @@ import { Model } from "../../Model";
  */
 export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
 
-    constructor(filter?: Array<new() => any>) {
-        super(filter);
-    }
 
     public processObject(dataObject: SensorObject, dataFrame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {

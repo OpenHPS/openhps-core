@@ -87,6 +87,12 @@ describe('data object', () => {
             });
         });
 
+        it('should delete all objects', (done) => {
+            objectDataService.deleteAll().then(() => {
+                done();
+            });
+        });
+
     });
 
     describe('output layer', () => {

@@ -23,24 +23,29 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
 
         this.removeAllListeners("build");
         this.removeAllListeners("destroy");
-        this.on("build", this._onModelBuild.bind(this));
-        this.on("destroy", this._onModelDestroy.bind(this));
+        this.once("build", this._onModelBuild.bind(this));
+        this.once("destroy", this._onModelDestroy.bind(this));
     }
 
     private _onModelBuild(_: any): Promise<void> {
         return new Promise((resolve, reject) => {
             const buildPromises = new Array();
             this._services.forEach(service => {
-                buildPromises.push(service.emitAsync('build'));
+                if (!service.isReady()) {
+                    buildPromises.push(service.emitAsync('build'));
+                }
             });
             this._dataServices.forEach(service => {
-                // Check that the service has a driver
-                buildPromises.push(service.emitAsync('build'));
+                if (!service.isReady()) {
+                    buildPromises.push(service.emitAsync('build'));
+                }
             });
             this.nodes.forEach(node => {
-                buildPromises.push(node.emitAsync('build', _));
+                if (!node.isReady()) {
+                    buildPromises.push(node.emitAsync('build', _));
+                }
             });
-            Promise.all(buildPromises).then(_2 => {
+            Promise.all(buildPromises).then(() => {
                 this.emit('ready');
                 resolve();
             }).catch(ex => {
