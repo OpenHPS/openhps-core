@@ -12,10 +12,6 @@ import { AngleUnit } from "../../utils";
  */
 export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
 
-    constructor(filter?: Array<new() => any>) {
-        super(filter);
-    }
-
     public processObject(dataObject: SensorObject, dataFrame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             const referencePromises = new Array();

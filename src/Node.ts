@@ -137,7 +137,7 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
                     reject(ex);
                 });
             } else {
-                Promise.all(callbackPromises).then(_ => {
+                Promise.all(callbackPromises).then(() => {
                     resolve();
                 }).catch(ex => {
                     reject(ex);

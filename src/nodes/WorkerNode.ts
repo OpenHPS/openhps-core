@@ -65,9 +65,11 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
             } else {
                 // Pass the pull request to the worker
                 this._pool.queue((worker: any) => {
-                    const pullFn: (options?: GraphPullOptions) => Promise<void> = worker.pull;
-                    return pullFn(DataSerializer.serialize(options));
-                }).then(_ => {
+                    const pullFn: (options?: GraphPullOptions) => Promise<Promise<void>> = worker.pull;
+                    return Promise.resolve(pullFn(DataSerializer.serialize(options)));
+                }).then(promise => {
+                    return promise;
+                }).then(() => {
                     resolve();
                 }).catch(ex => {
                     reject(ex);
@@ -79,9 +81,11 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
     private _onPush(data: In, options?: GraphPushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this._pool.queue((worker: any) => {
-                const pushFn: (data: In, options?: GraphPushOptions) => Promise<void> = worker.push;
+                const pushFn: (data: In, options?: GraphPushOptions) => Promise<Promise<void>> = worker.push;
                 return pushFn(DataSerializer.serialize(data), DataSerializer.serialize(options));
-            }).then(_ => {
+            }).then(promise => {
+                return promise;
+            }).then(() => {
                 resolve();
             }).catch(ex => {
                 reject(ex);

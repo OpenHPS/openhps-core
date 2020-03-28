@@ -22,6 +22,7 @@ export class DataSerializer {
         if (data === null || data === undefined) {
             return undefined;
         }
+        
         const dataType = Object.getPrototypeOf(data).constructor;
         const serialized = new TypedJSON(dataType).toPlainJson(data) as any;
         serialized['__type'] = dataType.name;

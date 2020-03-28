@@ -1,4 +1,4 @@
-import { DataFrame, DataSerializer } from "../data";
+import { DataFrame } from "../data";
 import { DataFrameService } from "./DataFrameService";
 import { JSONPath } from "jsonpath-plus";
 import { isArray } from "util";
@@ -12,10 +12,10 @@ export class MemoryDataFrameService<T extends DataFrame> extends DataFrameServic
             const data = new Array();
             if (isArray(result)) {
                 result.forEach(r => {
-                    data.push(DataSerializer.deserialize(r));
+                    data.push(r);
                 });
             } else {
-                data.push(DataSerializer.deserialize(result));
+                data.push(result);
             }
             resolve(data);
         });
@@ -27,10 +27,10 @@ export class MemoryDataFrameService<T extends DataFrame> extends DataFrameServic
             const data = new Array();
             if (isArray(result)) {
                 result.forEach(r => {
-                    data.push(DataSerializer.deserialize(r));
+                    data.push(r);
                 });
             } else {
-                data.push(DataSerializer.deserialize(result));
+                data.push(result);
             }
             resolve(data);
         });
@@ -42,10 +42,10 @@ export class MemoryDataFrameService<T extends DataFrame> extends DataFrameServic
             const data = new Array();
             if (isArray(result)) {
                 result.forEach(r => {
-                    data.push(DataSerializer.deserialize(r));
+                    data.push(r);
                 });
             } else {
-                data.push(DataSerializer.deserialize(result));
+                data.push(result);
             }
             resolve(data);
         });

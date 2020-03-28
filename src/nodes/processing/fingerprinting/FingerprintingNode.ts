@@ -8,15 +8,15 @@ import { DataObjectService } from "../../../service";
  */
 export class FingerprintingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
 
-    constructor(filter?: Array<new() => any>) {
-        super(filter);
+    constructor(filterFn?: (object: DataObject) => boolean) {
+        super(filterFn);
     }
-    
+
     public processObject(dataObject: DataObject, dataFrame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             // Fingerprinting service
             const fingerprintService = (this.graph as Model<any, any>).findDataService(Fingerprint) as DataObjectService<Fingerprint>;
-            
+
             if (dataObject.currentLocation !== undefined) {
                 // Perform fingerprint calibration
                 const fingerprint = new Fingerprint();

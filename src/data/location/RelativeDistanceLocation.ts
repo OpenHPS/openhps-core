@@ -13,7 +13,7 @@ export class RelativeDistanceLocation extends RelativeLocation {
 
     constructor(referenceObject?: DataObject, distance?: number, distanceUnit?: LengthUnit) {
         super(referenceObject);
-        this._distance = distance;
+        this.distance = distance;
         this._distanceUnit = distanceUnit;
     }
 

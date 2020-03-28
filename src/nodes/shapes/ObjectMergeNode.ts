@@ -9,9 +9,9 @@ export class ObjectMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
     private _timeoutUnit: TimeUnit;
     private _timer: NodeJS.Timeout;
     private _groupFn: (frame: InOut) => Object;
-    private _filterFn: (object: DataObject, frame: InOut) => boolean;
+    private _filterFn: (object: DataObject, frame?: InOut) => boolean;
 
-    constructor(filterFn: (object: DataObject, frame: InOut) => boolean, groupFn: (frame: InOut) => Object, timeout: number, timeoutUnit: TimeUnit) {
+    constructor(filterFn: (object: DataObject, frame?: InOut) => boolean, groupFn: (frame: InOut) => Object, timeout: number, timeoutUnit: TimeUnit) {
         super();
         this._timeout = timeout;
         this._timeoutUnit = timeoutUnit;
@@ -105,6 +105,7 @@ export class ObjectMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
             for (let i = 1; i < frames.length; i++) {
                 const frame = frames[i];
                 const object = frame.getObjectByUID(objectUID);
+                
                 // Merge object
                 object.relativeLocations.forEach(value => {
                     existingObject.addRelativeLocation(value);

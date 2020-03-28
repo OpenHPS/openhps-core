@@ -13,12 +13,22 @@ describe('data object', () => {
         before((done) => {
             objectDataService = new MemoryDataObjectService(DataObject);
             var object = new DataObject();
+            object.currentLocation = new Cartesian2DLocation(5, 6);
             object.displayName = "Test";
             objectDataService.insert(object).then(savedObject => {
                 done();
             });
         });
         
+        it('should find an object by location', (done) => {
+            objectDataService.findByCurrentLocation(new Cartesian2DLocation(5, 6)).then(locations => {
+                done();
+                // TODO
+            }).catch(ex => {
+                done(ex);
+            });
+        });
+
         it('should store objects', (done) => {
             var object = new DataObject("2");
             object.displayName = "Test";

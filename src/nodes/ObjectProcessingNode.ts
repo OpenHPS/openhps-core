@@ -1,34 +1,28 @@
 import { DataFrame, DataObject } from "../data";
 import { ProcessingNode } from "./ProcessingNode";
 import { GraphPushOptions } from "../graph";
+import { isFunction } from "util";
 
 /**
  * Processing node that processes each [[DataObject]] in a [[DataFrame]] individually
  */
 export abstract class ObjectProcessingNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
-    private _filter: Array<new () => any>;
+    private _filterFn: (object: DataObject, frame?: InOut) => boolean = (object: DataObject) => true;
 
-    constructor(filter?: Array<new () => any>) {
+    constructor(filterFn?: (object: DataObject, frame?: InOut) => boolean) {
         super();
-        this._filter = filter;
+
+        if (isFunction(filterFn)) {
+            this._filterFn = filterFn;
+        }
     }
 
     public process(data: InOut, options?: GraphPushOptions): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
             const processObjectPromises = new Array();
-            if (this._filter === undefined) {
-                data.getObjects().forEach(object => {
-                    processObjectPromises.push(this.processObject(object, data));
-                });
-            } else {
-                data.getObjects().forEach(object => {
-                    this._filter.forEach(dataType => {
-                        if (object instanceof dataType) {
-                            processObjectPromises.push(this.processObject(object, data));
-                        }
-                    });
-                });
-            }
+            data.getObjects().filter(value => this._filterFn(value, data)).forEach(object => {
+                processObjectPromises.push(this.processObject(object, data));
+            });
             Promise.all(processObjectPromises).then(objects => {
                 objects.forEach(object => {
                     data.addObject(object);

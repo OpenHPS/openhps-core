@@ -11,7 +11,6 @@ import { Model } from "../../Model";
  */
 export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
 
-
     public processObject(dataObject: SensorObject, dataFrame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             const referencePromises = new Array();

@@ -13,7 +13,7 @@ export class RelativeAngleLocation extends RelativeLocation {
 
     constructor(referenceObject?: DataObject, angle?: number, angleUnit?: AngleUnit) {
         super(referenceObject);
-        this._angle = angle;
+        this.angle = angle;
         this._angleUnit = angleUnit;
     }
 
