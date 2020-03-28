@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.126](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.125...v1.0.0-alpha.126) (2020-03-28)
+
+
+### Features
+
+* knn and wknn fingerprinting + extra dataset ([b9adaa1](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/b9adaa1771bc3e7de8ec539116abaace12ebb617))
+
 ## [1.0.0-alpha.125](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.124...v1.0.0-alpha.125) (2020-03-25)
 
 
