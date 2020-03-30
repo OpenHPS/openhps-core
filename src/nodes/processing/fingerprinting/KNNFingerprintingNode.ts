@@ -1,4 +1,4 @@
-import { DataFrame, DataObject, Fingerprint, AbsoluteLocation, DataSerializer } from "../../../data";
+import { DataFrame, DataObject, Fingerprint, AbsoluteLocation, DataSerializer, RelativeLocation } from "../../../data";
 import { Model } from "../../../Model";
 import { DataObjectService } from "../../../service";
 import * as math from 'mathjs';
@@ -11,11 +11,13 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
     private _options: KNNFingerprintingOptions;
     private _cache: CachedFingerprint[] = new Array();
     private _kdtree: KDTree;
+    private _cacheObjects: Set<string> = new Set();
 
-    constructor(options: KNNFingerprintingOptions, filterFn?: (object: DataObject) => boolean) {
+    constructor(options: KNNFingerprintingOptions = new KNNFingerprintingOptions(), filterFn?: (object: DataObject) => boolean) {
         super(filterFn);
-        this._options = options;
-
+        const defaultOptions = new KNNFingerprintingOptions();
+        // tslint:disable-next-line
+        this._options = Object.assign(defaultOptions, options);
         this.once('build', this._onBuild.bind(this));
     }
 
@@ -23,12 +25,34 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
         return new Promise<void>((resolve, reject) => {
             const fingerprintService = (this.graph as Model<any, any>).findDataService(Fingerprint) as DataObjectService<Fingerprint>;
             fingerprintService.findAll().then(fingerprints => {
+                /* Add missing reference locations (objects not in range) */
+                fingerprints.forEach(fingerprint => {
+                    fingerprint.relativeLocations.forEach(relativeLocation => {
+                        if (!this._cacheObjects.has(relativeLocation.referenceObjectUID))
+                            this._cacheObjects.add(relativeLocation.referenceObjectUID);
+                    });
+                });
+
+                /* Interpolate and extrapolate missing RSSI values */
                 if (this.options.interpolate) {
                     
                 }
+                
+                /* Cache fingerprints to simple vectors */
                 fingerprints.forEach(fingerprint => {
+                    // Complete missing references
+                    this._cacheObjects.forEach(relativeObject => {
+                        if (!fingerprint.hasRelativeLocation(relativeObject)) {
+                            const relativeLocation = new RelativeLocation();
+                            relativeLocation.referenceObjectUID = relativeObject;
+                            relativeLocation.referenceValue = this.options.defaultValue;
+                            fingerprint.addRelativeLocation(relativeLocation);
+                        }
+                    });
                     this._cache.push(new CachedFingerprint(fingerprint));
                 });
+
+                /* Create k-d tree */
                 if (!this.options.naive) {
                     this._kdtree = new KDTree(this.cache);
                 }
@@ -60,13 +84,30 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
                     reject(ex);
                 });
             } else if (dataObject.relativeLocations.length !== 0) {
+                this._cacheObjects.forEach(relativeObject => {
+                    if (!dataObject.hasRelativeLocation(relativeObject)) {
+                        const relativeLocation = new RelativeLocation();
+                        relativeLocation.referenceObjectUID = relativeObject;
+                        relativeLocation.referenceValue = this.options.defaultValue;
+                        dataObject.addRelativeLocation(relativeLocation);
+                    }
+                });
+
+                const dataObjectPoint: number[] = [];
+                dataObject.relativeLocations
+                    .filter(rl => {
+                        return this._cacheObjects.has(rl.referenceObjectUID);       // Filter out unneeded reference objects
+                    }).sort(function(a: RelativeLocation, b: RelativeLocation) {    // Sort alphabetically
+                        if (a.referenceObjectUID < b.referenceObjectUID) { return -1; }
+                        if (a.referenceObjectUID > b.referenceObjectUID) { return 1; }
+                        return 0;
+                    }).forEach(relativeLocation => {
+                        dataObjectPoint.push(relativeLocation.referenceValue);
+                    });
+
                 // Perform reverse fingerprinting
                 let results = new Array<[AbsoluteLocation, number]>();
                 if (this.options.naive) {
-                    const dataObjectPoint: number[] = [];
-                    dataObject.relativeLocations.forEach(relativeLocation => {
-                        dataObjectPoint.push(relativeLocation.referenceValue);
-                    });
                     this.cache.forEach(cachedFingerprint => {
                         let ed = 0;
                         for (let i = 0 ; i < dataObjectPoint.length ; i++) {
@@ -80,7 +121,7 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
                     });
                     results = results.sort((a, b) => a[1] - b[1]).splice(0, this.options.k).map((v: [any, number]) => [DataSerializer.deserialize(v[0]), v[1]]);    
                 } else {
-                    results = this.kdtree.nearest(dataObject, this.options.k);
+                    results = this.kdtree.nearest(dataObjectPoint, this.options.k);
                 }
 
                 let point = Array<number>(results[0][0].point.length).fill(0);
@@ -116,19 +157,22 @@ export class KNNFingerprintingOptions {
     public weighted?: boolean = true;
     public naive?: boolean = false;
     public interpolate?: boolean = false;
-}
-
-class KNNInterpolationOptions {
-
+    public defaultValue?: number = 0;
 }
 
 class CachedFingerprint {
+    public uid: string;
     public vector: number[] = [];
     public location: any;
 
     constructor(fingerprint: Fingerprint) {
+        this.uid = fingerprint.uid;
         this.location = DataSerializer.serialize(fingerprint.currentLocation);
-        fingerprint.relativeLocations.forEach(relativeLocation => {
+        fingerprint.relativeLocations.sort(function(a: RelativeLocation, b: RelativeLocation) {
+            if (a.referenceObjectUID < b.referenceObjectUID) { return -1; }
+            if (a.referenceObjectUID > b.referenceObjectUID) { return 1; }
+            return 0;
+        }).forEach(relativeLocation => {
             this.vector.push(relativeLocation.referenceValue);
         });
     }
@@ -215,14 +259,9 @@ class KDTree {
         }
     }
 
-    public nearest(object: DataObject, count: number = 1, maxDistance?: number): Array<[AbsoluteLocation, number]> {
+    public nearest(point: number[], count: number = 1, maxDistance?: number): Array<[AbsoluteLocation, number]> {
         const bestNodes = new BinaryHeap<[KDTree, number]>((element: [KDTree, number]) => {
             return -element[1];
-        });
-
-        const point: number[] = [];
-        object.relativeLocations.forEach(relativeLocation => {
-            point.push(relativeLocation.referenceValue);
         });
 
         if (maxDistance) {

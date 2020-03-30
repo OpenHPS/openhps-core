@@ -63,7 +63,7 @@ describe('data object', () => {
         var objectDataService: DataObjectService<DataObject>;
         
         before((done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from()
                 .via(new ServiceMergeNode())
                 .to(new LoggingSinkNode())
@@ -110,7 +110,7 @@ describe('data object', () => {
         var objectDataService: DataObjectService<DataObject>;
         
         before((done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from()
                 .to(new LoggingSinkNode())
                 .build().then(m => {

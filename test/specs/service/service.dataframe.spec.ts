@@ -8,7 +8,7 @@ describe('data frame service', () => {
         var frameDataService: DataFrameService<DataFrame>;
         
         before(async () => {
-            model = await new ModelBuilder()
+            model = await ModelBuilder.create()
                 .from()
                 .to(new LoggingSinkNode())
                 .build();

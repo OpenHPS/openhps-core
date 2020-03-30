@@ -7,7 +7,7 @@ describe('node', () => {
     describe('basic kalman filter', () => {
 
         it('should filter values in a data frame', (done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from()
                 .via(new BKFilterNode({
                     R: 1,

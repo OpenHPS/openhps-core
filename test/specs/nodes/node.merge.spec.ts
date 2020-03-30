@@ -17,7 +17,7 @@ describe('node', () => {
             frameB.source = new DataObject("abc");
             frameB.source.currentLocation = new Cartesian2DLocation(3, 4);
 
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from(new ListSourceNode([frameA]), new ListSourceNode([frameB]))
                 .via(new SourceMergeNode(500, TimeUnit.MILLI))
                 .to(new LoggingSinkNode((data: DataFrame) => {

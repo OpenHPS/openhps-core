@@ -7,7 +7,7 @@ describe('node', () => {
     describe('worker js', () => {
         
         it('should process data as a normal node', (done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from()
                 .via(new WorkerProcessingNode('../../../test/mock/nodes/WorkerTask.js'))
                 .to()
@@ -28,7 +28,7 @@ describe('node', () => {
     describe('worker ts', () => {
         
         it('should process data as a normal node', (done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from()
                 .via(new WorkerProcessingNode('../../../test/mock/nodes/WorkerTask.ts'))
                 .to()
@@ -48,7 +48,7 @@ describe('node', () => {
 
     describe('worker node', () => {
         it('should take 30ms with 1 worker', (done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from()
                 .via(new WorkerNode((builder) => {
                     const { TimeConsumingNode } = require(path.join(__dirname, '../../mock/nodes/TimeConsumingNode'));
@@ -78,7 +78,7 @@ describe('node', () => {
         }).timeout(30000);
 
         it('should take 20ms with 2 workers', (done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from()
                 .via(new WorkerNode((builder) => {
                     const { TimeConsumingNode } = require(path.join(__dirname, '../../mock/nodes/TimeConsumingNode'));
@@ -108,7 +108,7 @@ describe('node', () => {
         }).timeout(30000);
 
         it('should take 10ms with 3 workers', (done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from()
                 .via(new WorkerNode((builder) => {
                     const { TimeConsumingNode } = require(path.join(__dirname, '../../mock/nodes/TimeConsumingNode'));
@@ -138,7 +138,7 @@ describe('node', () => {
         }).timeout(30000);
 
         it('should be able to access services', (done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from()
                 .via(new WorkerNode((builder) => {
                     const { DataServiceTestNode } = require(path.join(__dirname, '../../mock/nodes/DataServiceTestNode'));

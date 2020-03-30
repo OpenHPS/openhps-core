@@ -7,14 +7,14 @@ describe('model', () => {
     describe('builder', () => {
 
         it('should have an input and output by default', (done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .build().then(model => {
                     done();
                 });
         });
 
         it('should be able to broadcast to multiple nodes', (done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from()
                 .via(new NamedNode("1"))
                 .via(new NamedNode("2.1"), new NamedNode("2.2"), new NamedNode("2.3"))

@@ -9,7 +9,7 @@ describe('node', () => {
     describe('balance', () => {
 
         it('should take 30ms to execute with one time consuming layer', (done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from()
                 .via(new BalanceNode())
                 .via(new TimeConsumingNode())
@@ -31,7 +31,7 @@ describe('node', () => {
         });
 
         it('should take 10ms to execute with 3 time consuming layers', (done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from()
                 .via(new BalanceNode())
                 .via(new TimeConsumingNode(), new TimeConsumingNode(), new TimeConsumingNode())
@@ -53,7 +53,7 @@ describe('node', () => {
         });
 
         it('should take 20ms to execute with 2 time consuming layers', (done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from()
                 .via(new BalanceNode())
                 .via(new TimeConsumingNode(), new TimeConsumingNode())

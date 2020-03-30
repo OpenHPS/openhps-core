@@ -22,7 +22,7 @@ import { EvaluationDataFrame } from '../../mock/data/EvaluationDataFrame';
 import * as path from 'path';
 
 function rssiToDistance(rssi) {
-    return Math.pow(10, (-46 - rssi) / (10 - 2.4));
+    return Math.pow(10, (-28 - rssi) / (10 * 2.8));
 }
 
 describe('dataset', () => {
@@ -69,7 +69,7 @@ describe('dataset', () => {
                 return dataFrame;
             }, ["x", "y", "z"]);
 
-            new ModelBuilder()
+            ModelBuilder.create()
                 .addService(fingerprintService)
                 .from(rssSource, locationSource)
                 .via(new ObjectMergeNode(
@@ -126,59 +126,61 @@ describe('dataset', () => {
         describe('online stage knn with k=5', () => {
 
             before((done) => {
-                new ModelBuilder()
-                .addService(calibrationModel.findDataService(Fingerprint))
-                .from(new CSVDataSource("test/data/richter2018/Test_rss.csv", (row: any) => {
-                    const dataFrame = new EvaluationDataFrame();
-                    const phoneObject = new DataObject("phone");
-                    aps.forEach(ap => {
-                        let rssi = parseFloat(row[ap]);
-                        let distance = rssiToDistance(rssi);
-                        const object = new DataObject(ap);
-                        dataFrame.addObject(object);
-                        phoneObject.addRelativeLocation(new RelativeDistanceLocation(object, distance));
-                    });
-                    dataFrame.evaluationObjects = null;
-                    dataFrame.addObject(phoneObject);
-                    return dataFrame;
-                }, aps), new CSVDataSource("test/data/richter2018/Test_coordinates.csv", (row: any) => {
-                    const dataFrame = new EvaluationDataFrame();
-                    
-                    const phoneObject = new DataObject("phone");
-                    dataFrame.addObject(phoneObject);
+                ModelBuilder.create()
+                    .addService(calibrationModel.findDataService(Fingerprint))
+                    .from(new CSVDataSource("test/data/richter2018/Test_rss.csv", (row: any) => {
+                        const dataFrame = new EvaluationDataFrame();
+                        const phoneObject = new DataObject("phone");
+                        aps.forEach(ap => {
+                            let rssi = parseFloat(row[ap]);
+                            let distance = rssiToDistance(rssi);
+                            const object = new DataObject(ap);
+                            dataFrame.addObject(object);
+                            phoneObject.addRelativeLocation(new RelativeDistanceLocation(object, distance));
+                        });
+                        dataFrame.evaluationObjects = null;
+                        dataFrame.addObject(phoneObject);
+                        return dataFrame;
+                    }, aps), new CSVDataSource("test/data/richter2018/Test_coordinates.csv", (row: any) => {
+                        const dataFrame = new EvaluationDataFrame();
+                        
+                        const phoneObject = new DataObject("phone");
+                        dataFrame.addObject(phoneObject);
 
-                    const evaluationObject = new DataObject("phone");
-                    evaluationObject.currentLocation = new Cartesian3DLocation(parseFloat(row.x), parseFloat(row.y), parseFloat(row.z));
-                    dataFrame.evaluationObjects.set("phone", evaluationObject);
-                    return dataFrame;
-                }, ["x", "y", "z"]))
-                .via(new ObjectMergeNode<EvaluationDataFrame>(
-                    (object: DataObject) => object.uid == "phone", 
-                    (frame: EvaluationDataFrame) => frame.source.uid, 500, TimeUnit.MILLI))
-                    .via(new KNNFingerprintingNode({
-                        k: 5,
-                        weighted: false,
-                        naive: true
-                    }, object => object.uid === "phone"))
-                .to(callbackNode)
-                .build().then(model => {
-                    trackingModel = model;
-                    done();
-                });
+                        const evaluationObject = new DataObject("phone");
+                        evaluationObject.currentLocation = new Cartesian3DLocation(parseFloat(row.x), parseFloat(row.y), parseFloat(row.z));
+                        dataFrame.evaluationObjects.set("phone", evaluationObject);
+                        return dataFrame;
+                    }, ["x", "y", "z"]))
+                    .via(new ObjectMergeNode<EvaluationDataFrame>(
+                        (object: DataObject) => object.uid == "phone", 
+                        (frame: EvaluationDataFrame) => frame.source.uid, 500, TimeUnit.MILLI))
+                        .via(new KNNFingerprintingNode({
+                            k: 5,
+                            weighted: false,
+                            naive: true
+                        }, object => object.uid === "phone"))
+                    .to(callbackNode)
+                    .build().then(model => {
+                        trackingModel = model;
+                        done();
+                    });
             });
 
             after(() => {
                 trackingModel.emit('destroy');
             });
 
-            it('should have an error of less than 70 meters', (done) => {
+            it('should have an average error of less than 18 meters', (done) => {
+                let totalError = 0;
+                let totalValues = 0;
                 callbackNode.callback = (data: EvaluationDataFrame) => {
                     let calculatedLocation: Cartesian3DLocation = data.getObjectByUID("phone").predictedLocations[0] as Cartesian3DLocation;
                     // Accurate control location
                     const expectedLocation: Cartesian3DLocation = data.evaluationObjects.get("phone").currentLocation as Cartesian3DLocation;
                     
-                    const error = expectedLocation.distance(calculatedLocation);
-                    expect(error).to.be.lessThan(100);
+                    totalError += expectedLocation.distance(calculatedLocation);
+                    totalValues++;
                 };
     
                 // Perform a pull
@@ -187,6 +189,7 @@ describe('dataset', () => {
                    promises.push(trackingModel.pull());
                 }
                 Promise.all(promises).then(() => {
+                    expect(totalError / totalValues).to.be.lessThan(18);
                     done();
                 }).catch(ex => {
                     done(ex);
@@ -198,61 +201,63 @@ describe('dataset', () => {
         describe('online stage weighted knn with k=5', () => {
 
             before((done) => {
-                new ModelBuilder()
-                .addService(calibrationModel.findDataService(Fingerprint))
-                .from(new CSVDataSource("test/data/richter2018/Test_rss.csv", (row: any) => {
-                    const dataFrame = new EvaluationDataFrame();
-                    const phoneObject = new DataObject("phone");
-                    aps.forEach(ap => {
-                        const object = new DataObject(ap);
-                        dataFrame.addObject(object);
-                        phoneObject.addRelativeLocation(new RelativeDistanceLocation(object, rssiToDistance(parseFloat(row[ap]))));
-                    });
-                    dataFrame.evaluationObjects = null;
-                    dataFrame.addObject(phoneObject);
-                    return dataFrame;
-                }, aps), new CSVDataSource("test/data/richter2018/Test_coordinates.csv", (row: any) => {
-                    const dataFrame = new EvaluationDataFrame();
-                    
-                    const phoneObject = new DataObject("phone");
-                    dataFrame.addObject(phoneObject);
+                ModelBuilder.create()
+                    .addService(calibrationModel.findDataService(Fingerprint))
+                    .from(new CSVDataSource("test/data/richter2018/Test_rss.csv", (row: any) => {
+                        const dataFrame = new EvaluationDataFrame();
+                        const phoneObject = new DataObject("phone");
+                        aps.forEach(ap => {
+                            const object = new DataObject(ap);
+                            dataFrame.addObject(object);
+                            phoneObject.addRelativeLocation(new RelativeDistanceLocation(object, rssiToDistance(parseFloat(row[ap]))));
+                        });
+                        dataFrame.evaluationObjects = null;
+                        dataFrame.addObject(phoneObject);
+                        return dataFrame;
+                    }, aps), new CSVDataSource("test/data/richter2018/Test_coordinates.csv", (row: any) => {
+                        const dataFrame = new EvaluationDataFrame();
+                        
+                        const phoneObject = new DataObject("phone");
+                        dataFrame.addObject(phoneObject);
 
-                    const evaluationObject = new DataObject("phone");
-                    evaluationObject.currentLocation = new Cartesian3DLocation(parseFloat(row.x), parseFloat(row.y), parseFloat(row.z));
-                    dataFrame.evaluationObjects.set("phone", evaluationObject);
-                    return dataFrame;
-                }, ["x", "y", "z"]))
-                .via(new ObjectMergeNode<EvaluationDataFrame>(
-                    (object: DataObject) => object.uid == "phone", 
-                    (frame: EvaluationDataFrame) => frame.source.uid, 500, TimeUnit.MILLI))
-                // .via(new WorkerNode((builder) => {
-                //     const { WKNNFingerprintingNode } = require(path.join(__dirname, '../../../src/nodes/processing/fingerprinting/WKNNFingerprintingNode'));
-                //     builder.via(new WKNNFingerprintingNode(5, object => object.uid === "phone"))
-                // }, { directory: __dirname, poolSize: 4 }))
-                .via(new KNNFingerprintingNode({
-                    k: 5,
-                    weighted: true,
-                    naive: true
-                }, object => object.uid === "phone"))
-                .to(callbackNode)
-                .build().then(model => {
-                    trackingModel = model;
-                    done();
-                });
+                        const evaluationObject = new DataObject("phone");
+                        evaluationObject.currentLocation = new Cartesian3DLocation(parseFloat(row.x), parseFloat(row.y), parseFloat(row.z));
+                        dataFrame.evaluationObjects.set("phone", evaluationObject);
+                        return dataFrame;
+                    }, ["x", "y", "z"]))
+                    .via(new ObjectMergeNode<EvaluationDataFrame>(
+                        (object: DataObject) => object.uid == "phone", 
+                        (frame: EvaluationDataFrame) => frame.source.uid, 500, TimeUnit.MILLI))
+                    // .via(new WorkerNode((builder) => {
+                    //     const { WKNNFingerprintingNode } = require(path.join(__dirname, '../../../src/nodes/processing/fingerprinting/WKNNFingerprintingNode'));
+                    //     builder.via(new WKNNFingerprintingNode(5, object => object.uid === "phone"))
+                    // }, { directory: __dirname, poolSize: 4 }))
+                    .via(new KNNFingerprintingNode({
+                        k: 5,
+                        weighted: true,
+                        naive: true
+                    }, object => object.uid === "phone"))
+                    .to(callbackNode)
+                    .build().then(model => {
+                        trackingModel = model;
+                        done();
+                    });
             });
 
             after(() => {
                 trackingModel.emit('destroy');
             });
 
-            it('should have an error of less than 80 meters', (done) => {
+            it('should have an average error of less than 17 meters', (done) => {
+                let totalError = 0;
+                let totalValues = 0;
                 callbackNode.callback = (data: EvaluationDataFrame) => {
                     let calculatedLocation: Cartesian3DLocation = data.getObjectByUID("phone").predictedLocations[0] as Cartesian3DLocation;
                     // Accurate control location
                     const expectedLocation: Cartesian3DLocation = data.evaluationObjects.get("phone").currentLocation as Cartesian3DLocation;
                     
-                    const error = expectedLocation.distance(calculatedLocation);
-                    expect(error).to.be.lessThan(100);
+                    totalError += expectedLocation.distance(calculatedLocation);
+                    totalValues++;
                 };
     
                 // Perform a pull
@@ -261,6 +266,7 @@ describe('dataset', () => {
                    promises.push(trackingModel.pull());
                 }
                 Promise.all(promises).then(() => {
+                    expect(totalError / totalValues).to.be.lessThan(17);
                     done();
                 }).catch(ex => {
                     done(ex);

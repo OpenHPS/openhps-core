@@ -8,7 +8,7 @@ describe('list source', () => {
     describe('layer', () => {
 
         it('should pop items from the list', (done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from(new ListSourceNode([new DataFrame()]))
                 .to(new LoggingSinkNode((log) => {
                     done();
@@ -20,7 +20,7 @@ describe('list source', () => {
 
         
         it('should add a merge node internally', (done) => {
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from(new ListSourceNode([new DataFrame()]))
                 .via(new NamedNode("output"))
                 .to(new LoggingSinkNode((log) => {

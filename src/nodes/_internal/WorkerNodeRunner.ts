@@ -1,4 +1,3 @@
-import { ModelBuilder } from "../../ModelBuilder";
 import { DataSerializer, DataObject, DataFrame } from "../../data";
 import { Model } from "../../Model";
 import { Subject, Observable } from 'threads/observable';
@@ -8,6 +7,7 @@ import { CallbackSourceNode } from "../source";
 import { expose } from "threads";
 import { WorkerDataObjectService } from "../../service/WorkerDataObjectService";
 import { WorkerDataFrameService } from "../../service/WorkerDataFrameService";
+import { ModelBuilder } from "../../ModelBuilder";
 
 let model: Model<any, any>;
 const input: Subject<{ options?: GraphPullOptions }> = new Subject();
@@ -26,7 +26,7 @@ expose({
         // Create model
         // tslint:disable-next-line
         const builderCallback = eval(workerData.builderCallback);
-        const modelBuilder = new ModelBuilder();
+        const modelBuilder = ModelBuilder.create();
         // Add remote worker services
         modelBuilder.addService(new WorkerDataObjectService(DataObject, serviceInput, serviceOutput));
         modelBuilder.addService(new WorkerDataFrameService(DataFrame, serviceInput, serviceOutput));

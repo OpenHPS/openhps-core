@@ -3,10 +3,10 @@ import { GraphPushOptions, GraphPullOptions } from "../graph";
 import { Node } from "../Node";
 import { Thread, Worker, spawn, Pool } from "threads";
 import { Observable, Subject } from "threads/observable";
-import { GraphShapeBuilder } from "../graph/builders";
 import { PoolEvent } from "threads/dist/master/pool";
 import { Model } from "../Model";
 import { isArray } from "util";
+import { ModelShapeBuilder } from "../ModelBuilder";
 
 /**
  * 
@@ -31,11 +31,11 @@ import { isArray } from "util";
 export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
     private _worker: Worker;
     private _pool: Pool<Thread>;
-    private _builderCallback: (builder: GraphShapeBuilder<any>) => void;
+    private _builderCallback: (builder: ModelShapeBuilder) => void;
     private _options: WorkerNodeOptions;
     private _serviceOutputFn: (id: string, success: boolean, result?: any) => Promise<void>;
 
-    constructor(builderCallback: (builder: GraphShapeBuilder<any>) => void, options: WorkerNodeOptions = new WorkerNodeOptions()) {
+    constructor(builderCallback: (builder: ModelShapeBuilder) => void, options: WorkerNodeOptions = new WorkerNodeOptions()) {
         super();
         this._builderCallback = builderCallback;
         this._options = options;

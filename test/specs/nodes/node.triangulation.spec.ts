@@ -31,7 +31,7 @@ describe('node', () => {
                 return frame;
             })());
 
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from(new ListSourceNode(frames))
                 .via(new TriangulationNode())
                 .to(new LoggingSinkNode((frame: DataFrame) => {

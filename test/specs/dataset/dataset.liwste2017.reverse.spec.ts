@@ -21,7 +21,7 @@ describe('dataset', () => {
          */
         before((done) => {
             // Calibration model to set-up or train the model
-            new ModelBuilder()
+            ModelBuilder.create()
                 .from(new CSVDataSource("test/data/liwste2017/beacons.csv", (row: any) => {
                     const dataFrame = new DataFrame();
                     const beacon = new DataObject(`beacon_${row.Beacon}`);
@@ -99,7 +99,7 @@ describe('dataset', () => {
         describe('trilateration', () => {
 
             before((done) => {
-                new ModelBuilder()
+                ModelBuilder.create()
                     // Use the data from the calibration model
                     .addService(calibrationModel.findDataService(DataObject))
                     .from(scanSourceNodeA, scanSourceNodeB, scanSourceNodeC)
