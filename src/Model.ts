@@ -1,8 +1,6 @@
 import { DataFrame, DataObject } from "./data";
 import { DataService, Service } from "./service";
 import { GraphImpl } from "./graph/_internal/implementations/GraphImpl";
-import { GraphPushOptions } from "./graph/GraphPushOptions";
-import { GraphPullOptions } from "./graph/GraphPullOptions";
 
 /**
  * This model contains multiple [[Node]]s, [[Service]]s to compute
@@ -16,17 +14,14 @@ export interface Model<In extends DataFrame, Out extends DataFrame> extends Grap
     /**
      * Push data to the model
      * 
-     * @param data Input data
-     * @param options Push options
+     * @param frame Input frame
      */
-    push(data: In, options?: GraphPushOptions): Promise<void>;
+    push(frame: In): Promise<void>;
 
     /**
      * Pull data from the model
-     * 
-     * @param options Pull options
      */
-    pull(options?: GraphPullOptions): Promise<void>;
+    pull(): Promise<void>;
 
     /**
      * Find service by name

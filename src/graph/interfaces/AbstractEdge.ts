@@ -1,7 +1,7 @@
 import { AbstractNode } from './AbstractNode';
 import { DataFrame } from '../../data';
 
-export interface AbstractEdge<InOut extends DataFrame> {
+export interface AbstractEdge<InOut extends DataFrame | DataFrame[]> {
     /**
      * Get unique identifier of edge
      */

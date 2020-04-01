@@ -1,6 +1,4 @@
 import { DataFrame } from "../../data/DataFrame";
-import { SinkNode } from "../SinkNode";
-import { GraphPushOptions } from "../../graph/GraphPushOptions";
 import { CallbackSinkNode } from "./CallbackSinkNode";
 
 /**
@@ -13,22 +11,13 @@ export class LoggingSinkNode<In extends DataFrame> extends CallbackSinkNode<In> 
      * Create a new logger output sink
      * @param loggingFn Logging function
      */
-    constructor(loggingFn?: (data: In, options?: GraphPushOptions) => void) {
-        super();
+    constructor(loggingFn?: (frame: In) => void) {
+        super(loggingFn);
         if (loggingFn === undefined) {
-            loggingFn = (data: In, options?: GraphPushOptions) => {
-                this.logger("info", data);
+            this.callback = (frame: In) => {
+                this.logger("info", frame);
             };
         }
-
-        this.callback = loggingFn;
-    }
-    
-    public onPush(data: In, options?: GraphPushOptions): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            this.callback(data, options);
-            resolve();
-        });
     }
     
 } 

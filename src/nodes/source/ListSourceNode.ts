@@ -1,6 +1,5 @@
 import { DataFrame } from "../../data/DataFrame";
 import { SourceNode } from "../SourceNode";
-import { GraphPullOptions } from "../../graph/GraphPullOptions";
 import { DataObject } from "../../data";
 
 /**
@@ -27,7 +26,7 @@ export class ListSourceNode<Out extends DataFrame> extends SourceNode<Out> {
         return this._inputData.length;
     }
 
-    public onPull(options?: GraphPullOptions): Promise<Out> {
+    public onPull(): Promise<Out> {
         return new Promise<Out>((resolve, reject) => {
             if (this._inputData.length !== 0) {
                 resolve(this._inputData.pop());

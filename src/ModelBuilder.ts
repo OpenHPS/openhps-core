@@ -11,6 +11,7 @@ import { TimeUnit } from "./utils";
 import { FrameFilterNode } from "./nodes/shapes/FrameFilterNode";
 import { FrameDebounceNode } from "./nodes/shapes/FrameDebounceNode";
 import { ObjectFilterNode } from "./nodes/shapes/ObjectFilterNode";
+import { FrameChunkNode } from "./nodes/shapes/FrameChunkNode";
 
 /**
  * Model build to construct and build a [[Model]]
@@ -132,16 +133,38 @@ export class ModelShapeBuilder {
         return this;
     }
 
+    public chunk(size: number, timeout: number = 100, timeoutUnit: TimeUnit = TimeUnit.MILLI): ModelShapeBuilder {
+        return this.via(new FrameChunkNode());
+    }
+
+    public flatten(): ModelShapeBuilder {
+        return this.via(new FrameChunkNode());
+    }
+
+    /**
+     * Filter frames based on function
+     * @param filterFn Filter function (true to keep, false to remove)
+     */
     public filter(filterFn: (frame: DataFrame) => boolean): ModelShapeBuilder {
         return this.via(new FrameFilterNode(filterFn));
     }
 
+    /**
+     * Filter objects inside frames
+     * @param filterFn Filter function (true to keep, false to remove)
+     */
     public filterObjects(filterFn: (object: DataObject) => boolean): ModelShapeBuilder {
         return this.via(new ObjectFilterNode(filterFn));
     }
 
+    /**
+     * Merge objects
+     * @param by Merge key
+     * @param timeout Timeout
+     * @param timeoutUnit Timeout unit
+     */
     public merge(by: (frame: DataFrame) => boolean = _ => true, timeout: number = 100, timeoutUnit: TimeUnit = TimeUnit.MILLI): ModelShapeBuilder {
-        return this.via(new ObjectMergeNode(null, by, timeout, timeoutUnit)); 
+        return this.via(new ObjectMergeNode((_) => true, by, timeout, timeoutUnit)); 
     }
 
     public debounce(timeout: number = 100, timeoutUnit: TimeUnit = TimeUnit.MILLI): ModelShapeBuilder {

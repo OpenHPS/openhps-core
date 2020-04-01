@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder } from '../../src';
-import { NamedNode } from '../../src/nodes';
+import { ModelBuilder, DataFrame } from '../../src';
+import { NamedNode, CallbackSourceNode, CallbackNode, CallbackSinkNode } from '../../src/nodes';
 
 describe('model', () => {
     describe('builder', () => {
@@ -25,5 +25,39 @@ describe('model', () => {
                 });
         });
 
+    });
+
+    describe('resolve chain', () => {
+        it('should only resolve a push after reaching a sink', (done) => {
+            const resolved = new Array();
+            ModelBuilder.create()
+                .from(new CallbackSourceNode(() => {
+                    resolved.push(1);
+                    return null;
+                }))
+                .via(new CallbackNode(() => {
+                    let counter = 0;
+                    for(let i = 0 ; i < 100000 ; i ++) {
+                        counter += i;
+                    }
+                    resolved.push(2);
+                },
+                () => {
+                    resolved.push(2);
+                    return null;
+                }))
+                .to(new CallbackSinkNode(() => {
+                    resolved.push(3); 
+                }))
+                .build().then(model => {
+                    Promise.resolve(model.push(new DataFrame())).then(() => {
+                        expect(resolved[0]).to.equal(2);
+                        expect(resolved[1]).to.equal(3);
+                        done();
+                    }).catch(ex => {
+                        done(ex);
+                    });
+                });
+        });
     });
 });

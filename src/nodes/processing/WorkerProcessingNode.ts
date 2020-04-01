@@ -1,7 +1,6 @@
 import { DataFrame } from "../../data";
 import { ProcessingNode } from "../ProcessingNode";
 import { spawn, Thread, Worker } from "threads";
-import { GraphPushOptions } from "../../graph";
 import { DataSerializer } from "../../data/DataSerializer";
 
 /**
@@ -15,7 +14,7 @@ import { DataSerializer } from "../../data/DataSerializer";
  */
 export class WorkerProcessingNode<In extends DataFrame, Out extends DataFrame> extends ProcessingNode<In, Out> {
     private _worker: Worker;
-    private _workerFn: (data: In, options?: GraphPushOptions) => Promise<Out>;
+    private _workerFn: (frame: any) => Promise<any>;
     private _thread: Thread;
     
     constructor(workerFile: string) {
@@ -58,13 +57,13 @@ export class WorkerProcessingNode<In extends DataFrame, Out extends DataFrame> e
         });
     }
 
-    public process(data: In, options?: GraphPushOptions): Promise<Out> {
+    public process(data: In): Promise<Out> {
         return new Promise<Out>((resolve, reject) => {
             if (this._workerFn === undefined) {
                 reject("Worker thread not spawned yet!");
             }
 
-            this._workerFn(DataSerializer.serialize(data), options).then((result: any) => {
+            this._workerFn(DataSerializer.serialize<In>(data)).then((result: any) => {
                 resolve(DataSerializer.deserialize(result) as Out);
             }).catch(ex => {
                 reject(ex);

@@ -1,4 +1,3 @@
-import { GraphOptions } from "../graph/GraphOptions";
 import { DataFrame } from "../data/DataFrame";
 import { Model } from "../Model";
 import { DataObject } from "../data";
@@ -14,14 +13,34 @@ export abstract class SinkNode<In extends DataFrame> extends AbstractSinkNode<In
         super();
     }
 
-    public push(data: In, options?: GraphOptions): Promise<void> {
+    public push(frame: In): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this.onPush(data, options).then(() => {
+            if (frame === null || frame === undefined) {
+                this.logger("warning", {
+                    node: {
+                        uid: this.uid,
+                        name: this.name
+                    },
+                    message: `Sink node received null data frame!`,
+                });
+                return reject();
+            }
+
+            this.logger("debug", {
+                node: {
+                    uid: this.uid,
+                    name: this.name
+                },
+                message: `Sink node received push`
+            });
+
+            this.onPush(frame).then(() => {
                 const model: Model<any, any> = (this.graph as Model<any, any>);
                 const defaultService = model.findDataService(DataObject);
                 const servicePromises = new Array();
+
                 const objects = new Array<DataObject>();
-                data.getObjects().forEach(object => {
+                frame.getObjects().forEach(object => {
                     objects.push(object);
                 });
 
@@ -48,18 +67,18 @@ export abstract class SinkNode<In extends DataFrame> extends AbstractSinkNode<In
                 }
 
                 // Check if there are frame services
-                const frameService = this.getDataFrameService(data);
+                const frameService = this.getDataFrameService(frame);
                 let framePromise: PromiseLike<void> = null;
                 if (frameService !== null && frameService !== undefined) { 
                     // Update the frame
-                    framePromise = frameService.delete(data.uid);
+                    framePromise = frameService.delete(frame.uid);
                 }
 
                 Promise.all(servicePromises).then(() => {
                     if (framePromise !== null) {
-                        Promise.resolve(framePromise).then(_ => {
+                        Promise.resolve(framePromise).then(() => {
                             resolve();
-                        }).catch(_ => {
+                        }).catch(() => {
                             resolve(); // Ignore frame deleting issue
                         });
                     } else {
@@ -74,6 +93,6 @@ export abstract class SinkNode<In extends DataFrame> extends AbstractSinkNode<In
         });
     }
 
-    public abstract onPush(data: In, options?: GraphOptions): Promise<void>;
+    public abstract onPush(frame: In): Promise<void>;
 
 }

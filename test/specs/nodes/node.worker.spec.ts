@@ -73,6 +73,8 @@ describe('node', () => {
                         expect(diff).to.be.lessThan(60);
                         model.emit('destroy');
                         done();
+                    }).catch(ex => {
+                        done(ex);
                     });
                 });
         }).timeout(30000);
@@ -103,6 +105,8 @@ describe('node', () => {
                         expect(diff).to.be.lessThan(50);
                         model.emit('destroy');
                         done();
+                    }).catch(ex => {
+                        done(ex);
                     });
                 });
         }).timeout(30000);
@@ -133,11 +137,14 @@ describe('node', () => {
                         expect(diff).to.be.lessThan(40);
                         model.emit('destroy');
                         done();
+                    }).catch(ex => {
+                        done(ex);
                     });
                 });
         }).timeout(30000);
 
         it('should be able to access services', (done) => {
+            let model;
             ModelBuilder.create()
                 .from()
                 .via(new WorkerNode((builder) => {
@@ -150,19 +157,14 @@ describe('node', () => {
                 .to(new CallbackSinkNode((data: DataFrame) => {
                     expect(data.getObjects()[0].uid).to.equal("abc456");
                     expect(data.getObjects()[0].displayName).to.equal("hello world");
+                    model.emit('destroy');
+                    done();
                 }))
-                .build().then(model => {
+                .build().then(m => {
+                    model = m;
                     const dataService = model.findDataService(DataObject);
                     dataService.insert(new DataObject("abc456")).then(() => {
-                        Promise.all([
-                            model.push(new DataFrame())
-                        ]).then(_ => {
-                            dataService.findByUID("abc456").then(object => {
-                                expect(object.displayName).to.equal("hello world");
-                                model.emit('destroy');
-                                done();
-                            });
-                        });
+                        Promise.resolve(model.push(new DataFrame()));
                     });
                 });
         }).timeout(50000);

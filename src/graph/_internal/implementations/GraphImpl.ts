@@ -3,8 +3,6 @@ import { AbstractEdge } from "../../interfaces/AbstractEdge";
 import { AbstractGraph } from "../../interfaces/AbstractGraph";
 import { DataFrame } from "../../../data/DataFrame";
 import { ModelException } from "../../../exceptions";
-import { GraphPushOptions } from "../../GraphPushOptions";
-import { GraphPullOptions } from "../../GraphPullOptions";
 import { BroadcastNode } from "../../../nodes/shapes/BroadcastNode";
 
 export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> implements AbstractGraph<In, Out> {
@@ -139,15 +137,13 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
 
     /**
      * Send a pull request to the graph
-     * 
-     * @param options Pull options
      */
-    public pull(options?: GraphPullOptions): Promise<void> {
+    public pull(): Promise<void> {
         return this.internalOutput.pull();
     }
 
-    public push(data: In, options?: GraphPushOptions): Promise<void> {
-        return this.internalInput.push(data, options);
+    public push(frame: In): Promise<void> {
+        return this.internalInput.push(frame);
     }
 
 }

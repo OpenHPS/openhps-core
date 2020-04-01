@@ -1,7 +1,6 @@
 import { DataFrame } from "../../../data/DataFrame";
 import { isNumber } from "util";
 import { ProcessingNode } from "../../ProcessingNode";
-import { GraphPushOptions } from "../../../graph";
 import { DataObject } from "../../../data";
 
 export abstract class FilterNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
@@ -14,7 +13,7 @@ export abstract class FilterNode<InOut extends DataFrame> extends ProcessingNode
         this._properties = properties;
     }
 
-    public process(frame: InOut, options?: GraphPushOptions): Promise<InOut> {
+    public process(frame: InOut): Promise<InOut> {
         return new Promise((resolve, reject) => {
             // Extract all sensor values from the frame
             const filterPromises = new Array();

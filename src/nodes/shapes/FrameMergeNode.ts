@@ -1,5 +1,4 @@
 import { DataFrame } from "../../data";
-import { GraphPushOptions } from "../../graph";
 import { ProcessingNode } from "../ProcessingNode";
 import { TimeUnit } from "../../utils";
 
@@ -68,9 +67,9 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
         }
     }
 
-    public process(data: InOut, options: GraphPushOptions): Promise<InOut> {
+    public process(frame: InOut): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
-            const key = this._mergeFn(data);
+            const key = this._mergeFn(frame);
             if (key === undefined) {
                 return resolve();
             }
@@ -78,11 +77,11 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
             let queue = this._queue.get(key);
             if (queue === undefined) {
                 queue = new QueuedMerge(key);
-                queue.frames.set(this._groupFn(data), data);
+                queue.frames.set(this._groupFn(frame), frame);
                 this._queue.set(key, queue);
                 resolve();
             } else {
-                queue.frames.set(this._groupFn(data), data);
+                queue.frames.set(this._groupFn(frame), frame);
                 // Check if there are enough frames
                 if (queue.frames.size >= this.inputNodes.length) {
                     this._queue.delete(key);

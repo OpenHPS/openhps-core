@@ -1,8 +1,7 @@
 import { DataFrame, DataObject } from "../../../data";
-import { Service, DataObjectService, DataService } from "../../../service";
+import { Service, DataService } from "../../../service";
 import { GraphImpl } from "./GraphImpl";
 import { Model } from "../../../Model";
-import { GraphPushOptions } from "../../GraphPushOptions";
 import { MemoryDataObjectService } from "../../../service/MemoryDataObjectService";
 import { MemoryDataFrameService } from "../../../service/MemoryDataFrameService";
 
@@ -129,21 +128,23 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
         }
     }
 
-    public push(frame: In, options?: GraphPushOptions): Promise<void> {
+    public push(frame: In): Promise<void> {
         return new Promise<void>((resolve, reject) => {
+            const servicePromises = new Array();
+
             // Merge the changes in the frame service
             let frameService = this.findDataServiceByName(frame.constructor.name);
             if (frameService === null || frameService === undefined) { 
                 frameService = this.findDataServiceByName("DataFrame"); 
             }
-            const servicePromises = new Array();
+            
             if (frameService !== null && frameService !== undefined) { 
                 // Update the frame
                 servicePromises.push(frameService.insert(frame));
             }
 
-            Promise.all(servicePromises).then(_1 => {
-                this.internalInput.push(frame, options).then(_2 => {
+            Promise.all(servicePromises).then(() => {
+                this.internalInput.push(frame).then(() => {
                     resolve();
                 }).catch(ex => {
                     reject(ex);

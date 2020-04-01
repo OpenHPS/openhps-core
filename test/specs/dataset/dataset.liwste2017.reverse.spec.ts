@@ -133,12 +133,12 @@ describe('dataset', () => {
                 });
 
                 it('should trilaterate a location based on three relative distances', (done) => {
-                    callbackNode.callback = (data: EvaluationDataFrame) => {
-                        data.getObjects().forEach(object => {
+                    callbackNode.callback = (frame: EvaluationDataFrame) => {
+                        frame.getObjects().forEach(object => {
                             if (object.uid === "tracked") {
                                 let calculatedLocation: Cartesian2DLocation = object.predictedLocations[0] as Cartesian2DLocation;
                                 // Accurate control location
-                                const expectedLocation: Cartesian2DLocation = data.evaluationObjects.get(object.uid).currentLocation as Cartesian2DLocation;
+                                const expectedLocation: Cartesian2DLocation = frame.evaluationObjects.get(object.uid).currentLocation as Cartesian2DLocation;
                                 
                                 // Convert meters to cm
                                 calculatedLocation.x = calculatedLocation.unit.convert(calculatedLocation.x, expectedLocation.unit);

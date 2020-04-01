@@ -1,7 +1,5 @@
 import { DataFrame } from "../data/DataFrame";
-import { GraphPullOptions } from "../graph/GraphPullOptions";
 import { ServiceMergeNode } from "./processing/ServiceMergeNode";
-import { GraphPushOptions } from "../graph/GraphPushOptions";
 import { ModelBuilder } from "../ModelBuilder";
 import { DataObject } from "../data";
 import { EdgeBuilder } from "../graph/builders/EdgeBuilder";
@@ -58,39 +56,39 @@ export abstract class SourceNode<Out extends DataFrame> extends AbstractSourceNo
         this.emit('ready');
     }
 
-    private _onPush(frame: Out, options?: GraphPushOptions): Promise<void> {
+    private _onPush(frame: Out): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            if (frame !== null || frame !== undefined) {
-                const servicePromises = new Array();
+            const servicePromises = new Array();
+            const pushPromises = new Array();
 
+            if (frame !== null || frame !== undefined) {
                 const frameService = this.getDataFrameService(frame);
                 
                 if (frameService !== null && frameService !== undefined) { 
                     // Update the frame
                     servicePromises.push(frameService.insert(frame));
                 }
-
-                const pushPromises = new Array();
                 this.outputNodes.forEach(node => {
-                    pushPromises.push(node.push(frame, options));
-                });
-                Promise.all(pushPromises).then(_ => {
-                    resolve();
-                }).catch(ex => {
-                    reject(ex);
+                    pushPromises.push(node.push(frame));
                 });
             } else {
                 // No frame provided in pull
                 resolve();
             }
+            
+            Promise.all(pushPromises).then(_ => {
+                resolve();
+            }).catch(ex => {
+                reject(ex);
+            });
         });
     }
 
-    private _onPull(options?: GraphPullOptions): Promise<void> {
+    private _onPull(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this.onPull(options).then(frame => {
+            this.onPull().then(frame => {
                 if (frame !== undefined && frame !== null) {
-                    return this.push(frame, options);
+                    return this.push(frame);
                 } else {
                     resolve();
                 }
@@ -110,6 +108,6 @@ export abstract class SourceNode<Out extends DataFrame> extends AbstractSourceNo
         this._source = source;
     }
 
-    public abstract onPull(options?: GraphPullOptions): Promise<Out>;
+    public abstract onPull(): Promise<Out>;
 
 }

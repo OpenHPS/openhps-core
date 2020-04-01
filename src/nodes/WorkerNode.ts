@@ -1,8 +1,7 @@
 import { DataFrame, DataSerializer } from "../data";
-import { GraphPushOptions, GraphPullOptions } from "../graph";
 import { Node } from "../Node";
 import { Thread, Worker, spawn, Pool } from "threads";
-import { Observable, Subject } from "threads/observable";
+import { Observable } from "threads/observable";
 import { PoolEvent } from "threads/dist/master/pool";
 import { Model } from "../Model";
 import { isArray } from "util";
@@ -28,7 +27,7 @@ import { ModelShapeBuilder } from "../ModelBuilder";
  * }, { directory: __dirname });
  * ```
  */
-export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
+export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends Node<In, Out> {
     private _worker: Worker;
     private _pool: Pool<Thread>;
     private _builderCallback: (builder: ModelShapeBuilder) => void;
@@ -48,13 +47,13 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         this.on('push', this._onPush.bind(this));
     }
 
-    private _onPull(options?: GraphPullOptions): Promise<void> {
+    private _onPull(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (this._options.optimizedPull) {
                 // Do not pass the pull request to the worker
                 const pullPromises = new Array();
                 this.inputNodes.forEach(node => {
-                    pullPromises.push(node.pull(options));
+                    pullPromises.push(node.pull());
                 });
 
                 Promise.all(pullPromises).then(_ => {
@@ -65,10 +64,8 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
             } else {
                 // Pass the pull request to the worker
                 this._pool.queue((worker: any) => {
-                    const pullFn: (options?: GraphPullOptions) => Promise<Promise<void>> = worker.pull;
-                    return Promise.resolve(pullFn(DataSerializer.serialize(options)));
-                }).then(promise => {
-                    return promise;
+                    const pullFn: () =>  Promise<void> = worker.pull;
+                    return pullFn();
                 }).then(() => {
                     resolve();
                 }).catch(ex => {
@@ -78,13 +75,11 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         });
     }
 
-    private _onPush(data: In, options?: GraphPushOptions): Promise<void> {
+    private _onPush(frame: In): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this._pool.queue((worker: any) => {
-                const pushFn: (data: In, options?: GraphPushOptions) => Promise<Promise<void>> = worker.push;
-                return pushFn(DataSerializer.serialize(data), DataSerializer.serialize(options));
-            }).then(promise => {
-                return promise;
+                const pushFn: (frame: any) => Promise<void> = worker.push;
+                return pushFn(DataSerializer.serialize(frame));
             }).then(() => {
                 resolve();
             }).catch(ex => {
@@ -110,8 +105,8 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         return new Promise((resolve, reject) => {
             spawn(this._worker).then((thread: Thread) => {
                 const initFn: (workerData: any) => Promise<void> = (thread as any).init;
-                const outputFn: () => Observable<{ data: any, options?: GraphPushOptions }> = (thread as any).output;
-                const inputFn: () => Observable<{ options?: GraphPullOptions }> = (thread as any).input;
+                const outputFn: () => Observable<any> = (thread as any).output;
+                const inputFn: () => Observable<void> = (thread as any).input;
                 const serviceInput: () => Observable<{ id: string, serviceName: string, method: string, parameters: any }> = (thread as any).serviceInput;
                 this._serviceOutputFn = (thread as any).serviceOutput;
 
@@ -126,7 +121,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                 initFn({
                     dirname: this._options.directory,
                     builderCallback: this._builderCallback.toString()
-                }).then(_ => {
+                }).then(() => {
                     resolve(thread);
                 }).catch(ex => {
                     reject(ex);
@@ -166,24 +161,21 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         }
     }
 
-    private _onWorkerPull(value: { options?: GraphPullOptions }): void {
-        const deserializedOptions = DataSerializer.deserialize(value.options) as GraphPullOptions;
-
+    private _onWorkerPull(): void {
         const pullPromises = new Array();
         this.inputNodes.forEach(node => {
-            pullPromises.push(node.pull(deserializedOptions));
+            pullPromises.push(node.pull());
         });
 
         Promise.all(pullPromises);
     }
 
-    private _onWorkerPush(value: { data: any, options?: GraphPushOptions }): void {
-        const deserializedData = DataSerializer.deserialize(value.data);
-        const deserializedOptions = DataSerializer.deserialize(value.options);
+    private _onWorkerPush(value: any): void {
+        const deserializedFrame = DataSerializer.deserialize(value);
 
         const pushPromises = new Array();
         this.outputNodes.forEach(node => {
-            pushPromises.push(node.push(deserializedData, deserializedOptions));
+            pushPromises.push(node.push(deserializedFrame));
         });
 
         Promise.all(pushPromises);

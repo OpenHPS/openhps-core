@@ -1,4 +1,4 @@
-import { Node, GraphPushOptions, Model } from "../../../src";
+import { Node, Model } from "../../../src";
 import { DataFrame, DataObject } from "../../../src/data";
 
 export class DataServiceTestNode extends Node<DataFrame, DataFrame> {
@@ -8,18 +8,20 @@ export class DataServiceTestNode extends Node<DataFrame, DataFrame> {
         this.on('push', this.onPush.bind(this));
     }
     
-    public onPush(data: DataFrame, options?: GraphPushOptions): Promise<void> {
+    public onPush(frame: DataFrame): Promise<void> {
         return new Promise((resolve, reject) => {
             const dataService = (this.graph as Model<any, any>).findDataService(DataObject);
             dataService.findByUID("abc456").then(dataObject => {
                 dataObject.displayName = "hello world";
-                data.addObject(dataObject);
+                frame.addObject(dataObject);
                 const pushPromises = new Array();
                 this.outputNodes.forEach(node => {
-                    pushPromises.push(node.push(data, options));
+                    pushPromises.push(node.push(frame));
                 });
-                Promise.all(pushPromises).then(_ => {
+                Promise.all(pushPromises).then(() => {
                     resolve();
+                }).catch(ex => {
+                    reject(ex);
                 });
             });
         });

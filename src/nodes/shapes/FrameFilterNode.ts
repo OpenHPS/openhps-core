@@ -1,5 +1,4 @@
 import { DataFrame } from "../../data";
-import { GraphPushOptions } from "../../graph";
 import { ProcessingNode } from "../ProcessingNode";
 
 export class FrameFilterNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
@@ -10,10 +9,10 @@ export class FrameFilterNode<InOut extends DataFrame> extends ProcessingNode<InO
         this._filterFn = filterFn;
     }
 
-    public process(data: InOut, options: GraphPushOptions): Promise<InOut> {
+    public process(frame: InOut): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
-           if (this._filterFn(data)) {
-               resolve(data);
+           if (this._filterFn(frame)) {
+               resolve(frame);
            } else {
                resolve();
            }

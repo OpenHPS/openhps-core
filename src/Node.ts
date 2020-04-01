@@ -1,9 +1,6 @@
-import 'reflect-metadata';
 import * as uuidv4 from 'uuid/v4';
 import { AbstractNode } from "./graph/interfaces/AbstractNode";
 import { DataFrame } from "./data/DataFrame";
-import { GraphPushOptions } from "./graph/GraphPushOptions";
-import { GraphPullOptions } from "./graph/GraphPullOptions";
 import { AbstractGraph } from "./graph/interfaces/AbstractGraph";
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
 import { DataFrameService } from './service/DataFrameService';
@@ -12,7 +9,7 @@ import { AsyncEventEmitter } from './_internal/AsyncEventEmitter';
 /**
  * OpenHPS model node.
  */
-export abstract class Node<In extends DataFrame, Out extends DataFrame> extends AsyncEventEmitter implements AbstractNode<In, Out> {
+export abstract class Node<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends AsyncEventEmitter implements AbstractNode<In, Out> {
     private _uid: string = uuidv4();
     private _name: string;
     private _graph: AbstractGraph<any, any>;
@@ -118,20 +115,20 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
      * 
      * @param options Pull options
      */
-    public pull(options?: GraphPullOptions): Promise<void> {
+    public pull(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const callbackPromises = new Array();
             this.listeners('pull').forEach(callback => {
-                callbackPromises.push(callback(options));
+                callbackPromises.push(callback());
             });
 
             if (callbackPromises.length === 0) {
                 const pullPromises = new Array();
                 this.inputNodes.forEach(node => {
-                    pullPromises.push(node.pull(options));
+                    pullPromises.push(node.pull());
                 });
 
-                Promise.all(pullPromises).then(_ => {
+                Promise.all(pullPromises).then(() => {
                     resolve();
                 }).catch(ex => {
                     reject(ex);
@@ -149,12 +146,11 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
     /**
      * Push data to the node
      * 
-     * @param data Data frame to push
-     * @param options 
+     * @param frame Data frame to push
      */
-    public push(data: In, options?: GraphPushOptions): Promise<void> {
+    public push(frame: In): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            if (data === undefined || data === null) {
+            if (frame === null || frame === undefined) {
                 this.logger("warning", {
                     node: {
                         uid: this.uid,
@@ -175,22 +171,22 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
 
             const callbackPromises = new Array();
             this.listeners('push').forEach(callback => {
-                callbackPromises.push(callback(data, options));
+                callbackPromises.push(callback(frame));
             });
 
             if (callbackPromises.length === 0) {
                 const pushPromises = new Array();
                 this.outputNodes.forEach(node => {
-                    pushPromises.push(node.push(data, options));
+                    pushPromises.push(node.push(frame));
                 });
 
-                Promise.all(pushPromises).then(_ => {
+                Promise.all(pushPromises).then(() => {
                     resolve();
                 }).catch(ex => {
                     reject(ex);
                 });
             } else {
-                Promise.all(callbackPromises).then(_ => {
+                Promise.all(callbackPromises).then(() => {
                     resolve();
                 }).catch(ex => {
                     reject(ex);

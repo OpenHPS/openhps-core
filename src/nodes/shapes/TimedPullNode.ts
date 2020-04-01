@@ -1,7 +1,6 @@
 import { DataFrame } from "../../data/DataFrame";
 import { Node } from "../../Node";
 import { TimeUnit } from "../../utils/unit";
-import { GraphPushOptions } from "../../graph";
 
 export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _interval: number;
@@ -18,11 +17,11 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
         this.once('destroy', this._stop.bind(this));
     }
 
-    private _onPush(data: InOut, options?: GraphPushOptions): Promise<void> {
+    private _onPush(frame: InOut): Promise<void> {
         return new Promise((resolve, reject) => {
             const pushPromises = new Array();
             this.outputNodes.forEach(node => {
-                pushPromises.push(node.push(data, options));
+                pushPromises.push(node.push(frame));
             });
 
             Promise.all(pushPromises).then(_ => {

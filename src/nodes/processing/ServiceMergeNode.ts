@@ -1,6 +1,5 @@
 import { DataFrame, DataObject } from "../../data";
 import { ProcessingNode } from "../ProcessingNode";
-import { GraphPushOptions } from "../../graph/GraphPushOptions";
 import { Model } from "../../Model";
 
 export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
@@ -9,13 +8,13 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
         super();
     }
 
-    public process(data: InOut, options: GraphPushOptions): Promise<InOut> {
+    public process(frame: InOut): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
             const model = (this.graph as Model<any, any>);
             const defaultService = model.findDataService(DataObject);
             const promises = new Array();
             const objects = new Array<DataObject>();
-            data.getObjects().forEach(object => {
+            frame.getObjects().forEach(object => {
                 objects.push(object);
             });
             objects.forEach(object => {
@@ -30,8 +29,8 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
                         }
 
                         object.merge(existingObject);
-                        if (data.source !== undefined && data.source.uid === existingObject.uid) {
-                            data.source = object;
+                        if (frame.source !== undefined && frame.source.uid === existingObject.uid) {
+                            frame.source = object;
                         }
                         objResolve();
                     }).catch(ex => {
@@ -42,7 +41,7 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
             });
             
             Promise.all(promises).then(_ => {
-                resolve(data);
+                resolve(frame);
             }).catch(ex => {
                 reject(ex);
             });

@@ -1,6 +1,5 @@
 import { DataFrame, DataObject } from "../data";
 import { ProcessingNode } from "./ProcessingNode";
-import { GraphPushOptions } from "../graph";
 import { isFunction } from "util";
 
 /**
@@ -17,17 +16,17 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame> extends Proc
         }
     }
 
-    public process(data: InOut, options?: GraphPushOptions): Promise<InOut> {
+    public process(frame: InOut): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
             const processObjectPromises = new Array();
-            data.getObjects().filter(value => this._filterFn(value, data)).forEach(object => {
-                processObjectPromises.push(this.processObject(object, data));
+            frame.getObjects().filter(value => this._filterFn(value, frame)).forEach(object => {
+                processObjectPromises.push(this.processObject(object, frame));
             });
             Promise.all(processObjectPromises).then(objects => {
                 objects.forEach(object => {
-                    data.addObject(object);
+                    frame.addObject(object);
                 });
-                resolve(data);
+                resolve(frame);
             }).catch(ex => {
                 reject(ex);
             });

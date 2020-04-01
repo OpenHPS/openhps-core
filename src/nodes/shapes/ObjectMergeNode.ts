@@ -1,5 +1,4 @@
 import { DataFrame, DataObject } from "../../data";
-import { GraphPushOptions } from "../../graph";
 import { TimeUnit } from "../../utils";
 import { ProcessingNode } from "../ProcessingNode";
 
@@ -68,7 +67,7 @@ export class ObjectMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
         }
     }
 
-    public process(frame: InOut, options: GraphPushOptions): Promise<InOut> {
+    public process(frame: InOut): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
             frame.getObjects().filter((value: DataObject) => this._filterFn(value, frame)).forEach(object => {
                 const key = object.uid;

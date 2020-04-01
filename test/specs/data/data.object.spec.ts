@@ -3,7 +3,6 @@ import 'mocha';
 import { DataObject, RelativeDistanceLocation, Fingerprint, Cartesian2DLocation } from '../../../src';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 import { DataSerializer } from '../../../src/data/DataSerializer';
-import { JSONPath, JSONPathClass } from 'jsonpath-plus';
 
 describe('data', () => {
     describe('object', () => {
@@ -33,7 +32,7 @@ describe('data', () => {
                     beacons.push(beacon);
                 }
                 const addFingerprint = (data: Fingerprint) => {
-                    fingerprints.set(data.uid, DataSerializer.serialize(data));
+                    fingerprints.set(data.uid, DataSerializer.serialize<Fingerprint>(data));
                 };
 
                 for (let i = 0 ; i < 250 ; i++) {

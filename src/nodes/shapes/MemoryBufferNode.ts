@@ -1,7 +1,5 @@
 import { DataFrame } from "../../data/DataFrame";
 import { Node } from "../../Node";
-import { GraphPushOptions } from "../../graph/GraphPushOptions";
-import { GraphPullOptions } from "../../graph/GraphPullOptions";
 
 export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _dataFrames: InOut[];
@@ -12,16 +10,16 @@ export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut
         this.on('push', this.onPush.bind(this));
     }
 
-    public onPull(options?: GraphPullOptions): void {
+    public onPull(): void {
         if (this._dataFrames.length !== 0) {
             this.outputNodes.forEach(node => {
-                node.push(this._dataFrames.pop(), options);
+                node.push(this._dataFrames.pop());
             });
         }
     } 
 
-    public onPush(data: InOut, options?: GraphPushOptions): void {
-        this._dataFrames.push(data);
+    public onPush(frame: InOut): void {
+        this._dataFrames.push(frame);
     }
 
 }

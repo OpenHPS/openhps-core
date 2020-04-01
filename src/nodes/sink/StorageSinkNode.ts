@@ -1,6 +1,5 @@
 import { DataFrame } from "../../data/DataFrame";
 import { SinkNode } from "../SinkNode";
-import { GraphPushOptions } from "../../graph/GraphPushOptions";
 
 export class StorageSinkNode<In extends DataFrame> extends SinkNode<In> {
 
@@ -8,7 +7,7 @@ export class StorageSinkNode<In extends DataFrame> extends SinkNode<In> {
         super();
     }
     
-    public onPush(data: In, options?: GraphPushOptions): Promise<void> {
+    public onPush(frame: In): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             resolve();
         });
