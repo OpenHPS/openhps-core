@@ -2,7 +2,7 @@ import { DataFrame, DataObject } from "../../data";
 import { ProcessingNode } from "../ProcessingNode";
 import { Model } from "../../Model";
 
-export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
+export class ServiceMergeNode<InOut extends DataFrame | DataFrame[]> extends ProcessingNode<InOut, InOut> {
 
     constructor() {
         super();
@@ -14,9 +14,17 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
             const defaultService = model.findDataService(DataObject);
             const promises = new Array();
             const objects = new Array<DataObject>();
-            frame.getObjects().forEach(object => {
-                objects.push(object);
-            });
+            if (frame instanceof Array) {
+                frame.forEach((f: DataFrame) => {
+                    f.getObjects().forEach(object => {
+                        objects.push(object);
+                    });
+                });
+            } else {
+                (frame as DataFrame).getObjects().forEach(object => {
+                    objects.push(object);
+                });
+            }
             objects.forEach(object => {
                 promises.push(new Promise((objResolve, objReject) => {
                     let service = model.findDataServiceByObject(object);
@@ -29,9 +37,6 @@ export class ServiceMergeNode<InOut extends DataFrame> extends ProcessingNode<In
                         }
 
                         object.merge(existingObject);
-                        if (frame.source !== undefined && frame.source.uid === existingObject.uid) {
-                            frame.source = object;
-                        }
                         objResolve();
                     }).catch(ex => {
                         // Ignore

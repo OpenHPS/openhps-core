@@ -4,7 +4,7 @@ import { Node } from "../Node";
 /**
  * Processing node
  */
-export abstract class ProcessingNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
+export abstract class ProcessingNode<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends Node<In, Out> {
 
     constructor() {
         super();
@@ -18,26 +18,28 @@ export abstract class ProcessingNode<In extends DataFrame, Out extends DataFrame
             const pushPromises = new Array();
             
             this.process(frame).then(result => {
-                if (result !== null && result !== undefined) {
-                    const oldFrameService = this.getDataFrameService(frame);
-                    const frameService = this.getDataFrameService(result);
+                if (result === null || result === undefined) {
+                    return resolve();
+                } else if (result instanceof Array) {
+                    
+                } else {
+                    const oldFrameService = this.getDataFrameService(frame as DataFrame);
+                    const frameService = this.getDataFrameService(result as DataFrame);
                     
                     if (frameService !== null && frameService !== undefined) { 
                         if (frameService.name !== oldFrameService.name) {
                             // Delete frame from old service
-                            servicePromises.push(oldFrameService.delete(frame.uid));
+                            servicePromises.push(oldFrameService.delete((frame as DataFrame).uid));
                         }
                         
                         // Update the frame
-                        servicePromises.push(frameService.insert(result));
+                        servicePromises.push(frameService.insert(result as DataFrame));
                     }
-
-                    this.outputNodes.forEach(node => {
-                        pushPromises.push(node.push(result));
-                    });
-                } else {
-                    resolve();
                 }
+                
+                this.outputNodes.forEach(node => {
+                    pushPromises.push(node.push(result));
+                });
             }).catch(ex => {
                 if (ex === undefined) {
                     this.logger("warning", {

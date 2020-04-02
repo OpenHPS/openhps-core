@@ -3,7 +3,7 @@ import * as uuidv4 from 'uuid/v4';
 import { AbstractNode } from "../../interfaces";
 import { DataFrame } from "../../../data";
 
-export class EdgeImpl<InOut extends DataFrame> implements AbstractEdge<InOut> {
+export class EdgeImpl<InOut extends DataFrame | DataFrame[]> implements AbstractEdge<InOut> {
     private _uid: string = uuidv4();
     private _inputNode: AbstractNode<any, InOut>;
     private _outputNode: AbstractNode<InOut, any>;

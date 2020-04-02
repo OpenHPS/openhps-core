@@ -8,7 +8,7 @@ import { AbstractSourceNode } from "./_internal/interfaces/AbstractSourceNode";
 /**
  * Source node
  */
-export abstract class SourceNode<Out extends DataFrame> extends AbstractSourceNode<Out> {
+export abstract class SourceNode<Out extends DataFrame | DataFrame[]> extends AbstractSourceNode<Out> {
     private _source: DataObject;
     private _ignoreMerging: boolean;
 
@@ -61,20 +61,37 @@ export abstract class SourceNode<Out extends DataFrame> extends AbstractSourceNo
             const servicePromises = new Array();
             const pushPromises = new Array();
 
-            if (frame !== null || frame !== undefined) {
-                const frameService = this.getDataFrameService(frame);
-                
-                if (frameService !== null && frameService !== undefined) { 
-                    // Update the frame
-                    servicePromises.push(frameService.insert(frame));
-                }
-                this.outputNodes.forEach(node => {
-                    pushPromises.push(node.push(frame));
+            if (frame instanceof Array) {
+                frame.forEach(f => {
+                    if (f !== null || f !== undefined) {
+                        const frameService = this.getDataFrameService(f);
+                        
+                        if (frameService !== null && frameService !== undefined) { 
+                            // Update the frame
+                            servicePromises.push(frameService.insert(f));
+                        }
+                    } else {
+                        // No frame provided in pull
+                        return resolve();
+                    }
                 });
             } else {
-                // No frame provided in pull
-                resolve();
+                if (frame !== null || frame !== undefined) {
+                    const frameService = this.getDataFrameService(frame as DataFrame);
+                    
+                    if (frameService !== null && frameService !== undefined) { 
+                        // Update the frame
+                        servicePromises.push(frameService.insert(frame as DataFrame));
+                    }
+                } else {
+                    // No frame provided in pull
+                    return resolve();
+                }
             }
+            
+            this.outputNodes.forEach(node => {
+                pushPromises.push(node.push(frame));
+            });
             
             Promise.all(pushPromises).then(_ => {
                 resolve();
