@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.132](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.131...v1.0.0-alpha.132) (2020-04-02)
+
+
+### Features
+
+* allow for chunked frames ([afc3f8b](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/afc3f8baea313ed898909b27802f313446e5a0c4))
+
 ## [1.0.0-alpha.131](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.130...v1.0.0-alpha.131) (2020-04-02)
 
 ## [1.0.0-alpha.130](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.129...v1.0.0-alpha.130) (2020-04-02)
