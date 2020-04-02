@@ -3,11 +3,13 @@ import { Model } from "../Model";
 import { DataObject } from "../data";
 import * as uuidv4 from 'uuid/v4';
 import { AbstractSinkNode } from "./_internal/interfaces/AbstractSinkNode";
+import { isArray } from "util";
+import { DataFrameService } from "../service";
 
 /**
  * Sink node
  */
-export abstract class SinkNode<In extends DataFrame> extends AbstractSinkNode<In> {
+export abstract class SinkNode<In extends DataFrame | DataFrame[]> extends AbstractSinkNode<In> {
 
     constructor() {
         super();
@@ -40,9 +42,17 @@ export abstract class SinkNode<In extends DataFrame> extends AbstractSinkNode<In
                 const servicePromises = new Array();
 
                 const objects = new Array<DataObject>();
-                frame.getObjects().forEach(object => {
-                    objects.push(object);
-                });
+                if (frame instanceof Array) {
+                    frame.forEach((f: DataFrame) => {
+                        f.getObjects().forEach(object => {
+                            objects.push(object);
+                        });
+                    });
+                } else {
+                    (frame as DataFrame).getObjects().forEach(object => {
+                        objects.push(object);
+                    });
+                }
 
                 for (const object of objects) {
                     // Check if current location needs to be updated
@@ -66,17 +76,29 @@ export abstract class SinkNode<In extends DataFrame> extends AbstractSinkNode<In
                     servicePromises.push(service.insert(object));
                 }
 
-                // Check if there are frame services
-                const frameService = this.getDataFrameService(frame);
-                let framePromise: PromiseLike<void> = null;
-                if (frameService !== null && frameService !== undefined) { 
-                    // Update the frame
-                    framePromise = frameService.delete(frame.uid);
+                let frameService: DataFrameService<any>;
+                const framePromises: Array<PromiseLike<void>> = new Array();
+                if (frame instanceof Array) {
+                    frame.forEach((f: DataFrame) => {
+                        // Check if there are frame services
+                        frameService = this.getDataFrameService(f);
+                        if (frameService !== null && frameService !== undefined) { 
+                            // Update the frame
+                            framePromises.push(frameService.delete(f.uid));
+                        }
+                    });
+                } else if (frame instanceof DataFrame) {
+                    // Check if there are frame services
+                    frameService = this.getDataFrameService(frame);
+                    if (frameService !== null && frameService !== undefined) { 
+                        // Update the frame
+                        framePromises.push(frameService.delete(frame.uid));
+                    }
                 }
 
                 Promise.all(servicePromises).then(() => {
-                    if (framePromise !== null) {
-                        Promise.resolve(framePromise).then(() => {
+                    if (framePromises.length !== 0) {
+                        Promise.all(framePromises).then(() => {
                             resolve();
                         }).catch(() => {
                             resolve(); // Ignore frame deleting issue

@@ -2,6 +2,7 @@ import { DataFrame, DataObject, Fingerprint, DataSerializer, RelativeLocation } 
 import { Model } from "../../../Model";
 import { DataObjectService } from "../../../service";
 import { FingerprintingNode } from "./FingerprintingNode";
+import * as math from 'mathjs';
 
 /**
  * Compressive-sensing based fingerprinting processing node
@@ -72,7 +73,7 @@ export class CSFingerprintingNode<InOut extends DataFrame> extends Fingerprintin
 }
 
 class CSFingerprintingOptions {
-    public orientations: number[][] = [[NaN, 0], [NaN, NaN, 90], [NaN, NaN, 180], [NaN, NaN, 270]];
+    public orientations: number[][] = [];
     public defaultValue?: number = 0;
 }
 
@@ -85,6 +86,7 @@ class CachedFingerprint {
     constructor(fingerprint: Fingerprint) {
         this.uid = fingerprint.uid;
         this.location = DataSerializer.serialize(fingerprint.currentLocation);
+        this.orientation = fingerprint.currentLocation.velocity;
         fingerprint.relativeLocations.sort(function(a: RelativeLocation, b: RelativeLocation) {
             if (a.referenceObjectUID < b.referenceObjectUID) { return -1; }
             if (a.referenceObjectUID > b.referenceObjectUID) { return 1; }
