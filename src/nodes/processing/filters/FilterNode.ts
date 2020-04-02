@@ -5,10 +5,12 @@ import { DataObject } from "../../../data";
 
 export abstract class FilterNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
     private _options: FilterOptions;
-    
-    constructor(options?: FilterOptions) {
+    private _propertySelector: (frame: DataFrame) => boolean;
+
+    constructor(options?: FilterOptions, propertySelector: (frame: DataFrame) => boolean = () => true) {
         super();
         this._options = options;
+        this._propertySelector = propertySelector;
     }
 
     public process(frame: InOut): Promise<InOut> {

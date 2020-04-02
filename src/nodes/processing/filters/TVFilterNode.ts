@@ -1,6 +1,5 @@
 import { DataFrame } from "../../../data/DataFrame";
 import { FilterNode, FilterOptions } from "./FilterNode";
-import * as math from 'mathjs';
 
 /**
  * Total Variation Filter
@@ -8,8 +7,8 @@ import * as math from 'mathjs';
  */
 export class TVFilterNode<InOut extends DataFrame> extends FilterNode<InOut> {
     
-    constructor(options: TVFilterOptions, properties?: string[]) {
-        super(options, properties);
+    constructor(options: TVFilterOptions) {
+        super(options);
     }
 
     public initFilter(value: number, options: TVFilterOptions): Promise<any> {
