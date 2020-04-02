@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.133](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.132...v1.0.0-alpha.133) (2020-04-02)
+
+
+### Bug Fixes
+
+* edge support for chunked data frames ([fa470fc](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/fa470fc5383e3a92d9853e4611ca16cb31706bca))
+
 ## [1.0.0-alpha.132](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.131...v1.0.0-alpha.132) (2020-04-02)
 
 
