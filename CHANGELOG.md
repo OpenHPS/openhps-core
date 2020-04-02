@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.130](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.129...v1.0.0-alpha.130) (2020-04-02)
+
+
+### Features
+
+* cs fingerprinting ([473407d](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/473407d480994a5033dfa96bbfc410c42f10ac0d))
+
+
+### Bug Fixes
+
+* filter node ([c4e10fc](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/c4e10fcaf25733767cf3f995701d7b33224edf91))
+
 ## [1.0.0-alpha.129](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.128...v1.0.0-alpha.129) (2020-04-01)
 
 ## [1.0.0-alpha.128](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.127...v1.0.0-alpha.128) (2020-03-30)
