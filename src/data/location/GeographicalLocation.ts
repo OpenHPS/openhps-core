@@ -3,6 +3,7 @@ import { AngleUnit, MetricLengthUnit } from "../../utils/unit";
 import { LengthUnit } from "../../utils/unit/LengthUnit";
 import { SerializableObject, SerializableMember } from "../decorators";
 import { Cartesian3DLocation } from "./Cartesian3DLocation";
+import { Vector3D } from "../geometry";
 
 /**
  * Geographical location
@@ -16,6 +17,7 @@ export class GeographicalLocation implements AbsoluteLocation {
     private _accuracy: number;
     private _accuracyUnit: LengthUnit;
     private _timestamp: number = new Date().getTime();
+    public velocity: Vector3D = new Vector3D();
 
     public static EARTH_RADIUS: number = 6371008; 
 

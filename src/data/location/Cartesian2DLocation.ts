@@ -3,6 +3,7 @@ import { AbsoluteLocation } from "./AbsoluteLocation";
 import { LengthUnit, Unit } from "../../utils";
 import { SerializableMember, SerializableObject } from "../decorators";
 import { Cartesian3DLocation } from "./Cartesian3DLocation";
+import { Vector2D } from "../geometry";
 
 /**
  * Cartesian 2D location. This class extends a normal [[Point2D]]
@@ -14,6 +15,7 @@ export class Cartesian2DLocation extends Point2D implements AbsoluteLocation {
     private _accuracy: number;
     private _unit: LengthUnit = LengthUnit.POINTS;
     private _timestamp: number = new Date().getTime();
+    public velocity: Vector2D = new Vector2D();
 
     @SerializableMember()
     public get timestamp(): number {

@@ -3,8 +3,8 @@ import { FilterNode, FilterOptions } from "./FilterNode";
 
 export class LPFilterNode<InOut extends DataFrame> extends FilterNode<InOut> {
     
-    constructor(options: LPFilterOptions, properties?: string[]) {
-        super(options, properties);
+    constructor(options: LPFilterOptions) {
+        super(options);
     }
 
     public initFilter(value: number, options: LPFilterOptions): Promise<any> {

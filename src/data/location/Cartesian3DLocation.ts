@@ -3,6 +3,7 @@ import { AbsoluteLocation } from "./AbsoluteLocation";
 import { LengthUnit, Unit } from "../../utils";
 import { SerializableObject, SerializableMember } from "../decorators";
 import * as math from 'mathjs';
+import { Vector3D } from "../geometry";
 
 /**
  * Cartesian 3D location. This class extends a normal [[Point3D]]
@@ -14,6 +15,7 @@ export class Cartesian3DLocation extends Point3D implements AbsoluteLocation {
     private _accuracy: number;
     private _unit: LengthUnit = LengthUnit.POINTS;
     private _timestamp: number = new Date().getTime();
+    public velocity: Vector3D = new Vector3D();
 
     @SerializableMember()
     public get timestamp(): number {

@@ -4,13 +4,11 @@ import { ProcessingNode } from "../../ProcessingNode";
 import { DataObject } from "../../../data";
 
 export abstract class FilterNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
-    private _properties: string[];
     private _options: FilterOptions;
     
-    constructor(options?: FilterOptions, properties: string[] = null) {
+    constructor(options?: FilterOptions) {
         super();
         this._options = options;
-        this._properties = properties;
     }
 
     public process(frame: InOut): Promise<InOut> {
@@ -20,10 +18,6 @@ export abstract class FilterNode<InOut extends DataFrame> extends ProcessingNode
             const filterProperties = new Array();
             for (const key of Object.getOwnPropertyNames(frame)) {
                 // If defined, check if property key is listed
-                if (this._properties !== null && this._properties.indexOf(key) === -1) {
-                    continue;
-                }
-
                 const property = (frame as any)[key];
                 if (isNumber(property)) {
                     // 1D sensor value

@@ -5,8 +5,8 @@ import { FilterNode, FilterOptions } from "./FilterNode";
  * Basic Kalman Filter processing node
  */
 export class EKFilterNode<InOut extends DataFrame> extends FilterNode<InOut> {
-    constructor(options: ExtendKalmanFilterOptions, properties: string[] = null) {
-        super(null, properties);
+    constructor(options: ExtendKalmanFilterOptions) {
+        super(null);
     }
 
     public initFilter(value: number, options: ExtendKalmanFilterOptions): Promise<any> {

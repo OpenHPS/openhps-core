@@ -1,11 +1,13 @@
 import { AbsoluteLocation } from "./AbsoluteLocation";
 import { SerializableObject, SerializableMember } from "../decorators";
 import { LengthUnit } from "../../utils";
+import { Vector3D } from "../geometry";
 
 @SerializableObject()
 export abstract class CelestialLocation implements AbsoluteLocation {
     private _accuracy: number;
     private _timestamp: number = new Date().getTime();
+    public velocity: Vector3D = new Vector3D();
 
     @SerializableMember()
     public get timestamp(): number {

@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { Location } from "./Location";
 import { LengthUnit } from "../../utils/unit/LengthUnit";
+import { Vector } from '../geometry/Vector';
 
 /**
  * Absolute location
@@ -21,6 +22,8 @@ export interface AbsoluteLocation extends Location {
      * Cartesian point conversion
      */
     point: number[];
+
+    velocity: Vector;
 
     /**
      * Midpoint to another location

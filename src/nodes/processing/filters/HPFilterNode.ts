@@ -3,8 +3,8 @@ import { FilterNode, FilterOptions } from "./FilterNode";
 
 export class HPFilterNode<InOut extends DataFrame> extends FilterNode<InOut> {
     
-    constructor(options: HPFilterOptions, properties?: string[]) {
-        super(options, properties);
+    constructor(options: HPFilterOptions) {
+        super(options);
     }
 
     public initFilter(value: number, options: HPFilterOptions): Promise<any> {
