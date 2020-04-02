@@ -1,58 +1,34 @@
-import { Point3D } from "../geometry/Point3D";
-import { AbsoluteLocation } from "./AbsoluteLocation";
-import { LengthUnit, Unit } from "../../utils";
 import { SerializableObject, SerializableMember } from "../decorators";
 import * as math from 'mathjs';
-import { Vector3D } from "../geometry";
+import { Cartesian2DLocation } from "./Cartesian2DLocation";
 
 /**
- * Cartesian 3D location. This class extends a normal [[Point3D]]
- * but implements a [[Location]]. This location can be used both as
+ * Cartesian 3D location. This class extends a [[Cartesian2DLocation]]. This location can be used both as
  * an absolute location or relative location.
  */
 @SerializableObject()
-export class Cartesian3DLocation extends Point3D implements AbsoluteLocation {
-    private _accuracy: number;
-    private _unit: LengthUnit = LengthUnit.POINTS;
-    private _timestamp: number = new Date().getTime();
-    public velocity: Vector3D = new Vector3D();
+export class Cartesian3DLocation extends Cartesian2DLocation {
+    private _z: number = 0;
 
-    @SerializableMember()
-    public get timestamp(): number {
-        return this._timestamp;
-    }
-
-    public set timestamp(timestamp: number) {
-        this._timestamp = timestamp;
+    constructor(x?: number, y?: number, z?: number) {
+        super(x, y);
+        this.z = z;
     }
 
     /**
-     * Get location accuracy
+     * Get Z coordinate
      */
     @SerializableMember()
-    public get accuracy(): number {
-        return this._accuracy;
+    public get z(): number {
+        return this._z;
     }
 
     /**
-     * Set location accuracy
-     * @param accuracy Location accuracy
+     * Set Z coordinate
+     * @param z Z coordinate
      */
-    public set accuracy(accuracy: number) {
-        this._accuracy = accuracy;
-    }
-
-    @SerializableMember()
-    public get unit(): LengthUnit {
-        return this._unit;
-    }
-
-    public set unit(unit: LengthUnit) {
-        this._unit = unit;
-    }
-
-    public get accuracyUnit(): LengthUnit {
-        return this.unit;
+    public set z(z: number) {
+        this._z = z;
     }
 
     /**
@@ -63,7 +39,9 @@ export class Cartesian3DLocation extends Point3D implements AbsoluteLocation {
         return new Promise<Cartesian3DLocation>((resolve, reject) => {
             const newPoint = new Cartesian3DLocation();
             newPoint.accuracy = this.accuracy + otherLocation.accuracy / 2;
-            newPoint.point = [(this.x + otherLocation.x) / 2, (this.y + otherLocation.y) / 2, (this.z + otherLocation.z) / 2];
+            newPoint.x = (this.x + otherLocation.x) / 2;
+            newPoint.y = (this.y + otherLocation.y) / 2;
+            newPoint.z = (this.z + otherLocation.z) / 2;
             resolve(newPoint);
         });
     }
@@ -115,6 +93,20 @@ export class Cartesian3DLocation extends Point3D implements AbsoluteLocation {
                     break;
             }
         });
+    }
+
+    public distance(other: Cartesian3DLocation): number {
+        return Math.pow(Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2) + Math.pow((other.z - this.z), 2), 1 / 2.);
+    }
+
+    public get point(): number[] {
+        return [this.x, this.y, this.z];
+    }
+
+    public set point(point: number[]) {
+        this.x = point[0];
+        this.y = point[1];
+        this.z = point[2];
     }
 
 }

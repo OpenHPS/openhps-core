@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import { Location } from "./Location";
 import { LengthUnit } from "../../utils/unit/LengthUnit";
-import { Vector } from '../geometry/Vector';
 
 /**
  * Absolute location
@@ -23,11 +22,6 @@ export interface AbsoluteLocation extends Location {
      */
     point: number[];
 
-    velocity: Vector;
+    velocity: number[];
 
-    /**
-     * Midpoint to another location
-     * @param otherLocation Other location
-     */
-    midpoint(otherLocation: AbsoluteLocation, distanceSelf?: number, distanceOther?: number): Promise<AbsoluteLocation>;
 }

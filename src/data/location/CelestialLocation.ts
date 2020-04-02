@@ -1,13 +1,13 @@
 import { AbsoluteLocation } from "./AbsoluteLocation";
-import { SerializableObject, SerializableMember } from "../decorators";
+import { SerializableObject, SerializableMember, SerializableArrayMember } from "../decorators";
 import { LengthUnit } from "../../utils";
-import { Vector3D } from "../geometry";
 
 @SerializableObject()
 export abstract class CelestialLocation implements AbsoluteLocation {
     private _accuracy: number;
     private _timestamp: number = new Date().getTime();
-    public velocity: Vector3D = new Vector3D();
+    @SerializableArrayMember(Number)
+    public velocity: number[] = [];
 
     @SerializableMember()
     public get timestamp(): number {
@@ -46,9 +46,4 @@ export abstract class CelestialLocation implements AbsoluteLocation {
      */
     abstract point: number[];
 
-    /**
-     * Midpoint to another location
-     * @param otherLocation Other location
-     */
-    abstract midpoint(otherLocation: AbsoluteLocation, distanceSelf?: number, distanceOther?: number): Promise<AbsoluteLocation>;
 }

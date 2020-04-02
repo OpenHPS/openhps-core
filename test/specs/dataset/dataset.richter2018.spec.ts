@@ -178,7 +178,7 @@ describe('dataset', () => {
                     let calculatedLocation: Cartesian3DLocation = data.getObjectByUID("phone").predictedLocations[0] as Cartesian3DLocation;
                     // Accurate control location
                     const expectedLocation: Cartesian3DLocation = data.evaluationObjects.get("phone").currentLocation as Cartesian3DLocation;
-                    
+            
                     totalError += expectedLocation.distance(calculatedLocation);
                     totalValues++;
                 };
@@ -252,7 +252,7 @@ describe('dataset', () => {
                 let totalError = 0;
                 let totalValues = 0;
                 callbackNode.callback = (data: EvaluationDataFrame) => {
-                    let calculatedLocation: Cartesian3DLocation = data.getObjectByUID("phone").predictedLocations[0] as Cartesian3DLocation;
+                    const calculatedLocation: Cartesian3DLocation = data.getObjectByUID("phone").predictedLocations[0] as Cartesian3DLocation;
                     // Accurate control location
                     const expectedLocation: Cartesian3DLocation = data.evaluationObjects.get("phone").currentLocation as Cartesian3DLocation;
                     

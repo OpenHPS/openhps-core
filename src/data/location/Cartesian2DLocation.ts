@@ -1,21 +1,58 @@
-import { Point2D } from "../geometry/Point2D";
 import { AbsoluteLocation } from "./AbsoluteLocation";
-import { LengthUnit, Unit } from "../../utils";
-import { SerializableMember, SerializableObject } from "../decorators";
-import { Cartesian3DLocation } from "./Cartesian3DLocation";
-import { Vector2D } from "../geometry";
+import { LengthUnit } from "../../utils";
+import { SerializableMember, SerializableObject, SerializableArrayMember } from "../decorators";
+import * as math from 'mathjs';
 
 /**
- * Cartesian 2D location. This class extends a normal [[Point2D]]
- * but implements a [[Location]]. This location can be used both as
+ * Cartesian 2D location. This class implements a [[Location]]. This location can be used both as
  * an absolute location or relative location.
  */
 @SerializableObject()
-export class Cartesian2DLocation extends Point2D implements AbsoluteLocation {
+export class Cartesian2DLocation implements AbsoluteLocation {
+    private _x: number = 0;
+    private _y: number = 0;
     private _accuracy: number;
     private _unit: LengthUnit = LengthUnit.POINTS;
     private _timestamp: number = new Date().getTime();
-    public velocity: Vector2D = new Vector2D();
+    @SerializableArrayMember(Number)
+    public velocity: number[] = [0, 0];
+
+    constructor(x?: number, y?: number) {
+        this.x = x;
+        this.y = y;
+    }
+
+    /**
+     * Get X coordinate
+     */
+    @SerializableMember()
+    public get x(): number {
+        return this._x;
+    }
+
+    /**
+     * Set X coordinate
+     * @param x X coordinate
+     */
+    public set x(x: number) {
+        this._x = x;
+    }
+
+    /**
+     * Get Y coordinate
+     */
+    @SerializableMember()
+    public get y(): number {
+        return this._y;
+    }
+
+    /**
+     * Set Y coordinate
+     * @param y Y coordinate
+     */
+    public set y(y: number) {
+        this._y = y;
+    }
 
     @SerializableMember()
     public get timestamp(): number {
@@ -63,28 +100,58 @@ export class Cartesian2DLocation extends Point2D implements AbsoluteLocation {
         return new Promise<Cartesian2DLocation>((resolve, reject) => {
             const newPoint = new Cartesian2DLocation();
             newPoint.accuracy = this.accuracy + otherLocation.accuracy / 2;
-            newPoint.point = [(this.x + otherLocation.x) / 2, (this.y + otherLocation.y) / 2];
+            newPoint.x = (this.x + otherLocation.x) / 2;
+            newPoint.y = (this.y + otherLocation.y) / 2;
             resolve(newPoint);
         });
     }
     
     public static trilaterate(points: Cartesian2DLocation[], distances: number[]): Promise<Cartesian2DLocation> {
         return new Promise<Cartesian2DLocation>((resolve, reject) => {
-            const convertedPoints = new Array();
-            points.forEach(point => {
-                const convertedPoint = new Cartesian3DLocation(point.x, point.y, 1);
-                convertedPoint.accuracy = point.accuracy;
-                convertedPoint.unit = point.unit;
-                convertedPoints.push(convertedPoint);
-            });
-            Cartesian3DLocation.trilaterate(convertedPoints, distances).then(point3d => {
-                const point2d = new Cartesian2DLocation(point3d.x, point3d.y);
-                point2d.accuracy = point3d.accuracy;
-                point2d.unit = point3d.unit;
-                resolve(point2d);
-            }).catch(ex => {
-                reject(ex);
-            });
+            switch (points.length) {
+                case 0:
+                    resolve(null);
+                    break;
+                case 1:
+                    resolve(points[0]);
+                    break;
+                case 2:
+                    resolve(points[0].midpoint(points[1], distances[0], distances[1]));
+                    break;
+                case 3:
+                default:
+                    const eX = math.divide(math.subtract(points[1].point, points[0].point), math.norm(math.subtract(points[1].point, points[0].point) as number[]));
+                    const i = math.multiply(eX, math.subtract(points[2].point, points[0].point)) as number;
+                    const eY = math.divide((math.subtract(math.subtract(points[2].point, points[0].point), math.multiply(i, eX))), math.norm(math.subtract(math.subtract(points[2].point, points[0].point) as number[], math.multiply(i, eX) as number[]) as number[]));
+                    const j = math.multiply(eY, math.subtract(points[2].point, points[0].point)) as number;
+                    const eZ = math.multiply(eX, eY) as number;
+                    const d = math.norm(math.subtract(points[1].point, points[0].point) as number[]) as number;
+                
+                    // Calculate coordinates
+                    let AX = distances[0];
+                    let BX = distances[1];
+                    let CX = distances[2];
+                    
+                    let incr = -1;
+                    let x = 0;
+                    let y = 0;
+                    do {
+                        x = (Math.pow(AX, 2) - Math.pow(BX, 2) + Math.pow(d, 2)) / (2 * d);
+                        y = ((Math.pow(AX, 2) - Math.pow(CX, 2) + Math.pow(i, 2) + Math.pow(j, 2)) / (2 * j)) - ((i / j) * x);
+                        incr = Math.pow(AX, 2) - Math.pow(x, 2) - Math.pow(y, 2);
+                        // Increase distances
+                        AX += 0.10;
+                        BX += 0.10;
+                        CX += 0.10;
+                    } while (incr < 0);
+                    const z = Math.sqrt(incr);
+            
+                    const point = new Cartesian2DLocation();
+                    point.unit = points[0].unit;
+                    point.point = math.add(points[0].point, math.add(math.add(math.multiply(eX, x), math.multiply(eY, y)), math.multiply(eZ, z))) as number[];
+                    resolve(point);
+                    break;
+            }
         });
     }
 
@@ -123,6 +190,19 @@ export class Cartesian2DLocation extends Point2D implements AbsoluteLocation {
             const point2d = new Cartesian2DLocation(xr, yr);
             resolve(point2d);
         });
+    }
+
+    public distance(other: Cartesian2DLocation): number {
+        return Math.pow(Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2), 1 / 2.);
+    }
+
+    public get point(): number[] {
+        return [this.x, this.y];
+    }
+
+    public set point(point: number[]) {
+        this.x = point[0];
+        this.y = point[1];
     }
 
 }

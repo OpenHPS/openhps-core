@@ -1,6 +1,5 @@
 import { AbsoluteLocation } from "../location/AbsoluteLocation";
 import { RelativeLocation } from '../location/RelativeLocation';
-import { Shape } from "../geometry/Shape";
 import { TypedJSON } from 'typedjson';
 import { SerializableObject, SerializableMember, SerializableArrayMember, SerializableMapMember } from '../decorators';
 import * as uuidv4 from 'uuid/v4';
@@ -18,7 +17,6 @@ export class DataObject {
     private _currentLocation: AbsoluteLocation;
     private _predictedLocations: AbsoluteLocation[] = new Array();
     private _relativeLocations: Map<string, RelativeLocation[]> = new Map();
-    private _shape: Shape;
     @SerializableMapMember(String, Object)
     private _nodeData: Map<string, any> = new Map();
     @SerializableMember()
@@ -32,8 +30,6 @@ export class DataObject {
     public merge(object: DataObject): DataObject {
         if (object.displayName !== undefined)
             this.displayName = object.displayName;
-        if (object.shape !== undefined)
-            this.shape = object.shape;
         if (object.currentLocation !== undefined)
             this.currentLocation = object.currentLocation;
         object._nodeData.forEach((value, key) => {
@@ -133,22 +129,6 @@ export class DataObject {
 
     public removePredictedLocation(location: AbsoluteLocation): void {
         this._predictedLocations.splice(this._predictedLocations.indexOf(location), 1);
-    }
-
-    /**
-     * Get object shape
-     */
-    @SerializableMember()
-    public get shape(): Shape {
-        return this._shape;
-    }
-
-    /**
-     * Set object shape
-     * @param size Object shape
-     */
-    public set shape(shape: Shape) {
-        this._shape = shape;
     }
 
     /**

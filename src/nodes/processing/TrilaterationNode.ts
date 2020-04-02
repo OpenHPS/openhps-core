@@ -1,5 +1,13 @@
 import { ObjectProcessingNode } from "../ObjectProcessingNode";
-import { DataFrame, DataObject, RelativeDistanceLocation, SensorObject, Cartesian3DLocation, Cartesian2DLocation, GeographicalLocation } from "../../data";
+import { 
+    DataFrame, 
+    DataObject, 
+    RelativeDistanceLocation, 
+    SensorObject, 
+    Cartesian3DLocation, 
+    Cartesian2DLocation, 
+    GeographicalLocation 
+} from "../../data";
 import { Model } from "../../Model";
 
 /**
