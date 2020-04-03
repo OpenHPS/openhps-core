@@ -102,7 +102,9 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> {
             this.graph.once('ready', () => {
                 resolve(this.graph);
             });
-            this.graph.emit('build', this);
+            this.graph.emitAsync('build', this).catch(ex => {
+                reject(ex);
+            });
         });
     }
     

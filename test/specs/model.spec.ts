@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, DataFrame } from '../../src';
+import { ModelBuilder, DataFrame, Node } from '../../src';
 import { NamedNode, CallbackSourceNode, CallbackNode, CallbackSinkNode } from '../../src/nodes';
 
 describe('model', () => {
@@ -25,6 +25,27 @@ describe('model', () => {
                 });
         });
 
+        it('should reject building when node rejects build', (done) => {
+            ModelBuilder.create()
+                .from()
+                .via(new NamedNode("1"))
+                .via(new (class TestNode extends Node<any, any> {
+                    constructor() {
+                        super();
+                        this.once('build', () => new Promise((resolve, reject) => {
+                            reject('Test');
+                        }));
+                    }
+                }))
+                .via(new NamedNode("3"))
+                .to()
+                .build().then(model => {
+                    done("Model builded succesfully");
+                }).catch(ex => {
+                    expect(ex).to.equal("Test");
+                    done();
+                });
+        });
     });
 
     describe('resolve chain', () => {
