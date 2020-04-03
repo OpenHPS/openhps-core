@@ -103,6 +103,8 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> {
                 resolve(this.graph);
             });
             this.graph.emitAsync('build', this).catch(ex => {
+                // Destroy model
+                this.graph.emit('destroy');
                 reject(ex);
             });
         });
