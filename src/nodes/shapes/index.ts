@@ -5,3 +5,5 @@ export * from './SourceMergeNode';
 export * from './FrameMergeNode';
 export * from './ObjectMergeNode';
 export * from './FrameFilterNode';
+export * from './FrameFlattenNode';
+export * from './FrameChunkNode';

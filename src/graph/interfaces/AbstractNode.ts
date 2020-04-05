@@ -1,11 +1,15 @@
 import { DataFrame } from "../../data/DataFrame";
+import { AsyncEventEmitter } from "../../_internal/AsyncEventEmitter";
 
-export interface AbstractNode<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> {
+export interface AbstractNode<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends AsyncEventEmitter {
     /**
      * Get unique identifier of node
      */
     uid: string;
 
+    /**
+     * Node name
+     */
     name: string;
     
     /**
@@ -19,7 +23,5 @@ export interface AbstractNode<In extends DataFrame | DataFrame[], Out extends Da
      * Pull data from the node
      */
     pull(): Promise<void>;
-
-    on(event: string, callback: () => any): void;
 
 }

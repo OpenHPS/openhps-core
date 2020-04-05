@@ -2,7 +2,6 @@ import { Node } from "../../../Node";
 import { AbstractEdge } from "../../interfaces/AbstractEdge";
 import { AbstractGraph } from "../../interfaces/AbstractGraph";
 import { DataFrame } from "../../../data/DataFrame";
-import { ModelException } from "../../../exceptions";
 import { BroadcastNode } from "../../../nodes/shapes/BroadcastNode";
 
 export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> implements AbstractGraph<In, Out> {
@@ -109,28 +108,28 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
         if (this.internalInput.outputNodes.length === 0) {
             this.deleteNode(this.internalInput);
         } else if (!this._nodes.has(this.internalInput.uid)) {
-            throw new ModelException(`Internal input node ${this.internalInput.uid} is not added to the graph!`);
+            throw new Error(`Internal input node ${this.internalInput.uid} is not added to the graph!`);
         }
         if (this.internalOutput.inputNodes.length === 0) {
             this.deleteNode(this.internalOutput);
         } else if (!this._nodes.has(this.internalInput.uid)) {
-            throw new ModelException(`Internal output node ${this.internalOutput.uid} is not added to the graph!`);
+            throw new Error(`Internal output node ${this.internalOutput.uid} is not added to the graph!`);
         }
 
         this._nodes.forEach(node => {
             if (node.graph === undefined) {
-                throw new ModelException(`Node ${node.uid} does not have a graph set!`);
+                throw new Error(`Node ${node.uid} does not have a graph set!`);
             }
             if (this._getNodeInlets(node).length === 0 && this._getNodeOutlets(node).length === 0) {
-                throw new ModelException(`Node ${node.uid} is not connected to the graph!`);
+                throw new Error(`Node ${node.uid} is not connected to the graph!`);
             }
         });
         this._edges.forEach(edge => {
             if (!this._nodes.has(edge.inputNode.uid)) {
-                throw new ModelException(`Node ${edge.inputNode.uid} is used in an edge but not added to the graph!`);
+                throw new Error(`Node ${edge.inputNode.uid} is used in an edge but not added to the graph!`);
             }
             if (!this._nodes.has(edge.outputNode.uid)) {
-                throw new ModelException(`Node ${edge.outputNode.uid} is used in an edge but not added to the graph!`);
+                throw new Error(`Node ${edge.outputNode.uid} is used in an edge but not added to the graph!`);
             }
         });
     }

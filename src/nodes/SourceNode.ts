@@ -3,7 +3,7 @@ import { ServiceMergeNode } from "./processing/ServiceMergeNode";
 import { ModelBuilder } from "../ModelBuilder";
 import { DataObject } from "../data";
 import { EdgeBuilder } from "../graph/builders/EdgeBuilder";
-import { AbstractSourceNode } from "./_internal/interfaces/AbstractSourceNode";
+import { AbstractSourceNode } from "../graph/interfaces/AbstractSourceNode";
 
 /**
  * Source node

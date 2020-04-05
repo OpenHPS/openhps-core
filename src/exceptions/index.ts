@@ -1,1 +1,0 @@
-export { ModelException } from './ModelException';

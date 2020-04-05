@@ -3,15 +3,16 @@ import { DataFrame, DataObject } from "./data";
 import { AbstractEdge, EdgeBuilder } from "./graph";
 import { Node } from "./Node";
 import { ModelImpl } from "./graph/_internal/implementations";
-import { AbstractSourceNode } from "./nodes/_internal/interfaces/AbstractSourceNode";
+import { AbstractSourceNode } from "./graph/interfaces/AbstractSourceNode";
 import { Model } from "./Model";
-import { AbstractSinkNode } from "./nodes/_internal/interfaces/AbstractSinkNode";
+import { AbstractSinkNode } from "./graph/interfaces/AbstractSinkNode";
 import { ObjectMergeNode } from './nodes/shapes/ObjectMergeNode';
 import { TimeUnit } from "./utils";
 import { FrameFilterNode } from "./nodes/shapes/FrameFilterNode";
 import { FrameDebounceNode } from "./nodes/shapes/FrameDebounceNode";
 import { ObjectFilterNode } from "./nodes/shapes/ObjectFilterNode";
 import { FrameChunkNode } from "./nodes/shapes/FrameChunkNode";
+import { FrameFlattenNode } from "./nodes/shapes/FrameFlattenNode";
 
 /**
  * Model build to construct and build a [[Model]]
@@ -137,12 +138,12 @@ export class ModelShapeBuilder {
         return this;
     }
 
-    public chunk(size: number, timeout: number = 100, timeoutUnit: TimeUnit = TimeUnit.MILLI): ModelShapeBuilder {
-        return this.via(new FrameChunkNode());
+    public chunk(size: number, timeout?: number, timeoutUnit?: TimeUnit): ModelShapeBuilder {
+        return this.via(new FrameChunkNode(size, timeout, timeoutUnit));
     }
 
     public flatten(): ModelShapeBuilder {
-        return this.via(new FrameChunkNode());
+        return this.via(new FrameFlattenNode());
     }
 
     /**
