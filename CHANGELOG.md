@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.136](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.135...v1.0.0-alpha.136) (2020-04-05)
+
+
+### Bug Fixes
+
+* velocity added to location with unit ([e722332](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/e722332aeac4975a280db07bd64b6ffe0420de64))
+
 ## [1.0.0-alpha.135](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.134...v1.0.0-alpha.135) (2020-04-03)
 
 
