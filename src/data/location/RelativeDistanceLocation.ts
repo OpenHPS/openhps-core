@@ -18,6 +18,18 @@ export class RelativeDistanceLocation extends RelativeLocation {
     }
 
     /**
+     * Get accuracy unit
+     */
+    @SerializableMember()
+    public get accuracyUnit(): LengthUnit {
+        return super.accuracyUnit;
+    }
+
+    public set accuracyUnit(unit: LengthUnit) {
+        super.accuracyUnit = unit;
+    }
+
+    /**
      * Get distance to reference object
      */
     @SerializableMember()

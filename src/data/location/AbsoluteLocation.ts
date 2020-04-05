@@ -22,6 +22,4 @@ export interface AbsoluteLocation extends Location {
      */
     point: number[];
 
-    velocity: number[];
-
 }

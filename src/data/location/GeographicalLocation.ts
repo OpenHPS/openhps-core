@@ -1,5 +1,5 @@
 import { AbsoluteLocation } from "./AbsoluteLocation";
-import { AngleUnit, MetricLengthUnit } from "../../utils/unit";
+import { AngleUnit, MetricLengthUnit, SpeedUnit } from "../../utils/unit";
 import { LengthUnit } from "../../utils/unit/LengthUnit";
 import { SerializableObject, SerializableMember, SerializableArrayMember } from "../decorators";
 import { Cartesian3DLocation } from "./Cartesian3DLocation";
@@ -16,8 +16,8 @@ export class GeographicalLocation implements AbsoluteLocation {
     private _accuracy: number;
     private _accuracyUnit: LengthUnit;
     private _timestamp: number = new Date().getTime();
-    @SerializableArrayMember(Number)
-    public velocity: number[] = [];
+    private _velocity: number[];
+    private _velocityUnit: SpeedUnit<any, any>;
 
     public static EARTH_RADIUS: number = 6371008; 
 
@@ -28,6 +28,27 @@ export class GeographicalLocation implements AbsoluteLocation {
 
     public set timestamp(timestamp: number) {
         this._timestamp = timestamp;
+    }
+
+    @SerializableArrayMember(Number)
+    public get velocity(): number[] {
+        return this._velocity;
+    }
+
+    public set velocity(velocity: number[]) {
+        this._velocity = velocity;
+    }
+
+    /**
+     * Get velocity unit
+     */
+    @SerializableMember()
+    public get velocityUnit(): SpeedUnit<any, any> {
+        return this._velocityUnit;
+    }
+
+    public set velocityUnit(unit: SpeedUnit<any, any>) {
+        this._velocityUnit = unit;
     }
 
     /**

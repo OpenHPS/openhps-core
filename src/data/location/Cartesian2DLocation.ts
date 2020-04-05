@@ -1,5 +1,5 @@
 import { AbsoluteLocation } from "./AbsoluteLocation";
-import { LengthUnit } from "../../utils";
+import { LengthUnit, SpeedUnit } from "../../utils";
 import { SerializableMember, SerializableObject, SerializableArrayMember } from "../decorators";
 import * as math from 'mathjs';
 
@@ -14,12 +14,33 @@ export class Cartesian2DLocation implements AbsoluteLocation {
     private _accuracy: number;
     private _unit: LengthUnit = LengthUnit.POINTS;
     private _timestamp: number = new Date().getTime();
-    @SerializableArrayMember(Number)
-    public velocity: number[] = [0, 0];
+    private _velocity: number[];
+    private _velocityUnit: SpeedUnit<any, any>;
 
     constructor(x?: number, y?: number) {
         this.x = x;
         this.y = y;
+    }
+
+    @SerializableArrayMember(Number)
+    public get velocity(): number[] {
+        return this._velocity;
+    }
+
+    public set velocity(velocity: number[]) {
+        this._velocity = velocity;
+    }
+
+    /**
+     * Get velocity unit
+     */
+    @SerializableMember()
+    public get velocityUnit(): SpeedUnit<any, any> {
+        return this._velocityUnit;
+    }
+
+    public set velocityUnit(unit: SpeedUnit<any, any>) {
+        this._velocityUnit = unit;
     }
 
     /**

@@ -7,3 +7,4 @@ export { VolumeUnit } from './VolumeUnit';
 export { SquareUnit } from './SquareUnit';
 export { TimeUnit } from './TimeUnit';
 export * from './LengthUnit';
+export * from './SpeedUnit';

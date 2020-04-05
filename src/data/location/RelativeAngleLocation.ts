@@ -18,6 +18,18 @@ export class RelativeAngleLocation extends RelativeLocation {
     }
 
     /**
+     * Get accuracy unit
+     */
+    @SerializableMember()
+    public get accuracyUnit(): AngleUnit {
+        return super.accuracyUnit;
+    }
+
+    public set accuracyUnit(unit: AngleUnit) {
+        super.accuracyUnit = unit;
+    }
+
+    /**
      * Get angle to reference object
      */
     @SerializableMember()
