@@ -17,6 +17,7 @@ export class DataObject {
     private _currentLocation: AbsoluteLocation;
     private _predictedLocations: AbsoluteLocation[] = new Array();
     private _relativeLocations: Map<string, RelativeLocation[]> = new Map();
+    private _parent: string;
     @SerializableMapMember(String, Object)
     private _nodeData: Map<string, any> = new Map();
     @SerializableMember()
@@ -55,6 +56,22 @@ export class DataObject {
      */
     public set uid(uid: string) {
         this._uid = uid;
+    }
+        
+    /**
+     * Get the parent object identifier
+     */
+    @SerializableMember()
+    public get parent(): string {
+        return this._parent;
+    }
+
+    /**
+     * Set the parent object identifier
+     * @param uid Parent object identifier
+     */
+    public set parent(uid: string) {
+        this._parent = uid;
     }
 
     /**
