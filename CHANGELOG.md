@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.143](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.142...v1.0.0-alpha.143) (2020-04-06)
+
+
+### Bug Fixes
+
+* predicted location deserializing ([5effc14](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/5effc14a92568e182a07954b4078e5e25c964526))
+
 ## [1.0.0-alpha.142](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.141...v1.0.0-alpha.142) (2020-04-06)
 
 
