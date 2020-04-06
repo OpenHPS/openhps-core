@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.140](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.139...v1.0.0-alpha.140) (2020-04-06)
+
+
+### Features
+
+* buffer helper function ([ff588a8](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/ff588a86be59f4e77bbef91546505797ec29371a))
+
 ## [1.0.0-alpha.139](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.138...v1.0.0-alpha.139) (2020-04-06)
 
 
