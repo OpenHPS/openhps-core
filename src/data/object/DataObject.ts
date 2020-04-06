@@ -127,7 +127,7 @@ export class DataObject {
             }
             const predictions = new Array();
             raw.forEach((obj: any) => {
-                predictions.push(new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw));
+                predictions.push(new TypedJSON(DataSerializer.findTypeByName(obj.__type)).parse(obj));
             });
             return predictions;
         }
