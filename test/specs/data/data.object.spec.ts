@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataObject, RelativeDistanceLocation, Fingerprint, Cartesian2DLocation } from '../../../src';
+import { DataObject, RelativeDistanceLocation, Cartesian2DLocation } from '../../../src';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 import { DataSerializer } from '../../../src/data/DataSerializer';
 
@@ -31,12 +31,12 @@ describe('data', () => {
                     beacon.currentLocation = new Cartesian2DLocation(Math.floor(Math.random() * 500) + 0, Math.floor(Math.random() * 500) + 0);
                     beacons.push(beacon);
                 }
-                const addFingerprint = (data: Fingerprint) => {
-                    fingerprints.set(data.uid, DataSerializer.serialize<Fingerprint>(data));
+                const addFingerprint = (data: DataObject) => {
+                    fingerprints.set(data.uid, DataSerializer.serialize<DataObject>(data));
                 };
 
                 for (let i = 0 ; i < 250 ; i++) {
-                    const fingerprint = new Fingerprint()
+                    const fingerprint = new DataObject()
                     fingerprint.currentLocation = new Cartesian2DLocation(Math.floor(Math.random() * 500) + 0, Math.floor(Math.random() * 500) + 0);
                     const nrLocations = Math.floor(Math.random() * 8) + 3;
                     for (let j = 0 ; j < nrLocations ; j++) {

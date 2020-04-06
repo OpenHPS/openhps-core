@@ -23,7 +23,7 @@ export class MemoryDataFrameService<T extends DataFrame> extends DataFrameServic
 
     public findBefore(timestamp: number): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[?(@.createdTimestamp <= ${timestamp})]`, json: Array.from(this._data.values()) });
+            const result = JSONPath({ path: `$[?(@._createdTimestamp <= ${timestamp})]`, json: Array.from(this._data.values()) });
             const data = new Array();
             if (isArray(result)) {
                 result.forEach(r => {
@@ -38,7 +38,7 @@ export class MemoryDataFrameService<T extends DataFrame> extends DataFrameServic
 
     public findAfter(timestamp: number): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[?(@.createdTimestamp > = ${timestamp})]`, json: Array.from(this._data.values()) });
+            const result = JSONPath({ path: `$[?(@._createdTimestamp >= ${timestamp})]`, json: Array.from(this._data.values()) });
             const data = new Array();
             if (isArray(result)) {
                 result.forEach(r => {
