@@ -13,6 +13,7 @@ import { FrameDebounceNode } from "./nodes/shapes/FrameDebounceNode";
 import { ObjectFilterNode } from "./nodes/shapes/ObjectFilterNode";
 import { FrameChunkNode } from "./nodes/shapes/FrameChunkNode";
 import { FrameFlattenNode } from "./nodes/shapes/FrameFlattenNode";
+import { MemoryBufferNode } from "./nodes/shapes/MemoryBufferNode";
 
 /**
  * Model build to construct and build a [[Model]]
@@ -158,7 +159,7 @@ export class ModelShapeBuilder {
      * Filter objects inside frames
      * @param filterFn Filter function (true to keep, false to remove)
      */
-    public filterObjects(filterFn: (object: DataObject) => boolean): ModelShapeBuilder {
+    public filterObjects(filterFn: (object: DataObject, frame?: DataFrame) => boolean): ModelShapeBuilder {
         return this.via(new ObjectFilterNode(filterFn));
     }
 
@@ -169,11 +170,15 @@ export class ModelShapeBuilder {
      * @param timeoutUnit Timeout unit
      */
     public merge(by: (frame: DataFrame) => boolean = _ => true, timeout: number = 100, timeoutUnit: TimeUnit = TimeUnit.MILLI): ModelShapeBuilder {
-        return this.via(new ObjectMergeNode((_) => true, by, timeout, timeoutUnit)); 
+        return this.via(new ObjectMergeNode((object: DataObject) => true, by, timeout, timeoutUnit)); 
     }
 
     public debounce(timeout: number = 100, timeoutUnit: TimeUnit = TimeUnit.MILLI): ModelShapeBuilder {
         return this.via(new FrameDebounceNode(timeout, timeoutUnit));
+    }
+
+    public buffer(): ModelShapeBuilder {
+        return this.via(new MemoryBufferNode());
     }
 
     public to(...nodes: Array<AbstractSinkNode<any>>): ModelBuilder<any, any> {

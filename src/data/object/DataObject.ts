@@ -23,8 +23,9 @@ export class DataObject {
     @SerializableMember()
     public createdTimestamp: number;
 
-    constructor(uid: string = uuidv4()) {
+    constructor(uid: string = uuidv4(), parent?: string) {
         this.uid = uid;
+        this.parent = parent;
         this.createdTimestamp = new Date().getTime();
     }
 
