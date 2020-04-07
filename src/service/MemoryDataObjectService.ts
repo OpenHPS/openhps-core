@@ -23,7 +23,7 @@ export class MemoryDataObjectService<T extends DataObject> extends DataObjectSer
 
     public findByCurrentLocation(location: AbsoluteLocation): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[*?(JSON.stringify(currentLocation.point) == "${JSON.stringify(location.point)}")]`, json: Array.from(this._data.values()) });
+            const result = JSONPath({ path: `$[?(@.currentLocation.point == ${location.point})]`, json: Array.from(this._data.values()) });
             resolve(result);
         });
     }

@@ -22,8 +22,11 @@ describe('data object', () => {
         
         it('should find an object by location', (done) => {
             objectDataService.findByCurrentLocation(new Cartesian2DLocation(5, 6)).then(locations => {
+                expect(locations[0].currentLocation).to.be.instanceOf(Cartesian2DLocation);
+                const location = locations[0].currentLocation as Cartesian2DLocation;
+                expect(location.x).to.equal(5);
+                expect(location.y).to.equal(6);
                 done();
-                // TODO
             }).catch(ex => {
                 done(ex);
             });
