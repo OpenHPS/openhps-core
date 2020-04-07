@@ -202,6 +202,14 @@ export class DataObject {
         }
     }
 
+    public findRelativeLocations(target: string): RelativeLocation[] {
+        if (this.hasRelativeLocation(target)) {
+            return this._relativeLocations.get(target);
+        } else {
+            return [];
+        }
+    }
+
     public hasRelativeLocation(target: string): boolean {
         return this._relativeLocations.has(target);
     }
