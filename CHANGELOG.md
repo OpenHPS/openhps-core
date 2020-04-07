@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.148](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.147...v1.0.0-alpha.148) (2020-04-07)
+
+
+### Bug Fixes
+
+* removed motion and dsp packages ([fc79774](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/fc79774dadd1c74ff03f7a420f8a100646756056))
+
 ## [1.0.0-alpha.147](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.146...v1.0.0-alpha.147) (2020-04-07)
 
 ## [1.0.0-alpha.146](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.145...v1.0.0-alpha.146) (2020-04-07)
