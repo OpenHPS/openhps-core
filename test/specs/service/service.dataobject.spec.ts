@@ -1,4 +1,4 @@
-import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, ServiceMergeNode, Cartesian2DLocation } from '../../../src';
+import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, ServiceMergeNode, Cartesian2DLocation, Cartesian3DLocation } from '../../../src';
 import { LoggingSinkNode } from '../../../src/nodes/sink';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 
@@ -12,20 +12,46 @@ describe('data object', () => {
 
         before((done) => {
             objectDataService = new MemoryDataObjectService(DataObject);
-            var object = new DataObject();
-            object.currentLocation = new Cartesian2DLocation(5, 6);
-            object.displayName = "Test";
-            objectDataService.insert(object).then(savedObject => {
+            var object1 = new DataObject();
+            object1.currentLocation = new Cartesian2DLocation(5, 6);
+            object1.displayName = "Test";
+
+            var object2 = new DataObject();
+            object2.currentLocation = new Cartesian3DLocation(5, 6, 2);
+            object2.displayName = "Test";
+
+            const insertPromises = new Array();
+            insertPromises.push(objectDataService.insert(object1));
+            insertPromises.push(objectDataService.insert(object2));
+            
+            Promise.all(insertPromises).then(() => {
                 done();
+            }).catch(ex => {
+                done(ex);
             });
         });
         
-        it('should find an object by location', (done) => {
-            objectDataService.findByCurrentLocation(new Cartesian2DLocation(5, 6)).then(locations => {
-                expect(locations[0].currentLocation).to.be.instanceOf(Cartesian2DLocation);
-                const location = locations[0].currentLocation as Cartesian2DLocation;
+        it('should find a object by 2d location', (done) => {
+            objectDataService.findByCurrentLocation(new Cartesian2DLocation(5, 6)).then(objects => {
+                expect(objects[0].currentLocation).to.be.instanceOf(Cartesian2DLocation);
+                const location = objects[0].currentLocation as Cartesian2DLocation;
                 expect(location.x).to.equal(5);
                 expect(location.y).to.equal(6);
+                expect(objects[0].displayName).to.equal("Test");
+                done();
+            }).catch(ex => {
+                done(ex);
+            });
+        });
+
+        it('should find a object by 3d location', (done) => {
+            objectDataService.findByCurrentLocation(new Cartesian3DLocation(5, 6, 2)).then(objects => {
+                expect(objects[0].currentLocation).to.be.instanceOf(Cartesian2DLocation);
+                const location = objects[0].currentLocation as Cartesian3DLocation;
+                expect(location.x).to.equal(5);
+                expect(location.y).to.equal(6);
+                expect(location.z).to.equal(2);
+                expect(objects[0].displayName).to.equal("Test");
                 done();
             }).catch(ex => {
                 done(ex);
