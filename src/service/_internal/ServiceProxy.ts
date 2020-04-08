@@ -1,7 +1,7 @@
 import { Service } from "../Service";
 import { isFunction } from "util";
 
-export class ServiceProxy<S extends Service> implements ProxyHandler<S> {
+export class ServiceProxy<S extends Service> extends Service implements ProxyHandler<S> {
     
     public get? (target: S, p: PropertyKey, receiver: any): any {
         if (isFunction((target as any)[p])) {

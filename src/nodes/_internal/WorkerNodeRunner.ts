@@ -4,9 +4,12 @@ import { Subject, Observable } from 'threads/observable';
 import { CallbackSinkNode } from "../sink";
 import { CallbackSourceNode } from "../source";
 import { expose } from "threads";
-import { WorkerDataObjectService } from "../../service/WorkerDataObjectService";
-import { WorkerDataFrameService } from "../../service/WorkerDataFrameService";
 import { ModelBuilder } from "../../ModelBuilder";
+import { WorkerService } from "../../service/WorkerService";
+import { DummyService } from "../../service/_internal/DummyService";
+import { DummyDataObjectService } from "../../service/_internal/DummyDataObjectService";
+import { DummyDataFrameService } from "../../service/_internal/DummyDataFrameService";
+import { DummyDataService } from "../../service/_internal/DummyDataService";
 
 let model: Model<any, any>;
 const input: Subject<void> = new Subject();
@@ -27,8 +30,23 @@ expose({
         const builderCallback = eval(workerData.builderCallback);
         const modelBuilder = ModelBuilder.create();
         // Add remote worker services
-        modelBuilder.addService(new WorkerDataObjectService(DataObject, serviceInput, serviceOutput));
-        modelBuilder.addService(new WorkerDataFrameService(DataFrame, serviceInput, serviceOutput));
+        workerData.services.forEach((service: any) => {
+            switch (service.type) {
+                case "DataObjectService":
+                    modelBuilder.addService(new Proxy(new DummyDataObjectService(), new WorkerService(service.name, serviceInput, serviceOutput)));
+                    break;
+                case "DataFrameService":
+                    modelBuilder.addService(new Proxy(new DummyDataFrameService(), new WorkerService(service.name, serviceInput, serviceOutput)));
+                    break;
+                case "DataService":
+                    modelBuilder.addService(new Proxy(new DummyDataService(null), new WorkerService(service.name, serviceInput, serviceOutput)));
+                    break;
+                case "Service":
+                default:
+                    modelBuilder.addService(new Proxy(new DummyService(), new WorkerService(service.name, serviceInput, serviceOutput)));
+                    break;
+            }
+        });
         // Add source node with input observable
         const traversalBuilder = modelBuilder.from(new CallbackSourceNode(() => {
             input.next();

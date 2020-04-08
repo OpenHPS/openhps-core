@@ -6,6 +6,7 @@ import { PoolEvent } from "threads/dist/master/pool";
 import { Model } from "../Model";
 import { isArray } from "util";
 import { ModelShapeBuilder } from "../ModelBuilder";
+import { DataService, DataObjectService, DataFrameService, Service } from "../service";
 
 /**
  * 
@@ -118,9 +119,22 @@ export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFram
                 outputFn().subscribe(this._onWorkerPush.bind(this));
                 serviceInput().subscribe(this._onWorkerService.bind(this));
 
+                const model = (this.graph as Model<any, any>);
+                const services = model.findAllServices();
+                const servicesArray = new Array();
+                services.forEach(service => {
+                    servicesArray.push({
+                        name: service.name,
+                        type: service instanceof DataObjectService ? "DataObjectService" :
+                            service instanceof DataFrameService ? "DataFrameService" :
+                            service instanceof DataService ? "DataService" :
+                            service instanceof Service ? "Service" : ""
+                    });
+                });
                 initFn({
                     dirname: this._options.directory,
-                    builderCallback: this._builderCallback.toString()
+                    builderCallback: this._builderCallback.toString(),
+                    services: servicesArray
                 }).then(() => {
                     resolve(thread);
                 }).catch(ex => {

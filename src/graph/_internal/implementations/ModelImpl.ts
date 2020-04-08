@@ -115,6 +115,10 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
         return this.findDataServiceByName(dataObject.constructor.name);
     }
 
+    public findAllServices(): Service[] {
+        return Array.from(this._services.values()).concat(Array.from(this._dataServices.values()));
+    }
+
     /**
      * Add service to model
      * @param service Service
