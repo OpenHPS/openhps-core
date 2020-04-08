@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.149](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.148...v1.0.0-alpha.149) (2020-04-08)
+
+
+### Features
+
+* event emitting and service proxying ([46c57dd](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/46c57dd8f84b4737b0780a2b4c861c4322ac20cb))
+
 ## [1.0.0-alpha.148](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.147...v1.0.0-alpha.148) (2020-04-07)
 
 
