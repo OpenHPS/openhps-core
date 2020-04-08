@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.151](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.150...v1.0.0-alpha.151) (2020-04-08)
+
+
+### Bug Fixes
+
+* find data service by inherited classes ([fdef511](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/fdef511c1ba5e358a17ca73627f0a831bd6949c1))
+* find data service frame ([6a1c038](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/6a1c0387a005d76eefc24e2d7bd83dc67a10040a))
+
 ## [1.0.0-alpha.150](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.149...v1.0.0-alpha.150) (2020-04-08)
 
 ## [1.0.0-alpha.149](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.148...v1.0.0-alpha.149) (2020-04-08)
