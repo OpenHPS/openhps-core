@@ -104,7 +104,20 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
      * @param dataType Data type
      */
     public findDataService<D extends DataObject, F extends DataService<any, D>>(dataType: new () => D): F {
-        return this.findDataServiceByName(dataType.name);
+        if (this._dataServices.has(dataType.name)) {
+            return this._dataServices.get(dataType.name) as F;
+        } else {
+            let parent = Object.getPrototypeOf(dataType).constructor;
+            while (true) {
+                if (this._dataServices.has(parent.name)) {
+                    return this._dataServices.get(parent.name) as F;
+                }
+                if (parent.name === "DataObject") {
+                    return null;
+                }
+                parent = Object.getPrototypeOf(parent).constructor;
+            }
+        }
     }
 
     /**
