@@ -4,6 +4,7 @@ import { GraphImpl } from "./GraphImpl";
 import { Model } from "../../../Model";
 import { MemoryDataObjectService } from "../../../service/MemoryDataObjectService";
 import { MemoryDataFrameService } from "../../../service/MemoryDataFrameService";
+import { ServiceProxy } from "../../../service/_internal";
 
 /**
  * [[Model]] implementation
@@ -121,10 +122,10 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
     public addService(service: Service): void {
         if (service instanceof DataService) {
             // Data service
-            this._dataServices.set(service.name, service);
+            this._dataServices.set(service.name, new Proxy(service , new ServiceProxy()));
         } else {
             // Normal service
-            this._services.set(service.name, service);
+            this._services.set(service.name, new Proxy(service , new ServiceProxy()));
         }
     }
 

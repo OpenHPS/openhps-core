@@ -11,6 +11,10 @@ export abstract class DataService<I, T> extends Service {
     public get dataType(): new () => T {
         return this._dataType;
     }
+
+    public set dataType(dataType: new () => T) {
+        this._dataType = dataType;
+    }
     
     public abstract findByUID(uid: I): Promise<T>;
 

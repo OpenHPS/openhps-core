@@ -126,6 +126,13 @@ describe('data object', () => {
             });
         });
 
+        it('should emit events', (done) => {
+            objectDataService.once('deleteAll', () => {
+                done();
+            });
+            Promise.resolve(objectDataService.deleteAll());
+        });
+
         it('should delete all objects', (done) => {
             objectDataService.deleteAll().then(() => {
                 done();

@@ -25,6 +25,10 @@ export abstract class Service extends AsyncEventEmitter {
         return this._name;
     }
 
+    public set name(name: string) {
+        this._name = name;
+    }
+
     public isReady(): boolean {
         return this._ready;
     }
