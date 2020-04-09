@@ -12,7 +12,6 @@ export abstract class Service extends AsyncEventEmitter {
         super();
         this._name = name === null ? this.constructor.name : name;
 
-        this.prependOnceListener('build', () => { if (this.listeners('build').length === 0) { this.emit('ready'); } });
         this.prependOnceListener('ready', () => {
             this._ready = true;
         });

@@ -4,7 +4,7 @@ import { AbstractGraph } from "../../interfaces/AbstractGraph";
 import { DataFrame } from "../../../data/DataFrame";
 import { BroadcastNode } from "../../../nodes/shapes/BroadcastNode";
 
-export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> implements AbstractGraph<In, Out> {
+export abstract class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> implements AbstractGraph<In, Out> {
     private _nodes: Map<string, Node<any, any>> = new Map();
     private _edges: Map<string, AbstractEdge<any>> = new Map();
 

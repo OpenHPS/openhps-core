@@ -29,9 +29,6 @@ export abstract class Node<In extends DataFrame | DataFrame[], Out extends DataF
             message: `Node has been constructed.`,
         });
 
-        this.prependOnceListener('build', () => { 
-            if (this.listeners('build').length === 0) { this.emit('ready'); } 
-        });
         this.prependOnceListener('ready', () => {
             this._ready = true;
         });

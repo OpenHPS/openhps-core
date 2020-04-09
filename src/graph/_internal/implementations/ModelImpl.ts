@@ -46,6 +46,22 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
                 }
             });
             Promise.all(buildPromises).then(() => {
+                this._services.forEach(service => {
+                    if (!service.isReady()) {
+                        service.emit('ready');
+                    }
+                });
+                this._dataServices.forEach(service => {
+                    if (!service.isReady()) {
+                        service.emit('ready');
+                    }
+                });
+                this.nodes.forEach(node => {
+                    if (!node.isReady()) {
+                        node.emit('ready');
+                    }
+                });
+                
                 this.emit('ready');
                 resolve();
             }).catch(ex => {
