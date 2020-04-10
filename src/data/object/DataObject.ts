@@ -153,12 +153,16 @@ export class DataObject {
      */
     @SerializableArrayMember(RelativeLocation, {
         deserializer(rawArray: any[]): RelativeLocation[] {
+            if (rawArray === undefined) {
+                return [];
+            }
             const output = new Array();
             rawArray.forEach(raw => {
-                if (raw === undefined) {
-                    return undefined;
+                if (raw.__type === undefined) {
+                    output.push(new TypedJSON(RelativeLocation).parse(raw));
+                } else {
+                    output.push(new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw));
                 }
-                output.push(new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw));
             });
             return output;
         }
@@ -195,6 +199,10 @@ export class DataObject {
     }
 
     public addRelativeLocation(relativeLocation: RelativeLocation): void {
+        if (relativeLocation.referenceObjectUID === undefined) {
+            return;
+        }
+
         if (this._relativeLocations.has(relativeLocation.referenceObjectUID)) {
             this._relativeLocations.get(relativeLocation.referenceObjectUID).push(relativeLocation);
         } else {
