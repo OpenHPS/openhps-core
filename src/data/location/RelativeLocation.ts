@@ -18,8 +18,12 @@ export class RelativeLocation implements Location {
 
     constructor(referenceObject?: any, referenceValue?: number) {
         if (referenceObject !== undefined) {
-            this.referenceObjectType = referenceObject.constructor.name;
-            this.referenceObjectUID = referenceObject.uid;
+            if (referenceObject instanceof String) {
+                this.referenceObjectUID = referenceObject as string;
+            } else {
+                this.referenceObjectType = referenceObject.constructor.name;
+                this.referenceObjectUID = referenceObject.uid;
+            }
         }
         this.referenceValue = referenceValue;
     }
