@@ -100,6 +100,9 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> {
             this.graph.nodes.forEach(node => {
                 node.logger = this.graph.logger;
             });
+            this.graph.findAllServices().forEach(service => {
+                service.logger = this.graph.logger;
+            });
             this.graph.validate();
             this.graph.once('ready', () => {
                 resolve(this.graph);
