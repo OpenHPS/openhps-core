@@ -27,10 +27,14 @@ export class DataSerializer {
         if (isArray(data)) {
             const serializedResult = new Array();
             data.forEach(d => {
-                const dataType = Object.getPrototypeOf(d).constructor;
-                const serialized = new TypedJSON(dataType).toPlainJson(d) as any;
-                serialized['__type'] = dataType.name;
-                serializedResult.push(serialized);
+                if (d === null || d === undefined) {
+                    serializedResult.push(d);
+                } else {
+                    const dataType = Object.getPrototypeOf(d).constructor;
+                    const serialized = new TypedJSON(dataType).toPlainJson(d) as any;
+                    serialized['__type'] = dataType.name;
+                    serializedResult.push(serialized);
+                }
             });
             return serializedResult;
         } else {
@@ -51,12 +55,16 @@ export class DataSerializer {
         if (isArray(serializedData)) {
             const deserializedResult = new Array();
             serializedData.forEach(d => {
-                const detectedType = d['__type'] !== undefined ? this.findTypeByName(d['__type']) : Object;
-                const finalType = dataType === undefined ? detectedType : dataType;
-                if (finalType === undefined) {
+                if (d === null || d === undefined) {
                     deserializedResult.push(d);
+                } else {
+                    const detectedType = d['__type'] !== undefined ? this.findTypeByName(d['__type']) : Object;
+                    const finalType = dataType === undefined ? detectedType : dataType;
+                    if (finalType === undefined) {
+                        deserializedResult.push(d);
+                    }
+                    deserializedResult.push(new TypedJSON(finalType).parse(d));   
                 }
-                deserializedResult.push(new TypedJSON(finalType).parse(d));
             });
             return deserializedResult;
         } else {
