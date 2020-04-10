@@ -4,7 +4,8 @@ export abstract class DataService<I, T> extends Service {
     private _dataType: new () => T;
 
     constructor(dataType: new () => T, options?: any) {
-        super(dataType.name);
+        super();
+        this.name = dataType.name;
         this._dataType = dataType;
     }
 

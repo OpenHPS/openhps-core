@@ -12,7 +12,8 @@ export class WorkerService extends ServiceProxy<Service> {
 
     constructor(name: string, inputObservable: Subject<{ id: string, serviceName: string, method: string, parameters: any }>, 
                 outputObservable: Subject<{ id: string, success: boolean, result?: any}>) {
-        super(name);
+        super();
+        this.name = name;
         this._inputObservable = inputObservable;
         this._outputObservable = outputObservable;
         this._outputObservable.subscribe(this._onOutput.bind(this));

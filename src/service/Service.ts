@@ -8,9 +8,9 @@ export abstract class Service extends AsyncEventEmitter {
     public logger: (level: string, log: any) => void = () => {};
     private _ready: boolean = false;
 
-    constructor(name: string = null) {
+    constructor() {
         super();
-        this._name = name === null ? this.constructor.name : name;
+        this._name = this.constructor.name;
 
         this.prependOnceListener('ready', () => {
             this._ready = true;
