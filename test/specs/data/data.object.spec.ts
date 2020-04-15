@@ -15,9 +15,7 @@ describe('data', () => {
             dataObject.addRelativeLocation(new RelativeDistanceLocation(new DataObject("ref_b"), 2));
             dataObject.addRelativeLocation(new RelativeDistanceLocation(new DataObject("ref_c"), 3));
             dataObject.addRelativeLocation(new RelativeLocation("ref_x", 10.5));
-            console.log(dataObject);
             const serialized = DataSerializer.serialize(dataObject);
-            console.log(serialized);
             const deserialized = DataSerializer.deserialize(serialized, DataObject);
             expect(dataObject.uid).to.equal(deserialized.uid);
             expect(dataObject.displayName).to.equal(deserialized.displayName);
