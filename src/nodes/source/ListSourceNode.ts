@@ -29,7 +29,7 @@ export class ListSourceNode<Out extends DataFrame> extends SourceNode<Out> {
     public onPull(): Promise<Out> {
         return new Promise<Out>((resolve, reject) => {
             if (this._inputData.length !== 0) {
-                resolve(this._inputData.pop());
+                resolve(this._inputData.shift());
             }
             resolve(null);
         });
