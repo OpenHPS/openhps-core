@@ -23,8 +23,8 @@ export abstract class ProcessingNode<In extends DataFrame | DataFrame[], Out ext
                 } else if (result instanceof Array) {
                     
                 } else {
-                    const oldFrameService = this.getDataFrameService(frame as DataFrame);
-                    const frameService = this.getDataFrameService(result as DataFrame);
+                    const oldFrameService = this.findDataFrameService(frame as DataFrame);
+                    const frameService = this.findDataFrameService(result as DataFrame);
                     
                     if (frameService !== null && frameService !== undefined) { 
                         if (frameService.name !== oldFrameService.name) {

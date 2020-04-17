@@ -5,6 +5,8 @@ import { AbstractGraph } from "./graph/interfaces/AbstractGraph";
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
 import { DataFrameService } from './service/DataFrameService';
 import { AsyncEventEmitter } from './_internal/AsyncEventEmitter';
+import { DataObject } from './data';
+import { DataObjectService } from './service';
 
 /**
  * OpenHPS model node.
@@ -196,7 +198,7 @@ export abstract class Node<In extends DataFrame | DataFrame[], Out extends DataF
      * Get data frame service for a specific frame
      * @param frame Frame to get data frame service for
      */
-    protected getDataFrameService<T extends DataFrame | DataFrame>(frame: T): DataFrameService<T> {
+    protected findDataFrameService<T extends DataFrame | DataFrame>(frame: T): DataFrameService<T> {
         const model = (this.graph as any);
         // Merge the changes in the frame service
         let frameService = model.findDataServiceByName(frame.constructor.name) as DataFrameService<T>;
@@ -204,6 +206,20 @@ export abstract class Node<In extends DataFrame | DataFrame[], Out extends DataF
             frameService = model.findDataServiceByName("DataFrame"); 
         }
         return frameService;
+    }
+
+    /**
+     * Get data frame service for a specific frame
+     * @param frame Frame to get data frame service for
+     */
+    protected findDataObjectService<T extends DataObject | DataObject>(object: T): DataObjectService<T> {
+        const model = (this.graph as any);
+        // Merge the changes in the object service
+        let objectService = model.findDataServiceByName(object.constructor.name) as DataObjectService<T>;
+        if (objectService === null || objectService === undefined) { 
+            objectService = model.findDataServiceByName("DataObject"); 
+        }
+        return objectService;
     }
 
 }

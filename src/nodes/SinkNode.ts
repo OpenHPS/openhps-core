@@ -3,7 +3,6 @@ import { Model } from "../Model";
 import { DataObject } from "../data";
 import * as uuidv4 from 'uuid/v4';
 import { AbstractSinkNode } from "../graph/interfaces/AbstractSinkNode";
-import { isArray } from "util";
 import { DataFrameService } from "../service";
 
 /**
@@ -81,7 +80,7 @@ export abstract class SinkNode<In extends DataFrame | DataFrame[]> extends Abstr
                 if (frame instanceof Array) {
                     frame.forEach((f: DataFrame) => {
                         // Check if there are frame services
-                        frameService = this.getDataFrameService(f);
+                        frameService = this.findDataFrameService(f);
                         if (frameService !== null && frameService !== undefined) { 
                             // Update the frame
                             framePromises.push(frameService.delete(f.uid));
@@ -89,7 +88,7 @@ export abstract class SinkNode<In extends DataFrame | DataFrame[]> extends Abstr
                     });
                 } else if (frame instanceof DataFrame) {
                     // Check if there are frame services
-                    frameService = this.getDataFrameService(frame);
+                    frameService = this.findDataFrameService(frame);
                     if (frameService !== null && frameService !== undefined) { 
                         // Update the frame
                         framePromises.push(frameService.delete(frame.uid));

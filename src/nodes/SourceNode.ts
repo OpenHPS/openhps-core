@@ -64,7 +64,7 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[]> extends Ab
             if (frame instanceof Array) {
                 frame.forEach(f => {
                     if (f !== null || f !== undefined) {
-                        const frameService = this.getDataFrameService(f);
+                        const frameService = this.findDataFrameService(f);
                         
                         if (frameService !== null && frameService !== undefined) { 
                             // Update the frame
@@ -77,7 +77,7 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[]> extends Ab
                 });
             } else {
                 if (frame !== null || frame !== undefined) {
-                    const frameService = this.getDataFrameService(frame as DataFrame);
+                    const frameService = this.findDataFrameService(frame as DataFrame);
                     
                     if (frameService !== null && frameService !== undefined) { 
                         // Update the frame
