@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.160](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.159...v1.0.0-alpha.160) (2020-04-17)
+
+
+### Features
+
+* allow modelbuilder to take uid strings of existing or added nodes ([ac64f9d](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/ac64f9de4a971edf02877d0d8e9e2c17adb78e3e))
+
+
+### Bug Fixes
+
+* find nodes by name when creating shape ([085dfc8](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/085dfc85e232b007c0657b0c67b96c48e5bb5c4b))
+
 ## [1.0.0-alpha.159](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.158...v1.0.0-alpha.159) (2020-04-16)
 
 
