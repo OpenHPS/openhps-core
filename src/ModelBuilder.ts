@@ -65,10 +65,11 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> {
         const selectedNodes: Array<Node<any, any>> = new Array();
         nodes.forEach((node: Node<any, any> | string) => {
             if (typeof node === 'string') {
-                const existingNode = this.graph.getNodeByUID(node);
-                if (existingNode !== undefined) {
-                    selectedNodes.push(existingNode);
+                let existingNode = this.graph.getNodeByUID(node);
+                if (existingNode === undefined) {
+                    existingNode = this.graph.getNodeByName(node);
                 }
+                selectedNodes.push(existingNode);
             } else {
                 this.graph.addNode(node);
                 if (node instanceof AbstractSourceNode) {
@@ -81,6 +82,10 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> {
             }
         });
         return new ModelShapeBuilder(this, this.graph, selectedNodes.length === 0 ? [this.graph.internalInput] : selectedNodes);
+    }
+
+    public shape(builderFn: (builder: ModelShapeBuilder) => void): void {
+        
     }
 
     public addNode(node: Node<any, any>): ModelBuilder<In, Out> {
@@ -140,16 +145,17 @@ export class ModelShapeBuilder {
         const selectedNodes: Array<Node<any, any>> = new Array();
         nodes.forEach(node => {
             if (typeof node === 'string') {
-                const existingNode = this.graph.getNodeByUID(node);
-                if (existingNode !== undefined) {
-                    this.previousNodes.forEach(prevNode => {
-                        this.graph.addEdge(new EdgeBuilder<any>()
-                            .withInput(prevNode)
-                            .withOutput(existingNode)
-                            .build());
-                    });
-                    selectedNodes.push(existingNode);
+                let existingNode = this.graph.getNodeByUID(node);
+                if (existingNode === undefined) {
+                    existingNode = this.graph.getNodeByName(node);
                 }
+                this.previousNodes.forEach(prevNode => {
+                    this.graph.addEdge(new EdgeBuilder<any>()
+                        .withInput(prevNode)
+                        .withOutput(existingNode)
+                        .build());
+                });
+                selectedNodes.push(existingNode);
             } else {
                 this.graph.addNode(node);
                 this.previousNodes.forEach(prevNode => {
@@ -212,20 +218,21 @@ export class ModelShapeBuilder {
             const selectedNodes: Array<AbstractSinkNode<any>> = new Array();
             nodes.forEach(node => {
                 if (typeof node === 'string') {
-                    const existingNode = this.graph.getNodeByUID(node);
-                    if (existingNode !== undefined) {
-                        this.previousNodes.forEach(prevNode => {
-                            this.graph.addEdge(new EdgeBuilder<any>()
-                                .withInput(prevNode)
-                                .withOutput(existingNode)
-                                .build());
-                        });
-                        this.graph.addEdge(new EdgeBuilder<any>()
-                            .withInput(existingNode)
-                            .withOutput(this.graph.internalOutput)
-                            .build());
-                        selectedNodes.push(existingNode as AbstractSinkNode<any>);
+                    let existingNode = this.graph.getNodeByUID(node);
+                    if (existingNode === undefined) {
+                        existingNode = this.graph.getNodeByName(node);
                     }
+                    this.previousNodes.forEach(prevNode => {
+                        this.graph.addEdge(new EdgeBuilder<any>()
+                            .withInput(prevNode)
+                            .withOutput(existingNode)
+                            .build());
+                    });
+                    this.graph.addEdge(new EdgeBuilder<any>()
+                        .withInput(existingNode)
+                        .withOutput(this.graph.internalOutput)
+                        .build());
+                    selectedNodes.push(existingNode as AbstractSinkNode<any>);
                 } else {
                     this.graph.addNode(node);
                     this.previousNodes.forEach(prevNode => {

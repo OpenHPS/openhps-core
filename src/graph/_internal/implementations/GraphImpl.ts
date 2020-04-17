@@ -71,6 +71,17 @@ export abstract class GraphImpl<In extends DataFrame, Out extends DataFrame> ext
         return this._nodes.get(uid);
     }
 
+    public getNodeByName(name: string): Node<any, any> {
+        let result: Node<any, any>;
+        this._nodes.forEach(node => {
+            if (node.name === name) {
+                result = node;
+                return;
+            }
+        });
+        return result;
+    }
+
     public addNode(node: Node<any, any>): void {
         node.graph = this;
         this._nodes.set(node.uid, node);
