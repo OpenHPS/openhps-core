@@ -18,7 +18,15 @@ export interface AbstractEdge<InOut extends DataFrame | DataFrame[]> {
     outputNode: AbstractNode<InOut, any>;
 
     /**
-     * Serialize the edge connection
+     * Push data to the output node
+     * 
+     * @param frame Data frame to push
      */
-    serialize(): Object;
+    push(frame: InOut): Promise<void>;
+
+    /**
+     * Pull data from the input node
+     */
+    pull(): Promise<void>;
+
 }

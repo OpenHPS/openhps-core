@@ -67,6 +67,10 @@ export abstract class GraphImpl<In extends DataFrame, Out extends DataFrame> ext
         });
     }
 
+    public getNodeByUID(uid: string): Node<any, any> {
+        return this._nodes.get(uid);
+    }
+
     public addNode(node: Node<any, any>): void {
         node.graph = this;
         this._nodes.set(node.uid, node);

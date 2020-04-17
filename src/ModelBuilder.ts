@@ -32,7 +32,6 @@ import { MemoryBufferNode } from "./nodes/shapes/MemoryBufferNode";
  * ```
  */
 export class ModelBuilder<In extends DataFrame, Out extends DataFrame> {
-
     protected graph: ModelImpl<In, Out>;
 
     private constructor() {
@@ -62,17 +61,26 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> {
         return this;
     }
 
-    public from(...nodes: Array<Node<any, any>>): ModelShapeBuilder {
-        nodes.forEach(node => {
-            this.graph.addNode(node);
-            if (node instanceof AbstractSourceNode) {
-                this.graph.addEdge(new EdgeBuilder<any>()
-                    .withInput(this.graph.internalInput)
-                    .withOutput(node)
-                    .build());
+    public from(...nodes: Array<Node<any, any> | string>): ModelShapeBuilder {
+        const selectedNodes: Array<Node<any, any>> = new Array();
+        nodes.forEach((node: Node<any, any> | string) => {
+            if (typeof node === 'string') {
+                const existingNode = this.graph.getNodeByUID(node);
+                if (existingNode !== undefined) {
+                    selectedNodes.push(existingNode);
+                }
+            } else {
+                this.graph.addNode(node);
+                if (node instanceof AbstractSourceNode) {
+                    this.graph.addEdge(new EdgeBuilder<any>()
+                        .withInput(this.graph.internalInput)
+                        .withOutput(node)
+                        .build());
+                }
+                selectedNodes.push(node);
             }
         });
-        return new ModelShapeBuilder(this, this.graph, nodes.length === 0 ? [this.graph.internalInput] : nodes);
+        return new ModelShapeBuilder(this, this.graph, selectedNodes.length === 0 ? [this.graph.internalInput] : selectedNodes);
     }
 
     public addNode(node: Node<any, any>): ModelBuilder<In, Out> {
@@ -128,17 +136,32 @@ export class ModelShapeBuilder {
         this.graph = graph;
     }
 
-    public via(...nodes: Array<Node<any, any>>): ModelShapeBuilder {
+    public via(...nodes: Array<Node<any, any> | string>): ModelShapeBuilder {
+        const selectedNodes: Array<Node<any, any>> = new Array();
         nodes.forEach(node => {
-            this.previousNodes.forEach(prevNode => {
+            if (typeof node === 'string') {
+                const existingNode = this.graph.getNodeByUID(node);
+                if (existingNode !== undefined) {
+                    this.previousNodes.forEach(prevNode => {
+                        this.graph.addEdge(new EdgeBuilder<any>()
+                            .withInput(prevNode)
+                            .withOutput(existingNode)
+                            .build());
+                    });
+                    selectedNodes.push(existingNode);
+                }
+            } else {
                 this.graph.addNode(node);
-                this.graph.addEdge(new EdgeBuilder<any>()
-                    .withInput(prevNode)
-                    .withOutput(node)
-                    .build());
-            });
+                this.previousNodes.forEach(prevNode => {
+                    this.graph.addEdge(new EdgeBuilder<any>()
+                        .withInput(prevNode)
+                        .withOutput(node)
+                        .build());
+                });
+                selectedNodes.push(node);
+            }
         });
-        this.previousNodes = nodes;
+        this.previousNodes = selectedNodes;
         return this;
     }
 
@@ -184,22 +207,41 @@ export class ModelShapeBuilder {
         return this.via(new MemoryBufferNode());
     }
 
-    public to(...nodes: Array<AbstractSinkNode<any>>): ModelBuilder<any, any> {
+    public to(...nodes: Array<AbstractSinkNode<any> | string>): ModelBuilder<any, any> {
         if (nodes.length !== 0) {
+            const selectedNodes: Array<AbstractSinkNode<any>> = new Array();
             nodes.forEach(node => {
-                this.graph.addNode(node);
-                this.previousNodes.forEach(prevNode => {
+                if (typeof node === 'string') {
+                    const existingNode = this.graph.getNodeByUID(node);
+                    if (existingNode !== undefined) {
+                        this.previousNodes.forEach(prevNode => {
+                            this.graph.addEdge(new EdgeBuilder<any>()
+                                .withInput(prevNode)
+                                .withOutput(existingNode)
+                                .build());
+                        });
+                        this.graph.addEdge(new EdgeBuilder<any>()
+                            .withInput(existingNode)
+                            .withOutput(this.graph.internalOutput)
+                            .build());
+                        selectedNodes.push(existingNode as AbstractSinkNode<any>);
+                    }
+                } else {
+                    this.graph.addNode(node);
+                    this.previousNodes.forEach(prevNode => {
+                        this.graph.addEdge(new EdgeBuilder<any>()
+                            .withInput(prevNode)
+                            .withOutput(node)
+                            .build());
+                    });
                     this.graph.addEdge(new EdgeBuilder<any>()
-                        .withInput(prevNode)
-                        .withOutput(node)
+                        .withInput(node)
+                        .withOutput(this.graph.internalOutput)
                         .build());
-                });
-                this.graph.addEdge(new EdgeBuilder<any>()
-                    .withInput(node)
-                    .withOutput(this.graph.internalOutput)
-                    .build());
+                    selectedNodes.push(node);
+                }
             });
-            this.previousNodes = nodes; 
+            this.previousNodes = selectedNodes; 
         } else {
             this.previousNodes.forEach(prevNode => {
                 this.graph.addEdge(new EdgeBuilder<any>()

@@ -56,7 +56,7 @@ export abstract class Node<In extends DataFrame | DataFrame[], Out extends DataF
         this._graph = graph;
     }
 
-    private _getOutlets(): Array<AbstractEdge<Out>> {
+    protected get outlets(): Array<AbstractEdge<Out>> {
         const edges = new Array();
         this.graph.edges.forEach(edge => {
             if (edge.inputNode === this) {
@@ -66,7 +66,7 @@ export abstract class Node<In extends DataFrame | DataFrame[], Out extends DataF
         return edges;
     }
 
-    private _getInlets(): Array<AbstractEdge<In>> {
+    protected get inlets(): Array<AbstractEdge<In>> {
         const edges = new Array();
         this.graph.edges.forEach(edge => {
             if (edge.outputNode === this) {
@@ -77,7 +77,7 @@ export abstract class Node<In extends DataFrame | DataFrame[], Out extends DataF
     }
 
     public get outputNodes(): Array<Node<any, any>> {
-        const edges = this._getOutlets();
+        const edges = this.outlets;
         const nodes = new Array();
         edges.forEach(edge => {
             nodes.push(edge.outputNode);
@@ -86,7 +86,7 @@ export abstract class Node<In extends DataFrame | DataFrame[], Out extends DataF
     }
 
     public get inputNodes(): Array<Node<any, any>> {
-        const edges = this._getInlets();
+        const edges = this.inlets;
         const nodes = new Array();
         edges.forEach(edge => {
             nodes.push(edge.inputNode);

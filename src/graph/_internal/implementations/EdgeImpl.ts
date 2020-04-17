@@ -39,11 +39,19 @@ export class EdgeImpl<InOut extends DataFrame | DataFrame[]> implements Abstract
         this._outputNode = output;
     }
 
-    public serialize(): Object {
-        return {
-            uid: this._uid,
-            input: this._inputNode.uid,
-            output: this._outputNode.uid
-        };
+    /**
+     * Push data to the output node
+     * 
+     * @param frame Data frame to push
+     */
+    public push(frame: InOut): Promise<void> {
+        return this.outputNode.push(frame);
+    }
+
+    /**
+     * Pull data from the input node
+     */
+    public pull(): Promise<void> {
+        return this.inputNode.pull();
     }
 }
