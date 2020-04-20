@@ -2,7 +2,7 @@ import { AbstractEdge } from './AbstractEdge';
 import { DataFrame } from '../../data/DataFrame';
 import { AbstractNode } from './AbstractNode';
 
-export interface AbstractGraph<In extends DataFrame, Out extends DataFrame> extends AbstractNode<In, Out> {
+export interface AbstractGraph<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends AbstractNode<In, Out> {
     /**
      * Get unique identifier of graph
      */

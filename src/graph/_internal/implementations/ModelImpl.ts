@@ -9,7 +9,7 @@ import { ServiceProxy } from "../../../service/_internal";
 /**
  * [[Model]] implementation
  */
-export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends GraphImpl<In, Out> implements Model<In, Out> {
+export class ModelImpl<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends GraphImpl<In, Out> implements Model<In, Out> {
     private _services: Map<string, Service> = new Map();
     private _dataServices: Map<string, DataService<any, any>> = new Map();
 

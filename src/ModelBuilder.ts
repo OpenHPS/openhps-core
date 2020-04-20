@@ -1,19 +1,10 @@
 import { Service } from "./service";
-import { DataFrame, DataObject } from "./data";
-import { AbstractEdge, EdgeBuilder } from "./graph";
-import { Node } from "./Node";
+import { DataFrame } from "./data";
 import { ModelImpl } from "./graph/_internal/implementations";
-import { AbstractSourceNode } from "./graph/interfaces/AbstractSourceNode";
 import { Model } from "./Model";
-import { AbstractSinkNode } from "./graph/interfaces/AbstractSinkNode";
-import { ObjectMergeNode } from './nodes/shapes/ObjectMergeNode';
-import { TimeUnit } from "./utils";
-import { FrameFilterNode } from "./nodes/shapes/FrameFilterNode";
-import { FrameDebounceNode } from "./nodes/shapes/FrameDebounceNode";
-import { ObjectFilterNode } from "./nodes/shapes/ObjectFilterNode";
-import { FrameChunkNode } from "./nodes/shapes/FrameChunkNode";
-import { FrameFlattenNode } from "./nodes/shapes/FrameFlattenNode";
-import { MemoryBufferNode } from "./nodes/shapes/MemoryBufferNode";
+import { GraphBuilder } from "./graph/builders/GraphBuilder";
+import { AbstractGraph } from "./graph";
+import { Node } from "./Node";
 
 /**
  * Model build to construct and build a [[Model]]
@@ -31,15 +22,14 @@ import { MemoryBufferNode } from "./nodes/shapes/MemoryBufferNode";
  *      });
  * ```
  */
-export class ModelBuilder<In extends DataFrame, Out extends DataFrame> {
-    protected graph: ModelImpl<In, Out>;
+export class ModelBuilder<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends GraphBuilder<In, Out> {
 
-    private constructor() {
-        this.graph = new ModelImpl<In, Out>();
+    protected constructor() {
+        super(new ModelImpl<In, Out>());
         this.graph.name = "model";
     }
 
-    public static create<In extends DataFrame, Out extends DataFrame>(): ModelBuilder<In, Out> {
+    public static create<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]>(): ModelBuilder<In, Out> {
         return new ModelBuilder();
     }
 
@@ -57,54 +47,7 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> {
      * @param service Service to add
      */
     public addService(service: Service): ModelBuilder<In, Out> {
-        this.graph.addService(service);
-        return this;
-    }
-
-    public from(...nodes: Array<Node<any, any> | string>): ModelShapeBuilder {
-        const selectedNodes: Array<Node<any, any>> = new Array();
-        nodes.forEach((node: Node<any, any> | string) => {
-            if (typeof node === 'string') {
-                let existingNode = this.graph.getNodeByUID(node);
-                if (existingNode === undefined) {
-                    existingNode = this.graph.getNodeByName(node);
-                }
-                selectedNodes.push(existingNode);
-            } else {
-                this.graph.addNode(node);
-                if (node instanceof AbstractSourceNode) {
-                    this.graph.addEdge(new EdgeBuilder<any>()
-                        .withInput(this.graph.internalInput)
-                        .withOutput(node)
-                        .build());
-                }
-                selectedNodes.push(node);
-            }
-        });
-        return new ModelShapeBuilder(this, this.graph, selectedNodes.length === 0 ? [this.graph.internalInput] : selectedNodes);
-    }
-
-    public shape(builderFn: (builder: ModelShapeBuilder) => void): void {
-        
-    }
-
-    public addNode(node: Node<any, any>): ModelBuilder<In, Out> {
-        this.graph.addNode(node);
-        return this;
-    }
-
-    public addEdge(edge: AbstractEdge<any>): ModelBuilder<In, Out> {
-        this.graph.addEdge(edge);
-        return this;
-    }
-
-    public deleteEdge(edge: AbstractEdge<any>): ModelBuilder<In, Out> {
-        this.graph.deleteEdge(edge);
-        return this;
-    }
-
-    public deleteNode(node: Node<any, any>): ModelBuilder<In, Out> {
-        this.graph.deleteNode(node);
+        (this.graph as ModelImpl<In, Out>).addService(service);
         return this;
     }
 
@@ -113,12 +56,12 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> {
             this.graph.nodes.forEach(node => {
                 node.logger = this.graph.logger;
             });
-            this.graph.findAllServices().forEach(service => {
+            (this.graph as ModelImpl<In, Out>).findAllServices().forEach(service => {
                 service.logger = this.graph.logger;
             });
             this.graph.validate();
             this.graph.once('ready', () => {
-                resolve(this.graph);
+                resolve(this.graph as Model<In, Out>);
             });
             this.graph.emitAsync('build', this).catch(ex => {
                 // Destroy model
@@ -128,136 +71,4 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> {
         });
     }
     
-}
-
-export class ModelShapeBuilder {
-    protected graphBuilder: ModelBuilder<any, any>;
-    protected previousNodes: Array<Node<any, any>>;
-    protected graph: ModelImpl<any, any>;
-
-    constructor(graphBuilder: ModelBuilder<any, any>, graph: ModelImpl<any, any>, nodes: Array<Node<any, any>>) {
-        this.graphBuilder = graphBuilder;
-        this.previousNodes = nodes;
-        this.graph = graph;
-    }
-
-    public via(...nodes: Array<Node<any, any> | string>): ModelShapeBuilder {
-        const selectedNodes: Array<Node<any, any>> = new Array();
-        nodes.forEach(node => {
-            if (typeof node === 'string') {
-                let existingNode = this.graph.getNodeByUID(node);
-                if (existingNode === undefined) {
-                    existingNode = this.graph.getNodeByName(node);
-                }
-                this.previousNodes.forEach(prevNode => {
-                    this.graph.addEdge(new EdgeBuilder<any>()
-                        .withInput(prevNode)
-                        .withOutput(existingNode)
-                        .build());
-                });
-                selectedNodes.push(existingNode);
-            } else {
-                this.graph.addNode(node);
-                this.previousNodes.forEach(prevNode => {
-                    this.graph.addEdge(new EdgeBuilder<any>()
-                        .withInput(prevNode)
-                        .withOutput(node)
-                        .build());
-                });
-                selectedNodes.push(node);
-            }
-        });
-        this.previousNodes = selectedNodes;
-        return this;
-    }
-
-    public chunk(size: number, timeout?: number, timeoutUnit?: TimeUnit): ModelShapeBuilder {
-        return this.via(new FrameChunkNode(size, timeout, timeoutUnit));
-    }
-
-    public flatten(): ModelShapeBuilder {
-        return this.via(new FrameFlattenNode());
-    }
-
-    /**
-     * Filter frames based on function
-     * @param filterFn Filter function (true to keep, false to remove)
-     */
-    public filter(filterFn: (frame: DataFrame) => boolean): ModelShapeBuilder {
-        return this.via(new FrameFilterNode(filterFn));
-    }
-
-    /**
-     * Filter objects inside frames
-     * @param filterFn Filter function (true to keep, false to remove)
-     */
-    public filterObjects(filterFn: (object: DataObject, frame?: DataFrame) => boolean): ModelShapeBuilder {
-        return this.via(new ObjectFilterNode(filterFn));
-    }
-
-    /**
-     * Merge objects
-     * @param by Merge key
-     * @param timeout Timeout
-     * @param timeoutUnit Timeout unit
-     */
-    public merge(by: (frame: DataFrame) => boolean = _ => true, timeout: number = 100, timeoutUnit: TimeUnit = TimeUnit.MILLI): ModelShapeBuilder {
-        return this.via(new ObjectMergeNode((object: DataObject) => true, by, timeout, timeoutUnit)); 
-    }
-
-    public debounce(timeout: number = 100, timeoutUnit: TimeUnit = TimeUnit.MILLI): ModelShapeBuilder {
-        return this.via(new FrameDebounceNode(timeout, timeoutUnit));
-    }
-
-    public buffer(): ModelShapeBuilder {
-        return this.via(new MemoryBufferNode());
-    }
-
-    public to(...nodes: Array<AbstractSinkNode<any> | string>): ModelBuilder<any, any> {
-        if (nodes.length !== 0) {
-            const selectedNodes: Array<AbstractSinkNode<any>> = new Array();
-            nodes.forEach(node => {
-                if (typeof node === 'string') {
-                    let existingNode = this.graph.getNodeByUID(node);
-                    if (existingNode === undefined) {
-                        existingNode = this.graph.getNodeByName(node);
-                    }
-                    this.previousNodes.forEach(prevNode => {
-                        this.graph.addEdge(new EdgeBuilder<any>()
-                            .withInput(prevNode)
-                            .withOutput(existingNode)
-                            .build());
-                    });
-                    this.graph.addEdge(new EdgeBuilder<any>()
-                        .withInput(existingNode)
-                        .withOutput(this.graph.internalOutput)
-                        .build());
-                    selectedNodes.push(existingNode as AbstractSinkNode<any>);
-                } else {
-                    this.graph.addNode(node);
-                    this.previousNodes.forEach(prevNode => {
-                        this.graph.addEdge(new EdgeBuilder<any>()
-                            .withInput(prevNode)
-                            .withOutput(node)
-                            .build());
-                    });
-                    this.graph.addEdge(new EdgeBuilder<any>()
-                        .withInput(node)
-                        .withOutput(this.graph.internalOutput)
-                        .build());
-                    selectedNodes.push(node);
-                }
-            });
-            this.previousNodes = selectedNodes; 
-        } else {
-            this.previousNodes.forEach(prevNode => {
-                this.graph.addEdge(new EdgeBuilder<any>()
-                    .withInput(prevNode)
-                    .withOutput(this.graph.internalOutput)
-                    .build());
-            });
-        }
-        return this.graphBuilder;
-    }
-
 }

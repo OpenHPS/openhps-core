@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, DataFrame, Node } from '../../src';
+import { ModelBuilder, DataFrame, Node, GraphBuilder } from '../../src';
 import { NamedNode, CallbackSourceNode, CallbackNode, CallbackSinkNode } from '../../src/nodes';
 
 describe('model', () => {
@@ -66,6 +66,21 @@ describe('model', () => {
                     done(ex);
                 });
         });
+
+        
+        it('should be able to take graph shapes', (done) => {
+            ModelBuilder.create()
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .via(new NamedNode("1"), new NamedNode("2"))
+                    .to())
+                .build().then(model => {
+                    done();
+                }).catch(ex => {
+                    done(ex);
+                });
+        });
+
 
     });
 

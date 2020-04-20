@@ -5,8 +5,9 @@ import { Observable } from "threads/observable";
 import { PoolEvent } from "threads/dist/master/pool";
 import { Model } from "../Model";
 import { isArray } from "util";
-import { ModelShapeBuilder } from "../ModelBuilder";
 import { DataService, DataObjectService, DataFrameService, Service } from "../service";
+import { GraphShapeBuilder } from "../graph/builders/GraphBuilder";
+import { ModelBuilder } from "../ModelBuilder";
 
 /**
  * 
@@ -31,11 +32,11 @@ import { DataService, DataObjectService, DataFrameService, Service } from "../se
 export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends Node<In, Out> {
     private _worker: Worker;
     private _pool: Pool<Thread>;
-    private _builderCallback: (builder: ModelShapeBuilder) => void;
+    private _builderCallback: (builder: GraphShapeBuilder<ModelBuilder<any, any>>, modelBuilder?: ModelBuilder<any, any>) => void;
     private _options: WorkerNodeOptions;
     private _serviceOutputFn: (id: string, success: boolean, result?: any) => Promise<void>;
 
-    constructor(builderCallback: (builder: ModelShapeBuilder) => void, options: WorkerNodeOptions = new WorkerNodeOptions()) {
+    constructor(builderCallback: (builder: GraphShapeBuilder<ModelBuilder<any, any>>, modelBuilder?: ModelBuilder<any, any>) => void, options: WorkerNodeOptions = new WorkerNodeOptions()) {
         super();
         this._builderCallback = builderCallback;
         this._options = options;
@@ -57,7 +58,7 @@ export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFram
                     pullPromises.push(node.pull());
                 });
 
-                Promise.all(pullPromises).then(_ => {
+                Promise.all(pullPromises).then(() => {
                     resolve();
                 }).catch(ex => {
                     reject(ex);

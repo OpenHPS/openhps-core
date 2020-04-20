@@ -54,7 +54,7 @@ expose({
         }));
 
         const path = require('path');
-        builderCallback(traversalBuilder);
+        builderCallback(traversalBuilder, modelBuilder);
 
         traversalBuilder.to(new CallbackSinkNode((frame: DataFrame) => {
             output.next(DataSerializer.serialize(frame));

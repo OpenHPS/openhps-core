@@ -3,8 +3,9 @@ import { AbstractEdge } from "../../interfaces/AbstractEdge";
 import { AbstractGraph } from "../../interfaces/AbstractGraph";
 import { DataFrame } from "../../../data/DataFrame";
 import { BroadcastNode } from "../../../nodes/shapes/BroadcastNode";
+import { AbstractNode } from "../../interfaces";
 
-export abstract class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> implements AbstractGraph<In, Out> {
+export class GraphImpl<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends Node<In, Out> implements AbstractGraph<In, Out> {
     private _nodes: Map<string, Node<any, any>> = new Map();
     private _edges: Map<string, AbstractEdge<any>> = new Map();
 
@@ -32,7 +33,7 @@ export abstract class GraphImpl<In extends DataFrame, Out extends DataFrame> ext
             this.nodes.forEach(node => {
                 buildPromises.push(node.emitAsync('build', _));
             });
-            Promise.all(buildPromises).then(_2 => {
+            Promise.all(buildPromises).then(() => {
                 this.emit('ready');
                 resolve();
             }).catch(ex => {
@@ -82,9 +83,9 @@ export abstract class GraphImpl<In extends DataFrame, Out extends DataFrame> ext
         return result;
     }
 
-    public addNode(node: Node<any, any>): void {
-        node.graph = this;
-        this._nodes.set(node.uid, node);
+    public addNode(node: AbstractNode<any, any>): void {
+        (node as Node<any, any>).graph = this.graph === undefined ? this : this.graph;
+        this._nodes.set(node.uid, (node as Node<any, any>));
     }
 
     public addEdge(edge: AbstractEdge<any>): void {
@@ -95,7 +96,7 @@ export abstract class GraphImpl<In extends DataFrame, Out extends DataFrame> ext
         this._edges.delete(edge.uid);
     }
 
-    public deleteNode(node: Node<any, any>): void {
+    public deleteNode(node: AbstractNode<any, any>): void {
         this._nodes.delete(node.uid);
     }
 
