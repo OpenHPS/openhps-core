@@ -1,5 +1,4 @@
 import { SerializableObject, SerializableMember } from "../../data/decorators";
-import * as crypto from 'crypto';
 
 @SerializableObject({
     initializer: <T extends Unit | Unit>(_: T, rawSourceObject: T) => {
@@ -31,7 +30,7 @@ export class Unit {
         this._fromReference = fromReference;
 
         if (toReference !== undefined && fromReference !== undefined) {
-            this._hash = crypto.createHash('md5').update(`${this.constructor.name}${this._toReference.toString()}${this._fromReference.toString()}`).digest("hex");
+            this._hash = Buffer.from(`${this.constructor.name}${this._toReference.toString()}${this._fromReference.toString()}`).toString('base64');
 
             if (!Unit._units.has(this.hash)) {
                 Unit._units.set(this.hash, this);

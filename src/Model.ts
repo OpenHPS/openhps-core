@@ -53,5 +53,8 @@ export interface Model<In extends DataFrame | DataFrame[], Out extends DataFrame
      */
     findDataServiceByObject<D extends DataObject, F extends DataService<any, D>>(dataObject: D): F;
 
+    /**
+     * Find all services
+     */
     findAllServices(): Service[];
 }

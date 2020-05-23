@@ -1,7 +1,7 @@
 import { AbsoluteLocation } from "./AbsoluteLocation";
 import { LengthUnit, SpeedUnit } from "../../utils";
 import { SerializableMember, SerializableObject, SerializableArrayMember } from "../decorators";
-import * as math from 'mathjs';
+import * as math from '../../utils/_internal/Math';
 
 /**
  * Cartesian 2D location. This class implements a [[Location]]. This location can be used both as

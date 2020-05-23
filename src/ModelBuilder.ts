@@ -3,8 +3,6 @@ import { DataFrame } from "./data";
 import { ModelImpl } from "./graph/_internal/implementations";
 import { Model } from "./Model";
 import { GraphBuilder } from "./graph/builders/GraphBuilder";
-import { AbstractGraph } from "./graph";
-import { Node } from "./Node";
 
 /**
  * Model build to construct and build a [[Model]]

@@ -1,5 +1,5 @@
 import { SerializableObject, SerializableMember } from "../decorators";
-import * as math from 'mathjs';
+import * as math from '../../utils/_internal/Math';
 import { Cartesian2DLocation } from "./Cartesian2DLocation";
 
 /**
