@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.164](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.163...v1.0.0-alpha.164) (2020-06-21)
+
+
+### Features
+
+* added velocity calculator ([ecc306c](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/ecc306c670a0098875298efab2f7b5d56c582afc))
+
 ## [1.0.0-alpha.163](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.162...v1.0.0-alpha.163) (2020-05-23)
 
 ## [1.0.0-alpha.162](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.161...v1.0.0-alpha.162) (2020-04-29)
