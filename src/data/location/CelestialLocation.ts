@@ -1,13 +1,13 @@
 import { AbsoluteLocation } from "./AbsoluteLocation";
 import { SerializableObject, SerializableMember, SerializableArrayMember } from "../decorators";
-import { LengthUnit, SpeedUnit } from "../../utils";
+import { LengthUnit } from "../../utils";
+import { Velocity } from "./Velocity";
 
 @SerializableObject()
 export abstract class CelestialLocation implements AbsoluteLocation {
     private _accuracy: number;
     private _timestamp: number = new Date().getTime();
-    private _velocity: number[];
-    private _velocityUnit: SpeedUnit<any, any>;
+    private _velocity: Velocity = new Velocity();
 
     @SerializableMember()
     public get timestamp(): number {
@@ -18,25 +18,13 @@ export abstract class CelestialLocation implements AbsoluteLocation {
         this._timestamp = timestamp;
     }
 
-    @SerializableArrayMember(Number)
-    public get velocity(): number[] {
+    @SerializableMember()
+    public get velocity(): Velocity {
         return this._velocity;
     }
 
-    public set velocity(velocity: number[]) {
+    public set velocity(velocity: Velocity) {
         this._velocity = velocity;
-    }
-
-    /**
-     * Get velocity unit
-     */
-    @SerializableMember()
-    public get velocityUnit(): SpeedUnit<any, any> {
-        return this._velocityUnit;
-    }
-
-    public set velocityUnit(unit: SpeedUnit<any, any>) {
-        this._velocityUnit = unit;
     }
     
     /**

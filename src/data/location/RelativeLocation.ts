@@ -1,6 +1,7 @@
 import { Location } from "./Location";
-import { SerializableObject, SerializableMember, SerializableArrayMember } from '../decorators';
-import { Unit, SpeedUnit } from "../../utils";
+import { SerializableObject, SerializableMember } from '../decorators';
+import { Unit } from "../../utils";
+import { Velocity } from "./Velocity";
 
 /**
  * Relative location to another reference object.
@@ -13,8 +14,7 @@ export class RelativeLocation implements Location {
     private _timestamp: number = new Date().getTime();
     private _accuracy: number;
     private _accuracyUnit: Unit;
-    private _velocity: number[];
-    private _velocityUnit: SpeedUnit<any, any>;
+    private _velocity: Velocity = new Velocity();
 
     constructor(referenceObject?: any, referenceValue?: number) {
         if (referenceObject !== undefined) {
@@ -37,25 +37,13 @@ export class RelativeLocation implements Location {
         this._timestamp = timestamp;
     }
 
-    @SerializableArrayMember(Number)
-    public get velocity(): number[] {
+    @SerializableMember()
+    public get velocity(): Velocity {
         return this._velocity;
     }
 
-    public set velocity(velocity: number[]) {
+    public set velocity(velocity: Velocity) {
         this._velocity = velocity;
-    }
-
-    /**
-     * Get velocity unit
-     */
-    @SerializableMember()
-    public get velocityUnit(): SpeedUnit<any, any> {
-        return this._velocityUnit;
-    }
-
-    public set velocityUnit(unit: SpeedUnit<any, any>) {
-        this._velocityUnit = unit;
     }
 
     /**

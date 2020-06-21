@@ -1,7 +1,8 @@
 import { AbsoluteLocation } from "./AbsoluteLocation";
-import { LengthUnit, SpeedUnit } from "../../utils";
-import { SerializableMember, SerializableObject, SerializableArrayMember } from "../decorators";
+import { LengthUnit } from "../../utils";
+import { SerializableMember, SerializableObject } from "../decorators";
 import * as math from '../../utils/_internal/Math';
+import { Velocity } from "./Velocity";
 
 /**
  * Cartesian 2D location. This class implements a [[Location]]. This location can be used both as
@@ -14,33 +15,20 @@ export class Cartesian2DLocation implements AbsoluteLocation {
     private _accuracy: number;
     private _unit: LengthUnit = LengthUnit.POINTS;
     private _timestamp: number = new Date().getTime();
-    private _velocity: number[];
-    private _velocityUnit: SpeedUnit<any, any>;
+    private _velocity: Velocity = new Velocity();
 
     constructor(x?: number, y?: number) {
         this.x = x;
         this.y = y;
     }
 
-    @SerializableArrayMember(Number)
-    public get velocity(): number[] {
+    @SerializableMember()
+    public get velocity(): Velocity {
         return this._velocity;
     }
 
-    public set velocity(velocity: number[]) {
+    public set velocity(velocity: Velocity) {
         this._velocity = velocity;
-    }
-
-    /**
-     * Get velocity unit
-     */
-    @SerializableMember()
-    public get velocityUnit(): SpeedUnit<any, any> {
-        return this._velocityUnit;
-    }
-
-    public set velocityUnit(unit: SpeedUnit<any, any>) {
-        this._velocityUnit = unit;
     }
 
     /**

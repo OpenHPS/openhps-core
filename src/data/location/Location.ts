@@ -1,4 +1,5 @@
-import { Unit, SpeedUnit } from "../../utils";
+import { Unit } from "../../utils";
+import { Velocity } from "./Velocity";
 
 /**
  * General location class. Regardless on the type of location, each location
@@ -17,7 +18,8 @@ export interface Location {
      */
     accuracyUnit: Unit;
 
-    velocity: number[];
-
-    velocityUnit: SpeedUnit<any, any>;
+    /**
+     * Velocity at given location
+     */
+    velocity: Velocity;
 }

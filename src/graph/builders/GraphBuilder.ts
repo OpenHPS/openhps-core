@@ -4,7 +4,7 @@ import { Node } from "../../Node";
 import { AbstractSourceNode, AbstractEdge, AbstractGraph, AbstractSinkNode, AbstractNode } from "../interfaces";
 import { EdgeBuilder } from "./EdgeBuilder";
 import { TimeUnit } from "../../utils";
-import { FrameChunkNode, FrameFlattenNode, FrameFilterNode, ObjectMergeNode, MemoryBufferNode } from "../../nodes/shapes";
+import { FrameChunkNode, FrameFlattenNode, FrameFilterNode, ObjectMergeNode, MemoryBufferNode, InflateNode, DeflateNode } from "../../nodes/shapes";
 import { ObjectFilterNode } from "../../nodes/shapes/ObjectFilterNode";
 import { FrameDebounceNode } from "../../nodes/shapes/FrameDebounceNode";
 
@@ -180,6 +180,14 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     public flatten(): GraphShapeBuilder<Builder> {
         return this.via(new FrameFlattenNode());
+    }
+
+    public inflate(): GraphShapeBuilder<Builder> {
+        return this.via(new InflateNode());
+    }
+
+    public deflate(): GraphShapeBuilder<Builder> {
+        return this.via(new DeflateNode());
     }
 
     /**
