@@ -6,7 +6,9 @@ import { AngleUnit } from "../../utils";
 /**
  * Camera source object
  */
-@SerializableObject()
+@SerializableObject({
+    name: "CameraObject"
+})
 export class CameraObject extends DataObject implements SensorObject {
     @SerializableMember()
     public horizontalFOV: number;

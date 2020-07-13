@@ -8,7 +8,9 @@ import { Velocity } from "./Velocity";
  * Cartesian 2D location. This class implements a [[Location]]. This location can be used both as
  * an absolute location or relative location.
  */
-@SerializableObject()
+@SerializableObject({
+    name: "Cartesian2DLocation"
+})
 export class Cartesian2DLocation implements AbsoluteLocation {
     private _x: number = 0;
     private _y: number = 0;

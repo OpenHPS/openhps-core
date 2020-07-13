@@ -6,7 +6,9 @@ import { DataObject } from '../object';
 /**
  * Relative location to another reference object measured in the angle.
  */
-@SerializableObject()
+@SerializableObject({
+    name: "RelativeAngleLocation"
+})
 export class RelativeAngleLocation extends RelativeLocation {
     private _angle: number;
     private _angleUnit: AngleUnit;

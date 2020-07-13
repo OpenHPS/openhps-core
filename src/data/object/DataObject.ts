@@ -9,7 +9,9 @@ import { DataSerializer } from '../DataSerializer';
  * A data object is an instance that can be anything ranging from a person or asset to
  * a more abstract object such as a Wi-Fi access point or room.
  */
-@SerializableObject()
+@SerializableObject({
+    name: "DataObject"
+})
 export class DataObject {
     private _uid: string;
     private _displayName: string;

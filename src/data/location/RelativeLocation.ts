@@ -6,7 +6,9 @@ import { Velocity } from "./Velocity";
 /**
  * Relative location to another reference object.
  */
-@SerializableObject()
+@SerializableObject({
+    name: "RelativeLocation"
+})
 export class RelativeLocation implements Location {
     private _referenceObjectUID: string;
     private _referenceObjectType: string;

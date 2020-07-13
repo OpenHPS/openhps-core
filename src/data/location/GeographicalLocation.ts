@@ -8,7 +8,9 @@ import { Velocity } from "./Velocity";
 /**
  * Geographical location
  */
-@SerializableObject()
+@SerializableObject({
+    name: "GeographicalLocation"
+})
 export class GeographicalLocation implements AbsoluteLocation {
     private _lat: number;
     private _lng: number;

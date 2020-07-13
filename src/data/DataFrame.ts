@@ -5,7 +5,9 @@ import { SerializableObject, SerializableMember, SerializableMapMember } from '.
 /**
  * Data frame that is passed through each node in a model.
  */
-@SerializableObject()
+@SerializableObject({
+    name: "DataFrame"
+})
 export class DataFrame {
     @SerializableMember()
     private _uid: string = uuidv4();

@@ -6,7 +6,9 @@ import { Cartesian2DLocation } from "./Cartesian2DLocation";
  * Cartesian 3D location. This class extends a [[Cartesian2DLocation]]. This location can be used both as
  * an absolute location or relative location.
  */
-@SerializableObject()
+@SerializableObject({
+    name: "Cartesian3DLocation"
+})
 export class Cartesian3DLocation extends Cartesian2DLocation {
     private _z: number = 0;
 

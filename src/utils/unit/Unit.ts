@@ -1,6 +1,7 @@
 import { SerializableObject, SerializableMember } from "../../data/decorators";
 
 @SerializableObject({
+    name: "Unit",
     initializer: <T extends Unit | Unit>(_: T, rawSourceObject: T) => {
         if (rawSourceObject.hash !== undefined) {
             const unit = Unit.findUnitByHash(rawSourceObject.hash);

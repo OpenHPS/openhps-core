@@ -6,7 +6,9 @@ import { DataObject } from '../object';
 /**
  * Relative location to another reference object in distance.
  */
-@SerializableObject()
+@SerializableObject({
+    name: "RelativeDistanceLocation"
+})
 export class RelativeDistanceLocation extends RelativeLocation {
     private _distance: number;
     private _distanceUnit: LengthUnit;
