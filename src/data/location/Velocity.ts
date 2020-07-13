@@ -1,9 +1,7 @@
 import { LinearVelocityUnit, AngularVelocityUnit } from "../../utils";
 import { SerializableObject, SerializableArrayMember, SerializableMember } from "../decorators";
 
-@SerializableObject({
-    name: "Velocity"
-})
+@SerializableObject()
 export class Velocity {
     @SerializableArrayMember(Number)
     public linearVelocity: number[];

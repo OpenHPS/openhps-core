@@ -1,9 +1,7 @@
 import { SquareUnit } from "./SquareUnit";
 import { SerializableObject } from "../../data/decorators";
 
-@SerializableObject({
-    name: "MetricSquareUnit"
-})
+@SerializableObject()
 export class MetricSquareUnit extends SquareUnit {
     public static readonly SQUARE_MILLIMETERS: MetricSquareUnit = new MetricSquareUnit((x) => x, (x) => x);
     public static readonly SQUARE_CENTIMETERS: MetricSquareUnit = new MetricSquareUnit((x) => x * 10, (x) => x / 10);

@@ -2,9 +2,7 @@ import { CameraObject } from "./CameraObject";
 import { SerializableObject, SerializableMember } from "../decorators";
 import { DataObject } from "./DataObject";
 
-@SerializableObject({
-    name: "StereoCameraObject"
-})
+@SerializableObject()
 export class StereoCameraObject extends DataObject {
     @SerializableMember()
     public leftCamera: CameraObject;

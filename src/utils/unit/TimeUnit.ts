@@ -1,9 +1,7 @@
 import { Unit } from "./Unit";
 import { SerializableObject } from "../../data/decorators";
 
-@SerializableObject({
-    name: "TimeUnit"
-})
+@SerializableObject()
 export class TimeUnit extends Unit {
     public static readonly NANO = new TimeUnit((x) => x, (x) => x);
     public static readonly MICRO = new TimeUnit((x) => x * 1000, (x) => x / 1000.);

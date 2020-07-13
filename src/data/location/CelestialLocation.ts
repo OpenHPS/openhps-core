@@ -3,9 +3,7 @@ import { SerializableObject, SerializableMember, SerializableArrayMember } from 
 import { LengthUnit } from "../../utils";
 import { Velocity } from "./Velocity";
 
-@SerializableObject({
-    name: "CelestialLocation"
-})
+@SerializableObject()
 export abstract class CelestialLocation implements AbsoluteLocation {
     private _accuracy: number;
     private _timestamp: number = new Date().getTime();
