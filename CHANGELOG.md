@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.165](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.164...v1.0.0-alpha.165) (2020-07-13)
+
+
+### Features
+
+* added camera object to core ([4d77dd6](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/4d77dd663c31ca3c6b62197a889c790f46f7aa62))
+
+
+### Bug Fixes
+
+* linting issues ([2b60d41](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/2b60d41425f16536aa671deb43b798959c980e48))
+
 ## [1.0.0-alpha.164](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.0-alpha.163...v1.0.0-alpha.164) (2020-06-21)
 
 
