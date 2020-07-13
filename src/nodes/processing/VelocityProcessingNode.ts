@@ -29,7 +29,7 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends Node<any, I
 
                         // Process the linear velocity
                         // TODO: Validate delta time with the linear and angular velocity unit (meters per minute, second, ...)
-                        let relativeMovement = math.multiply(object.currentLocation.velocity.linearVelocity, deltaTime);
+                        const relativeMovement = math.multiply(object.currentLocation.velocity.linearVelocity, deltaTime);
                         // Process the angular velocity
 
 

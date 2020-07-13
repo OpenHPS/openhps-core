@@ -1,5 +1,6 @@
-import { DataObject, SerializableObject, SerializableMember } from "@openhps/core";
 import { CameraObject } from "./CameraObject";
+import { SerializableObject, SerializableMember } from "../decorators";
+import { DataObject } from "./DataObject";
 
 @SerializableObject()
 export class StereoCameraObject extends DataObject {

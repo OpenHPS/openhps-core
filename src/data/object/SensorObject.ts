@@ -17,4 +17,5 @@ export interface SensorObject extends DataObject {
      * Field of view unit
      */
     fovUnit: AngleUnit;
+    
 }
