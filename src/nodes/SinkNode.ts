@@ -35,46 +35,42 @@ export abstract class SinkNode<In extends DataFrame | DataFrame[]> extends Abstr
                 message: `Sink node received push`
             });
 
-            this.onPush(frame).then(() => {
-                const model: Model<any, any> = (this.graph as Model<any, any>);
-                const defaultService = model.findDataService(DataObject);
-                const servicePromises = new Array();
+            const model: Model<any, any> = (this.graph as Model<any, any>);
+            const defaultService = model.findDataService(DataObject);
+            const servicePromises = new Array();
 
-                const objects = new Array<DataObject>();
-                if (frame instanceof Array) {
-                    frame.forEach((f: DataFrame) => {
-                        f.getObjects().forEach(object => {
-                            objects.push(object);
-                        });
-                    });
-                } else {
-                    (frame as DataFrame).getObjects().forEach(object => {
+            const objects = new Array<DataObject>();
+            if (frame instanceof Array) {
+                frame.forEach((f: DataFrame) => {
+                    f.getObjects().forEach(object => {
                         objects.push(object);
                     });
+                });
+            } else {
+                (frame as DataFrame).getObjects().forEach(object => {
+                    objects.push(object);
+                });
+            }
+
+            for (const object of objects) {
+                if (object.uid === null) {
+                    object.uid = uuidv4();
                 }
 
-                for (const object of objects) {
-                    // Check if current location needs to be updated
-                    if (object.predictedLocations.length !== 0 && !object.hasNewLocation()) {
-                        // Choose the predicted location with the best accuracy
-                        object.currentLocation = object.predictedLocations[0];
-                        for (let i = 1 ; i < object.predictedLocations.length ; i++) {
-                            if (object.predictedLocations[i].accuracy < object.currentLocation.accuracy) {
-                                object.currentLocation = object.predictedLocations[i];
-                            }
-                        }
-                    }
-
-                    let service = model.findDataServiceByObject(object);
-                    if (service === null || service === undefined) { 
-                        service = defaultService;
-                    }
-                    if (object.uid === null) {
-                        object.uid = uuidv4();
-                    }
-                    servicePromises.push(service.insert(object));
+                // Queue the storage of the object in a data service
+                let service = model.findDataServiceByObject(object);
+                if (service === null || service === undefined) { 
+                    service = defaultService;
                 }
+                if (object.uid === null) {
+                    object.uid = uuidv4();
+                }
+                servicePromises.push(service.insert(object));
+            }
 
+            // Push the frame to the sink node
+            this.onPush(frame).then(() => {
+                // Remove the frame from the data frame service
                 let frameService: DataFrameService<any>;
                 const framePromises: Array<PromiseLike<void>> = new Array();
                 if (frame instanceof Array) {

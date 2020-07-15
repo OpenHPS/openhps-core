@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, Model, DataFrame, DataObject, RelativeDistanceLocation, MetricLengthUnit, Cartesian2DLocation, StorageSinkNode, CallbackSinkNode, SourceMergeNode, TimeUnit, WorkerNode, TrilaterationNode } from '../../../src';
+import { ModelBuilder, Model, DataFrame, DataObject, MetricLengthUnit, Cartesian2DPosition, StorageSinkNode, CallbackSinkNode, SourceMergeNode, TimeUnit, WorkerNode, TrilaterationNode, RelativeDistancePosition } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
 import { EvaluationDataFrame } from '../../mock/data/EvaluationDataFrame';
 
@@ -21,8 +21,8 @@ describe('dataset', () => {
                 .from(new CSVDataSource("test/data/liwste2017/beacons.csv", (row: any) => {
                     const dataFrame = new DataFrame();
                     const beacon = new DataObject(`beacon_${row.Beacon}`);
-                    beacon.currentLocation = new Cartesian2DLocation(parseFloat(row.X), parseFloat(row.Y));
-                    (beacon.currentLocation as Cartesian2DLocation).unit = MetricLengthUnit.METER;
+                    beacon.currentPosition = new Cartesian2DPosition(parseFloat(row.X), parseFloat(row.Y));
+                    (beacon.currentPosition as Cartesian2DPosition).unit = MetricLengthUnit.METER;
                     dataFrame.addObject(beacon);
                     return dataFrame;
                 }))
@@ -42,15 +42,15 @@ describe('dataset', () => {
                         
                             const trackedObject = new DataObject("tracked");
                             // The tracked object has three relative locations
-                            trackedObject.addRelativeLocation(new RelativeDistanceLocation(new DataObject("beacon_A"), parseFloat(row['Distance A']), MetricLengthUnit.METER));
-                            trackedObject.addRelativeLocation(new RelativeDistanceLocation(new DataObject("beacon_B"), parseFloat(row['Distance B']), MetricLengthUnit.METER));
-                            trackedObject.addRelativeLocation(new RelativeDistanceLocation(new DataObject("beacon_C"), parseFloat(row['Distance C']), MetricLengthUnit.METER));
+                            trackedObject.addRelativePosition(new RelativeDistancePosition(new DataObject("beacon_A"), parseFloat(row['Distance A']), MetricLengthUnit.METER));
+                            trackedObject.addRelativePosition(new RelativeDistancePosition(new DataObject("beacon_B"), parseFloat(row['Distance B']), MetricLengthUnit.METER));
+                            trackedObject.addRelativePosition(new RelativeDistancePosition(new DataObject("beacon_C"), parseFloat(row['Distance C']), MetricLengthUnit.METER));
                             dataFrame.addObject(trackedObject);
 
                             // Control object
                             const evaluationObject = new DataObject("tracked");
-                            evaluationObject.currentLocation = new Cartesian2DLocation(parseFloat(row['Position X']), parseFloat(row['Position Y']));
-                            (evaluationObject.currentLocation as Cartesian2DLocation).unit = MetricLengthUnit.CENTIMETER;
+                            evaluationObject.currentPosition = new Cartesian2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y']));
+                            (evaluationObject.currentPosition as Cartesian2DPosition).unit = MetricLengthUnit.CENTIMETER;
                             dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
 
                             return dataFrame;
@@ -92,8 +92,8 @@ describe('dataset', () => {
                 it('should contain calibration data for beacon A', (done) => {
                     trackingModel.findDataService(DataObject).findByUID("beacon_A").then(beacon => {
                         expect(beacon).to.not.be.null;
-                        expect(beacon.currentLocation).to.be.instanceOf(Cartesian2DLocation);
-                        expect((beacon.currentLocation as Cartesian2DLocation).x).to.equal(0.10);
+                        expect(beacon.currentPosition).to.be.instanceOf(Cartesian2DPosition);
+                        expect((beacon.currentPosition as Cartesian2DPosition).x).to.equal(0.10);
                         done();
                     });
                 });
@@ -101,8 +101,8 @@ describe('dataset', () => {
                 it('should contain calibration data for beacon B', (done) => {
                     trackingModel.findDataService(DataObject).findByUID("beacon_B").then(beacon => {
                         expect(beacon).to.not.be.null;
-                        expect(beacon.currentLocation).to.be.instanceOf(Cartesian2DLocation);
-                        expect((beacon.currentLocation as Cartesian2DLocation).x).to.equal(2.74);
+                        expect(beacon.currentPosition).to.be.instanceOf(Cartesian2DPosition);
+                        expect((beacon.currentPosition as Cartesian2DPosition).x).to.equal(2.74);
                         done();
                     });
                 });
@@ -110,8 +110,8 @@ describe('dataset', () => {
                 it('should contain calibration data for beacon C', (done) => {
                     trackingModel.findDataService(DataObject).findByUID("beacon_C").then(beacon => {
                         expect(beacon).to.not.be.null;
-                        expect(beacon.currentLocation).to.be.instanceOf(Cartesian2DLocation);
-                        expect((beacon.currentLocation as Cartesian2DLocation).x).to.equal(1.22);
+                        expect(beacon.currentPosition).to.be.instanceOf(Cartesian2DPosition);
+                        expect((beacon.currentPosition as Cartesian2DPosition).x).to.equal(1.22);
                         done();
                     });
                 });
@@ -132,20 +132,20 @@ describe('dataset', () => {
                     callbackNode.callback = (data: EvaluationDataFrame) => {
                         data.getObjects().forEach(object => {
                             if (object.uid === "tracked") {
-                                let calculatedLocation: Cartesian2DLocation = object.predictedLocations[0] as Cartesian2DLocation;
+                                let calculatedPosition: Cartesian2DPosition = object.currentPosition as Cartesian2DPosition;
                                 // Accurate control location
-                                const expectedLocation: Cartesian2DLocation = data.evaluationObjects.get(object.uid).currentLocation as Cartesian2DLocation;
+                                const expectedPosition: Cartesian2DPosition = data.evaluationObjects.get(object.uid).currentPosition as Cartesian2DPosition;
                                 
                                 // Convert meters to cm
-                                calculatedLocation.x = calculatedLocation.unit.convert(calculatedLocation.x, expectedLocation.unit);
-                                calculatedLocation.y = calculatedLocation.unit.convert(calculatedLocation.y, expectedLocation.unit);
-                                calculatedLocation.unit = expectedLocation.unit;
+                                calculatedPosition.x = calculatedPosition.unit.convert(calculatedPosition.x, expectedPosition.unit);
+                                calculatedPosition.y = calculatedPosition.unit.convert(calculatedPosition.y, expectedPosition.unit);
+                                calculatedPosition.unit = expectedPosition.unit;
     
-                                expect(calculatedLocation).to.not.be.undefined;
+                                expect(calculatedPosition).to.not.be.undefined;
     
                                 // Accuracy of 15 cm
-                                expect(Math.abs(calculatedLocation.x - expectedLocation.x)).to.be.lessThan(70);
-                                expect(Math.abs(calculatedLocation.y - expectedLocation.y)).to.be.lessThan(70);
+                                expect(Math.abs(calculatedPosition.x - expectedPosition.x)).to.be.lessThan(70);
+                                expect(Math.abs(calculatedPosition.y - expectedPosition.y)).to.be.lessThan(70);
     
                                 done();
                             }
@@ -160,16 +160,16 @@ describe('dataset', () => {
                     callbackNode.callback = (data: EvaluationDataFrame) => {
                         data.getObjects().forEach(object => {
                             if (object.uid === "tracked") {
-                                let calculatedLocation: Cartesian2DLocation = object.predictedLocations[0] as Cartesian2DLocation;
+                                let calculatedPosition: Cartesian2DPosition = object.currentPosition as Cartesian2DPosition;
                                 // Accurate control location
-                                const expectedLocation: Cartesian2DLocation = data.evaluationObjects.get(object.uid).currentLocation as Cartesian2DLocation;
+                                const expectedPosition: Cartesian2DPosition = data.evaluationObjects.get(object.uid).currentPosition as Cartesian2DPosition;
                                 
                                 // Convert meters to cm
-                                calculatedLocation.x = calculatedLocation.unit.convert(calculatedLocation.x, expectedLocation.unit);
-                                calculatedLocation.y = calculatedLocation.unit.convert(calculatedLocation.y, expectedLocation.unit);
-                                calculatedLocation.unit = expectedLocation.unit;
+                                calculatedPosition.x = calculatedPosition.unit.convert(calculatedPosition.x, expectedPosition.unit);
+                                calculatedPosition.y = calculatedPosition.unit.convert(calculatedPosition.y, expectedPosition.unit);
+                                calculatedPosition.unit = expectedPosition.unit;
     
-                                expect(calculatedLocation).to.not.be.undefined;
+                                expect(calculatedPosition).to.not.be.undefined;
                             }
                         });
                     };

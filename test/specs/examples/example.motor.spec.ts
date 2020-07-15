@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Model, ModelBuilder, CallbackSourceNode, CallbackSinkNode, DataFrame, GraphBuilder, DataObject, Cartesian2DLocation, LinearVelocityUnit, VelocityProcessingNode } from '../../../src';
+import { Model, ModelBuilder, CallbackSourceNode, CallbackSinkNode, DataFrame, GraphBuilder, DataObject, Cartesian2DPosition, LinearVelocityUnit, VelocityProcessingNode } from '../../../src';
 
 describe('example', () => {
 
@@ -10,10 +10,7 @@ describe('example', () => {
         before((done) => {
             ModelBuilder.create()
                 .addShape(GraphBuilder.create()
-                    .from(new CallbackSourceNode(() => {
-
-                        return null;
-                    }))
+                    .from()
                     .via(new VelocityProcessingNode())
                     .to(new CallbackSinkNode((frame: DataFrame) => {
                         console.log(frame.source);
@@ -23,7 +20,7 @@ describe('example', () => {
 
                     const robot = new DataObject("robot");
                     // Start location
-                    robot.addPredictedLocation(new Cartesian2DLocation(0, 0));
+                    robot.currentPosition = new Cartesian2DPosition(0, 0);
 
                     model.push(new DataFrame(robot)).then(() => {
                         done();
@@ -33,8 +30,8 @@ describe('example', () => {
 
         it('should calculate moving forward', () =>{
             model.findDataService(DataObject).findByUID("robot").then(robot => {
-                robot.currentLocation.velocity.linearVelocity = [1, 0];
-                robot.currentLocation.velocity.linearVelocityUnit = LinearVelocityUnit.METERS_PER_SECOND;
+                robot.currentPosition.velocity.linearVelocity = [1, 0];
+                robot.currentPosition.velocity.linearVelocityUnit = LinearVelocityUnit.METERS_PER_SECOND;
                 Promise.resolve(model.push(new DataFrame(robot)));
             });
 

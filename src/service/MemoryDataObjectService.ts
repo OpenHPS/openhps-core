@@ -1,4 +1,4 @@
-import { DataObject, AbsoluteLocation } from "../data";
+import { DataObject, AbsolutePosition } from "../data";
 import { JSONPath } from 'jsonpath-plus';
 import { DataObjectService } from "./DataObjectService";
 import { isArray } from "util";
@@ -21,16 +21,10 @@ export class MemoryDataObjectService<T extends DataObject> extends DataObjectSer
         });
     }
 
-    public findByCurrentLocation(location: AbsoluteLocation): Promise<T[]> {
+    public findByCurrentPosition(location: AbsolutePosition): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[?(@.currentLocation.point.toString() == "${location.point.toString()}")]`, json: Array.from(this._data.values()) });
+            const result = JSONPath({ path: `$[?(@.currentPosition.point.toString() == "${location.point.toString()}")]`, json: Array.from(this._data.values()) });
             resolve(result);
-        });
-    }
-
-    public findByPredictedLocation(location: AbsoluteLocation): Promise<T[]> {
-        return new Promise<T[]>((resolve, reject) => {
-
         });
     }
 

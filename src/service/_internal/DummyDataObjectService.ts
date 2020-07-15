@@ -1,4 +1,4 @@
-import { AbsoluteLocation, DataObject } from "../../data";
+import { AbsolutePosition, DataObject } from "../../data";
 import { DataObjectService } from "../DataObjectService";
 
 export class DummyDataObjectService<T extends DataObject> extends DataObjectService<T> {
@@ -9,13 +9,7 @@ export class DummyDataObjectService<T extends DataObject> extends DataObjectServ
         });
     }
 
-    public findByCurrentLocation(location: AbsoluteLocation): Promise<T[]> {
-        return new Promise<T[]>((resolve, reject) => {
-            resolve();
-        });
-    }
-
-    public findByPredictedLocation(location: AbsoluteLocation): Promise<T[]> {
+    public findByCurrentPosition(position: AbsolutePosition): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
             resolve();
         });

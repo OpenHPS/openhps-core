@@ -1,5 +1,5 @@
-import { AbsoluteLocation } from "../location/AbsoluteLocation";
-import { RelativeLocation } from '../location/RelativeLocation';
+import { AbsolutePosition } from "../position/AbsolutePosition";
+import { RelativePosition } from '../position/RelativePosition';
 import { TypedJSON } from 'typedjson';
 import { SerializableObject, SerializableMember, SerializableArrayMember, SerializableMapMember } from '../decorators';
 import * as uuidv4 from 'uuid/v4';
@@ -7,17 +7,17 @@ import { DataSerializer } from '../DataSerializer';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
- * a more abstract object such as a Wi-Fi access point or room.
+ * a more abstract object such as a Wi-Fi access point or [[Space]].
  */
 @SerializableObject()
 export class DataObject {
     private _uid: string;
     private _displayName: string;
-    private _currentLocationUpdated: boolean = false;
-    private _currentLocation: AbsoluteLocation;
-    private _predictedLocations: AbsoluteLocation[] = new Array();
-    private _relativeLocations: Map<string, RelativeLocation[]> = new Map();
-    private _parent: string;
+    private _currentPosition: AbsolutePosition;
+    private _relativePositions: Map<string, Map<string, RelativePosition>> = new Map();
+    private _currentPositionDirty: boolean = false;
+    private _relativePositionDirty: boolean = false;
+    private _parentUID: string;
     @SerializableMapMember(String, Object)
     private _nodeData: Map<string, any> = new Map();
     @SerializableMember()
@@ -31,8 +31,8 @@ export class DataObject {
     public merge(object: DataObject): DataObject {
         if (object.displayName !== undefined)
             this.displayName = object.displayName;
-        if (object.currentLocation !== undefined)
-            this.currentLocation = object.currentLocation;
+        if (object.currentPosition !== undefined)
+            this.currentPosition = object.currentPosition;
         object._nodeData.forEach((value, key) => {
             this._nodeData.set(key, value);
         });
@@ -62,16 +62,16 @@ export class DataObject {
      * Get the parent object identifier
      */
     @SerializableMember()
-    public get parent(): string {
-        return this._parent;
+    public get parentUID(): string {
+        return this._parentUID;
     }
 
     /**
      * Set the parent object identifier
      * @param uid Parent object identifier
      */
-    public set parent(uid: string) {
-        this._parent = uid;
+    public set parentUID(uid: string) {
+        this._parentUID = uid;
     }
 
     /**
@@ -91,75 +91,40 @@ export class DataObject {
     }
 
     /**
-     * Get the absolute location of the object
+     * Get the current absolute position of the object
      */
     @SerializableMember({
-        deserializer(raw: any): AbsoluteLocation {
+        deserializer(raw: any): AbsolutePosition {
             if (raw === undefined) {
                 return undefined;
             }
             return new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw);
         }
     })
-    public get currentLocation(): AbsoluteLocation {
-        return this._currentLocation;
+    public get currentPosition(): AbsolutePosition {
+        return this._currentPosition;
     }
 
     /**
-     * Set the absolute location of the object
-     * @param absoluteLocation Absolute location of the object
+     * Set the current absolute position of the object
      */
-    public set currentLocation(absoluteLocation: AbsoluteLocation) {
-        if (this._currentLocation !== undefined) {
-            this._currentLocationUpdated = true;
-        }
-        this._currentLocation = absoluteLocation;
-    }
-
-    public hasNewLocation(): boolean {
-        return this._currentLocationUpdated;
-    }
-
-    @SerializableArrayMember(Object, {
-        deserializer(raw: any): AbsoluteLocation[] {
-            if (raw === undefined) {
-                return new Array();
-            }
-            const predictions = new Array();
-            raw.forEach((obj: any) => {
-                predictions.push(new TypedJSON(DataSerializer.findTypeByName(obj.__type)).parse(obj));
-            });
-            return predictions;
-        }
-    })
-    public get predictedLocations(): AbsoluteLocation[] {
-        return this._predictedLocations;
-    }
-
-    public set predictedLocations(predictedLocations: AbsoluteLocation[]) {
-        this._predictedLocations = predictedLocations;
-    }
-
-    public addPredictedLocation(location: AbsoluteLocation): void {
-        this._predictedLocations.push(location);
-    }
-
-    public removePredictedLocation(location: AbsoluteLocation): void {
-        this._predictedLocations.splice(this._predictedLocations.indexOf(location), 1);
+    public set currentPosition(position: AbsolutePosition) {
+        this._currentPosition = position;
+        this._currentPositionDirty = true;
     }
 
     /**
-     * Get relative locations
+     * Get relative positions
      */
-    @SerializableArrayMember(RelativeLocation, {
-        deserializer(rawArray: any[]): RelativeLocation[] {
+    @SerializableArrayMember(RelativePosition, {
+        deserializer(rawArray: any[]): RelativePosition[] {
             if (rawArray === undefined) {
                 return [];
             }
             const output = new Array();
             rawArray.forEach(raw => {
                 if (raw.__type === undefined) {
-                    output.push(new TypedJSON(RelativeLocation).parse(raw));
+                    output.push(new TypedJSON(RelativePosition).parse(raw));
                 } else {
                     output.push(new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw));
                 }
@@ -167,59 +132,53 @@ export class DataObject {
             return output;
         }
     })
-    public get relativeLocations(): RelativeLocation[] {
-        const relativeLocations: RelativeLocation[] = new Array();
-        if (this._relativeLocations !== undefined) {
-            this._relativeLocations.forEach((values: RelativeLocation[]) => {
-                values.forEach(value => { relativeLocations.push(value); });
+    public get relativePositions(): RelativePosition[] {
+        const relativePostions: RelativePosition[] = new Array();
+        if (this._relativePositions !== undefined) {
+            this._relativePositions.forEach((values: Map<string, RelativePosition>) => {
+                values.forEach(value => { relativePostions.push(value); });
             });
         }
-        return relativeLocations;
+        return relativePostions;
     }
 
-    public set relativeLocations(relativeLocations: RelativeLocation[]) {
-        this._relativeLocations = new Map();
-        relativeLocations.forEach(relativeLocation => {
-            this.addRelativeLocation(relativeLocation);
+    public set relativePositions(relativePostions: RelativePosition[]) {
+        this._relativePositions = new Map();
+        relativePostions.forEach(relativePostion => {
+            this.addRelativePosition(relativePostion);
         });
+        this._relativePositionDirty = true;
     }
 
-    public removeRelativeLocation(relativeLocation: RelativeLocation): void {
-        if (this._relativeLocations.has(relativeLocation.referenceObjectUID)) {
-            const relativeLocations = this._relativeLocations.get(relativeLocation.referenceObjectUID);
-            relativeLocations.splice(relativeLocations.indexOf(relativeLocation), 1);
-            if (relativeLocations.length === 0) {
-                this._relativeLocations.delete(relativeLocation.referenceObjectUID);
-            }
-        }
+    public removeRelativePositions(referenceObjectUID: string): void {
+        this._relativePositions.delete(referenceObjectUID);
+        this._relativePositionDirty = true;
     }
 
-    public removeRelativeLocations(referenceObjectUID: string): void {
-        this._relativeLocations.delete(referenceObjectUID);
-    }
-
-    public addRelativeLocation(relativeLocation: RelativeLocation): void {
-        if (relativeLocation.referenceObjectUID === undefined) {
+    public addRelativePosition(relativePosition: RelativePosition): void {
+        if (relativePosition.referenceObjectUID === undefined) {
             return;
         }
 
-        if (this._relativeLocations.has(relativeLocation.referenceObjectUID)) {
-            this._relativeLocations.get(relativeLocation.referenceObjectUID).push(relativeLocation);
-        } else {
-            this._relativeLocations.set(relativeLocation.referenceObjectUID, new Array(relativeLocation));
+        if (!this._relativePositions.has(relativePosition.referenceObjectUID)) {
+            this._relativePositions.set(relativePosition.referenceObjectUID, new Map());
         }
+
+        this._relativePositions.get(relativePosition.referenceObjectUID).set(relativePosition.constructor.name, relativePosition);
+        this._relativePositionDirty = true;
     }
 
-    public findRelativeLocations(target: string): RelativeLocation[] {
-        if (this.hasRelativeLocation(target)) {
-            return this._relativeLocations.get(target);
+    /**
+     * Get relative positions for a different target
+     */
+    public getRelativePositions(referenceObjectUID?: string): RelativePosition[] {
+        if (referenceObjectUID === undefined) {
+            return this.relativePositions;
+        } else if (this._relativePositions.has(referenceObjectUID)) {
+            return Array.from(this._relativePositions.get(referenceObjectUID).values());
         } else {
-            return [];
+            return undefined;
         }
-    }
-
-    public hasRelativeLocation(target: string): boolean {
-        return this._relativeLocations.has(target);
     }
 
     /**
@@ -236,6 +195,23 @@ export class DataObject {
      * @param data Node data to save
      */
     public setNodeData(nodeUID: string, data: any): void {
+        this.addNodeData(nodeUID, data);
+    }
+
+    /**
+     * Add node data
+     * @param nodeUID Node UID 
+     * @param data Node data to save
+     */
+    public addNodeData(nodeUID: string, data: any): void {
         this._nodeData.set(nodeUID, data);
+    }
+
+    public isCurrentPositionDirty(): boolean {
+        return this._currentPositionDirty;
+    }
+
+    public isRelativePositionDirty(): boolean {
+        return this._relativePositionDirty;
     }
 }

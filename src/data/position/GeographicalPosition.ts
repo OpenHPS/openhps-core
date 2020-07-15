@@ -1,71 +1,20 @@
-import { AbsoluteLocation } from "./AbsoluteLocation";
+import { AbsolutePosition } from "./AbsolutePosition";
 import { AngleUnit, MetricLengthUnit } from "../../utils/unit";
 import { LengthUnit } from "../../utils/unit/LengthUnit";
-import { SerializableObject, SerializableMember, SerializableArrayMember } from "../decorators";
-import { Cartesian3DLocation } from "./Cartesian3DLocation";
-import { Velocity } from "./Velocity";
+import { SerializableObject, SerializableMember } from "../decorators";
+import { Cartesian3DPosition } from "./Cartesian3DPosition";
 
 /**
- * Geographical location
+ * Geographical position
  */
 @SerializableObject()
-export class GeographicalLocation implements AbsoluteLocation {
+export class GeographicalPosition extends AbsolutePosition {
     private _lat: number;
     private _lng: number;
     private _amsl: number;
     private _amslUnit: LengthUnit;
-    private _accuracy: number;
-    private _accuracyUnit: LengthUnit;
-    private _timestamp: number = new Date().getTime();
-    private _velocity: Velocity = new Velocity();
 
     public static EARTH_RADIUS: number = 6371008; 
-
-    @SerializableMember()
-    public get timestamp(): number {
-        return this._timestamp;
-    }
-
-    public set timestamp(timestamp: number) {
-        this._timestamp = timestamp;
-    }
-
-    @SerializableMember()
-    public get velocity(): Velocity {
-        return this._velocity;
-    }
-
-    public set velocity(velocity: Velocity) {
-        this._velocity = velocity;
-    }
-
-    /**
-     * Get location accuracy
-     */
-    @SerializableMember()
-    public get accuracy(): number {
-        return this._accuracy;
-    }
-
-    /**
-     * Set location accuracy
-     * @param accuracy Location accuracy
-     */
-    public set accuracy(accuracy: number) {
-        this._accuracy = accuracy;
-    }
-
-    /**
-     * Get accuracy unit
-     */
-    @SerializableMember()
-    public get accuracyUnit(): LengthUnit {
-        return this._accuracyUnit;
-    }
-
-    public set accuracyUnit(unit: LengthUnit) {
-        this._accuracyUnit = unit;
-    }
 
     /**
      * Get latitude
@@ -131,7 +80,7 @@ export class GeographicalLocation implements AbsoluteLocation {
      * Get the distance from this location to a destination
      * @param destination Destination location
      */
-    public distance(destination: GeographicalLocation): number {
+    public distance(destination: GeographicalPosition): number {
         const latRadA = AngleUnit.DEGREES.convert(this.latitude, AngleUnit.RADIANS);
         const latRadB = AngleUnit.DEGREES.convert(destination.latitude, AngleUnit.RADIANS);
         const deltaLat = AngleUnit.DEGREES.convert(destination.latitude - this.latitude, AngleUnit.RADIANS);
@@ -140,7 +89,7 @@ export class GeographicalLocation implements AbsoluteLocation {
                 Math.cos(latRadA) * Math.cos(latRadB) *
                 Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return GeographicalLocation.EARTH_RADIUS * c;
+        return GeographicalPosition.EARTH_RADIUS * c;
     }
 
 
@@ -148,7 +97,7 @@ export class GeographicalLocation implements AbsoluteLocation {
      * Get the bearing in degrees from this location to a destination
      * @param destination Destination location
      */
-    public bearing(destination: GeographicalLocation): number {
+    public bearing(destination: GeographicalPosition): number {
         const lonRadA = AngleUnit.DEGREES.convert(this.longitude, AngleUnit.RADIANS);
         const latRadA = AngleUnit.DEGREES.convert(this.latitude, AngleUnit.RADIANS);
         const lonRadB = AngleUnit.DEGREES.convert(destination.longitude, AngleUnit.RADIANS);
@@ -162,17 +111,17 @@ export class GeographicalLocation implements AbsoluteLocation {
         bearing: number, 
         distance: number, 
         bearingUnit: AngleUnit = AngleUnit.DEGREES, 
-        distanceUnit: LengthUnit = MetricLengthUnit.METER): Promise<GeographicalLocation> {
-        return new Promise<GeographicalLocation>((resolve, reject) => {
+        distanceUnit: LengthUnit = MetricLengthUnit.METER): Promise<GeographicalPosition> {
+        return new Promise<GeographicalPosition>((resolve, reject) => {
             const brng = bearingUnit.convert(bearing, AngleUnit.RADIANS);
             const lonRadA = bearingUnit.convert(this.longitude, AngleUnit.RADIANS);
             const latRadA = bearingUnit.convert(this.latitude, AngleUnit.RADIANS);
-            const latX = Math.asin(Math.sin(latRadA) * Math.cos(distance / GeographicalLocation.EARTH_RADIUS) +
-                        Math.cos(latRadA) * Math.sin(distance / GeographicalLocation.EARTH_RADIUS) * Math.cos(brng));
-            const lonX = lonRadA + Math.atan2(Math.sin(brng) * Math.sin(distance / GeographicalLocation.EARTH_RADIUS) * Math.cos(latRadA),
-                                    Math.cos(distance / GeographicalLocation.EARTH_RADIUS) - Math.sin(latRadA) * Math.sin(latX));
+            const latX = Math.asin(Math.sin(latRadA) * Math.cos(distance / GeographicalPosition.EARTH_RADIUS) +
+                        Math.cos(latRadA) * Math.sin(distance / GeographicalPosition.EARTH_RADIUS) * Math.cos(brng));
+            const lonX = lonRadA + Math.atan2(Math.sin(brng) * Math.sin(distance / GeographicalPosition.EARTH_RADIUS) * Math.cos(latRadA),
+                                    Math.cos(distance / GeographicalPosition.EARTH_RADIUS) - Math.sin(latRadA) * Math.sin(latX));
     
-            const location = new GeographicalLocation();
+            const location = new GeographicalPosition();
             location.latitude = AngleUnit.RADIANS.convert(latX, AngleUnit.DEGREES);
             location.longitude = AngleUnit.RADIANS.convert(lonX, AngleUnit.DEGREES);
             resolve(location);
@@ -181,15 +130,15 @@ export class GeographicalLocation implements AbsoluteLocation {
 
     /**
      * Get the midpoint of two geographical locations
-     * @param otherLocation Other location to get midpoint from
+     * @param otherPosition Other location to get midpoint from
      */
-    public midpoint(otherLocation: GeographicalLocation, distanceSelf: number = 1, distanceOther: number = 1): Promise<GeographicalLocation> {
-        return new Promise<GeographicalLocation>((resolve, reject) => {
+    public midpoint(otherPosition: GeographicalPosition, distanceSelf: number = 1, distanceOther: number = 1): Promise<GeographicalPosition> {
+        return new Promise<GeographicalPosition>((resolve, reject) => {
             if (distanceOther === distanceOther) {
                 const lonRadA = AngleUnit.DEGREES.convert(this.longitude, AngleUnit.RADIANS);
                 const latRadA = AngleUnit.DEGREES.convert(this.latitude, AngleUnit.RADIANS);
-                const lonRadB = AngleUnit.DEGREES.convert(otherLocation.longitude, AngleUnit.RADIANS);
-                const latRadB = AngleUnit.DEGREES.convert(otherLocation.latitude, AngleUnit.RADIANS);
+                const lonRadB = AngleUnit.DEGREES.convert(otherPosition.longitude, AngleUnit.RADIANS);
+                const latRadB = AngleUnit.DEGREES.convert(otherPosition.latitude, AngleUnit.RADIANS);
         
                 const Bx = Math.cos(latRadB) * Math.cos(lonRadB - lonRadA);
                 const By = Math.cos(latRadB) * Math.sin(lonRadB - lonRadA);
@@ -197,18 +146,18 @@ export class GeographicalLocation implements AbsoluteLocation {
                                     Math.sqrt((Math.cos(latRadA) + Bx) * (Math.cos(latRadA) + Bx) + By * By));
                 const lonX = lonRadA + Math.atan2(By, Math.cos(latRadA) + Bx);
         
-                const location = new GeographicalLocation();
+                const location = new GeographicalPosition();
                 location.latitude = AngleUnit.RADIANS.convert(latX, AngleUnit.DEGREES);
                 location.longitude = AngleUnit.RADIANS.convert(lonX, AngleUnit.DEGREES);
                 resolve(location);
             } else {
                 // Calculate bearings
-                const bearingAB = this.bearing(otherLocation);
-                const bearingBA = otherLocation.bearing(this);
+                const bearingAB = this.bearing(otherPosition);
+                const bearingBA = otherPosition.bearing(this);
                 // Calculate two reference points
                 const destinationPromises = new Array();
                 destinationPromises.push(this.destination(bearingAB, distanceSelf));
-                destinationPromises.push(otherLocation.destination(bearingBA, distanceOther));
+                destinationPromises.push(otherPosition.destination(bearingBA, distanceOther));
 
                 Promise.all(destinationPromises).then(destinations => {
                     const C = destinations[0];
@@ -224,16 +173,16 @@ export class GeographicalLocation implements AbsoluteLocation {
         });
     }
 
-    public static trilaterate(points: GeographicalLocation[], distances: number[]): Promise<GeographicalLocation> {
-        return new Promise<GeographicalLocation>((resolve, reject) => {
+    public static trilaterate(points: GeographicalPosition[], distances: number[]): Promise<GeographicalPosition> {
+        return new Promise<GeographicalPosition>((resolve, reject) => {
             const convertedPoints = new Array();
             points.forEach(geopoint => {
                 const point = geopoint.point;
-                const convertedPoint = new Cartesian3DLocation(point[0], point[1], point[2]);
+                const convertedPoint = new Cartesian3DPosition(point[0], point[1], point[2]);
                 convertedPoints.push(convertedPoint);
             });
-            GeographicalLocation.trilaterate(convertedPoints, distances).then(point3d => {
-                const geopoint = new GeographicalLocation();
+            GeographicalPosition.trilaterate(convertedPoints, distances).then(point3d => {
+                const geopoint = new GeographicalPosition();
                 geopoint.point = point3d.point;
                 geopoint.accuracy = points[0].accuracy;
                 resolve(geopoint);
@@ -250,18 +199,18 @@ export class GeographicalLocation implements AbsoluteLocation {
         const phi = AngleUnit.DEGREES.convert(this.latitude, AngleUnit.RADIANS);
         const lambda = AngleUnit.DEGREES.convert(this.longitude, AngleUnit.RADIANS);
         // Convert ECR positions
-        return [GeographicalLocation.EARTH_RADIUS * Math.cos(phi) * Math.cos(lambda),
-            GeographicalLocation.EARTH_RADIUS * Math.cos(phi) * Math.sin(lambda),
-            GeographicalLocation.EARTH_RADIUS * Math.sin(phi)];
+        return [GeographicalPosition.EARTH_RADIUS * Math.cos(phi) * Math.cos(lambda),
+            GeographicalPosition.EARTH_RADIUS * Math.cos(phi) * Math.sin(lambda),
+            GeographicalPosition.EARTH_RADIUS * Math.sin(phi)];
     }
 
     /**
      * Convert the ECR point to an absolute location
-     * @param ecrLocation Earth Centered Rotational
+     * @param ecrPosition Earth Centered Rotational
      */
-    public set point(ecrLocation: number[]) {
-        this.latitude = AngleUnit.RADIANS.convert(Math.asin(ecrLocation[2] / GeographicalLocation.EARTH_RADIUS), AngleUnit.DEGREES);
-        this.longitude = AngleUnit.RADIANS.convert(Math.atan2(ecrLocation[1], ecrLocation[0]), AngleUnit.DEGREES);
+    public set point(ecrPosition: number[]) {
+        this.latitude = AngleUnit.RADIANS.convert(Math.asin(ecrPosition[2] / GeographicalPosition.EARTH_RADIUS), AngleUnit.DEGREES);
+        this.longitude = AngleUnit.RADIANS.convert(Math.atan2(ecrPosition[1], ecrPosition[0]), AngleUnit.DEGREES);
     }
 
 }

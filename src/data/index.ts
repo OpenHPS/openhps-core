@@ -1,5 +1,6 @@
 export * from './DataFrame';
 export * from './object';
-export * from './location';
+export * from './position';
 export * from './decorators';
 export * from './DataSerializer';
+export * from './space';

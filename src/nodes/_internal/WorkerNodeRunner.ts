@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { DataSerializer, DataObject, DataFrame } from "../../data";
 import { Model } from "../../Model";
 import { Subject, Observable } from 'threads/observable';

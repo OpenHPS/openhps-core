@@ -1,4 +1,4 @@
-import { RelativeLocation } from "./RelativeLocation";
+import { RelativePosition } from "./RelativePosition";
 import { LengthUnit, Unit } from "../../utils";
 import { SerializableObject, SerializableMember } from '../decorators';
 import { DataObject } from '../object';
@@ -7,7 +7,7 @@ import { DataObject } from '../object';
  * Relative location to another reference object in distance.
  */
 @SerializableObject()
-export class RelativeDistanceLocation extends RelativeLocation {
+export class RelativeDistancePosition extends RelativePosition {
     private _distance: number;
     private _distanceUnit: LengthUnit;
 

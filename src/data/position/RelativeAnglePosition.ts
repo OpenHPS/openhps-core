@@ -1,13 +1,13 @@
-import { RelativeLocation } from "./RelativeLocation";
+import { RelativePosition } from "./RelativePosition";
 import { AngleUnit } from '../../utils';
 import { SerializableObject, SerializableMember } from '../decorators';
-import { DataObject } from '../object';
+import { DataObject } from '../object/DataObject';
 
 /**
  * Relative location to another reference object measured in the angle.
  */
 @SerializableObject()
-export class RelativeAngleLocation extends RelativeLocation {
+export class RelativeAnglePosition extends RelativePosition {
     private _angle: number;
     private _angleUnit: AngleUnit;
 

@@ -1,42 +1,42 @@
-import { SensorObject, DataObject, DataFrame, RelativeAngleLocation, GeographicalLocation, Cartesian2DLocation, Cartesian3DLocation } from "../../data";
+import { SensorObject, DataObject, DataFrame, RelativeAnglePosition, GeographicalPosition, Cartesian2DPosition, Cartesian3DPosition } from "../../data";
 import { ObjectProcessingNode } from "../ObjectProcessingNode";
 import { Model } from "../../Model";
 import { AngleUnit } from "../../utils";
 
 /**
  * Triangulation processing node
- * Supported location types:
- * - [[Cartesian2DLocation]]
- * - [[Cartesian3DLocation]]
- * - [[GeographicalLocation]]
+ * Supported position types:
+ * - [[Cartesian2DPosition]]
+ * - [[Cartesian3DPosition]]
+ * - [[GeographicalPosition]]
  */
 export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
 
     public processObject(dataObject: SensorObject, dataFrame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             const referencePromises = new Array();
-            const index = new Map<string, RelativeAngleLocation[]>();
-            for (const relativeLocation of dataObject.relativeLocations) {
+            const index = new Map<string, RelativeAnglePosition[]>();
+            for (const relativePosition of dataObject.relativePositions) {
                 // Only use relative angle locations
-                if (relativeLocation instanceof RelativeAngleLocation) {
-                    if (index.has(relativeLocation.referenceObjectUID)) {
-                        index.get(relativeLocation.referenceObjectUID).push(relativeLocation);
+                if (relativePosition instanceof RelativeAnglePosition) {
+                    if (index.has(relativePosition.referenceObjectUID)) {
+                        index.get(relativePosition.referenceObjectUID).push(relativePosition);
                     } else {
-                        index.set(relativeLocation.referenceObjectUID, [relativeLocation]);
+                        index.set(relativePosition.referenceObjectUID, [relativePosition]);
                     }
-                    referencePromises.push(this._findObjectByName(relativeLocation.referenceObjectUID, relativeLocation.referenceObjectType, dataFrame));
+                    referencePromises.push(this._findObjectByName(relativePosition.referenceObjectUID, relativePosition.referenceObjectType, dataFrame));
                 }
             }
 
             Promise.all(referencePromises).then(referenceObjects => {
                 // Filter relative locations that have an absolute location
-                const filteredRelativeLocations = new Array<RelativeAngleLocation>();
+                const filteredRelativePositions = new Array<RelativeAnglePosition>();
                 const objectCache = new Map<string, DataObject>();
                 referenceObjects.forEach((referenceObject: DataObject) => {
-                    if (referenceObject.currentLocation !== undefined) {
+                    if (referenceObject.currentPosition !== undefined) {
                         objectCache.set(referenceObject.uid, referenceObject);
-                        index.get(referenceObject.uid).forEach(relativeLocation => {
-                            filteredRelativeLocations.push(relativeLocation);
+                        index.get(referenceObject.uid).forEach(relativePosition => {
+                            filteredRelativePositions.push(relativePosition);
                         });
                     }
                 });
@@ -44,14 +44,14 @@ export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessing
                 const objects = new Array<DataObject>();
                 const points = new Array();
                 const angles = new Array();
-                filteredRelativeLocations.forEach(filteredRelativeLocation => {
-                    const object = objectCache.get(filteredRelativeLocation.referenceObjectUID);
+                filteredRelativePositions.forEach(filteredRelativePosition => {
+                    const object = objectCache.get(filteredRelativePosition.referenceObjectUID);
                     objects.push(object);
-                    points.push(object.currentLocation);
-                    angles.push(filteredRelativeLocation.angleUnit.convert(filteredRelativeLocation.angle, AngleUnit.RADIANS));
+                    points.push(object.currentPosition);
+                    angles.push(filteredRelativePosition.angleUnit.convert(filteredRelativePosition.angle, AngleUnit.RADIANS));
                 });
 
-                switch (filteredRelativeLocations.length) {
+                switch (filteredRelativePositions.length) {
                     case 0:
                     case 1:
                         resolve(dataObject);
@@ -60,18 +60,18 @@ export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessing
                         break;
                     case 3:
                         switch (true) {
-                            case objects[0].currentLocation instanceof Cartesian3DLocation:
+                            case objects[0].currentPosition instanceof Cartesian3DPosition:
                                 break;
-                            case objects[0].currentLocation instanceof Cartesian2DLocation:
-                                Cartesian2DLocation.triangulate(points, angles).then(location => {
-                                    if (location !== null)
-                                        dataObject.addPredictedLocation(location);
+                            case objects[0].currentPosition instanceof Cartesian2DPosition:
+                                Cartesian2DPosition.triangulate(points, angles).then(position => {
+                                    if (position !== null)
+                                        dataObject.currentPosition = position;
                                     resolve(dataObject);
                                 }).catch(ex => {
                                     reject(ex);
                                 });
                                 break;
-                            case objects[0].currentLocation instanceof GeographicalLocation:
+                            case objects[0].currentPosition instanceof GeographicalPosition:
                                 break;
                             default:
                                 resolve(dataObject);

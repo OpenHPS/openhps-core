@@ -1,13 +1,13 @@
 import { SerializableObject, SerializableMember } from "../decorators";
 import * as math from '../../utils/_internal/Math';
-import { Cartesian2DLocation } from "./Cartesian2DLocation";
+import { Cartesian2DPosition } from "./Cartesian2DPosition";
 
 /**
- * Cartesian 3D location. This class extends a [[Cartesian2DLocation]]. This location can be used both as
+ * Cartesian 3D position. This class extends a [[Cartesian2DPosition]]. This location can be used both as
  * an absolute location or relative location.
  */
 @SerializableObject()
-export class Cartesian3DLocation extends Cartesian2DLocation {
+export class Cartesian3DPosition extends Cartesian2DPosition {
     private _z: number = 0;
 
     constructor(x?: number, y?: number, z?: number) {
@@ -33,21 +33,21 @@ export class Cartesian3DLocation extends Cartesian2DLocation {
 
     /**
      * Midpoint to another location
-     * @param otherLocation Other location
+     * @param otherPosition Other location
      */
-    public midpoint(otherLocation: Cartesian3DLocation, distanceSelf: number = 1, distanceOther: number = 1): Promise<Cartesian3DLocation> {
-        return new Promise<Cartesian3DLocation>((resolve, reject) => {
-            const newPoint = new Cartesian3DLocation();
-            newPoint.accuracy = this.accuracy + otherLocation.accuracy / 2;
-            newPoint.x = (this.x + otherLocation.x) / 2;
-            newPoint.y = (this.y + otherLocation.y) / 2;
-            newPoint.z = (this.z + otherLocation.z) / 2;
+    public midpoint(otherPosition: Cartesian3DPosition, distanceSelf: number = 1, distanceOther: number = 1): Promise<Cartesian3DPosition> {
+        return new Promise<Cartesian3DPosition>((resolve, reject) => {
+            const newPoint = new Cartesian3DPosition();
+            newPoint.accuracy = this.accuracy + otherPosition.accuracy / 2;
+            newPoint.x = (this.x + otherPosition.x) / 2;
+            newPoint.y = (this.y + otherPosition.y) / 2;
+            newPoint.z = (this.z + otherPosition.z) / 2;
             resolve(newPoint);
         });
     }
 
-    public static trilaterate(points: Cartesian3DLocation[], distances: number[]): Promise<Cartesian3DLocation> {
-        return new Promise<Cartesian3DLocation>((resolve, reject) => {
+    public static trilaterate(points: Cartesian3DPosition[], distances: number[]): Promise<Cartesian3DPosition> {
+        return new Promise<Cartesian3DPosition>((resolve, reject) => {
             switch (points.length) {
                 case 0:
                     resolve(null);
@@ -86,7 +86,7 @@ export class Cartesian3DLocation extends Cartesian2DLocation {
                     } while (incr < 0);
                     const z = Math.sqrt(incr);
             
-                    const point = new Cartesian3DLocation();
+                    const point = new Cartesian3DPosition();
                     point.unit = points[0].unit;
                     point.point = math.add(points[0].point, math.add(math.add(math.multiply(eX, x), math.multiply(eY, y)), math.multiply(eZ, z))) as number[];
                     resolve(point);
@@ -95,7 +95,7 @@ export class Cartesian3DLocation extends Cartesian2DLocation {
         });
     }
 
-    public distance(other: Cartesian3DLocation): number {
+    public distance(other: Cartesian3DPosition): number {
         return Math.pow(Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2) + Math.pow((other.z - this.z), 2), 1 / 2.);
     }
 

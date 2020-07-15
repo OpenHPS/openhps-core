@@ -14,6 +14,4 @@ export class CameraObject extends DataObject implements SensorObject {
     public verticalFOV: number;
     @SerializableMember()
     public fovUnit: AngleUnit;
-    @SerializableMember()
-    public projectionMatrix: Float32Array;
 }

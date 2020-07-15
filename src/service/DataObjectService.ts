@@ -1,5 +1,5 @@
 import { DataService } from "./DataService";
-import { DataObject, AbsoluteLocation } from "../data";
+import { DataObject, AbsolutePosition } from "../data";
 
 /**
  * The object service manages the data of objects that are currently being
@@ -13,8 +13,6 @@ export abstract class DataObjectService<T extends DataObject> extends DataServic
 
     public abstract findByDisplayName(displayName: string): Promise<T[]>;
 
-    public abstract findByCurrentLocation(location: AbsoluteLocation): Promise<T[]>;
-
-    public abstract findByPredictedLocation(location: AbsoluteLocation): Promise<T[]>;
+    public abstract findByCurrentPosition(location: AbsolutePosition): Promise<T[]>;
 
 }

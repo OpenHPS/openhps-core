@@ -1,34 +1,21 @@
-import { AbsoluteLocation } from "./AbsoluteLocation";
+import { AbsolutePosition } from "./AbsolutePosition";
 import { LengthUnit } from "../../utils";
 import { SerializableMember, SerializableObject } from "../decorators";
 import * as math from '../../utils/_internal/Math';
-import { Velocity } from "./Velocity";
 
 /**
- * Cartesian 2D location. This class implements a [[Location]]. This location can be used both as
+ * Cartesian 2D position. This class implements a [[Position]]. This location can be used both as
  * an absolute location or relative location.
  */
 @SerializableObject()
-export class Cartesian2DLocation implements AbsoluteLocation {
+export class Cartesian2DPosition extends AbsolutePosition {
     private _x: number = 0;
     private _y: number = 0;
-    private _accuracy: number;
-    private _unit: LengthUnit = LengthUnit.POINTS;
-    private _timestamp: number = new Date().getTime();
-    private _velocity: Velocity = new Velocity();
 
     constructor(x?: number, y?: number) {
+        super();
         this.x = x;
         this.y = y;
-    }
-
-    @SerializableMember()
-    public get velocity(): Velocity {
-        return this._velocity;
-    }
-
-    public set velocity(velocity: Velocity) {
-        this._velocity = velocity;
     }
 
     /**
@@ -63,60 +50,22 @@ export class Cartesian2DLocation implements AbsoluteLocation {
         this._y = y;
     }
 
-    @SerializableMember()
-    public get timestamp(): number {
-        return this._timestamp;
-    }
-
-    public set timestamp(timestamp: number) {
-        this._timestamp = timestamp;
-    }
-
-    /**
-     * Get location accuracy
-     */
-    @SerializableMember()
-    public get accuracy(): number {
-        return this._accuracy;
-    }
-
-    /**
-     * Set location accuracy
-     * @param accuracy Location accuracy
-     */
-    public set accuracy(accuracy: number) {
-        this._accuracy = accuracy;
-    }
-
-    @SerializableMember()
-    public get unit(): LengthUnit {
-        return this._unit;
-    }
-
-    public set unit(unit: LengthUnit) {
-        this._unit = unit;
-    }
-
-    public get accuracyUnit(): LengthUnit {
-        return this.unit;
-    }
-
     /**
      * Midpoint to another location
-     * @param otherLocation Other location
+     * @param otherPosition Other location
      */
-    public midpoint(otherLocation: Cartesian2DLocation, distanceSelf: number = 1, distanceOther: number = 1): Promise<Cartesian2DLocation> {
-        return new Promise<Cartesian2DLocation>((resolve, reject) => {
-            const newPoint = new Cartesian2DLocation();
-            newPoint.accuracy = this.accuracy + otherLocation.accuracy / 2;
-            newPoint.x = (this.x + otherLocation.x) / 2;
-            newPoint.y = (this.y + otherLocation.y) / 2;
+    public midpoint(otherPosition: Cartesian2DPosition, distanceSelf: number = 1, distanceOther: number = 1): Promise<Cartesian2DPosition> {
+        return new Promise<Cartesian2DPosition>((resolve, reject) => {
+            const newPoint = new Cartesian2DPosition();
+            newPoint.accuracy = this.accuracy + otherPosition.accuracy / 2;
+            newPoint.x = (this.x + otherPosition.x) / 2;
+            newPoint.y = (this.y + otherPosition.y) / 2;
             resolve(newPoint);
         });
     }
     
-    public static trilaterate(points: Cartesian2DLocation[], distances: number[]): Promise<Cartesian2DLocation> {
-        return new Promise<Cartesian2DLocation>((resolve, reject) => {
+    public static trilaterate(points: Cartesian2DPosition[], distances: number[]): Promise<Cartesian2DPosition> {
+        return new Promise<Cartesian2DPosition>((resolve, reject) => {
             switch (points.length) {
                 case 0:
                     resolve(null);
@@ -155,7 +104,7 @@ export class Cartesian2DLocation implements AbsoluteLocation {
                     } while (incr < 0);
                     const z = Math.sqrt(incr);
             
-                    const point = new Cartesian2DLocation();
+                    const point = new Cartesian2DPosition();
                     point.unit = points[0].unit;
                     point.point = math.add(points[0].point, math.add(math.add(math.multiply(eX, x), math.multiply(eY, y)), math.multiply(eZ, z))) as number[];
                     resolve(point);
@@ -171,8 +120,8 @@ export class Cartesian2DLocation implements AbsoluteLocation {
      * @param points 
      * @param angles 
      */
-    public static triangulate(points: Cartesian2DLocation[], angles: number[]): Promise<Cartesian2DLocation> {
-        return new Promise<Cartesian2DLocation>((resolve, reject) => {
+    public static triangulate(points: Cartesian2DPosition[], angles: number[]): Promise<Cartesian2DPosition> {
+        return new Promise<Cartesian2DPosition>((resolve, reject) => {
             const x1 = points[0].x - points[1].x;
             const y1 = points[0].y - points[1].y;
             const x3 = points[2].x - points[1].x;
@@ -196,12 +145,12 @@ export class Cartesian2DLocation implements AbsoluteLocation {
             }
             const xr = points[1].x + ((k31 * (y12 - y23)) / d);
             const yr = points[1].y + ((k31 * (x23 - x12)) / d);
-            const point2d = new Cartesian2DLocation(xr, yr);
+            const point2d = new Cartesian2DPosition(xr, yr);
             resolve(point2d);
         });
     }
 
-    public distance(other: Cartesian2DLocation): number {
+    public distance(other: Cartesian2DPosition): number {
         return Math.pow(Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2), 1 / 2.);
     }
 

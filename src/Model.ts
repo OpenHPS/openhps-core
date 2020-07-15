@@ -1,4 +1,4 @@
-import { DataFrame, DataObject } from "./data";
+import { DataFrame, DataObject, Space } from "./data";
 import { DataService, Service } from "./service";
 import { GraphImpl } from "./graph/_internal/implementations/GraphImpl";
 
@@ -9,7 +9,7 @@ import { GraphImpl } from "./graph/_internal/implementations/GraphImpl";
  * ## Usage
  * Please refer to [[ModelBuilder]] for creating a new model
  */
-export interface Model<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends GraphImpl<In, Out> {
+export interface Model<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame> extends GraphImpl<In, Out> {
 
     /**
      * Push data to the model
@@ -57,4 +57,9 @@ export interface Model<In extends DataFrame | DataFrame[], Out extends DataFrame
      * Find all services
      */
     findAllServices(): Service[];
+
+    /**
+     * Model space
+     */
+    baseSpace: Space;
 }

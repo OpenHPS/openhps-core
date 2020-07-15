@@ -106,15 +106,15 @@ export class ObjectMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
                 const object = frame.getObjectByUID(objectUID);
                 
                 // Merge object
-                object.relativeLocations.forEach(value => {
-                    existingObject.addRelativeLocation(value);
+                object.relativePositions.forEach(value => {
+                    existingObject.addRelativePosition(value);
                 });
-                if (existingObject.currentLocation === undefined) {
-                    existingObject.currentLocation = object.currentLocation;
+                if (existingObject.currentPosition === undefined) {
+                    existingObject.currentPosition = object.currentPosition;
+                } else if (existingObject.currentPosition.accuracy < object.currentPosition.accuracy) {
+                    // TODO: Merge location using different tactic + check accuracy unit
+                    existingObject.currentPosition = object.currentPosition;
                 }
-                object.predictedLocations.forEach(value => {
-                    existingObject.addPredictedLocation(value);
-                });
 
                 // Merge properties
                 Object.keys(frame).forEach(propertyName => {

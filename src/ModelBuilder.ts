@@ -1,5 +1,5 @@
 import { Service } from "./service";
-import { DataFrame } from "./data";
+import { DataFrame, Space } from "./data";
 import { ModelImpl } from "./graph/_internal/implementations";
 import { Model } from "./Model";
 import { GraphBuilder } from "./graph/builders/GraphBuilder";
@@ -20,14 +20,14 @@ import { GraphBuilder } from "./graph/builders/GraphBuilder";
  *      });
  * ```
  */
-export class ModelBuilder<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends GraphBuilder<In, Out> {
+export class ModelBuilder<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame> extends GraphBuilder<In, Out> {
 
     protected constructor() {
         super(new ModelImpl<In, Out>());
         this.graph.name = "model";
     }
 
-    public static create<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]>(): ModelBuilder<In, Out> {
+    public static create<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame>(): ModelBuilder<In, Out> {
         return new ModelBuilder();
     }
 
@@ -37,6 +37,11 @@ export class ModelBuilder<In extends DataFrame | DataFrame[], Out extends DataFr
      */
     public withLogger(logger: (level: string, log: any) => void): ModelBuilder<In, Out> {
         this.graph.logger = logger;
+        return this;
+    }
+
+    public withBaseSpace(space: Space): ModelBuilder<In, Out> {
+        (this.graph as ModelImpl<In, Out>).baseSpace = space;
         return this;
     }
 

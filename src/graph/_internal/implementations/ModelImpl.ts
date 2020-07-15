@@ -1,4 +1,4 @@
-import { DataFrame, DataObject } from "../../../data";
+import { DataFrame, DataObject, Space } from "../../../data";
 import { Service, DataService } from "../../../service";
 import { GraphImpl } from "./GraphImpl";
 import { Model } from "../../../Model";
@@ -9,9 +9,10 @@ import { ServiceProxy } from "../../../service/_internal";
 /**
  * [[Model]] implementation
  */
-export class ModelImpl<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends GraphImpl<In, Out> implements Model<In, Out> {
+export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame> extends GraphImpl<In, Out> implements Model<In, Out> {
     private _services: Map<string, Service> = new Map();
     private _dataServices: Map<string, DataService<any, any>> = new Map();
+    private _baseSpace: Space;
 
     /**
      * Create a new OpenHPS model
@@ -19,6 +20,8 @@ export class ModelImpl<In extends DataFrame | DataFrame[], Out extends DataFrame
     constructor(name: string = "model") {
         super();
         this.name = name;
+        this.baseSpace = new Space();
+        
         this._addDefaultServices();
 
         this.removeAllListeners("build");
@@ -92,6 +95,9 @@ export class ModelImpl<In extends DataFrame | DataFrame[], Out extends DataFrame
 
     private _addDefaultServices(): void {
         this.addService(new MemoryDataObjectService<DataObject>());
+        // Store spaces in their own memory data object service
+        this.addService(new MemoryDataObjectService<Space>());
+        // Temporal storage of data frames
         this.addService(new MemoryDataFrameService<DataFrame>());
     }
 
@@ -160,6 +166,14 @@ export class ModelImpl<In extends DataFrame | DataFrame[], Out extends DataFrame
             // Normal service
             this._services.set(service.name, new Proxy(service , new ServiceProxy()));
         }
+    }
+
+    public get baseSpace(): Space {
+        return this._baseSpace;
+    }
+
+    public set baseSpace(space: Space) {
+        this._baseSpace = space;
     }
 
     public push(frame: In): Promise<void> {
