@@ -106,6 +106,8 @@ describe('data', () => {
                     .translation(-2.0, -2.0, -1.0)      // Origin offset
                     .rotation(0, 0, 0, AngleUnit.RADIANS);
 
+                // Test node that provides a location with a different reference space
+                // e.g. WebXR providing a location (5,5,5) with a different origin
                 callbackNode.pushCallback = (frame: DataFrame) => {
                     const object = frame.getObjectByUID("test");
                     object.addRelativePosition(new Relative3DPosition(calibratedReferenceSpace, 5, 5, 5));
