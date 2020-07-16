@@ -1,14 +1,13 @@
 import { AbsolutePosition } from "./AbsolutePosition";
-import { LengthUnit } from "../../utils";
 import { SerializableMember, SerializableObject } from "../decorators";
 import * as math from '../../utils/_internal/Math';
 
 /**
- * Cartesian 2D position. This class implements a [[Position]]. This location can be used both as
+ * Absolute cartesian 2D position. This class implements a [[Position]]. This location can be used both as
  * an absolute location or relative location.
  */
 @SerializableObject()
-export class Cartesian2DPosition extends AbsolutePosition {
+export class Absolute2DPosition extends AbsolutePosition {
     private _x: number = 0;
     private _y: number = 0;
 
@@ -54,9 +53,9 @@ export class Cartesian2DPosition extends AbsolutePosition {
      * Midpoint to another location
      * @param otherPosition Other location
      */
-    public midpoint(otherPosition: Cartesian2DPosition, distanceSelf: number = 1, distanceOther: number = 1): Promise<Cartesian2DPosition> {
-        return new Promise<Cartesian2DPosition>((resolve, reject) => {
-            const newPoint = new Cartesian2DPosition();
+    public midpoint(otherPosition: Absolute2DPosition, distanceSelf: number = 1, distanceOther: number = 1): Promise<Absolute2DPosition> {
+        return new Promise<Absolute2DPosition>((resolve, reject) => {
+            const newPoint = new Absolute2DPosition();
             newPoint.accuracy = this.accuracy + otherPosition.accuracy / 2;
             newPoint.x = (this.x + otherPosition.x) / 2;
             newPoint.y = (this.y + otherPosition.y) / 2;
@@ -64,8 +63,8 @@ export class Cartesian2DPosition extends AbsolutePosition {
         });
     }
     
-    public static trilaterate(points: Cartesian2DPosition[], distances: number[]): Promise<Cartesian2DPosition> {
-        return new Promise<Cartesian2DPosition>((resolve, reject) => {
+    public static trilaterate(points: Absolute2DPosition[], distances: number[]): Promise<Absolute2DPosition> {
+        return new Promise<Absolute2DPosition>((resolve, reject) => {
             switch (points.length) {
                 case 0:
                     resolve(null);
@@ -104,7 +103,7 @@ export class Cartesian2DPosition extends AbsolutePosition {
                     } while (incr < 0);
                     const z = Math.sqrt(incr);
             
-                    const point = new Cartesian2DPosition();
+                    const point = new Absolute2DPosition();
                     point.unit = points[0].unit;
                     point.point = math.add(points[0].point, math.add(math.add(math.multiply(eX, x), math.multiply(eY, y)), math.multiply(eZ, z))) as number[];
                     resolve(point);
@@ -120,8 +119,8 @@ export class Cartesian2DPosition extends AbsolutePosition {
      * @param points 
      * @param angles 
      */
-    public static triangulate(points: Cartesian2DPosition[], angles: number[]): Promise<Cartesian2DPosition> {
-        return new Promise<Cartesian2DPosition>((resolve, reject) => {
+    public static triangulate(points: Absolute2DPosition[], angles: number[]): Promise<Absolute2DPosition> {
+        return new Promise<Absolute2DPosition>((resolve, reject) => {
             const x1 = points[0].x - points[1].x;
             const y1 = points[0].y - points[1].y;
             const x3 = points[2].x - points[1].x;
@@ -145,12 +144,12 @@ export class Cartesian2DPosition extends AbsolutePosition {
             }
             const xr = points[1].x + ((k31 * (y12 - y23)) / d);
             const yr = points[1].y + ((k31 * (x23 - x12)) / d);
-            const point2d = new Cartesian2DPosition(xr, yr);
+            const point2d = new Absolute2DPosition(xr, yr);
             resolve(point2d);
         });
     }
 
-    public distance(other: Cartesian2DPosition): number {
+    public distance(other: Absolute2DPosition): number {
         return Math.pow(Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2), 1 / 2.);
     }
 

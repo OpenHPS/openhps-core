@@ -21,4 +21,4 @@ that is added to the model can read and write the data that is stored by the ser
 The framework is open source and is mainly developed by PhD Student Maxim Van de Wynckel as part of his research towards *Hybrid Positioning and Implicit Human-Computer Interaction* under the supervision of Prof. Dr. Beat Signer.
 
 ## Contributing
-Use of OpenHPS and contributions to the components are highly encouraged. However, the framework will only officially release to the public in September 2020
+Use of OpenHPS, contributions and feedback is highly appreciated. Please read our [contributing guidelines](CONTRIBUTING.md) for more information.

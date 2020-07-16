@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Model, ModelBuilder, CallbackSourceNode, CallbackSinkNode, DataFrame, GraphBuilder, DataObject, Cartesian2DPosition, LinearVelocityUnit, VelocityProcessingNode } from '../../../src';
+import { Model, ModelBuilder, CallbackSourceNode, CallbackSinkNode, DataFrame, GraphBuilder, DataObject, Absolute2DPosition, LinearVelocityUnit, VelocityProcessingNode } from '../../../src';
 
 describe('example', () => {
 
@@ -20,7 +20,7 @@ describe('example', () => {
 
                     const robot = new DataObject("robot");
                     // Start location
-                    robot.currentPosition = new Cartesian2DPosition(0, 0);
+                    robot.currentPosition = new Absolute2DPosition(0, 0);
 
                     model.push(new DataFrame(robot)).then(() => {
                         done();

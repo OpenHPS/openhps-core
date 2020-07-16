@@ -2,7 +2,7 @@ import { AbsolutePosition } from "./AbsolutePosition";
 import { AngleUnit, MetricLengthUnit } from "../../utils/unit";
 import { LengthUnit } from "../../utils/unit/LengthUnit";
 import { SerializableObject, SerializableMember } from "../decorators";
-import { Cartesian3DPosition } from "./Cartesian3DPosition";
+import { Absolute3DPosition } from "./Absolute3DPosition";
 
 /**
  * Geographical position
@@ -178,7 +178,7 @@ export class GeographicalPosition extends AbsolutePosition {
             const convertedPoints = new Array();
             points.forEach(geopoint => {
                 const point = geopoint.point;
-                const convertedPoint = new Cartesian3DPosition(point[0], point[1], point[2]);
+                const convertedPoint = new Absolute3DPosition(point[0], point[1], point[2]);
                 convertedPoints.push(convertedPoint);
             });
             GeographicalPosition.trilaterate(convertedPoints, distances).then(point3d => {

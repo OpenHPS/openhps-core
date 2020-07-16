@@ -11,8 +11,16 @@ export abstract class DataObjectService<T extends DataObject> extends DataServic
         super(dataType as new () => T, options);
     }
 
+    /**
+     * Find a data object by its display name
+     * @param displayName Name to search for
+     */
     public abstract findByDisplayName(displayName: string): Promise<T[]>;
 
-    public abstract findByCurrentPosition(location: AbsolutePosition): Promise<T[]>;
+    /**
+     * Find a data object by its current absolute position
+     * @param position Current absolute position
+     */
+    public abstract findByCurrentPosition(position: AbsolutePosition): Promise<T[]>;
 
 }

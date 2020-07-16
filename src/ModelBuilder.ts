@@ -1,5 +1,5 @@
 import { Service } from "./service";
-import { DataFrame, Space } from "./data";
+import { DataFrame, ReferenceSpace } from "./data";
 import { ModelImpl } from "./graph/_internal/implementations";
 import { Model } from "./Model";
 import { GraphBuilder } from "./graph/builders/GraphBuilder";
@@ -40,8 +40,8 @@ export class ModelBuilder<In extends DataFrame | DataFrame[] = DataFrame, Out ex
         return this;
     }
 
-    public withBaseSpace(space: Space): ModelBuilder<In, Out> {
-        (this.graph as ModelImpl<In, Out>).baseSpace = space;
+    public withReferenceSpace(space: ReferenceSpace): ModelBuilder<In, Out> {
+        (this.graph as ModelImpl<In, Out>).referenceSpace = space;
         return this;
     }
 

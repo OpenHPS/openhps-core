@@ -155,6 +155,17 @@ export class DataObject {
         this._relativePositionDirty = true;
     }
 
+    /**
+     * Add a relative position to this data object
+     */
+    public set relativePosition(relativePosition: RelativePosition) {
+        this.addRelativePosition(relativePosition);
+    }
+
+    /**
+     * Add a relative position to this data object
+     * @param relativePosition 
+     */
     public addRelativePosition(relativePosition: RelativePosition): void {
         if (relativePosition.referenceObjectUID === undefined) {
             return;
@@ -214,4 +225,5 @@ export class DataObject {
     public isRelativePositionDirty(): boolean {
         return this._relativePositionDirty;
     }
+
 }

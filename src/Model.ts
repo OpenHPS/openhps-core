@@ -1,4 +1,4 @@
-import { DataFrame, DataObject, Space } from "./data";
+import { DataFrame, DataObject, ReferenceSpace } from "./data";
 import { DataService, Service } from "./service";
 import { GraphImpl } from "./graph/_internal/implementations/GraphImpl";
 
@@ -59,7 +59,7 @@ export interface Model<In extends DataFrame | DataFrame[] = DataFrame, Out exten
     findAllServices(): Service[];
 
     /**
-     * Model space
+     * Model reference space
      */
-    baseSpace: Space;
+    referenceSpace: ReferenceSpace;
 }

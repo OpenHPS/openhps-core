@@ -1,4 +1,4 @@
-import { DataFrame, DataObject, Space } from "../../../data";
+import { DataFrame, DataObject, ReferenceSpace } from "../../../data";
 import { Service, DataService } from "../../../service";
 import { GraphImpl } from "./GraphImpl";
 import { Model } from "../../../Model";
@@ -12,7 +12,7 @@ import { ServiceProxy } from "../../../service/_internal";
 export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame> extends GraphImpl<In, Out> implements Model<In, Out> {
     private _services: Map<string, Service> = new Map();
     private _dataServices: Map<string, DataService<any, any>> = new Map();
-    private _baseSpace: Space;
+    private _referenceSpace: ReferenceSpace;
 
     /**
      * Create a new OpenHPS model
@@ -20,7 +20,7 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
     constructor(name: string = "model") {
         super();
         this.name = name;
-        this.baseSpace = new Space();
+        this.referenceSpace = new ReferenceSpace();
         
         this._addDefaultServices();
 
@@ -96,7 +96,7 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
     private _addDefaultServices(): void {
         this.addService(new MemoryDataObjectService<DataObject>());
         // Store spaces in their own memory data object service
-        this.addService(new MemoryDataObjectService<Space>());
+        this.addService(new MemoryDataObjectService<ReferenceSpace>());
         // Temporal storage of data frames
         this.addService(new MemoryDataFrameService<DataFrame>());
     }
@@ -168,12 +168,12 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
         }
     }
 
-    public get baseSpace(): Space {
-        return this._baseSpace;
+    public get referenceSpace(): ReferenceSpace {
+        return this._referenceSpace;
     }
 
-    public set baseSpace(space: Space) {
-        this._baseSpace = space;
+    public set referenceSpace(space: ReferenceSpace) {
+        this._referenceSpace = space;
     }
 
     public push(frame: In): Promise<void> {

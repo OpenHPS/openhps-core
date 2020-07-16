@@ -31,4 +31,5 @@ export interface Position {
      * Orientation at given position
      */
     orientation: Orientation;
+
 }

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataObject, RelativeDistancePosition, Cartesian2DPosition, RelativePosition } from '../../../src';
+import { DataObject, RelativeDistancePosition, Absolute2DPosition, RelativePosition, Relative2DPosition, ReferenceSpace } from '../../../src';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 import { DataSerializer } from '../../../src/data/DataSerializer';
 
@@ -14,7 +14,7 @@ describe('data', () => {
             dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject("ref_a"), 1));
             dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject("ref_b"), 2));
             dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject("ref_c"), 3));
-            dataObject.addRelativePosition(new RelativePosition("ref_x", 10.5));
+            dataObject.addRelativePosition(new Relative2DPosition(new ReferenceSpace(), 10.5, 5));
             const serialized = DataSerializer.serialize(dataObject);
             const deserialized = DataSerializer.deserialize(serialized, DataObject);
             expect(dataObject.uid).to.equal(deserialized.uid);
@@ -29,7 +29,7 @@ describe('data', () => {
                 const beacons: Array<DataObject> = new Array();
                 for (let i = 0 ; i < 10 ; i ++) {
                     const beacon = new DataObject();
-                    beacon.currentPosition = new Cartesian2DPosition(Math.floor(Math.random() * 500) + 0, Math.floor(Math.random() * 500) + 0);
+                    beacon.currentPosition = new Absolute2DPosition(Math.floor(Math.random() * 500) + 0, Math.floor(Math.random() * 500) + 0);
                     beacons.push(beacon);
                 }
                 const addFingerprint = (data: DataObject) => {
@@ -38,7 +38,7 @@ describe('data', () => {
 
                 for (let i = 0 ; i < 250 ; i++) {
                     const fingerprint = new DataObject()
-                    fingerprint.currentPosition = new Cartesian2DPosition(Math.floor(Math.random() * 500) + 0, Math.floor(Math.random() * 500) + 0);
+                    fingerprint.currentPosition = new Absolute2DPosition(Math.floor(Math.random() * 500) + 0, Math.floor(Math.random() * 500) + 0);
                     const nrPositions = Math.floor(Math.random() * 8) + 3;
                     for (let j = 0 ; j < nrPositions ; j++) {
                         const beacon = beacons[Math.floor(Math.random() * (beacons.length - 1)) + 0]

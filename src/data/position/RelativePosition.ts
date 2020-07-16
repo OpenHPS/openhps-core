@@ -5,20 +5,19 @@ import { Velocity } from "./Velocity";
 import { Orientation } from "./Orientation";
 
 /**
- * Relative location to another reference object.
+ * Relative position to another reference object or space.
  */
 @SerializableObject()
 export class RelativePosition implements Position {
     private _referenceObjectUID: string;
     private _referenceObjectType: string;
-    private _referenceValue: number;
     private _timestamp: number = new Date().getTime();
     private _accuracy: number;
     private _accuracyUnit: Unit;
     private _velocity: Velocity = new Velocity();
     private _orientation: Orientation;
 
-    constructor(referenceObject?: any, referenceValue?: number) {
+    constructor(referenceObject?: any) {
         if (referenceObject !== undefined) {
             if (referenceObject instanceof String || typeof referenceObject === 'string') {
                 this.referenceObjectUID = referenceObject as string;
@@ -27,7 +26,6 @@ export class RelativePosition implements Position {
                 this.referenceObjectUID = referenceObject.uid;
             }
         }
-        this.referenceValue = referenceValue;
     }
 
     @SerializableMember()
@@ -98,15 +96,6 @@ export class RelativePosition implements Position {
     }
 
     @SerializableMember()
-    public get referenceValue(): number {
-        return this._referenceValue;
-    }
-
-    public set referenceValue(value: number) {
-        this._referenceValue = value;
-    }
-
-    @SerializableMember()
     public get referenceObjectType(): string {
         return this._referenceObjectType;
     }
@@ -114,4 +103,5 @@ export class RelativePosition implements Position {
     public set referenceObjectType(referenceObjectType: string) {
         this._referenceObjectType = referenceObjectType;
     }
+
 }

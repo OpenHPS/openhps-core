@@ -1,4 +1,4 @@
-import { SensorObject, DataObject, DataFrame, RelativeAnglePosition, GeographicalPosition, Cartesian2DPosition, Cartesian3DPosition } from "../../data";
+import { SensorObject, DataObject, DataFrame, RelativeAnglePosition, GeographicalPosition, Absolute2DPosition, Absolute3DPosition } from "../../data";
 import { ObjectProcessingNode } from "../ObjectProcessingNode";
 import { Model } from "../../Model";
 import { AngleUnit } from "../../utils";
@@ -6,8 +6,8 @@ import { AngleUnit } from "../../utils";
 /**
  * Triangulation processing node
  * Supported position types:
- * - [[Cartesian2DPosition]]
- * - [[Cartesian3DPosition]]
+ * - [[Absolute2DPosition]]
+ * - [[Absolute3DPosition]]
  * - [[GeographicalPosition]]
  */
 export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
@@ -60,10 +60,10 @@ export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessing
                         break;
                     case 3:
                         switch (true) {
-                            case objects[0].currentPosition instanceof Cartesian3DPosition:
+                            case objects[0].currentPosition instanceof Absolute3DPosition:
                                 break;
-                            case objects[0].currentPosition instanceof Cartesian2DPosition:
-                                Cartesian2DPosition.triangulate(points, angles).then(position => {
+                            case objects[0].currentPosition instanceof Absolute2DPosition:
+                                Absolute2DPosition.triangulate(points, angles).then(position => {
                                     if (position !== null)
                                         dataObject.currentPosition = position;
                                     resolve(dataObject);

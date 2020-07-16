@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
 import { LoggingSinkNode } from '../../../src/nodes/sink';
-import { DataFrame, DataObject, Cartesian2DPosition, RelativeDistancePosition, ModelBuilder, ListSourceNode, SourceMergeNode, TimeUnit } from '../../../src';
+import { DataFrame, DataObject, Absolute2DPosition, RelativeDistancePosition, ModelBuilder, ListSourceNode, SourceMergeNode, TimeUnit } from '../../../src';
 
 describe('node', () => {
     describe('source merge', () => {
@@ -15,7 +15,7 @@ describe('node', () => {
 
             const frameB = new DataFrame();
             frameB.source = new DataObject("abc");
-            frameB.source.currentPosition = new Cartesian2DPosition(3, 4);
+            frameB.source.currentPosition = new Absolute2DPosition(3, 4);
 
             ModelBuilder.create()
                 .from(new ListSourceNode([frameA]), new ListSourceNode([frameB]))

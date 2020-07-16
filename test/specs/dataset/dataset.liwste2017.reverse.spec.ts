@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, ObjectMergeNode, Model, DataFrame, DataObject, RelativeDistancePosition, MetricLengthUnit, Cartesian2DPosition, StorageSinkNode, TrilaterationNode, CallbackSinkNode, SourceMergeNode, TimeUnit, WorkerNode, DataSerializer } from '../../../src';
+import { ModelBuilder, ObjectMergeNode, Model, DataFrame, DataObject, RelativeDistancePosition, MetricLengthUnit, Absolute2DPosition, StorageSinkNode, TrilaterationNode, CallbackSinkNode, SourceMergeNode, TimeUnit, WorkerNode, DataSerializer } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
 import { EvaluationDataFrame } from '../../mock/data/EvaluationDataFrame';
 import * as path from 'path';
@@ -25,8 +25,8 @@ describe('dataset', () => {
                 .from(new CSVDataSource("test/data/liwste2017/beacons.csv", (row: any) => {
                     const dataFrame = new DataFrame();
                     const beacon = new DataObject(`beacon_${row.Beacon}`);
-                    beacon.currentPosition = new Cartesian2DPosition(parseFloat(row.X), parseFloat(row.Y));
-                    (beacon.currentPosition as Cartesian2DPosition).unit = MetricLengthUnit.METER;
+                    beacon.currentPosition = new Absolute2DPosition(parseFloat(row.X), parseFloat(row.Y));
+                    (beacon.currentPosition as Absolute2DPosition).unit = MetricLengthUnit.METER;
                     dataFrame.addObject(beacon);
                     return dataFrame;
                 }))
@@ -50,8 +50,8 @@ describe('dataset', () => {
 
                             // Control object
                             const evaluationObject = new DataObject("tracked");
-                            evaluationObject.currentPosition = new Cartesian2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y']));
-                            (evaluationObject.currentPosition as Cartesian2DPosition).unit = MetricLengthUnit.CENTIMETER;
+                            evaluationObject.currentPosition = new Absolute2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y']));
+                            (evaluationObject.currentPosition as Absolute2DPosition).unit = MetricLengthUnit.CENTIMETER;
                             dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
 
                             return dataFrame;
@@ -67,8 +67,8 @@ describe('dataset', () => {
 
                             // Control object
                             const evaluationObject = new DataObject("tracked");
-                            evaluationObject.currentPosition = new Cartesian2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y']));
-                            (evaluationObject.currentPosition as Cartesian2DPosition).unit = MetricLengthUnit.CENTIMETER;
+                            evaluationObject.currentPosition = new Absolute2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y']));
+                            (evaluationObject.currentPosition as Absolute2DPosition).unit = MetricLengthUnit.CENTIMETER;
                             dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
 
                             return dataFrame;
@@ -84,8 +84,8 @@ describe('dataset', () => {
 
                             // Control object
                             const evaluationObject = new DataObject("tracked");
-                            evaluationObject.currentPosition = new Cartesian2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y']));
-                            (evaluationObject.currentPosition as Cartesian2DPosition).unit = MetricLengthUnit.CENTIMETER;
+                            evaluationObject.currentPosition = new Absolute2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y']));
+                            (evaluationObject.currentPosition as Absolute2DPosition).unit = MetricLengthUnit.CENTIMETER;
                             dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
 
                             return dataFrame;
@@ -136,9 +136,9 @@ describe('dataset', () => {
                     callbackNode.callback = (frame: EvaluationDataFrame) => {
                         frame.getObjects().forEach(object => {
                             if (object.uid === "tracked") {
-                                let calculatedLocation: Cartesian2DPosition = object.currentPosition as Cartesian2DPosition;
+                                let calculatedLocation: Absolute2DPosition = object.currentPosition as Absolute2DPosition;
                                 // Accurate control location
-                                const expectedLocation: Cartesian2DPosition = frame.evaluationObjects.get(object.uid).currentPosition as Cartesian2DPosition;
+                                const expectedLocation: Absolute2DPosition = frame.evaluationObjects.get(object.uid).currentPosition as Absolute2DPosition;
                                 
                                 // Convert meters to cm
                                 calculatedLocation.x = calculatedLocation.unit.convert(calculatedLocation.x, expectedLocation.unit);
@@ -164,9 +164,9 @@ describe('dataset', () => {
                     callbackNode.callback = (data: EvaluationDataFrame) => {
                         data.getObjects().forEach(object => {
                             if (object.uid === "tracked") {
-                                let calculatedLocation: Cartesian2DPosition = object.currentPosition as Cartesian2DPosition;
+                                let calculatedLocation: Absolute2DPosition = object.currentPosition as Absolute2DPosition;
                                 // Accurate control location
-                                const expectedLocation: Cartesian2DPosition = data.evaluationObjects.get(object.uid).currentPosition as Cartesian2DPosition;
+                                const expectedLocation: Absolute2DPosition = data.evaluationObjects.get(object.uid).currentPosition as Absolute2DPosition;
                                 
                                 // Convert meters to cm
                                 calculatedLocation.x = calculatedLocation.unit.convert(calculatedLocation.x, expectedLocation.unit);

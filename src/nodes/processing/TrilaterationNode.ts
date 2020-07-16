@@ -4,8 +4,8 @@ import {
     DataObject, 
     RelativeDistancePosition, 
     SensorObject, 
-    Cartesian3DPosition, 
-    Cartesian2DPosition, 
+    Absolute3DPosition, 
+    Absolute2DPosition, 
     GeographicalPosition 
 } from "../../data";
 import { Model } from "../../Model";
@@ -13,8 +13,8 @@ import { Model } from "../../Model";
 /**
  * Trillateration processing node
  * Supported location types:
- * - [[Cartesian2DPosition]]
- * - [[Cartesian3DPosition]]
+ * - [[Absolute2DPosition]]
+ * - [[Absolute3DPosition]]
  * - [[GeographicalPosition]]
  */
 export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
@@ -67,8 +67,8 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
                     case 3: // Trilateration
                     default:
                         switch (true) {
-                            case objects[0].currentPosition instanceof Cartesian3DPosition:
-                                Cartesian3DPosition.trilaterate(points, distances).then(location => {
+                            case objects[0].currentPosition instanceof Absolute3DPosition:
+                                Absolute3DPosition.trilaterate(points, distances).then(location => {
                                     if (location !== null)
                                         dataObject.currentPosition = location;
                                     resolve(dataObject);
@@ -76,8 +76,8 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
                                     reject(ex);
                                 });
                                 break;
-                            case objects[0].currentPosition instanceof Cartesian2DPosition:
-                                Cartesian2DPosition.trilaterate(points, distances).then(location => {
+                            case objects[0].currentPosition instanceof Absolute2DPosition:
+                                Absolute2DPosition.trilaterate(points, distances).then(location => {
                                     if (location !== null)
                                         dataObject.currentPosition = location;
                                     resolve(dataObject);

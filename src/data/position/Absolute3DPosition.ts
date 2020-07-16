@@ -1,13 +1,13 @@
 import { SerializableObject, SerializableMember } from "../decorators";
 import * as math from '../../utils/_internal/Math';
-import { Cartesian2DPosition } from "./Cartesian2DPosition";
+import { Absolute2DPosition } from "./Absolute2DPosition";
 
 /**
- * Cartesian 3D position. This class extends a [[Cartesian2DPosition]]. This location can be used both as
+ * Absolute cartesian 3D position. This class extends a [[AbsolutePosition2D]]. This location can be used both as
  * an absolute location or relative location.
  */
 @SerializableObject()
-export class Cartesian3DPosition extends Cartesian2DPosition {
+export class Absolute3DPosition extends Absolute2DPosition {
     private _z: number = 0;
 
     constructor(x?: number, y?: number, z?: number) {
@@ -35,9 +35,9 @@ export class Cartesian3DPosition extends Cartesian2DPosition {
      * Midpoint to another location
      * @param otherPosition Other location
      */
-    public midpoint(otherPosition: Cartesian3DPosition, distanceSelf: number = 1, distanceOther: number = 1): Promise<Cartesian3DPosition> {
-        return new Promise<Cartesian3DPosition>((resolve, reject) => {
-            const newPoint = new Cartesian3DPosition();
+    public midpoint(otherPosition: Absolute3DPosition, distanceSelf: number = 1, distanceOther: number = 1): Promise<Absolute3DPosition> {
+        return new Promise<Absolute3DPosition>((resolve, reject) => {
+            const newPoint = new Absolute3DPosition();
             newPoint.accuracy = this.accuracy + otherPosition.accuracy / 2;
             newPoint.x = (this.x + otherPosition.x) / 2;
             newPoint.y = (this.y + otherPosition.y) / 2;
@@ -46,8 +46,8 @@ export class Cartesian3DPosition extends Cartesian2DPosition {
         });
     }
 
-    public static trilaterate(points: Cartesian3DPosition[], distances: number[]): Promise<Cartesian3DPosition> {
-        return new Promise<Cartesian3DPosition>((resolve, reject) => {
+    public static trilaterate(points: Absolute3DPosition[], distances: number[]): Promise<Absolute3DPosition> {
+        return new Promise<Absolute3DPosition>((resolve, reject) => {
             switch (points.length) {
                 case 0:
                     resolve(null);
@@ -86,7 +86,7 @@ export class Cartesian3DPosition extends Cartesian2DPosition {
                     } while (incr < 0);
                     const z = Math.sqrt(incr);
             
-                    const point = new Cartesian3DPosition();
+                    const point = new Absolute3DPosition();
                     point.unit = points[0].unit;
                     point.point = math.add(points[0].point, math.add(math.add(math.multiply(eX, x), math.multiply(eY, y)), math.multiply(eZ, z))) as number[];
                     resolve(point);
@@ -95,7 +95,7 @@ export class Cartesian3DPosition extends Cartesian2DPosition {
         });
     }
 
-    public distance(other: Cartesian3DPosition): number {
+    public distance(other: Absolute3DPosition): number {
         return Math.pow(Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2) + Math.pow((other.z - this.z), 2), 1 / 2.);
     }
 

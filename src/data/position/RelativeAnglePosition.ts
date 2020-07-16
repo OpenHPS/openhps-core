@@ -11,7 +11,7 @@ export class RelativeAnglePosition extends RelativePosition {
     private _angle: number;
     private _angleUnit: AngleUnit;
 
-    constructor(referenceObject?: DataObject, angle?: number, angleUnit?: AngleUnit) {
+    constructor(referenceObject?: any, angle?: number, angleUnit?: AngleUnit) {
         super(referenceObject);
         this.angle = angle;
         this._angleUnit = angleUnit;
@@ -43,7 +43,6 @@ export class RelativeAnglePosition extends RelativePosition {
      */
     public set angle(angle: number) {
         this._angle = angle;
-        this.referenceValue = angle;
     }
 
     /**

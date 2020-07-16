@@ -1,7 +1,6 @@
 import { RelativePosition } from "./RelativePosition";
 import { LengthUnit, Unit } from "../../utils";
 import { SerializableObject, SerializableMember } from '../decorators';
-import { DataObject } from '../object';
 
 /**
  * Relative location to another reference object in distance.
@@ -11,7 +10,7 @@ export class RelativeDistancePosition extends RelativePosition {
     private _distance: number;
     private _distanceUnit: LengthUnit;
 
-    constructor(referenceObject?: DataObject, distance?: number, distanceUnit?: LengthUnit) {
+    constructor(referenceObject?: any, distance?: number, distanceUnit?: LengthUnit) {
         super(referenceObject);
         this.distance = distance;
         this._distanceUnit = distanceUnit;
@@ -43,7 +42,6 @@ export class RelativeDistancePosition extends RelativePosition {
      */
     public set distance(distance: number) {
         this._distance = distance;
-        this.referenceValue = distance;
     }
 
     /**
