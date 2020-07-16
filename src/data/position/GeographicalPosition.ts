@@ -16,6 +16,12 @@ export class GeographicalPosition extends AbsolutePosition {
 
     public static EARTH_RADIUS: number = 6371008; 
 
+    constructor(lat?: number, lng?: number) {
+        super();
+        this.latitude = lat;
+        this.longitude = lng;
+    }
+
     /**
      * Get latitude
      */

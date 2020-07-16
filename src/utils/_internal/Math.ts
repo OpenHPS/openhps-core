@@ -4,7 +4,7 @@ import {
     divideDependencies,
     multiplyDependencies,
     normDependencies,
-    subtractDependencies,
+    subtractDependencies
 } from 'mathjs';
 
 const math = create({

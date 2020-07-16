@@ -23,9 +23,10 @@ export class DataObject {
     @SerializableMember()
     public createdTimestamp: number;
 
-    constructor(uid: string = uuidv4()) {
+    constructor(uid: string = uuidv4(), displayName?: string) {
         this.uid = uid;
         this.createdTimestamp = new Date().getTime();
+        this.displayName = displayName;
     }
 
     public merge(object: DataObject): DataObject {
@@ -157,13 +158,6 @@ export class DataObject {
 
     /**
      * Add a relative position to this data object
-     */
-    public set relativePosition(relativePosition: RelativePosition) {
-        this.addRelativePosition(relativePosition);
-    }
-
-    /**
-     * Add a relative position to this data object
      * @param relativePosition 
      */
     public addRelativePosition(relativePosition: RelativePosition): void {
@@ -187,6 +181,14 @@ export class DataObject {
             return this.relativePositions;
         } else if (this._relativePositions.has(referenceObjectUID)) {
             return Array.from(this._relativePositions.get(referenceObjectUID).values());
+        } else {
+            return undefined;
+        }
+    }
+
+    public getRelativePosition(referenceObjectUID: string): RelativePosition {
+        if (this._relativePositions.has(referenceObjectUID)) {
+            return Array.from(this._relativePositions.get(referenceObjectUID).values())[0];
         } else {
             return undefined;
         }

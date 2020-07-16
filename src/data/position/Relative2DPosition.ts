@@ -1,7 +1,9 @@
 import { RelativePosition } from "./RelativePosition";
 import { AngleUnit } from '../../utils';
-import { SerializableObject, SerializableMember } from '../decorators';
+import { SerializableObject, SerializableMember, SerializableArrayMember } from '../decorators';
 import { ReferenceSpace } from "../object";
+import { Absolute2DPosition } from "./Absolute2DPosition";
+import * as math from 'mathjs';
 
 /**
  * Relative cartesian 2d poisition to another reference object or space
@@ -10,11 +12,20 @@ import { ReferenceSpace } from "../object";
 export class Relative2DPosition extends RelativePosition {
     private _x: number = 0;
     private _y: number = 0;
+    @SerializableArrayMember(Array)
+    protected transformationMatrix: number[][];
 
-    constructor(referenceObject?: ReferenceSpace, x?: number, y?: number) {
-        super(referenceObject);
+    constructor(space?: ReferenceSpace, x?: number, y?: number) {
+        super(space);
         this.x = x;
         this.y = y;
+        this.transformationMatrix = space.transformationMatrix;
+    }
+
+    public get transform(): Absolute2DPosition {
+        const absolute = new Absolute2DPosition();
+        absolute.point = math.multiply([this.x, this.y, 0, 1], this.transformationMatrix);
+        return absolute;
     }
 
     /**
