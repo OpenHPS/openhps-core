@@ -101,7 +101,7 @@ describe('data', () => {
             it('should translate the origin offset', (done) => {
                 // Calibrated reference space
                 // In a normal situation, this offset/scale/rotation needs to be calculated
-                let calibratedReferenceSpace = new ReferenceSpace()
+                let calibratedReferenceSpace = new ReferenceSpace(globalReferenceSpace)
                     .scale(1.0, 1.0, 1.0)               // Scale is the same
                     .translation(-2.0, -2.0, -1.0)      // Origin offset
                     .rotation(0, 0, 0, AngleUnit.RADIANS);
