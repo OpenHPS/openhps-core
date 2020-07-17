@@ -2,12 +2,18 @@ import { DataObject } from "../DataObject";
 import * as math from '../../../utils/_internal/Math';
 import { AngleUnit } from "../../../utils";
 import { Space } from "./Space";
+import { SerializableObject, SerializableArrayMember } from "../../decorators";
 
+@SerializableObject()
 export class ReferenceSpace extends DataObject implements Space {
     // Raw transformation matrix
+    @SerializableArrayMember(Number, { dimensions: 2 })
     private _transformationMatrix: number[][];
+    @SerializableArrayMember(Number, { dimensions: 2 })
     private _scaleMatrix: number[][];
+    @SerializableArrayMember(Number, { dimensions: 2 })
     private _translationMatrix: number[][];
+    @SerializableArrayMember(Number, { dimensions: 2 })
     private _rotationMatrix: number[][];
 
     constructor(transformationMatrix?: number[][]) {

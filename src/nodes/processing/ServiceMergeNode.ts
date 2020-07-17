@@ -45,7 +45,7 @@ export class ServiceMergeNode<InOut extends DataFrame | DataFrame[]> extends Pro
                 }));
             });
             
-            Promise.all(promises).then(_ => {
+            Promise.all(promises).then(() => {
                 resolve(frame);
             }).catch(ex => {
                 reject(ex);

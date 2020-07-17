@@ -30,16 +30,31 @@ export class DataObject {
     }
 
     public merge(object: DataObject): DataObject {
-        if (object.displayName !== undefined)
+        if (this.displayName === undefined)
             this.displayName = object.displayName;
-        if (object.getCurrentPosition() !== undefined)
-            this.setCurrentPosition(object.getCurrentPosition());
+        if (this.getCurrentPosition() === undefined && object.getCurrentPosition() !== undefined)
+            this.setCurrentPosition(object.getCurrentPosition().clone());
         object._nodeData.forEach((value, key) => {
             this._nodeData.set(key, value);
         });
-        if (this.createdTimestamp > object.createdTimestamp) {
-            this.createdTimestamp = object.createdTimestamp;
-        }
+        object._relativePositions.forEach((value: Map<string, RelativePosition>, key: string) => {
+            const newRelativePositions = this._relativePositions.get(key);
+            if (newRelativePositions === undefined) {
+                this._relativePositions.set(key, value);
+            } else {
+                value.forEach((existingRelativePosition: RelativePosition) => {
+                    const newRelativePosition = newRelativePositions.get(existingRelativePosition.constructor.name);
+                    if (!newRelativePosition) {
+                        this.addRelativePosition(existingRelativePosition);
+                    } else {
+                        // Check timestamp. If existing one is newer, override
+                        if (existingRelativePosition.timestamp > newRelativePosition.timestamp) {
+                            this.addRelativePosition(existingRelativePosition);
+                        }
+                    }
+                });
+            }
+        });
         return this;
     }
     
@@ -119,11 +134,12 @@ export class DataObject {
 
     /**
      * Get the current absolute position of the object
+     * @param referenceSpace (optional) reference space
      */
     public getCurrentPosition(referenceSpace?: Space): AbsolutePosition {
         if (referenceSpace !== undefined && this._currentPosition !== undefined) {
             // Convert the global space to reference space
-            const transposedPosition = this._currentPosition.clone();
+            const transposedPosition = this._currentPosition.clone<AbsolutePosition>();
             const point = transposedPosition.point;
             // TODO: Cleanup
             if (point.length === 3) {
@@ -140,11 +156,13 @@ export class DataObject {
 
     /**
      * Set the current absolute position of the object
+     * @param position Position to set
+     * @param referenceSpace (optional) reference space
      */
     public setCurrentPosition(position: AbsolutePosition, referenceSpace?: Space) {
         if (referenceSpace !== undefined) {
             // Convert the reference space to the global space
-            const transposedPosition = position.clone();
+            const transposedPosition = position.clone<AbsolutePosition>();
             const point = transposedPosition.point;
             // TODO: Cleanup
             if (point.length === 3) {
@@ -169,9 +187,7 @@ export class DataObject {
             }
             const output = new Array();
             rawArray.forEach(raw => {
-                if (raw.__type === undefined) {
-                    output.push(new TypedJSON(RelativePosition).parse(raw));
-                } else {
+                if (raw.__type !== undefined) {
                     output.push(new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw));
                 }
             });

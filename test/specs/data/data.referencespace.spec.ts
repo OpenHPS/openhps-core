@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ReferenceSpace, AngleUnit, Model, ModelBuilder, GraphBuilder, CallbackNode, DataFrame, DataObject, Absolute3DPosition, SinkNode, CallbackSinkNode } from '../../../src';
+import { ReferenceSpace, AngleUnit, Model, ModelBuilder, GraphBuilder, CallbackNode, DataFrame, DataObject, Absolute3DPosition, SinkNode, CallbackSinkNode, CallbackSourceNode } from '../../../src';
 import * as math from 'mathjs';
 
 describe('data', () => {
@@ -56,7 +56,6 @@ describe('data', () => {
         });
 
         describe('positioning model', () => {
-            let globalReferenceSpace: ReferenceSpace;
             let model: Model;
             let callbackNode: CallbackNode<DataFrame>; // Position manipulation
 
@@ -64,31 +63,45 @@ describe('data', () => {
              * Create the positioning model
              */
             before((done) => {
-                // Define the global reference space
-                // (if not defined, created by default)
-                globalReferenceSpace = new ReferenceSpace();
-
                 // For testing, manipulate position
                 callbackNode = new CallbackNode();
 
                 ModelBuilder.create()
-                    .withReferenceSpace(globalReferenceSpace)
                     .addShape(GraphBuilder.create()
-                        .from()
-                        .via(callbackNode)
-                        .to(new CallbackSinkNode()))
+                        .from(new CallbackSourceNode()) // Source node merges stored data objects
+                        .via(callbackNode)              // Test node
+                        .to(new CallbackSinkNode()))    // Sink node stores data objects
                     .build().then((m: Model) => {
                         model = m;
-                        // Create a test object
-                        const object = new DataObject("test");
-                        // Object is currently at a known location (2, 2, 1)
-                        object.currentPosition = new Absolute3DPosition(2, 2, 1);
-
-                        // Insert into the system
-                        Promise.resolve(model.push(new DataFrame(object))).then(() => {
-                            done();
-                        });
+                        done();
                     });
+            });
+
+            /**
+             * Reset the location of the object #test
+             * for each test to (2, 2, 1)
+             */
+            beforeEach((done) => {
+                // Reset test node
+                callbackNode.pushCallback = (_) => { console.log(_.getObjectByUID("test")) };
+
+                // Create a test object
+                const object = new DataObject("test");
+                // Object is currently at a known location (2, 2, 1)
+                object.setCurrentPosition(new Absolute3DPosition(2, 2, 1));
+
+                console.log("BEFORE EACH");
+                // Insert into the system
+                model.push(new DataFrame(object)).then(() => {
+                    // Confirm that it is inserted
+                    model.findDataService(DataObject).findByUID("test").then(storedObject => {
+                        const storedLocation = storedObject.getCurrentPosition() as Absolute3DPosition;
+                        expect(storedLocation.x).to.eq(2);
+                        expect(storedLocation.y).to.eq(2);
+                        expect(storedLocation.z).to.eq(1);
+                        done();
+                    });
+                });
             });
 
             it('should translate the origin offset', (done) => {
@@ -124,6 +137,50 @@ describe('data', () => {
                     expect(transformedPosition.x).to.equal(7);
                     expect(transformedPosition.y).to.equal(7);
                     expect(transformedPosition.z).to.equal(6);
+                    done();
+                }).catch(ex => {
+                    done(ex);
+                });
+            });
+
+            it('should inverse the orientation', (done) => {
+                // Calibrated reference space
+                // In a normal situation, this offset/scale/rotation needs to be calculated
+                let calibratedReferenceSpace = new ReferenceSpace()
+                    .translation(2, 2, 1)            // Origin offset
+                    .scale(1, 1, 1)                  // Same scale on all axis 1:1
+                    .rotation(0, 180, 0, AngleUnit.DEGREES);          // Rotation is inverse (down is up, left is right)
+
+                // Test node that provides a location with a different reference space
+                // This example will move the object forward. However, in our global
+                // reference space, forward is backwards
+                callbackNode.pushCallback = (frame: DataFrame) => {
+                    const object = frame.getObjectByUID("test");
+                    // Get the current position using the reference space of this node
+                    const currentPosition = object.getCurrentPosition(calibratedReferenceSpace) as Absolute3DPosition;
+                    currentPosition.x += 1; // Move foward on the X axis (1, 0, 0)
+                    // However, according to the global reference space we moved backwards (1, 2, 1)
+                    object.setCurrentPosition(currentPosition, calibratedReferenceSpace);
+                };
+
+                Promise.resolve(model.push(new DataFrame(new DataObject("test")))).then(() => {
+                    return model.findDataService(DataObject).findByUID("test")
+                }).then(storedObject => {
+                    // This will return the current position relative to the 'calibratedReferenceSpace'
+                    // Meaning the position will be (1, 0, 0)
+                    const relativePosition = storedObject.getCurrentPosition(calibratedReferenceSpace) as Absolute3DPosition;
+                    expect(Math.round(relativePosition.x)).to.equal(1);
+                    expect(Math.round(relativePosition.y)).to.equal(0);
+                    expect(Math.round(relativePosition.z)).to.equal(0);
+
+                    // This will return the current position relative to the global reference space
+                    // The origin of the relative 3d position (0, 0, 0) will translate
+                    // to the absolute position (2, 2, 1) and the rotation will also be taken into account
+                    // Meaning the position (1, 0, 0) will transform to (1, 2, 1)
+                    const transformedPosition = storedObject.getCurrentPosition() as Absolute3DPosition;
+                    expect(Math.round(transformedPosition.x)).to.equal(1);
+                    expect(Math.round(transformedPosition.y)).to.equal(2);
+                    expect(Math.round(transformedPosition.z)).to.equal(1);
                     done();
                 }).catch(ex => {
                     done(ex);

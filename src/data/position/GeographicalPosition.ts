@@ -16,62 +16,51 @@ export class GeographicalPosition extends AbsolutePosition {
 
     public static EARTH_RADIUS: number = 6371008; 
 
-    constructor(lat?: number, lng?: number) {
+    constructor(lat?: number, lng?: number, amsl?: number) {
         super();
         this.latitude = lat;
         this.longitude = lng;
+        this._amsl = amsl;
     }
 
     /**
-     * Get latitude
+     * Geographical Latitude
      */
     @SerializableMember()
     public get latitude(): number {
         return this._lat;
     }
 
-    /**
-     * Set latitude
-     * @param lat 
-     */
     public set latitude(lat: number) {
         this._lat = lat;
     }
 
     /**
-     * Get longitude
+     * Geographical Longitude
      */
     @SerializableMember()
     public get longitude(): number {
         return this._lng;
     }
 
-    /**
-     * Set longitude
-     * @param lng 
-     */
     public set longitude(lng: number) {
         this._lng = lng;
     }
 
     /**
-     * Get the altitude above mean sea level
+     * Altitude above mean sea level
      */
     @SerializableMember()
     public get altitude(): number {
         return this._amsl;
     }
     
-    /**
-     * Set the altitude
-     * @param mamsl Above mean sea level
-     */
     public set altitude(amsl: number) {
         this._amsl = amsl;
     }
     
     /**
-     * Get altitude unit
+     * Altitude unit
      */
     @SerializableMember()
     public get altitudeUnit(): LengthUnit {
