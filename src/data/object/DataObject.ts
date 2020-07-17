@@ -5,7 +5,7 @@ import { SerializableObject, SerializableMember, SerializableArrayMember, Serial
 import * as uuidv4 from 'uuid/v4';
 import { DataSerializer } from '../DataSerializer';
 import { Space } from "./space/Space";
-import * as math from '../../utils/_internal/Math';
+import * as math from 'mathjs';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to

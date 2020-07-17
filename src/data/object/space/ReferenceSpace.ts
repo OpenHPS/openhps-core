@@ -1,5 +1,5 @@
 import { DataObject } from "../DataObject";
-import * as math from '../../../utils/_internal/Math';
+import * as math from 'mathjs';
 import { AngleUnit } from "../../../utils";
 import { Space } from "./Space";
 import { SerializableObject, SerializableArrayMember } from "../../decorators";

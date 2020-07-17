@@ -1,7 +1,7 @@
 import * as uuidv4 from 'uuid/v4';
 import { DataObject } from './object/DataObject';
 import { SerializableObject, SerializableMember, SerializableMapMember } from './decorators';
-import { Space, ReferenceSpace } from './object';
+import { ReferenceSpace } from './object';
 
 /**
  * Data frame that is passed through each node in a model.

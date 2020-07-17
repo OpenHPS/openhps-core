@@ -1,6 +1,6 @@
 import { AbsolutePosition } from "./AbsolutePosition";
 import { SerializableMember, SerializableObject } from "../decorators";
-import * as math from '../../utils/_internal/Math';
+import * as math from 'mathjs';
 
 /**
  * Absolute cartesian 2D position. This class implements a [[Position]]. This location can be used both as

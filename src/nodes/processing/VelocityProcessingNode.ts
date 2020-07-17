@@ -1,6 +1,6 @@
 import { DataFrame } from "../../data";
 import { Node } from "../../Node";
-import * as math from '../../utils/_internal/Math';
+import * as math from 'mathjs';
 
 /**
  * Linear and angular velocity processing

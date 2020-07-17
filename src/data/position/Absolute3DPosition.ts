@@ -1,5 +1,5 @@
 import { SerializableObject, SerializableMember } from "../decorators";
-import * as math from '../../utils/_internal/Math';
+import * as math from 'mathjs';
 import { Absolute2DPosition } from "./Absolute2DPosition";
 
 /**

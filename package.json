@@ -1,6 +1,6 @@
 {
   "name": "@openhps/core",
-  "version": "1.1.0-alpha.0",
+  "version": "0.1.0-alpha.0",
   "description": "Open Hybrid Positioning System - Core component",
   "author": "Maxim Van de Wynckel",
   "license": "Apache-2.0",
@@ -66,7 +66,7 @@
     "ts-node": "^8.10.1",
     "tslint": "^5.20.1",
     "tslint-no-circular-imports": "^0.7.0",
-    "typedoc": "^0.15.8",
+    "typedoc": "^0.17.8",
     "typescript": "^3.9.3",
     "uglify-es": "^3.3.9",
     "webpack": "^4.43.0",

@@ -83,14 +83,13 @@ describe('data', () => {
              */
             beforeEach((done) => {
                 // Reset test node
-                callbackNode.pushCallback = (_) => { console.log(_.getObjectByUID("test")) };
+                callbackNode.pushCallback = (_) => { };
 
                 // Create a test object
                 const object = new DataObject("test");
                 // Object is currently at a known location (2, 2, 1)
                 object.setCurrentPosition(new Absolute3DPosition(2, 2, 1));
 
-                console.log("BEFORE EACH");
                 // Insert into the system
                 model.push(new DataFrame(object)).then(() => {
                     // Confirm that it is inserted
