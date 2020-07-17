@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-alpha.1](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.1.0-alpha.0...v0.1.0-alpha.1) (2020-07-17)
+
+
+### Features
+
+* [ci-skip] transform a relative position ([a40d32a](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/a40d32aa4f77626ad636aa3f41c1a69d93fb3870))
+* [ci-skip] transform a relative position ([d29bcd1](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/d29bcd1a6f4f66112f6f73294e961234dcf80d33))
+* [ci-skip] transform a relative position ([01db581](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/01db581dda36e340b47cd41154bfb014194cf384))
+* getCurrentLocation by reference space ([b44151b](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/b44151b6570fa1acb91df39759b323cf45dd6776))
+
+
+### Bug Fixes
+
+* better merging of data objects ([a83893b](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/a83893b283df25612351bc94465a66631835ee0a))
+
 ## [1.1.0-alpha.0](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v1.0.1-alpha.1...v1.1.0-alpha.0) (2020-07-16)
 
 
