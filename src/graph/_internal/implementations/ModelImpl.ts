@@ -20,7 +20,7 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
     constructor(name: string = "model") {
         super();
         this.name = name;
-        this.referenceSpace = new ReferenceSpace();
+        this.referenceSpace = new ReferenceSpace(undefined);
         
         this._addDefaultServices();
 

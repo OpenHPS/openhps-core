@@ -8,7 +8,9 @@ describe('data', () => {
         describe('translation', () => {
 
             it('should shift position', () => {
-                let refSpace = new ReferenceSpace()
+                let globalReferenceSpace = new ReferenceSpace(undefined);
+    
+                let refSpace = new ReferenceSpace(globalReferenceSpace)
                     .translation(2.0, 2.0, 2.0);
                 let result = math.multiply([3, 3, 0, 1], refSpace.transformationMatrix);
                 expect(result[0]).to.equal(5);
@@ -21,7 +23,9 @@ describe('data', () => {
         describe('scaling', () => {
 
             it('should scale up', () => {
-                let refSpace = new ReferenceSpace()
+                let globalReferenceSpace = new ReferenceSpace(undefined);
+    
+                let refSpace = new ReferenceSpace(globalReferenceSpace)
                     .scale(2.0, 2.0, 2.0);
                 let result = math.multiply([3, 3, 0, 1], refSpace.transformationMatrix);
                 expect(result[0]).to.equal(6);
@@ -30,9 +34,9 @@ describe('data', () => {
             });
 
             it('should scale down', () => {
-                let globalReferenceSpace = new ReferenceSpace();
+                let globalReferenceSpace = new ReferenceSpace(undefined);
     
-                let refSpace = new ReferenceSpace()
+                let refSpace = new ReferenceSpace(globalReferenceSpace)
                     .scale(0.5, 0.5, 0.5);
                 let result = math.multiply([3, 3, 0, 1], refSpace.transformationMatrix);
                 expect(result[0]).to.equal(1.5);
@@ -45,7 +49,9 @@ describe('data', () => {
         describe('rotation', () => {
 
             it('should rotate on X axis', () => {
-                let refSpace = new ReferenceSpace()
+                let globalReferenceSpace = new ReferenceSpace(undefined);
+    
+                let refSpace = new ReferenceSpace(globalReferenceSpace)
                     .rotation(180, 0, 0, AngleUnit.DEGREES);
                 let result = math.multiply([2, 2, 0, 1], refSpace.transformationMatrix);
                 expect(result[0]).to.within(-2.1, -1.9);
@@ -106,7 +112,7 @@ describe('data', () => {
             it('should translate the origin offset', (done) => {
                 // Calibrated reference space
                 // In a normal situation, this offset/scale/rotation needs to be calculated
-                let calibratedReferenceSpace = new ReferenceSpace()
+                let calibratedReferenceSpace = new ReferenceSpace(model.referenceSpace)
                     .translation(2, 2, 1)            // Origin offset
                     .scale(1, 1, 1)                  // Same scale on all axis 1:1
                     .rotation(0, 0, 0);              // Same rotation
@@ -145,7 +151,7 @@ describe('data', () => {
             it('should inverse the orientation', (done) => {
                 // Calibrated reference space
                 // In a normal situation, this offset/scale/rotation needs to be calculated
-                let calibratedReferenceSpace = new ReferenceSpace()
+                let calibratedReferenceSpace = new ReferenceSpace(model.referenceSpace)
                     .translation(2, 2, 1)            // Origin offset
                     .scale(1, 1, 1)                  // Same scale on all axis 1:1
                     .rotation(0, 180, 0, AngleUnit.DEGREES);          // Rotation is inverse (down is up, left is right)

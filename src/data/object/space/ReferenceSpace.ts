@@ -16,8 +16,12 @@ export class ReferenceSpace extends DataObject implements Space {
     @SerializableArrayMember(Number, { dimensions: 2 })
     private _rotationMatrix: number[][];
 
-    constructor(transformationMatrix?: number[][]) {
+    private _baseSpace: ReferenceSpace;
+
+    constructor(baseSpace: ReferenceSpace, transformationMatrix?: number[][]) {
         super();
+        this._baseSpace = baseSpace;
+        
         this._transformationMatrix = transformationMatrix;
         if (this._transformationMatrix === undefined) {
             // Initialize
