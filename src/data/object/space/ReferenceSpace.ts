@@ -1,25 +1,44 @@
 import { DataObject } from "../DataObject";
-import { RelativePosition } from "../../position";
-import * as math from 'mathjs';
+import * as math from '../../../utils/_internal/Math';
 import { AngleUnit } from "../../../utils";
+import { Space } from "./Space";
 
-export class ReferenceSpace extends DataObject {
+export class ReferenceSpace extends DataObject implements Space {
     // Raw transformation matrix
     private _transformationMatrix: number[][];
     private _scaleMatrix: number[][];
     private _translationMatrix: number[][];
     private _rotationMatrix: number[][];
 
-    constructor(relativeSpace?: ReferenceSpace, transformationMatrix?: number[][]) {
+    constructor(transformationMatrix?: number[][]) {
         super();
-        this.addRelativePosition(new RelativePosition(relativeSpace));
         this._transformationMatrix = transformationMatrix;
         if (this._transformationMatrix === undefined) {
             // Initialize
-            this._transformationMatrix = math.zeros([4, 4]) as number[][];
-            this._scaleMatrix = math.zeros([4, 4]) as number[][];
-            this._translationMatrix = math.zeros([4, 4]) as number[][];
-            this._rotationMatrix = math.zeros([4, 4]) as number[][];
+            this._transformationMatrix = [
+                [1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1]
+            ];
+            this._scaleMatrix = [
+                [1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1]
+            ];
+            this._translationMatrix = [
+                [1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1]
+            ];
+            this._rotationMatrix = [
+                [1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1]
+            ];
         }
     }
 
@@ -79,7 +98,7 @@ export class ReferenceSpace extends DataObject {
     }
 
     private _calculateTransformationMatrix(): void {
-        this._transformationMatrix = math.add(this._rotationMatrix, math.add(this._translationMatrix, this._scaleMatrix)) as number[][];
+        this._transformationMatrix = math.multiply(this._rotationMatrix, math.multiply(this._translationMatrix, this._scaleMatrix)) as number[][];
     }
 
     /**

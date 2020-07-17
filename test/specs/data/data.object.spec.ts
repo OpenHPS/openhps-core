@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataObject, RelativeDistancePosition, Absolute2DPosition, RelativePosition, Relative2DPosition, ReferenceSpace } from '../../../src';
+import { DataObject, RelativeDistancePosition, Absolute2DPosition, RelativePosition, ReferenceSpace } from '../../../src';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 import { DataSerializer } from '../../../src/data/DataSerializer';
 
@@ -14,7 +14,6 @@ describe('data', () => {
             dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject("ref_a"), 1));
             dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject("ref_b"), 2));
             dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject("ref_c"), 3));
-            dataObject.addRelativePosition(new Relative2DPosition(new ReferenceSpace(), 10.5, 5));
             const serialized = DataSerializer.serialize(dataObject);
             const deserialized = DataSerializer.deserialize(serialized, DataObject);
             expect(dataObject.uid).to.equal(deserialized.uid);

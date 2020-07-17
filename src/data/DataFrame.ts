@@ -1,6 +1,7 @@
 import * as uuidv4 from 'uuid/v4';
 import { DataObject } from './object/DataObject';
 import { SerializableObject, SerializableMember, SerializableMapMember } from './decorators';
+import { Space, ReferenceSpace } from './object';
 
 /**
  * Data frame that is passed through each node in a model.
@@ -102,6 +103,14 @@ export class DataFrame {
         this._objects.set(object.uid, object);
     }
 
+    /**
+     * Add a new reference space relevant to this data frame
+     * @param referenceSpace Relevant reference space
+     */
+    public addReferenceSpace(referenceSpace: ReferenceSpace): void {
+        this.addObject(referenceSpace);
+    }
+    
     /**
      * Remove an object from the data frame
      * @param object Object to remove

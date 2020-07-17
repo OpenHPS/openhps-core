@@ -9,5 +9,3 @@ export * from './RelativeAnglePosition';
 export * from './RelativeDistancePosition';
 export * from './CelestialPosition';
 export * from './Velocity';
-export * from './Relative2DPosition';
-export * from './Relative3DPosition';

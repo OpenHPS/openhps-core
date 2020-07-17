@@ -4,6 +4,8 @@ import { TypedJSON } from 'typedjson';
 import { SerializableObject, SerializableMember, SerializableArrayMember, SerializableMapMember } from '../decorators';
 import * as uuidv4 from 'uuid/v4';
 import { DataSerializer } from '../DataSerializer';
+import { Space } from "./space/Space";
+import * as math from '../../utils/_internal/Math';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -15,8 +17,6 @@ export class DataObject {
     private _displayName: string;
     private _currentPosition: AbsolutePosition;
     private _relativePositions: Map<string, Map<string, RelativePosition>> = new Map();
-    private _currentPositionDirty: boolean = false;
-    private _relativePositionDirty: boolean = false;
     private _parentUID: string;
     @SerializableMapMember(String, Object)
     private _nodeData: Map<string, any> = new Map();
@@ -32,8 +32,8 @@ export class DataObject {
     public merge(object: DataObject): DataObject {
         if (object.displayName !== undefined)
             this.displayName = object.displayName;
-        if (object.currentPosition !== undefined)
-            this.currentPosition = object.currentPosition;
+        if (object.getCurrentPosition() !== undefined)
+            this.setCurrentPosition(object.getCurrentPosition());
         object._nodeData.forEach((value, key) => {
             this._nodeData.set(key, value);
         });
@@ -93,6 +93,8 @@ export class DataObject {
 
     /**
      * Get the current absolute position of the object
+     * relative to the global reference space
+     * @deprecated Use [[getCurrentPosition]] instead
      */
     @SerializableMember({
         deserializer(raw: any): AbsolutePosition {
@@ -103,15 +105,58 @@ export class DataObject {
         }
     })
     public get currentPosition(): AbsolutePosition {
-        return this._currentPosition;
+        return this.getCurrentPosition();
+    }
+
+    /**
+     * Set the current absolute position of the object
+     * relative to the global reference space
+     * @deprecated Use [[setCurrentPosition]] instead
+     */
+    public set currentPosition(position: AbsolutePosition) {
+        this.setCurrentPosition(position);
+    }
+
+    /**
+     * Get the current absolute position of the object
+     */
+    public getCurrentPosition(referenceSpace?: Space): AbsolutePosition {
+        if (referenceSpace !== undefined && this._currentPosition !== undefined) {
+            // Convert the global space to reference space
+            const transposedPosition = this._currentPosition.clone();
+            const point = transposedPosition.point;
+            // TODO: Cleanup
+            if (point.length === 3) {
+                point.push(1);
+            } else {
+                point.push(0, 1);
+            }
+            transposedPosition.point = math.multiply(point, math.inv(referenceSpace.transformationMatrix));
+            return transposedPosition;
+        } else {
+            return this._currentPosition;
+        }
     }
 
     /**
      * Set the current absolute position of the object
      */
-    public set currentPosition(position: AbsolutePosition) {
-        this._currentPosition = position;
-        this._currentPositionDirty = true;
+    public setCurrentPosition(position: AbsolutePosition, referenceSpace?: Space) {
+        if (referenceSpace !== undefined) {
+            // Convert the reference space to the global space
+            const transposedPosition = position.clone();
+            const point = transposedPosition.point;
+            // TODO: Cleanup
+            if (point.length === 3) {
+                point.push(1);
+            } else {
+                point.push(0, 1);
+            }
+            transposedPosition.point = math.multiply(point, referenceSpace.transformationMatrix);
+            this._currentPosition = transposedPosition;
+        } else {
+            this._currentPosition = position;
+        }
     }
 
     /**
@@ -148,12 +193,10 @@ export class DataObject {
         relativePostions.forEach(relativePostion => {
             this.addRelativePosition(relativePostion);
         });
-        this._relativePositionDirty = true;
     }
 
     public removeRelativePositions(referenceObjectUID: string): void {
         this._relativePositions.delete(referenceObjectUID);
-        this._relativePositionDirty = true;
     }
 
     /**
@@ -170,7 +213,6 @@ export class DataObject {
         }
 
         this._relativePositions.get(relativePosition.referenceObjectUID).set(relativePosition.constructor.name, relativePosition);
-        this._relativePositionDirty = true;
     }
 
     /**
@@ -218,14 +260,6 @@ export class DataObject {
      */
     public addNodeData(nodeUID: string, data: any): void {
         this._nodeData.set(nodeUID, data);
-    }
-
-    public isCurrentPositionDirty(): boolean {
-        return this._currentPositionDirty;
-    }
-
-    public isRelativePositionDirty(): boolean {
-        return this._relativePositionDirty;
     }
 
 }

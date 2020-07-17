@@ -3,6 +3,7 @@ import { LengthUnit } from "../../utils/unit/LengthUnit";
 import { Orientation } from "./Orientation";
 import { Velocity } from "./Velocity";
 import { SerializableObject, SerializableMember } from "../decorators";
+import { DataSerializer } from "../DataSerializer";
 
 /**
  * Absolute position
@@ -69,6 +70,12 @@ export abstract class AbsolutePosition implements Position {
 
     public get accuracyUnit(): LengthUnit {
         return this.unit;
+    }
+
+    public clone(): AbsolutePosition {
+        const serialized = DataSerializer.serialize(this);
+        const clone = DataSerializer.deserialize(serialized) as AbsolutePosition;
+        return clone;
     }
 
     public abstract point: number[];

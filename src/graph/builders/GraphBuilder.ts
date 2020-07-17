@@ -80,6 +80,15 @@ export class GraphBuilder<In extends DataFrame | DataFrame[], Out extends DataFr
             graph.graph.edges.forEach(graphEdge => {
                 this.addEdge(graphEdge);
             });
+            // Connect internal and external output to shape 
+            this.graph.addEdge(new EdgeBuilder<any>()
+                .withInput(this.graph.internalInput)
+                .withOutput(graph.graph.internalInput)
+                .build());
+            this.graph.addEdge(new EdgeBuilder<any>()
+                .withInput(graph.graph.internalOutput)
+                .withOutput(this.graph.internalOutput)
+                .build());
         } else {
             // Add graph as node
             graph.nodes.forEach(graphNode => {
