@@ -9,3 +9,4 @@ export { TimeUnit } from './TimeUnit';
 export * from './LengthUnit';
 export * from './LinearVelocityUnity';
 export * from './AngularVelocityUnit';
+export * from './AccelerationUnit';

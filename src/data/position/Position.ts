@@ -12,8 +12,8 @@ import { DataSerializer } from "../DataSerializer";
 export abstract class Position {
     private _accuracy: number;
     private _timestamp: number = new Date().getTime();
-    private _velocity: Velocity;
-    private _orientation: Orientation;
+    private _velocity: Velocity = new Velocity();
+    private _orientation: Orientation = new Orientation();
     private _unit: LengthUnit = LengthUnit.POINTS;
     private _accuracyUnit: LengthUnit = LengthUnit.POINTS;
 

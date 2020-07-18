@@ -1,23 +1,18 @@
+import { AngularVelocityUnit } from "../../utils/unit/AngularVelocityUnit";
 import { SerializableObject, SerializableMember } from "../decorators";
-import { AngleUnit } from "../../utils";
 
-/**
- * Orientation
- */
 @SerializableObject()
-export class Orientation {
+export class AngularVelocity {
     @SerializableMember()
     public x: number;
-
     @SerializableMember()
     public y: number;
-
     @SerializableMember()
     public z: number;
-
+    
     @SerializableMember()
-    public unit?: AngleUnit;
-
+    public unit?: AngularVelocityUnit<any, any>;
+    
     constructor(x?: number, y?: number, z?: number) {
         this.x = x;
         this.y = y;

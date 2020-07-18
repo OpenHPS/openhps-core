@@ -8,3 +8,5 @@ export * from './Absolute3DPosition';
 export * from './RelativeAnglePosition';
 export * from './RelativeDistancePosition';
 export * from './Velocity';
+export * from './AngularVelocity';
+export * from './LinearVelocity';

@@ -1,17 +1,19 @@
 import { LinearVelocityUnit, AngularVelocityUnit } from "../../utils";
 import { SerializableObject, SerializableArrayMember, SerializableMember } from "../decorators";
+import { AngularVelocity } from "./AngularVelocity";
+import { LinearVelocity } from "./LinearVelocity";
 
 @SerializableObject()
 export class Velocity {
-    @SerializableArrayMember(Number)
-    public linearVelocity: number[];
-
+    /**
+     * Linear velocity
+     */
     @SerializableMember()
-    public linearVelocityUnit: LinearVelocityUnit<any, any>;
+    public linear: LinearVelocity = new LinearVelocity();
 
-    @SerializableArrayMember(Number)
-    public angularVelocity: number[];
-
+    /**
+     * Angular velocity
+     */
     @SerializableMember()
-    public angularVelocityUnit: AngularVelocityUnit<any, any>;
+    public angular: AngularVelocity = new AngularVelocity();
 }

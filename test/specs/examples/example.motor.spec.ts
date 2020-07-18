@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Model, ModelBuilder, CallbackSourceNode, CallbackSinkNode, DataFrame, GraphBuilder, DataObject, Absolute2DPosition, LinearVelocityUnit, VelocityProcessingNode } from '../../../src';
+import { Model, ModelBuilder, CallbackSourceNode, CallbackSinkNode, DataFrame, GraphBuilder, DataObject, Absolute2DPosition, LinearVelocityUnit, VelocityProcessingNode, LinearVelocity } from '../../../src';
 
 describe('example', () => {
 
@@ -30,8 +30,7 @@ describe('example', () => {
 
         it('should calculate moving forward', () =>{
             model.findDataService(DataObject).findByUID("robot").then(robot => {
-                robot.currentPosition.velocity.linearVelocity = [1, 0];
-                robot.currentPosition.velocity.linearVelocityUnit = LinearVelocityUnit.METERS_PER_SECOND;
+                robot.currentPosition.velocity.linear = new LinearVelocity(1, 0);
                 Promise.resolve(model.push(new DataFrame(robot)));
             });
 
