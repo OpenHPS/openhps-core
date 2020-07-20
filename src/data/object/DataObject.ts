@@ -109,7 +109,6 @@ export class DataObject {
     /**
      * Get the current absolute position of the object
      * relative to the global reference space
-     * @deprecated Use [[getCurrentPosition]] instead
      */
     @SerializableMember({
         deserializer(raw: any): AbsolutePosition {
@@ -126,7 +125,6 @@ export class DataObject {
     /**
      * Set the current absolute position of the object
      * relative to the global reference space
-     * @deprecated Use [[setCurrentPosition]] instead
      */
     public set currentPosition(position: AbsolutePosition) {
         this.setCurrentPosition(position);

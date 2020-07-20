@@ -25,8 +25,8 @@ describe('dataset', () => {
                 .from(new CSVDataSource("test/data/liwste2017/beacons.csv", (row: any) => {
                     const dataFrame = new DataFrame();
                     const beacon = new DataObject(`beacon_${row.Beacon}`);
-                    beacon.currentPosition = new Absolute2DPosition(parseFloat(row.X), parseFloat(row.Y));
-                    (beacon.currentPosition as Absolute2DPosition).unit = MetricLengthUnit.METER;
+                    beacon.setCurrentPosition(new Absolute2DPosition(parseFloat(row.X), parseFloat(row.Y)));
+                    (beacon.getCurrentPosition() as Absolute2DPosition).unit = MetricLengthUnit.METER;
                     dataFrame.addObject(beacon);
                     return dataFrame;
                 }))
@@ -50,8 +50,8 @@ describe('dataset', () => {
 
                             // Control object
                             const evaluationObject = new DataObject("tracked");
-                            evaluationObject.currentPosition = new Absolute2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y']));
-                            (evaluationObject.currentPosition as Absolute2DPosition).unit = MetricLengthUnit.CENTIMETER;
+                            evaluationObject.setCurrentPosition(new Absolute2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y'])));
+                            (evaluationObject.getCurrentPosition() as Absolute2DPosition).unit = MetricLengthUnit.CENTIMETER;
                             dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
 
                             return dataFrame;
@@ -67,8 +67,8 @@ describe('dataset', () => {
 
                             // Control object
                             const evaluationObject = new DataObject("tracked");
-                            evaluationObject.currentPosition = new Absolute2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y']));
-                            (evaluationObject.currentPosition as Absolute2DPosition).unit = MetricLengthUnit.CENTIMETER;
+                            evaluationObject.setCurrentPosition(new Absolute2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y'])));
+                            (evaluationObject.getCurrentPosition() as Absolute2DPosition).unit = MetricLengthUnit.CENTIMETER;
                             dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
 
                             return dataFrame;
@@ -84,8 +84,8 @@ describe('dataset', () => {
 
                             // Control object
                             const evaluationObject = new DataObject("tracked");
-                            evaluationObject.currentPosition = new Absolute2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y']));
-                            (evaluationObject.currentPosition as Absolute2DPosition).unit = MetricLengthUnit.CENTIMETER;
+                            evaluationObject.setCurrentPosition(new Absolute2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y'])));
+                            (evaluationObject.getCurrentPosition() as Absolute2DPosition).unit = MetricLengthUnit.CENTIMETER;
                             dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
 
                             return dataFrame;
@@ -136,9 +136,9 @@ describe('dataset', () => {
                     callbackNode.callback = (frame: EvaluationDataFrame) => {
                         frame.getObjects().forEach(object => {
                             if (object.uid === "tracked") {
-                                let calculatedLocation: Absolute2DPosition = object.currentPosition as Absolute2DPosition;
+                                let calculatedLocation: Absolute2DPosition = object.getCurrentPosition() as Absolute2DPosition;
                                 // Accurate control location
-                                const expectedLocation: Absolute2DPosition = frame.evaluationObjects.get(object.uid).currentPosition as Absolute2DPosition;
+                                const expectedLocation: Absolute2DPosition = frame.evaluationObjects.get(object.uid).getCurrentPosition() as Absolute2DPosition;
                                 
                                 // Convert meters to cm
                                 calculatedLocation.x = calculatedLocation.unit.convert(calculatedLocation.x, expectedLocation.unit);
@@ -164,9 +164,9 @@ describe('dataset', () => {
                     callbackNode.callback = (data: EvaluationDataFrame) => {
                         data.getObjects().forEach(object => {
                             if (object.uid === "tracked") {
-                                let calculatedLocation: Absolute2DPosition = object.currentPosition as Absolute2DPosition;
+                                let calculatedLocation: Absolute2DPosition = object.getCurrentPosition() as Absolute2DPosition;
                                 // Accurate control location
-                                const expectedLocation: Absolute2DPosition = data.evaluationObjects.get(object.uid).currentPosition as Absolute2DPosition;
+                                const expectedLocation: Absolute2DPosition = data.evaluationObjects.get(object.uid).getCurrentPosition() as Absolute2DPosition;
                                 
                                 // Convert meters to cm
                                 calculatedLocation.x = calculatedLocation.unit.convert(calculatedLocation.x, expectedLocation.unit);

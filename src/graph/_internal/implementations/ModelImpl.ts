@@ -32,7 +32,7 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
 
     private _onModelBuild(_: any): Promise<void> {
         return new Promise((resolve, reject) => {
-            const buildPromises = new Array();
+            let buildPromises = new Array();
             this._services.forEach(service => {
                 if (!service.isReady()) {
                     buildPromises.push(service.emitAsync('build'));
@@ -43,11 +43,8 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
                     buildPromises.push(service.emitAsync('build'));
                 }
             });
-            this.nodes.forEach(node => {
-                if (!node.isReady()) {
-                    buildPromises.push(node.emitAsync('build', _));
-                }
-            });
+
+            // First resolve the building of services
             Promise.all(buildPromises).then(() => {
                 this._services.forEach(service => {
                     if (!service.isReady()) {
@@ -59,6 +56,17 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
                         service.emit('ready');
                     }
                 });
+
+                // Build all nodes
+                buildPromises = new Array();
+                this.nodes.forEach(node => {
+                    if (!node.isReady()) {
+                        buildPromises.push(node.emitAsync('build', _));
+                    }
+                });
+                
+                return Promise.all(buildPromises);
+            }).then(() => {
                 this.nodes.forEach(node => {
                     if (!node.isReady()) {
                         node.emit('ready');

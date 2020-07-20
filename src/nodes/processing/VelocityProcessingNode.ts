@@ -9,7 +9,7 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
 
     public processObject(object: DataObject): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
-            if (object.currentPosition !== undefined) {
+            if (object.getCurrentPosition() !== undefined) {
                 const lastPosition = object.getCurrentPosition().clone<AbsolutePosition>();
                 if (lastPosition.velocity !== undefined) {
                     // Time since current calculation and previous velocity

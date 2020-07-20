@@ -28,7 +28,7 @@ describe('data', () => {
                 const beacons: Array<DataObject> = new Array();
                 for (let i = 0 ; i < 10 ; i ++) {
                     const beacon = new DataObject();
-                    beacon.currentPosition = new Absolute2DPosition(Math.floor(Math.random() * 500) + 0, Math.floor(Math.random() * 500) + 0);
+                    beacon.setCurrentPosition(new Absolute2DPosition(Math.floor(Math.random() * 500) + 0, Math.floor(Math.random() * 500) + 0));
                     beacons.push(beacon);
                 }
                 const addFingerprint = (data: DataObject) => {
@@ -37,7 +37,7 @@ describe('data', () => {
 
                 for (let i = 0 ; i < 250 ; i++) {
                     const fingerprint = new DataObject()
-                    fingerprint.currentPosition = new Absolute2DPosition(Math.floor(Math.random() * 500) + 0, Math.floor(Math.random() * 500) + 0);
+                    fingerprint.setCurrentPosition(new Absolute2DPosition(Math.floor(Math.random() * 500) + 0, Math.floor(Math.random() * 500) + 0));
                     const nrPositions = Math.floor(Math.random() * 8) + 3;
                     for (let j = 0 ; j < nrPositions ; j++) {
                         const beacon = beacons[Math.floor(Math.random() * (beacons.length - 1)) + 0]

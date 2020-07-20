@@ -18,7 +18,7 @@ export class ReferenceSpace extends DataObject implements Space {
 
     private _baseSpace: ReferenceSpace;
 
-    constructor(baseSpace: ReferenceSpace, transformationMatrix?: number[][]) {
+    constructor(baseSpace?: ReferenceSpace, transformationMatrix?: number[][]) {
         super();
         this._baseSpace = baseSpace;
         
@@ -31,25 +31,26 @@ export class ReferenceSpace extends DataObject implements Space {
                 [0, 0, 1, 0],
                 [0, 0, 0, 1]
             ];
-            this._scaleMatrix = [
-                [1, 0, 0, 0],
-                [0, 1, 0, 0],
-                [0, 0, 1, 0],
-                [0, 0, 0, 1]
-            ];
-            this._translationMatrix = [
-                [1, 0, 0, 0],
-                [0, 1, 0, 0],
-                [0, 0, 1, 0],
-                [0, 0, 0, 1]
-            ];
-            this._rotationMatrix = [
-                [1, 0, 0, 0],
-                [0, 1, 0, 0],
-                [0, 0, 1, 0],
-                [0, 0, 0, 1]
-            ];
         }
+
+        this._scaleMatrix = [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ];
+        this._translationMatrix = [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ];
+        this._rotationMatrix = [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ];
     }
 
     public translation(dX: number, dY: number, dZ: number): ReferenceSpace {

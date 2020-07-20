@@ -15,6 +15,12 @@ export class DummyDataObjectService<T extends DataObject> extends DataObjectServ
         });
     }
 
+    public findByParentUID(parentUID: string): Promise<T[]> {
+        return new Promise<T[]>((resolve, reject) => {
+            resolve();
+        });
+    }
+
     public findByUID(uid: string): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             resolve();

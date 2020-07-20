@@ -109,11 +109,11 @@ export class ObjectMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
                 object.relativePositions.forEach(value => {
                     existingObject.addRelativePosition(value);
                 });
-                if (existingObject.currentPosition === undefined) {
-                    existingObject.currentPosition = object.currentPosition;
-                } else if (existingObject.currentPosition.accuracy < object.currentPosition.accuracy) {
+                if (existingObject.getCurrentPosition() === undefined) {
+                    existingObject.setCurrentPosition(object.getCurrentPosition());
+                } else if (existingObject.getCurrentPosition().accuracy < object.getCurrentPosition().accuracy) {
                     // TODO: Merge location using different tactic + check accuracy unit
-                    existingObject.currentPosition = object.currentPosition;
+                    existingObject.setCurrentPosition(object.getCurrentPosition());
                 }
 
                 // Merge properties

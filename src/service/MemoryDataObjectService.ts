@@ -23,7 +23,14 @@ export class MemoryDataObjectService<T extends DataObject> extends DataObjectSer
 
     public findByCurrentPosition(location: AbsolutePosition): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[?(@.currentPosition.point.toString() == "${location.point.toString()}")]`, json: Array.from(this._data.values()) });
+            const result = JSONPath({ path: `$[?(@._currentPosition.point.toString() == "${location.point.toString()}")]`, json: Array.from(this._data.values()) });
+            resolve(result);
+        });
+    }
+
+    public findByParentUID(parentUID: string): Promise<T[]> {
+        return new Promise<T[]>((resolve, reject) => {
+            const result = JSONPath({ path: `$[?(@.parentUID == "${parentUID}")]`, json: Array.from(this._data.values()) });
             resolve(result);
         });
     }

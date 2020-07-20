@@ -23,4 +23,9 @@ export abstract class DataObjectService<T extends DataObject> extends DataServic
      */
     public abstract findByCurrentPosition(position: AbsolutePosition): Promise<T[]>;
 
+    /**
+     * Find all data objects with a parent UID
+     * @param parentUID Parent UID
+     */
+    public abstract findByParentUID(parentUID: string): Promise<T[]>;
 }

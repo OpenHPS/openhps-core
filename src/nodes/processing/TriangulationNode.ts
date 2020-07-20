@@ -33,7 +33,7 @@ export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessing
                 const filteredRelativePositions = new Array<RelativeAnglePosition>();
                 const objectCache = new Map<string, DataObject>();
                 referenceObjects.forEach((referenceObject: DataObject) => {
-                    if (referenceObject.currentPosition !== undefined) {
+                    if (referenceObject.getCurrentPosition() !== undefined) {
                         objectCache.set(referenceObject.uid, referenceObject);
                         index.get(referenceObject.uid).forEach(relativePosition => {
                             filteredRelativePositions.push(relativePosition);
@@ -47,7 +47,7 @@ export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessing
                 filteredRelativePositions.forEach(filteredRelativePosition => {
                     const object = objectCache.get(filteredRelativePosition.referenceObjectUID);
                     objects.push(object);
-                    points.push(object.currentPosition);
+                    points.push(object.getCurrentPosition());
                     angles.push(filteredRelativePosition.angleUnit.convert(filteredRelativePosition.angle, AngleUnit.RADIANS));
                 });
 
@@ -60,18 +60,18 @@ export class TriangulationNode<InOut extends DataFrame> extends ObjectProcessing
                         break;
                     case 3:
                         switch (true) {
-                            case objects[0].currentPosition instanceof Absolute3DPosition:
+                            case objects[0].getCurrentPosition() instanceof Absolute3DPosition:
                                 break;
-                            case objects[0].currentPosition instanceof Absolute2DPosition:
+                            case objects[0].getCurrentPosition() instanceof Absolute2DPosition:
                                 Absolute2DPosition.triangulate(points, angles).then(position => {
                                     if (position !== null)
-                                        dataObject.currentPosition = position;
+                                        dataObject.setCurrentPosition(position);
                                     resolve(dataObject);
                                 }).catch(ex => {
                                     reject(ex);
                                 });
                                 break;
-                            case objects[0].currentPosition instanceof GeographicalPosition:
+                            case objects[0].getCurrentPosition() instanceof GeographicalPosition:
                                 break;
                             default:
                                 resolve(dataObject);

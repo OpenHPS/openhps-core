@@ -12,15 +12,15 @@ describe('node', () => {
                 const frame = new DataFrame();
                 
                 const beacon1 = new DataObject("b1");
-                beacon1.currentPosition = new Absolute2DPosition(1, 1);
+                beacon1.setCurrentPosition(new Absolute2DPosition(1, 1));
                 frame.addObject(beacon1);
 
                 const beacon2 = new DataObject("b2");
-                beacon2.currentPosition = new Absolute2DPosition(1, 10);
+                beacon2.setCurrentPosition(new Absolute2DPosition(1, 10));
                 frame.addObject(beacon2);
 
                 const beacon3 = new DataObject("b3");
-                beacon3.currentPosition = new Absolute2DPosition(10, 1);
+                beacon3.setCurrentPosition(new Absolute2DPosition(10, 1));
                 frame.addObject(beacon3);
 
                 frame.source = new DataObject("phone");
@@ -35,7 +35,7 @@ describe('node', () => {
                 .from(new ListSourceNode(frames))
                 .via(new TriangulationNode())
                 .to(new LoggingSinkNode((frame: DataFrame) => {
-                    const location = frame.source.currentPosition as Absolute2DPosition;
+                    const location = frame.source.getCurrentPosition() as Absolute2DPosition;
                     expect(location.x).to.gt(0.9);
                     expect(location.x).to.lt(1.1);
                 }))
