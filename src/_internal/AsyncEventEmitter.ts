@@ -1,5 +1,9 @@
 import { EventEmitter } from "events";
 
+/**
+ * Asynchronous event emitter that adds
+ * the function ```emitAsync()```.
+ */
 export class AsyncEventEmitter extends EventEmitter {
 
     public emitAsync(type: string | symbol, ...args: any[]): Promise<boolean> {

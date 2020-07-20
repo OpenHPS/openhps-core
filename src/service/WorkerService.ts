@@ -54,14 +54,14 @@ export class WorkerService extends ServiceProxy<Service> {
         if (ownResult) {
             return ownResult;
         }
-        return this.createHandler(p as string);
+        return this.createHandler(target, p);
     }
 
     /**
      * Create handler function for a specific property key
      * @param key Property key
      */
-    public createHandler(key: string): (...args: any[]) => Promise<any> {
+    public createHandler(target: Service, p: PropertyKey): (...args: any[]) => any {
         return (...args: any[]) => {
             return new Promise<any>((resolve, reject) => {
                 const uuid = uuidv4();
@@ -77,11 +77,11 @@ export class WorkerService extends ServiceProxy<Service> {
                 this._inputObservable.next({
                     id: uuid,
                     serviceName: this.name,
-                    method: key,
+                    method: p as string,
                     parameters: serializedArgs
                 });
             });
         };
     }
-    
+
 }

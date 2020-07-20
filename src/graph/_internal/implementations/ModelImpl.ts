@@ -64,7 +64,6 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
                         buildPromises.push(node.emitAsync('build', _));
                     }
                 });
-                
                 return Promise.all(buildPromises);
             }).then(() => {
                 this.nodes.forEach(node => {
@@ -137,7 +136,8 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
         if (this._dataServices.has(dataType.name)) {
             return this._dataServices.get(dataType.name) as F;
         } else {
-            let parent = Object.getPrototypeOf(dataType).constructor;
+            // Find the parent class
+            let parent = Object.getPrototypeOf(dataType);
             while (true) {
                 if (this._dataServices.has(parent.name)) {
                     return this._dataServices.get(parent.name) as F;
@@ -145,7 +145,7 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
                 if (parent.name === "DataObject" || parent.name === "DataFrame") {
                     return null;
                 }
-                parent = Object.getPrototypeOf(parent).constructor;
+                parent = Object.getPrototypeOf(parent);
             }
         }
     }

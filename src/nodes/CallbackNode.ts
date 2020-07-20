@@ -32,7 +32,12 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
     private _onPush(frame: InOut): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this.pushCallback(frame);
+            try {
+                this.pushCallback(frame);
+            } catch (ex) {
+                return reject(ex);
+            }
+
             const pushPromises = new Array();
             this.outputNodes.forEach(node => {
                 pushPromises.push(node.push(frame));
@@ -48,7 +53,12 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
     private _onPull(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const result = this.pullCallback();
+            let result: InOut = null;
+            try {
+                result = this.pullCallback();
+            } catch (ex) {
+                return reject(ex);
+            }
             
             if (result !== undefined && result !== null) {
                 const pushPromises = new Array();

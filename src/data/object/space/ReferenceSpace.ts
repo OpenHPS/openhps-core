@@ -53,7 +53,7 @@ export class ReferenceSpace extends DataObject implements Space {
         ];
     }
 
-    public translation(dX: number, dY: number, dZ: number): ReferenceSpace {
+    public translation(dX: number, dY: number, dZ: number = 0): ReferenceSpace {
         this._translationMatrix = [
             [1, 0, 0, 0],
             [0, 1, 0, 0],
@@ -64,7 +64,7 @@ export class ReferenceSpace extends DataObject implements Space {
         return this;
     }
 
-    public scale(kX: number, kY: number, kZ: number): ReferenceSpace {
+    public scale(kX: number, kY: number, kZ: number = 1.0): ReferenceSpace {
         this._scaleMatrix = [
             [kX, 0, 0, 0],
             [0, kY, 0, 0],
@@ -75,11 +75,7 @@ export class ReferenceSpace extends DataObject implements Space {
         return this;
     }
 
-    public shear(): ReferenceSpace {
-        return this;
-    }
-
-    public rotation(rX: number, rY: number, rZ: number, angleUnit: AngleUnit = AngleUnit.RADIANS): ReferenceSpace {
+    public rotation(rX: number, rY: number, rZ: number = 0, angleUnit: AngleUnit = AngleUnit.RADIANS): ReferenceSpace {
         const radRx = angleUnit.convert(rX, AngleUnit.RADIANS);
         const radRy = angleUnit.convert(rY, AngleUnit.RADIANS);
         const radRz = angleUnit.convert(rZ, AngleUnit.RADIANS);

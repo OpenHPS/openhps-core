@@ -93,7 +93,7 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[]> extends Ab
                 pushPromises.push(node.push(frame));
             });
             
-            Promise.all(pushPromises).then(_ => {
+            Promise.all(pushPromises).then(() => {
                 resolve();
             }).catch(ex => {
                 reject(ex);

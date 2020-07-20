@@ -5,7 +5,7 @@ export class ServiceProxy<S extends Service> extends Service implements ProxyHan
     
     public get? (target: S, p: PropertyKey, receiver: any): any {
         if (isFunction((target as any)[p])) {
-            target.emit(p as string);
+            return this.createHandler(target, p);
         }
         return (target as any)[p];
     }
@@ -15,4 +15,17 @@ export class ServiceProxy<S extends Service> extends Service implements ProxyHan
         return true;
     }
 
+    public createHandler(target: S, p: PropertyKey): (...args: any[]) => any {
+        return (...args: any[]) => {
+            const key = p as string;     
+            if (key !== "emit" && 
+                key !== "emitAsync" && 
+                key !== "on" && 
+                key !== "once") {
+                target.emit(key, ...args);
+            }
+            return (target as any)[p](...args);
+        };
+    }
+    
 }

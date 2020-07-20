@@ -51,11 +51,9 @@ export abstract class ProcessingNode<In extends DataFrame | DataFrame[], Out ext
 
             // Push processed result to the next node
             Promise.all(servicePromises).then(() => {
-                Promise.all(pushPromises).then(() => {
-                    resolve();
-                }).catch(ex => {
-                    reject(ex);
-                });
+                return Promise.all(pushPromises);
+            }).then(() => {
+                resolve();
             }).catch(ex => {
                 reject(ex);
             });
