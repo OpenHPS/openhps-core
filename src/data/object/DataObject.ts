@@ -18,8 +18,6 @@ export class DataObject {
     private _currentPosition: AbsolutePosition;
     private _relativePositions: Map<string, Map<string, RelativePosition>> = new Map();
     private _parentUID: string;
-    @SerializableMapMember(String, Object)
-    private _nodeData: Map<string, any> = new Map();
     @SerializableMember()
     public createdTimestamp: number;
 
@@ -34,9 +32,6 @@ export class DataObject {
             this.displayName = object.displayName;
         if (this.getCurrentPosition() === undefined && object.getCurrentPosition() !== undefined)
             this.setCurrentPosition(object.getCurrentPosition().clone());
-        object._nodeData.forEach((value, key) => {
-            this._nodeData.set(key, value);
-        });
         object._relativePositions.forEach((value: Map<string, RelativePosition>, key: string) => {
             const newRelativePositions = this._relativePositions.get(key);
             if (newRelativePositions === undefined) {
@@ -248,32 +243,6 @@ export class DataObject {
         } else {
             return undefined;
         }
-    }
-
-    /**
-     * Get node data
-     * @param nodeUID Node UID 
-     */
-    public getNodeData(nodeUID: string): any {
-        return this._nodeData.get(nodeUID);
-    }
-
-    /**
-     * Add node data
-     * @param nodeUID Node UID 
-     * @param data Node data to save
-     */
-    public setNodeData(nodeUID: string, data: any): void {
-        this.addNodeData(nodeUID, data);
-    }
-
-    /**
-     * Add node data
-     * @param nodeUID Node UID 
-     * @param data Node data to save
-     */
-    public addNodeData(nodeUID: string, data: any): void {
-        this._nodeData.set(nodeUID, data);
     }
 
 }

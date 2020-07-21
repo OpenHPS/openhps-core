@@ -4,7 +4,7 @@ import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 
 import { expect } from 'chai';
 import 'mocha';
-import { MemoryDataObjectService } from '../../../src/service/MemoryDataObjectService';
+import { MemoryDataObjectService } from '../../../src/service/memory';
 
 describe('data object', () => {
     describe('service', () => {

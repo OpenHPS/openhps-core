@@ -10,7 +10,6 @@ describe('data', () => {
         it('should be serializable and deserializable', (done) => {
             const dataObject = new DataObject("123");
             dataObject.displayName = "abc";
-            dataObject.addNodeData('x', { test: [1, 2, 3] });
             dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject("ref_a"), 1));
             dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject("ref_b"), 2));
             dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject("ref_c"), 3));
@@ -64,7 +63,6 @@ describe('data', () => {
         it('should be serializable and deserializable', (done) => {
             const dataObject = new DummySensorObject("123");
             dataObject.displayName = "abc";
-            dataObject.setNodeData('x', { test: [1, 2, 3] });
             dataObject.horizontalFOV = 15;
             const serialized = DataSerializer.serialize(dataObject);
             const deserialized = DataSerializer.deserialize(serialized, DummySensorObject);

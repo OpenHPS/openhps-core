@@ -1,14 +1,14 @@
-import { DataFrame } from "../data";
-import { DataFrameService } from "./DataFrameService";
-import { JSONPath } from "jsonpath-plus";
+import { DataObject, AbsolutePosition } from "../../data";
+import { JSONPath } from 'jsonpath-plus';
+import { DataObjectService } from "../DataObjectService";
 import { isArray } from "util";
 
-export class MemoryDataFrameService<T extends DataFrame> extends DataFrameService<T> {
+export class MemoryDataObjectService<T extends DataObject> extends DataObjectService<T> {
     protected _data: Map<string, T> = new Map();
-    
-    public findByDataObjectUID(uid: string): Promise<T[]> {
+
+    public findByDisplayName(displayName: string): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[*].objects[?(@.uid == "${uid}")]`, json: Array.from(this._data.values()) });
+            const result = JSONPath({ path: `$[?(@.displayName == "${displayName}")]`, json: Array.from(this._data.values()) });
             const data = new Array();
             if (isArray(result)) {
                 result.forEach(r => {
@@ -21,33 +21,17 @@ export class MemoryDataFrameService<T extends DataFrame> extends DataFrameServic
         });
     }
 
-    public findBefore(timestamp: number): Promise<T[]> {
+    public findByCurrentPosition(location: AbsolutePosition): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[?(@._createdTimestamp <= ${timestamp})]`, json: Array.from(this._data.values()) });
-            const data = new Array();
-            if (isArray(result)) {
-                result.forEach(r => {
-                    data.push(r);
-                });
-            } else {
-                data.push(result);
-            }
-            resolve(data);
+            const result = JSONPath({ path: `$[?(@._currentPosition.point.toString() == "${location.point.toString()}")]`, json: Array.from(this._data.values()) });
+            resolve(result);
         });
     }
 
-    public findAfter(timestamp: number): Promise<T[]> {
+    public findByParentUID(parentUID: string): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[?(@._createdTimestamp >= ${timestamp})]`, json: Array.from(this._data.values()) });
-            const data = new Array();
-            if (isArray(result)) {
-                result.forEach(r => {
-                    data.push(r);
-                });
-            } else {
-                data.push(result);
-            }
-            resolve(data);
+            const result = JSONPath({ path: `$[?(@.parentUID == "${parentUID}")]`, json: Array.from(this._data.values()) });
+            resolve(result);
         });
     }
 

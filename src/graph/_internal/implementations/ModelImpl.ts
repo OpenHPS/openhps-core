@@ -2,8 +2,7 @@ import { DataFrame, DataObject, ReferenceSpace } from "../../../data";
 import { Service, DataService } from "../../../service";
 import { GraphImpl } from "./GraphImpl";
 import { Model } from "../../../Model";
-import { MemoryDataObjectService } from "../../../service/MemoryDataObjectService";
-import { MemoryDataFrameService } from "../../../service/MemoryDataFrameService";
+import { MemoryDataFrameService, MemoryDataObjectService } from "../../../service/memory";
 import { ServiceProxy } from "../../../service/_internal";
 
 /**
