@@ -1,5 +1,4 @@
-import { LinearVelocityUnit, AngularVelocityUnit } from "../../utils";
-import { SerializableObject, SerializableArrayMember, SerializableMember } from "../decorators";
+import { SerializableObject, SerializableMember } from "../decorators";
 import { AngularVelocity } from "./AngularVelocity";
 import { LinearVelocity } from "./LinearVelocity";
 

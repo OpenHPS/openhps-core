@@ -1,7 +1,6 @@
 import { RelativePosition } from "./RelativePosition";
 import { AngleUnit } from '../../utils';
 import { SerializableObject, SerializableMember } from '../decorators';
-import { DataObject } from '../object/DataObject';
 
 /**
  * Relative location to another reference object measured in the angle.

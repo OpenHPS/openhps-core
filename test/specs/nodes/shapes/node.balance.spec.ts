@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, DataFrame } from '../../../src';
-import { TimeConsumingNode } from '../../mock/nodes/TimeConsumingNode';
-import { BalanceNode } from '../../../src/nodes/shapes/BalanceNode';
-import { LoggingSinkNode } from '../../../src/nodes/sink';
+import { ModelBuilder, DataFrame } from '../../../../src';
+import { TimeConsumingNode } from '../../../mock/nodes/TimeConsumingNode';
+import { BalanceNode } from '../../../../src/nodes/shapes/BalanceNode';
+import { LoggingSinkNode } from '../../../../src/nodes/sink';
 
 describe('node', () => {
     describe('balance', () => {

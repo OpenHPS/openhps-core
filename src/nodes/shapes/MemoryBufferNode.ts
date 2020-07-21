@@ -2,10 +2,11 @@ import { DataFrame } from "../../data/DataFrame";
 import { Node } from "../../Node";
 
 export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut> {
-    private _dataFrames: InOut[];
+    private _dataFrames: InOut[] = new Array();
 
-    constructor() {
+    constructor(maxSize?: number) {
         super();
+
         this.on('pull', this.onPull.bind(this));
         this.on('push', this.onPush.bind(this));
     }

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
-import { LoggingSinkNode } from '../../../src/nodes/sink';
-import { DataFrame, DataObject, Absolute2DPosition, RelativeDistancePosition, ModelBuilder, ListSourceNode, SourceMergeNode, TimeUnit } from '../../../src';
+import { LoggingSinkNode } from '../../../../src/nodes/sink';
+import { DataFrame, DataObject, Absolute2DPosition, RelativeDistancePosition, ModelBuilder, ListSourceNode, SourceMergeNode, TimeUnit } from '../../../../src';
 
 describe('node', () => {
     describe('source merge', () => {

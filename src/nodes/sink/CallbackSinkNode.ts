@@ -1,7 +1,7 @@
 import { DataFrame } from "../../data/DataFrame";
 import { SinkNode } from "../SinkNode";
 
-export class CallbackSinkNode<In extends DataFrame> extends SinkNode<In> {
+export class CallbackSinkNode<In extends DataFrame | DataFrame[]> extends SinkNode<In> {
     private _callback: (frame: In) => void;
 
     constructor(callback: (frame: In) => void = function(frame: In) { }) {

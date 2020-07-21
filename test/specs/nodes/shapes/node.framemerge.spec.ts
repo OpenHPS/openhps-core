@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
-import { LoggingSinkNode, CallbackSinkNode } from '../../../src/nodes/sink';
-import { ModelBuilder, CallbackSourceNode, DataFrame, DataObject, FrameMergeNode, TimeUnit } from '../../../src';
+import { LoggingSinkNode, CallbackSinkNode } from '../../../../src/nodes/sink';
+import { ModelBuilder, CallbackSourceNode, DataFrame, DataObject, FrameMergeNode, TimeUnit } from '../../../../src';
 
 describe('node', () => {
     describe('frame merge node', () => {

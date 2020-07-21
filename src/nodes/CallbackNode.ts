@@ -1,7 +1,7 @@
 import { DataFrame } from "../data/DataFrame";
 import { Node } from "../Node";
 
-export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
+export class CallbackNode<InOut extends DataFrame | DataFrame[]> extends Node<InOut, InOut> {
     private _pushCallback: (frame: InOut) => void;
     private _pullCallback: () => InOut;
 

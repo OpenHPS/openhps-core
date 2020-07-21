@@ -1,4 +1,4 @@
-import { Unit, LengthUnit } from "../../utils";
+import { LengthUnit } from "../../utils";
 import { Velocity } from "./Velocity";
 import { Orientation } from "./Orientation";
 import { SerializableObject, SerializableMember } from "../decorators";

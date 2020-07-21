@@ -1,7 +1,7 @@
 import { DataFrame } from "../../data/DataFrame";
 import { SinkNode } from "../SinkNode";
 
-export class StorageSinkNode<In extends DataFrame> extends SinkNode<In> {
+export class StorageSinkNode<In extends DataFrame | DataFrame[]> extends SinkNode<In> {
 
     constructor() {
         super();
