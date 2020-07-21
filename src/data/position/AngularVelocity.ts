@@ -13,7 +13,7 @@ export class AngularVelocity {
     @SerializableMember()
     public unit?: AngularVelocityUnit<any, any>;
     
-    constructor(x?: number, y?: number, z?: number) {
+    constructor(x: number = 0, y: number = 0, z: number = 0, unit?: AngularVelocityUnit<any, any>) {
         this.x = x;
         this.y = y;
         this.z = z;

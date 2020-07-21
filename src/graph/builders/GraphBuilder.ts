@@ -7,7 +7,7 @@ import { TimeUnit } from "../../utils";
 import { FrameChunkNode, FrameFlattenNode, FrameFilterNode, ObjectMergeNode, MemoryBufferNode } from "../../nodes/shapes";
 import { ObjectFilterNode } from "../../nodes/shapes/ObjectFilterNode";
 import { FrameDebounceNode } from "../../nodes/shapes/FrameDebounceNode";
-import { filter, boolean } from "mathjs";
+import { ReferenceSpaceConversionNode } from "../../nodes/processing/ReferenceSpaceConversionNode";
 
 /**
  * Graph builder
@@ -222,6 +222,22 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     public debounce(timeout: number = 100, timeoutUnit: TimeUnit = TimeUnit.MILLI): GraphShapeBuilder<Builder> {
         return this.via(new FrameDebounceNode(timeout, timeoutUnit));
+    }
+
+    /**
+     * Convert positions of all objects to a certain reference space
+     * @param referenceSpace Reference space to convert to
+     */
+    public convertToSpace(referenceSpace: ReferenceSpace | string): GraphShapeBuilder<Builder> {
+        return this.via(new ReferenceSpaceConversionNode(referenceSpace, false));
+    }
+    
+    /**
+     * Convert positions of all objects from a certain reference space
+     * @param referenceSpace Reference space to convert from
+     */
+    public convertFromSpace(referenceSpace: ReferenceSpace | string): GraphShapeBuilder<Builder> {
+        return this.via(new ReferenceSpaceConversionNode(referenceSpace, true));
     }
 
     /**

@@ -64,7 +64,7 @@ describe('node', () => {
                         expect(position.x).to.equal(-7);
                         expect(position.y).to.equal(-7);
                     }))
-                    .via(new ReferenceSpaceConversionNode(myReferenceSpace.uid, true))
+                    .convertFromSpace(myReferenceSpace.uid)
                     .to(new CallbackSinkNode()))    // Sink node stores data objects
                 .build().then((model: Model) => {
                     const object = new DataObject("test");
