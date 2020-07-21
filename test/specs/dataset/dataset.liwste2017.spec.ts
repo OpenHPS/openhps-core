@@ -18,6 +18,9 @@ describe('dataset', () => {
         before((done) => {
             // Calibration model to set-up or train the model
             ModelBuilder.create()
+                .withLogger((level: string, log: any) => {
+                    // Todo, add logger
+                })
                 .from(new CSVDataSource("test/data/liwste2017/beacons.csv", (row: any) => {
                     const dataFrame = new DataFrame();
                     const beacon = new DataObject(`beacon_${row.Beacon}`);

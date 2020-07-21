@@ -7,6 +7,7 @@ import { TimeUnit } from "../../utils";
 import { FrameChunkNode, FrameFlattenNode, FrameFilterNode, ObjectMergeNode, MemoryBufferNode } from "../../nodes/shapes";
 import { ObjectFilterNode } from "../../nodes/shapes/ObjectFilterNode";
 import { FrameDebounceNode } from "../../nodes/shapes/FrameDebounceNode";
+import { filter, boolean } from "mathjs";
 
 /**
  * Graph builder
@@ -195,7 +196,9 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      * Filter frames based on function
      * @param filterFn Filter function (true to keep, false to remove)
      */
-    public filter(filterFn: (frame: DataFrame) => boolean): GraphShapeBuilder<Builder> {
+    public filter(filterFn: (object: DataObject, frame?: DataFrame) => boolean): GraphShapeBuilder<Builder>;
+    public filter(filterFn: (frame: DataFrame) => boolean): GraphShapeBuilder<Builder>;
+    public filter(filterFn: (_: any) => boolean): GraphShapeBuilder<Builder> {
         return this.via(new FrameFilterNode(filterFn));
     }
 
@@ -224,8 +227,8 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     /**
      * Buffer pushed objects
      */
-    public buffer(): GraphShapeBuilder<Builder> {
-        return this.via(new MemoryBufferNode());
+    public buffer(maxSize?: number): GraphShapeBuilder<Builder> {
+        return this.via(new MemoryBufferNode(maxSize));
     }
 
     public to(...nodes: Array<AbstractSinkNode<any> | string>): Builder {

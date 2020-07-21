@@ -5,6 +5,15 @@ import * as math from 'mathjs';
 
 describe('data', () => {
     describe('reference space', () => {
+
+        it('should initialize with a given transformation matrix', () => {
+            let referenceSpace = new ReferenceSpace(undefined, 
+                    [[1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [0, 0, 0, 1]]);
+        });
+
         describe('translation', () => {
 
             it('should shift position', () => {
