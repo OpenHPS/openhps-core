@@ -115,4 +115,8 @@ export class ReferenceSpace extends DataObject implements Space {
         return this._transformationMatrix;
     }
 
+    public get rotationMatrix(): number[][] {
+        return this._rotationMatrix;
+    }
+
 }

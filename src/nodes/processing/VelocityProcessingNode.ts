@@ -1,6 +1,7 @@
-import { DataFrame, DataObject, AbsolutePosition, ReferenceSpace } from "../../data";
+import { DataFrame, DataObject, AbsolutePosition, ReferenceSpace, Orientation } from "../../data";
 import * as math from 'mathjs';
 import { ObjectProcessingNode } from "../ObjectProcessingNode";
+import { AngularVelocityUnit, LinearVelocityUnit, AngleUnit } from "../../utils";
 
 /**
  * Linear and angular velocity processing
@@ -22,9 +23,9 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                     }
 
                     // Process the linear velocity
-                    const dX = lastPosition.velocity.linear.x;
-                    const dY = lastPosition.velocity.linear.y;
-                    const dZ = lastPosition.velocity.linear.z;
+                    const dX = lastPosition.velocity.linear.unit.convert(lastPosition.velocity.linear.x, LinearVelocityUnit.METERS_PER_SECOND);
+                    const dY = lastPosition.velocity.linear.unit.convert(lastPosition.velocity.linear.y, LinearVelocityUnit.METERS_PER_SECOND);
+                    const dZ = lastPosition.velocity.linear.unit.convert(lastPosition.velocity.linear.z, LinearVelocityUnit.METERS_PER_SECOND);
                     const translationMatrix = [
                         [1, 0, 0, 0],
                         [0, 1, 0, 0],
@@ -32,9 +33,9 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                         [dX, dY, dZ, 1]
                     ];
                     // Process the angular velocity
-                    const rX = lastPosition.velocity.angular.x;
-                    const rY = lastPosition.velocity.angular.y;
-                    const rZ = lastPosition.velocity.angular.z;
+                    const rX = lastPosition.velocity.angular.unit.convert(lastPosition.velocity.angular.x, AngularVelocityUnit.RADIANS_PER_SECOND);
+                    const rY = lastPosition.velocity.angular.unit.convert(lastPosition.velocity.angular.y, AngularVelocityUnit.RADIANS_PER_SECOND);
+                    const rZ = lastPosition.velocity.angular.unit.convert(lastPosition.velocity.angular.z, AngularVelocityUnit.RADIANS_PER_SECOND);
                     const rotMatrixZ = [
                         [1, 0, 0, 0],
                         [0, Math.cos(rZ), -Math.sin(rZ), 0],
@@ -55,17 +56,23 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                     ];
                     const rotationMatrix = math.multiply(math.multiply(rotMatrixX, rotMatrixY), rotMatrixZ);
                     const transformationMatrix = math.multiply(translationMatrix, rotationMatrix);
-                    const relativePosition = math.multiply([0, 0, 0, 1], transformationMatrix);
+                    const relativePosition = math.multiply(math.multiply([0, 0, 0, 1], transformationMatrix), deltaTime / 1000.);
+                    const relativeOrientation = math.multiply([rX, rY, rZ], deltaTime / 1000.);
 
                     // Predict the next location
                     const newPosition = lastPosition;
                     const point = newPosition.point;
-                    // TODO: Cleanup
                     if (point.length === 3) {
                         point.push(1);
                     } else {
                         point.push(0, 1);
                     }
+                    // New orientation in radians
+                    const newOrientation = math.add(newPosition.orientation.toVector(AngleUnit.RADIANS), relativeOrientation) as number[];
+                    newOrientation[0] = AngleUnit.RADIANS.convert(newOrientation[0], newPosition.orientation.unit);
+                    newOrientation[1] = AngleUnit.RADIANS.convert(newOrientation[1], newPosition.orientation.unit);
+                    newOrientation[2] = AngleUnit.RADIANS.convert(newOrientation[2], newPosition.orientation.unit);
+                    newPosition.orientation = Orientation.fromVector(newOrientation, newPosition.orientation.unit);
                     newPosition.point = math.add(point, relativePosition) as number[];
                     object.setCurrentPosition(newPosition);
                 }

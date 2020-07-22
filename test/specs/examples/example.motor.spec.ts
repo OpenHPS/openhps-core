@@ -13,7 +13,7 @@ describe('example', () => {
                     .from()
                     .via(new VelocityProcessingNode())
                     .to(new CallbackSinkNode((frame: DataFrame) => {
-                        console.log(frame.source);
+                        //console.log(frame.source);
                     })))
                 .build().then((m: Model<any, any>) => {
                     model = m;

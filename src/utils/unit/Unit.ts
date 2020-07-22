@@ -48,7 +48,7 @@ export class Unit {
             const existingUnit = Unit.findUnitByHash(hash);
             if (existingUnit !== undefined) {
                 this._toReference = existingUnit._toReference;
-                this._fromReference = existingUnit._toReference;
+                this._fromReference = existingUnit._fromReference;
                 this._hash = hash;
             }
         }

@@ -6,6 +6,7 @@ import * as uuidv4 from 'uuid/v4';
 import { DataSerializer } from '../DataSerializer';
 import { Space } from "./space/Space";
 import * as math from 'mathjs';
+import { LinearVelocity, AngularVelocity, Orientation } from "../position";
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -131,17 +132,33 @@ export class DataObject {
      */
     public getCurrentPosition(referenceSpace?: Space): AbsolutePosition {
         if (referenceSpace !== undefined && this._currentPosition !== undefined) {
-            // Convert the global space to reference space
-            const transposedPosition = this._currentPosition.clone<AbsolutePosition>();
-            const point = transposedPosition.point;
-            // TODO: Cleanup
+            const transformedPosition = this._currentPosition.clone<AbsolutePosition>();
+            const point = transformedPosition.point;
             if (point.length === 3) {
                 point.push(1);
             } else {
                 point.push(0, 1);
             }
-            transposedPosition.point = math.multiply(point, math.inv(referenceSpace.transformationMatrix));
-            return transposedPosition;
+            const vLinear = transformedPosition.velocity.linear.toVector();
+            vLinear.push(1);
+            const vAngular = transformedPosition.velocity.angular.toVector();
+            vAngular.push(1);
+            const orientation = transformedPosition.orientation.toVector();
+            orientation.push(1);
+
+            // Inverse of transformation and rotation matrix
+            const invTransformationMatrix = math.inv(referenceSpace.transformationMatrix);
+            const invRotationMatrix = math.inv(referenceSpace.rotationMatrix);
+
+            // Transform the point using the transformation matrix
+            transformedPosition.point = math.multiply(point, invTransformationMatrix);
+            // Transform the velocity (rotation)
+            transformedPosition.velocity.linear = LinearVelocity.fromVector(math.multiply(vLinear, invRotationMatrix));
+            transformedPosition.velocity.angular = AngularVelocity.fromVector(math.multiply(vAngular, invRotationMatrix));
+            // Transform the orientation (rotation)
+            transformedPosition.orientation = Orientation.fromVector(math.multiply(orientation, invRotationMatrix));
+
+            return transformedPosition;
         } else {
             return this._currentPosition;
         }
@@ -154,17 +171,29 @@ export class DataObject {
      */
     public setCurrentPosition(position: AbsolutePosition, referenceSpace?: Space) {
         if (referenceSpace !== undefined) {
-            // Convert the reference space to the global space
-            const transposedPosition = position.clone<AbsolutePosition>();
-            const point = transposedPosition.point;
-            // TODO: Cleanup
+            const transformedPosition = position.clone<AbsolutePosition>();
+            const point = transformedPosition.point;
             if (point.length === 3) {
                 point.push(1);
             } else {
                 point.push(0, 1);
             }
-            transposedPosition.point = math.multiply(point, referenceSpace.transformationMatrix);
-            this._currentPosition = transposedPosition;
+            const vLinear = transformedPosition.velocity.linear.toVector();
+            vLinear.push(1);
+            const vAngular = transformedPosition.velocity.angular.toVector();
+            vAngular.push(1);
+            const orientation = transformedPosition.orientation.toVector();
+            orientation.push(1);
+
+            // Transform the point using the transformation matrix
+            transformedPosition.point = math.multiply(point, referenceSpace.transformationMatrix);
+            // Transform the velocity (rotation)
+            transformedPosition.velocity.linear = LinearVelocity.fromVector(math.multiply(vLinear, referenceSpace.rotationMatrix));
+            transformedPosition.velocity.angular = AngularVelocity.fromVector(math.multiply(vAngular, referenceSpace.rotationMatrix));
+            // Transform the orientation (rotation)
+            transformedPosition.orientation = Orientation.fromVector(math.multiply(orientation, referenceSpace.rotationMatrix));
+
+            this._currentPosition = transformedPosition;
         } else {
             this._currentPosition = position;
         }

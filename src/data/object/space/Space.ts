@@ -16,4 +16,9 @@ export interface Space {
      * Get the transformation matrix from this reference space to the relative space
      */
     transformationMatrix: number[][];
+
+    /**
+     * Get the rotation matrix for this reference space to the relative space
+     */
+    rotationMatrix: number[][];
 }
