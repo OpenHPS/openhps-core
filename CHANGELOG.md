@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-alpha.10](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v0.1.0-alpha.9...v0.1.0-alpha.10) (2020-07-22)
+
+
+### Bug Fixes
+
+* velocity processing and unit deserialisation fix ([71750a2](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/71750a249973724f5d2927c6a77fd71e7c48ebaa))
+
 ## [0.1.0-alpha.9](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v0.1.0-alpha.8...v0.1.0-alpha.9) (2020-07-21)
 
 
