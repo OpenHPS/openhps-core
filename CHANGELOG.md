@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-alpha.11](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v0.1.0-alpha.10...v0.1.0-alpha.11) (2020-07-22)
+
+
+### Bug Fixes
+
+* velocity processes orientation ([c1ef294](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/c1ef294c26b3d4142095582e2301f2f8dd5b6908))
+
 ## [0.1.0-alpha.10](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v0.1.0-alpha.9...v0.1.0-alpha.10) (2020-07-22)
 
 
