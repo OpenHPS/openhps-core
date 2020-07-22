@@ -26,12 +26,13 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                     const dX = lastPosition.velocity.linear.unit.convert(lastPosition.velocity.linear.x, LinearVelocityUnit.METERS_PER_SECOND);
                     const dY = lastPosition.velocity.linear.unit.convert(lastPosition.velocity.linear.y, LinearVelocityUnit.METERS_PER_SECOND);
                     const dZ = lastPosition.velocity.linear.unit.convert(lastPosition.velocity.linear.z, LinearVelocityUnit.METERS_PER_SECOND);
-                    const translationMatrix = [
+                    const translationMatrix = math.multiply([
                         [1, 0, 0, 0],
                         [0, 1, 0, 0],
                         [0, 0, 1, 0],
                         [dX, dY, dZ, 1]
-                    ];
+                    ], deltaTime / 1000.);
+                    
                     // Process the angular velocity
                     const rX = lastPosition.velocity.angular.unit.convert(lastPosition.velocity.angular.x, AngularVelocityUnit.RADIANS_PER_SECOND);
                     const rY = lastPosition.velocity.angular.unit.convert(lastPosition.velocity.angular.y, AngularVelocityUnit.RADIANS_PER_SECOND);
@@ -54,9 +55,10 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                         [0, 0, 1, 0],
                         [0, 0, 0, 1]
                     ];
-                    const rotationMatrix = math.multiply(math.multiply(rotMatrixX, rotMatrixY), rotMatrixZ);
+                    const rotationMatrix = math.multiply(math.multiply(math.multiply(rotMatrixX, rotMatrixY), rotMatrixZ), deltaTime / 1000.);
                     const transformationMatrix = math.multiply(translationMatrix, rotationMatrix);
-                    const relativePosition = math.multiply(math.multiply([0, 0, 0, 1], transformationMatrix), deltaTime / 1000.);
+                    // The relative position is the transformation matrix rotated using the orientation
+                    const relativePosition = math.multiply(math.multiply([0, 0, 0, 1], transformationMatrix), lastPosition.orientation.toRotationMatrix());
                     const relativeOrientation = math.multiply([rX, rY, rZ], deltaTime / 1000.);
 
                     // Predict the next location

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { VelocityProcessingNode, DataFrame, DataObject, Absolute2DPosition, LinearVelocity, Model, ModelBuilder, CallbackSourceNode, StorageSinkNode, CallbackSinkNode, AngularVelocity, AngleUnit, AngularVelocityUnit } from '../../../src';
+import { VelocityProcessingNode, DataFrame, DataObject, Absolute2DPosition, LinearVelocity, Model, ModelBuilder, CallbackSourceNode, StorageSinkNode, CallbackSinkNode, AngularVelocity, AngleUnit, AngularVelocityUnit, Orientation } from '../../../src';
 import { exp } from 'mathjs';
 
 describe('node', () => {
@@ -39,6 +39,26 @@ describe('node', () => {
             }, 500);
         });
 
+        it('should process linear velocity in a given direction (orientation)', (done) => {
+            callbackSink.callback = (frame: DataFrame) => {
+                const position = frame.source.getCurrentPosition();
+                expect(Math.round(position.point[0])).to.equal(3);
+                expect(Math.round(position.point[1] * 100.) / 100.).to.equal(2.5);
+                done();
+            };
+
+            const frame = new DataFrame();
+            const object = new DataObject();
+            object.setCurrentPosition(new Absolute2DPosition(3, 3));
+            object.getCurrentPosition().velocity.linear = new LinearVelocity(2, 2);
+            object.getCurrentPosition().orientation = new Orientation(90, 90, 0, AngleUnit.DEGREES);
+            frame.source = object;
+
+            setTimeout(() => {
+                Promise.resolve(model.push(frame));
+            }, 500);
+        });
+
         it('should process angular velocity on the orientation', (done) => {
             callbackSink.callback = (frame: DataFrame) => {
                 const position = frame.source.getCurrentPosition();
@@ -65,9 +85,9 @@ describe('node', () => {
             callbackSink.callback = (frame: DataFrame) => {
                 const position = frame.source.getCurrentPosition();
                 // Linear position is (3, 3) + the linear and angular movement
-                expect(Math.round(position.point[0])).to.equal(5);
-                expect(Math.round(position.point[1])).to.equal(1);
-                // Orientation should changed
+                expect(Math.round(position.point[0])).to.equal(4);
+                expect(Math.round(position.point[1])).to.equal(2);
+                // Orientation should change
                 expect(Math.round(position.orientation.toVector(AngleUnit.DEGREES)[0])).to.equal(45);
                 done();
             };
