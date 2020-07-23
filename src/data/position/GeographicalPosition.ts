@@ -168,6 +168,11 @@ export class GeographicalPosition extends AbsolutePosition {
         });
     }
 
+    /**
+     * Multilaterate the given points and distances
+     * @param points Geographical positions to trilaterate
+     * @param distances Distances to each position
+     */
     public static trilaterate(points: GeographicalPosition[], distances: number[]): Promise<GeographicalPosition> {
         return new Promise<GeographicalPosition>((resolve, reject) => {
             const convertedPoints = new Array();
@@ -176,6 +181,7 @@ export class GeographicalPosition extends AbsolutePosition {
                 const convertedPoint = new Absolute3DPosition(point[0], point[1], point[2]);
                 convertedPoints.push(convertedPoint);
             });
+
             Absolute3DPosition.trilaterate(convertedPoints, distances).then(point3d => {
                 const geopoint = new GeographicalPosition();
                 geopoint.point = point3d.point;
