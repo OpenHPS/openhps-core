@@ -103,13 +103,13 @@ describe('data', () => {
                 // Create a test object
                 const object = new DataObject("test");
                 // Object is currently at a known location (2, 2, 1)
-                object.setCurrentPosition(new Absolute3DPosition(2, 2, 1));
+                object.setPosition(new Absolute3DPosition(2, 2, 1));
 
                 // Insert into the system
                 model.push(new DataFrame(object)).then(() => {
                     // Confirm that it is inserted
                     model.findDataService(DataObject).findByUID("test").then(storedObject => {
-                        const storedLocation = storedObject.getCurrentPosition() as Absolute3DPosition;
+                        const storedLocation = storedObject.getPosition() as Absolute3DPosition;
                         expect(storedLocation.x).to.eq(2);
                         expect(storedLocation.y).to.eq(2);
                         expect(storedLocation.z).to.eq(1);
@@ -130,7 +130,7 @@ describe('data', () => {
                 // e.g. WebXR providing a location (5,5,5) with a different origin
                 callbackNode.pushCallback = (frame: DataFrame) => {
                     const object = frame.getObjectByUID("test");
-                    object.setCurrentPosition(new Absolute3DPosition(5, 5, 5), calibratedReferenceSpace);
+                    object.setPosition(new Absolute3DPosition(5, 5, 5), calibratedReferenceSpace);
                 };
 
                 Promise.resolve(model.push(new DataFrame(new DataObject("test")))).then(() => {
@@ -138,7 +138,7 @@ describe('data', () => {
                 }).then(storedObject => {
                     // This will return the current position relative to the 'calibratedReferenceSpace'
                     // Meaning the position will be (5, 5, 5)
-                    const relativePosition = storedObject.getCurrentPosition(calibratedReferenceSpace) as Absolute3DPosition;
+                    const relativePosition = storedObject.getPosition(calibratedReferenceSpace) as Absolute3DPosition;
                     expect(relativePosition.x).to.equal(5);
                     expect(relativePosition.y).to.equal(5);
                     expect(relativePosition.z).to.equal(5);
@@ -147,7 +147,7 @@ describe('data', () => {
                     // The origin of the relative 3d position (0, 0, 0) will translate
                     // to the absolute position (2, 2, 1)
                     // Meaning the position (5, 5, 5) will transform to (7, 7, 6)
-                    const transformedPosition = storedObject.getCurrentPosition() as Absolute3DPosition;
+                    const transformedPosition = storedObject.getPosition() as Absolute3DPosition;
                     expect(transformedPosition.x).to.equal(7);
                     expect(transformedPosition.y).to.equal(7);
                     expect(transformedPosition.z).to.equal(6);
@@ -171,10 +171,10 @@ describe('data', () => {
                 callbackNode.pushCallback = (frame: DataFrame) => {
                     const object = frame.getObjectByUID("test");
                     // Get the current position using the reference space of this node
-                    const currentPosition = object.getCurrentPosition(calibratedReferenceSpace) as Absolute3DPosition;
+                    const currentPosition = object.getPosition(calibratedReferenceSpace) as Absolute3DPosition;
                     currentPosition.x += 1; // Move foward on the X axis (1, 0, 0)
                     // However, according to the global reference space we moved backwards (1, 2, 1)
-                    object.setCurrentPosition(currentPosition, calibratedReferenceSpace);
+                    object.setPosition(currentPosition, calibratedReferenceSpace);
                 };
 
                 Promise.resolve(model.push(new DataFrame(new DataObject("test")))).then(() => {
@@ -182,7 +182,7 @@ describe('data', () => {
                 }).then(storedObject => {
                     // This will return the current position relative to the 'calibratedReferenceSpace'
                     // Meaning the position will be (1, 0, 0)
-                    const relativePosition = storedObject.getCurrentPosition(calibratedReferenceSpace) as Absolute3DPosition;
+                    const relativePosition = storedObject.getPosition(calibratedReferenceSpace) as Absolute3DPosition;
                     expect(Math.round(relativePosition.x)).to.equal(1);
                     expect(Math.round(relativePosition.y)).to.equal(0);
                     expect(Math.round(relativePosition.z)).to.equal(0);
@@ -191,7 +191,7 @@ describe('data', () => {
                     // The origin of the relative 3d position (0, 0, 0) will translate
                     // to the absolute position (2, 2, 1) and the rotation will also be taken into account
                     // Meaning the position (1, 0, 0) will transform to (1, 2, 1)
-                    const transformedPosition = storedObject.getCurrentPosition() as Absolute3DPosition;
+                    const transformedPosition = storedObject.getPosition() as Absolute3DPosition;
                     expect(Math.round(transformedPosition.x)).to.equal(1);
                     expect(Math.round(transformedPosition.y)).to.equal(2);
                     expect(Math.round(transformedPosition.z)).to.equal(1);

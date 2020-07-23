@@ -40,7 +40,7 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
                 const filteredRelativePositions = new Array<RelativeDistancePosition>();
                 const objectCache = new Map<string, DataObject>();
                 referenceObjects.forEach((referenceObject: DataObject) => {
-                    if (referenceObject.getCurrentPosition() !== undefined) {
+                    if (referenceObject.getPosition() !== undefined) {
                         objectCache.set(referenceObject.uid, referenceObject);
                         index.get(referenceObject.uid).forEach(relativePosition => {
                             filteredRelativePositions.push(relativePosition);
@@ -54,7 +54,7 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
                 filteredRelativePositions.forEach(filteredRelativePosition => {
                     const object = objectCache.get(filteredRelativePosition.referenceObjectUID);
                     objects.push(object);
-                    points.push(object.getCurrentPosition());
+                    points.push(object.getPosition());
                     distances.push(filteredRelativePosition.distance);
                 });
 
@@ -67,28 +67,28 @@ export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessing
                     case 3: // Trilateration
                     default:
                         switch (true) {
-                            case objects[0].getCurrentPosition() instanceof Absolute3DPosition:
+                            case objects[0].getPosition() instanceof Absolute3DPosition:
                                 Absolute3DPosition.trilaterate(points, distances).then(location => {
                                     if (location !== null)
-                                        dataObject.setCurrentPosition(location);
+                                        dataObject.setPosition(location);
                                     resolve(dataObject);
                                 }).catch(ex => {
                                     reject(ex);
                                 });
                                 break;
-                            case objects[0].getCurrentPosition() instanceof Absolute2DPosition:
+                            case objects[0].getPosition() instanceof Absolute2DPosition:
                                 Absolute2DPosition.trilaterate(points, distances).then(location => {
                                     if (location !== null)
-                                        dataObject.setCurrentPosition(location);
+                                        dataObject.setPosition(location);
                                     resolve(dataObject);
                                 }).catch(ex => {
                                     reject(ex);
                                 });
                                 break;
-                            case objects[0].getCurrentPosition() instanceof GeographicalPosition:
+                            case objects[0].getPosition() instanceof GeographicalPosition:
                                 GeographicalPosition.trilaterate(points, distances).then(location => {
                                     if (location !== null)
-                                        dataObject.setCurrentPosition(location);
+                                        dataObject.setPosition(location);
                                     resolve(dataObject);
                                 }).catch(ex => {
                                     reject(ex);

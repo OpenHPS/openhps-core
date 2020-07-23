@@ -5,7 +5,7 @@ import { SerializableObject, SerializableMember } from "../decorators";
 import { DataSerializer } from "../DataSerializer";
 
 /**
- * General position class consisting of the position, orientation and velocity.
+ * General abstract position class consisting of orientation and velocity.
  * Regardless on the type of position, each position should have a specific accuracy.
  */
 @SerializableObject()

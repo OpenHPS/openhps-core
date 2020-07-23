@@ -15,7 +15,7 @@ describe('node', () => {
 
             const frameB = new DataFrame();
             frameB.source = new DataObject("abc");
-            frameB.source.currentPosition = new Absolute2DPosition(3, 4);
+            frameB.source.setPosition(new Absolute2DPosition(3, 4));
 
             ModelBuilder.create()
                 .from(new ListSourceNode([frameA]), new ListSourceNode([frameB]))

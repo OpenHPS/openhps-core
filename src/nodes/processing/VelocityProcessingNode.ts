@@ -10,8 +10,8 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
 
     public processObject(object: DataObject): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
-            if (object.getCurrentPosition() !== undefined) {
-                const lastPosition = object.getCurrentPosition().clone<AbsolutePosition>();
+            if (object.getPosition() !== undefined) {
+                const lastPosition = object.getPosition().clone<AbsolutePosition>();
                 if (lastPosition.velocity !== undefined) {
                     // Time since current calculation and previous velocity
                     const deltaTime = new Date().getTime() - lastPosition.timestamp;
@@ -76,7 +76,7 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                     newOrientation[2] = AngleUnit.RADIANS.convert(newOrientation[2], newPosition.orientation.unit);
                     newPosition.orientation = Orientation.fromVector(newOrientation, newPosition.orientation.unit);
                     newPosition.point = math.add(point, relativePosition) as number[];
-                    object.setCurrentPosition(newPosition);
+                    object.setPosition(newPosition);
                 }
             }
             resolve(object);

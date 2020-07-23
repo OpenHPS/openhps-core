@@ -21,9 +21,9 @@ export class MemoryDataObjectService<T extends DataObject> extends DataObjectSer
         });
     }
 
-    public findByCurrentPosition(location: AbsolutePosition): Promise<T[]> {
+    public findByPosition(location: AbsolutePosition): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[?(@._currentPosition.point.toString() == "${location.point.toString()}")]`, json: Array.from(this._data.values()) });
+            const result = JSONPath({ path: `$[?(@._position.point.toString() == "${location.point.toString()}")]`, json: Array.from(this._data.values()) });
             resolve(result);
         });
     }

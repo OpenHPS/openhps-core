@@ -13,11 +13,11 @@ describe('data object', () => {
         before((done) => {
             objectDataService = new MemoryDataObjectService(DataObject);
             var object1 = new DataObject();
-            object1.currentPosition = new Absolute2DPosition(5, 6);
+            object1.setPosition(new Absolute2DPosition(5, 6));
             object1.displayName = "Test";
 
             var object2 = new DataObject();
-            object2.currentPosition = new Absolute3DPosition(5, 6, 2);
+            object2.setPosition(new Absolute3DPosition(5, 6, 2));
             object2.displayName = "Test";
 
             const insertPromises = new Array();
@@ -32,9 +32,9 @@ describe('data object', () => {
         });
         
         it('should find a object by 2d position', (done) => {
-            objectDataService.findByCurrentPosition(new Absolute2DPosition(5, 6)).then(objects => {
-                expect(objects[0].currentPosition).to.be.instanceOf(Absolute2DPosition);
-                const location = objects[0].currentPosition as Absolute2DPosition;
+            objectDataService.findByPosition(new Absolute2DPosition(5, 6)).then(objects => {
+                expect(objects[0].getPosition()).to.be.instanceOf(Absolute2DPosition);
+                const location = objects[0].getPosition() as Absolute2DPosition;
                 expect(location.x).to.equal(5);
                 expect(location.y).to.equal(6);
                 expect(objects[0].displayName).to.equal("Test");
@@ -45,9 +45,9 @@ describe('data object', () => {
         });
 
         it('should find a object by 3d position', (done) => {
-            objectDataService.findByCurrentPosition(new Absolute3DPosition(5, 6, 2)).then(objects => {
-                expect(objects[0].currentPosition).to.be.instanceOf(Absolute3DPosition);
-                const location = objects[0].currentPosition as Absolute3DPosition;
+            objectDataService.findByPosition(new Absolute3DPosition(5, 6, 2)).then(objects => {
+                expect(objects[0].getPosition()).to.be.instanceOf(Absolute3DPosition);
+                const location = objects[0].getPosition() as Absolute3DPosition;
                 expect(location.x).to.equal(5);
                 expect(location.y).to.equal(6);
                 expect(location.z).to.equal(2);
@@ -101,7 +101,7 @@ describe('data object', () => {
                     objectDataService = model.findDataService(DataObject);
 
                     var object = new DummySensorObject("123");
-                    object.currentPosition = new Absolute2DPosition(3,2);
+                    object.setPosition(new Absolute2DPosition(3,2));
                     object.displayName = "Hello";
                     objectDataService.insert(object).then(savedObject => {
                         done();
@@ -158,7 +158,7 @@ describe('data object', () => {
 
         it('should store objects at the output layer', (done) => {
             var object = new DataObject();
-            object.currentPosition = new Absolute2DPosition(1,2);
+            object.setPosition(new Absolute2DPosition(1,2));
             object.displayName = "Test";
             var frame = new DataFrame();
             frame.addObject(object);
@@ -166,8 +166,8 @@ describe('data object', () => {
                 // Check if it is stored
                 objectDataService.findAll().then(objects => {
                     expect(objects[0].displayName).to.equal("Test");
-                    expect(objects[0].currentPosition).to.be.instanceOf(Absolute2DPosition);
-                    expect(((objects[0].currentPosition) as Absolute2DPosition).y).to.equal(2);
+                    expect(objects[0].getPosition()).to.be.instanceOf(Absolute2DPosition);
+                    expect(((objects[0].getPosition()) as Absolute2DPosition).y).to.equal(2);
                     done();
                 }).catch(ex => {
                     done(ex);

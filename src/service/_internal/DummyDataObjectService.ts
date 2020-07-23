@@ -9,7 +9,7 @@ export class DummyDataObjectService<T extends DataObject> extends DataObjectServ
         });
     }
 
-    public findByCurrentPosition(position: AbsolutePosition): Promise<T[]> {
+    public findByPosition(position: AbsolutePosition): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
             resolve();
         });

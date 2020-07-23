@@ -16,7 +16,7 @@ import { LinearVelocity, AngularVelocity, Orientation } from "../position";
 export class DataObject {
     private _uid: string;
     private _displayName: string;
-    private _currentPosition: AbsolutePosition;
+    private _position: AbsolutePosition;
     private _relativePositions: Map<string, Map<string, RelativePosition>> = new Map();
     private _parentUID: string;
     @SerializableMember()
@@ -31,8 +31,8 @@ export class DataObject {
     public merge(object: DataObject): DataObject {
         if (this.displayName === undefined)
             this.displayName = object.displayName;
-        if (this.getCurrentPosition() === undefined && object.getCurrentPosition() !== undefined)
-            this.setCurrentPosition(object.getCurrentPosition().clone());
+        if (this.getPosition() === undefined && object.getPosition() !== undefined)
+            this.setPosition(object.getPosition().clone());
         object._relativePositions.forEach((value: Map<string, RelativePosition>, key: string) => {
             const newRelativePositions = this._relativePositions.get(key);
             if (newRelativePositions === undefined) {
@@ -114,25 +114,25 @@ export class DataObject {
             return new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw);
         }
     })
-    public get currentPosition(): AbsolutePosition {
-        return this.getCurrentPosition();
+    public get position(): AbsolutePosition {
+        return this.getPosition();
     }
 
     /**
      * Set the current absolute position of the object
      * relative to the global reference space
      */
-    public set currentPosition(position: AbsolutePosition) {
-        this.setCurrentPosition(position);
+    public set position(position: AbsolutePosition) {
+        this.setPosition(position);
     }
 
     /**
      * Get the current absolute position of the object
      * @param referenceSpace (optional) reference space
      */
-    public getCurrentPosition(referenceSpace?: Space): AbsolutePosition {
-        if (referenceSpace !== undefined && this._currentPosition !== undefined) {
-            const transformedPosition = this._currentPosition.clone<AbsolutePosition>();
+    public getPosition(referenceSpace?: Space): AbsolutePosition {
+        if (referenceSpace !== undefined && this._position !== undefined) {
+            const transformedPosition = this._position.clone<AbsolutePosition>();
             const point = transformedPosition.point;
             if (point.length === 3) {
                 point.push(1);
@@ -160,7 +160,7 @@ export class DataObject {
 
             return transformedPosition;
         } else {
-            return this._currentPosition;
+            return this._position;
         }
     }
 
@@ -169,7 +169,7 @@ export class DataObject {
      * @param position Position to set
      * @param referenceSpace (optional) reference space
      */
-    public setCurrentPosition(position: AbsolutePosition, referenceSpace?: Space) {
+    public setPosition(position: AbsolutePosition, referenceSpace?: Space) {
         if (referenceSpace !== undefined) {
             const transformedPosition = position.clone<AbsolutePosition>();
             const point = transformedPosition.point;
@@ -193,9 +193,9 @@ export class DataObject {
             // Transform the orientation (rotation)
             transformedPosition.orientation = Orientation.fromVector(math.multiply(orientation, referenceSpace.rotationMatrix));
 
-            this._currentPosition = transformedPosition;
+            this._position = transformedPosition;
         } else {
-            this._currentPosition = position;
+            this._position = position;
         }
     }
 

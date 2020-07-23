@@ -24,8 +24,8 @@ describe('dataset', () => {
                 .from(new CSVDataSource("test/data/liwste2017/beacons.csv", (row: any) => {
                     const dataFrame = new DataFrame();
                     const beacon = new DataObject(`beacon_${row.Beacon}`);
-                    beacon.setCurrentPosition(new Absolute2DPosition(parseFloat(row.X), parseFloat(row.Y)));
-                    (beacon.getCurrentPosition() as Absolute2DPosition).unit = MetricLengthUnit.METER;
+                    beacon.setPosition(new Absolute2DPosition(parseFloat(row.X), parseFloat(row.Y)));
+                    (beacon.getPosition() as Absolute2DPosition).unit = MetricLengthUnit.METER;
                     dataFrame.addObject(beacon);
                     return dataFrame;
                 }))
@@ -52,8 +52,8 @@ describe('dataset', () => {
 
                             // Control object
                             const evaluationObject = new DataObject("tracked");
-                            evaluationObject.setCurrentPosition(new Absolute2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y'])));
-                            (evaluationObject.getCurrentPosition() as Absolute2DPosition).unit = MetricLengthUnit.CENTIMETER;
+                            evaluationObject.setPosition(new Absolute2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y'])));
+                            (evaluationObject.getPosition() as Absolute2DPosition).unit = MetricLengthUnit.CENTIMETER;
                             dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
 
                             return dataFrame;
@@ -95,8 +95,8 @@ describe('dataset', () => {
                 it('should contain calibration data for beacon A', (done) => {
                     trackingModel.findDataService(DataObject).findByUID("beacon_A").then(beacon => {
                         expect(beacon).to.not.be.null;
-                        expect(beacon.getCurrentPosition()).to.be.instanceOf(Absolute2DPosition);
-                        expect((beacon.getCurrentPosition() as Absolute2DPosition).x).to.equal(0.10);
+                        expect(beacon.getPosition()).to.be.instanceOf(Absolute2DPosition);
+                        expect((beacon.getPosition() as Absolute2DPosition).x).to.equal(0.10);
                         done();
                     });
                 });
@@ -104,8 +104,8 @@ describe('dataset', () => {
                 it('should contain calibration data for beacon B', (done) => {
                     trackingModel.findDataService(DataObject).findByUID("beacon_B").then(beacon => {
                         expect(beacon).to.not.be.null;
-                        expect(beacon.getCurrentPosition()).to.be.instanceOf(Absolute2DPosition);
-                        expect((beacon.getCurrentPosition() as Absolute2DPosition).x).to.equal(2.74);
+                        expect(beacon.getPosition()).to.be.instanceOf(Absolute2DPosition);
+                        expect((beacon.getPosition() as Absolute2DPosition).x).to.equal(2.74);
                         done();
                     });
                 });
@@ -113,8 +113,8 @@ describe('dataset', () => {
                 it('should contain calibration data for beacon C', (done) => {
                     trackingModel.findDataService(DataObject).findByUID("beacon_C").then(beacon => {
                         expect(beacon).to.not.be.null;
-                        expect(beacon.getCurrentPosition()).to.be.instanceOf(Absolute2DPosition);
-                        expect((beacon.getCurrentPosition() as Absolute2DPosition).x).to.equal(1.22);
+                        expect(beacon.getPosition()).to.be.instanceOf(Absolute2DPosition);
+                        expect((beacon.getPosition() as Absolute2DPosition).x).to.equal(1.22);
                         done();
                     });
                 });
@@ -135,9 +135,9 @@ describe('dataset', () => {
                     callbackNode.callback = (data: EvaluationDataFrame) => {
                         data.getObjects().forEach(object => {
                             if (object.uid === "tracked") {
-                                let calculatedPosition: Absolute2DPosition = object.getCurrentPosition() as Absolute2DPosition;
+                                let calculatedPosition: Absolute2DPosition = object.getPosition() as Absolute2DPosition;
                                 // Accurate control location
-                                const expectedPosition: Absolute2DPosition = data.evaluationObjects.get(object.uid).getCurrentPosition() as Absolute2DPosition;
+                                const expectedPosition: Absolute2DPosition = data.evaluationObjects.get(object.uid).getPosition() as Absolute2DPosition;
                                 
                                 // Convert meters to cm
                                 calculatedPosition.x = calculatedPosition.unit.convert(calculatedPosition.x, expectedPosition.unit);
@@ -163,9 +163,9 @@ describe('dataset', () => {
                     callbackNode.callback = (data: EvaluationDataFrame) => {
                         data.getObjects().forEach(object => {
                             if (object.uid === "tracked") {
-                                let calculatedPosition: Absolute2DPosition = object.getCurrentPosition() as Absolute2DPosition;
+                                let calculatedPosition: Absolute2DPosition = object.getPosition() as Absolute2DPosition;
                                 // Accurate control location
-                                const expectedPosition: Absolute2DPosition = data.evaluationObjects.get(object.uid).getCurrentPosition() as Absolute2DPosition;
+                                const expectedPosition: Absolute2DPosition = data.evaluationObjects.get(object.uid).getPosition() as Absolute2DPosition;
                                 
                                 // Convert meters to cm
                                 calculatedPosition.x = calculatedPosition.unit.convert(calculatedPosition.x, expectedPosition.unit);

@@ -20,7 +20,7 @@ describe('example', () => {
 
                     const robot = new DataObject("robot");
                     // Start location
-                    robot.setCurrentPosition(new Absolute2DPosition(0, 0));
+                    robot.setPosition(new Absolute2DPosition(0, 0));
 
                     model.push(new DataFrame(robot)).then(() => {
                         done();
@@ -30,7 +30,7 @@ describe('example', () => {
 
         it('should calculate moving forward', () =>{
             model.findDataService(DataObject).findByUID("robot").then(robot => {
-                robot.getCurrentPosition().velocity.linear = new LinearVelocity(1, 0);
+                robot.getPosition().velocity.linear = new LinearVelocity(1, 0);
                 Promise.resolve(model.push(new DataFrame(robot)));
             });
 

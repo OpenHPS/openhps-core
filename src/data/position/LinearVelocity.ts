@@ -33,4 +33,14 @@ export class LinearVelocity {
                 this.unit.convert(this.z, unit)];
         }
     }
+
+    public toTranslationMatrix(): number[][] {
+        const v = this.toVector(LinearVelocityUnit.METERS_PER_SECOND);
+        return [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [v[0], v[1], v[2], 1]
+        ];
+    }
 }

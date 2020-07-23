@@ -1,7 +1,6 @@
 import { DataFrame, ReferenceSpace, DataObject } from "../../data";
 import { ObjectProcessingNode } from "../ObjectProcessingNode";
 import { Model } from "../../Model";
-import { re } from "mathjs";
 
 /**
  * This node converts the positions of data objects inside the frame
@@ -55,13 +54,13 @@ export class ReferenceSpaceConversionNode<InOut extends DataFrame> extends Objec
                 referenceSpace = this._referenceSpace;
             }
 
-            if (object.getCurrentPosition() && object.uid !== referenceSpace.uid) {
+            if (object.getPosition() && object.uid !== referenceSpace.uid) {
                 if (this._inverse) {
                     // Convert from reference space to global
-                    object.setCurrentPosition(object.getCurrentPosition(), referenceSpace);
+                    object.setPosition(object.getPosition(), referenceSpace);
                 } else {
                     // Convert global space to reference space
-                    object.setCurrentPosition(object.getCurrentPosition(referenceSpace));
+                    object.setPosition(object.getPosition(referenceSpace));
                 }
             }
             resolve(object);

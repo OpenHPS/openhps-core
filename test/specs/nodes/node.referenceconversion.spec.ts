@@ -20,7 +20,7 @@ describe('node', () => {
                     .via(new ReferenceSpaceConversionNode(myReferenceSpace))
                     .via(new CallbackNode((frame: DataFrame) => {
                         const object = frame.getObjectByUID("test");
-                        const position = object.getCurrentPosition() as Absolute2DPosition; // No reference space provided
+                        const position = object.getPosition() as Absolute2DPosition; // No reference space provided
                         // Since our reference space has a translation offset of 10,10,10
                         // We expect the position to be -7, -7
                         expect(position.x).to.equal(-7);
@@ -32,7 +32,7 @@ describe('node', () => {
                     const object = new DataObject("test");
                     // Set the current position in the global reference space
                     // to (3, 3)
-                    object.setCurrentPosition(new Absolute2DPosition(3, 3));
+                    object.setPosition(new Absolute2DPosition(3, 3));
 
                     model.push(new DataFrame(object)).then(() => {
                         return model.findDataService(ReferenceSpace).insert(myReferenceSpace);
@@ -58,7 +58,7 @@ describe('node', () => {
                     .via(new ReferenceSpaceConversionNode(myReferenceSpace.uid))
                     .via(new CallbackNode((frame: DataFrame) => {
                         const object = frame.getObjectByUID("test");
-                        const position = object.getCurrentPosition() as Absolute2DPosition; // No reference space provided
+                        const position = object.getPosition() as Absolute2DPosition; // No reference space provided
                         // Since our reference space has a translation offset of 10,10,10
                         // We expect the position to be -7, -7
                         expect(position.x).to.equal(-7);
@@ -70,7 +70,7 @@ describe('node', () => {
                     const object = new DataObject("test");
                     // Set the current position in the global reference space
                     // to (3, 3)
-                    object.setCurrentPosition(new Absolute2DPosition(3, 3));
+                    object.setPosition(new Absolute2DPosition(3, 3));
 
                     const frame = new DataFrame(object);
                     frame.addReferenceSpace(myReferenceSpace);

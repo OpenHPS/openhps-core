@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
 import { VelocityProcessingNode, DataFrame, DataObject, Absolute2DPosition, LinearVelocity, Model, ModelBuilder, CallbackSourceNode, StorageSinkNode, CallbackSinkNode, AngularVelocity, AngleUnit, AngularVelocityUnit, Orientation } from '../../../src';
-import { exp } from 'mathjs';
 
 describe('node', () => {
     describe('processing velocity', () => {
@@ -22,7 +21,7 @@ describe('node', () => {
 
         it('should process linear velocity', (done) => {
             callbackSink.callback = (frame: DataFrame) => {
-                const position = frame.source.getCurrentPosition();
+                const position = frame.source.getPosition();
                 expect(Math.round(position.point[0])).to.equal(4);
                 expect(Math.round(position.point[1])).to.equal(4);
                 done();
@@ -30,8 +29,8 @@ describe('node', () => {
 
             const frame = new DataFrame();
             const object = new DataObject();
-            object.setCurrentPosition(new Absolute2DPosition(3, 3));
-            object.getCurrentPosition().velocity.linear = new LinearVelocity(2, 2);
+            object.setPosition(new Absolute2DPosition(3, 3));
+            object.getPosition().velocity.linear = new LinearVelocity(2, 2);
             frame.source = object;
 
             setTimeout(() => {
@@ -41,7 +40,7 @@ describe('node', () => {
 
         it('should process linear velocity in a given direction (orientation)', (done) => {
             callbackSink.callback = (frame: DataFrame) => {
-                const position = frame.source.getCurrentPosition();
+                const position = frame.source.getPosition();
                 expect(Math.round(position.point[0])).to.equal(3);
                 expect(Math.round(position.point[1] * 100.) / 100.).to.equal(2.5);
                 done();
@@ -49,9 +48,9 @@ describe('node', () => {
 
             const frame = new DataFrame();
             const object = new DataObject();
-            object.setCurrentPosition(new Absolute2DPosition(3, 3));
-            object.getCurrentPosition().velocity.linear = new LinearVelocity(2, 2);
-            object.getCurrentPosition().orientation = new Orientation(90, 90, 0, AngleUnit.DEGREES);
+            object.setPosition(new Absolute2DPosition(3, 3));
+            object.getPosition().velocity.linear = new LinearVelocity(2, 2);
+            object.getPosition().orientation = new Orientation(90, 90, 0, AngleUnit.DEGREES);
             frame.source = object;
 
             setTimeout(() => {
@@ -61,7 +60,7 @@ describe('node', () => {
 
         it('should process angular velocity on the orientation', (done) => {
             callbackSink.callback = (frame: DataFrame) => {
-                const position = frame.source.getCurrentPosition();
+                const position = frame.source.getPosition();
                 // Linear position has not changed
                 expect(Math.round(position.point[0])).to.equal(3);
                 expect(Math.round(position.point[1])).to.equal(3);
@@ -72,8 +71,8 @@ describe('node', () => {
 
             const frame = new DataFrame();
             const object = new DataObject();
-            object.setCurrentPosition(new Absolute2DPosition(3, 3));
-            object.getCurrentPosition().velocity.angular = new AngularVelocity(90, 0, 0, AngularVelocityUnit.DEGREES_PER_SECOND);
+            object.setPosition(new Absolute2DPosition(3, 3));
+            object.getPosition().velocity.angular = new AngularVelocity(90, 0, 0, AngularVelocityUnit.DEGREES_PER_SECOND);
             frame.source = object;
 
             setTimeout(() => {
@@ -83,7 +82,7 @@ describe('node', () => {
 
         it('should process angular velocity on the linear movement', (done) => {
             callbackSink.callback = (frame: DataFrame) => {
-                const position = frame.source.getCurrentPosition();
+                const position = frame.source.getPosition();
                 // Linear position is (3, 3) + the linear and angular movement
                 expect(Math.round(position.point[0])).to.equal(4);
                 expect(Math.round(position.point[1])).to.equal(2);
@@ -94,9 +93,9 @@ describe('node', () => {
 
             const frame = new DataFrame();
             const object = new DataObject();
-            object.setCurrentPosition(new Absolute2DPosition(3, 3));
-            object.getCurrentPosition().velocity.angular = new AngularVelocity(90, 0, 0, AngularVelocityUnit.DEGREES_PER_SECOND);
-            object.getCurrentPosition().velocity.linear = new LinearVelocity(4, 4, 0);
+            object.setPosition(new Absolute2DPosition(3, 3));
+            object.getPosition().velocity.angular = new AngularVelocity(90, 0, 0, AngularVelocityUnit.DEGREES_PER_SECOND);
+            object.getPosition().velocity.linear = new LinearVelocity(4, 4, 0);
             frame.source = object;
 
             setTimeout(() => {

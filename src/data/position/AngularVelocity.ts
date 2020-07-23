@@ -1,5 +1,6 @@
 import { AngularVelocityUnit } from "../../utils/unit/AngularVelocityUnit";
 import { SerializableObject, SerializableMember } from "../decorators";
+import * as math from 'mathjs';
 
 @SerializableObject()
 export class AngularVelocity {
@@ -33,4 +34,27 @@ export class AngularVelocity {
                 this.unit.convert(this.z, unit)];
         }
     }
+
+    public toRotationMatrix(): number[][] {
+        const v = this.toVector(AngularVelocityUnit.RADIANS_PER_SECOND);
+        const rotMatrixZ = [
+            [1, 0, 0, 0],
+            [0, Math.cos(v[2]), -Math.sin(v[2]), 0],
+            [0, Math.sin(v[2]), Math.cos(v[2]), 0],
+            [0, 0, 0, 1]
+        ];
+        const rotMatrixY = [
+            [Math.cos(v[1]), 0, Math.sin(v[1]), 0],
+            [0, 1, 0, 0],
+            [-Math.sin(v[1]), 0, Math.cos(v[1]), 0],
+            [0, 0, 0, 1]
+        ];
+        const rotMatrixX = [
+            [Math.cos(v[0]), -Math.sin(v[0]), 0, 0],
+            [Math.sin(v[0]), Math.cos(v[0]), 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ];
+        return math.multiply(math.multiply(rotMatrixX, rotMatrixY), rotMatrixZ);
+    }    
 }
