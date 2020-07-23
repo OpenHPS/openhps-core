@@ -22,7 +22,7 @@ describe('position', () => {
             const distances = [
                 3,
                 4,
-                3
+                5
             ];
             
             GeographicalPosition.trilaterate(positions, distances).then(result => {

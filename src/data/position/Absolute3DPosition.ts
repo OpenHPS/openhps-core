@@ -75,6 +75,7 @@ export class Absolute3DPosition extends Absolute2DPosition {
                     let incr = -1;
                     let x = 0;
                     let y = 0;
+                    // TODO: Itteration guard
                     do {
                         x = (Math.pow(AX, 2) - Math.pow(BX, 2) + Math.pow(d, 2)) / (2 * d);
                         y = ((Math.pow(AX, 2) - Math.pow(CX, 2) + Math.pow(i, 2) + Math.pow(j, 2)) / (2 * j)) - ((i / j) * x);
