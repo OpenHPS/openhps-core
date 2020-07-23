@@ -176,7 +176,7 @@ export class GeographicalPosition extends AbsolutePosition {
                 const convertedPoint = new Absolute3DPosition(point[0], point[1], point[2]);
                 convertedPoints.push(convertedPoint);
             });
-            GeographicalPosition.trilaterate(convertedPoints, distances).then(point3d => {
+            Absolute3DPosition.trilaterate(convertedPoints, distances).then(point3d => {
                 const geopoint = new GeographicalPosition();
                 geopoint.point = point3d.point;
                 geopoint.accuracy = points[0].accuracy;
