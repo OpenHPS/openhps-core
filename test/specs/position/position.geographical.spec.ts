@@ -28,7 +28,7 @@ describe('position', () => {
             GeographicalPosition.trilaterate(positions, distances).then(result => {
                 done();
             });
-        });
+        }).timeout(10000);
 
 
     });
