@@ -1,5 +1,7 @@
-import { DataFrame } from "../data";
+import { DataFrame, DataObject } from "../data";
 import { Node } from "../Node";
+import { NodeDataService, NodeData } from "../service";
+import { Model } from "../Model";
 
 /**
  * Processing node
@@ -53,6 +55,30 @@ export abstract class ProcessingNode<In extends DataFrame | DataFrame[], Out ext
             Promise.all(servicePromises).then(() => {
                 return Promise.all(pushPromises);
             }).then(() => {
+                resolve();
+            }).catch(ex => {
+                reject(ex);
+            });
+        });
+    }
+
+    public findNodeDataService(): NodeDataService<NodeData> {
+        return (this.graph as Model).findDataService(NodeData);
+    }
+
+    public getNodeData(dataObject: DataObject): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.findNodeDataService().findData(this.uid, dataObject).then(data => {
+                resolve(data);
+            }).catch(ex => {
+                reject(ex);
+            });
+        });
+    }
+
+    public setNodeData(dataObject: DataObject, data: any): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.findNodeDataService().insertData(this.uid, dataObject, data).then(() => {
                 resolve();
             }).catch(ex => {
                 reject(ex);
