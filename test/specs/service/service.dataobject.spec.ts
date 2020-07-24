@@ -19,6 +19,7 @@ describe('data object', () => {
             var object2 = new DataObject();
             object2.setPosition(new Absolute3DPosition(5, 6, 2));
             object2.displayName = "Test";
+            object2.parentUID = object1.uid;
 
             const insertPromises = new Array();
             insertPromises.push(objectDataService.insert(object1));
@@ -83,6 +84,12 @@ describe('data object', () => {
         it('should find all items', () => {
             objectDataService.findAll().then(objects => {
                 expect(objects.length).to.be.gte(1);
+            });
+        });
+
+        it('should find by display name', () => {
+            objectDataService.findByDisplayName("Test").then(objects => {
+                expect(objects.length).to.equal(2);
             });
         });
 

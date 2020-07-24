@@ -29,6 +29,8 @@ export interface NodeDataIdentifier {
     dataObjectUID: string;
 }
 
-export interface NodeData extends NodeDataIdentifier {
+export class NodeData implements NodeDataIdentifier {
+    nodeUID: string;
+    dataObjectUID: string;
     data: any;
 }
