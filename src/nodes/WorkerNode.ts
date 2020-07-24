@@ -5,7 +5,7 @@ import { Observable } from "threads/observable";
 import { PoolEvent } from "threads/dist/master/pool";
 import { Model } from "../Model";
 import { isArray } from "util";
-import { DataService, DataObjectService, DataFrameService, Service } from "../service";
+import { DataService, DataObjectService, DataFrameService, Service, NodeDataService } from "../service";
 import { GraphShapeBuilder } from "../graph/builders/GraphBuilder";
 import { ModelBuilder } from "../ModelBuilder";
 
@@ -128,6 +128,7 @@ export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFram
                         name: service.name,
                         type: service instanceof DataObjectService ? "DataObjectService" :
                             service instanceof DataFrameService ? "DataFrameService" :
+                            service instanceof NodeDataService ? "NodeDataService" :
                             service instanceof DataService ? "DataService" :
                             service instanceof Service ? "Service" : ""
                     });

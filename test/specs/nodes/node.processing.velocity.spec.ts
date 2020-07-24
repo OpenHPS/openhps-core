@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { VelocityProcessingNode, DataFrame, DataObject, Absolute2DPosition, LinearVelocity, Model, ModelBuilder, CallbackSourceNode, StorageSinkNode, CallbackSinkNode, AngularVelocity, AngleUnit, AngularVelocityUnit, Orientation } from '../../../src';
+import { VelocityProcessingNode, DataFrame, DataObject, Absolute2DPosition, LinearVelocity, Model, ModelBuilder, CallbackSourceNode, StorageSinkNode, CallbackSinkNode, AngularVelocity, AngleUnit, AngularVelocityUnit, Quaternion } from '../../../src';
 
 describe('node', () => {
     describe('processing velocity', () => {
@@ -50,7 +50,7 @@ describe('node', () => {
             const object = new DataObject();
             object.setPosition(new Absolute2DPosition(3, 3));
             object.getPosition().velocity.linear = new LinearVelocity(2, 2);
-            object.getPosition().orientation = new Orientation(90, 90, 0, AngleUnit.DEGREES);
+            object.getPosition().orientation = new Quaternion(90, 90, 0, AngleUnit.DEGREES);
             frame.source = object;
 
             setTimeout(() => {

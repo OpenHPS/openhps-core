@@ -1,5 +1,5 @@
 export * from './Position';
-export * from './Orientation';
+export * from './Quaternion';
 export * from './RelativePosition';
 export * from './AbsolutePosition';
 export * from './GeographicalPosition';

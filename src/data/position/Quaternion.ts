@@ -6,7 +6,7 @@ import * as math from 'mathjs';
  * Orientation
  */
 @SerializableObject()
-export class Orientation {
+export class Quaternion {
     @SerializableMember()
     public x: number;
 
@@ -15,6 +15,8 @@ export class Orientation {
 
     @SerializableMember()
     public z: number;
+
+    public w: number = 1;
 
     @SerializableMember()
     public unit: AngleUnit;
@@ -26,8 +28,8 @@ export class Orientation {
         this.unit = unit;
     }
 
-    public static fromVector(vector: number[], unit: AngleUnit = AngleUnit.RADIANS): Orientation {
-        return new Orientation(vector[0], vector[1], vector[2], unit);
+    public static fromVector(vector: number[], unit: AngleUnit = AngleUnit.RADIANS): Quaternion {
+        return new Quaternion(vector[0], vector[1], vector[2], unit);
     }
 
     public toVector(unit?: AngleUnit): number [] {

@@ -45,7 +45,7 @@ export interface Model<In extends DataFrame | DataFrame[] = DataFrame, Out exten
      * Find data service by data type
      * @param dataType Data type
      */
-    findDataService<D, F extends DataService<any, D>>(dataType: new () => D): F;
+    findDataService<D extends DataObject | DataFrame | Object, F extends DataService<any, D>>(dataType: new () => D): F;
 
     /**
      * Find data service by data object

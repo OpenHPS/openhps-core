@@ -18,7 +18,7 @@ export abstract class Service extends AsyncEventEmitter {
     }
 
     /**
-     * Get data manager name
+     * Service name
      */
     public get name() {
         return this._name;

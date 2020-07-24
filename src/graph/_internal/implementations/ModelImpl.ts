@@ -1,8 +1,8 @@
 import { DataFrame, DataObject, ReferenceSpace } from "../../../data";
-import { Service, DataService } from "../../../service";
+import { Service, DataService, NodeData } from "../../../service";
 import { GraphImpl } from "./GraphImpl";
 import { Model } from "../../../Model";
-import { MemoryDataFrameService, MemoryDataObjectService } from "../../../service/memory";
+import { MemoryDataFrameService, MemoryDataObjectService, MemoryNodeDataService } from "../../../service/memory";
 import { ServiceProxy } from "../../../service/_internal";
 
 /**
@@ -100,11 +100,14 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
     }
 
     private _addDefaultServices(): void {
+        // Store data objects
         this.addService(new MemoryDataObjectService<DataObject>());
         // Store spaces in their own memory data object service
         this.addService(new MemoryDataObjectService<ReferenceSpace>());
         // Temporal storage of data frames
         this.addService(new MemoryDataFrameService<DataFrame>());
+        // Store node data
+        this.addService(new MemoryNodeDataService(NodeData));
     }
 
     public findServiceByName<F extends Service>(name: string): F {
@@ -131,7 +134,7 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
      * Get data service by data type
      * @param dataType Data type
      */
-    public findDataService<D extends DataObject | DataFrame, F extends DataService<any, D>>(dataType: new () => D): F {
+    public findDataService<D extends DataObject | DataFrame | Object, F extends DataService<any, D>>(dataType: new () => D): F {
         if (this._dataServices.has(dataType.name)) {
             return this._dataServices.get(dataType.name) as F;
         } else {
