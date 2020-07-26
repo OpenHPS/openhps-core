@@ -1,10 +1,13 @@
-import { DataFrame, DataObject, AbsolutePosition, EulerOrientation } from "../../data";
+import { DataFrame, DataObject, AbsolutePosition } from "../../../data";
 import * as math from 'mathjs';
-import { ObjectProcessingNode } from "../ObjectProcessingNode";
-import { AngularVelocityUnit, LinearVelocityUnit, AngleUnit } from "../../utils";
+import { ObjectProcessingNode } from "../../ObjectProcessingNode";
+import { AngularVelocityUnit, LinearVelocityUnit } from "../../../utils";
+import { Quaternion } from "../../../data/position/Quaternion";
 
 /**
  * Linear and angular velocity processing
+ * 
+ * TODO: Work with quaternions instead of euler angles
  */
 export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
 
@@ -70,11 +73,8 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                         point.push(0, 1);
                     }
                     // New orientation in radians
-                    const newOrientation = math.add(newPosition.orientation.toVector(AngleUnit.RADIANS), relativeOrientation) as number[];
-                    newOrientation[0] = AngleUnit.RADIANS.convert(newOrientation[0], newPosition.orientation.unit);
-                    newOrientation[1] = AngleUnit.RADIANS.convert(newOrientation[1], newPosition.orientation.unit);
-                    newOrientation[2] = AngleUnit.RADIANS.convert(newOrientation[2], newPosition.orientation.unit);
-                    newPosition.orientation = EulerOrientation.fromVector(newOrientation, newPosition.orientation.unit);
+                    const newOrientation = math.add(lastPosition.orientation.toEulerVector(), relativeOrientation) as number[];
+                    newPosition.orientation = Quaternion.fromEulerVector(newOrientation);
                     newPosition.fromVector(math.add(point, relativePosition) as number[]);
                     object.setPosition(newPosition);
                 }
