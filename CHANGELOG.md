@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-alpha.17](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v0.1.0-alpha.16...v0.1.0-alpha.17) (2020-07-26)
+
+
+### Features
+
+* added getNodeData and setNodeData for processing nodes ([0738db0](https://git.mvdw-software.com/Maximvdw/openhps-core/commit/0738db048e01446dfafdd72a7fe9f32debc528bc))
+
 ## [0.1.0-alpha.16](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v0.1.0-alpha.14...v0.1.0-alpha.16) (2020-07-23)
 
 ## [0.1.0-alpha.15](https://git.mvdw-software.com/Maximvdw/openhps-core/compare/v0.1.0-alpha.14...v0.1.0-alpha.15) (2020-07-23)
