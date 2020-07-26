@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { DataSerializer, DataObject, DataFrame } from "../../data";
+import { DataSerializer, DataFrame } from "../../data";
 import { Model } from "../../Model";
 import { Subject, Observable } from 'threads/observable';
 import { CallbackSinkNode } from "../sink";
@@ -11,6 +11,7 @@ import { DummyService } from "../../service/_internal/DummyService";
 import { DummyDataObjectService } from "../../service/_internal/DummyDataObjectService";
 import { DummyDataFrameService } from "../../service/_internal/DummyDataFrameService";
 import { DummyDataService } from "../../service/_internal/DummyDataService";
+import { DummyNodeDataService } from "../../service/_internal/DummyNodeDataService";
 
 let model: Model<any, any>;
 const input: Subject<void> = new Subject();
@@ -38,6 +39,9 @@ expose({
                     break;
                 case "DataFrameService":
                     modelBuilder.addService(new Proxy(new DummyDataFrameService(), new WorkerService(service.name, serviceInput, serviceOutput)));
+                    break;
+                case "NodeDataService":
+                    modelBuilder.addService(new Proxy(new DummyNodeDataService(), new WorkerService(service.name, serviceInput, serviceOutput)));
                     break;
                 case "DataService":
                     modelBuilder.addService(new Proxy(new DummyDataService(null), new WorkerService(service.name, serviceInput, serviceOutput)));

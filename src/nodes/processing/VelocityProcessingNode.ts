@@ -1,4 +1,4 @@
-import { DataFrame, DataObject, AbsolutePosition, ReferenceSpace, Quaternion } from "../../data";
+import { DataFrame, DataObject, AbsolutePosition, EulerOrientation } from "../../data";
 import * as math from 'mathjs';
 import { ObjectProcessingNode } from "../ObjectProcessingNode";
 import { AngularVelocityUnit, LinearVelocityUnit, AngleUnit } from "../../utils";
@@ -63,7 +63,7 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
 
                     // Predict the next location
                     const newPosition = lastPosition;
-                    const point = newPosition.point;
+                    const point = newPosition.toVector();
                     if (point.length === 3) {
                         point.push(1);
                     } else {
@@ -74,8 +74,8 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                     newOrientation[0] = AngleUnit.RADIANS.convert(newOrientation[0], newPosition.orientation.unit);
                     newOrientation[1] = AngleUnit.RADIANS.convert(newOrientation[1], newPosition.orientation.unit);
                     newOrientation[2] = AngleUnit.RADIANS.convert(newOrientation[2], newPosition.orientation.unit);
-                    newPosition.orientation = Quaternion.fromVector(newOrientation, newPosition.orientation.unit);
-                    newPosition.point = math.add(point, relativePosition) as number[];
+                    newPosition.orientation = EulerOrientation.fromVector(newOrientation, newPosition.orientation.unit);
+                    newPosition.fromVector(math.add(point, relativePosition) as number[]);
                     object.setPosition(newPosition);
                 }
             }

@@ -6,7 +6,7 @@ import * as uuidv4 from 'uuid/v4';
 import { DataSerializer } from '../DataSerializer';
 import { Space } from "./space/Space";
 import * as math from 'mathjs';
-import { Quaternion } from "../position";
+import { EulerOrientation } from "../position";
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -133,7 +133,7 @@ export class DataObject {
     public getPosition(referenceSpace?: Space): AbsolutePosition {
         if (referenceSpace !== undefined && this._position !== undefined) {
             const transformedPosition = this._position.clone<AbsolutePosition>();
-            const point = transformedPosition.point;
+            const point = transformedPosition.toVector();
             if (point.length === 3) {
                 point.push(1);
             } else {
@@ -147,9 +147,9 @@ export class DataObject {
             const invRotationMatrix = math.inv(referenceSpace.rotationMatrix);
 
             // Transform the point using the transformation matrix
-            transformedPosition.point = math.multiply(point, invTransformationMatrix);
+            transformedPosition.fromVector(math.multiply(point, invTransformationMatrix));
             // Transform the orientation (rotation)
-            transformedPosition.orientation = Quaternion.fromVector(math.multiply(orientation, invRotationMatrix));
+            transformedPosition.orientation = EulerOrientation.fromVector(math.multiply(orientation, invRotationMatrix));
 
             return transformedPosition;
         } else {
@@ -165,7 +165,7 @@ export class DataObject {
     public setPosition(position: AbsolutePosition, referenceSpace?: Space) {
         if (referenceSpace !== undefined) {
             const transformedPosition = position.clone<AbsolutePosition>();
-            const point = transformedPosition.point;
+            const point = transformedPosition.toVector();
             if (point.length === 3) {
                 point.push(1);
             } else {
@@ -175,9 +175,9 @@ export class DataObject {
             orientation.push(1);
 
             // Transform the point using the transformation matrix
-            transformedPosition.point = math.multiply(point, referenceSpace.transformationMatrix);
+            transformedPosition.fromVector(math.multiply(point, referenceSpace.transformationMatrix));
             // Transform the orientation (rotation)
-            transformedPosition.orientation = Quaternion.fromVector(math.multiply(orientation, referenceSpace.rotationMatrix));
+            transformedPosition.orientation = EulerOrientation.fromVector(math.multiply(orientation, referenceSpace.rotationMatrix));
 
             this._position = transformedPosition;
         } else {

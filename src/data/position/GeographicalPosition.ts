@@ -184,7 +184,7 @@ export class GeographicalPosition extends AbsolutePosition {
 
             Absolute3DPosition.trilaterate(convertedPoints, distances).then(point3d => {
                 const geopoint = new GeographicalPosition();
-                geopoint.point = point3d.point;
+                geopoint.fromVector(point3d.toVector());
                 geopoint.accuracy = points[0].accuracy;
                 resolve(geopoint);
             }).catch(ex => {
@@ -205,13 +205,18 @@ export class GeographicalPosition extends AbsolutePosition {
             GeographicalPosition.EARTH_RADIUS * Math.sin(phi)];
     }
 
-    /**
-     * Convert the ECR point to an absolute location
-     * @param ecrPosition Earth Centered Rotational
-     */
-    public set point(ecrPosition: number[]) {
-        this.latitude = AngleUnit.RADIANS.convert(Math.asin(ecrPosition[2] / GeographicalPosition.EARTH_RADIUS), AngleUnit.DEGREES);
-        this.longitude = AngleUnit.RADIANS.convert(Math.atan2(ecrPosition[1], ecrPosition[0]), AngleUnit.DEGREES);
+    public fromVector(vector: number[], unit?: LengthUnit): void {
+        this.latitude = AngleUnit.RADIANS.convert(Math.asin(vector[2] / GeographicalPosition.EARTH_RADIUS), AngleUnit.DEGREES);
+        this.longitude = AngleUnit.RADIANS.convert(Math.atan2(vector[1], vector[0]), AngleUnit.DEGREES);
+    }
+    
+    public toVector(): number [] {
+        const phi = AngleUnit.DEGREES.convert(this.latitude, AngleUnit.RADIANS);
+        const lambda = AngleUnit.DEGREES.convert(this.longitude, AngleUnit.RADIANS);
+        // Convert ECR positions
+        return [GeographicalPosition.EARTH_RADIUS * Math.cos(phi) * Math.cos(lambda),
+            GeographicalPosition.EARTH_RADIUS * Math.cos(phi) * Math.sin(lambda),
+            GeographicalPosition.EARTH_RADIUS * Math.sin(phi)];
     }
 
 }

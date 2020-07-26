@@ -1,6 +1,6 @@
 import { LengthUnit } from "../../utils";
 import { Velocity } from "./Velocity";
-import { Quaternion } from "./Quaternion";
+import { EulerOrientation } from "./EulerOrientation";
 import { SerializableObject, SerializableMember } from "../decorators";
 import { DataSerializer } from "../DataSerializer";
 
@@ -13,7 +13,7 @@ export abstract class Position {
     private _accuracy: number;
     private _timestamp: number = new Date().getTime();
     private _velocity: Velocity = new Velocity();
-    private _orientation: Quaternion = new Quaternion();
+    private _orientation: EulerOrientation = new EulerOrientation();
     private _unit: LengthUnit = LengthUnit.POINTS;
     private _accuracyUnit: LengthUnit = LengthUnit.POINTS;
 
@@ -45,11 +45,11 @@ export abstract class Position {
      * Orientation at recorded position
      */
     @SerializableMember()
-    public get orientation(): Quaternion {
+    public get orientation(): EulerOrientation {
         return this._orientation;
     }
 
-    public set orientation(orientation: Quaternion) {
+    public set orientation(orientation: EulerOrientation) {
         this._orientation = orientation;
     }
 

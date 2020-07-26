@@ -23,7 +23,7 @@ export class MemoryDataObjectService<T extends DataObject> extends DataObjectSer
 
     public findByPosition(location: AbsolutePosition): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[?(@._position.point.toString() == "${location.point.toString()}")]`, json: Array.from(this._data.values()) });
+            const result = JSONPath({ path: `$[?(@._position.toVector().toString() == "${location.toVector().toString()}")]`, json: Array.from(this._data.values()) });
             resolve(result);
         });
     }

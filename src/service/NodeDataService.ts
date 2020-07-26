@@ -3,7 +3,7 @@ import { DataObject, SerializableObject, SerializableMember, } from "../data";
 
 export abstract class NodeDataService<T extends NodeData | NodeData> extends DataService<string, T> {
 
-    constructor(dataType: new () => T, options?: any) {
+    constructor(dataType: new () => T = NodeData as any, options?: any) {
         super(dataType as new () => T, options);
     }
 

@@ -1,6 +1,7 @@
 import { AbsolutePosition } from "./AbsolutePosition";
 import { SerializableMember, SerializableObject } from "../decorators";
 import * as math from 'mathjs';
+import { LengthUnit } from "../../utils";
 
 /**
  * Absolute cartesian 2D position. This class implements a [[Position]]. This location can be used both as
@@ -77,12 +78,17 @@ export class Absolute2DPosition extends AbsolutePosition {
                     break;
                 case 3:
                 default:
-                    const eX = math.divide(math.subtract(points[1].point, points[0].point), math.norm(math.subtract(points[1].point, points[0].point) as number[]));
-                    const i = math.multiply(eX, math.subtract(points[2].point, points[0].point)) as number;
-                    const eY = math.divide((math.subtract(math.subtract(points[2].point, points[0].point), math.multiply(i, eX))), math.norm(math.subtract(math.subtract(points[2].point, points[0].point) as number[], math.multiply(i, eX) as number[]) as number[]));
-                    const j = math.multiply(eY, math.subtract(points[2].point, points[0].point)) as number;
+                    const vectors = [
+                        points[0].toVector(),
+                        points[1].toVector(),
+                        points[2].toVector()
+                    ];
+                    const eX = math.divide(math.subtract(vectors[1], vectors[0]), math.norm(math.subtract(vectors[1], vectors[0]) as number[]));
+                    const i = math.multiply(eX, math.subtract(vectors[2], vectors[0])) as number;
+                    const eY = math.divide((math.subtract(math.subtract(vectors[2], vectors[0]), math.multiply(i, eX))), math.norm(math.subtract(math.subtract(vectors[2], vectors[0]) as number[], math.multiply(i, eX) as number[]) as number[]));
+                    const j = math.multiply(eY, math.subtract(vectors[2], vectors[0])) as number;
                     const eZ = math.multiply(eX, eY) as number;
-                    const d = math.norm(math.subtract(points[1].point, points[0].point) as number[]) as number;
+                    const d = math.norm(math.subtract(vectors[1], vectors[0]) as number[]) as number;
                 
                     // Calculate coordinates
                     let AX = distances[0];
@@ -105,7 +111,7 @@ export class Absolute2DPosition extends AbsolutePosition {
             
                     const point = new Absolute2DPosition();
                     point.unit = points[0].unit;
-                    point.point = math.add(points[0].point, math.add(math.add(math.multiply(eX, x), math.multiply(eY, y)), math.multiply(eZ, z))) as number[];
+                    point.fromVector(math.add(vectors[0], math.add(math.add(math.multiply(eX, x), math.multiply(eY, y)), math.multiply(eZ, z))) as number[]);
                     resolve(point);
                     break;
             }
@@ -153,13 +159,21 @@ export class Absolute2DPosition extends AbsolutePosition {
         return Math.pow(Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2), 1 / 2.);
     }
 
-    public get point(): number[] {
-        return [this.x, this.y];
+    public fromVector(vector: number[], unit?: LengthUnit): void {
+        if (vector.length < 2) throw new Error(`Vector needs to be a 2D coordinate!`);
+        this.x = vector[0];
+        this.y = vector[1];
+        if (unit !== undefined)
+            this.unit = unit;
     }
 
-    public set point(point: number[]) {
-        this.x = point[0];
-        this.y = point[1];
+    public toVector(unit?: LengthUnit): number [] {
+        if (unit === undefined) {
+            return [this.x, this.y];
+        } else {
+            return [this.unit.convert(this.x, unit), 
+                this.unit.convert(this.y, unit)];
+        }
     }
 
 }

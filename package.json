@@ -16,6 +16,7 @@
   "scripts": {
     "test": "mocha --experimental-worker",
     "test:jenkins": "jenkins-mocha",
+    "benchmark": "matcha",
     "cover": "nyc mocha && nyc report --reporter=cobertura",
     "lint": "tslint -c tslint.json --project tsconfig.json",
     "clean": "shx rm -rf ./dist && shx rm -rf ./docs",
@@ -48,11 +49,13 @@
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
+    "@types/benchmark": "^1.0.33",
     "@types/chai": "^4.2.7",
     "@types/mathjs": "^6.0.5",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.42",
     "@types/uuid": "^7.0.4",
+    "benchmark": "^2.1.4",
     "chai": "^4.2.0",
     "csv-parser": "^2.3.2",
     "husky": "^4.0.10",

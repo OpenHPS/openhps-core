@@ -12,6 +12,7 @@
     "include": [
       "models",
       "specs",
+      "bench"
     ],
     "exclude": [
       "../node_modules",
