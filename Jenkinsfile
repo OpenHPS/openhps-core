@@ -6,14 +6,25 @@ pipeline {
             steps {
                 echo 'Building..'
                 npm install
-                npm run build
+                npm run clean
+                npm run build\:typescript
+                npm run build\:webpack
+            }
+        }
+        stage('Documentation') {
+            when {
+                branch "master"
+            }
+            steps {
+                echo 'Building Documentation..'
+                npm run build\:typedoc
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing..'
                 npm run lint
-                npm run test:jenkins
+                npm run test\:jenkins
                 npm run cover
             }
         }
