@@ -46,10 +46,10 @@ pipeline {
                 sh 'npm run publish:release'
             }
         }
-        post {
-            always {
-                junit 'build/reports/**/*.xml'
-            }
+    }
+    post {
+        always {
+            junit 'build/reports/**/*.xml'
         }
     }
 }
