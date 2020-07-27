@@ -75,4 +75,11 @@ export class Orientation extends Array<number[]> {
         return EulerRotation.fromRotationMatrix(this);
     }
 
+    /**
+     * Convert orientation to rotation matrix
+     */
+    public toRotationMatrix(): number[][] {
+        return this;
+    }
+
 }
