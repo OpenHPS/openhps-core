@@ -24,7 +24,7 @@ pipeline {
             steps {
                 echo 'Testing ...'
                 sh 'npm run lint'
-                sh 'npm run test:jenkins'
+                sh 'npm run cover'
             }
         }
         stage('Publish Development') {
@@ -34,6 +34,7 @@ pipeline {
             steps {
                 echo 'Publishing Development ...'
                 sh 'npm run publish:development'
+                sh 'git push origin HEAD:dev'
             }
         }
         stage('Publish Release') {
@@ -43,6 +44,7 @@ pipeline {
             steps {
                 echo 'Publishing Release ...'
                 sh 'npm run publish:release'
+                sh 'git push origin HEAD:master'
             }
         }
     }
