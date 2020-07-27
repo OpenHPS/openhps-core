@@ -5,16 +5,32 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
+                npm install
+                npm run build
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing..'
+                npm run lint
+                npm run test:jenkins
+                npm run cover
             }
         }
-        stage('Deploy') {
+        stage('Development Publish') {
+            when {
+                branch "dev"
+            }
             steps {
-                echo 'Deploying....'
+                echo 'Publishing Development....'
+            }
+        }
+        stage('Release Publish') {
+            when {
+                branch "master"
+            }
+            steps {
+                echo 'Publishing Release....'
             }
         }
     }
