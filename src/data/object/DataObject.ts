@@ -139,7 +139,7 @@ export class DataObject {
             } else {
                 point.push(0, 1);
             }
-            const orientation = transformedPosition.orientation.toEulerRotation();
+            const orientation = transformedPosition.orientation.toEulerRotation().toVector();
             orientation.push(1);
 
             // Inverse of transformation and rotation matrix
@@ -171,7 +171,7 @@ export class DataObject {
             } else {
                 point.push(0, 1);
             }
-            const orientation = transformedPosition.orientation.toEulerRotation();
+            const orientation = transformedPosition.orientation.toEulerRotation().toVector();
             orientation.push(1);
 
             // Transform the point using the transformation matrix

@@ -1,20 +1,24 @@
 import { AngleUnit } from "../unit";
+import { SerializableObject, SerializableMember } from "../../data/decorators";
 
 /**
  * Euler rotation
  * @source https://github.com/mrdoob/three.js/blob/master/src/math/Euler.js
  */
+@SerializableObject()
 export class EulerRotation extends Array<number> {
-    public order: EulerOrder = EulerOrder.XYZ;
+    @SerializableMember()
+    public order: EulerOrder = 'XYZ';
 
-    constructor(x: number = 0, y: number = 0, z: number = 0, order: EulerOrder = EulerOrder.XYZ, unit: AngleUnit = AngleUnit.RADIANS) {
+    constructor(x: number = 0, y: number = 0, z: number = 0, order: EulerOrder = 'XYZ', unit: AngleUnit = AngleUnit.RADIANS) {
         super();
-        this[0] = unit.convert(x, AngleUnit.RADIANS);
-        this[1] = unit.convert(y, AngleUnit.RADIANS);
-        this[2] = unit.convert(z, AngleUnit.RADIANS);
+        this.x = unit.convert(x, AngleUnit.RADIANS);
+        this.y = unit.convert(y, AngleUnit.RADIANS);
+        this.z = unit.convert(z, AngleUnit.RADIANS);
         this.order = order;
     }
 
+    @SerializableMember()
     public get x(): number {
         return this[0];
     }
@@ -23,6 +27,7 @@ export class EulerRotation extends Array<number> {
         this[0] = value;
     }
 
+    @SerializableMember()
     public get y(): number {
         return this[1];
     }
@@ -31,6 +36,7 @@ export class EulerRotation extends Array<number> {
         this[1] = value;
     }
 
+    @SerializableMember()
     public get z(): number {
         return this[2];
     }
@@ -47,13 +53,13 @@ export class EulerRotation extends Array<number> {
         ];
     }
 
-    public static fromRotationMatrix(m: number[][], order: EulerOrder = EulerOrder.XYZ): EulerRotation {
+    public static fromRotationMatrix(m: number[][], order: EulerOrder = 'XYZ'): EulerRotation {
         let x = 0;
         let y = 0;
         let z = 0;
 
         switch (order) {
-            case EulerOrder.XYZ:
+            case 'XYZ':
                 y = Math.asin(Math.max(-1, Math.min(1, m[0][2])));
 
                 if (Math.abs(m[0][2]) < 0.9999999) {
@@ -64,7 +70,7 @@ export class EulerRotation extends Array<number> {
                     z = 0;
                 }
                 break;
-            case EulerOrder.YXZ:
+            case 'YXZ':
                 x = Math.asin(-Math.max(-1, Math.min(1, m[1][2])));
 
                 if (Math.abs(m[1][2]) < 0.9999999) {
@@ -75,7 +81,7 @@ export class EulerRotation extends Array<number> {
                     z = 0;
                 }
                 break;
-            case EulerOrder.ZXY:
+            case 'ZXY':
                 x = Math.asin(Math.max(-1, Math.min(1, m[2][1])));
 
                 if (Math.abs(m[2][1]) < 0.9999999) {
@@ -87,7 +93,7 @@ export class EulerRotation extends Array<number> {
                 }
                 break;
 
-            case EulerOrder.ZYX:
+            case 'ZYX':
                 y = Math.asin(-Math.max(-1, Math.min(1, m[2][0])));
 
                 if (Math.abs(m[2][0]) < 0.9999999) {
@@ -99,7 +105,7 @@ export class EulerRotation extends Array<number> {
                 }
                 break;
 
-            case EulerOrder.YZX:
+            case 'YZX':
                 z = Math.asin(Math.max(-1, Math.min(1, m[1][0])));
 
                 if (Math.abs(m[1][0]) < 0.9999999) {
@@ -110,7 +116,7 @@ export class EulerRotation extends Array<number> {
                     y = Math.atan2(m[0][2], m[2][2]);
                 }
                 break;
-            case EulerOrder.XZY:
+            case 'XZY':
                 z = Math.asin(-Math.max(-1, Math.min(1, m[0][1])));
 
                 if (Math.abs(m[0][1]) < 0.9999999) {
@@ -158,7 +164,7 @@ export class EulerRotation extends Array<number> {
         const bd = b * d;
 
         switch (this.order) {
-            case EulerOrder.XZY:
+            case 'XZY':
                 matrix[0][0] = c * e;
                 matrix[0][1] = -f;
                 matrix[0][2] = d * e;
@@ -171,7 +177,7 @@ export class EulerRotation extends Array<number> {
                 matrix[2][1] = b * e;
                 matrix[2][2] = bd * f + ac;
                 break;
-            case EulerOrder.YXZ:
+            case 'YXZ':
                 matrix[0][0] = ce + df * b;
                 matrix[0][1] = de * b - cf;
                 matrix[0][2] = a * d;
@@ -184,7 +190,7 @@ export class EulerRotation extends Array<number> {
                 matrix[2][1] = df + ce * b;
                 matrix[2][2] = a * c;
                 break;
-            case EulerOrder.YZX:
+            case 'YZX':
                 matrix[0][0] = c * e;
                 matrix[0][1] = bd - ac * f;
                 matrix[0][2] = bc * f + ad;
@@ -197,7 +203,7 @@ export class EulerRotation extends Array<number> {
                 matrix[2][1] = ad * f + bc;
                 matrix[2][2] = ac - bd * f;
                 break;
-            case EulerOrder.ZXY:
+            case 'ZXY':
                 matrix[0][0] = ce - df * b;
                 matrix[0][1] = - a * f;
                 matrix[0][2] = de + cf * b;
@@ -210,7 +216,7 @@ export class EulerRotation extends Array<number> {
                 matrix[2][1] = b;
                 matrix[2][2] = a * c;
                 break;
-            case EulerOrder.ZYX:
+            case 'ZYX':
                 matrix[0][0] = c * e;
                 matrix[0][1] = be * d - af;
                 matrix[0][2] = ae * d + bf;
@@ -223,7 +229,7 @@ export class EulerRotation extends Array<number> {
                 matrix[2][1] = b * c;
                 matrix[2][2] = a * c;
                 break;
-            case EulerOrder.XYZ:
+            case 'XYZ':
             default:
                 matrix[0][0] = c * e;
                 matrix[0][1] = -c * f;
@@ -250,11 +256,10 @@ export class EulerRotation extends Array<number> {
 
 }
 
-export enum EulerOrder {
-    XYZ,
-    XZY,
-    YXZ,
-    YZX,
-    ZXY,
-    ZYX
-}
+export type EulerOrder = 
+    'XYZ' |
+    'XZY' |
+    'YXZ' |
+    'YZX' |
+    'ZXY' |
+    'ZYX';

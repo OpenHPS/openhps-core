@@ -22,6 +22,9 @@ export class Velocity {
         this.angular = angular;
     }
 
+    /**
+     * Conver the linear and angular velocity to a transformation matrix
+     */
     public toTransformationMatrix(): number[][] {
         return math.multiply(this.angular.toRotationMatrix(), this.linear.toTranslationMatrix());
     }

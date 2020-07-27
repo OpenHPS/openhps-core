@@ -1,8 +1,25 @@
 import 'mocha';
 import { expect } from 'chai';
-import { Quaternion, Orientation, EulerRotation, EulerOrder, AngleUnit } from '../../../src';
+import { Quaternion, Orientation, EulerRotation, AngleUnit, DataSerializer } from '../../../src';
 
 describe('orientation', () => {
+
+    describe('serializing', () => {
+        
+        it('should be serializable', () => {
+            const quat = new Quaternion(0.3394366, 0.7165883, 0.0754304, 0.6046439);
+            const orientation = Orientation.fromQuaternion(quat);
+            const serialized = DataSerializer.serialize(orientation);
+            const deserialized = DataSerializer.deserialize(serialized);
+            expect(deserialized).to.eql([
+                [ -0.03837707388209988, 0.39525552983443996, 0.9177691658380199, 0 ],
+                [ 0.57768965477268, 0.75818609867256, -0.30237145504484, 0 ],
+                [ -0.81535381178746, 0.51858162346212, -0.2574319942329, 0 ],
+                [ 0, 0, 0, 1 ]
+            ]);
+        });
+
+    });
 
     describe('quaternion', () => {
 
@@ -37,7 +54,7 @@ describe('orientation', () => {
     describe('euler rotation', () => {
 
         it('convert from object', () => {
-            const euler = new EulerRotation(45, 90, 0, EulerOrder.XYZ, AngleUnit.DEGREES);
+            const euler = new EulerRotation(45, 90, 0, 'XYZ', AngleUnit.DEGREES);
             const orientation = Orientation.fromEulerRotation(euler);
             expect(orientation).to.eql([
                 [ 6.123233995736766e-17, -0, 1, 0 ],

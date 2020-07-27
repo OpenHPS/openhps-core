@@ -1,5 +1,4 @@
 import { TypedJSON } from "typedjson";
-import { isArray } from "util";
 
 /**
  * Data serializer
@@ -24,13 +23,19 @@ export class DataSerializer {
             return undefined;
         }
 
-        if (isArray(data)) {
+        const globalDataType = data.constructor;
+
+        if (this.findTypeByName(data.constructor.name)) {
+            const serialized = new TypedJSON(globalDataType as any).toPlainJson(data) as any;
+            serialized['__type'] = globalDataType.name;
+            return serialized;
+        } else if (Array.isArray(data)) {
             const serializedResult = new Array();
             data.forEach(d => {
-                if (d === null || d === undefined) {
+                if (d === null || d === undefined || d !== Object(d)) {
                     serializedResult.push(d);
                 } else {
-                    const dataType = Object.getPrototypeOf(d).constructor;
+                    const dataType = d.constructor;
                     const serialized = new TypedJSON(dataType).toPlainJson(d) as any;
                     serialized['__type'] = dataType.name;
                     serializedResult.push(serialized);
@@ -38,9 +43,8 @@ export class DataSerializer {
             });
             return serializedResult;
         } else {
-            const dataType = Object.getPrototypeOf(data).constructor;
-            const serialized = new TypedJSON(dataType).toPlainJson(data) as any;
-            serialized['__type'] = dataType.name;
+            const serialized = new TypedJSON(globalDataType as any).toPlainJson(data) as any;
+            serialized['__type'] = globalDataType.name;
             return serialized;
         }
     }
@@ -52,7 +56,7 @@ export class DataSerializer {
             return undefined;
         }
 
-        if (isArray(serializedData)) {
+        if (Array.isArray(serializedData)) {
             const deserializedResult = new Array();
             serializedData.forEach(d => {
                 if (d === null || d === undefined) {

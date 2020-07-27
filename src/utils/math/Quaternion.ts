@@ -1,18 +1,22 @@
+import { SerializableMember, SerializableObject } from "../../data/decorators";
+
 /**
  * Quaternion
  * 
  * @source https://github.com/mrdoob/three.js/blob/master/src/math/Quaternion.js
  */
+@SerializableObject()
 export class Quaternion extends Array<number> {
 
     constructor(x: number = 0, y: number = 0, z: number = 0, w: number = 1) {
         super();
-        this[0] = x;
-        this[1] = y;
-        this[2] = z;
-        this[3] = w;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
     }
 
+    @SerializableMember()
     public get x(): number {
         return this[0];
     }
@@ -21,6 +25,7 @@ export class Quaternion extends Array<number> {
         this[0] = value;
     }
 
+    @SerializableMember()
     public get y(): number {
         return this[1];
     }
@@ -33,10 +38,12 @@ export class Quaternion extends Array<number> {
         return this[2];
     }
 
+    @SerializableMember()
     public set z(value: number) {
         this[2] = value;
     }
 
+    @SerializableMember()
     public get w(): number {
         return this[3];
     }
@@ -132,7 +139,7 @@ export class Quaternion extends Array<number> {
      * Clone the quaternion
      */
     public clone(): Quaternion {
-        return new Quaternion(this[0], this[1], this[2], this[3]);
+        return new Quaternion(this.x, this.y, this.z);
     }
 
 }

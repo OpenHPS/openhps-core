@@ -1,13 +1,10 @@
 import { DataFrame, DataObject, AbsolutePosition } from "../../../data";
 import * as math from 'mathjs';
 import { ObjectProcessingNode } from "../../ObjectProcessingNode";
-import { AngularVelocityUnit, LinearVelocityUnit } from "../../../utils";
 import { Orientation } from "../../../data/position/Orientation";
 
 /**
  * Linear and angular velocity processing
- * 
- * TODO: Work with quaternions instead of euler angles
  */
 export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
 
@@ -26,9 +23,9 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                     }
 
                     // Process the linear velocity
-                    const dX = lastPosition.velocity.linear.unit.convert(lastPosition.velocity.linear.x, LinearVelocityUnit.METERS_PER_SECOND);
-                    const dY = lastPosition.velocity.linear.unit.convert(lastPosition.velocity.linear.y, LinearVelocityUnit.METERS_PER_SECOND);
-                    const dZ = lastPosition.velocity.linear.unit.convert(lastPosition.velocity.linear.z, LinearVelocityUnit.METERS_PER_SECOND);
+                    const dX = lastPosition.velocity.linear.x;
+                    const dY = lastPosition.velocity.linear.y;
+                    const dZ = lastPosition.velocity.linear.z;
                     const translationMatrix = math.multiply([
                         [1, 0, 0, 0],
                         [0, 1, 0, 0],
@@ -37,9 +34,9 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                     ], deltaTime / 1000.);
                     
                     // Process the angular velocity
-                    const rX = lastPosition.velocity.angular.unit.convert(lastPosition.velocity.angular.x, AngularVelocityUnit.RADIANS_PER_SECOND);
-                    const rY = lastPosition.velocity.angular.unit.convert(lastPosition.velocity.angular.y, AngularVelocityUnit.RADIANS_PER_SECOND);
-                    const rZ = lastPosition.velocity.angular.unit.convert(lastPosition.velocity.angular.z, AngularVelocityUnit.RADIANS_PER_SECOND);
+                    const rX = lastPosition.velocity.angular.x;
+                    const rY = lastPosition.velocity.angular.y;
+                    const rZ = lastPosition.velocity.angular.z;
                     const rotMatrixZ = [
                         [1, 0, 0, 0],
                         [0, Math.cos(rZ), -Math.sin(rZ), 0],
@@ -73,7 +70,7 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                         point.push(0, 1);
                     }
                     // New orientation in radians
-                    const newOrientation = math.add(lastPosition.orientation.toEulerRotation(), relativeOrientation) as number[];
+                    const newOrientation = math.add(lastPosition.orientation.toEulerRotation().toVector(), relativeOrientation) as number[];
                     newPosition.orientation = Orientation.fromEulerRotation({ x: newOrientation[0], y: newOrientation[1], z: newOrientation[2] });
                     newPosition.fromVector(math.add(point, relativePosition) as number[]);
                     object.setPosition(newPosition);

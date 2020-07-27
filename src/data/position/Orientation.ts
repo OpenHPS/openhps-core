@@ -1,4 +1,4 @@
-import { SerializableObject } from "../decorators";
+import { SerializableObject, SerializableArrayMember } from "../decorators";
 import { Quaternion, EulerRotation, EulerOrder, AngleUnit } from "../../utils";
 
 /**
@@ -6,7 +6,6 @@ import { Quaternion, EulerRotation, EulerOrder, AngleUnit } from "../../utils";
  */
 @SerializableObject()
 export class Orientation extends Array<number[]> {
-
     constructor(rotationMatrix?: number[][]) {
         super();
         if (rotationMatrix === undefined) {
@@ -47,11 +46,19 @@ export class Orientation extends Array<number[]> {
     }
 
     public static fromEulerRotation(rotation: { x: number, y: number, z: number, order?: EulerOrder, unit?: AngleUnit }): Orientation;
+    public static fromEulerRotation(rotation: number[]): Orientation;
     public static fromEulerRotation(rotation: EulerRotation): Orientation;
     public static fromEulerRotation(rotation: any): Orientation {
         const orientation = new Orientation();
-        const rotationMatrix: number[][] = rotation instanceof EulerRotation ? rotation.toRotationMatrix() : 
-            new EulerRotation(rotation.x, rotation.y, rotation.z, rotation.order ? rotation.order : EulerOrder.XYZ, rotation.unit ? rotation.unit : AngleUnit.RADIANS).toRotationMatrix();
+        let rotationMatrix: number[][] = orientation;
+
+        if (rotation instanceof Quaternion) {
+            rotationMatrix = rotation.toRotationMatrix();
+        } else if (rotation instanceof Array) {
+            rotationMatrix = new EulerRotation(rotation[0], rotation[1], rotation[2]).toRotationMatrix();
+        } else {
+            rotationMatrix = new EulerRotation(rotation.x, rotation.y, rotation.z, rotation.order ? rotation.order : 'XYZ', rotation.unit ? rotation.unit : AngleUnit.RADIANS).toRotationMatrix();
+        }
 
         orientation[0] = rotationMatrix[0];
         orientation[1] = rotationMatrix[1];
@@ -75,11 +82,16 @@ export class Orientation extends Array<number[]> {
         return EulerRotation.fromRotationMatrix(this);
     }
 
-    /**
-     * Convert orientation to rotation matrix
-     */
-    public toRotationMatrix(): number[][] {
+    @SerializableArrayMember(Number, { dimensions: 2 })
+    public get rotationMatrix(): number[][] {
         return this;
+    }
+
+    public set rotationMatrix(matrix: number[][]) {
+        this[0] = matrix[0];
+        this[1] = matrix[1];
+        this[2] = matrix[2];
+        this[3] = matrix[3];
     }
 
 }

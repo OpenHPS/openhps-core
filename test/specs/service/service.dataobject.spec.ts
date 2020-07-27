@@ -89,7 +89,7 @@ describe('data object', () => {
 
         it('should find by display name', () => {
             objectDataService.findByDisplayName("Test").then(objects => {
-                expect(objects.length).to.equal(2);
+                expect(objects.length).to.equal(3);
             });
         });
 
