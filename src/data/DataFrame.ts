@@ -5,6 +5,15 @@ import { ReferenceSpace } from './object';
 
 /**
  * Data frame that is passed through each node in a model.
+ * 
+ * ## Usage
+ * 
+ * ### Creation
+ * A data frame can be created with an optional source [[DataObject]] that represents
+ * the object responsible for generating the frame.
+ * ```typescript
+ * const dataFrame = new DataFrame(new DataObject("phone"));
+ * ```
  */
 @SerializableObject()
 export class DataFrame {

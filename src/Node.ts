@@ -9,9 +9,12 @@ import { DataObject } from './data';
 import { DataObjectService } from './service';
 
 /**
- * OpenHPS model node.
+ * The graph node has an input and output [[DataFrame]]
+ * 
+ * ## Usage
+ * 
  */
-export abstract class Node<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends AsyncEventEmitter implements AbstractNode<In, Out> {
+export abstract class Node<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame> extends AsyncEventEmitter implements AbstractNode<In, Out> {
     private _uid: string = uuidv4();
     private _name: string;
     private _graph: AbstractGraph<any, any>;

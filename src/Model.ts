@@ -3,7 +3,7 @@ import { DataService, Service } from "./service";
 import { GraphImpl } from "./graph/_internal/implementations/GraphImpl";
 
 /**
- * This model contains multiple [[Node]]s, [[Service]]s to compute
+ * This model contains multiple [[Node]]s, [[Service]]s to sample
  * [[DataFrame]]s that are pushed or pulled from this model.
  * 
  * ## Usage

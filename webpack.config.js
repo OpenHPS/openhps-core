@@ -1,4 +1,5 @@
 const TerserPlugin = require('terser-webpack-plugin');
+const WebpackAutoInject = require('webpack-auto-inject-version');
 const path = require('path');
 
 module.exports = [{
@@ -7,11 +8,25 @@ module.exports = [{
     devtool: 'source-map',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'openhps-core.bundle.js'
+        filename: 'openhps-core.js'
     },
+    plugins: [
+        new WebpackAutoInject({
+            SHORT: '@openhps/core',
+            components: {
+              AutoIncreaseVersion: false,
+            },
+            componentsOptions: {
+              InjectAsComment: {
+                tag: 'Version: {version} - {date}',
+                dateFormat: 'isoDate',
+              },
+            },
+        }),
+    ],
     externals: {
-        './node_modules/mathjs': 'mathjs',
-    }
+        mathjs: 'mathjs',
+    },
 },{
     mode: 'production',
     entry: './dist/index.js',
@@ -27,11 +42,25 @@ module.exports = [{
               })
         ]
     },
+    plugins: [
+        new WebpackAutoInject({
+            SHORT: '@openhps/core',
+            components: {
+              AutoIncreaseVersion: false,
+            },
+            componentsOptions: {
+              InjectAsComment: {
+                tag: 'Version: {version} - {date}',
+                dateFormat: 'isoDate',
+              },
+            },
+        }),
+    ],
     externals: {
         mathjs: 'mathjs',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'openhps-core.bundle.min.js'
+        filename: 'openhps-core.min.js'
     }
 }];

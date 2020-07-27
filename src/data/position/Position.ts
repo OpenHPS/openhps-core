@@ -5,8 +5,7 @@ import { DataSerializer } from "../DataSerializer";
 import { Orientation } from "./Orientation";
 
 /**
- * General abstract position class consisting of orientation and velocity.
- * Regardless on the type of position, each position should have a specific accuracy.
+ * General abstract position class consisting of orientation, velocity, position unit and an accuracy.
  */
 @SerializableObject()
 export abstract class Position {

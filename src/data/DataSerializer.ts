@@ -1,7 +1,14 @@
 import { TypedJSON } from "typedjson";
 
 /**
- * Data serializer
+ * Data serializer allows the serialization of objects using the [[SerializableObject]] decorator.
+ * 
+ * ## Usage
+ * Objects are registered upon loading with the [[SerializableObject]] decorator.
+ * Manual registration is possible using:
+ * ```typescript
+ * DataSerializer.registerType(MyObjectClass);
+ * ```
  */
 export class DataSerializer {
     private static _serializableTypes: Map<string, new () => any> = new Map();
