@@ -45,6 +45,10 @@ export class Orientation extends Array<number[]> {
         return orientation;
     }
 
+    /**
+     * Create an orientation based on euler angles
+     * @param rotation Euler angles
+     */
     public static fromEulerRotation(rotation: { x: number, y: number, z: number, order?: EulerOrder, unit?: AngleUnit }): Orientation;
     public static fromEulerRotation(rotation: number[]): Orientation;
     public static fromEulerRotation(rotation: EulerRotation): Orientation;
@@ -82,12 +86,19 @@ export class Orientation extends Array<number[]> {
         return EulerRotation.fromRotationMatrix(this);
     }
 
+    /**
+     * Convert orientation to rotation matrix
+     */
+    public toRotationMatrix(): number[][] {
+        return this.rotationMatrix;
+    }
+
     @SerializableArrayMember(Number, { dimensions: 2 })
-    public get rotationMatrix(): number[][] {
+    private get rotationMatrix(): number[][] {
         return this;
     }
 
-    public set rotationMatrix(matrix: number[][]) {
+    private set rotationMatrix(matrix: number[][]) {
         this[0] = matrix[0];
         this[1] = matrix[1];
         this[2] = matrix[2];
