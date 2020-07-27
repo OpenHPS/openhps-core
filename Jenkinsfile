@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
+                echo 'Building ...'
                 sh 'npm install'
                 sh 'npm run clean'
                 sh 'npm run build:typescript'
@@ -22,26 +22,33 @@ pipeline {
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+                echo 'Testing ...'
                 sh 'npm run lint'
                 sh 'npm run test:jenkins'
                 sh 'npm run cover'
             }
         }
-        stage('Development Publish') {
+        stage('Publish Development') {
             when {
                 branch "dev"
             }
             steps {
-                echo 'Publishing Development....'
+                echo 'Publishing Development ...'
+                sh 'npm run publish:development'
             }
         }
-        stage('Release Publish') {
+        stage('Publish Release') {
             when {
                 branch "master"
             }
             steps {
-                echo 'Publishing Release....'
+                echo 'Publishing Release ...'
+                sh 'npm run publish:release'
+            }
+        }
+        post {
+            always {
+                junit 'build/reports/**/*.xml'
             }
         }
     }
