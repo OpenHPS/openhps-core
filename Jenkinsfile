@@ -5,10 +5,10 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                npm install
-                npm run clean
-                npm run build\:typescript
-                npm run build\:webpack
+                sh 'npm install'
+                sh 'npm run clean'
+                sh 'npm run build:typescript'
+                sh 'npm run build:webpack'
             }
         }
         stage('Documentation') {
@@ -17,15 +17,15 @@ pipeline {
             }
             steps {
                 echo 'Building Documentation..'
-                npm run build\:typedoc
+                sh 'npm run build:typedoc'
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing..'
-                npm run lint
-                npm run test\:jenkins
-                npm run cover
+                sh 'npm run lint'
+                sh 'npm run test:jenkins'
+                sh 'npm run cover'
             }
         }
         stage('Development Publish') {
