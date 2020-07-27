@@ -25,7 +25,6 @@ pipeline {
                 echo 'Testing ...'
                 sh 'npm run lint'
                 sh 'npm run test:jenkins'
-                sh 'npm run cover'
             }
         }
         stage('Publish Development') {
@@ -49,7 +48,7 @@ pipeline {
     }
     post {
         always {
-            junit 'build/reports/**/*.xml'
+            junit 'coverage/cobertura-coverage.xml'
         }
     }
 }
