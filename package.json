@@ -24,9 +24,9 @@
     "build:typescript": "tsc",
     "build:typedoc": "typedoc --exclude **/_internal/**/* --excludePrivate --hideGenerator --out docs src",
     "build:webpack": "webpack",
-    "publish:development": "standard-version --prerelease alpha -m 'chore(alpha): %s [ci-skip]' && npm publish --tag dev",
-    "publish:beta": "standard-version --prerelease beta -m 'chore(beta): %s [ci-skip]' && npm publish --tag beta",
-    "publish:release": "standard-version -m 'chore(release): %s [ci-skip]' && npm publish --tag latest"
+    "publish:development": "standard-version --prerelease alpha -m 'chore(alpha): %s' --author='ci <ci@openhps.org>' && npm publish --tag dev",
+    "publish:beta": "standard-version --prerelease beta -m 'chore(beta): %s' --author='ci <ci@openhps.org>' && npm publish --tag beta",
+    "publish:release": "standard-version -m 'chore(release): %s' --author='ci <ci@openhps.org>' && npm publish --tag latest"
   },
   "keywords": [
     "openhps",
