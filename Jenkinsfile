@@ -50,8 +50,8 @@ pipeline {
     }
     post {
         always {
-            junit 'test-results.xml'
-            cobertura coberturaReportFile: 'coverage/cobertura-coverage.xml'
+            junit 'artifacts/test/xunit.xml'
+            cobertura coberturaReportFile: 'artifacts/coverage/cobertura-coverage.xml'
         }
     }
 }
