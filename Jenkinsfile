@@ -11,6 +11,12 @@ pipeline {
                 sh 'npm run build:webpack'
             }
         }
+        stage('Quality') {
+            steps {
+                echo 'Checking code quality ...'
+                sh 'npm run lint'
+            }
+        }
         stage('Documentation') {
             when {
                 branch "master"
@@ -23,7 +29,6 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing ...'
-                sh 'npm run lint'
                 sh 'npm run test:jenkins'
             }
         }
