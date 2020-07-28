@@ -25,6 +25,10 @@ This repository contains the core component for OpenHPS (Open Source Hybrid Posi
 OpenHPS is a graph-based data processing positioning framework. It is designed to support many different use cases ranging from simple positioning such as detecting the position of a pawn on a chessboard using RFID, to indoor positioning methods using multiple cameras.
 
 ## Features
+- 2D, 3D and Geographical positioning
+- Relative positioning based on angle and distance
+- Basic Dead Reckoning
+- Basic positioning algorithms (e.g. trilateration, triangulation, fingerprinting, ...)
 
 ## Getting Started
 If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps/core with the following command.
