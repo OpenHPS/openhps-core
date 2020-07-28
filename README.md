@@ -4,8 +4,6 @@
 </h1>
 <p align="center">
   <a href="https://ci.mvdw-software.com/job/openhps-core/" target="_blank"><img alt="Build Status" src="https://ci.mvdw-software.com/job/openhps-core/job/dev/badge/icon"></a>
-  <a href="https://ci.mvdw-software.com/job/openhps-core/job/dev/lastCompletedBuild/testReport/s" target="_blank"><img alt="Tests" src="https://img.shields.io/jenkins/tests/http/ci.mvdw-software.com/job/openhps-core?compact_message"></a>
-  <a href="https://ci.mvdw-software.com/view/OpenHPS/job/openhps-core/cobertura/" target="_blank"><img alt="Coverage" src="https://img.shields.io/jenkins/coverage/cobertura/http/ci.mvdw-software.com/job/openhps-core" /></a>
 </p>
 
 <h3 align="center">
