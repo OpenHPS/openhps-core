@@ -25,7 +25,6 @@ pipeline {
                 echo 'Testing ...'
                 sh 'npm run lint'
                 sh 'npm run test:jenkins'
-                sh 'npm run cover'
             }
         }
         stage('Publish Development') {
