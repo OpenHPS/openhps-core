@@ -60,7 +60,7 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                     // The relative position is the transformation matrix rotated using the orientation
                     const relativePosition = math.multiply(math.multiply([0, 0, 0, 1], transformationMatrix), lastPosition.orientation);
                     const relativeOrientation = math.multiply([rX, rY, rZ], deltaTime / 1000.);
-
+ 
                     // Predict the next location
                     const newPosition = lastPosition;
                     const point = newPosition.toVector();

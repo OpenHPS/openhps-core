@@ -54,22 +54,21 @@ export class AngularVelocity extends Array<number> {
     }
 
     public toRotationMatrix(): number[][] {
-        const v = this.toVector();
         const rotMatrixZ = [
             [1, 0, 0, 0],
-            [0, Math.cos(v[2]), -Math.sin(v[2]), 0],
-            [0, Math.sin(v[2]), Math.cos(v[2]), 0],
+            [0, Math.cos(this[2]), -Math.sin(this[2]), 0],
+            [0, Math.sin(this[2]), Math.cos(this[2]), 0],
             [0, 0, 0, 1]
         ];
         const rotMatrixY = [
-            [Math.cos(v[1]), 0, Math.sin(v[1]), 0],
+            [Math.cos(this[1]), 0, Math.sin(this[1]), 0],
             [0, 1, 0, 0],
-            [-Math.sin(v[1]), 0, Math.cos(v[1]), 0],
+            [-Math.sin(this[1]), 0, Math.cos(this[1]), 0],
             [0, 0, 0, 1]
         ];
         const rotMatrixX = [
-            [Math.cos(v[0]), -Math.sin(v[0]), 0, 0],
-            [Math.sin(v[0]), Math.cos(v[0]), 0, 0],
+            [Math.cos(this[0]), -Math.sin(this[0]), 0, 0],
+            [Math.sin(this[0]), Math.cos(this[0]), 0, 0],
             [0, 0, 1, 0],
             [0, 0, 0, 1]
         ];

@@ -24,12 +24,13 @@ This repository contains the core component for OpenHPS (Open Source Hybrid Posi
 
 OpenHPS is a graph-based data processing positioning framework. It is designed to support many different use cases ranging from simple positioning such as detecting the position of a pawn on a chessboard using RFID, to indoor positioning methods using multiple cameras.
 
+## Features
+
 ## Getting Started
 If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps/core with the following command.
 ```bash
 npm install @openhps/core --save
 ```
-
 ## Contributors
 The framework is open source and is mainly developed by PhD Student Maxim Van de Wynckel as part of his research towards *Hybrid Positioning and Implicit Human-Computer Interaction* under the supervision of Prof. Dr. Beat Signer.
 

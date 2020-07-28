@@ -1,5 +1,6 @@
 import { AngleUnit } from "../unit";
 import { SerializableObject, SerializableMember } from "../../data/decorators";
+import * as math from 'mathjs';
 
 /**
  * Euler rotation
@@ -132,119 +133,40 @@ export class EulerRotation extends Array<number> {
     }
 
     public toRotationMatrix(): number[][] {
-        const matrix: number[][] = [
+        const rotMatrixX = [
             [1, 0, 0, 0],
+            [0, Math.cos(this[0]), -Math.sin(this[0]), 0],
+            [0, Math.sin(this[0]), Math.cos(this[0]), 0],
+            [0, 0, 0, 1]
+        ];
+        const rotMatrixY = [
+            [Math.cos(this[1]), 0, Math.sin(this[1]), 0],
             [0, 1, 0, 0],
+            [-Math.sin(this[1]), 0, Math.cos(this[1]), 0],
+            [0, 0, 0, 1]
+        ];
+        const rotMatrixZ = [
+            [Math.cos(this[2]), -Math.sin(this[2]), 0, 0],
+            [Math.sin(this[2]), Math.cos(this[2]), 0, 0],
             [0, 0, 1, 0],
             [0, 0, 0, 1]
         ];
 
-        const x = this.x;
-        const y = this.y;
-        const z = this.z;
-
-        const a = Math.cos(x);
-        const b = Math.sin(x);
-        const c = Math.cos(y);
-        const d = Math.sin(y);
-        const e = Math.cos(z);
-        const f = Math.sin(z);
-        
-        const ce = c * e;
-        const cf = c * f;
-        const de = d * e;
-        const df = d * f;
-        const ae = a * e;
-        const af = a * f;
-        const be = b * e;
-        const bf = b * f;
-        const ac = a * c;
-        const ad = a * d;
-        const bc = b * c;
-        const bd = b * d;
-
         switch (this.order) {
             case 'XZY':
-                matrix[0][0] = c * e;
-                matrix[0][1] = -f;
-                matrix[0][2] = d * e;
-    
-                matrix[1][0] = ac * f + bd;
-                matrix[1][1] = a * e;
-                matrix[1][2] = ad * f - bc;
-    
-                matrix[2][0] = bc * f - ad;
-                matrix[2][1] = b * e;
-                matrix[2][2] = bd * f + ac;
-                break;
+                return math.multiply(math.multiply(rotMatrixX, rotMatrixZ), rotMatrixY);    
             case 'YXZ':
-                matrix[0][0] = ce + df * b;
-                matrix[0][1] = de * b - cf;
-                matrix[0][2] = a * d;
-
-                matrix[1][0] = a * f;
-                matrix[1][1] = a * e;
-                matrix[1][2] = - b;
-
-                matrix[2][0] = cf * b - de;
-                matrix[2][1] = df + ce * b;
-                matrix[2][2] = a * c;
-                break;
+                return math.multiply(math.multiply(rotMatrixY, rotMatrixX), rotMatrixZ);    
             case 'YZX':
-                matrix[0][0] = c * e;
-                matrix[0][1] = bd - ac * f;
-                matrix[0][2] = bc * f + ad;
-
-                matrix[1][0] = f;
-                matrix[1][1] = a * e;
-                matrix[1][2] = - b * e;
-
-                matrix[2][0] = -d * e;
-                matrix[2][1] = ad * f + bc;
-                matrix[2][2] = ac - bd * f;
-                break;
+                return math.multiply(math.multiply(rotMatrixY, rotMatrixZ), rotMatrixX);    
             case 'ZXY':
-                matrix[0][0] = ce - df * b;
-                matrix[0][1] = - a * f;
-                matrix[0][2] = de + cf * b;
-
-                matrix[1][0] = cf + de * b;
-                matrix[1][1] = a * e;
-                matrix[1][2] = df - ce * b;
-
-                matrix[2][0] = -a * d;
-                matrix[2][1] = b;
-                matrix[2][2] = a * c;
-                break;
+                return math.multiply(math.multiply(rotMatrixZ, rotMatrixX), rotMatrixY);    
             case 'ZYX':
-                matrix[0][0] = c * e;
-                matrix[0][1] = be * d - af;
-                matrix[0][2] = ae * d + bf;
-
-                matrix[1][0] = c * f;
-                matrix[1][1] = bf * d + ae;
-                matrix[1][2] = af * d - be;
-
-                matrix[2][0] = -d;
-                matrix[2][1] = b * c;
-                matrix[2][2] = a * c;
-                break;
+                return math.multiply(math.multiply(rotMatrixZ, rotMatrixY), rotMatrixX);    
             case 'XYZ':
             default:
-                matrix[0][0] = c * e;
-                matrix[0][1] = -c * f;
-                matrix[0][2] = d;
-
-                matrix[1][0] = af + be * d;
-                matrix[1][1] = ae - bf * d;
-                matrix[1][2] = -b * c;
-
-                matrix[2][0] = bf - ae * d;
-                matrix[2][1] = be + af * d;
-                matrix[2][2] = a * c;
-                break;
+                return math.multiply(math.multiply(rotMatrixX, rotMatrixY), rotMatrixZ);    
         }
-        return matrix;
     }
 
     /**

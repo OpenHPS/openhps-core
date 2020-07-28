@@ -8,7 +8,7 @@ import { AbstractSourceNode } from "../graph/interfaces/AbstractSourceNode";
 /**
  * Source node
  */
-export abstract class SourceNode<Out extends DataFrame | DataFrame[]> extends AbstractSourceNode<Out> {
+export abstract class SourceNode<Out extends DataFrame | DataFrame[] = DataFrame> extends AbstractSourceNode<Out> {
     private _source: DataObject;
     private _ignoreMerging: boolean;
 

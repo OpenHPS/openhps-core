@@ -1,4 +1,6 @@
 import { SerializableMember, SerializableObject } from "../../data/decorators";
+import { AxisRotation } from "./AxisRotation";
+import { EulerRotation } from "./EulerRotation";
 
 /**
  * Quaternion
@@ -56,6 +58,9 @@ export class Quaternion extends Array<number> {
         return this;
     }
 
+    /**
+     * Convert quaternion to rotation matrix
+     */
     public toRotationMatrix(): number[][] {
         const matrix: number[][] = [
             [1, 0, 0, 0],
@@ -96,6 +101,26 @@ export class Quaternion extends Array<number> {
         return matrix;
     }
 
+    /**
+     * Convert axis angle rotation to quaternion
+     * 
+     * @param axis Axis rotation
+     */
+    public static fromAxisRotation(axis: AxisRotation): Quaternion {
+        const halfAngle = axis.angle / 2;
+        const s = Math.sin(halfAngle);
+        const x = axis.x * s;
+        const y = axis.y * s;
+        const z = axis.z * s;
+        const w = Math.cos(halfAngle);
+        return new Quaternion(x, y, z, w);
+    }
+
+    /**
+     * Convert rotation matrix to quaternion
+     * 
+     * @param m Rotation matrix
+     */
     public static fromRotationMatrix(m: number[][]): Quaternion {
         let x = 0;
         let y = 0;
@@ -139,7 +164,7 @@ export class Quaternion extends Array<number> {
      * Clone the quaternion
      */
     public clone(): Quaternion {
-        return new Quaternion(this.x, this.y, this.z);
+        return new Quaternion(this.x, this.y, this.z, this.w);
     }
 
 }

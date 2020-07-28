@@ -8,7 +8,7 @@ import { DataFrameService } from "../service";
 /**
  * Sink node
  */
-export abstract class SinkNode<In extends DataFrame | DataFrame[]> extends AbstractSinkNode<In> {
+export abstract class SinkNode<In extends DataFrame | DataFrame[] = DataFrame> extends AbstractSinkNode<In> {
 
     constructor() {
         super();

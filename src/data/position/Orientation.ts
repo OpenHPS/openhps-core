@@ -1,14 +1,17 @@
-import { SerializableObject, SerializableArrayMember } from "../decorators";
-import { Quaternion, EulerRotation, EulerOrder, AngleUnit } from "../../utils";
+import { SerializableObject, SerializableMember } from "../decorators";
+import { Quaternion, EulerRotation, EulerOrder, AngleUnit, AxisRotation } from "../../utils";
 
 /**
  * Orientation rotation matrix
  */
 @SerializableObject()
 export class Orientation extends Array<number[]> {
+    private _quaternion: Quaternion;
+
     constructor(rotationMatrix?: number[][]) {
         super();
-        if (rotationMatrix === undefined) {
+
+        if (rotationMatrix === undefined || !Array.isArray(rotationMatrix)) {
             this[0] = [1, 0, 0, 0];
             this[1] = [0, 1, 0, 0];
             this[2] = [0, 0, 1, 0];
@@ -19,6 +22,22 @@ export class Orientation extends Array<number[]> {
             this[2] = rotationMatrix[2];
             this[3] = rotationMatrix[3];
         }
+
+        this._quaternion = Quaternion.fromRotationMatrix(this);
+    }
+
+    @SerializableMember()
+    protected get quaternion(): Quaternion {
+        return this._quaternion;
+    }
+
+    protected set quaternion(quat: Quaternion) {
+        this._quaternion = quat;
+        const rotationMatrix = quat.toRotationMatrix();
+        this[0] = rotationMatrix[0];
+        this[1] = rotationMatrix[1];
+        this[2] = rotationMatrix[2];
+        this[3] = rotationMatrix[3];
     }
 
     /**
@@ -29,18 +48,12 @@ export class Orientation extends Array<number[]> {
     public static fromQuaternion(quaternion: Quaternion): Orientation;
     public static fromQuaternion(quaternion: any): Orientation {
         const orientation = new Orientation();
-        let rotationMatrix: number[][] = orientation;
 
         if (quaternion instanceof Quaternion) {
-            rotationMatrix = quaternion.toRotationMatrix();
+            orientation.quaternion = quaternion;
         } else if (quaternion instanceof Array) {
-            rotationMatrix = new Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]).toRotationMatrix();
+            orientation.quaternion = new Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
         }
-
-        orientation[0] = rotationMatrix[0];
-        orientation[1] = rotationMatrix[1];
-        orientation[2] = rotationMatrix[2];
-        orientation[3] = rotationMatrix[3];
 
         return orientation;
     }
@@ -54,9 +67,9 @@ export class Orientation extends Array<number[]> {
     public static fromEulerRotation(rotation: EulerRotation): Orientation;
     public static fromEulerRotation(rotation: any): Orientation {
         const orientation = new Orientation();
-        let rotationMatrix: number[][] = orientation;
-
-        if (rotation instanceof Quaternion) {
+        let rotationMatrix: number[][];
+        
+        if (rotation instanceof EulerRotation) {
             rotationMatrix = rotation.toRotationMatrix();
         } else if (rotation instanceof Array) {
             rotationMatrix = new EulerRotation(rotation[0], rotation[1], rotation[2]).toRotationMatrix();
@@ -64,10 +77,27 @@ export class Orientation extends Array<number[]> {
             rotationMatrix = new EulerRotation(rotation.x, rotation.y, rotation.z, rotation.order ? rotation.order : 'XYZ', rotation.unit ? rotation.unit : AngleUnit.RADIANS).toRotationMatrix();
         }
 
-        orientation[0] = rotationMatrix[0];
-        orientation[1] = rotationMatrix[1];
-        orientation[2] = rotationMatrix[2];
-        orientation[3] = rotationMatrix[3];
+        orientation.quaternion = Quaternion.fromRotationMatrix(rotationMatrix);
+        return orientation;
+    }
+
+    /**
+     * Create an orientation based on axis angles
+     * @param rotation axis angles
+     */
+    public static fromAxisRotation(rotation: { x: number, y: number, z: number, angle: number, unit?: AngleUnit }): Orientation;
+    public static fromAxisRotation(rotation: number[]): Orientation;
+    public static fromAxisRotation(rotation: AxisRotation): Orientation;
+    public static fromAxisRotation(rotation: any): Orientation {
+        const orientation = new Orientation();
+
+        if (rotation instanceof AxisRotation) {
+            orientation.quaternion = Quaternion.fromAxisRotation(rotation);
+        } else if (rotation instanceof Array) {
+            orientation.quaternion = Quaternion.fromAxisRotation(new AxisRotation(rotation[0], rotation[1], rotation[2], rotation[3]));
+        } else {
+            orientation.quaternion = Quaternion.fromAxisRotation(new AxisRotation(rotation.x, rotation.y, rotation.z, rotation.angle, rotation.unit ? rotation.unit : AngleUnit.RADIANS));
+        }
 
         return orientation;
     }
@@ -90,19 +120,14 @@ export class Orientation extends Array<number[]> {
      * Convert orientation to rotation matrix
      */
     public toRotationMatrix(): number[][] {
-        return this.rotationMatrix;
-    }
-
-    @SerializableArrayMember(Number, { dimensions: 2 })
-    private get rotationMatrix(): number[][] {
         return this;
     }
 
-    private set rotationMatrix(matrix: number[][]) {
-        this[0] = matrix[0];
-        this[1] = matrix[1];
-        this[2] = matrix[2];
-        this[3] = matrix[3];
+    /**
+     * Convert orientation to axis rotation
+     */
+    public toAxisRotation(): AxisRotation {
+        return null;
     }
 
 }

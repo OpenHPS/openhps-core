@@ -5,7 +5,7 @@ import { isFunction } from "util";
 /**
  * Processing node that processes each [[DataObject]] in a [[DataFrame]] individually
  */
-export abstract class ObjectProcessingNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
+export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> extends ProcessingNode<InOut, InOut> {
     private _filterFn: (object: DataObject, frame?: InOut) => boolean = (object: DataObject) => true;
 
     constructor(filterFn?: (object: DataObject, frame?: InOut) => boolean) {

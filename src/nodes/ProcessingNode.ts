@@ -6,7 +6,7 @@ import { Model } from "../Model";
 /**
  * Processing node
  */
-export abstract class ProcessingNode<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends Node<In, Out> {
+export abstract class ProcessingNode<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame> extends Node<In, Out> {
 
     constructor() {
         super();

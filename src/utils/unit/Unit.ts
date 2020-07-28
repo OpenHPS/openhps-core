@@ -62,6 +62,11 @@ export class Unit {
      * Convert a value in the current unit to a target unit
      */
     public convert(value: number, targetUnit: Unit): number {
+        // Do not convert if target unit is the same
+        if (targetUnit.hash === this.hash) {
+            return value;
+        }
+        
         const currentValue = this.to(value);
         const targetValue = targetUnit.from(currentValue);
         return targetValue;
