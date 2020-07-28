@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="18.4640" tests="98" failures="0">
+  <testsuite name="Root Suite" timestamp="2020-07-27T23:32:37" tests="0" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="data" timestamp="2020-07-27T23:32:37" tests="0" file="D:\workspace\@openhps\core\test\specs\data\data.frame.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="frame" timestamp="2020-07-27T23:32:37" tests="1" file="D:\workspace\@openhps\core\test\specs\data\data.frame.spec.ts" time="0.0060" failures="0">
+    <testcase name="data frame should be serializable and deserializable" time="0.0060" classname="should be serializable and deserializable">
+    </testcase>
+  </testsuite>
+  <testsuite name="data" timestamp="2020-07-27T23:32:37" tests="0" file="D:\workspace\@openhps\core\test\specs\data\data.object.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="object" timestamp="2020-07-27T23:32:37" tests="1" file="D:\workspace\@openhps\core\test\specs\data\data.object.spec.ts" time="0.0020" failures="0">
+    <testcase name="data object should be serializable and deserializable" time="0.0020" classname="should be serializable and deserializable">
+    </testcase>
+  </testsuite>
+  <testsuite name="sensor object" timestamp="2020-07-27T23:32:37" tests="1" file="D:\workspace\@openhps\core\test\specs\data\data.object.spec.ts" time="0.0000" failures="0">
+    <testcase name="data sensor object should be serializable and deserializable" time="0.0000" classname="should be serializable and deserializable">
+    </testcase>
+  </testsuite>
+  <testsuite name="data" timestamp="2020-07-27T23:32:37" tests="0" file="D:\workspace\@openhps\core\test\specs\data\data.referencespace.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="reference space" timestamp="2020-07-27T23:32:37" tests="1" file="D:\workspace\@openhps\core\test\specs\data\data.referencespace.spec.ts" time="0.0010" failures="0">
+    <testcase name="data reference space should initialize with a given transformation matrix" time="0.0010" classname="should initialize with a given transformation matrix">
+    </testcase>
+  </testsuite>
+  <testsuite name="translation" timestamp="2020-07-27T23:32:37" tests="1" file="D:\workspace\@openhps\core\test\specs\data\data.referencespace.spec.ts" time="0.0020" failures="0">
+    <testcase name="data reference space translation should shift position" time="0.0020" classname="should shift position">
+    </testcase>
+  </testsuite>
+  <testsuite name="scaling" timestamp="2020-07-27T23:32:37" tests="2" file="D:\workspace\@openhps\core\test\specs\data\data.referencespace.spec.ts" time="0.0010" failures="0">
+    <testcase name="data reference space scaling should scale up" time="0.0000" classname="should scale up">
+    </testcase>
+    <testcase name="data reference space scaling should scale down" time="0.0010" classname="should scale down">
+    </testcase>
+  </testsuite>
+  <testsuite name="rotation" timestamp="2020-07-27T23:32:37" tests="1" file="D:\workspace\@openhps\core\test\specs\data\data.referencespace.spec.ts" time="0.0010" failures="0">
+    <testcase name="data reference space rotation should rotate on X axis" time="0.0010" classname="should rotate on X axis">
+    </testcase>
+  </testsuite>
+  <testsuite name="positioning model" timestamp="2020-07-27T23:32:37" tests="2" file="D:\workspace\@openhps\core\test\specs\data\data.referencespace.spec.ts" time="0.0080" failures="0">
+    <testcase name="data reference space positioning model should translate the origin offset" time="0.0050" classname="should translate the origin offset">
+    </testcase>
+    <testcase name="data reference space positioning model should inverse the orientation" time="0.0030" classname="should inverse the orientation">
+    </testcase>
+  </testsuite>
+  <testsuite name="dataset" timestamp="2020-07-27T23:32:37" tests="0" file="D:\workspace\@openhps\core\test\specs\dataset\dataset.liwste2017.reverse.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="liwste2017 (reverse beacons)" timestamp="2020-07-27T23:32:37" tests="0" file="D:\workspace\@openhps\core\test\specs\dataset\dataset.liwste2017.reverse.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="trilateration" timestamp="2020-07-27T23:32:37" tests="0" file="D:\workspace\@openhps\core\test\specs\dataset\dataset.liwste2017.reverse.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="raw" timestamp="2020-07-27T23:32:37" tests="2" file="D:\workspace\@openhps\core\test\specs\dataset\dataset.liwste2017.reverse.spec.ts" time="0.3470" failures="0">
+    <testcase name="dataset liwste2017 (reverse beacons) trilateration raw should trilaterate a location based on three relative distances" time="0.0060" classname="should trilaterate a location based on three relative distances">
+    </testcase>
+    <testcase name="dataset liwste2017 (reverse beacons) trilateration raw should perform multiple trilaterations" time="0.3410" classname="should perform multiple trilaterations">
+    </testcase>
+  </testsuite>
+  <testsuite name="dataset" timestamp="2020-07-27T23:32:38" tests="0" file="D:\workspace\@openhps\core\test\specs\dataset\dataset.liwste2017.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="liwste2017" timestamp="2020-07-27T23:32:38" tests="0" file="D:\workspace\@openhps\core\test\specs\dataset\dataset.liwste2017.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="trilateration" timestamp="2020-07-27T23:32:38" tests="0" file="D:\workspace\@openhps\core\test\specs\dataset\dataset.liwste2017.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="calibration" timestamp="2020-07-27T23:32:38" tests="3" file="D:\workspace\@openhps\core\test\specs\dataset\dataset.liwste2017.spec.ts" time="0.0020" failures="0">
+    <testcase name="dataset liwste2017 trilateration calibration should contain calibration data for beacon A" time="0.0010" classname="should contain calibration data for beacon A">
+    </testcase>
+    <testcase name="dataset liwste2017 trilateration calibration should contain calibration data for beacon B" time="0.0000" classname="should contain calibration data for beacon B">
+    </testcase>
+    <testcase name="dataset liwste2017 trilateration calibration should contain calibration data for beacon C" time="0.0010" classname="should contain calibration data for beacon C">
+    </testcase>
+  </testsuite>
+  <testsuite name="raw" timestamp="2020-07-27T23:32:38" tests="2" file="D:\workspace\@openhps\core\test\specs\dataset\dataset.liwste2017.spec.ts" time="0.1110" failures="0">
+    <testcase name="dataset liwste2017 trilateration raw should trilaterate a location based on three relative distances" time="0.0020" classname="should trilaterate a location based on three relative distances">
+    </testcase>
+    <testcase name="dataset liwste2017 trilateration raw should perform multiple trilaterations" time="0.1090" classname="should perform multiple trilaterations">
+    </testcase>
+  </testsuite>
+  <testsuite name="example" timestamp="2020-07-27T23:32:38" tests="0" file="D:\workspace\@openhps\core\test\specs\examples\example.motor.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="motor" timestamp="2020-07-27T23:32:38" tests="1" file="D:\workspace\@openhps\core\test\specs\examples\example.motor.spec.ts" time="0.0000" failures="0">
+    <testcase name="example motor should calculate moving forward" time="0.0000" classname="should calculate moving forward">
+    </testcase>
+  </testsuite>
+  <testsuite name="model" timestamp="2020-07-27T23:32:38" tests="0" file="D:\workspace\@openhps\core\test\specs\model.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="builder" timestamp="2020-07-27T23:32:38" tests="5" file="D:\workspace\@openhps\core\test\specs\model.spec.ts" time="0.0030" failures="0">
+    <testcase name="model builder should have an input and output by default" time="0.0000" classname="should have an input and output by default">
+    </testcase>
+    <testcase name="model builder should be able to broadcast to multiple nodes" time="0.0010" classname="should be able to broadcast to multiple nodes">
+    </testcase>
+    <testcase name="model builder should reject building when node rejects build" time="0.0010" classname="should reject building when node rejects build">
+    </testcase>
+    <testcase name="model builder should be able to take uids in from, via and to" time="0.0000" classname="should be able to take uids in from, via and to">
+    </testcase>
+    <testcase name="model builder should be able to take graph shapes" time="0.0010" classname="should be able to take graph shapes">
+    </testcase>
+  </testsuite>
+  <testsuite name="resolve chain" timestamp="2020-07-27T23:32:38" tests="1" file="D:\workspace\@openhps\core\test\specs\model.spec.ts" time="0.0020" failures="0">
+    <testcase name="model resolve chain should only resolve a push after reaching a sink" time="0.0020" classname="should only resolve a push after reaching a sink">
+    </testcase>
+  </testsuite>
+  <testsuite name="node" timestamp="2020-07-27T23:32:38" tests="0" file="D:\workspace\@openhps\core\test\specs\nodes\dsp\node.bkfilter.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="basic kalman filter" timestamp="2020-07-27T23:32:38" tests="1" file="D:\workspace\@openhps\core\test\specs\nodes\dsp\node.bkfilter.spec.ts" time="0.0040" failures="0">
+    <testcase name="node basic kalman filter should filter values in a data frame" time="0.0040" classname="should filter values in a data frame">
+    </testcase>
+  </testsuite>
+  <testsuite name="list source" timestamp="2020-07-27T23:32:38" tests="0" file="D:\workspace\@openhps\core\test\specs\nodes\node.listsource.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="layer" timestamp="2020-07-27T23:32:38" tests="2" file="D:\workspace\@openhps\core\test\specs\nodes\node.listsource.spec.ts" time="0.0010" failures="0">
+    <testcase name="list source layer should pop items from the list" time="0.0010" classname="should pop items from the list">
+    </testcase>
+    <testcase name="list source layer should add a merge node internally" time="0.0000" classname="should add a merge node internally">
+    </testcase>
+  </testsuite>
+  <testsuite name="node" timestamp="2020-07-27T23:32:38" tests="0" file="D:\workspace\@openhps\core\test\specs\nodes\node.processing.velocity.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="processing velocity" timestamp="2020-07-27T23:32:38" tests="4" file="D:\workspace\@openhps\core\test\specs\nodes\node.processing.velocity.spec.ts" time="2.0070" failures="0">
+    <testcase name="node processing velocity should process linear velocity" time="0.5010" classname="should process linear velocity">
+    </testcase>
+    <testcase name="node processing velocity should process linear velocity in a given direction (orientation)" time="0.5020" classname="should process linear velocity in a given direction (orientation)">
+    </testcase>
+    <testcase name="node processing velocity should process angular velocity on the orientation" time="0.5020" classname="should process angular velocity on the orientation">
+    </testcase>
+    <testcase name="node processing velocity should process angular velocity on the linear movement" time="0.5020" classname="should process angular velocity on the linear movement">
+    </testcase>
+  </testsuite>
+  <testsuite name="node" timestamp="2020-07-27T23:32:40" tests="0" file="D:\workspace\@openhps\core\test\specs\nodes\node.referenceconversion.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="referenceconversion" timestamp="2020-07-27T23:32:40" tests="2" file="D:\workspace\@openhps\core\test\specs\nodes\node.referenceconversion.spec.ts" time="0.0040" failures="0">
+    <testcase name="node referenceconversion should convert from and to the reference space" time="0.0020" classname="should convert from and to the reference space">
+    </testcase>
+    <testcase name="node referenceconversion should work with stored reference spaces" time="0.0020" classname="should work with stored reference spaces">
+    </testcase>
+  </testsuite>
+  <testsuite name="node" timestamp="2020-07-27T23:32:40" tests="0" file="D:\workspace\@openhps\core\test\specs\nodes\node.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="uid" timestamp="2020-07-27T23:32:40" tests="2" file="D:\workspace\@openhps\core\test\specs\nodes\node.spec.ts" time="0.0000" failures="0">
+    <testcase name="node uid should not be null" time="0.0000" classname="should not be null">
+    </testcase>
+    <testcase name="node uid should be changeablel" time="0.0000" classname="should be changeablel">
+    </testcase>
+  </testsuite>
+  <testsuite name="pull" timestamp="2020-07-27T23:32:40" tests="1" file="D:\workspace\@openhps\core\test\specs\nodes\node.spec.ts" time="0.0010" failures="0">
+    <testcase name="node pull should trigger exception" time="0.0010" classname="should trigger exception">
+    </testcase>
+  </testsuite>
+  <testsuite name="push" timestamp="2020-07-27T23:32:40" tests="1" file="D:\workspace\@openhps\core\test\specs\nodes\node.spec.ts" time="0.0000" failures="0">
+    <testcase name="node push should trigger exception" time="0.0000" classname="should trigger exception">
+    </testcase>
+  </testsuite>
+  <testsuite name="node" timestamp="2020-07-27T23:32:40" tests="0" file="D:\workspace\@openhps\core\test\specs\nodes\node.triangulation.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="triangulation" timestamp="2020-07-27T23:32:40" tests="1" file="D:\workspace\@openhps\core\test\specs\nodes\node.triangulation.spec.ts" time="0.0030" failures="0">
+    <testcase name="node triangulation should calculate a location based on three angles" time="0.0030" classname="should calculate a location based on three angles">
+    </testcase>
+  </testsuite>
+  <testsuite name="node" timestamp="2020-07-27T23:32:40" tests="0" file="D:\workspace\@openhps\core\test\specs\nodes\node.worker.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="worker js" timestamp="2020-07-27T23:32:40" tests="1" file="D:\workspace\@openhps\core\test\specs\nodes\node.worker.spec.ts" time="0.0610" failures="0">
+    <testcase name="node worker js should process data as a normal node" time="0.0610" classname="should process data as a normal node">
+    </testcase>
+  </testsuite>
+  <testsuite name="worker ts" timestamp="2020-07-27T23:32:40" tests="1" file="D:\workspace\@openhps\core\test\specs\nodes\node.worker.spec.ts" time="0.4220" failures="0">
+    <testcase name="node worker ts should process data as a normal node" time="0.4220" classname="should process data as a normal node">
+    </testcase>
+  </testsuite>
+  <testsuite name="worker node" timestamp="2020-07-27T23:32:40" tests="4" file="D:\workspace\@openhps\core\test\specs\nodes\node.worker.spec.ts" time="13.8100" failures="0">
+    <testcase name="node worker node should take 30ms with 1 worker" time="3.2750" classname="should take 30ms with 1 worker">
+    </testcase>
+    <testcase name="node worker node should take 20ms with 2 workers" time="3.2830" classname="should take 20ms with 2 workers">
+    </testcase>
+    <testcase name="node worker node should take 10ms with 3 workers" time="3.8300" classname="should take 10ms with 3 workers">
+    </testcase>
+    <testcase name="node worker node should be able to access services" time="3.4220" classname="should be able to access services">
+    </testcase>
+  </testsuite>
+  <testsuite name="node" timestamp="2020-07-27T23:32:54" tests="0" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.balance.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="balance" timestamp="2020-07-27T23:32:54" tests="3" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.balance.spec.ts" time="0.0640" failures="0">
+    <testcase name="node balance should take 30ms to execute with one time consuming layer" time="0.0320" classname="should take 30ms to execute with one time consuming layer">
+    </testcase>
+    <testcase name="node balance should take 10ms to execute with 3 time consuming layers" time="0.0110" classname="should take 10ms to execute with 3 time consuming layers">
+    </testcase>
+    <testcase name="node balance should take 20ms to execute with 2 time consuming layers" time="0.0210" classname="should take 20ms to execute with 2 time consuming layers">
+    </testcase>
+  </testsuite>
+  <testsuite name="node" timestamp="2020-07-27T23:32:54" tests="0" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.chunk.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="frame chunk" timestamp="2020-07-27T23:32:54" tests="1" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.chunk.spec.ts" time="0.0010" failures="0">
+    <testcase name="node frame chunk should chunk data frames in frames of 3" time="0.0010" classname="should chunk data frames in frames of 3">
+    </testcase>
+  </testsuite>
+  <testsuite name="node" timestamp="2020-07-27T23:32:54" tests="0" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.filter.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="frame filter" timestamp="2020-07-27T23:32:54" tests="1" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.filter.spec.ts" time="0.0010" failures="0">
+    <testcase name="node frame filter should filter data frames" time="0.0010" classname="should filter data frames">
+    </testcase>
+  </testsuite>
+  <testsuite name="node" timestamp="2020-07-27T23:32:54" tests="0" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.flatten.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="frame flatten" timestamp="2020-07-27T23:32:54" tests="1" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.flatten.spec.ts" time="0.0010" failures="0">
+    <testcase name="node frame flatten should flatten data frames that are chunked" time="0.0010" classname="should flatten data frames that are chunked">
+    </testcase>
+  </testsuite>
+  <testsuite name="node" timestamp="2020-07-27T23:32:54" tests="0" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.framemerge.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="frame merge node" timestamp="2020-07-27T23:32:54" tests="1" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.framemerge.spec.ts" time="0.0030" failures="0">
+    <testcase name="node frame merge node should merge from multiple sources with same parent" time="0.0030" classname="should merge from multiple sources with same parent">
+    </testcase>
+  </testsuite>
+  <testsuite name="node" timestamp="2020-07-27T23:32:54" tests="0" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.memorybuffer.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="frame memory buffer" timestamp="2020-07-27T23:32:54" tests="1" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.memorybuffer.spec.ts" time="0.0010" failures="0">
+    <testcase name="node frame memory buffer should buffer pushed frames" time="0.0010" classname="should buffer pushed frames">
+    </testcase>
+  </testsuite>
+  <testsuite name="node" timestamp="2020-07-27T23:32:54" tests="0" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.merge.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="source merge" timestamp="2020-07-27T23:32:54" tests="1" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.merge.spec.ts" time="0.0010" failures="0">
+    <testcase name="node source merge should merge data object from the same source uid" time="0.0010" classname="should merge data object from the same source uid">
+    </testcase>
+  </testsuite>
+  <testsuite name="node" timestamp="2020-07-27T23:32:54" tests="0" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.objectfilter.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="object filter" timestamp="2020-07-27T23:32:54" tests="1" file="D:\workspace\@openhps\core\test\specs\nodes\shapes\node.objectfilter.spec.ts" time="0.0010" failures="0">
+    <testcase name="node object filter should filter data objects" time="0.0010" classname="should filter data objects">
+    </testcase>
+  </testsuite>
+  <testsuite name="orientation" timestamp="2020-07-27T23:32:54" tests="0" file="D:\workspace\@openhps\core\test\specs\position\orientation.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="serializing" timestamp="2020-07-27T23:32:54" tests="1" file="D:\workspace\@openhps\core\test\specs\position\orientation.spec.ts" time="0.0010" failures="0">
+    <testcase name="orientation serializing should be serializable" time="0.0010" classname="should be serializable">
+    </testcase>
+  </testsuite>
+  <testsuite name="quaternion" timestamp="2020-07-27T23:32:54" tests="3" file="D:\workspace\@openhps\core\test\specs\position\orientation.spec.ts" time="0.0000" failures="0">
+    <testcase name="orientation quaternion convert from object" time="0.0000" classname="convert from object">
+    </testcase>
+    <testcase name="orientation quaternion convert from array" time="0.0000" classname="convert from array">
+    </testcase>
+    <testcase name="orientation quaternion convert to quaternion" time="0.0000" classname="convert to quaternion">
+    </testcase>
+  </testsuite>
+  <testsuite name="euler rotation" timestamp="2020-07-27T23:32:54" tests="2" file="D:\workspace\@openhps\core\test\specs\position\orientation.spec.ts" time="0.0000" failures="0">
+    <testcase name="orientation euler rotation convert from object" time="0.0000" classname="convert from object">
+    </testcase>
+    <testcase name="orientation euler rotation convert from number array" time="0.0000" classname="convert from number array">
+    </testcase>
+  </testsuite>
+  <testsuite name="position" timestamp="2020-07-27T23:32:54" tests="0" file="D:\workspace\@openhps\core\test\specs\position\position.absolute2d.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Absolute2DPosition" timestamp="2020-07-27T23:32:54" tests="3" file="D:\workspace\@openhps\core\test\specs\position\position.absolute2d.spec.ts" time="0.0010" failures="0">
+    <testcase name="position Absolute2DPosition should calculate the midpoint" time="0.0000" classname="should calculate the midpoint">
+    </testcase>
+    <testcase name="position Absolute2DPosition should trilaterate with three points" time="0.0010" classname="should trilaterate with three points">
+    </testcase>
+    <testcase name="position Absolute2DPosition should triangulate with three points" time="0.0000" classname="should triangulate with three points">
+    </testcase>
+  </testsuite>
+  <testsuite name="position" timestamp="2020-07-27T23:32:54" tests="0" file="D:\workspace\@openhps\core\test\specs\position\position.absolute3d.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Absolute3DPosition" timestamp="2020-07-27T23:32:54" tests="3" file="D:\workspace\@openhps\core\test\specs\position\position.absolute3d.spec.ts" time="0.0010" failures="0">
+    <testcase name="position Absolute3DPosition should calculate the midpoint" time="0.0000" classname="should calculate the midpoint">
+    </testcase>
+    <testcase name="position Absolute3DPosition should trilaterate with three points" time="0.0010" classname="should trilaterate with three points">
+    </testcase>
+    <testcase name="position Absolute3DPosition should triangulate with three points" time="0.0000" classname="should triangulate with three points">
+    </testcase>
+  </testsuite>
+  <testsuite name="position" timestamp="2020-07-27T23:32:54" tests="0" file="D:\workspace\@openhps\core\test\specs\position\position.geographical.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="GeographicalPosition" timestamp="2020-07-27T23:32:54" tests="2" file="D:\workspace\@openhps\core\test\specs\position\position.geographical.spec.ts" time="1.5660" failures="0">
+    <testcase name="position GeographicalPosition should calculate the midpoint" time="0.0010" classname="should calculate the midpoint">
+    </testcase>
+    <testcase name="position GeographicalPosition should trilaterate with three points" time="1.5650" classname="should trilaterate with three points">
+    </testcase>
+  </testsuite>
+  <testsuite name="data frame service" timestamp="2020-07-27T23:32:56" tests="0" file="D:\workspace\@openhps\core\test\specs\service\service.dataframe.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="output layer" timestamp="2020-07-27T23:32:56" tests="1" file="D:\workspace\@openhps\core\test\specs\service\service.dataframe.spec.ts" time="0.0000" failures="0">
+    <testcase name="data frame service output layer should delete frame at the output layer" time="0.0000" classname="should delete frame at the output layer">
+    </testcase>
+  </testsuite>
+  <testsuite name="querying" timestamp="2020-07-27T23:32:56" tests="2" file="D:\workspace\@openhps\core\test\specs\service\service.dataframe.spec.ts" time="0.0140" failures="0">
+    <testcase name="data frame service querying should find data frames before a certain date" time="0.0110" classname="should find data frames before a certain date">
+    </testcase>
+    <testcase name="data frame service querying should find data frames after a certain date" time="0.0030" classname="should find data frames after a certain date">
+    </testcase>
+  </testsuite>
+  <testsuite name="data object" timestamp="2020-07-27T23:32:56" tests="0" file="D:\workspace\@openhps\core\test\specs\service\service.dataobject.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="service" timestamp="2020-07-27T23:32:56" tests="6" file="D:\workspace\@openhps\core\test\specs\service\service.dataobject.spec.ts" time="0.0070" failures="0">
+    <testcase name="data object service should find a object by 2d position" time="0.0020" classname="should find a object by 2d position">
+    </testcase>
+    <testcase name="data object service should find a object by 3d position" time="0.0030" classname="should find a object by 3d position">
+    </testcase>
+    <testcase name="data object service should store objects" time="0.0000" classname="should store objects">
+    </testcase>
+    <testcase name="data object service should throw an error when quering non existing objects" time="0.0000" classname="should throw an error when quering non existing objects">
+    </testcase>
+    <testcase name="data object service should find all items" time="0.0000" classname="should find all items">
+    </testcase>
+    <testcase name="data object service should find by display name" time="0.0020" classname="should find by display name">
+    </testcase>
+  </testsuite>
+  <testsuite name="input layer" timestamp="2020-07-27T23:32:56" tests="3" file="D:\workspace\@openhps\core\test\specs\service\service.dataobject.spec.ts" time="0.0000" failures="0">
+    <testcase name="data object input layer should load unknown objects" time="0.0000" classname="should load unknown objects">
+    </testcase>
+    <testcase name="data object input layer should emit events" time="0.0000" classname="should emit events">
+    </testcase>
+    <testcase name="data object input layer should delete all objects" time="0.0000" classname="should delete all objects">
+    </testcase>
+  </testsuite>
+  <testsuite name="output layer" timestamp="2020-07-27T23:32:56" tests="2" file="D:\workspace\@openhps\core\test\specs\service\service.dataobject.spec.ts" time="0.0000" failures="0">
+    <testcase name="data object output layer should store objects at the output layer" time="0.0000" classname="should store objects at the output layer">
+    </testcase>
+    <testcase name="data object output layer should store unknown data objects at the output layer" time="0.0000" classname="should store unknown data objects at the output layer">
+    </testcase>
+  </testsuite>
+  <testsuite name="node data" timestamp="2020-07-27T23:32:56" tests="0" file="D:\workspace\@openhps\core\test\specs\service\service.nodedata.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="service" timestamp="2020-07-27T23:32:56" tests="1" file="D:\workspace\@openhps\core\test\specs\service\service.nodedata.spec.ts" time="0.0010" failures="0">
+    <testcase name="node data service should store node data" time="0.0010" classname="should store node data">
+    </testcase>
+  </testsuite>
+  <testsuite name="proxy" timestamp="2020-07-27T23:32:56" tests="0" file="D:\workspace\@openhps\core\test\specs\service\service.proxy.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="data object service" timestamp="2020-07-27T23:32:56" tests="2" file="D:\workspace\@openhps\core\test\specs\service\service.proxy.spec.ts" time="0.0000" failures="0">
+    <testcase name="proxy data object service should be able to proxy name requests" time="0.0000" classname="should be able to proxy name requests">
+    </testcase>
+    <testcase name="proxy data object service should be able to proxy function calls" time="0.0000" classname="should be able to proxy function calls">
+    </testcase>
+  </testsuite>
+  <testsuite name="algorithm" timestamp="2020-07-27T23:32:56" tests="0" file="D:\workspace\@openhps\core\test\specs\utils\algorithms\algo.leastsquares.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="least squares" timestamp="2020-07-27T23:32:56" tests="1" file="D:\workspace\@openhps\core\test\specs\utils\algorithms\algo.leastsquares.spec.ts" time="0.0000" failures="0">
+    <testcase name="algorithm least squares should work" time="0.0000" classname="should work">
+    </testcase>
+  </testsuite>
+  <testsuite name="units" timestamp="2020-07-27T23:32:56" tests="1" file="D:\workspace\@openhps\core\test\specs\utils\utils.unit.spec.ts" time="0.0000" failures="0">
+    <testcase name="units should be serializable" time="0.0000" classname="should be serializable">
+    </testcase>
+  </testsuite>
+  <testsuite name="length" timestamp="2020-07-27T23:32:56" tests="0" file="D:\workspace\@openhps\core\test\specs\utils\utils.unit.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="metric units" timestamp="2020-07-27T23:32:56" tests="6" file="D:\workspace\@openhps\core\test\specs\utils\utils.unit.spec.ts" time="0.0010" failures="0">
+    <testcase name="units length metric units should convert from mm to cm" time="0.0000" classname="should convert from mm to cm">
+    </testcase>
+    <testcase name="units length metric units should convert from mm to m" time="0.0010" classname="should convert from mm to m">
+    </testcase>
+    <testcase name="units length metric units should convert from cm to km" time="0.0000" classname="should convert from cm to km">
+    </testcase>
+    <testcase name="units length metric units should convert from m to m" time="0.0000" classname="should convert from m to m">
+    </testcase>
+    <testcase name="units length metric units should handle small numbers" time="0.0000" classname="should handle small numbers">
+    </testcase>
+    <testcase name="units length metric units should handle large numbers" time="0.0000" classname="should handle large numbers">
+    </testcase>
+  </testsuite>
+  <testsuite name="unspecified units" timestamp="2020-07-27T23:32:56" tests="1" file="D:\workspace\@openhps\core\test\specs\utils\utils.unit.spec.ts" time="0.0000" failures="0">
+    <testcase name="units length unspecified units should convert from points to points" time="0.0000" classname="should convert from points to points">
+    </testcase>
+  </testsuite>
+  <testsuite name="square" timestamp="2020-07-27T23:32:56" tests="0" file="D:\workspace\@openhps\core\test\specs\utils\utils.unit.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="unspecified units" timestamp="2020-07-27T23:32:56" tests="1" file="D:\workspace\@openhps\core\test\specs\utils\utils.unit.spec.ts" time="0.0000" failures="0">
+    <testcase name="units square unspecified units should convert from points to points" time="0.0000" classname="should convert from points to points">
+    </testcase>
+  </testsuite>
+  <testsuite name="volume" timestamp="2020-07-27T23:32:56" tests="0" file="D:\workspace\@openhps\core\test\specs\utils\utils.unit.spec.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="unspecified units" timestamp="2020-07-27T23:32:56" tests="1" file="D:\workspace\@openhps\core\test\specs\utils\utils.unit.spec.ts" time="0.0000" failures="0">
+    <testcase name="units volume unspecified units should convert from points to points" time="0.0000" classname="should convert from points to points">
+    </testcase>
+  </testsuite>
+  <testsuite name="angle" timestamp="2020-07-27T23:32:56" tests="2" file="D:\workspace\@openhps\core\test\specs\utils\utils.unit.spec.ts" time="0.0000" failures="0">
+    <testcase name="units angle should convert from degrees to radians" time="0.0000" classname="should convert from degrees to radians">
+    </testcase>
+    <testcase name="units angle should convert from radians to degrees" time="0.0000" classname="should convert from radians to degrees">
+    </testcase>
+  </testsuite>
+</testsuites>

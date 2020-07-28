@@ -24,6 +24,7 @@ pipeline {
             steps {
                 echo 'Testing ...'
                 sh 'npm run lint'
+                sh 'npm run test:jenkins'
                 sh 'npm run cover'
             }
         }
@@ -50,7 +51,8 @@ pipeline {
     }
     post {
         always {
-            junit 'coverage/cobertura-coverage.xml'
+            junit 'test-results.xml'
+            cobertura coberturaReportFile: 'coverage/cobertura-coverage.xml'
         }
     }
 }
