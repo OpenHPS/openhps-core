@@ -35,8 +35,8 @@ pipeline {
             steps {
                 echo 'Publishing Development ...'
                 sh 'npm run publish:development'
-                sh 'git config user.name ci'
-                sh 'git config user.email ci@openhps.org'
+                sh 'git config --global user.name "ci"'
+                sh 'git config --global user.email "ci@openhps.org"'
                 sh 'git push origin HEAD:dev'
             }
         }
@@ -47,8 +47,8 @@ pipeline {
             steps {
                 echo 'Publishing Release ...'
                 sh 'npm run publish:release'
-                sh 'git config user.name ci'
-                sh 'git config user.email ci@openhps.org'
+                sh 'git config --global user.name "ci"'
+                sh 'git config --global user.email "ci@openhps.org"'
                 sh 'git push origin HEAD:master'
             }
         }
