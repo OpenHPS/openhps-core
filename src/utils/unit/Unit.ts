@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { SerializableObject, SerializableMember } from "../../data/decorators";
 
 @SerializableObject({

@@ -13,9 +13,9 @@ module.exports = [{
         filename: 'openhps-core.js'
     },
     plugins: [
-        new ThreadsPlugin({
-          globalObject: false
-        }),
+        // new ThreadsPlugin({
+        //   globalObject: false
+        // }),
         new WebpackAutoInject({
             SHORT: '@openhps/core',
             components: {
@@ -29,8 +29,13 @@ module.exports = [{
             },
         }),
     ],
+    resolve: {
+      alias: {
+        'typedjson': 'typedjson/js/typedjson.min.js',
+        "mathjs": "mathjs/dist/math.min.js"
+      }
+    },
     externals: {
-      "mathjs": 'mathjs',
       "tiny-worker": "tiny-worker"
     },
 },{
@@ -49,7 +54,9 @@ module.exports = [{
         ]
     },
     plugins: [
-     
+        // new ThreadsPlugin({
+        //   globalObject: false
+        // }), 
         new WebpackAutoInject({
             SHORT: '@openhps/core',
             components: {
@@ -66,11 +73,9 @@ module.exports = [{
     resolve: {
       alias: {
         'typedjson': 'typedjson/js/typedjson.min.js',
-        'jsonpath-plus': 'jsonpath-plus/dist/index-es.min.js'
       }
     },
     externals: {
-        "mathjs": 'mathjs',
         "tiny-worker": "tiny-worker"
     },
     output: {

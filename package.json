@@ -8,9 +8,6 @@
     "type": "git",
     "url": "https://github.com/OpenHPS/openhps-core.git"
   },
-  "publishConfig": {
-    "registry": "https://repo.mvdw-software.com/repository/npm-openhps/"
-  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "unpkg": "dist/openhps-core.min.js",
@@ -25,14 +22,13 @@
     "build:typescript": "tsc --module es2015",
     "build:typedoc": "typedoc --exclude **/_internal/**/* --excludePrivate --hideGenerator --out docs src",
     "build:webpack": "webpack",
-    "publish:development": "standard-version --prerelease alpha -m 'chore(alpha): %s' --author='ci <ci@openhps.org>' && npm publish --tag dev",
-    "publish:beta": "standard-version --prerelease beta -m 'chore(beta): %s' --author='ci <ci@openhps.org>' && npm publish --tag beta",
-    "publish:release": "standard-version -m 'chore(release): %s' --author='ci <ci@openhps.org>' && npm publish --tag latest"
+    "publish:development": "standard-version --prerelease alpha -m 'chore(alpha): %s' --author='ci <ci@openhps.org>' && npm publish --tag dev --access public",
+    "publish:beta": "standard-version --prerelease beta -m 'chore(beta): %s' --author='ci <ci@openhps.org>' && npm publish --tag beta --access public",
+    "publish:release": "standard-version -m 'chore(release): %s' --author='ci <ci@openhps.org>' && npm publish --tag latest --access public"
   },
   "keywords": [
     "openhps",
     "ips",
-    "slam",
     "hybrid",
     "positioning",
     "system"

@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { Service } from "./service";
 import { DataFrame, ReferenceSpace } from "./data";
 import { ModelImpl } from "./graph/_internal/implementations";
