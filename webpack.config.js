@@ -1,5 +1,7 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const WebpackAutoInject = require('webpack-auto-inject-version');
+const ThreadsPlugin = require('threads-plugin');
+
 const path = require('path');
 
 module.exports = [{
@@ -11,6 +13,9 @@ module.exports = [{
         filename: 'openhps-core.js'
     },
     plugins: [
+        new ThreadsPlugin({
+          globalObject: false
+        }),
         new WebpackAutoInject({
             SHORT: '@openhps/core',
             components: {
@@ -25,7 +30,8 @@ module.exports = [{
         }),
     ],
     externals: {
-        mathjs: 'mathjs',
+      "mathjs": 'mathjs',
+      "tiny-worker": "tiny-worker"
     },
 },{
     mode: 'production',
@@ -39,10 +45,11 @@ module.exports = [{
                     keep_classnames: true,
                     keep_fnames: true
                 }
-              })
+            })
         ]
     },
     plugins: [
+     
         new WebpackAutoInject({
             SHORT: '@openhps/core',
             components: {
@@ -56,8 +63,15 @@ module.exports = [{
             },
         }),
     ],
+    resolve: {
+      alias: {
+        'typedjson': 'typedjson/js/typedjson.min.js',
+        'jsonpath-plus': 'jsonpath-plus/dist/index-es.min.js'
+      }
+    },
     externals: {
-        mathjs: 'mathjs',
+        "mathjs": 'mathjs',
+        "tiny-worker": "tiny-worker"
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

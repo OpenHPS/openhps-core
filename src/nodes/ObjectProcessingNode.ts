@@ -1,6 +1,5 @@
 import { DataFrame, DataObject } from "../data";
 import { ProcessingNode } from "./ProcessingNode";
-import { isFunction } from "util";
 
 /**
  * Processing node that processes each [[DataObject]] in a [[DataFrame]] individually
@@ -11,7 +10,7 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
     constructor(filterFn?: (object: DataObject, frame?: InOut) => boolean) {
         super();
 
-        if (isFunction(filterFn)) {
+        if (filterFn !== undefined) {
             this._filterFn = filterFn;
         }
     }

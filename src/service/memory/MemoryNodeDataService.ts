@@ -1,5 +1,10 @@
 import { NodeDataService, NodeData } from "../NodeDataService";
 
+/**
+ * Memory node data service
+ *  This service should not be used on a production server
+ *  as its quering is not efficient.
+ */
 export class MemoryNodeDataService<T extends NodeData | NodeData> extends NodeDataService<T> {
     protected _data: Map<string, T> = new Map();
 

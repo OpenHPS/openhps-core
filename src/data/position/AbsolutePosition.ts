@@ -18,4 +18,16 @@ export abstract class AbsolutePosition extends Position {
     public abstract fromVector(vector: number[], unit?: LengthUnit): void;
     
     public abstract toVector(unit?: LengthUnit): number[];
+
+    public equals(position: AbsolutePosition): boolean {
+        const s = this.toVector();
+        const o = position.toVector();
+        if (s.length !== o.length) return false;
+
+        for (let i = 0; s.length < i; i++) {
+            if (s[i] !== o[i]) return false;
+        }
+        return true;
+    }
+
 }

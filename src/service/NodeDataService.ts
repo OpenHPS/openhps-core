@@ -22,7 +22,16 @@ export abstract class NodeDataService<T extends NodeData | NodeData> extends Dat
     }
 
     protected getUID(nodeUID: string, dataObjectUID: string): string {
-        return Buffer.from(nodeUID + dataObjectUID).toString('base64');
+        const str = nodeUID + dataObjectUID;
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            // tslint:disable-next-line
+            hash = ((hash << 5) - hash) + char;
+            // tslint:disable-next-line
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return hash.toString();
     }
 
 }

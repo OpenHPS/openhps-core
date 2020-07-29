@@ -30,7 +30,16 @@ export class Unit {
         this._fromReference = fromReference;
 
         if (toReference !== undefined && fromReference !== undefined) {
-            this._hash = Buffer.from(`${this.constructor.name}${this._toReference.toString()}${this._fromReference.toString()}`).toString('base64');
+            const str = `${this.constructor.name}${this._toReference.toString()}${this._fromReference.toString()}`;
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                // tslint:disable-next-line
+                hash = ((hash << 5) - hash) + char;
+                // tslint:disable-next-line
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            this._hash = hash.toString();
 
             if (!Unit._units.has(this.hash)) {
                 Unit._units.set(this.hash, this);

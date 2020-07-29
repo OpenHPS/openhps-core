@@ -1,53 +1,47 @@
 import { DataFrame } from "../../data";
 import { DataFrameService } from "../DataFrameService";
-import { JSONPath } from "jsonpath-plus";
-import { isArray } from "util";
 
+/**
+ * Memory data frame service
+ *  This service should not be used on a production server
+ *  as its quering is not efficient.
+ */
 export class MemoryDataFrameService<T extends DataFrame> extends DataFrameService<T> {
     protected _data: Map<string, T> = new Map();
     
     public findByDataObjectUID(uid: string): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[*].objects[?(@.uid == "${uid}")]`, json: Array.from(this._data.values()) });
-            const data = new Array();
-            if (isArray(result)) {
-                result.forEach(r => {
-                    data.push(r);
-                });
-            } else {
-                data.push(result);
-            }
-            resolve(data);
+            const result = new Array<T>();
+            this._data.forEach(frame => {
+                if (frame.getObjectByUID(uid)) {
+                    result.push(frame);
+                }
+            });
+            resolve(result);
         });
     }
 
     public findBefore(timestamp: number): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[?(@._createdTimestamp <= ${timestamp})]`, json: Array.from(this._data.values()) });
-            const data = new Array();
-            if (isArray(result)) {
-                result.forEach(r => {
-                    data.push(r);
-                });
-            } else {
-                data.push(result);
-            }
-            resolve(data);
+            const result = new Array<T>();
+            this._data.forEach(frame => {
+                if (frame.createdTimestamp <= timestamp) {
+                    result.push(frame);
+                }
+            });
+            resolve(result);
         });
     }
 
     public findAfter(timestamp: number): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[?(@._createdTimestamp >= ${timestamp})]`, json: Array.from(this._data.values()) });
-            const data = new Array();
-            if (isArray(result)) {
-                result.forEach(r => {
-                    data.push(r);
-                });
-            } else {
-                data.push(result);
-            }
-            resolve(data);
+            const result = new Array<T>();
+            this._data.forEach(frame => {
+                if (frame.createdTimestamp >= timestamp) {
+                    result.push(frame);
+                }
+            });
+            resolve(result);
         });
     }
 

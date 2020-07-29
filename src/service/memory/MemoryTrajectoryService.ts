@@ -1,9 +1,11 @@
 import { DataObject, AbsolutePosition } from "../../data";
-import { JSONPath } from 'jsonpath-plus';
-import { DataObjectService } from "../DataObjectService";
-import { isArray } from "util";
 import { TrajectoryService } from "../TrajectoryService";
 
+/**
+ * Memory trajectory service
+ *  This service should not be used on a production server
+ *  as its quering is not efficient.
+ */
 export class MemoryTrajectoryService<T extends DataObject> extends TrajectoryService<T> {
     protected _data: Map<string, T> = new Map();
 

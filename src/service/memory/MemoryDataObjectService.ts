@@ -1,36 +1,46 @@
 import { DataObject, AbsolutePosition } from "../../data";
-import { JSONPath } from 'jsonpath-plus';
 import { DataObjectService } from "../DataObjectService";
-import { isArray } from "util";
 
+/**
+ * Memory data object service
+ *  This service should not be used on a production server
+ *  as its quering is not efficient.
+ */
 export class MemoryDataObjectService<T extends DataObject> extends DataObjectService<T> {
     protected _data: Map<string, T> = new Map();
 
     public findByDisplayName(displayName: string): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[?(@.displayName == "${displayName}")]`, json: Array.from(this._data.values()) });
-            const data = new Array();
-            if (isArray(result)) {
-                result.forEach(r => {
-                    data.push(r);
-                });
-            } else {
-                data.push(result);
-            }
-            resolve(data);
+            const result = new Array<T>();
+            this._data.forEach(obj => {
+                if (obj.displayName === displayName) {
+                    result.push(obj);
+                }
+            });
+            resolve(result);
         });
     }
 
-    public findByPosition(location: AbsolutePosition): Promise<T[]> {
+    public findByPosition(position: AbsolutePosition): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[?(@._position.toVector().toString() == "${location.toVector().toString()}")]`, json: Array.from(this._data.values()) });
+            const result = new Array<T>();
+            this._data.forEach(obj => {
+                if (obj.getPosition().equals(position)) {
+                    result.push(obj);
+                }
+            });
             resolve(result);
         });
     }
 
     public findByParentUID(parentUID: string): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            const result = JSONPath({ path: `$[?(@.parentUID == "${parentUID}")]`, json: Array.from(this._data.values()) });
+            const result = new Array<T>();
+            this._data.forEach(obj => {
+                if (obj.parentUID === parentUID) {
+                    result.push(obj);
+                }
+            });
             resolve(result);
         });
     }

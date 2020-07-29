@@ -1,50 +1,9 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Model, ModelBuilder, DataFrame, WorkerProcessingNode, WorkerNode, CallbackSinkNode, DataObject } from '../../../src';
+import { ModelBuilder, DataFrame, WorkerNode, CallbackSinkNode, DataObject } from '../../../src';
 import * as path from 'path';
 
 describe('node', () => {
-    describe('worker js', () => {
-        
-        it('should process data as a normal node', (done) => {
-            ModelBuilder.create()
-                .from()
-                .via(new WorkerProcessingNode('../../../test/mock/nodes/WorkerTask.js'))
-                .to()
-                .build().then(model => {
-                    // Push three frames and wait for them to finish
-                    Promise.all([
-                        model.push(new DataFrame()),
-                        model.push(new DataFrame()),
-                        model.push(new DataFrame())
-                    ]).then(_ => {
-                        Promise.resolve(model.emit('destroy'));
-                        done();
-                    });
-                });
-        }).timeout(3000);
-
-    });
-    describe('worker ts', () => {
-        
-        it('should process data as a normal node', (done) => {
-            ModelBuilder.create()
-                .from()
-                .via(new WorkerProcessingNode('../../../test/mock/nodes/WorkerTask.ts'))
-                .to()
-                .build().then(model => {
-                    Promise.all([
-                        model.push(new DataFrame()),
-                        model.push(new DataFrame()),
-                        model.push(new DataFrame())
-                    ]).then(_ => {
-                        Promise.resolve(model.emit('destroy'));
-                        done();
-                    });
-                });
-        }).timeout(3000);
-
-    });
 
     describe('worker node', () => {
         it('should take 30ms with 1 worker', (done) => {

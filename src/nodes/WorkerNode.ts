@@ -4,7 +4,6 @@ import { Thread, Worker, spawn, Pool } from "threads";
 import { Observable } from "threads/observable";
 import { PoolEvent } from "threads/dist/master/pool";
 import { Model } from "../Model";
-import { isArray } from "util";
 import { DataService, DataObjectService, DataFrameService, Service, NodeDataService } from "../service";
 import { GraphShapeBuilder } from "../graph/builders/GraphBuilder";
 import { ModelBuilder } from "../ModelBuilder";
@@ -41,7 +40,7 @@ export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFram
         this._builderCallback = builderCallback;
         this._options = options;
 
-        this._worker = new Worker('_internal/WorkerNodeRunner');
+        this._worker = new Worker('./_internal/WorkerNodeRunner');
 
         this.once('build', this._onBuild.bind(this));
         this.once('destroy', this._onDestroy.bind(this));
@@ -161,7 +160,7 @@ export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFram
             });
             const promise = (service as any)[value.method](...params) as Promise<any>;
             promise.then(_ => {
-                if (isArray(_)) {
+                if (Array.isArray(_)) {
                     const result = new Array();
                     _.forEach(r => {
                         result.push(DataSerializer.serialize(r));

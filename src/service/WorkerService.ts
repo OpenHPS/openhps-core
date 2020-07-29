@@ -1,7 +1,6 @@
 import { DataSerializer } from "../data";
 import { Subject } from "threads/observable";
 import * as uuidv4 from 'uuid/v4';
-import { isArray } from "util";
 import { ServiceProxy } from "./_internal";
 import { Service } from "./Service";
 
@@ -25,7 +24,7 @@ export class WorkerService extends ServiceProxy<Service> {
             if (next.success) {
                 if (next.result === undefined) {
                     promise.resolve();
-                } else if (isArray(next.result)) {
+                } else if (Array.isArray(next.result)) {
                     const result = new Array();
                     next.result.forEach(r => {
                         if (r['__type']) {

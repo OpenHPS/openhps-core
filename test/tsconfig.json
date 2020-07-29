@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
       "module": "commonjs",
+      "moduleResolution": "node",
       "target": "es6",
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
@@ -12,11 +13,9 @@
     "include": [
       "models",
       "specs",
-      "bench"
     ],
     "exclude": [
       "../node_modules",
       "../src",
-      "../src/index.ts"
     ]
   }

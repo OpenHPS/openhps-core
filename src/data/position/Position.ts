@@ -52,18 +52,6 @@ export abstract class Position {
     }
 
     /**
-     * Position accuracy
-     */
-    @SerializableMember()
-    public get accuracy(): number {
-        return this._accuracy;
-    }
-
-    public set accuracy(accuracy: number) {
-        this._accuracy = accuracy;
-    }
-
-    /**
      * Position unit
      */
     @SerializableMember()
@@ -75,6 +63,18 @@ export abstract class Position {
         this._unit = unit;
     }
 
+    /**
+     * Position accuracy
+     */
+    @SerializableMember()
+    public get accuracy(): number {
+        return this._accuracy;
+    }
+
+    public set accuracy(accuracy: number) {
+        this._accuracy = accuracy;
+    }
+    
     public get accuracyUnit(): LengthUnit {
         return this._accuracyUnit;
     }
