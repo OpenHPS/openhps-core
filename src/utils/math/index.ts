@@ -1,3 +1,3 @@
-export * from './EulerRotation';
+export * from './Euler';
 export * from './Quaternion';
-export * from './AxisRotation';
+export * from './AxisAngle';

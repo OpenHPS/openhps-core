@@ -1,7 +1,7 @@
 import { DataFrame, DataObject, AbsolutePosition } from "../../../data";
 import * as math from 'mathjs';
 import { ObjectProcessingNode } from "../../ObjectProcessingNode";
-import { Orientation } from "../../../data/position/Orientation";
+import { Quaternion } from "../../../utils";
 
 /**
  * Linear and angular velocity processing
@@ -58,7 +58,7 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                     const rotationMatrix = math.multiply(math.multiply(math.multiply(rotMatrixX, rotMatrixY), rotMatrixZ), deltaTime / 1000.);
                     const transformationMatrix = math.multiply(translationMatrix, rotationMatrix);
                     // The relative position is the transformation matrix rotated using the orientation
-                    const relativePosition = math.multiply(math.multiply([0, 0, 0, 1], transformationMatrix), lastPosition.orientation);
+                    const relativePosition = math.multiply(math.multiply([0, 0, 0, 1], transformationMatrix), lastPosition.orientation.toRotationMatrix());
                     const relativeOrientation = math.multiply([rX, rY, rZ], deltaTime / 1000.);
  
                     // Predict the next location
@@ -70,8 +70,8 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                         point.push(0, 1);
                     }
                     // New orientation in radians
-                    const newOrientation = math.add(lastPosition.orientation.toEulerRotation().toVector(), relativeOrientation) as number[];
-                    newPosition.orientation = Orientation.fromEulerRotation({ x: newOrientation[0], y: newOrientation[1], z: newOrientation[2] });
+                    const newOrientation = math.add(lastPosition.orientation.toEuler(), relativeOrientation) as number[];
+                    newPosition.orientation = Quaternion.fromEuler({ x: newOrientation[0], y: newOrientation[1], z: newOrientation[2] });
                     newPosition.fromVector(math.add(point, relativePosition) as number[]);
                     object.setPosition(newPosition);
                 }

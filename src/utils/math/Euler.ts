@@ -7,7 +7,7 @@ import * as math from 'mathjs';
  * @source https://github.com/mrdoob/three.js/blob/master/src/math/Euler.js
  */
 @SerializableObject()
-export class EulerRotation extends Array<number> {
+export class Euler extends Array<number> {
     @SerializableMember()
     public order: EulerOrder = 'XYZ';
 
@@ -54,7 +54,7 @@ export class EulerRotation extends Array<number> {
         ];
     }
 
-    public static fromRotationMatrix(m: number[][], order: EulerOrder = 'XYZ'): EulerRotation {
+    public static fromRotationMatrix(m: number[][], order: EulerOrder = 'XYZ'): Euler {
         let x = 0;
         let y = 0;
         let z = 0;
@@ -93,7 +93,6 @@ export class EulerRotation extends Array<number> {
                     z = Math.atan2(m[1][0], m[0][0]);
                 }
                 break;
-
             case 'ZYX':
                 y = Math.asin(-Math.max(-1, Math.min(1, m[2][0])));
 
@@ -105,7 +104,6 @@ export class EulerRotation extends Array<number> {
                     z = Math.atan2(-m[0][1], m[1][1]);
                 }
                 break;
-
             case 'YZX':
                 z = Math.asin(Math.max(-1, Math.min(1, m[1][0])));
 
@@ -129,7 +127,7 @@ export class EulerRotation extends Array<number> {
                 }
                 break;
         }
-        return new EulerRotation(x, y, z, order);
+        return new Euler(x, y, z, order);
     }
 
     public toRotationMatrix(): number[][] {
@@ -172,8 +170,8 @@ export class EulerRotation extends Array<number> {
     /**
      * Clone the euler
      */
-    public clone(): EulerRotation {
-        return new EulerRotation(this.x, this.y, this.z, this.order);
+    public clone(): Euler {
+        return new Euler(this.x, this.y, this.z, this.order);
     }
 
 }

@@ -3,18 +3,18 @@ import { SerializableObject, SerializableMember } from "../../data/decorators";
 import * as math from 'mathjs';
 
 /**
- * Axis rotation
+ * Axis-angle rotation
  */
 @SerializableObject()
-export class AxisRotation extends Array<number> {
+export class AxisAngle extends Array<number> {
 
-    constructor(x: number = 0, y: number = 0, z: number = 0, angle: number = -1, unit: AngleUnit = AngleUnit.RADIANS) {
+    constructor(x: number = 0, y: number = 0, z: number = 0, angle: number = null, unit: AngleUnit = AngleUnit.RADIANS) {
         super();
         this.x = unit.convert(x, AngleUnit.RADIANS);
         this.y = unit.convert(y, AngleUnit.RADIANS);
         this.z = unit.convert(z, AngleUnit.RADIANS);
 
-        if (angle !== -1) {
+        if (angle !== null) {
             this.angle = unit.convert(angle, AngleUnit.RADIANS);
         } else {
             this.angle = Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
@@ -72,8 +72,8 @@ export class AxisRotation extends Array<number> {
     /**
      * Clone the axis
      */
-    public clone(): AxisRotation {
-        return new AxisRotation(this.x, this.y, this.z);
+    public clone(): AxisAngle {
+        return new AxisAngle(this.x, this.y, this.z, this.angle);
     }
 
 }

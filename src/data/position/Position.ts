@@ -1,8 +1,7 @@
-import { LengthUnit } from "../../utils";
+import { LengthUnit, Quaternion } from "../../utils";
 import { Velocity } from "./Velocity";
 import { SerializableObject, SerializableMember } from "../decorators";
 import { DataSerializer } from "../DataSerializer";
-import { Orientation } from "./Orientation";
 
 /**
  * General abstract position class consisting of orientation, velocity, position unit and an accuracy.
@@ -12,7 +11,7 @@ export abstract class Position {
     private _accuracy: number;
     private _timestamp: number = new Date().getTime();
     private _velocity: Velocity = new Velocity();
-    private _orientation: Orientation = new Orientation();
+    private _orientation: Quaternion = new Quaternion();
     private _unit: LengthUnit = LengthUnit.POINTS;
     private _accuracyUnit: LengthUnit = LengthUnit.POINTS;
 
@@ -44,11 +43,11 @@ export abstract class Position {
      * Orientation at recorded position
      */
     @SerializableMember()
-    public get orientation(): Orientation {
+    public get orientation(): Quaternion {
         return this._orientation;
     }
 
-    public set orientation(orientation: Orientation) {
+    public set orientation(orientation: Quaternion) {
         this._orientation = orientation;
     }
 

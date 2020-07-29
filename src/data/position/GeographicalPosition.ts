@@ -36,6 +36,17 @@ export class GeographicalPosition extends AbsolutePosition {
     }
 
     /**
+     * Geographical Latitude
+     */
+    public get lat(): number {
+        return this._lat;
+    }
+
+    public set lat(lat: number) {
+        this._lat = lat;
+    }
+
+    /**
      * Geographical Longitude
      */
     @SerializableMember()
@@ -44,6 +55,18 @@ export class GeographicalPosition extends AbsolutePosition {
     }
 
     public set longitude(lng: number) {
+        this._lng = lng;
+    }
+
+    /**
+     * Geographical Longitude
+     */
+    @SerializableMember()
+    public get lng(): number {
+        return this._lng;
+    }
+
+    public set lng(lng: number) {
         this._lng = lng;
     }
 

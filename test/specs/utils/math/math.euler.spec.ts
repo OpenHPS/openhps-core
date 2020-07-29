@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
-import { EulerRotation, AngleUnit } from '../../../../src';
+import { Euler, AngleUnit } from '../../../../src';
 
 describe('math', () => {
     describe('euler rotation', () => {
@@ -8,7 +8,7 @@ describe('math', () => {
         describe('order XYZ', () => {
 
             it('should load from X', () => {
-                const euler = new EulerRotation(45, 0, 0, 'XYZ', AngleUnit.DEGREES);
+                const euler = new Euler(45, 0, 0, 'XYZ', AngleUnit.DEGREES);
                 const rotationMatrix = euler.toRotationMatrix();
                 expect(rotationMatrix).to.eql([
                     [ 1, 0, 0, 0 ],
@@ -19,7 +19,7 @@ describe('math', () => {
             });
 
             it('should load from Y', () => {
-                const euler = new EulerRotation(0, 45, 0, 'XYZ', AngleUnit.DEGREES);
+                const euler = new Euler(0, 45, 0, 'XYZ', AngleUnit.DEGREES);
                 const rotationMatrix = euler.toRotationMatrix();
                 expect(rotationMatrix).to.eql([
                     [ 0.7071067811865476, 0, 0.7071067811865475, 0 ],
@@ -30,7 +30,7 @@ describe('math', () => {
             });
 
             it('should load from Z', () => {
-                const euler = new EulerRotation(0, 0, 45, 'XYZ', AngleUnit.DEGREES);
+                const euler = new Euler(0, 0, 45, 'XYZ', AngleUnit.DEGREES);
                 const rotationMatrix = euler.toRotationMatrix();
                 expect(rotationMatrix).to.eql([
                     [ 0.7071067811865476, -0.7071067811865475, 0, 0 ],
