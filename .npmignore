@@ -4,4 +4,4 @@ coverage/
 artifacts/
 .nyc_output/
 test/
-scripts/
+Jenkinsfile
