@@ -14,7 +14,7 @@ export class AxisRotation extends Array<number> {
         this.y = unit.convert(y, AngleUnit.RADIANS);
         this.z = unit.convert(z, AngleUnit.RADIANS);
 
-        if (angle === -1) {
+        if (angle !== -1) {
             this.angle = unit.convert(angle, AngleUnit.RADIANS);
         } else {
             this.angle = Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
