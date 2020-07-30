@@ -1,9 +1,7 @@
 import { DataFrame } from "../data/DataFrame";
-import { ServiceMergeNode } from "./processing/ServiceMergeNode";
-import { ModelBuilder } from "../ModelBuilder";
 import { DataObject } from "../data";
-import { EdgeBuilder } from "../graph/builders/EdgeBuilder";
 import { AbstractSourceNode } from "../graph/interfaces/AbstractSourceNode";
+import { Model } from "../Model";
 
 /**
  * Source node
@@ -25,44 +23,18 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[] = DataFrame
         this._ignoreMerging = ignoreMerging;
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
-        this.once('build', this._onBuild.bind(this));
     }
 
-    private _onBuild(graphBuilder: ModelBuilder<any, any>): void {
-        if (this._ignoreMerging) {
-            return;
-        }
-
-        // Add a service merge node between this node and output nodes
-        const mergeNode = new ServiceMergeNode<Out>();
-        mergeNode.name = this.name + "_service_merge";
-        mergeNode.graph = this.graph;
-        mergeNode.logger = this.logger;
-        graphBuilder.addNode(mergeNode);
-        this.graph.edges.forEach(edge => {
-            if (edge.inputNode === this) {
-                graphBuilder.deleteEdge(edge);
-                graphBuilder.addEdge(new EdgeBuilder<Out>()
-                    .withInput(mergeNode)
-                    .withOutput(edge.outputNode)
-                    .build());
-            }
-        });
-        graphBuilder.addEdge(new EdgeBuilder<Out>()
-            .withInput(this)
-            .withOutput(mergeNode)
-            .build());
-
-        this.emit('ready');
-    }
-
-    private _onPush(frame: Out): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+    private _onPush(data: Out): Promise<void> {
+        return new Promise<void>(async (resolve, reject) => {
             const servicePromises = new Array();
             const pushPromises = new Array();
 
-            if (frame instanceof Array) {
-                frame.forEach(f => {
+            if (data instanceof Array) {
+                data.forEach(async f => {
+                    if (!this._ignoreMerging)
+                        f = await this._mergeFrame(f);
+
                     if (f !== null || f !== undefined) {
                         const frameService = this.findDataFrameService(f);
                         
@@ -76,7 +48,12 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[] = DataFrame
                     }
                 });
             } else {
-                if (frame !== null || frame !== undefined) {
+                if (data !== null || data !== undefined) {
+                    let frame: DataFrame = data as DataFrame;
+
+                    if (!this._ignoreMerging)
+                        frame = await this._mergeFrame(frame);
+
                     const frameService = this.findDataFrameService(frame as DataFrame);
                     
                     if (frameService !== null && frameService !== undefined) { 
@@ -90,11 +67,56 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[] = DataFrame
             }
             
             this.outputNodes.forEach(node => {
-                pushPromises.push(node.push(frame));
+                pushPromises.push(node.push(data));
             });
             
             Promise.all(pushPromises).then(() => {
                 resolve();
+            }).catch(ex => {
+                reject(ex);
+            });
+        });
+    }
+
+    private _mergeFrame(frame: DataFrame): Promise<DataFrame> {
+        return new Promise<DataFrame>((resolve, reject) => {
+            const model = (this.graph as Model<any, any>);
+            const defaultService = model.findDataService(DataObject);
+            const promises = new Array();
+            const objects = new Array<DataObject>();
+            if (frame instanceof Array) {
+                frame.forEach((f: DataFrame) => {
+                    f.getObjects().forEach(object => {
+                        objects.push(object);
+                    });
+                });
+            } else {
+                (frame as DataFrame).getObjects().forEach(object => {
+                    objects.push(object);
+                });
+            }
+            objects.forEach(object => {
+                promises.push(new Promise((objResolve, objReject) => {
+                    let service = model.findDataServiceByObject(object);
+                    if (service === null || service === undefined) {
+                        service = defaultService;
+                    }
+                    service.findByUID(object.uid).then(existingObject => {
+                        if (existingObject === null) {
+                            objResolve();
+                        }
+
+                        object.merge(existingObject);
+                        objResolve();
+                    }).catch(ex => {
+                        // Ignore
+                        objResolve();
+                    });
+                }));
+            });
+
+            Promise.all(promises).then(() => {
+                resolve(frame);
             }).catch(ex => {
                 reject(ex);
             });

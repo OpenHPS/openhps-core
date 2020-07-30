@@ -1,4 +1,3 @@
-export * from './ServiceMergeNode';
 export * from './TrilaterationNode';
 export * from './TriangulationNode';
 export * from './imu';

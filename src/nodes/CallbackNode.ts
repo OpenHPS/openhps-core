@@ -7,8 +7,8 @@ export class CallbackNode<InOut extends DataFrame | DataFrame[] = DataFrame> ext
 
     constructor(pushCallback: (frame: InOut) => void = (frame: InOut) => { }, pullCallback: () => InOut = () => null) {
         super();
-        this._pushCallback = pushCallback;
-        this._pullCallback = pullCallback;
+        this.pushCallback = pushCallback;
+        this.pullCallback = pullCallback;
 
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));

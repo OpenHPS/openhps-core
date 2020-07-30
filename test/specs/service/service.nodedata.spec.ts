@@ -1,4 +1,4 @@
-import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, ServiceMergeNode, Absolute2DPosition, Absolute3DPosition, NodeDataService, NodeData } from '../../../src';
+import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, Absolute2DPosition, Absolute3DPosition, NodeDataService, NodeData } from '../../../src';
 import { expect } from 'chai';
 import 'mocha';
 import { MemoryNodeDataService } from '../../../src/service/memory';

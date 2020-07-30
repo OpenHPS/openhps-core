@@ -1,4 +1,4 @@
-import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, ServiceMergeNode, Absolute2DPosition, Absolute3DPosition, CallbackNode } from '../../../src';
+import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, Absolute2DPosition, Absolute3DPosition, CallbackNode, CallbackSourceNode } from '../../../src';
 import { LoggingSinkNode, StorageSinkNode } from '../../../src/nodes/sink';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 
@@ -101,8 +101,7 @@ describe('data object', () => {
         
         before((done) => {
             ModelBuilder.create()
-                .from()
-                .via(new ServiceMergeNode())
+                .from(new CallbackSourceNode())
                 .to(new LoggingSinkNode())
                 .build().then(m => {
                     model = m;
