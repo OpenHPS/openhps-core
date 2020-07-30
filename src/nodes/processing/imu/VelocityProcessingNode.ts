@@ -63,6 +63,7 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
  
                     // Predict the next location
                     const newPosition = lastPosition;
+                    newPosition.timestamp = new Date().getTime();
                     const point = newPosition.toVector();
                     if (point.length === 3) {
                         point.push(1);
