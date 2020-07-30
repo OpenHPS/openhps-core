@@ -179,6 +179,11 @@ export class DataObject {
             // Transform the orientation (rotation)
             transformedPosition.orientation = Quaternion.fromEuler(math.multiply(orientation, referenceSpace.rotationMatrix));
 
+            // Set the reference space
+            if (position.referenceSpaceUID === undefined) {
+                position.referenceSpaceUID = referenceSpace.uid;
+            }
+
             this._position = transformedPosition;
         } else {
             this._position = position;

@@ -40,7 +40,11 @@ module.exports = [{
       }
     },
     externals: {
-      "tiny-worker": "tiny-worker"
+      "tiny-worker": "tiny-worker",
+      "decimal.js": "decimal.js",
+      "fraction.js": "fraction.js",
+      "complex.js": "complex.js",
+      "typed-function": "typed-function"
     },
 },{
     mode: 'production',
@@ -80,7 +84,11 @@ module.exports = [{
       }
     },
     externals: {
-        "tiny-worker": "tiny-worker"
+        "tiny-worker": "tiny-worker",
+        "decimal.js": "decimal.js",
+        "fraction.js": "fraction.js",
+        "complex.js": "complex.js",
+        "typed-function": "typed-function"
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
