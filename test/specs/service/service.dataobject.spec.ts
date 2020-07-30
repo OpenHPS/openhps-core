@@ -1,10 +1,11 @@
-import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, ServiceMergeNode, Absolute2DPosition, Absolute3DPosition } from '../../../src';
-import { LoggingSinkNode } from '../../../src/nodes/sink';
+import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, ServiceMergeNode, Absolute2DPosition, Absolute3DPosition, CallbackNode } from '../../../src';
+import { LoggingSinkNode, StorageSinkNode } from '../../../src/nodes/sink';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 
 import { expect } from 'chai';
 import 'mocha';
 import { MemoryDataObjectService } from '../../../src/service/memory';
+import { exp } from 'mathjs';
 
 describe('data object', () => {
     describe('service', () => {
@@ -200,6 +201,22 @@ describe('data object', () => {
             }).catch(ex => {
                 done(ex);
             });
+        });
+
+        it('should resolve the promise after stored', async () => {
+            var object = new DataObject();
+            object.setPosition(new Absolute2DPosition(1,2));
+            object.displayName = "Test";
+            var frame = new DataFrame();
+            frame.addObject(object);
+            const model: Model = await ModelBuilder.create()
+                .from()
+                .via(new CallbackNode())
+                .to(new StorageSinkNode())
+                .build();
+            await model.push(frame);
+            const result = await model.findDataService(DataObject).findByUID(object.uid);
+            expect(result.displayName).to.equal("Test");
         });
 
     });

@@ -10,7 +10,11 @@ module.exports = [{
     devtool: 'source-map',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'openhps-core.js'
+        filename: 'openhps-core.js',
+        library: 'openhps-core',
+        libraryTarget: 'umd',
+        umdNamedDefine: true,
+        globalObject: `(typeof self !== 'undefined' ? self : this)`,
     },
     plugins: [
         // new ThreadsPlugin({
@@ -80,6 +84,10 @@ module.exports = [{
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'openhps-core.min.js'
+        filename: 'openhps-core.min.js',
+        library: 'openhps-core',
+        libraryTarget: 'umd',
+        umdNamedDefine: true,
+        globalObject: `(typeof self !== 'undefined' ? self : this)`,
     }
 }];

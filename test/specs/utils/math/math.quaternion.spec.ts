@@ -41,6 +41,8 @@ describe('quaternion', () => {
                 [ -0.70711, 0.70711, 0, 0 ],
                 [ 0, 0, 0, 1 ]
             ]);
+            const toEuler = Euler.fromRotationMatrix(orientation.toRotationMatrix(), 'XYZ');
+            expect(toEuler.toVector()).to.eql(euler.toVector());
         });
 
         it('convert from number array', () => {

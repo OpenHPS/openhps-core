@@ -257,7 +257,7 @@ export class Quaternion extends Array<number> {
         const x = Math.atan2(2 * (this.w * this.x + this.y * this.z), 1 - 2 * (Math.pow(this.x, 2) + Math.pow(this.y, 2)));
         const y = Math.asin(2 * (this.w * this.y - this.z * this.x));
         const z = Math.atan2(2 * (this.w * this.z + this.x * this.y), 1 - 2 * (Math.pow(this.y, 2) + Math.pow(this.z, 2)));
-        return new Euler(x, y, z, 'XYZ');
+        return new Euler(x, y, z, 'ZYX');
     }
 
     /**
