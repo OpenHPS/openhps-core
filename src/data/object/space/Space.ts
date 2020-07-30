@@ -6,6 +6,11 @@ import { AngleUnit } from "../../../utils";
  *  in order to create a transformation matrix.
  */
 export interface Space {
+    /**
+     * Space identifier
+     */
+    uid: string;
+
     translation(dX: number, dY: number, dZ?: number): Space;
 
     scale(kX: number, kY: number, kZ?: number): Space;

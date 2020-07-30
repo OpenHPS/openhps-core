@@ -1,5 +1,4 @@
-import { LengthUnit, Quaternion } from "../../utils";
-import { Velocity } from "./Velocity";
+import { LengthUnit } from "../../utils";
 import { SerializableObject, SerializableMember } from "../decorators";
 import { DataSerializer } from "../DataSerializer";
 
@@ -10,9 +9,6 @@ import { DataSerializer } from "../DataSerializer";
 export abstract class Position {
     private _accuracy: number;
     private _timestamp: number = new Date().getTime();
-    private _velocity: Velocity = new Velocity();
-    private _orientation: Quaternion = new Quaternion();
-    private _unit: LengthUnit = LengthUnit.POINTS;
     private _accuracyUnit: LengthUnit = LengthUnit.POINTS;
 
     /**
@@ -25,42 +21,6 @@ export abstract class Position {
 
     public set timestamp(timestamp: number) {
         this._timestamp = timestamp;
-    }
-
-    /**
-     * Velocity at recorded position
-     */
-    @SerializableMember()
-    public get velocity(): Velocity {
-        return this._velocity;
-    }
-
-    public set velocity(velocity: Velocity) {
-        this._velocity = velocity;
-    }
-
-    /**
-     * Orientation at recorded position
-     */
-    @SerializableMember()
-    public get orientation(): Quaternion {
-        return this._orientation;
-    }
-
-    public set orientation(orientation: Quaternion) {
-        this._orientation = orientation;
-    }
-
-    /**
-     * Position unit
-     */
-    @SerializableMember()
-    public get unit(): LengthUnit {
-        return this._unit;
-    }
-
-    public set unit(unit: LengthUnit) {
-        this._unit = unit;
     }
 
     /**

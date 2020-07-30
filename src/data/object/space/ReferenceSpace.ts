@@ -16,11 +16,13 @@ export class ReferenceSpace extends DataObject implements Space {
     @SerializableArrayMember(Number, { dimensions: 2 })
     private _rotationMatrix: number[][];
 
-    private _baseSpace: ReferenceSpace;
+    private _baseSpaceUID: string;
 
     constructor(baseSpace?: ReferenceSpace, transformationMatrix?: number[][]) {
         super();
-        this._baseSpace = baseSpace;
+        if (baseSpace) {
+            this._baseSpaceUID = baseSpace.uid;
+        }
         
         this._transformationMatrix = transformationMatrix;
         if (this._transformationMatrix === undefined) {
@@ -51,6 +53,10 @@ export class ReferenceSpace extends DataObject implements Space {
             [0, 0, 1, 0],
             [0, 0, 0, 1]
         ];
+    }
+
+    public get baseSpaceUID(): string {
+        return this._baseSpaceUID;
     }
 
     public translation(dX: number, dY: number, dZ: number = 0): ReferenceSpace {
