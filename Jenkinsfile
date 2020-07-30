@@ -60,6 +60,17 @@ pipeline {
         always {
             junit 'artifacts/test/xunit.xml'
             cobertura coberturaReportFile: 'artifacts/coverage/cobertura-coverage.xml'
+            publishHTML (target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: false,
+                keepAll: true,
+                reportDir: 'docs',
+                reportFiles: '*.*',
+                reportName: "Documentatin"
+            ])
+            deleteDir()
+        }
+        success {
             archiveArtifacts artifacts: 'dist/openhps-core.js', fingerprint: true
             archiveArtifacts artifacts: 'dist/openhps-core.min.js', fingerprint: true
         }
