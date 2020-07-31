@@ -4,13 +4,11 @@ import { TimeUnit } from "../../utils/unit";
 
 export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _interval: number;
-    private _intervalUnit: TimeUnit;
     private _timer: NodeJS.Timeout;
 
     constructor(interval: number, intervalUnit: TimeUnit = TimeUnit.MILLI) {
         super();
-        this._interval = interval;
-        this._intervalUnit = intervalUnit;
+        this._interval = intervalUnit.convert(interval, TimeUnit.MILLI);
 
         this.on('push', this._onPush.bind(this));
         this.once('build', this._start.bind(this));
@@ -24,8 +22,11 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
                 pushPromises.push(node.push(frame));
             });
 
-            Promise.all(pushPromises).then(_ => {
-                this._timer.refresh();
+            // Restart the timer
+            clearInterval(this._timer);
+            this._timer = setInterval(this._intervalFn.bind(this), this._interval);
+
+            Promise.all(pushPromises).then(() => {
                 resolve();
             }).catch(ex => {
                 reject(ex);
@@ -33,18 +34,20 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
         });
     }
 
+    private _intervalFn(): void {
+        const promises = new Array();
+        this.inputNodes.forEach(node => {
+            promises.push(node.pull());
+        });
+        Promise.resolve(promises);
+    }
+
     /**
      * Start the timed pull
      */
     private _start(): Promise<void> {
         return new Promise((resolve, reject) => {
-            this._timer = setInterval(() => {
-                const promises = new Array();
-                this.inputNodes.forEach(node => {
-                    promises.push(node.pull());
-                });
-                Promise.resolve(promises);
-            }, this._intervalUnit.convert(this._interval, TimeUnit.MILLI));
+            this._timer = setInterval(this._intervalFn.bind(this), this._interval);
             resolve();
             this.emit('ready');
         });
