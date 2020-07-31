@@ -40,6 +40,7 @@ pipeline {
                     steps {
                         echo 'Publishing Development ...'
                         sh 'npm run publish:development'
+                        sh 'git config --local credential.helper "!p() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; p"'
                         sh 'git push origin HEAD:dev'
                     }
                 }
@@ -50,6 +51,7 @@ pipeline {
                     steps {
                         echo 'Publishing Release ...'
                         sh 'npm run publish:release'
+                        sh 'git config --local credential.helper "!p() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; p"'
                         sh 'git push origin HEAD:master'
                     }
                 }
