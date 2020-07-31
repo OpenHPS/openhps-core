@@ -20,6 +20,8 @@
 
 <br />
 
+**Note: OpenHPS is in development and scheduled for development release in September 2020**
+
 This repository contains the core component for OpenHPS (Open Source Hybrid Positioning System). It includes concepts for creating the model, nodes and data object definitions.
 
 OpenHPS is a graph-based data processing positioning framework. It is designed to support many different use cases ranging from simple positioning such as detecting the position of a pawn on a chessboard using RFID, to indoor positioning methods using multiple cameras.
