@@ -17,9 +17,9 @@ import { SerializableObject, SerializableMember } from "../../data/decorators";
 export class Unit {
     private _toReference: (x: number) => number;
     private _fromReference: (x: number) => number;
-    private _hash: string;
+    private _hash: number;
 
-    private static _units: Map<string, Unit> = new Map();
+    private static _units: Map<number, Unit> = new Map();
 
     /**
      * Create a new unit
@@ -40,7 +40,7 @@ export class Unit {
                 // tslint:disable-next-line
                 hash = hash & hash; // Convert to 32bit integer
             }
-            this._hash = hash.toString();
+            this._hash = hash;
 
             if (!Unit._units.has(this.hash)) {
                 Unit._units.set(this.hash, this);
@@ -49,11 +49,11 @@ export class Unit {
     }
 
     @SerializableMember()
-    public get hash(): string {
+    public get hash(): number {
         return this._hash;
     }
 
-    public set hash(hash: string) {
+    public set hash(hash: number) {
         if (this._hash === undefined) {
             const existingUnit = Unit.findUnitByHash(hash);
             if (existingUnit !== undefined) {
@@ -64,12 +64,19 @@ export class Unit {
         }
     }
 
-    public static findUnitByHash(hash: string): Unit {
+    /**
+     * Find a unit by a hash number
+     * @param hash Hash number
+     */
+    public static findUnitByHash(hash: number): Unit {
         return Unit._units.get(hash);
     }
 
     /**
      * Convert a value in the current unit to a target unit
+     * 
+     * @param value value to convert
+     * @param targetUnit target unit
      */
     public convert(value: number, targetUnit: Unit): number {
         // Do not convert if target unit is the same

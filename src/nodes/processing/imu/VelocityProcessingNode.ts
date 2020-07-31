@@ -1,12 +1,24 @@
 import { DataFrame, DataObject, AbsolutePosition } from "../../../data";
 import * as math from 'mathjs';
 import { ObjectProcessingNode } from "../../ObjectProcessingNode";
-import { Quaternion } from "../../../utils";
+import { Quaternion, TimeUnit, AngleUnit } from "../../../utils";
 
 /**
  * Linear and angular velocity processing
  */
-export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
+export class VelocityProcessingNode<InOut extends DataFrame = DataFrame> extends ObjectProcessingNode<InOut> {
+    private _timeFn: () => number = () => new Date().getTime();
+    private _timeUnit: TimeUnit = TimeUnit.MILLI;
+
+    /**
+     * Manually set the function used to get the current time stamp
+     * @param timeFn Time function
+     */
+    public timeFunction(timeFn: () => number, timeUnit: TimeUnit): VelocityProcessingNode<InOut> {
+        this._timeFn = timeFn;
+        this._timeUnit = timeUnit;
+        return this;
+    }
 
     public processObject(object: DataObject): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
@@ -14,7 +26,7 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                 const lastPosition = object.getPosition().clone<AbsolutePosition>();
                 if (lastPosition.velocity !== undefined) {
                     // Time since current calculation and previous velocity
-                    const deltaTime = new Date().getTime() - lastPosition.timestamp;
+                    const deltaTime = this._timeUnit.convert(this._timeFn() - lastPosition.timestamp, TimeUnit.SECOND);
 
                     if (deltaTime < 0) {
                         // Delta time is negative, this means the previous location
@@ -31,12 +43,13 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                         [0, 1, 0, 0],
                         [0, 0, 1, 0],
                         [dX, dY, dZ, 1]
-                    ], deltaTime / 1000.);
+                    ], deltaTime);
                     
                     // Process the angular velocity
-                    const rX = lastPosition.velocity.angular.x;
-                    const rY = lastPosition.velocity.angular.y;
-                    const rZ = lastPosition.velocity.angular.z;
+                    const orientation = lastPosition.orientation.toEuler().toVector();
+                    const rX = math.add(math.multiply(lastPosition.velocity.angular.x, deltaTime), orientation[0]) as number;
+                    const rY = math.add(math.multiply(lastPosition.velocity.angular.y, deltaTime), orientation[1]) as number;
+                    const rZ = math.add(math.multiply(lastPosition.velocity.angular.z, deltaTime), orientation[2]) as number;
                     const rotMatrixZ = [
                         [1, 0, 0, 0],
                         [0, Math.cos(rZ), -Math.sin(rZ), 0],
@@ -55,24 +68,25 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                         [0, 0, 1, 0],
                         [0, 0, 0, 1]
                     ];
-                    const rotationMatrix = math.multiply(math.multiply(math.multiply(rotMatrixX, rotMatrixY), rotMatrixZ), deltaTime / 1000.);
+                    const rotationMatrix = math.multiply(math.multiply(rotMatrixX, rotMatrixY), rotMatrixZ);
                     const transformationMatrix = math.multiply(translationMatrix, rotationMatrix);
                     // The relative position is the transformation matrix rotated using the orientation
-                    const relativePosition = math.multiply(math.multiply([0, 0, 0, 1], transformationMatrix), lastPosition.orientation.toRotationMatrix());
-                    const relativeOrientation = math.multiply([rX, rY, rZ], deltaTime / 1000.);
- 
+                    const relativePosition = math.multiply([0, 0, 0, 1], transformationMatrix);
+                    const relativeOrientation = math.multiply(lastPosition.velocity.angular.toVector(), deltaTime);
+                    
                     // Predict the next location
                     const newPosition = lastPosition;
-                    newPosition.timestamp = new Date().getTime();
+                    newPosition.timestamp = this._timeFn();
                     const point = newPosition.toVector();
                     if (point.length === 3) {
                         point.push(1);
                     } else {
                         point.push(0, 1);
                     }
+
                     // New orientation in radians
                     const newOrientation = math.add(lastPosition.orientation.toEuler(), relativeOrientation) as number[];
-                    newPosition.orientation = Quaternion.fromEuler({ x: newOrientation[0], y: newOrientation[1], z: newOrientation[2] });
+                    newPosition.orientation = Quaternion.fromEuler(newOrientation);
                     newPosition.fromVector(math.add(point, relativePosition) as number[]);
                     object.setPosition(newPosition);
                 }

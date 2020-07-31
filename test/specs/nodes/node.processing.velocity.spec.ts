@@ -41,7 +41,7 @@ describe('node', () => {
         it('should process linear velocity in a given direction (orientation)', (done) => {
             callbackSink.callback = (frame: DataFrame) => {
                 const position = frame.source.getPosition();
-                expect(Math.round(position.toVector()[0] * 10.) / 10.).to.equal(3.5);
+                expect(Math.round(position.toVector()[0] * 10.) / 10.).to.equal(4);
                 expect(Math.round(position.toVector()[1] * 10.) / 10.).to.equal(3);
                 done();
             };
@@ -84,8 +84,8 @@ describe('node', () => {
             callbackSink.callback = (frame: DataFrame) => {
                 const position = frame.source.getPosition();
                 // Linear position is (3, 3) + the linear and angular movement
-                expect(Math.round(position.toVector()[0])).to.equal(4);
-                expect(Math.round(position.toVector()[1])).to.equal(2);
+                expect(Math.round(position.toVector()[0])).to.equal(6);
+                expect(Math.round(position.toVector()[1])).to.equal(3);
                 // Orientation should change
                 expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREES)[0])).to.equal(45);
                 done();
