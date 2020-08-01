@@ -62,11 +62,15 @@ export abstract class ProcessingNode<In extends DataFrame | DataFrame[] = DataFr
         });
     }
 
-    public findNodeDataService(): NodeDataService<NodeData> {
+    protected findNodeDataService(): NodeDataService<NodeData> {
         return (this.graph as Model).findDataService(NodeData);
     }
 
-    public getNodeData(dataObject: DataObject): Promise<any> {
+    /**
+     * Get node data
+     * @param dataObject 
+     */
+    protected getNodeData(dataObject: DataObject): Promise<any> {
         return new Promise((resolve, reject) => {
             this.findNodeDataService().findData(this.uid, dataObject).then(data => {
                 resolve(data);
@@ -76,7 +80,12 @@ export abstract class ProcessingNode<In extends DataFrame | DataFrame[] = DataFr
         });
     }
 
-    public setNodeData(dataObject: DataObject, data: any): Promise<void> {
+    /**
+     * Set node data
+     * @param dataObject 
+     * @param data 
+     */
+    protected setNodeData(dataObject: DataObject, data: any): Promise<void> {
         return new Promise((resolve, reject) => {
             this.findNodeDataService().insertData(this.uid, dataObject, data).then(() => {
                 resolve();
