@@ -23,7 +23,7 @@
 
 <br />
 
-**Note: OpenHPS is in development and scheduled for development release in September 2020**
+**Note: OpenHPS is in development and scheduled for development release in September 2020.**
 
 This repository contains the core component for OpenHPS (Open Source Hybrid Positioning System). It includes concepts for creating the model, nodes and data object definitions.
 
@@ -39,7 +39,7 @@ OpenHPS is a graph-based data processing positioning framework. It is designed t
 ## Getting Started
 If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps/core with the following command.
 ```bash
-npm install @openhps/core --save
+npm install @openhps/core@dev --save
 ```
 
 ## Contributors
