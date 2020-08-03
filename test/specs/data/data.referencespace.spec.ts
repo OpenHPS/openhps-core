@@ -20,7 +20,7 @@ describe('data', () => {
                 let globalReferenceSpace = new ReferenceSpace(undefined);
     
                 let refSpace = new ReferenceSpace(globalReferenceSpace)
-                    .translation(2.0, 2.0, 2.0);
+                    .translate(2.0, 2.0, 2.0);
                 let result = math.multiply([3, 3, 0, 1], refSpace.transformationMatrix);
                 expect(result[0]).to.equal(5);
                 expect(result[1]).to.equal(5);
@@ -61,7 +61,7 @@ describe('data', () => {
                 let globalReferenceSpace = new ReferenceSpace(undefined);
     
                 let refSpace = new ReferenceSpace(globalReferenceSpace)
-                    .rotation({ yaw: 180, pitch: 0, roll: 0, unit: AngleUnit.DEGREES });
+                    .rotate({ yaw: 180, pitch: 0, roll: 0, unit: AngleUnit.DEGREES });
                 let result = math.multiply([2, 2, 0, 1], refSpace.transformationMatrix);
                 expect(result[0]).to.within(-2.1, -1.9);
                 expect(result[1]).to.within(-2.1, -1.9);
@@ -122,9 +122,9 @@ describe('data', () => {
                 // Calibrated reference space
                 // In a normal situation, this offset/scale/rotation needs to be calculated
                 let calibratedReferenceSpace = new ReferenceSpace(model.referenceSpace)
-                    .translation(2, 2, 1)            // Origin offset
+                    .translate(2, 2, 1)            // Origin offset
                     .scale(1, 1, 1)                  // Same scale on all axis 1:1
-                    .rotation({ x: 0, y: 0, z: 0 });              // Same rotation
+                    .rotate({ x: 0, y: 0, z: 0 });              // Same rotation
 
                 // Test node that provides a location with a different reference space
                 // e.g. WebXR providing a location (5,5,5) with a different origin
@@ -161,9 +161,9 @@ describe('data', () => {
                 // Calibrated reference space
                 // In a normal situation, this offset/scale/rotation needs to be calculated
                 let calibratedReferenceSpace = new ReferenceSpace(model.referenceSpace)
-                    .translation(2, 2, 1)            // Origin offset
+                    .translate(2, 2, 1)            // Origin offset
                     .scale(1, 1, 1)                  // Same scale on all axis 1:1
-                    .rotation({ x: 0, y: 180, z: 0, unit: AngleUnit.DEGREES });   // Rotation is inverse (down is up, left is right)
+                    .rotate({ x: 0, y: 180, z: 0, unit: AngleUnit.DEGREES });   // Rotation is inverse (down is up, left is right)
 
                 // Test node that provides a location with a different reference space
                 // This example will move the object forward. However, in our global

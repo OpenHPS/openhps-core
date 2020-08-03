@@ -59,7 +59,7 @@ export class ReferenceSpace extends DataObject implements Space {
         return this._baseSpaceUID;
     }
 
-    public translation(dX: number, dY: number, dZ: number = 0): ReferenceSpace {
+    public translate(dX: number, dY: number, dZ: number = 0): ReferenceSpace {
         this._translationMatrix = [
             [1, 0, 0, 0],
             [0, 1, 0, 0],
@@ -81,13 +81,13 @@ export class ReferenceSpace extends DataObject implements Space {
         return this;
     }
 
-    public rotation(r: { yaw: number, pitch: number, roll: number, unit?: AngleUnit }): ReferenceSpace;
-    public rotation(r: { x: number, y: number, z: number, order?: EulerOrder, unit?: AngleUnit }): ReferenceSpace;
-    public rotation(r: number[]): ReferenceSpace;
-    public rotation(r: Quaternion): ReferenceSpace;
-    public rotation(r: Euler): ReferenceSpace;
-    public rotation(r: AxisAngle): ReferenceSpace;
-    public rotation(r: any): ReferenceSpace {
+    public rotate(r: { yaw: number, pitch: number, roll: number, unit?: AngleUnit }): ReferenceSpace;
+    public rotate(r: { x: number, y: number, z: number, order?: EulerOrder, unit?: AngleUnit }): ReferenceSpace;
+    public rotate(r: number[]): ReferenceSpace;
+    public rotate(r: Quaternion): ReferenceSpace;
+    public rotate(r: Euler): ReferenceSpace;
+    public rotate(r: AxisAngle): ReferenceSpace;
+    public rotate(r: any): ReferenceSpace {
         let quat: Quaternion;
         
         if (r instanceof AxisAngle) {

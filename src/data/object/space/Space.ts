@@ -11,20 +11,27 @@ export interface Space {
      */
     uid: string;
 
-    translation(dX: number, dY: number, dZ?: number): Space;
+    translate(dX: number, dY: number, dZ?: number): Space;
 
+    /**
+     * Scale the reference space
+     * 
+     * @param kX 
+     * @param kY 
+     * @param kZ 
+     */
     scale(kX: number, kY: number, kZ?: number): Space;
 
     /**
      * Rotate the space to the reference space
      * @param r Rotation
      */
-    rotation(r: { x: number, y: number, z?: number, order?: EulerOrder, unit?: AngleUnit }): Space;
-    rotation(r: number[]): Space;
-    rotation(r: Quaternion): Space;
-    rotation(r: Euler): Space;
-    rotation(r: AxisAngle): Space;
-    rotation(r: any): Space;
+    rotate(r: { x: number, y: number, z?: number, order?: EulerOrder, unit?: AngleUnit }): Space;
+    rotate(r: number[]): Space;
+    rotate(r: Quaternion): Space;
+    rotate(r: Euler): Space;
+    rotate(r: AxisAngle): Space;
+    rotate(r: any): Space;
 
     /**
      * Transform the vector to another

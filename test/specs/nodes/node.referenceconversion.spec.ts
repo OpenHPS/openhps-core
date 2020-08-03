@@ -11,7 +11,7 @@ describe('node', () => {
 
             // Reference space used by our test node
             const myReferenceSpace = new ReferenceSpace(globalReferenceSpace)
-                .translation(10, 10, 0);
+                .translate(10, 10, 0);
             
             ModelBuilder.create()
                 .withReferenceSpace(globalReferenceSpace)
@@ -49,7 +49,7 @@ describe('node', () => {
 
             // Reference space used by our test node
             const myReferenceSpace = new ReferenceSpace(globalReferenceSpace)
-                .translation(10, 10, 0);
+                .translate(10, 10, 0);
             
             ModelBuilder.create()
                 .withReferenceSpace(globalReferenceSpace)
