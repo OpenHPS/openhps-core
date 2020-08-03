@@ -62,6 +62,10 @@ pipeline {
         }
     }
     post {
+        success {
+            archiveArtifacts artifacts: 'dist/openhps-core.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/openhps-core.min.js', fingerprint: true
+        }
         always {
             junit 'artifacts/test/xunit.xml'
             cobertura coberturaReportFile: 'artifacts/coverage/cobertura-coverage.xml'
@@ -74,10 +78,6 @@ pipeline {
                 reportName: "Documentatin"
             ])
             deleteDir()
-        }
-        success {
-            archiveArtifacts artifacts: 'dist/openhps-core.js', fingerprint: true
-            archiveArtifacts artifacts: 'dist/openhps-core.min.js', fingerprint: true
         }
     }
 }
