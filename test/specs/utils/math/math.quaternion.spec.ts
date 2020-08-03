@@ -37,19 +37,19 @@ describe('quaternion', () => {
             const orientation = Quaternion.fromEuler(euler);
             expect(math.round(orientation.toRotationMatrix(), 5)).to.eql([
                 [ 0, 0, 1, 0 ],
-                [ 0.70711, 0.70711, -0, 0 ],
+                [ 0.70711, 0.70711, 0, 0 ],
                 [ -0.70711, 0.70711, 0, 0 ],
                 [ 0, 0, 0, 1 ]
             ]);
             const toEuler = Euler.fromRotationMatrix(orientation.toRotationMatrix(), 'XYZ');
-            expect(toEuler.toVector()).to.eql(euler.toVector());
+            expect(math.round(toEuler.toVector(), 4)).to.eql(math.round(euler.toVector(), 4));
         });
 
         it('convert from number array', () => {
             const orientation = Quaternion.fromEuler({ x: 0.7853981633974483, y: 1.5707963267948966, z: 0 });
             expect(math.round(orientation.toRotationMatrix(), 5)).to.eql([
                 [ 0, 0, 1, 0 ],
-                [ 0.70711, 0.70711, -0, 0 ],
+                [ 0.70711, 0.70711, 0, 0 ],
                 [ -0.70711, 0.70711, 0, 0 ],
                 [ 0, 0, 0, 1 ]
             ]);

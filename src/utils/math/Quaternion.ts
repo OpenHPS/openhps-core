@@ -2,7 +2,6 @@ import { SerializableObject } from "../../data/decorators";
 import { AxisAngle } from "./AxisAngle";
 import { Euler, EulerOrder } from "./Euler";
 import { AngleUnit } from "../unit";
-import * as math from 'mathjs';
 import { Vector4 } from "./Vector4";
 
 /**
@@ -37,58 +36,8 @@ export class Quaternion extends Vector4 {
         } else {
             rotation = new Euler(euler.roll, euler.pitch, euler.yaw, 'ZYX', euler.unit);
         }
-
-        const cy = math.cos(math.divide(rotation.z, 2));
-        const sy = math.sin(math.divide(rotation.z, 2));
-        const cp = math.cos(math.divide(rotation.y, 2));
-        const sp = math.sin(math.divide(rotation.y, 2));
-        const cr = math.cos(math.divide(rotation.x, 2));
-        const sr = math.sin(math.divide(rotation.x, 2));
-    
-        let w = 0;
-        let x = 0;
-        let y = 0;
-        let z = 0;
-
-        switch (rotation.order) {
-            case 'XYZ':
-                x = sr * cp * cy + cr * sp * sy;
-                y = cr * sp * cy - sr * cp * sy;
-                z = cr * cp * sy + sr * sp * cy;
-                w = cr * cp * cy - sr * sp * sy;
-                break;
-            case 'YXZ':
-                x = sr * cp * cy + cr * sp * sy;
-                y = cr * sp * cy - sr * cp * sy;
-                z = cr * cp * sy - sr * sp * cy;
-                w = cr * cp * cy + sr * sp * sy;
-                break;
-            case 'ZXY':
-                x = sr * cp * cy - cr * sp * sy;
-                y = cr * sp * cy + sr * cp * sy;
-                z = cr * cp * sy + sr * sp * cy;
-                w = cr * cp * cy - sr * sp * sy;
-                break;
-            case 'ZYX':
-                x = sr * cp * cy - cr * sp * sy;
-                y = cr * sp * cy + sr * cp * sy;
-                z = cr * cp * sy - sr * sp * cy;
-                w = cr * cp * cy + sr * sp * sy;
-                break;
-            case 'YZX':
-                x = sr * cp * cy + cr * sp * sy;
-                y = cr * sp * cy + sr * cp * sy;
-                z = cr * cp * sy - sr * sp * cy;
-                w = cr * cp * cy - sr * sp * sy;
-                break;
-            case 'XZY':
-                x = sr * cp * cy - cr * sp * sy;
-                y = cr * sp * cy - sr * cp * sy;
-                z = cr * cp * sy + sr * sp * cy;
-                w = cr * cp * cy + sr * sp * sy;
-                break;
-        }
-        return new Quaternion(x, y, z, w);
+        
+        return Quaternion.fromRotationMatrix(rotation.toRotationMatrix());
     }
 
     /**
@@ -171,13 +120,6 @@ export class Quaternion extends Vector4 {
      * Convert quaternion to rotation matrix
      */
     public toRotationMatrix(): number[][] {
-        const matrix: number[][] = [
-            [1, 0, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1]
-        ];
-
         const x = this.x;
         const y = this.y;
         const z = this.z;
@@ -196,18 +138,12 @@ export class Quaternion extends Vector4 {
         const wy = w * y2;
         const wz = w * z2;
 
-        matrix[0][0] = (1 - (yy + zz)) * 1;
-        matrix[1][0] = (xy + wz) * 1;
-        matrix[2][0] = (xz - wy) * 1;
-
-        matrix[0][1] = (xy - wz) * 1;
-        matrix[1][1] = (1 - (xx + zz)) * 1;
-        matrix[2][1] = (yz + wx) * 1;
-        
-        matrix[0][2] = (xz + wy) * 1;
-        matrix[1][2] = (yz - wx) * 1;
-        matrix[2][2] = (1 - (xx + yy)) * 1;
-        return matrix;
+        return [
+            [(1 - (yy + zz)) * 1, (xy - wz) * 1, (xz + wy) * 1, 0],
+            [(xy + wz) * 1, (1 - (xx + zz)) * 1, (yz - wx) * 1, 0],
+            [(xz - wy) * 1, (yz + wx) * 1, (1 - (xx + yy)) * 1, 0],
+            [0, 0, 0, 1]
+        ];
     }
 
     /**

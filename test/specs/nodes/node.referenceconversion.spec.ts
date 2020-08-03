@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { LoggingSinkNode, CallbackSinkNode } from '../../../src/nodes/sink';
+import { CallbackSinkNode } from '../../../src/nodes/sink';
 import { Model, CallbackNode, ModelBuilder, GraphBuilder, CallbackSourceNode, ReferenceSpace, DataFrame, Absolute2DPosition, DataObject, ReferenceSpaceConversionNode } from '../../../src';
 
 describe('node', () => {
