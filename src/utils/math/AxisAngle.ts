@@ -41,11 +41,7 @@ export class AxisAngle extends Vector4 {
     }
 
     public toVector(unit: AngleUnit = AngleUnit.RADIANS): number[] {
-        return [
-            AngleUnit.RADIANS.convert(this[0], unit),
-            AngleUnit.RADIANS.convert(this[1], unit),
-            AngleUnit.RADIANS.convert(this[2], unit)
-        ];
+        return super.toVector(AngleUnit.RADIANS, unit);
     }
 
     /**

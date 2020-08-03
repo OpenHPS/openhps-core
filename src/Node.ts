@@ -125,23 +125,16 @@ export abstract class Node<In extends DataFrame | DataFrame[] = DataFrame, Out e
             });
 
             if (callbackPromises.length === 0) {
-                const pullPromises = new Array();
                 this.inputNodes.forEach(node => {
-                    pullPromises.push(node.pull());
-                });
-
-                Promise.all(pullPromises).then(() => {
-                    resolve();
-                }).catch(ex => {
-                    reject(ex);
-                });
-            } else {
-                Promise.all(callbackPromises).then(() => {
-                    resolve();
-                }).catch(ex => {
-                    reject(ex);
+                    callbackPromises.push(node.pull());
                 });
             }
+
+            Promise.all(callbackPromises).then(() => {
+                resolve();
+            }).catch(ex => {
+                reject(ex);
+            });
         });
     }
 
@@ -154,20 +147,14 @@ export abstract class Node<In extends DataFrame | DataFrame[] = DataFrame, Out e
         return new Promise<void>((resolve, reject) => {
             if (frame === null || frame === undefined) {
                 this.logger("warning", {
-                    node: {
-                        uid: this.uid,
-                        name: this.name
-                    },
+                    node: { uid: this.uid, name: this.name },
                     message: `Node received null data frame!`,
                 });
                 return reject();
             }
 
             this.logger("debug", {
-                node: {
-                    uid: this.uid,
-                    name: this.name
-                },
+                node: { uid: this.uid, name: this.name },
                 message: `Node received push`
             });
 
@@ -177,23 +164,16 @@ export abstract class Node<In extends DataFrame | DataFrame[] = DataFrame, Out e
             });
 
             if (callbackPromises.length === 0) {
-                const pushPromises = new Array();
                 this.outputNodes.forEach(node => {
-                    pushPromises.push(node.push(frame));
-                });
-
-                Promise.all(pushPromises).then(() => {
-                    resolve();
-                }).catch(ex => {
-                    reject(ex);
-                });
-            } else {
-                Promise.all(callbackPromises).then(() => {
-                    resolve();
-                }).catch(ex => {
-                    reject(ex);
+                    callbackPromises.push(node.push(frame));
                 });
             }
+
+            Promise.all(callbackPromises).then(() => {
+                resolve();
+            }).catch(ex => {
+                reject(ex);
+            });
         });
     }
 

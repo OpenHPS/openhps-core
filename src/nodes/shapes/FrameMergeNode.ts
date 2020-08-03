@@ -47,17 +47,12 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
                             pushPromises.push(outputNode.push(mergedFrame));
                         });
                     });
-                    Promise.all(pushPromises).then(() => {
-                        
-                    }).catch(ex => {
-                        this.logger('error', ex);
-                    });
-                }).catch(ex => {
+                    return Promise.all(pushPromises);
+                }).then(() => {}).catch(ex => {
                     this.logger('error', ex);
                 });
             }, this._timeoutUnit.convert(this._timeout, TimeUnit.MILLI));
             resolve();
-            this.emit('ready');
         });
     }
 

@@ -18,20 +18,14 @@ export abstract class SinkNode<In extends DataFrame | DataFrame[] = DataFrame> e
         return new Promise<void>((resolve, reject) => {
             if (frame === null || frame === undefined) {
                 this.logger("warning", {
-                    node: {
-                        uid: this.uid,
-                        name: this.name
-                    },
+                    node: { uid: this.uid, name: this.name },
                     message: `Sink node received null data frame!`,
                 });
                 return reject();
             }
 
             this.logger("debug", {
-                node: {
-                    uid: this.uid,
-                    name: this.name
-                },
+                node: { uid: this.uid, name: this.name },
                 message: `Sink node received push`
             });
 
@@ -61,9 +55,6 @@ export abstract class SinkNode<In extends DataFrame | DataFrame[] = DataFrame> e
                 let service = model.findDataServiceByObject(object);
                 if (service === null || service === undefined) { 
                     service = defaultService;
-                }
-                if (object.uid === null) {
-                    object.uid = uuidv4();
                 }
                 servicePromises.push(service.insert(object));
             }

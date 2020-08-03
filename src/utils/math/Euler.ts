@@ -22,17 +22,19 @@ export class Euler extends Vector3 {
     }
 
     public toVector(unit: AngleUnit = AngleUnit.RADIANS): number[] {
-        return [
-            AngleUnit.RADIANS.convert(this[0], unit),
-            AngleUnit.RADIANS.convert(this[1], unit),
-            AngleUnit.RADIANS.convert(this[2], unit)
-        ];
+        return super.toVector(AngleUnit.RADIANS, unit);
     }
 
     public static fromVector(vector: number[]): Euler {
         return new Euler(vector[0], vector[1], vector[2]);
     }
 
+    /**
+     * Create euler angles from rotation matrix
+     * 
+     * @param m rotation matrix
+     * @param order euler order 
+     */
     public static fromRotationMatrix(m: number[][], order: EulerOrder = 'XYZ'): Euler {
         let x = 0;
         let y = 0;

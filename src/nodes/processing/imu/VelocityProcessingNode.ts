@@ -31,7 +31,7 @@ export class VelocityProcessingNode<InOut extends DataFrame = DataFrame> extends
                     if (deltaTime < 0) {
                         // Delta time is negative, this means the previous location
                         // timestamp was incorrect
-                        return resolve();
+                        return resolve(object);
                     }
 
                     // Process the linear velocity

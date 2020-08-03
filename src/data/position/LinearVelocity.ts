@@ -18,13 +18,7 @@ export class LinearVelocity extends Vector3 {
     }
 
     public toVector(unit?: LinearVelocityUnit<any, any>): number [] {
-        if (unit === undefined || unit === LinearVelocityUnit.METERS_PER_SECOND) {
-            return [this.x, this.y, this.z];
-        } else {
-            return [LinearVelocityUnit.METERS_PER_SECOND.convert(this.x, unit), 
-                LinearVelocityUnit.METERS_PER_SECOND.convert(this.y, unit), 
-                LinearVelocityUnit.METERS_PER_SECOND.convert(this.z, unit)];
-        }
+        return super.toVector(LinearVelocityUnit.METERS_PER_SECOND, unit);
     }
 
     public toTranslationMatrix(): number[][] {

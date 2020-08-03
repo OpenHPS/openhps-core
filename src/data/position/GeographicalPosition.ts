@@ -152,7 +152,7 @@ export class GeographicalPosition extends AbsolutePosition {
      */
     public midpoint(otherPosition: GeographicalPosition, distanceSelf: number = 1, distanceOther: number = 1): Promise<GeographicalPosition> {
         return new Promise<GeographicalPosition>((resolve, reject) => {
-            if (distanceOther === distanceOther) {
+            if (distanceOther === distanceSelf) {
                 const lonRadA = AngleUnit.DEGREES.convert(this.longitude, AngleUnit.RADIANS);
                 const latRadA = AngleUnit.DEGREES.convert(this.latitude, AngleUnit.RADIANS);
                 const lonRadB = AngleUnit.DEGREES.convert(otherPosition.longitude, AngleUnit.RADIANS);
@@ -200,7 +200,7 @@ export class GeographicalPosition extends AbsolutePosition {
         return new Promise<GeographicalPosition>((resolve, reject) => {
             const convertedPoints = new Array();
             points.forEach(geopoint => {
-                const point = geopoint.point;
+                const point = geopoint.toVector();
                 const convertedPoint = new Absolute3DPosition(point[0], point[1], point[2]);
                 convertedPoints.push(convertedPoint);
             });
@@ -214,18 +214,6 @@ export class GeographicalPosition extends AbsolutePosition {
                 reject(ex);
             });
         });
-    }
-
-    /**
-     * Convert the point to an ECR point (Earth Centered Rotational)
-     */
-    public get point(): number[] {
-        const phi = AngleUnit.DEGREES.convert(this.latitude, AngleUnit.RADIANS);
-        const lambda = AngleUnit.DEGREES.convert(this.longitude, AngleUnit.RADIANS);
-        // Convert ECR positions
-        return [GeographicalPosition.EARTH_RADIUS * Math.cos(phi) * Math.cos(lambda),
-            GeographicalPosition.EARTH_RADIUS * Math.cos(phi) * Math.sin(lambda),
-            GeographicalPosition.EARTH_RADIUS * Math.sin(phi)];
     }
 
     public fromVector(vector: number[], unit?: LengthUnit): void {

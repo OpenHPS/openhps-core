@@ -19,13 +19,7 @@ export class AngularVelocity extends Vector3 {
     }
 
     public toVector(unit?: AngularVelocityUnit<any, any>): number [] {
-        if (unit === undefined || unit === AngularVelocityUnit.RADIANS_PER_SECOND) {
-            return [this.x, this.y, this.z];
-        } else {
-            return [AngularVelocityUnit.RADIANS_PER_SECOND.convert(this.x, unit), 
-                AngularVelocityUnit.RADIANS_PER_SECOND.convert(this.y, unit), 
-                AngularVelocityUnit.RADIANS_PER_SECOND.convert(this.z, unit)];
-        }
+        return super.toVector(AngularVelocityUnit.RADIANS_PER_SECOND, unit);
     }
 
     public toRotationMatrix(): number[][] {
