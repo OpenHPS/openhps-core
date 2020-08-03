@@ -120,7 +120,15 @@ export class GraphImpl<In extends DataFrame | DataFrame[], Out extends DataFrame
         return edges;
     }
 
+    /**
+     * Validate if the graph is connected
+     */
     public validate(): void {
+        this._validateNodes();
+        this._validateEdges();
+    }
+
+    private _validateNodes(): void {
         if (this.internalInput.outputNodes.length === 0) {
             this.deleteNode(this.internalInput);
         } else if (!this._nodes.has(this.internalInput.uid)) {
@@ -140,6 +148,9 @@ export class GraphImpl<In extends DataFrame | DataFrame[], Out extends DataFrame
                 throw new Error(`Node ${node.uid} is not connected to the graph!`);
             }
         });
+    }
+
+    private _validateEdges(): void {
         this._edges.forEach(edge => {
             if (!this._nodes.has(edge.inputNode.uid)) {
                 throw new Error(`Node ${edge.inputNode.uid} is used in an edge but not added to the graph!`);

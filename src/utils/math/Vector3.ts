@@ -9,6 +9,12 @@ export class Vector3 extends Vector2 {
         this.z = z ? z : 0;
     }
 
+    public set(x: number, y: number, z: number): Vector3 {
+        super.set(x, y);
+        this.z = z;
+        return this;
+    }
+
     @SerializableMember()
     public get z(): number {
         return this[2];

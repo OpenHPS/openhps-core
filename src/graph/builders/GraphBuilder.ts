@@ -96,9 +96,7 @@ export class GraphBuilder<In extends DataFrame | DataFrame[], Out extends DataFr
                 (graphNode as Node<any, any>).graph = this.graph;
                 (graphNode as Node<any, any>).logger = this.graph.logger;
             });
-            this.from()
-                .via(graph as unknown as Node<any, any>)
-                .to();
+            this.from().via(graph as unknown as Node<any, any>).to();
         }
         return this;
     }
@@ -157,31 +155,37 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
                     (graphNode as Node<any, any>).logger = this.graph.logger;
                 });
                 return this.via(node as unknown as Node<any, any>);
-            } else if (typeof node === 'string') {
-                let existingNode = this.graph.getNodeByUID(node);
-                if (existingNode === undefined) {
-                    existingNode = this.graph.getNodeByName(node);
-                }
-                this.previousNodes.forEach(prevNode => {
-                    this.graph.addEdge(new EdgeBuilder<any>()
-                        .withInput(prevNode)
-                        .withOutput(existingNode)
-                        .build());
-                });
-                selectedNodes.push(existingNode);
             } else {
-                this.graph.addNode(node);
-                this.previousNodes.forEach(prevNode => {
-                    this.graph.addEdge(new EdgeBuilder<any>()
-                        .withInput(prevNode)
-                        .withOutput(node)
-                        .build());
-                });
-                selectedNodes.push(node as Node<any, any>);
+                let nodeObject: Node;
+                if (typeof node === 'string') {
+                    nodeObject = this.graph.getNodeByUID(node);
+                    if (nodeObject === undefined) {
+                        nodeObject = this.graph.getNodeByName(node);
+                    }
+                } else {
+                    this.graph.addNode(node);
+                    nodeObject = node as Node;
+                }
+
+                this._insertNode(nodeObject);
+                selectedNodes.push(nodeObject);
             }
         });
         this.previousNodes = selectedNodes;
         return this;
+    }
+
+    /**
+     * Insert a new node in the existing graph
+     * @param node Node to insert
+     */
+    private _insertNode(node: Node<any, any>): void {
+        this.previousNodes.forEach(prevNode => {
+            this.graph.addEdge(new EdgeBuilder<any>()
+                .withInput(prevNode)
+                .withOutput(node)
+                .build());
+        });
     }
 
     public chunk(size: number, timeout?: number, timeoutUnit?: TimeUnit): GraphShapeBuilder<Builder> {
@@ -251,45 +255,27 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         if (nodes.length !== 0) {
             const selectedNodes: Array<AbstractSinkNode<any>> = new Array();
             nodes.forEach(node => {
+                let nodeObject: Node;
                 if (typeof node === 'string') {
-                    let existingNode = this.graph.getNodeByUID(node);
-                    if (existingNode === undefined) {
-                        existingNode = this.graph.getNodeByName(node);
+                    nodeObject = this.graph.getNodeByUID(node);
+                    if (nodeObject === undefined) {
+                        nodeObject = this.graph.getNodeByName(node);
                     }
-                    this.previousNodes.forEach(prevNode => {
-                        this.graph.addEdge(new EdgeBuilder<any>()
-                            .withInput(prevNode)
-                            .withOutput(existingNode)
-                            .build());
-                    });
-                    this.graph.addEdge(new EdgeBuilder<any>()
-                        .withInput(existingNode)
-                        .withOutput(this.graph.internalOutput)
-                        .build());
-                    selectedNodes.push(existingNode as AbstractSinkNode<any>);
                 } else {
                     this.graph.addNode(node);
-                    this.previousNodes.forEach(prevNode => {
-                        this.graph.addEdge(new EdgeBuilder<any>()
-                            .withInput(prevNode)
-                            .withOutput(node)
-                            .build());
-                    });
-                    this.graph.addEdge(new EdgeBuilder<any>()
-                        .withInput(node)
-                        .withOutput(this.graph.internalOutput)
-                        .build());
-                    selectedNodes.push(node);
+                    nodeObject = node;
                 }
+
+                this._insertNode(nodeObject);
+                this.graph.addEdge(new EdgeBuilder<any>()
+                    .withInput(nodeObject)
+                    .withOutput(this.graph.internalOutput)
+                    .build());
+                selectedNodes.push(nodeObject as AbstractSinkNode<any>);
             });
             this.previousNodes = selectedNodes; 
         } else {
-            this.previousNodes.forEach(prevNode => {
-                this.graph.addEdge(new EdgeBuilder<any>()
-                    .withInput(prevNode)
-                    .withOutput(this.graph.internalOutput)
-                    .build());
-            });
+            this._insertNode(this.graph.internalOutput);
         }
         return this.graphBuilder;
     }

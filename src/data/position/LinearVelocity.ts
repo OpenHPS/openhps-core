@@ -28,12 +28,11 @@ export class LinearVelocity extends Vector3 {
     }
 
     public toTranslationMatrix(): number[][] {
-        const v = this.toVector();
         return [
             [1, 0, 0, 0],
             [0, 1, 0, 0],
             [0, 0, 1, 0],
-            [v[0], v[1], v[2], 1]
+            [this.x, this.y, this.z, 1]
         ];
     }
 }
