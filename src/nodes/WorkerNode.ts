@@ -111,14 +111,14 @@ export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFram
                 const serviceInput: () => Observable<{ id: string, serviceName: string, method: string, parameters: any }> = (thread as any).serviceInput;
                 this._serviceOutputFn = (thread as any).serviceOutput;
 
-                this.logger('debug', {
-                    message: "Worker thread spawned!",
-                });
+                this.logger('debug', { message: "Worker thread spawned!" });
 
+                // Subscribe to the workers pull, push and service functions
                 inputFn().subscribe(this._onWorkerPull.bind(this));
                 outputFn().subscribe(this._onWorkerPush.bind(this));
                 serviceInput().subscribe(this._onWorkerService.bind(this));
 
+                // Serialize this model services to the worker
                 const model = (this.graph as Model<any, any>);
                 const services = model.findAllServices();
                 const servicesArray = new Array();
@@ -132,6 +132,8 @@ export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFram
                             service instanceof Service ? "Service" : ""
                     });
                 });
+
+                // Initialize the worker
                 initFn({
                     dirname: this._options.directory,
                     builderCallback: this._builderCallback.toString(),

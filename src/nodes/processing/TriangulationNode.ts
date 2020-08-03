@@ -31,8 +31,7 @@ export class TriangulationNode<InOut extends DataFrame> extends RelativePosition
             switch (objects.length) {
                 case 0:
                 case 1:
-                    resolve(dataObject);
-                    break;
+                    return resolve(dataObject);
                 case 2:
                     break;
                 case 3:
@@ -55,8 +54,7 @@ export class TriangulationNode<InOut extends DataFrame> extends RelativePosition
                     }
                     break;
                 default:
-                    resolve(dataObject);
-                    break;
+                    return resolve(dataObject);
             }
         });
     }

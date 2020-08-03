@@ -1,8 +1,8 @@
 import { SerializableObject, SerializableMember } from "../../data/decorators";
-import { Unit } from "../unit";
+import { Vector } from "./Vector";
 
 @SerializableObject()
-export class Vector2 extends Array<number> {
+export class Vector2 extends Vector {
 
     constructor(x?: number, y?: number) {
         super();
@@ -26,15 +26,6 @@ export class Vector2 extends Array<number> {
 
     public set y(value: number) {
         this[1] = value;
-    }
-
-    public toVector(fromUnit?: Unit, toUnit?: Unit): number [] {
-        if (fromUnit === undefined || fromUnit === toUnit) {
-            return [this.x, this.y];
-        } else {
-            return [fromUnit.convert(this.x, toUnit), 
-                fromUnit.convert(this.y, toUnit)];
-        }
     }
 
 }

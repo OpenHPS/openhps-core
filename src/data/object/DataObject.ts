@@ -6,7 +6,7 @@ import * as uuidv4 from 'uuid/v4';
 import { DataSerializer } from '../DataSerializer';
 import { Space } from "./space/Space";
 import * as math from 'mathjs';
-import { Quaternion } from "../../utils";
+import { Quaternion, Vector4 } from "../../utils";
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -139,14 +139,8 @@ export class DataObject {
     public getPosition(referenceSpace?: Space): AbsolutePosition {
         if (referenceSpace !== undefined && this._position !== undefined) {
             const transformedPosition = this._position.clone<AbsolutePosition>();
-            const point = transformedPosition.toVector();
-            if (point.length === 3) {
-                point.push(1);
-            } else {
-                point.push(0, 1);
-            }
-            const orientation = transformedPosition.orientation.toEuler().toVector();
-            orientation.push(1);
+            const point = new Vector4().set(transformedPosition.toVector());
+            const orientation = new Vector4().set(transformedPosition.orientation.toEuler().toVector());
 
             // Inverse of transformation and rotation matrix
             const invTransformationMatrix = math.inv(referenceSpace.transformationMatrix);
@@ -172,14 +166,8 @@ export class DataObject {
     public setPosition(position: AbsolutePosition, referenceSpace?: Space) {
         if (referenceSpace !== undefined) {
             const transformedPosition = position.clone<AbsolutePosition>();
-            const point = transformedPosition.toVector();
-            if (point.length === 3) {
-                point.push(1);
-            } else {
-                point.push(0, 1);
-            }
-            const orientation = transformedPosition.orientation.toEuler().toVector();
-            orientation.push(1);
+            const point = new Vector4().set(transformedPosition.toVector());
+            const orientation = new Vector4().set(transformedPosition.orientation.toEuler().toVector());
 
             // Transform the point using the transformation matrix
             transformedPosition.fromVector(math.multiply(point, referenceSpace.transformationMatrix));

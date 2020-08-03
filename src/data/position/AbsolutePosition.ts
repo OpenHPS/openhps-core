@@ -75,6 +75,7 @@ export abstract class AbsolutePosition extends Position {
     public equals(position: AbsolutePosition): boolean {
         const s = this.toVector();
         const o = position.toVector();
+        
         if (s.length !== o.length) return false;
 
         for (let i = 0; s.length < i; i++) {

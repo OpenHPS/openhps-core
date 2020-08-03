@@ -1,7 +1,7 @@
 import { DataFrame, DataObject, AbsolutePosition } from "../../../data";
 import * as math from 'mathjs';
 import { ObjectProcessingNode } from "../../ObjectProcessingNode";
-import { Quaternion, TimeUnit, Euler } from "../../../utils";
+import { Quaternion, TimeUnit, Euler, Vector4 } from "../../../utils";
 
 /**
  * Linear and angular velocity processing
@@ -33,7 +33,7 @@ export class VelocityProcessingNode<InOut extends DataFrame = DataFrame> extends
                         // timestamp was incorrect
                         return resolve(object);
                     }
-
+                    
                     // Process the linear velocity
                     const dX = lastPosition.velocity.linear.x;
                     const dY = lastPosition.velocity.linear.y;
@@ -62,12 +62,8 @@ export class VelocityProcessingNode<InOut extends DataFrame = DataFrame> extends
                     // Predict the next location
                     const newPosition = lastPosition;
                     newPosition.timestamp = this._timeFn();
-                    const point = newPosition.toVector();
-                    if (point.length === 3) {
-                        point.push(1);
-                    } else {
-                        point.push(0, 1);
-                    }
+                    
+                    const point = new Vector4().set(newPosition.toVector());
 
                     // New orientation in radians
                     const newOrientation = math.add(lastPosition.orientation.toEuler(), relativeOrientation) as number[];

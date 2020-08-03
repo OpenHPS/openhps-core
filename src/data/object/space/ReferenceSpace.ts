@@ -113,11 +113,7 @@ export class ReferenceSpace extends DataObject implements Space {
      * @param vector Vector to transform
      */
     public transform(vector: number[]): number[] {
-        if (vector.length === 3) {
-            vector.push(1);
-        } else {
-            vector.push(0, 1);
-        }
+        vector.push(1);
         const result = math.multiply(vector, this.transformationMatrix);
         result.pop();
         return result;
