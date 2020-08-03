@@ -17,6 +17,12 @@ export class DataSerializer {
         this._serializableTypes.set(type.name, type);
     }
 
+    public static unregisterType(type: new () => any): void {
+        if (this._serializableTypes.has(type.name)) {
+            this._serializableTypes.delete(type.name);
+        }
+    }
+
     public static get serializableTypes(): Array<new () => any> {
         return Array.from(this._serializableTypes.values());
     }

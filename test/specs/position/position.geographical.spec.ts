@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { GeographicalPosition } from '../../../src';
+import { GeographicalPosition, AngleUnit } from '../../../src';
 
 describe('position', () => {
 
@@ -30,6 +30,18 @@ describe('position', () => {
             });
         }).timeout(10000);
 
+        it('should calculate the distance between two points', () => {
+            const distance = new GeographicalPosition(1, 1).distance( new GeographicalPosition(4, 9));
+        });
+
+        
+        it('should calculate the bearing between two points', () => {
+            const bearing = new GeographicalPosition(1, 1).bearing(new GeographicalPosition(4, 9));
+        });
+
+        it('should calculate the destination from a point in a direction', () => {
+            const destination = new GeographicalPosition(1, 1).destination(100, 20, AngleUnit.DEGREES);
+        });
 
     });
 

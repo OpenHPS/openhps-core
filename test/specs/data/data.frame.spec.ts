@@ -20,5 +20,12 @@ describe('data', () => {
             done();
         });
 
+        it('should get specific object types', () => {
+            const dataFrame = new DummyDataFrame();
+            dataFrame.addObject(new DataObject("123"));
+            dataFrame.addObject(new DummyDataObject());
+            expect(dataFrame.getObjects(DummyDataObject).length).to.equal(1);
+        });
+
     });
 });
