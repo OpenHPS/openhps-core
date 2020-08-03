@@ -40,7 +40,9 @@ pipeline {
                     steps {
                         echo 'Publishing Development ...'
                         sh 'npm run publish:development'
-                        sh 'git push origin HEAD:dev'
+                        sshagent(['git-openhps-ssh']) {
+                            sh 'git push origin HEAD:dev'
+                        }
                     }
                 }
                 stage('Publish Release') {
@@ -51,6 +53,9 @@ pipeline {
                         echo 'Publishing Release ...'
                         sh 'npm run publish:release'
                         sh 'git push origin HEAD:master'
+                        sshagent(['git-openhps-ssh']) {
+                            sh "git push origin master"
+                        }
                     }
                 }
             }
