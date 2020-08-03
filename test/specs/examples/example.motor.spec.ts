@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Model, ModelBuilder, CallbackSinkNode, DataFrame, GraphBuilder, DataObject, Absolute2DPosition, LinearVelocityUnit, VelocityProcessingNode, LinearVelocity, TimeUnit, AngularVelocity, AngularVelocityUnit, AngleUnit } from '../../../src';
+import { Model, ModelBuilder, CallbackSinkNode, DataFrame, GraphBuilder, DataObject, Absolute2DPosition, LinearVelocityUnit, VelocityProcessingNode, LinearVelocity, TimeUnit, AngularVelocity, AngularVelocityUnit, AngleUnit, TimeService } from '../../../src';
 
 describe('example', () => {
 
@@ -10,9 +10,10 @@ describe('example', () => {
 
         before((done) => {
             ModelBuilder.create()
+                .addService(new TimeService(() => currentTime, TimeUnit.SECOND))
                 .addShape(GraphBuilder.create()
                     .from()
-                    .via(new VelocityProcessingNode().timeFunction(() => currentTime, TimeUnit.SECOND))
+                    .via(new VelocityProcessingNode())
                     .to(new CallbackSinkNode((frame: DataFrame) => {
                         
                     })))
@@ -114,7 +115,7 @@ describe('example', () => {
                 const position = robot.getPosition();
                 position.fromVector([0, 0]);
                 position.velocity.linear = new LinearVelocity(1, 0, 0);
-                position.velocity.angular = new AngularVelocity(10, 0, 0, AngularVelocityUnit.DEGREES_PER_SECOND);
+                position.velocity.angular = new AngularVelocity(0, 0, 10, AngularVelocityUnit.DEGREES_PER_SECOND);
                 position.timestamp = currentTime;
                 robot.setPosition(position);
                 return model.push(new DataFrame(robot))
@@ -128,7 +129,6 @@ describe('example', () => {
                 return model.findDataService(DataObject).findByUID("robot");
             }).then(robot => {
                 const position = robot.getPosition() as Absolute2DPosition;
-               
                 const orientation = position.orientation.toEuler().toVector(AngleUnit.DEGREES);
                 return model.push(new DataFrame(robot));
             }).then(() => {

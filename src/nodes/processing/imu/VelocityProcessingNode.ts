@@ -2,32 +2,25 @@ import { DataFrame, DataObject, AbsolutePosition } from "../../../data";
 import * as math from 'mathjs';
 import { ObjectProcessingNode } from "../../ObjectProcessingNode";
 import { Quaternion, TimeUnit, Euler, Vector4 } from "../../../utils";
+import { TimeService } from "../../../service";
+import { Model } from "../../../Model";
 
 /**
  * Linear and angular velocity processing
  */
 export class VelocityProcessingNode<InOut extends DataFrame = DataFrame> extends ObjectProcessingNode<InOut> {
-    private _timeFn: () => number = () => new Date().getTime();
-    private _timeUnit: TimeUnit = TimeUnit.MILLI;
-
-    /**
-     * Manually set the function used to get the current time stamp
-     * @param timeFn Time function
-     */
-    public timeFunction(timeFn: () => number, timeUnit: TimeUnit): VelocityProcessingNode<InOut> {
-        this._timeFn = timeFn;
-        this._timeUnit = timeUnit;
-        return this;
-    }
 
     public processObject(object: DataObject): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
+            const model = (this.graph as Model);
+            const timeService = model.findService(TimeService);
+
             if (object.getPosition() !== undefined) {
                 const lastPosition = object.getPosition().clone<AbsolutePosition>();
                 if (lastPosition.velocity !== undefined) {
                     // Time since current calculation and previous velocity
-                    const deltaTime = this._timeUnit.convert(this._timeFn() - lastPosition.timestamp, TimeUnit.SECOND);
-
+                    const deltaTime = timeService.getUnit().convert(timeService.getTime() - lastPosition.timestamp, TimeUnit.SECOND);
+                    
                     if (deltaTime < 0) {
                         // Delta time is negative, this means the previous location
                         // timestamp was incorrect
@@ -61,7 +54,7 @@ export class VelocityProcessingNode<InOut extends DataFrame = DataFrame> extends
 
                     // Predict the next location
                     const newPosition = lastPosition;
-                    newPosition.timestamp = this._timeFn();
+                    newPosition.timestamp = timeService.getTime();
                     
                     const point = new Vector4().set(newPosition.toVector());
 

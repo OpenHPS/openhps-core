@@ -3,7 +3,7 @@ import { Model } from "../Model";
 import { DataObject } from "../data";
 import * as uuidv4 from 'uuid/v4';
 import { AbstractSinkNode } from "../graph/interfaces/AbstractSinkNode";
-import { DataFrameService } from "../service";
+import { DataService, DataObjectService } from "../service";
 
 /**
  * Sink node
@@ -52,7 +52,7 @@ export abstract class SinkNode<In extends DataFrame | DataFrame[] = DataFrame> e
                 }
 
                 // Queue the storage of the object in a data service
-                let service = model.findDataServiceByObject(object);
+                let service = model.findDataService(object);
                 if (service === null || service === undefined) { 
                     service = defaultService;
                 }
@@ -62,12 +62,12 @@ export abstract class SinkNode<In extends DataFrame | DataFrame[] = DataFrame> e
             // Push the frame to the sink node
             this.onPush(frame).then(() => {
                 // Remove the frame from the data frame service
-                let frameService: DataFrameService<any>;
+                let frameService: DataService<any, any>;
                 const framePromises: Array<PromiseLike<void>> = new Array();
                 if (frame instanceof Array) {
                     frame.forEach((f: DataFrame) => {
                         // Check if there are frame services
-                        frameService = this.findDataFrameService(f);
+                        frameService = model.findDataService(f);
                         if (frameService !== null && frameService !== undefined) { 
                             // Update the frame
                             framePromises.push(frameService.delete(f.uid));
@@ -75,7 +75,7 @@ export abstract class SinkNode<In extends DataFrame | DataFrame[] = DataFrame> e
                     });
                 } else if (frame instanceof DataFrame) {
                     // Check if there are frame services
-                    frameService = this.findDataFrameService(frame);
+                    frameService = model.findDataService(frame);
                     if (frameService !== null && frameService !== undefined) { 
                         // Update the frame
                         framePromises.push(frameService.delete(frame.uid));

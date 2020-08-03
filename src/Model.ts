@@ -24,37 +24,20 @@ export interface Model<In extends DataFrame | DataFrame[] = DataFrame, Out exten
     pull(): Promise<void>;
 
     /**
-     * Find service by name
-     * @param name Service name
+     * Find service
      */
-    findServiceByName<F extends Service>(name: string): F;
-
-    /**
-     * Find service by name
-     * @param name Service name
-     */
-    findServiceByClass<F extends Service>(serviceClass: new () => F): F;
-
-    /**
-     * Find data service by name
-     * @param name Name of the data service
-     */
-    findDataServiceByName<F extends DataService<any, any>>(name: string): F;
+    findService<F extends Service>(name: string): F;
+    findService<F extends Service>(serviceClass: new () => F): F;
     
     /**
-     * Find data service by data type
-     * @param dataType Data type
+     * Find data service
      */
-    findDataService<D extends DataObject | DataFrame | Object, F extends DataService<any, D>>(dataType: new () => D): F;
+    findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(name: string): F;
+    findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(dataType: new () => D): F;
+    findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(object: D): F;
 
     /**
-     * Find data service by data object
-     * @param dataObject Data object instance
-     */
-    findDataServiceByObject<D extends DataObject, F extends DataService<any, D>>(dataObject: D): F;
-
-    /**
-     * Find all services
+     * Find all services and data services
      */
     findAllServices(): Service[];
 

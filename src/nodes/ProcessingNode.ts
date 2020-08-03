@@ -18,15 +18,16 @@ export abstract class ProcessingNode<In extends DataFrame | DataFrame[] = DataFr
         return new Promise<void>((resolve, reject) => {
             const servicePromises = new Array();
             const pushPromises = new Array();
-            
+            const model = (this.graph as Model);
+
             this.process(frame).then(result => {
                 if (result === null || result === undefined) {
                     return resolve();
                 } else if (result instanceof Array) {
                     return resolve();
                 } else {
-                    const oldFrameService = this.findDataFrameService(frame as DataFrame);
-                    const frameService = this.findDataFrameService(result as DataFrame);
+                    const oldFrameService = model.findDataService(frame);
+                    const frameService = model.findDataService(result);
                     
                     if (frameService !== null && frameService !== undefined) { 
                         if (frameService.name !== oldFrameService.name) {
@@ -35,7 +36,7 @@ export abstract class ProcessingNode<In extends DataFrame | DataFrame[] = DataFr
                         }
                         
                         // Update the frame
-                        servicePromises.push(frameService.insert(result as DataFrame));
+                        servicePromises.push(frameService.insert(result));
                     }
                 }
                 

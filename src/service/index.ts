@@ -6,3 +6,4 @@ export * from './memory';
 export * from './WorkerService';
 export * from './TrajectoryService';
 export * from './NodeDataService';
+export * from './TimeService';

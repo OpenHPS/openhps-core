@@ -1,6 +1,6 @@
 import { DataObject } from "../DataObject";
 import * as math from 'mathjs';
-import { AngleUnit, Quaternion, AxisAngle, Euler, EulerOrder } from "../../../utils";
+import { AngleUnit, Quaternion, AxisAngle, Euler, EulerOrder, Vector4 } from "../../../utils";
 import { Space } from "./Space";
 import { SerializableObject, SerializableArrayMember, SerializableMember } from "../../decorators";
 
@@ -18,6 +18,14 @@ export class ReferenceSpace extends DataObject implements Space {
     @SerializableMember()
     private _baseSpaceUID: string;
 
+    // TODO: Move identity matrix to some matrix dedicated class or mathjs
+    private static _identity = [
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+    ];
+
     constructor(baseSpace?: ReferenceSpace, transformationMatrix?: number[][]) {
         super();
         if (baseSpace) {
@@ -25,34 +33,14 @@ export class ReferenceSpace extends DataObject implements Space {
         }
         
         this._transformationMatrix = transformationMatrix;
+        this._scaleMatrix = Array.from(ReferenceSpace._identity);
+        this._translationMatrix = Array.from(ReferenceSpace._identity);
+        this._rotationMatrix = Array.from(ReferenceSpace._identity);
+
         if (this._transformationMatrix === undefined) {
             // Initialize
-            this._transformationMatrix = [
-                [1, 0, 0, 0],
-                [0, 1, 0, 0],
-                [0, 0, 1, 0],
-                [0, 0, 0, 1]
-            ];
+            this._calculateTransformationMatrix();
         }
-
-        this._scaleMatrix = [
-            [1, 0, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1]
-        ];
-        this._translationMatrix = [
-            [1, 0, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1]
-        ];
-        this._rotationMatrix = [
-            [1, 0, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1]
-        ];
     }
 
     public get baseSpaceUID(): string {
@@ -113,8 +101,7 @@ export class ReferenceSpace extends DataObject implements Space {
      * @param vector Vector to transform
      */
     public transform(vector: number[]): number[] {
-        vector.push(1);
-        const result = math.multiply(vector, this.transformationMatrix);
+        const result = math.multiply(new Vector4().set(vector), this.transformationMatrix);
         result.pop();
         return result;
     }

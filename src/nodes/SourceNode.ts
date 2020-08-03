@@ -29,6 +29,7 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[] = DataFrame
         return new Promise<void>(async (resolve, reject) => {
             const servicePromises = new Array();
             const pushPromises = new Array();
+            const model = (this.graph as Model);
 
             if (data instanceof Array) {
                 data.forEach(async f => {
@@ -36,7 +37,7 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[] = DataFrame
                         f = await this._mergeFrame(f);
 
                     if (f !== null || f !== undefined) {
-                        const frameService = this.findDataFrameService(f);
+                        const frameService = model.findDataService(f);
                         
                         if (frameService !== null && frameService !== undefined) { 
                             // Update the frame
@@ -54,7 +55,7 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[] = DataFrame
                     if (!this._ignoreMerging)
                         frame = await this._mergeFrame(frame);
 
-                    const frameService = this.findDataFrameService(frame as DataFrame);
+                    const frameService = model.findDataService(frame);
                     
                     if (frameService !== null && frameService !== undefined) { 
                         // Update the frame
@@ -97,18 +98,18 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[] = DataFrame
             }
             objects.forEach(object => {
                 promises.push(new Promise((objResolve, objReject) => {
-                    let service = model.findDataServiceByObject(object);
+                    let service = model.findDataService(object);
                     if (service === null || service === undefined) {
                         service = defaultService;
                     }
-                    service.findByUID(object.uid).then(existingObject => {
+                    service.findByUID(object.uid).then((existingObject: DataObject) => {
                         if (existingObject === null) {
                             objResolve();
                         }
 
                         object.merge(existingObject);
                         objResolve();
-                    }).catch(ex => {
+                    }).catch(_ => {
                         // Ignore
                         objResolve();
                     });

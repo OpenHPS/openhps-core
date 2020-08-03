@@ -1,6 +1,7 @@
 import { DataFrame, DataObject } from "../data";
 import { ProcessingNode } from "./ProcessingNode";
 import { Model } from "../Model";
+import { DataObjectService } from "../service";
 
 /**
  * Processing node that processes each [[DataObject]] in a [[DataFrame]] individually
@@ -60,7 +61,7 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
         if (type === undefined) {
             return defaultService.findByUID(uid);
         }
-        const service = model.findDataServiceByName(type);
+        const service = model.findDataService(type) as DataObjectService<DataObject>;
         if (service === undefined) {
             return defaultService.findByUID(uid);
         } else {

@@ -149,7 +149,7 @@ export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFram
 
     private _onWorkerService(value: { id: string, serviceName: string, method: string, parameters: any }): void {
         const model = (this.graph as Model<any, any>);
-        const service = model.findDataServiceByName(value.serviceName);
+        const service = model.findDataService(value.serviceName);
         if ((service as any)[value.method]) {
             const serializedParams = value.parameters;
             const params = new Array();

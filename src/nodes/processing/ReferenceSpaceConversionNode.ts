@@ -1,6 +1,7 @@
 import { DataFrame, ReferenceSpace, DataObject } from "../../data";
 import { ObjectProcessingNode } from "../ObjectProcessingNode";
 import { Model } from "../../Model";
+import { DataObjectService } from "../../service";
 
 /**
  * This node converts the positions of data objects inside the frame
@@ -26,7 +27,7 @@ export class ReferenceSpaceConversionNode<InOut extends DataFrame> extends Objec
 
     private _onRegisterService(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const service = (this.graph as Model).findDataService(ReferenceSpace);
+            const service = (this.graph as Model).findDataService<ReferenceSpace>(ReferenceSpace);
             // Update reference space when modified
             service.on('insert', (space: ReferenceSpace) => {
                 if (space.uid === this._referenceSpaceUID) {

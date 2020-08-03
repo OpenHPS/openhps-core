@@ -14,7 +14,7 @@ describe('data frame service', () => {
                 .from()
                 .to(new LoggingSinkNode())
                 .build();
-            frameDataService = model.findDataServiceByName("DataFrame");
+            frameDataService = model.findDataService("DataFrame");
         });
     
         it('should delete frame at the output layer', (done) => {
@@ -44,7 +44,7 @@ describe('data frame service', () => {
                 .from()
                 .to(new LoggingSinkNode())
                 .build().then(model => {
-                    frameDataService = model.findDataServiceByName("DataFrame");
+                    frameDataService = model.findDataService("DataFrame");
                     
                     const frame1 = new DataFrame();
                     frame1.createdTimestamp = Date.parse("10 Mar 1995 00:00:00 GMT");

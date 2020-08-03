@@ -1,5 +1,5 @@
 import { DataFrame, DataObject, ReferenceSpace } from "../../../data";
-import { Service, DataService, NodeData } from "../../../service";
+import { Service, DataService, NodeData, TimeService } from "../../../service";
 import { GraphImpl } from "./GraphImpl";
 import { Model } from "../../../Model";
 import { MemoryDataFrameService, MemoryDataObjectService, MemoryNodeDataService } from "../../../service/memory";
@@ -108,9 +108,27 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
         this.addService(new MemoryDataFrameService<DataFrame>());
         // Store node data
         this.addService(new MemoryNodeDataService(NodeData));
+
+        this.addService(new TimeService());
     }
 
-    public findServiceByName<F extends Service>(name: string): F {
+    /**
+     * Find service
+     */
+    public findService<F extends Service>(name: string): F;
+    public findService<F extends Service>(serviceClass: new () => F): F;
+    public findService<F extends Service>(q: any): F {
+        if (q === undefined || q === null) {
+            return null;
+        } else if (typeof q === 'string') {
+            // Find by name
+            return this._findServiceByName(q);
+        } else {
+            return this._findServiceByName(q.name);
+        }
+    }
+
+    private _findServiceByName<F extends Service>(name: string): F {
         if (this._services.has(name)) {
             return this._services.get(name) as F;
         } else {
@@ -118,7 +136,44 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
         }
     }
 
-    public findDataServiceByName<F extends DataService<any, any>>(name: string): F {
+    /**
+     * Find data service
+     */
+    public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(name: string): F;
+    public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(dataType: new () => D): F;
+    public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(object: D): F;
+    public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(q: any): F {
+        if (q === undefined || q === null) {
+            return null;
+        } else if (typeof q === 'string') {
+            // Find by name
+            return this._findDataServiceByName(q);
+        } else if (q instanceof Function) {
+             // Find by constructor
+             let service: F = this._findDataServiceByName(q.name);
+             if (service === null) {
+                 // Find the parent class
+                 let parent = Object.getPrototypeOf(q);
+                 while (true) {
+                     service = this._findDataServiceByName(parent.name);
+                     if (service !== null) {
+                         return service;
+                     }
+                     if (parent.name === "DataObject" || parent.name === "DataFrame") {
+                         return null;
+                     }
+                     parent = Object.getPrototypeOf(parent);
+                 }
+             } else {
+                 return service;
+             }
+        } else {
+            // Find by instance
+            return this.findDataService(q.constructor);
+        }
+    }
+
+    private _findDataServiceByName<D extends any, F extends DataService<any, D>>(name: string): F {
         if (this._dataServices.has(name)) {
             return this._dataServices.get(name) as F;
         } else {
@@ -126,40 +181,9 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
         }
     }
 
-    public findServiceByClass<F extends Service>(serviceClass: new () => F): F {
-        return this.findServiceByName(serviceClass.name);
-    }
-
     /**
-     * Get data service by data type
-     * @param dataType Data type
+     * Find all services and data services
      */
-    public findDataService<D extends DataObject | DataFrame | Object, F extends DataService<any, D>>(dataType: new () => D): F {
-        if (this._dataServices.has(dataType.name)) {
-            return this._dataServices.get(dataType.name) as F;
-        } else {
-            // Find the parent class
-            let parent = Object.getPrototypeOf(dataType);
-            while (true) {
-                if (this._dataServices.has(parent.name)) {
-                    return this._dataServices.get(parent.name) as F;
-                }
-                if (parent.name === "DataObject" || parent.name === "DataFrame") {
-                    return null;
-                }
-                parent = Object.getPrototypeOf(parent);
-            }
-        }
-    }
-
-    /**
-     * Get data service by data object
-     * @param dataObject Data object instance
-     */
-    public findDataServiceByObject<D extends DataObject, F extends DataService<any, D>>(dataObject: D): F {
-        return this.findDataServiceByName(dataObject.constructor.name);
-    }
-
     public findAllServices(): Service[] {
         return Array.from(this._services.values()).concat(Array.from(this._dataServices.values()));
     }
@@ -191,9 +215,9 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
             const servicePromises = new Array();
 
             // Merge the changes in the frame service
-            let frameService = this.findDataServiceByName(frame.constructor.name);
+            let frameService = this.findDataService(frame.constructor.name);
             if (frameService === null || frameService === undefined) { 
-                frameService = this.findDataServiceByName("DataFrame"); 
+                frameService = this.findDataService("DataFrame"); 
             }
             
             if (frameService !== null && frameService !== undefined) { 

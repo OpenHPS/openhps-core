@@ -21,6 +21,30 @@ export class Euler extends Vector3 {
         this.order = order;
     }
 
+    public get yaw(): number {
+        return this.z;
+    }
+
+    public set yaw(value: number) {
+        this.z = value;
+    }
+
+    public get pitch(): number {
+        return this.y;
+    }
+
+    public set pitch(value: number) {
+        this.y = value;
+    }
+
+    public get roll(): number {
+        return this.x;
+    }
+
+    public set roll(value: number) {
+        this.x = value;
+    }
+
     public toVector(unit: AngleUnit = AngleUnit.RADIANS): number[] {
         return super.toVector(AngleUnit.RADIANS, unit);
     }

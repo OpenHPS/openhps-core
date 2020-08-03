@@ -3,10 +3,7 @@ import { AbstractNode } from "./graph/interfaces/AbstractNode";
 import { DataFrame } from "./data/DataFrame";
 import { AbstractGraph } from "./graph/interfaces/AbstractGraph";
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
-import { DataFrameService } from './service/DataFrameService';
 import { AsyncEventEmitter } from './_internal/AsyncEventEmitter';
-import { DataObject } from './data';
-import { DataObjectService, DataService } from './service';
 
 /**
  * The graph node has an input and output [[DataFrame]]
@@ -175,32 +172,6 @@ export abstract class Node<In extends DataFrame | DataFrame[] = DataFrame, Out e
                 reject(ex);
             });
         });
-    }
-
-    /**
-     * Get data frame service for a specific frame
-     * @param frame Frame to get data frame service for
-     */
-    protected findDataFrameService<T extends DataFrame | DataFrame>(frame: T): DataFrameService<T> {
-        return this._findDataService(frame, "DataFrame") as unknown as DataFrameService<T>;
-    }
-
-    /**
-     * Get data frame service for a specific frame
-     * @param frame Frame to get data frame service for
-     */
-    protected findDataObjectService<T extends DataObject | DataObject>(object: T): DataObjectService<T> {
-        return this._findDataService(object, "DataObject") as unknown as DataObjectService<T>;
-    }
-
-    private _findDataService<T>(object: T, defaultName?: string): DataService<any, T> {
-        const model = (this.graph as any);
-        // Merge the changes in the object service
-        let service = model.findDataServiceByName(object.constructor.name) as DataService<any, T>;
-        if (service === null || service === undefined) { 
-            service = model.findDataServiceByName(defaultName); 
-        }
-        return service;
     }
 
 }
