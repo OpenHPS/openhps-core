@@ -68,14 +68,11 @@ export class Absolute2DPosition extends AbsolutePosition {
         return new Promise<Absolute2DPosition>((resolve, reject) => {
             switch (points.length) {
                 case 0:
-                    resolve(null);
-                    break;
+                    return resolve(null);
                 case 1:
-                    resolve(points[0]);
-                    break;
+                    return resolve(points[0]);
                 case 2:
-                    resolve(points[0].midpoint(points[1], distances[0], distances[1]));
-                    break;
+                    return resolve(points[0].midpoint(points[1], distances[0], distances[1]));
                 case 3:
                 default:
                     const vectors = [
@@ -112,8 +109,7 @@ export class Absolute2DPosition extends AbsolutePosition {
                     const point = new Absolute2DPosition();
                     point.unit = points[0].unit;
                     point.fromVector(math.add(vectors[0], math.add(math.add(math.multiply(eX, x), math.multiply(eY, y)), math.multiply(eZ, z))) as number[]);
-                    resolve(point);
-                    break;
+                    return resolve(point);
             }
         });
     }
@@ -150,8 +146,7 @@ export class Absolute2DPosition extends AbsolutePosition {
             }
             const xr = points[1].x + ((k31 * (y12 - y23)) / d);
             const yr = points[1].y + ((k31 * (x23 - x12)) / d);
-            const point2d = new Absolute2DPosition(xr, yr);
-            resolve(point2d);
+            resolve(new Absolute2DPosition(xr, yr));
         });
     }
 

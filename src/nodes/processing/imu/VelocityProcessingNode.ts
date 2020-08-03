@@ -1,7 +1,7 @@
 import { DataFrame, DataObject, AbsolutePosition } from "../../../data";
 import * as math from 'mathjs';
 import { ObjectProcessingNode } from "../../ObjectProcessingNode";
-import { Quaternion, TimeUnit, AngleUnit } from "../../../utils";
+import { Quaternion, TimeUnit, Euler } from "../../../utils";
 
 /**
  * Linear and angular velocity processing
@@ -46,34 +46,19 @@ export class VelocityProcessingNode<InOut extends DataFrame = DataFrame> extends
                     ], deltaTime);
                     
                     // Process the angular velocity
-                    const orientation = lastPosition.orientation.toEuler().toVector();
-                    const rX = math.add(math.multiply(lastPosition.velocity.angular.x, deltaTime), orientation[0]) as number;
-                    const rY = math.add(math.multiply(lastPosition.velocity.angular.y, deltaTime), orientation[1]) as number;
-                    const rZ = math.add(math.multiply(lastPosition.velocity.angular.z, deltaTime), orientation[2]) as number;
-                    const rotMatrixZ = [
-                        [1, 0, 0, 0],
-                        [0, Math.cos(rZ), -Math.sin(rZ), 0],
-                        [0, Math.sin(rZ), Math.cos(rZ), 0],
-                        [0, 0, 0, 1]
-                    ];
-                    const rotMatrixY = [
-                        [Math.cos(rY), 0, Math.sin(rY), 0],
-                        [0, 1, 0, 0],
-                        [-Math.sin(rY), 0, Math.cos(rY), 0],
-                        [0, 0, 0, 1]
-                    ];
-                    const rotMatrixX = [
-                        [Math.cos(rX), -Math.sin(rX), 0, 0],
-                        [Math.sin(rX), Math.cos(rX), 0, 0],
-                        [0, 0, 1, 0],
-                        [0, 0, 0, 1]
-                    ];
-                    const rotationMatrix = math.multiply(math.multiply(rotMatrixX, rotMatrixY), rotMatrixZ);
+                    const orientation = lastPosition.orientation.toEuler();
+                    const roll = math.add(math.multiply(lastPosition.velocity.angular.x, deltaTime), orientation.x) as number;
+                    const pitch = math.add(math.multiply(lastPosition.velocity.angular.y, deltaTime), orientation.y) as number;
+                    const yaw = math.add(math.multiply(lastPosition.velocity.angular.z, deltaTime), orientation.z) as number;
+                    const rotationMatrix = Quaternion.fromEuler({ yaw, pitch, roll }).toRotationMatrix();
+                    
+                    // Create transformation matrix from linear and angular velocity
                     const transformationMatrix = math.multiply(translationMatrix, rotationMatrix);
+                    
                     // The relative position is the transformation matrix rotated using the orientation
                     const relativePosition = math.multiply([0, 0, 0, 1], transformationMatrix);
                     const relativeOrientation = math.multiply(lastPosition.velocity.angular.toVector(), deltaTime);
-                    
+
                     // Predict the next location
                     const newPosition = lastPosition;
                     newPosition.timestamp = this._timeFn();

@@ -1,8 +1,9 @@
-import { SerializableMember, SerializableObject } from "../../data/decorators";
+import { SerializableObject } from "../../data/decorators";
 import { AxisAngle } from "./AxisAngle";
 import { Euler, EulerOrder } from "./Euler";
 import { AngleUnit } from "../unit";
 import * as math from 'mathjs';
+import { Vector4 } from "./Vector4";
 
 /**
  * Quaternion
@@ -10,51 +11,7 @@ import * as math from 'mathjs';
  * @source https://github.com/mrdoob/three.js/blob/master/src/math/Quaternion.js
  */
 @SerializableObject()
-export class Quaternion extends Array<number> {
-
-    constructor(x: number = 0, y: number = 0, z: number = 0, w: number = 1) {
-        super();
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
-    }
-
-    @SerializableMember()
-    public get x(): number {
-        return this[0];
-    }
-
-    public set x(value: number) {
-        this[0] = value;
-    }
-
-    @SerializableMember()
-    public get y(): number {
-        return this[1];
-    }
-
-    public set y(value: number) {
-        this[1] = value;
-    }
-
-    public get z(): number {
-        return this[2];
-    }
-
-    @SerializableMember()
-    public set z(value: number) {
-        this[2] = value;
-    }
-
-    @SerializableMember()
-    public get w(): number {
-        return this[3];
-    }
-
-    public set w(value: number) {
-        this[3] = value;
-    }
+export class Quaternion extends Vector4 {
 
     public static fromVector(vector: number[]): Quaternion {
         return new Quaternion(vector[0], vector[1], vector[2], vector[3]);
@@ -64,6 +21,7 @@ export class Quaternion extends Array<number> {
      * Create an orientation based on euler angles
      * @param rotation Euler angles
      */
+    public static fromEuler(euler: { yaw: number, pitch: number, roll: number, unit?: AngleUnit }): Quaternion;
     public static fromEuler(euler: { x: number, y: number, z: number, order?: EulerOrder, unit?: AngleUnit }): Quaternion;
     public static fromEuler(euler: number[]): Quaternion;
     public static fromEuler(euler: Euler): Quaternion;
@@ -74,8 +32,10 @@ export class Quaternion extends Array<number> {
             rotation = euler;
         } else if (euler instanceof Array) {
             rotation = new Euler(euler[0], euler[1], euler[2]);
-        } else {
+        } else if (euler['yaw'] === undefined) {
             rotation = new Euler(euler.x, euler.y, euler.z, euler.order, euler.unit);
+        } else {
+            rotation = new Euler(euler.roll, euler.pitch, euler.yaw, 'ZYX', euler.unit);
         }
 
         const cy = math.cos(math.divide(rotation.z, 2));
@@ -253,11 +213,8 @@ export class Quaternion extends Array<number> {
     /**
      * Convert quaternion to euler angles
      */
-    public toEuler(): Euler {
-        const x = Math.atan2(2 * (this.w * this.x + this.y * this.z), 1 - 2 * (Math.pow(this.x, 2) + Math.pow(this.y, 2)));
-        const y = Math.asin(2 * (this.w * this.y - this.z * this.x));
-        const z = Math.atan2(2 * (this.w * this.z + this.x * this.y), 1 - 2 * (Math.pow(this.y, 2) + Math.pow(this.z, 2)));
-        return new Euler(x, y, z, 'ZYX');
+    public toEuler(order: EulerOrder = 'XYZ'): Euler {
+        return Euler.fromRotationMatrix(this.toRotationMatrix(), order);
     }
 
     /**

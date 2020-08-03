@@ -1,18 +1,20 @@
 import { AngleUnit } from "../unit";
 import { SerializableObject, SerializableMember } from "../../data/decorators";
 import * as math from 'mathjs';
+import { Vector4 } from "./Vector4";
 
 /**
  * Axis-angle rotation
  */
 @SerializableObject()
-export class AxisAngle extends Array<number> {
+export class AxisAngle extends Vector4 {
 
-    constructor(x: number = 0, y: number = 0, z: number = 0, angle: number = null, unit: AngleUnit = AngleUnit.RADIANS) {
-        super();
-        this.x = unit.convert(x, AngleUnit.RADIANS);
-        this.y = unit.convert(y, AngleUnit.RADIANS);
-        this.z = unit.convert(z, AngleUnit.RADIANS);
+    constructor(x?: number, y?: number, z?: number, angle: number = null, unit: AngleUnit = AngleUnit.RADIANS) {
+        super(
+            unit.convert(x ? x : 0, AngleUnit.RADIANS),
+            unit.convert(y ? y : 0, AngleUnit.RADIANS),
+            unit.convert(z ? z : 0, AngleUnit.RADIANS)
+        );
 
         if (angle !== null) {
             this.angle = unit.convert(angle, AngleUnit.RADIANS);
@@ -24,33 +26,6 @@ export class AxisAngle extends Array<number> {
             this.z = normalized[2];
         }
     }
-
-    @SerializableMember()
-    public get x(): number {
-        return this[0];
-    }
-
-    public set x(value: number) {
-        this[0] = value;
-    }
-
-    @SerializableMember()
-    public get y(): number {
-        return this[1];
-    }
-
-    public set y(value: number) {
-        this[1] = value;
-    }
-
-    @SerializableMember()
-    public get z(): number {
-        return this[2];
-    }
-
-    public set z(value: number) {
-        this[2] = value;
-    }
     
     @SerializableMember()
     public get angle(): number {
@@ -59,6 +34,10 @@ export class AxisAngle extends Array<number> {
 
     public set angle(value: number) {
         this[3] = value;
+    }
+
+    public static fromVector(vector: number[]): AxisAngle {
+        return new AxisAngle(vector[0], vector[1], vector[2]);
     }
 
     public toVector(unit: AngleUnit = AngleUnit.RADIANS): number[] {

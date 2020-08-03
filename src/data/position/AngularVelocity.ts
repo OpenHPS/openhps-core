@@ -1,42 +1,17 @@
 import { AngularVelocityUnit } from "../../utils/unit/AngularVelocityUnit";
-import { SerializableObject, SerializableMember } from "../decorators";
-import * as math from 'mathjs';
+import { SerializableObject } from "../decorators";
+import { Quaternion } from "../../utils";
+import { Vector3 } from "../../utils/math/Vector3";
 
 @SerializableObject()
-export class AngularVelocity extends Array<number> {
+export class AngularVelocity extends Vector3 {
 
-    constructor(x: number = 0, y: number = 0, z: number = 0, unit: AngularVelocityUnit<any, any> = AngularVelocityUnit.RADIANS_PER_SECOND) {
-        super();
-        this.x = unit.convert(x, AngularVelocityUnit.RADIANS_PER_SECOND);
-        this.y = unit.convert(y, AngularVelocityUnit.RADIANS_PER_SECOND);
-        this.z = unit.convert(z, AngularVelocityUnit.RADIANS_PER_SECOND);
-    }
-
-    @SerializableMember()
-    public get x(): number {
-        return this[0];
-    }
-
-    public set x(value: number) {
-        this[0] = value;
-    }
-
-    @SerializableMember()
-    public get y(): number {
-        return this[1];
-    }
-
-    public set y(value: number) {
-        this[1] = value;
-    }
-
-    public get z(): number {
-        return this[2];
-    }
-
-    @SerializableMember()
-    public set z(value: number) {
-        this[2] = value;
+    constructor(x?: number, y?: number, z?: number, unit: AngularVelocityUnit<any, any> = AngularVelocityUnit.RADIANS_PER_SECOND) {
+        super(
+            unit.convert(x ? x : 0, AngularVelocityUnit.RADIANS_PER_SECOND),
+            unit.convert(y ? y : 0, AngularVelocityUnit.RADIANS_PER_SECOND),
+            unit.convert(z ? z : 0, AngularVelocityUnit.RADIANS_PER_SECOND)
+        );
     }
 
     public static fromVector(vector: number[], unit: AngularVelocityUnit<any, any> = AngularVelocityUnit.RADIANS_PER_SECOND): AngularVelocity {
@@ -54,24 +29,6 @@ export class AngularVelocity extends Array<number> {
     }
 
     public toRotationMatrix(): number[][] {
-        const rotMatrixZ = [
-            [1, 0, 0, 0],
-            [0, Math.cos(this[2]), -Math.sin(this[2]), 0],
-            [0, Math.sin(this[2]), Math.cos(this[2]), 0],
-            [0, 0, 0, 1]
-        ];
-        const rotMatrixY = [
-            [Math.cos(this[1]), 0, Math.sin(this[1]), 0],
-            [0, 1, 0, 0],
-            [-Math.sin(this[1]), 0, Math.cos(this[1]), 0],
-            [0, 0, 0, 1]
-        ];
-        const rotMatrixX = [
-            [Math.cos(this[0]), -Math.sin(this[0]), 0, 0],
-            [Math.sin(this[0]), Math.cos(this[0]), 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1]
-        ];
-        return math.multiply(math.multiply(rotMatrixX, rotMatrixY), rotMatrixZ);
+        return Quaternion.fromEuler({ x: this[0], y: this[1], z: this[2], order: 'ZYX' }).toRotationMatrix();
     }    
 }

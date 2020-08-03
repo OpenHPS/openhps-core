@@ -1,40 +1,16 @@
-import { SerializableObject, SerializableMember } from "../decorators";
+import { SerializableObject } from "../decorators";
 import { LinearVelocityUnit } from "../../utils";
+import { Vector3 } from "../../utils/math/Vector3";
 
 @SerializableObject()
-export class LinearVelocity extends Array<number> {
-    constructor(x: number = 0, y: number = 0, z: number = 0, unit: LinearVelocityUnit<any, any> = LinearVelocityUnit.METERS_PER_SECOND) {
-        super();
-        this.x = unit.convert(x, LinearVelocityUnit.METERS_PER_SECOND);
-        this.y = unit.convert(y, LinearVelocityUnit.METERS_PER_SECOND);
-        this.z = unit.convert(z, LinearVelocityUnit.METERS_PER_SECOND);
-    }
+export class LinearVelocity extends Vector3 {
 
-    @SerializableMember()
-    public get x(): number {
-        return this[0];
-    }
-
-    public set x(value: number) {
-        this[0] = value;
-    }
-
-    @SerializableMember()
-    public get y(): number {
-        return this[1];
-    }
-
-    public set y(value: number) {
-        this[1] = value;
-    }
-
-    public get z(): number {
-        return this[2];
-    }
-
-    @SerializableMember()
-    public set z(value: number) {
-        this[2] = value;
+    constructor(x?: number, y?: number, z?: number, unit: LinearVelocityUnit<any, any> = LinearVelocityUnit.METERS_PER_SECOND) {
+        super(
+            unit.convert(x, LinearVelocityUnit.METERS_PER_SECOND),
+            unit.convert(y, LinearVelocityUnit.METERS_PER_SECOND),
+            unit.convert(z, LinearVelocityUnit.METERS_PER_SECOND)
+        );
     }
 
     public static fromVector(vector: number[], unit: LinearVelocityUnit<any, any> = LinearVelocityUnit.METERS_PER_SECOND): LinearVelocity {

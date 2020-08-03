@@ -1,8 +1,8 @@
 import { DataObject } from "../DataObject";
 import * as math from 'mathjs';
-import { AngleUnit } from "../../../utils";
+import { AngleUnit, Quaternion, AxisAngle, Euler, EulerOrder } from "../../../utils";
 import { Space } from "./Space";
-import { SerializableObject, SerializableArrayMember } from "../../decorators";
+import { SerializableObject, SerializableArrayMember, SerializableMember } from "../../decorators";
 
 @SerializableObject()
 export class ReferenceSpace extends DataObject implements Space {
@@ -15,7 +15,7 @@ export class ReferenceSpace extends DataObject implements Space {
     private _translationMatrix: number[][];
     @SerializableArrayMember(Number, { dimensions: 2 })
     private _rotationMatrix: number[][];
-
+    @SerializableMember()
     private _baseSpaceUID: string;
 
     constructor(baseSpace?: ReferenceSpace, transformationMatrix?: number[][]) {
@@ -81,37 +81,46 @@ export class ReferenceSpace extends DataObject implements Space {
         return this;
     }
 
-    public rotation(rX: number, rY: number, rZ: number = 0, angleUnit: AngleUnit = AngleUnit.RADIANS): ReferenceSpace {
-        const radRx = angleUnit.convert(rX, AngleUnit.RADIANS);
-        const radRy = angleUnit.convert(rY, AngleUnit.RADIANS);
-        const radRz = angleUnit.convert(rZ, AngleUnit.RADIANS);
-
-        const rotMatrixZ = [
-            [1, 0, 0, 0],
-            [0, Math.cos(radRz), -Math.sin(radRz), 0],
-            [0, Math.sin(radRz), Math.cos(radRz), 0],
-            [0, 0, 0, 1]
-        ];
-        const rotMatrixY = [
-            [Math.cos(radRy), 0, Math.sin(radRy), 0],
-            [0, 1, 0, 0],
-            [-Math.sin(radRy), 0, Math.cos(radRy), 0],
-            [0, 0, 0, 1]
-        ];
-        const rotMatrixX = [
-            [Math.cos(radRx), -Math.sin(radRx), 0, 0],
-            [Math.sin(radRx), Math.cos(radRx), 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1]
-        ];
-        this._rotationMatrix = math.multiply(math.multiply(rotMatrixX, rotMatrixY), rotMatrixZ);
-
+    public rotation(r: { yaw: number, pitch: number, roll: number, unit?: AngleUnit }): ReferenceSpace;
+    public rotation(r: { x: number, y: number, z: number, order?: EulerOrder, unit?: AngleUnit }): ReferenceSpace;
+    public rotation(r: number[]): ReferenceSpace;
+    public rotation(r: Quaternion): ReferenceSpace;
+    public rotation(r: Euler): ReferenceSpace;
+    public rotation(r: AxisAngle): ReferenceSpace;
+    public rotation(r: any): ReferenceSpace {
+        let quat: Quaternion;
+        
+        if (r instanceof AxisAngle) {
+            quat = Quaternion.fromAxisAngle(r);
+        } else if (r instanceof Quaternion) {
+            quat = r;
+        } else {
+            quat = Quaternion.fromEuler(r);
+        }
+        
+        this._rotationMatrix = quat.toRotationMatrix();
         this._calculateTransformationMatrix();
         return this;
     }
 
     private _calculateTransformationMatrix(): void {
         this._transformationMatrix = math.multiply(this._rotationMatrix, math.multiply(this._translationMatrix, this._scaleMatrix)) as number[][];
+    }
+
+    /**
+     * Transform the vector to another
+     * 
+     * @param vector Vector to transform
+     */
+    public transform(vector: number[]): number[] {
+        if (vector.length === 3) {
+            vector.push(1);
+        } else {
+            vector.push(0, 1);
+        }
+        const result = math.multiply(vector, this.transformationMatrix);
+        result.pop();
+        return result;
     }
 
     /**

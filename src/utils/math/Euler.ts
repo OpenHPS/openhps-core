@@ -1,49 +1,24 @@
 import { AngleUnit } from "../unit";
 import { SerializableObject, SerializableMember } from "../../data/decorators";
 import * as math from 'mathjs';
+import { Vector3 } from "./Vector3";
 
 /**
  * Euler rotation
  * @source https://github.com/mrdoob/three.js/blob/master/src/math/Euler.js
  */
 @SerializableObject()
-export class Euler extends Array<number> {
+export class Euler extends Vector3 {
     @SerializableMember()
     public order: EulerOrder = 'XYZ';
 
-    constructor(x: number = 0, y: number = 0, z: number = 0, order: EulerOrder = 'XYZ', unit: AngleUnit = AngleUnit.RADIANS) {
-        super();
-        this.x = unit.convert(x, AngleUnit.RADIANS);
-        this.y = unit.convert(y, AngleUnit.RADIANS);
-        this.z = unit.convert(z, AngleUnit.RADIANS);
+    constructor(x?: number, y?: number, z?: number, order: EulerOrder = 'XYZ', unit: AngleUnit = AngleUnit.RADIANS) {
+        super(
+            unit.convert(x ? x : 0, AngleUnit.RADIANS),
+            unit.convert(y ? y : 0, AngleUnit.RADIANS),
+            unit.convert(z ? z : 0, AngleUnit.RADIANS)
+        );
         this.order = order;
-    }
-
-    @SerializableMember()
-    public get x(): number {
-        return this[0];
-    }
-
-    public set x(value: number) {
-        this[0] = value;
-    }
-
-    @SerializableMember()
-    public get y(): number {
-        return this[1];
-    }
-
-    public set y(value: number) {
-        this[1] = value;
-    }
-
-    @SerializableMember()
-    public get z(): number {
-        return this[2];
-    }
-
-    public set z(value: number) {
-        this[2] = value;
     }
 
     public toVector(unit: AngleUnit = AngleUnit.RADIANS): number[] {
@@ -52,6 +27,10 @@ export class Euler extends Array<number> {
             AngleUnit.RADIANS.convert(this[1], unit),
             AngleUnit.RADIANS.convert(this[2], unit)
         ];
+    }
+
+    public static fromVector(vector: number[]): Euler {
+        return new Euler(vector[0], vector[1], vector[2]);
     }
 
     public static fromRotationMatrix(m: number[][], order: EulerOrder = 'XYZ'): Euler {

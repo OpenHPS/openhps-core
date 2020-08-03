@@ -22,6 +22,12 @@ export class DataObject {
     @SerializableMember()
     public createdTimestamp: number;
 
+    /**
+     * Create a new data object
+     * 
+     * @param uid Optional unique identifier
+     * @param displayName Optional display name
+     */
     constructor(uid: string = uuidv4(), displayName?: string) {
         this.uid = uid;
         this.createdTimestamp = new Date().getTime();
@@ -151,6 +157,7 @@ export class DataObject {
             // Transform the orientation (rotation)
             transformedPosition.orientation = Quaternion.fromEuler(math.multiply(orientation, invRotationMatrix));
 
+            transformedPosition.referenceSpaceUID = referenceSpace.uid;
             return transformedPosition;
         } else {
             return this._position;
