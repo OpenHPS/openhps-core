@@ -1,13 +1,15 @@
 import { AngleUnit } from "../unit";
 import { SerializableObject, SerializableMember } from "../../data/decorators";
-import * as math from 'mathjs';
-import { Vector4 } from "./Vector4";
+import { Matrix4 } from "./Matrix4";
+import { Vector3 } from "./Vector3";
+import * as THREE from './_internal';
 
 /**
  * Axis-angle rotation
  */
 @SerializableObject()
-export class AxisAngle extends Vector4 {
+export class AxisAngle extends Vector3 {
+    private _angle: number;
 
     constructor(x?: number, y?: number, z?: number, angle: number = null, unit: AngleUnit = AngleUnit.RADIANS) {
         super(
@@ -20,35 +22,33 @@ export class AxisAngle extends Vector4 {
             this.angle = unit.convert(angle, AngleUnit.RADIANS);
         } else {
             this.angle = Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
-            const normalized = math.divide(this, this.angle) as number[];
-            this.x = normalized[0];
-            this.y = normalized[1];
-            this.z = normalized[2];
+            this.normalize();
         }
     }
     
     @SerializableMember()
     public get angle(): number {
-        return this[3];
+        return this._angle;
     }
 
     public set angle(value: number) {
-        this[3] = value;
-    }
-
-    public static fromVector(vector: number[]): AxisAngle {
-        return new AxisAngle(vector[0], vector[1], vector[2]);
-    }
-
-    public toVector(unit: AngleUnit = AngleUnit.RADIANS): number[] {
-        return super.toVector(AngleUnit.RADIANS, unit);
+        this._angle = value;
     }
 
     /**
-     * Clone the axis
+     * Convert quaternion to axis angles
+     * @param quat Quaternion
      */
-    public clone(): AxisAngle {
-        return new AxisAngle(this.x, this.y, this.z, this.angle);
+    public static fromQuaternion(quat: THREE.Quaternion): AxisAngle {
+        const axis = new AxisAngle();
+        return axis;
+    }
+    
+    /**
+     * Convert axis angle to rotation matrix
+     */
+    public toRotationMatrix(): Matrix4 {
+        return Matrix4.rotationFromAxisAngle(this, this.angle);
     }
 
 }

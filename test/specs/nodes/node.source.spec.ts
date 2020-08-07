@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, DataFrame, CallbackSourceNode, DataObject, Absolute2DPosition, CallbackSinkNode, Model, LinearVelocity } from '../../../src';
+import { ModelBuilder, DataFrame, CallbackSourceNode, DataObject, Absolute2DPosition, CallbackSinkNode, Model, LinearVelocity, Vector3 } from '../../../src';
 
 describe('node source', () => {
 
@@ -25,7 +25,7 @@ describe('node source', () => {
                 object.setPosition(new Absolute2DPosition(3, 3));
                 model.push(new DataFrame(object)).then(() => {
                     callbackNode.callback = (frame: DataFrame) => {
-                        expect(frame.source.getPosition().toVector()).to.eql([3, 3]);
+                        expect(frame.source.getPosition().toVector3()).to.eql(new Vector3(3, 3));
                         expect(frame.source.getPosition().velocity.linear.x).to.equal(1);
                         done();
                     };

@@ -22,9 +22,9 @@ describe('position', () => {
                 new Absolute2DPosition(5, 5),
             ];
             const distances = [
-                3,
-                4,
-                3
+                1,
+                1,
+                1
             ];
             
             Absolute2DPosition.trilaterate(positions, distances).then(result => {

@@ -6,7 +6,12 @@ import * as path from 'path';
 describe('node', () => {
 
     describe('worker node', () => {
+        // Overhead in ms
+        const overhead = 20;
+
         it('should take 30ms with 1 worker', (done) => {
+            let model;
+            let start;
             ModelBuilder.create()
                 .from()
                 .via(new WorkerNode((builder) => {
@@ -14,31 +19,39 @@ describe('node', () => {
                     builder.via(new TimeConsumingNode());
                 }, {
                     directory: __dirname,
-                    poolSize: 1
+                    poolSize: 1,
+                    debug: true
                 }))
                 .to(new CallbackSinkNode((data: DataFrame) => {
                     expect(data.getObjects()[0].uid).to.equal("time object");
                 }))
-                .build().then(model => {
+                .build().then(m => {
+                    model = m;
+
+                    // Warm-up
+                    return model.push(new DataFrame());
+                }).then(() => {
                     // Push three frames and wait for them to finish
-                    const start = new Date().getTime();
-                    Promise.all([
+                    start = new Date().getTime();
+                    return Promise.all([
                         model.push(new DataFrame()),
                         model.push(new DataFrame()),
                         model.push(new DataFrame()),
-                    ]).then(_ => {
-                        const end = new Date().getTime();
-                        const diff = end - start;
-                        expect(diff).to.be.lessThan(60);
-                        model.emit('destroy');
-                        done();
-                    }).catch(ex => {
-                        done(ex);
-                    });
+                    ]);
+                }).then(() => {
+                    const end = new Date().getTime();
+                    const diff = end - start;
+                    expect(diff).to.be.lessThan(30 + overhead);
+                    model.emit('destroy');
+                    done();
+                }).catch(ex => {
+                    done(ex);
                 });
         }).timeout(30000);
 
         it('should take 20ms with 2 workers', (done) => {
+            let model;
+            let start;
             ModelBuilder.create()
                 .from()
                 .via(new WorkerNode((builder) => {
@@ -46,31 +59,39 @@ describe('node', () => {
                     builder.via(new TimeConsumingNode());
                 }, {
                     directory: __dirname,
-                    poolSize: 2
+                    poolSize: 2,
+                    debug: true
                 }))
                 .to(new CallbackSinkNode((data: DataFrame) => {
                     expect(data.getObjects()[0].uid).to.equal("time object");
                 }))
-                .build().then(model => {
+                .build().then(m => {
+                    model = m;
+
+                    // Warm-up
+                    return model.push(new DataFrame());
+                }).then(() => {
                     // Push three frames and wait for them to finish
-                    const start = new Date().getTime();
-                    Promise.all([
+                    start = new Date().getTime();
+                    return Promise.all([
                         model.push(new DataFrame()),
                         model.push(new DataFrame()),
                         model.push(new DataFrame()),
-                    ]).then(_ => {
-                        const end = new Date().getTime();
-                        const diff = end - start;
-                        expect(diff).to.be.lessThan(50);
-                        model.emit('destroy');
-                        done();
-                    }).catch(ex => {
-                        done(ex);
-                    });
+                    ]);
+                }).then(() => {
+                    const end = new Date().getTime();
+                    const diff = end - start;
+                    expect(diff).to.be.lessThan(20 + overhead);
+                    model.emit('destroy');
+                    done();
+                }).catch(ex => {
+                    done(ex);
                 });
         }).timeout(30000);
 
         it('should take 10ms with 3 workers', (done) => {
+            let model;
+            let start;
             ModelBuilder.create()
                 .from()
                 .via(new WorkerNode((builder) => {
@@ -78,27 +99,33 @@ describe('node', () => {
                     builder.via(new TimeConsumingNode());
                 }, {
                     directory: __dirname,
-                    poolSize: 3
+                    poolSize: 3,
+                    debug: true
                 }))
                 .to(new CallbackSinkNode((data: DataFrame) => {
                     expect(data.getObjects()[0].uid).to.equal("time object");
                 }))
-                .build().then(model => {
+                .build().then(m => {
+                    model = m;
+
+                    // Warm-up
+                    return model.push(new DataFrame());
+                }).then(() => {
                     // Push three frames and wait for them to finish
-                    const start = new Date().getTime();
-                    Promise.all([
+                    start = new Date().getTime();
+                    return Promise.all([
                         model.push(new DataFrame()),
                         model.push(new DataFrame()),
                         model.push(new DataFrame()),
-                    ]).then(_ => {
-                        const end = new Date().getTime();
-                        const diff = end - start;
-                        expect(diff).to.be.lessThan(40);
-                        model.emit('destroy');
-                        done();
-                    }).catch(ex => {
-                        done(ex);
-                    });
+                    ]);
+                }).then(() => {
+                    const end = new Date().getTime();
+                    const diff = end - start;
+                    expect(diff).to.be.lessThan(10 + overhead);
+                    model.emit('destroy');
+                    done();
+                }).catch(ex => {
+                    done(ex);
                 });
         }).timeout(30000);
 
@@ -111,7 +138,8 @@ describe('node', () => {
                     builder.via(new DataServiceTestNode());
                 }, {
                     directory: __dirname,
-                    poolSize: 1
+                    poolSize: 1,
+                    debug: true
                 }))
                 .to(new CallbackSinkNode((data: DataFrame) => {
                     expect(data.getObjects()[0].uid).to.equal("abc456");

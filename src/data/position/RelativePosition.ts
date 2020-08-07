@@ -1,46 +1,30 @@
 import { Position } from "./Position";
-import { SerializableObject, SerializableMember } from '../decorators';
+import { LengthUnit } from "../../utils";
 
 /**
  * Relative position to another reference object or space.
  */
-@SerializableObject()
-export abstract class RelativePosition extends Position {
-    private _referenceObjectUID: string;
-    private _referenceObjectType: string;
+export interface RelativePosition extends Position {
 
-    constructor(referenceObject?: any) {
-        super();
-
-        if (referenceObject !== undefined) {
-            if (referenceObject instanceof String || typeof referenceObject === 'string') {
-                this.referenceObjectUID = referenceObject as string;
-            } else {
-                this.referenceObjectType = referenceObject.constructor.name;
-                this.referenceObjectUID = referenceObject.uid;
-            }
-        }
-    }
+    /**
+     * Position accuracy
+     */
+    accuracy: number;
+    
+    accuracyUnit: LengthUnit;
 
     /**
      * Get the reference object UID that this location is relative to
      */
-    @SerializableMember()
-    public get referenceObjectUID(): string {
-        return this._referenceObjectUID;
-    }
+    referenceObjectUID: string;
 
-    public set referenceObjectUID(referenceObjectUID: string) {
-        this._referenceObjectUID = referenceObjectUID;
-    }
+    referenceObjectType: string;
 
-    @SerializableMember()
-    public get referenceObjectType(): string {
-        return this._referenceObjectType;
-    }
+    equals(position: this): boolean;
 
-    public set referenceObjectType(referenceObjectType: string) {
-        this._referenceObjectType = referenceObjectType;
-    }
+    /**
+     * Clone the position
+     */
+    clone(): this;
 
 }

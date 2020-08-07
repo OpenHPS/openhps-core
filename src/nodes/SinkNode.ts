@@ -1,7 +1,7 @@
 import { DataFrame } from "../data/DataFrame";
 import { Model } from "../Model";
 import { DataObject } from "../data";
-import * as uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import { AbstractSinkNode } from "../graph/interfaces/AbstractSinkNode";
 import { DataService, DataObjectService } from "../service";
 

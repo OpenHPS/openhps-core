@@ -1,10 +1,10 @@
 import { SerializableObject, SerializableMember } from "../decorators";
 import { AngularVelocity } from "./AngularVelocity";
 import { LinearVelocity } from "./LinearVelocity";
-import * as math from 'mathjs';
 
 @SerializableObject()
 export class Velocity {
+    
     /**
      * Linear velocity
      */
@@ -22,10 +22,4 @@ export class Velocity {
         this.angular = angular;
     }
 
-    /**
-     * Convert the linear and angular velocity to a transformation matrix
-     */
-    public toTransformationMatrix(): number[][] {
-        return math.multiply(this.angular.toRotationMatrix(), this.linear.toTranslationMatrix());
-    }
 }

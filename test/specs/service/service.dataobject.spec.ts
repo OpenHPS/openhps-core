@@ -1,11 +1,9 @@
 import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, Absolute2DPosition, Absolute3DPosition, CallbackNode, CallbackSourceNode } from '../../../src';
 import { LoggingSinkNode, StorageSinkNode } from '../../../src/nodes/sink';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
-
 import { expect } from 'chai';
 import 'mocha';
 import { MemoryDataObjectService } from '../../../src/service/memory';
-import { exp } from 'mathjs';
 
 describe('data object', () => {
     describe('service', () => {

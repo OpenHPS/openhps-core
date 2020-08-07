@@ -1,7 +1,6 @@
 import { DataFrame, ReferenceSpace, DataObject } from "../../data";
 import { ObjectProcessingNode } from "../ObjectProcessingNode";
 import { Model } from "../../Model";
-import { DataObjectService } from "../../service";
 
 /**
  * This node converts the positions of data objects inside the frame

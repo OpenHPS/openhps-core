@@ -1,4 +1,5 @@
-import { AngleUnit, EulerOrder, Quaternion, AxisAngle, Euler } from "../../../utils";
+import { Matrix4, Quaternion, Euler, AxisAngle, EulerOrder } from "../../../utils/math";
+import { AngleUnit } from "../../../utils";
 
 /**
  * Space interface.
@@ -11,7 +12,11 @@ export interface Space {
      */
     uid: string;
 
-    translate(dX: number, dY: number, dZ?: number): Space;
+    orthographic(left: number, right: number, bottom: number, top: number, near: number, far: number): Space;
+    
+    perspective(left: number, right: number, bottom: number, top: number, near: number, far: number): Space;
+
+    translation(dX: number, dY: number, dZ?: number): Space;
 
     /**
      * Scale the reference space
@@ -26,29 +31,19 @@ export interface Space {
      * Rotate the space to the reference space
      * @param r Rotation
      */
-    rotate(r: { x: number, y: number, z?: number, order?: EulerOrder, unit?: AngleUnit }): Space;
-    rotate(r: number[]): Space;
-    rotate(r: Quaternion): Space;
-    rotate(r: Euler): Space;
-    rotate(r: AxisAngle): Space;
-    rotate(r: any): Space;
-
-    /**
-     * Transform the vector to another
-     * 
-     * @param vector Vector to transform
-     */
-    transform(vector: number[]): number[];
+    rotation(r: Quaternion): Space;
+    rotation(r: Euler): Space;
+    rotation(r: AxisAngle): Space;
+    rotation(r: { yaw: number, pitch: number, roll: number, unit?: AngleUnit }): Space;
+    rotation(r: { x: number, y: number, z: number, order?: EulerOrder, unit?: AngleUnit }): Space;
+    rotation(r: number[]): Space;
 
     /**
      * Get the transformation matrix from this reference space to the relative space
      */
-    transformationMatrix: number[][];
+    transformationMatrix: Matrix4;
 
-    /**
-     * Get the rotation matrix for this reference space to the relative space
-     */
-    rotationMatrix: number[][];
+    rotationMatrix: Matrix4;
 
     baseSpaceUID: string;
 }

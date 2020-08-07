@@ -1,6 +1,7 @@
 import { FilterOptions } from "./FilterNode";
 import { DataFrame, DataObject } from "../../../data";
 import { ObjectProcessingNode } from "../../ObjectProcessingNode";
+import { Vector3 } from "../../../utils";
 
 export abstract class PropertyFilterNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
     private _propertySelector: (object: DataObject, frame?: InOut) =>  PropertyKey;
@@ -30,7 +31,7 @@ export abstract class PropertyFilterNode<InOut extends DataFrame> extends Object
         });
     }
 
-    private _filterValue<T extends number | number[]>(object: DataObject, key: PropertyKey, value: T): Promise<T> {
+    private _filterValue<T extends number | Vector3>(object: DataObject, key: PropertyKey, value: T): Promise<T> {
         return new Promise<T>(async (resolve, reject) => {
             // Get existing filter data
             this.getNodeData(object).then(async nodeData => {
@@ -54,8 +55,8 @@ export abstract class PropertyFilterNode<InOut extends DataFrame> extends Object
         });
     }
 
-    public abstract initFilter<T extends number | number[]>(object: DataObject, value: T, options: FilterOptions): Promise<any>;
+    public abstract initFilter<T extends number | Vector3>(object: DataObject, value: T, options: FilterOptions): Promise<any>;
     
-    public abstract filter<T extends number | number[]>(object: DataObject, value: T, filter: any, options?: FilterOptions): Promise<T>;
+    public abstract filter<T extends number | Vector3>(object: DataObject, value: T, filter: any, options?: FilterOptions): Promise<T>;
 
 }

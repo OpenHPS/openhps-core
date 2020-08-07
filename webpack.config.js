@@ -36,14 +36,10 @@ module.exports = [{
     resolve: {
       alias: {
         'typedjson': 'typedjson/js/typedjson.min.js',
-        "mathjs": "mathjs/dist/math.min.js"
       }
     },
     externals: {
       "tiny-worker": "tiny-worker",
-      "decimal.js": "decimal.js",
-      "fraction.js": "fraction.js",
-      "complex.js": "complex.js",
       "typed-function": "typed-function"
     },
 },{
@@ -85,9 +81,6 @@ module.exports = [{
     },
     externals: {
         "tiny-worker": "tiny-worker",
-        "decimal.js": "decimal.js",
-        "fraction.js": "fraction.js",
-        "complex.js": "complex.js",
         "typed-function": "typed-function"
     },
     output: {

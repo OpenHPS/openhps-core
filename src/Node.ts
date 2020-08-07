@@ -1,4 +1,4 @@
-import * as uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import { AbstractNode } from "./graph/interfaces/AbstractNode";
 import { DataFrame } from "./data/DataFrame";
 import { AbstractGraph } from "./graph/interfaces/AbstractGraph";

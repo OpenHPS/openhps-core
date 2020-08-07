@@ -1,53 +1,103 @@
 import { AbsolutePosition } from "./AbsolutePosition";
 import { SerializableMember, SerializableObject } from "../decorators";
-import * as math from 'mathjs';
 import { LengthUnit } from "../../utils";
+import { Vector3, Vector2, Quaternion } from "../../utils/math";
+import { Velocity } from "./Velocity";
+import { DataSerializer } from "../DataSerializer";
 
 /**
- * Absolute cartesian 2D position. This class implements a [[Position]]. This location can be used both as
+ * Absolute cartesian 2D position. This class implements a [[Vector2]]. This location can be used both as
  * an absolute location or relative location.
  */
 @SerializableObject()
-export class Absolute2DPosition extends AbsolutePosition {
-    private _x: number = 0;
-    private _y: number = 0;
-
-    constructor(x?: number, y?: number) {
-        super();
-        this.x = x;
-        this.y = y;
-    }
+export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
+    private _velocity: Velocity = new Velocity();
+    private _orientation: Quaternion = new Quaternion();
+    private _unit: LengthUnit = LengthUnit.POINTS;
+    private _referenceSpaceUID: string;
+    private _accuracy: number;
+    private _timestamp: number = new Date().getTime();
+    private _accuracyUnit: LengthUnit = LengthUnit.POINTS;
 
     /**
-     * Get X coordinate
+     * Position recording timestamp
      */
     @SerializableMember()
-    public get x(): number {
-        return this._x;
+    public get timestamp(): number {
+        return this._timestamp;
+    }
+
+    public set timestamp(timestamp: number) {
+        this._timestamp = timestamp;
     }
 
     /**
-     * Set X coordinate
-     * @param x X coordinate
-     */
-    public set x(x: number) {
-        this._x = x;
-    }
-
-    /**
-     * Get Y coordinate
+     * Position accuracy
      */
     @SerializableMember()
-    public get y(): number {
-        return this._y;
+    public get accuracy(): number {
+        return this._accuracy;
+    }
+
+    public set accuracy(accuracy: number) {
+        this._accuracy = accuracy;
+    }
+    
+    @SerializableMember()
+    public get accuracyUnit(): LengthUnit {
+        return this._accuracyUnit;
+    }
+
+    public set accuracyUnit(accuracyUnit: LengthUnit) {
+        this._accuracyUnit = accuracyUnit;
     }
 
     /**
-     * Set Y coordinate
-     * @param y Y coordinate
+     * Position reference space UID
      */
-    public set y(y: number) {
-        this._y = y;
+    @SerializableMember()
+    public get referenceSpaceUID(): string {
+        return this._referenceSpaceUID;
+    }
+
+    public set referenceSpaceUID(referenceSpaceUID: string) {
+        this._referenceSpaceUID = referenceSpaceUID;
+    }
+
+    /**
+     * Velocity at recorded position
+     */
+    @SerializableMember()
+    public get velocity(): Velocity {
+        return this._velocity;
+    }
+
+    public set velocity(velocity: Velocity) {
+        this._velocity = velocity;
+    }
+
+    /**
+     * Orientation at recorded position
+     */
+    @SerializableMember()
+    public get orientation(): Quaternion {
+        return this._orientation;
+    }
+
+    public set orientation(orientation: Quaternion) {
+        this._orientation = orientation;
+    }
+
+    /**
+     * Position unit
+     */
+    @SerializableMember()
+    public get unit(): LengthUnit {
+        return this._unit;
+    }
+
+    public set unit(unit: LengthUnit) {
+        this._unit = unit;
     }
 
     /**
@@ -58,8 +108,7 @@ export class Absolute2DPosition extends AbsolutePosition {
         return new Promise<Absolute2DPosition>((resolve, reject) => {
             const newPoint = new Absolute2DPosition();
             newPoint.accuracy = this.accuracy + otherPosition.accuracy / 2;
-            newPoint.x = (this.x + otherPosition.x) / 2;
-            newPoint.y = (this.y + otherPosition.y) / 2;
+            newPoint.set((this.x + otherPosition.x) / 2, (this.y + otherPosition.y) / 2);
             resolve(newPoint);
         });
     }
@@ -76,39 +125,44 @@ export class Absolute2DPosition extends AbsolutePosition {
                 case 3:
                 default:
                     const vectors = [
-                        points[0].toVector(),
-                        points[1].toVector(),
-                        points[2].toVector()
+                        points[0].toVector3(),
+                        points[1].toVector3(),
+                        points[2].toVector3()
                     ];
-                    const eX = math.divide(math.subtract(vectors[1], vectors[0]), math.norm(math.subtract(vectors[1], vectors[0]) as number[]));
-                    const i = math.multiply(eX, math.subtract(vectors[2], vectors[0])) as number;
-                    const eY = math.divide((math.subtract(math.subtract(vectors[2], vectors[0]), math.multiply(i, eX))), math.norm(math.subtract(math.subtract(vectors[2], vectors[0]) as number[], math.multiply(i, eX) as number[]) as number[]));
-                    const j = math.multiply(eY, math.subtract(vectors[2], vectors[0])) as number;
-                    const eZ = math.multiply(eX, eY) as number;
-                    const d = math.norm(math.subtract(vectors[1], vectors[0]) as number[]) as number;
-                
+                    const eX = vectors[1].clone().sub(vectors[0]).divideScalar(vectors[1].clone().sub(vectors[0]).length());
+                    const i = eX.dot(vectors[2].clone().sub(vectors[0]));
+                    const a = vectors[2].clone().sub(vectors[0]).sub(eX.clone().multiplyScalar(i));
+                    const eY = a.clone().divideScalar(a.length());
+                    const j = eY.dot(vectors[2].clone().sub(vectors[0]));
+                    const eZ = eX.clone().multiply(eY);
+                    const d = vectors[1].clone().sub(vectors[0]).length();
+                    
                     // Calculate coordinates
                     let AX = distances[0];
                     let BX = distances[1];
                     let CX = distances[2];
                     
-                    let incr = -1;
+                    let b = -1;
                     let x = 0;
                     let y = 0;
                     do {
                         x = (Math.pow(AX, 2) - Math.pow(BX, 2) + Math.pow(d, 2)) / (2 * d);
                         y = ((Math.pow(AX, 2) - Math.pow(CX, 2) + Math.pow(i, 2) + Math.pow(j, 2)) / (2 * j)) - ((i / j) * x);
-                        incr = Math.pow(AX, 2) - Math.pow(x, 2) - Math.pow(y, 2);
+                        b = Math.pow(AX, 2) - Math.pow(x, 2) - Math.pow(y, 2);
+
                         // Increase distances
                         AX += 0.10;
                         BX += 0.10;
                         CX += 0.10;
-                    } while (incr < 0);
-                    const z = Math.sqrt(incr);
+                    } while (b < 0);
+                    const z = Math.sqrt(b);
+                    if (isNaN(z)) {
+                        return resolve(null);
+                    }
             
                     const point = new Absolute2DPosition();
                     point.unit = points[0].unit;
-                    point.fromVector(math.add(vectors[0], math.add(math.add(math.multiply(eX, x), math.multiply(eY, y)), math.multiply(eZ, z))) as number[]);
+                    point.fromVector(vectors[0].clone().add(eX.multiplyScalar(x)).add(eY.multiplyScalar(y)).add(eZ.multiplyScalar(z)));
                     return resolve(point);
             }
         });
@@ -154,21 +208,29 @@ export class Absolute2DPosition extends AbsolutePosition {
         return Math.pow(Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2), 1 / 2.);
     }
 
-    public fromVector(vector: number[], unit?: LengthUnit): void {
-        if (vector.length < 2) throw new Error(`Vector needs to be a 2D coordinate!`);
-        this.x = vector[0];
-        this.y = vector[1];
+    public fromVector(vector: Vector2 | Vector3, unit?: LengthUnit): void {
+        this.x = vector.x;
+        this.y = vector.y;
+        
         if (unit !== undefined)
             this.unit = unit;
     }
 
-    public toVector(unit?: LengthUnit): number [] {
-        if (unit === undefined) {
-            return [this.x, this.y];
-        } else {
-            return [this.unit.convert(this.x, unit), 
-                this.unit.convert(this.y, unit)];
-        }
+    public toVector3(): Vector3 {
+        return new Vector3(this.x, this.y, 0);
+    }
+
+    public equals(position: Absolute2DPosition): boolean {
+        return this.toVector3().equals(position.toVector3());
+    }
+
+    /**
+     * Clone the position
+     */
+    public clone(): this {
+        const serialized = DataSerializer.serialize(this);
+        const clone = DataSerializer.deserialize(serialized) as this;
+        return clone;
     }
 
 }

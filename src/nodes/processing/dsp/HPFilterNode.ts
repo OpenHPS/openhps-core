@@ -1,6 +1,7 @@
 import { PropertyFilterNode } from "./PropertyFilterNode";
 import { FilterOptions } from "./FilterNode";
 import { DataFrame, DataObject } from "../../../data";
+import { Vector } from "../../../utils";
 
 export class HPFilterNode<InOut extends DataFrame> extends PropertyFilterNode<InOut> {
     
@@ -10,7 +11,7 @@ export class HPFilterNode<InOut extends DataFrame> extends PropertyFilterNode<In
         super(objectFilter, propertySelector, options);
     }
 
-    public initFilter<T extends number | number[]>(object: DataObject, value: T, options: HPFilterOptions): Promise<any> {
+    public initFilter<T extends number | Vector>(object: DataObject, value: T, options: HPFilterOptions): Promise<{ x: T, y: T, alpha: number }> {
         return new Promise<any>((resolve, reject) => {
             const rc = 1.0 / (options.cutOff * 2 * Math.PI);
             const dt = 1.0 / options.sampleRate;
@@ -24,11 +25,17 @@ export class HPFilterNode<InOut extends DataFrame> extends PropertyFilterNode<In
         });
     }
     
-    public filter<T extends number | number[]>(object: DataObject, value: T, filter: any): Promise<T> {
+    public filter<T extends number | Vector>(object: DataObject, value: T, filter: { x: any, y: any, alpha: number }): Promise<T> {
         return new Promise<T>((resolve, reject) => {
-            filter.x = filter.alpha * (filter.x + value - filter.y);
-            filter.y = value;
-            resolve(filter.x);
+            if (typeof value === 'number') {
+                filter.x = filter.alpha * (filter.x + value - filter.y);
+                filter.y = value;
+                resolve(filter.x);
+            } else {
+                filter.x = filter.x.add(value).sub(filter.y).multiplyScalar(filter.alpha);
+                filter.y = value;
+                resolve(filter.x);
+            }
         });
     }
 }

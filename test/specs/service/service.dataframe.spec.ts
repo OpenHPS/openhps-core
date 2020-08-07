@@ -1,7 +1,6 @@
 import { Model, DataFrame, ModelBuilder, LoggingSinkNode, DataObject } from "../../../src";
 import { DataFrameService } from "../../../src/service/DataFrameService";
 import { expect } from 'chai';
-import { rejects } from "assert";
 
 describe('data frame service', () => {
 

@@ -1,18 +1,21 @@
-import { AbsolutePosition } from "./AbsolutePosition";
 import { AngleUnit, MetricLengthUnit } from "../../utils/unit";
 import { LengthUnit } from "../../utils/unit/LengthUnit";
 import { SerializableObject, SerializableMember } from "../decorators";
 import { Absolute3DPosition } from "./Absolute3DPosition";
+import { Vector3 } from "../../utils";
 
 /**
  * Geographical position
  */
 @SerializableObject()
-export class GeographicalPosition extends AbsolutePosition {
+export class GeographicalPosition extends Absolute3DPosition {
     private _lat: number;
     private _lng: number;
     private _amsl: number;
     private _amslUnit: LengthUnit;
+    // Internal
+    private _phi: number;
+    private _lambda: number;
 
     public static EARTH_RADIUS: number = 6371008; 
 
@@ -21,6 +24,30 @@ export class GeographicalPosition extends AbsolutePosition {
         this.latitude = lat;
         this.longitude = lng;
         this._amsl = amsl;
+    }
+
+    public get x(): number {
+        return GeographicalPosition.EARTH_RADIUS * Math.cos(this._phi) * Math.cos(this._lambda);
+    }
+
+    public set x(value: number) {
+
+    }
+
+    public get y(): number {
+        return GeographicalPosition.EARTH_RADIUS * Math.cos(this._phi) * Math.sin(this._lambda);
+    }
+
+    public set y(value: number) {
+        
+    }
+
+    public get z(): number {
+        return GeographicalPosition.EARTH_RADIUS * Math.sin(this._phi);
+    }
+    
+    public set z(value: number) {
+        
     }
 
     /**
@@ -33,17 +60,18 @@ export class GeographicalPosition extends AbsolutePosition {
 
     public set latitude(lat: number) {
         this._lat = lat;
+        this._phi = AngleUnit.DEGREES.convert(this.latitude, AngleUnit.RADIANS);
     }
 
     /**
      * Geographical Latitude
      */
     public get lat(): number {
-        return this._lat;
+        return this.latitude;
     }
 
     public set lat(lat: number) {
-        this._lat = lat;
+        this.latitude = lat;
     }
 
     /**
@@ -56,6 +84,7 @@ export class GeographicalPosition extends AbsolutePosition {
 
     public set longitude(lng: number) {
         this._lng = lng;
+        this._lambda = AngleUnit.DEGREES.convert(this.longitude, AngleUnit.RADIANS);
     }
 
     /**
@@ -198,16 +227,9 @@ export class GeographicalPosition extends AbsolutePosition {
      */
     public static trilaterate(points: GeographicalPosition[], distances: number[]): Promise<GeographicalPosition> {
         return new Promise<GeographicalPosition>((resolve, reject) => {
-            const convertedPoints = new Array();
-            points.forEach(geopoint => {
-                const point = geopoint.toVector();
-                const convertedPoint = new Absolute3DPosition(point[0], point[1], point[2]);
-                convertedPoints.push(convertedPoint);
-            });
-
-            Absolute3DPosition.trilaterate(convertedPoints, distances).then(point3d => {
+            Absolute3DPosition.trilaterate(points, distances).then(point3d => {
                 const geopoint = new GeographicalPosition();
-                geopoint.fromVector(point3d.toVector());
+                geopoint.fromVector(point3d);
                 geopoint.accuracy = points[0].accuracy;
                 resolve(geopoint);
             }).catch(ex => {
@@ -216,18 +238,9 @@ export class GeographicalPosition extends AbsolutePosition {
         });
     }
 
-    public fromVector(vector: number[], unit?: LengthUnit): void {
-        this.latitude = AngleUnit.RADIANS.convert(Math.asin(vector[2] / GeographicalPosition.EARTH_RADIUS), AngleUnit.DEGREES);
-        this.longitude = AngleUnit.RADIANS.convert(Math.atan2(vector[1], vector[0]), AngleUnit.DEGREES);
-    }
-    
-    public toVector(): number [] {
-        const phi = AngleUnit.DEGREES.convert(this.latitude, AngleUnit.RADIANS);
-        const lambda = AngleUnit.DEGREES.convert(this.longitude, AngleUnit.RADIANS);
-        // Convert ECR positions
-        return [GeographicalPosition.EARTH_RADIUS * Math.cos(phi) * Math.cos(lambda),
-            GeographicalPosition.EARTH_RADIUS * Math.cos(phi) * Math.sin(lambda),
-            GeographicalPosition.EARTH_RADIUS * Math.sin(phi)];
+    public fromVector(vector: Vector3, unit?: LengthUnit): void {
+        this.latitude = AngleUnit.RADIANS.convert(Math.asin(vector.z / GeographicalPosition.EARTH_RADIUS), AngleUnit.DEGREES);
+        this.longitude = AngleUnit.RADIANS.convert(Math.atan2(vector.y, vector.x), AngleUnit.DEGREES);
     }
 
 }

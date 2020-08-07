@@ -1,7 +1,6 @@
 import { AngularVelocityUnit } from "../../utils/unit/AngularVelocityUnit";
 import { SerializableObject } from "../decorators";
-import { Quaternion } from "../../utils";
-import { Vector3 } from "../../utils/math/Vector3";
+import { Vector3 } from "../../utils/math";
 
 @SerializableObject()
 export class AngularVelocity extends Vector3 {
@@ -14,15 +13,4 @@ export class AngularVelocity extends Vector3 {
         );
     }
 
-    public static fromVector(vector: number[], unit: AngularVelocityUnit<any, any> = AngularVelocityUnit.RADIANS_PER_SECOND): AngularVelocity {
-        return new AngularVelocity(vector[0], vector[1], vector[2], unit);
-    }
-
-    public toVector(unit?: AngularVelocityUnit<any, any>): number [] {
-        return super.toVector(AngularVelocityUnit.RADIANS_PER_SECOND, unit);
-    }
-
-    public toRotationMatrix(): number[][] {
-        return Quaternion.fromEuler({ x: this[0], y: this[1], z: this[2], order: 'ZYX' }).toRotationMatrix();
-    }    
 }

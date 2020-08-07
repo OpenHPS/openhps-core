@@ -40,7 +40,7 @@ export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFram
         this._builderCallback = builderCallback;
         this._options = options;
 
-        this._worker = new Worker('./_internal/WorkerNodeRunner');
+        this._worker = new Worker(this._options && this._options.debug ? './_internal/WorkerNodeRunnerDebug' : './_internal/WorkerNodeRunner');
 
         this.once('build', this._onBuild.bind(this));
         this.once('destroy', this._onDestroy.bind(this));
@@ -217,4 +217,5 @@ export class WorkerNodeOptions {
     directory?: string = __dirname;
     poolSize?: number = 4;
     optimizedPull?: boolean = false;
+    debug?: boolean = false;
 }

@@ -1,7 +1,7 @@
-import * as math from 'mathjs';
 import { PropertyFilterNode } from "./PropertyFilterNode";
 import { FilterOptions } from "./FilterNode";
 import { DataFrame, DataObject } from '../../../data';
+import { Vector } from "../../../utils";
 
 export class LPFilterNode<InOut extends DataFrame> extends PropertyFilterNode<InOut> {
     
@@ -11,7 +11,7 @@ export class LPFilterNode<InOut extends DataFrame> extends PropertyFilterNode<In
         super(objectFilter, propertySelector, options);
     }
 
-    public initFilter<T extends number | number[]>(object: DataObject, value: T, options: LPFilterOptions): Promise<any> {
+    public initFilter<T extends number | Vector>(object: DataObject, value: T, options: LPFilterOptions): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             const rc = 1.0 / (options.cutOff * 2 * Math.PI);
             const dt = 1.0 / options.sampleRate;
@@ -24,9 +24,15 @@ export class LPFilterNode<InOut extends DataFrame> extends PropertyFilterNode<In
         });
     }
     
-    public filter<T extends number | number[]>(object: DataObject, value: T, filter: { x: T, alpha: number }): Promise<T> {
+    public filter<T extends number | Vector>(object: DataObject, value: T, filter: { x: any, alpha: number }): Promise<T> {
         return new Promise<T>((resolve, reject) => {
-            filter.x = math.add(filter.x, math.multiply(filter.alpha, math.subtract(value, filter.x))) as T;
+            if (typeof value === 'number') {
+                filter.x = filter.x + (filter.alpha * (value - filter.x));
+            } else {
+                const vector = value as Vector;
+                const filterVector = filter.x as Vector;
+                filter.x = filterVector.add(vector.sub(filter.x).multiplyScalar(filter.alpha));
+            }
             resolve(filter.x);
         });
     }

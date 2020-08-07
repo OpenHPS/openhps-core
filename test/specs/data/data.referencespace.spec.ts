@@ -1,17 +1,17 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ReferenceSpace, AngleUnit, Model, ModelBuilder, GraphBuilder, CallbackNode, DataFrame, DataObject, Absolute3DPosition, SinkNode, CallbackSinkNode, CallbackSourceNode } from '../../../src';
-import * as math from 'mathjs';
+import { ReferenceSpace, AngleUnit, Model, ModelBuilder, GraphBuilder, CallbackNode, DataFrame, DataObject, Absolute3DPosition, SinkNode, CallbackSinkNode, CallbackSourceNode, Matrix4, Vector4 } from '../../../src';
+import { Vector3 } from 'three/src/math/Vector3';
 
 describe('data', () => {
     describe('reference space', () => {
 
         it('should initialize with a given transformation matrix', () => {
             let referenceSpace = new ReferenceSpace(undefined, 
-                    [[1, 0, 0, 0],
+                    Matrix4.fromArray([[1, 0, 0, 0],
                     [0, 1, 0, 0],
                     [0, 0, 1, 0],
-                    [0, 0, 0, 1]]);
+                    [0, 0, 0, 1]]));
         });
 
         describe('translation', () => {
@@ -20,11 +20,11 @@ describe('data', () => {
                 let globalReferenceSpace = new ReferenceSpace(undefined);
     
                 let refSpace = new ReferenceSpace(globalReferenceSpace)
-                    .translate(2.0, 2.0, 2.0);
-                let result = math.multiply([3, 3, 0, 1], refSpace.transformationMatrix);
-                expect(result[0]).to.equal(5);
-                expect(result[1]).to.equal(5);
-                expect(result[2]).to.equal(2);
+                    .translation(2.0, 2.0, 2.0);
+                let result = Vector4.fromArray([3, 3, 0, 1]).applyMatrix4(refSpace.transformationMatrix);
+                expect(result.x).to.equal(5);
+                expect(result.y).to.equal(5);
+                expect(result.z).to.equal(2);
             });
 
         });
@@ -36,10 +36,10 @@ describe('data', () => {
     
                 let refSpace = new ReferenceSpace(globalReferenceSpace)
                     .scale(2.0, 2.0, 2.0);
-                let result = math.multiply([3, 3, 0, 1], refSpace.transformationMatrix);
-                expect(result[0]).to.equal(6);
-                expect(result[1]).to.equal(6);
-                expect(result[2]).to.equal(0);
+                let result = Vector4.fromArray([3, 3, 0, 1]).applyMatrix4(refSpace.transformationMatrix);
+                expect(result.x).to.equal(6);
+                expect(result.y).to.equal(6);
+                expect(result.z).to.equal(0);
             });
 
             it('should scale down', () => {
@@ -47,10 +47,10 @@ describe('data', () => {
     
                 let refSpace = new ReferenceSpace(globalReferenceSpace)
                     .scale(0.5, 0.5, 0.5);
-                let result = math.multiply([3, 3, 0, 1], refSpace.transformationMatrix);
-                expect(result[0]).to.equal(1.5);
-                expect(result[1]).to.equal(1.5);
-                expect(result[2]).to.equal(0);
+                let result = Vector4.fromArray([3, 3, 0, 1]).applyMatrix4(refSpace.transformationMatrix);
+                expect(result.x).to.equal(1.5);
+                expect(result.y).to.equal(1.5);
+                expect(result.z).to.equal(0);
             });
 
         });
@@ -61,11 +61,11 @@ describe('data', () => {
                 let globalReferenceSpace = new ReferenceSpace(undefined);
     
                 let refSpace = new ReferenceSpace(globalReferenceSpace)
-                    .rotate({ yaw: 180, pitch: 0, roll: 0, unit: AngleUnit.DEGREES });
-                let result = math.multiply([2, 2, 0, 1], refSpace.transformationMatrix);
-                expect(result[0]).to.within(-2.1, -1.9);
-                expect(result[1]).to.within(-2.1, -1.9);
-                expect(result[2]).to.equal(0);
+                    .rotation({ yaw: 180, pitch: 0, roll: 0, unit: AngleUnit.DEGREES });
+                let result = Vector4.fromArray([2, 2, 0, 1]).applyMatrix4(refSpace.transformationMatrix);
+                expect(result.x).to.within(-2.1, -1.9);
+                expect(result.y).to.within(-2.1, -1.9);
+                expect(result.z).to.equal(0);
             });
 
         });
@@ -122,9 +122,9 @@ describe('data', () => {
                 // Calibrated reference space
                 // In a normal situation, this offset/scale/rotation needs to be calculated
                 let calibratedReferenceSpace = new ReferenceSpace(model.referenceSpace)
-                    .translate(2, 2, 1)            // Origin offset
+                    .translation(2, 2, 1)            // Origin offset
                     .scale(1, 1, 1)                  // Same scale on all axis 1:1
-                    .rotate({ x: 0, y: 0, z: 0 });              // Same rotation
+                    .rotation({ x: 0, y: 0, z: 0 });              // Same rotation
 
                 // Test node that provides a location with a different reference space
                 // e.g. WebXR providing a location (5,5,5) with a different origin
@@ -161,10 +161,10 @@ describe('data', () => {
                 // Calibrated reference space
                 // In a normal situation, this offset/scale/rotation needs to be calculated
                 let calibratedReferenceSpace = new ReferenceSpace(model.referenceSpace)
-                    .translate(2, 2, 1)            // Origin offset
+                    .translation(2, 2, 1)            // Origin offset
                     .scale(1, 1, 1)                  // Same scale on all axis 1:1
-                    .rotate({ x: 0, y: 180, z: 0, unit: AngleUnit.DEGREES });   // Rotation is inverse (down is up, left is right)
-
+                    .rotation({ x: 0, y: 180, z: 0, unit: AngleUnit.DEGREES });   // Rotation is inverse (down is up, left is right)
+                
                 // Test node that provides a location with a different reference space
                 // This example will move the object forward. However, in our global
                 // reference space, forward is backwards

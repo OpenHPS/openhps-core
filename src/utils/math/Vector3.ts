@@ -1,21 +1,43 @@
-import { Vector2 } from "./Vector2";
-import { SerializableObject, SerializableMember } from "../../data/decorators";
+import { SerializableObject, SerializableMember } from '../../data/decorators';
+import * as THREE from './_internal';
 
+/**
+ * Serializable THREE.js Vector3
+ */
 @SerializableObject()
-export class Vector3 extends Vector2 {
+export class Vector3 extends THREE.Vector3 {
 
-    constructor(x?: number, y?: number, z?: number) {
-        super(x, y);
-        this.z = z ? z : 0;
+    @SerializableMember()
+    public get x(): number {
+        return super.x;
+    }
+
+    public set x(value: number) {
+        super.x = value;
+    }
+
+    @SerializableMember()
+    public get y(): number {
+        return super.y;
+    }
+
+    public set y(value: number) {
+        super.y = value;
     }
 
     @SerializableMember()
     public get z(): number {
-        return this[2];
+        return super.z;
     }
 
     public set z(value: number) {
-        this[2] = value;
+        super.z = value;
+    }
+
+    public static fromArray(array: number[]): Vector3 {
+        const vector = new Vector3();
+        vector.fromArray(array);
+        return vector;
     }
 
 }

@@ -2,11 +2,10 @@ import { AbsolutePosition } from "../position/AbsolutePosition";
 import { RelativePosition } from '../position/RelativePosition';
 import { TypedJSON } from 'typedjson';
 import { SerializableObject, SerializableMember, SerializableArrayMember } from '../decorators';
-import * as uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import { DataSerializer } from '../DataSerializer';
 import { Space } from "./space/Space";
-import * as math from 'mathjs';
-import { Quaternion, Vector4 } from "../../utils";
+import { Matrix4, Quaternion } from "../../utils/math";
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -138,18 +137,18 @@ export class DataObject {
      */
     public getPosition(referenceSpace?: Space): AbsolutePosition {
         if (referenceSpace !== undefined && this._position !== undefined) {
-            const transformedPosition = this._position.clone<AbsolutePosition>();
-            const point = new Vector4().set(transformedPosition.toVector());
-            const orientation = new Vector4().set(transformedPosition.orientation.toEuler().toVector());
+            const transformedPosition = this._position.clone();
 
             // Inverse of transformation and rotation matrix
-            const invTransformationMatrix = math.inv(referenceSpace.transformationMatrix);
-            const invRotationMatrix = math.inv(referenceSpace.rotationMatrix);
+            const invTransformationMatrix = new Matrix4().getInverse(referenceSpace.transformationMatrix);
+            const invRotationMatrix = new Matrix4().getInverse(referenceSpace.rotationMatrix);
 
             // Transform the point using the transformation matrix
-            transformedPosition.fromVector(math.multiply(point, invTransformationMatrix));
+            transformedPosition.fromVector(transformedPosition.toVector3().applyMatrix4(invTransformationMatrix));
             // Transform the orientation (rotation)
-            transformedPosition.orientation = Quaternion.fromEuler(math.multiply(orientation, invRotationMatrix));
+            if (transformedPosition.orientation) {
+                transformedPosition.orientation = Quaternion.fromRotationMatrix(transformedPosition.orientation.toRotationMatrix().multiply(invRotationMatrix));
+            }
 
             transformedPosition.referenceSpaceUID = referenceSpace.uid;
             return transformedPosition;
@@ -165,15 +164,16 @@ export class DataObject {
      */
     public setPosition(position: AbsolutePosition, referenceSpace?: Space) {
         if (referenceSpace !== undefined) {
-            const transformedPosition = position.clone<AbsolutePosition>();
-            const point = new Vector4().set(transformedPosition.toVector());
-            const orientation = new Vector4().set(transformedPosition.orientation.toEuler().toVector());
-
+            const transformedPosition = position.clone();
+            const point = transformedPosition.toVector3();
+            
             // Transform the point using the transformation matrix
-            transformedPosition.fromVector(math.multiply(point, referenceSpace.transformationMatrix));
+            transformedPosition.fromVector(point.applyMatrix4(referenceSpace.transformationMatrix));
             // Transform the orientation (rotation)
-            transformedPosition.orientation = Quaternion.fromEuler(math.multiply(orientation, referenceSpace.rotationMatrix));
-
+            if (transformedPosition.orientation) {
+                transformedPosition.orientation = Quaternion.fromRotationMatrix(transformedPosition.orientation.toRotationMatrix().multiply(referenceSpace.rotationMatrix));
+            }
+            
             // Set the reference space
             if (position.referenceSpaceUID === undefined) {
                 position.referenceSpaceUID = referenceSpace.uid;
@@ -188,7 +188,7 @@ export class DataObject {
     /**
      * Get relative positions
      */
-    @SerializableArrayMember(RelativePosition, {
+    @SerializableArrayMember(Object, {
         deserializer(rawArray: any[]): RelativePosition[] {
             if (rawArray === undefined) {
                 return [];
