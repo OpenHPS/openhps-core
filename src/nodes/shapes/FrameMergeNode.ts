@@ -7,13 +7,14 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
     private _timeout: number;
     private _timer: NodeJS.Timeout;
     private _mergeFn: (frame: InOut) => Object;
-    private _groupFn: (frame: InOut) => Object;
+    private _groupFn: (frame: InOut) => Object | Object[];
 
-    constructor(mergeFn: (frame: InOut) => Object, groupFn: (frame: InOut) => Object, timeout: number, timeoutUnit: TimeUnit) {
+    constructor(mergeFn: (frame: InOut) => Object | Object[], groupFn: (frame: InOut) => Object, timeout: number, timeoutUnit: TimeUnit) {
         super();
         this._mergeFn = mergeFn;
-        this._timeout = timeoutUnit.convert(timeout, TimeUnit.MILLISECOND);
         this._groupFn = groupFn;
+
+        this._timeout = timeoutUnit.convert(timeout, TimeUnit.MILLISECOND);
 
         this.once('build', this._start.bind(this));
         this.once('destroy', this._stop.bind(this));
@@ -35,7 +36,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
         this._queue.forEach(queue => {
             if (currentTime - queue.timestamp >= this._timeout) {
                 // Merge node
-                mergePromises.push(this.merge(Array.from(queue.frames.values())));
+                mergePromises.push(this.merge(Array.from(queue.frames.values()), queue.key as string));
                 this._queue.delete(queue.key);
             }
         });
@@ -57,46 +58,48 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
             clearInterval(this._timer);
         }
     }
-
+    
     public process(frame: InOut): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
-            const key = this._mergeFn(frame);
-            if (key === undefined) {
+            const merge: Object | Object[] = this._mergeFn(frame);
+            if (merge === undefined) {
                 return resolve();
             }
-            
-            let queue = this._queue.get(key);
-            if (queue === undefined) {
-                queue = new QueuedMerge(key);
-                queue.frames.set(this._groupFn(frame), frame);
-                this._queue.set(key, queue);
-                resolve();
-            } else {
-                queue.frames.set(this._groupFn(frame), frame);
-                // Check if there are enough frames
-                if (queue.frames.size >= this.inputNodes.length) {
-                    this._queue.delete(key);
-                    this.merge(Array.from(queue.frames.values())).then(mergedFrame => {
-                        resolve(mergedFrame);
-                    }).catch(ex => {
-                        reject(ex);
-                    });
-                } else {
+            (Array.isArray(merge) ? merge : [merge]).forEach(key => {
+                let queue = this._queue.get(key);
+                if (queue === undefined) {
+                    queue = new QueuedMerge(key);
+                    queue.frames.set(this._groupFn(frame), frame);
+                    this._queue.set(key, queue);
                     resolve();
+                } else {
+                    queue.frames.set(this._groupFn(frame), frame);
+                    // Check if there are enough frames
+                    if (queue.frames.size >= this.inputNodes.length) {
+                        this._queue.delete(key);
+                        this.merge(Array.from(queue.frames.values()), key).then(mergedFrame => {
+                            resolve(mergedFrame);
+                        }).catch(ex => {
+                            reject(ex);
+                        });
+                    } else {
+                        resolve();
+                    }
                 }
-            }
+            });
         });
     }
 
-    public merge(frames: InOut[]): Promise<InOut> {
+    public merge(frames: InOut[], key: string): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
             const mergedFrame = frames[0];
+
             for (let i = 1; i < frames.length; i++) {
                 const frame = frames[i];
                 frame.getObjects().forEach(object => {
                     if (mergedFrame.hasObject(object)) {
-                        // Merge object
                         const existingObject = mergedFrame.getObjectByUID(object.uid);
+                        // Merge object
                         object.relativePositions.forEach(value => {
                             existingObject.addRelativePosition(value);
                         });

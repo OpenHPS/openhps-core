@@ -66,7 +66,7 @@ export class CallbackNode<InOut extends DataFrame | DataFrame[] = DataFrame> ext
                     pushPromises.push(node.push(result));
                 });
     
-                Promise.all(pushPromises).then(_ => {
+                Promise.all(pushPromises).then(() => {
                     resolve();
                 }).catch(ex => {
                     reject(ex);
