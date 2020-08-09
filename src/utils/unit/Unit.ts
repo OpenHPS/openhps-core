@@ -35,14 +35,18 @@ export class Unit {
      */
     constructor(name?: string, options?: UnitOptions) {
         const config: UnitOptions = options || { baseName: undefined };
+        config.aliases = config.aliases ? config.aliases : [];
+        config.prefixes = config.prefixes ? config.prefixes : 'none';
+        config.definitions = config.definitions ? config.definitions : [];
 
         // Unit config
         this._name = name;
         this._baseName = config.baseName;
-        this._aliases = config.aliases ? config.aliases : [];
-        this._prefixType = config.prefixes ? config.prefixes : 'none';
+        this._aliases = config.aliases;
+        this._prefixType = config.prefixes;
 
-        (config.definitions ? config.definitions : []).forEach(definition => {
+        // Unit definitions
+        config.definitions.forEach(definition => {
             const referenceUnit = Unit.findByName(definition.unit);
             if (referenceUnit) {
                 this._definitions.set(referenceUnit.name, {
@@ -53,17 +57,7 @@ export class Unit {
             }
         });
 
-        if (options !== undefined && name !== undefined) {
-            // Register unit if it does not exist yet
-            if (!Unit.UNITS.has(this.name) || config.override) {
-                Unit.UNITS.set(this.name, this);
-            }
-            // Check if the unit is a new base unit
-            const baseName = config.baseName ? config.baseName : name;
-            if (!Unit.UNIT_BASES.has(baseName)) {
-                Unit.UNIT_BASES.set(baseName, name);
-            }
-        }
+        Unit.registerUnit(this, config.override);
     }
 
     @SerializableMember()
@@ -107,7 +101,6 @@ export class Unit {
         }
     }
 
-    
     public specifier(prefix: UnitPrefix): this {
         // Check if the unit already exists
         const unitName = `${prefix.name}${this.name}`;
@@ -136,66 +129,43 @@ export class Unit {
             magnitude: prefix.magnitude,
             offset: 0
         });
-        Unit.UNITS.set(unitName, unit);
-        return unit as this;
+        return Unit.registerUnit(unit) as this;
     }
-
 
     /**
      * Find a unit by its name
      * @param name Unit name
+     * @param baseName Optional base name to specific result
      */
-    public static findByName(name: string): Unit {
+    public static findByName(name: string, baseName?: string): Unit {
         if (name === undefined) {
             return undefined;
         } else if (Unit.UNITS.has(name)) {
             return Unit.UNITS.get(name);
         } else {
-            let result: Unit;
-            Unit.UNITS.forEach(unit => {
-                // Check if the name has a prefix
-                if (name.endsWith(unit.name)) {
-                    unit.prefixes.forEach((prefix: UnitPrefix) => {
-                        if (name.match(prefix.abbrevationPattern) || name.match(prefix.namePattern)) {
-                            result = unit.specifier(prefix);
-                            return;
-                        }
-                    });
-
-                    // Stop search if found
-                    if (result) {
-                        return;
-                    }
+            // Check all units
+            for (const [unitName, unit] of Unit.UNITS) {
+                if (baseName ? baseName !== unit.baseName : false) {
+                    continue;
                 }
 
-                // Check if the name matches an alias or an alias with prefix
-                unit.aliases.forEach(alias => {
+                // Check all aliases in those units
+                for (const alias of unit.aliases.concat(unitName)) {
                     if (name === alias) {
                         // Exact match with alias
-                        result = unit;
+                        return unit;
                     } else if (name.endsWith(alias)) {
                         // Unit that we are looking for ends with the alias
                         // confirm that there is a prefix match
-                        unit.prefixes.forEach((prefix: UnitPrefix) => {
+                        for (const prefix of unit.prefixes) {
                             if (name.match(prefix.abbrevationPattern) || name.match(prefix.namePattern)) {
-                                result = unit.specifier(prefix);
-                                return;
+                                return unit.specifier(prefix);
                             }
-                        });
+                        }
                     }
-
-                    // Stop search if found
-                    if (result) {
-                        return;
-                    }
-                });
-
-                // Stop search if found
-                if (result) {
-                    return;
                 }
-            });
-            return result;
+            }
+            return undefined;
         }
     }
 
@@ -206,20 +176,19 @@ export class Unit {
      * @param target Target unit
      */
     public convert(value: number, target: string | Unit): number {
-        const targetUnit: Unit = typeof target === 'string' ? Unit.findByName(target) : target;
-
-        // Do not convert if target unit is the same
-        if (targetUnit.name === this.name) {
+        const targetUnit: Unit = typeof target === 'string' ? Unit.findByName(target, this.baseName) : target;
+        
+        // Do not convert if target unit is the same or undefined
+        if (!targetUnit || targetUnit.name === this.name) {
             return value;
         }
 
-        let conversion: (x: number) => number;
         if (this._definitions.has(targetUnit.name)) {
             const definition = this._definitions.get(targetUnit.name);
-            conversion = (x: number) => (x * definition.magnitude) + definition.offset;
+            return (value * definition.magnitude) + definition.offset;
         } else if (targetUnit._definitions.has(this.name)) {
             const definition = targetUnit._definitions.get(this.name);
-            conversion = (x: number) => (x / definition.magnitude) - definition.offset;
+            return (value / definition.magnitude) - definition.offset;
         } else {
             // No direct conversion found, convert to base unit
             const baseUnitName = Unit.UNIT_BASES.get(this.baseName);
@@ -229,15 +198,30 @@ export class Unit {
             if (!definitionToBase || !definitionFromBase) {
                 return value;
             }
-            conversion = (x: number) => (((x * definitionToBase.magnitude) + definitionToBase.offset) / definitionFromBase.magnitude) - definitionFromBase.offset;
+            return (((value * definitionToBase.magnitude) + definitionToBase.offset) / definitionFromBase.magnitude) - definitionFromBase.offset;
         }
-        
-        return conversion(value);
     }
 
     public static convert(value: number, from: string | Unit, to: string | Unit): number {
         const fromUnit: Unit = typeof from === 'string' ? Unit.findByName(from) : from;
         return fromUnit.convert(value, to);
+    }
+
+    public static registerUnit(unit: Unit, override: boolean = false): Unit {
+        if (!unit.name) {
+            return unit;
+        }
+
+        // Register unit if it does not exist yet
+        if (!Unit.UNITS.has(unit.name) || override) {
+            Unit.UNITS.set(unit.name, unit);
+        }
+        // Check if the unit is a new base unit
+        const baseName = unit.baseName ? unit.baseName : unit.name;
+        if (!Unit.UNIT_BASES.has(baseName)) {
+            Unit.UNIT_BASES.set(baseName, unit.name);
+        }
+        return unit;
     }
     
 }

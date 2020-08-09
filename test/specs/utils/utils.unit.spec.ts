@@ -80,9 +80,15 @@ describe('units', () => {
             expect(unit.baseName).to.equal("length");
         });
 
-        it('should find units by their alias name', () => {
-            const unit = Unit.findByName("m");
+        it('should find units by their alias name and base name', () => {
+            const unit = Unit.findByName("m", "length");
             expect(unit.name).to.equal("meter");
+            expect(unit.baseName).to.equal("length");
+        });
+
+        it('should find units by their alias name', () => {
+            const unit = Unit.findByName("cm");
+            expect(unit.name).to.equal("centimeter");
             expect(unit.baseName).to.equal("length");
         });
 
