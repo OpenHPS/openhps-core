@@ -5,15 +5,13 @@ import { ProcessingNode } from "../ProcessingNode";
 export class ObjectMergeNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
     private _queue: Map<Object, QueuedMerge<InOut>> = new Map();
     private _timeout: number;
-    private _timeoutUnit: TimeUnit;
     private _timer: NodeJS.Timeout;
     private _groupFn: (frame: InOut) => Object;
     private _filterFn: (object: DataObject, frame?: InOut) => boolean;
 
     constructor(filterFn: (object: DataObject, frame?: InOut) => boolean, groupFn: (frame: InOut) => Object, timeout: number, timeoutUnit: TimeUnit) {
         super();
-        this._timeout = timeout;
-        this._timeoutUnit = timeoutUnit;
+        this._timeout = timeoutUnit.convert(timeout, TimeUnit.MILLISECOND);
         this._groupFn = groupFn;
         this._filterFn = filterFn;
 
@@ -26,33 +24,31 @@ export class ObjectMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
      */
     private _start(): Promise<void> {
         return new Promise((resolve, reject) => {
-            this._timer = setInterval(() => {
-                const currentTime = new Date().getTime();
-                const mergePromises = new Array();
-                const removed = new Array();
-                this._queue.forEach(queue => {
-                    if (currentTime - queue.timestamp >= this._timeoutUnit.convert(this._timeout, TimeUnit.MILLISECOND)) {
-                        // Merge node
-                        mergePromises.push(this.merge(Array.from(queue.frames.values()), queue.key as string));
-                        removed.push(queue.key);
-                    }
-                });
-                removed.forEach(remove => {
-                    this._queue.delete(remove);
-                });
-                Promise.all(mergePromises).then(mergedFrames => {
-                    const pushPromises = new Array();
-                    mergedFrames.forEach(mergedFrame => {
-                        this.outputNodes.forEach(outputNode => {
-                            pushPromises.push(outputNode.push(mergedFrame));
-                        });
-                    });
-                    return Promise.all(pushPromises);
-                }).then(() => {}).catch(ex => {
-                    this.logger('error', ex);
-                });
-            }, this._timeoutUnit.convert(this._timeout, TimeUnit.MILLISECOND));
+            this._timer = setInterval(this._timerTick.bind(this), this._timeout);
             resolve();
+        });
+    }
+
+    private _timerTick(): void {
+        const currentTime = new Date().getTime();
+        const mergePromises = new Array();
+        this._queue.forEach(queue => {
+            if (currentTime - queue.timestamp >= this._timeout) {
+                // Merge node
+                mergePromises.push(this.merge(Array.from(queue.frames.values()), queue.key as string));
+                this._queue.delete(queue.key);
+            }
+        });
+        Promise.all(mergePromises).then(mergedFrames => {
+            const pushPromises = new Array();
+            mergedFrames.forEach(mergedFrame => {
+                this.outputNodes.forEach(outputNode => {
+                    pushPromises.push(outputNode.push(mergedFrame));
+                });
+            });
+            return Promise.all(pushPromises);
+        }).then(() => {}).catch(ex => {
+            this.logger('error', ex);
         });
     }
 
