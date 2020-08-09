@@ -13,9 +13,9 @@ export class Euler extends THREE.Euler {
     constructor(x?: number, y?: number, z?: number, order?: EulerOrder, unit?: AngleUnit) {
         super(x, y, z, order);
         if (unit) {
-            this.x = unit.convert(this.x, AngleUnit.RADIANS);
-            this.y = unit.convert(this.y, AngleUnit.RADIANS);
-            this.z = unit.convert(this.z, AngleUnit.RADIANS);
+            this.x = unit.convert(this.x, AngleUnit.RADIAN);
+            this.y = unit.convert(this.y, AngleUnit.RADIAN);
+            this.z = unit.convert(this.z, AngleUnit.RADIAN);
         }
     }
 
@@ -66,11 +66,11 @@ export class Euler extends THREE.Euler {
         return euler;
     }
     
-    public toVector(unit: AngleUnit = AngleUnit.RADIANS): Vector3 {
+    public toVector(unit: AngleUnit = AngleUnit.RADIAN): Vector3 {
         return new Vector3(
-            AngleUnit.RADIANS.convert(this.x, unit), 
-            AngleUnit.RADIANS.convert(this.y, unit),
-            AngleUnit.RADIANS.convert(this.z, unit));
+            AngleUnit.RADIAN.convert(this.x, unit), 
+            AngleUnit.RADIAN.convert(this.y, unit),
+            AngleUnit.RADIAN.convert(this.z, unit));
     }
 
     /**

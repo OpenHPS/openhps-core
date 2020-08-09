@@ -31,7 +31,7 @@ export class ObjectMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
                 const mergePromises = new Array();
                 const removed = new Array();
                 this._queue.forEach(queue => {
-                    if (currentTime - queue.timestamp >= this._timeoutUnit.convert(this._timeout, TimeUnit.MILLI)) {
+                    if (currentTime - queue.timestamp >= this._timeoutUnit.convert(this._timeout, TimeUnit.MILLISECOND)) {
                         // Merge node
                         mergePromises.push(this.merge(Array.from(queue.frames.values()), queue.key as string));
                         removed.push(queue.key);
@@ -51,7 +51,7 @@ export class ObjectMergeNode<InOut extends DataFrame> extends ProcessingNode<InO
                 }).then(() => {}).catch(ex => {
                     this.logger('error', ex);
                 });
-            }, this._timeoutUnit.convert(this._timeout, TimeUnit.MILLI));
+            }, this._timeoutUnit.convert(this._timeout, TimeUnit.MILLISECOND));
             resolve();
         });
     }

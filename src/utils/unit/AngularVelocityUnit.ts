@@ -1,11 +1,19 @@
 import { SerializableObject } from "../../data/decorators";
-import { TimeUnit } from "./TimeUnit";
 import { Unit } from "./Unit";
-import { AngleUnit } from "./AngleUnit";
 
 @SerializableObject()
-export class AngularVelocityUnit<L extends AngleUnit, T extends TimeUnit> extends Unit {
-    public static readonly RADIANS_PER_SECOND = new AngularVelocityUnit((x) => x * (180. / Math.PI), (x) => x * (Math.PI / 180.));
-    public static readonly DEGREES_PER_SECOND = new AngularVelocityUnit((x) => x, (x) => x);
-    public static readonly ROUNDS_PER_SECOND = new AngularVelocityUnit();
+export class AngularVelocityUnit extends Unit {
+
+    public static readonly RADIAN_PER_SECOND = new Unit("radian per second", {
+        baseName: "angularvelocity",
+        aliases: ["rad/s", "radians per second"]
+    });
+    public static readonly DEGREE_PER_SECOND = new Unit("degree per second", {
+        baseName: "angularvelocity",
+        aliases: ["deg/s", "degrees per second"],
+        definitions: [
+            { magnitude: Math.PI / 180., unit: "rad/s" }
+        ]
+    });
+
 }

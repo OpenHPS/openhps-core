@@ -11,15 +11,15 @@ import * as THREE from './_internal';
 export class AxisAngle extends Vector3 {
     private _angle: number;
 
-    constructor(x?: number, y?: number, z?: number, angle: number = null, unit: AngleUnit = AngleUnit.RADIANS) {
+    constructor(x?: number, y?: number, z?: number, angle: number = null, unit: AngleUnit = AngleUnit.RADIAN) {
         super(
-            unit.convert(x ? x : 0, AngleUnit.RADIANS),
-            unit.convert(y ? y : 0, AngleUnit.RADIANS),
-            unit.convert(z ? z : 0, AngleUnit.RADIANS)
+            unit.convert(x ? x : 0, AngleUnit.RADIAN),
+            unit.convert(y ? y : 0, AngleUnit.RADIAN),
+            unit.convert(z ? z : 0, AngleUnit.RADIAN)
         );
 
         if (angle !== null) {
-            this.angle = unit.convert(angle, AngleUnit.RADIANS);
+            this.angle = unit.convert(angle, AngleUnit.RADIAN);
         } else {
             this.angle = Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
             this.normalize();

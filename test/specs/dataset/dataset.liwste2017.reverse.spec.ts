@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, ObjectMergeNode, Model, DataFrame, DataObject, RelativeDistancePosition, MetricLengthUnit, Absolute2DPosition, StorageSinkNode, TrilaterationNode, CallbackSinkNode, SourceMergeNode, TimeUnit, WorkerNode, DataSerializer } from '../../../src';
+import { ModelBuilder, ObjectMergeNode, Model, DataFrame, DataObject, RelativeDistancePosition, Absolute2DPosition, StorageSinkNode, TrilaterationNode, CallbackSinkNode, SourceMergeNode, TimeUnit, WorkerNode, DataSerializer, LengthUnit } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
 import { EvaluationDataFrame } from '../../mock/data/EvaluationDataFrame';
 import * as path from 'path';
@@ -26,7 +26,7 @@ describe('dataset', () => {
                     const dataFrame = new DataFrame();
                     const beacon = new DataObject(`beacon_${row.Beacon}`);
                     beacon.setPosition(new Absolute2DPosition(parseFloat(row.X), parseFloat(row.Y)));
-                    (beacon.getPosition() as Absolute2DPosition).unit = MetricLengthUnit.METER;
+                    (beacon.getPosition() as Absolute2DPosition).unit = LengthUnit.METER;
                     dataFrame.addObject(beacon);
                     return dataFrame;
                 }))
@@ -44,14 +44,14 @@ describe('dataset', () => {
                         
                             const trackedObject = new DataObject("tracked");
                             // The tracked object has three relative locations
-                            trackedObject.addRelativePosition(new RelativeDistancePosition(new DataObject("beacon_A"), parseFloat(row['Distance A']), MetricLengthUnit.METER));
+                            trackedObject.addRelativePosition(new RelativeDistancePosition(new DataObject("beacon_A"), parseFloat(row['Distance A']), LengthUnit.METER));
                             dataFrame.addObject(trackedObject);
                             dataFrame.source = new DataObject("beacon_A");
 
                             // Control object
                             const evaluationObject = new DataObject("tracked");
                             evaluationObject.setPosition(new Absolute2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y'])));
-                            (evaluationObject.getPosition() as Absolute2DPosition).unit = MetricLengthUnit.CENTIMETER;
+                            (evaluationObject.getPosition() as Absolute2DPosition).unit = LengthUnit.CENTIMETER;
                             dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
 
                             return dataFrame;
@@ -61,14 +61,14 @@ describe('dataset', () => {
                         
                             const trackedObject = new DataObject("tracked");
                             // The tracked object has three relative locations
-                            trackedObject.addRelativePosition(new RelativeDistancePosition(new DataObject("beacon_B"), parseFloat(row['Distance B']), MetricLengthUnit.METER));
+                            trackedObject.addRelativePosition(new RelativeDistancePosition(new DataObject("beacon_B"), parseFloat(row['Distance B']), LengthUnit.METER));
                             dataFrame.addObject(trackedObject);
                             dataFrame.source = new DataObject("beacon_B");
 
                             // Control object
                             const evaluationObject = new DataObject("tracked");
                             evaluationObject.setPosition(new Absolute2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y'])));
-                            (evaluationObject.getPosition() as Absolute2DPosition).unit = MetricLengthUnit.CENTIMETER;
+                            (evaluationObject.getPosition() as Absolute2DPosition).unit = LengthUnit.CENTIMETER;
                             dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
 
                             return dataFrame;
@@ -78,14 +78,14 @@ describe('dataset', () => {
                         
                             const trackedObject = new DataObject("tracked");
                             // The tracked object has three relative locations
-                            trackedObject.addRelativePosition(new RelativeDistancePosition(new DataObject("beacon_C"), parseFloat(row['Distance C']), MetricLengthUnit.METER));
+                            trackedObject.addRelativePosition(new RelativeDistancePosition(new DataObject("beacon_C"), parseFloat(row['Distance C']), LengthUnit.METER));
                             dataFrame.addObject(trackedObject);
                             dataFrame.source = new DataObject("beacon_C");
 
                             // Control object
                             const evaluationObject = new DataObject("tracked");
                             evaluationObject.setPosition(new Absolute2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y'])));
-                            (evaluationObject.getPosition() as Absolute2DPosition).unit = MetricLengthUnit.CENTIMETER;
+                            (evaluationObject.getPosition() as Absolute2DPosition).unit = LengthUnit.CENTIMETER;
                             dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
 
                             return dataFrame;
@@ -105,7 +105,7 @@ describe('dataset', () => {
                     .from(scanSourceNodeA, scanSourceNodeB, scanSourceNodeC)
                     .via(new ObjectMergeNode(
                         (object: DataObject, frame: DataFrame) => { return frame.source.uid !== object.uid; }, 
-                        (frame: DataFrame) => { return frame.source.uid; }, 100, TimeUnit.MILLI))
+                        (frame: DataFrame) => { return frame.source.uid; }, 100, TimeUnit.MILLISECOND))
                     .via(new TrilaterationNode<EvaluationDataFrame>())
                     .to(callbackNode)
                     .build().then(model => {

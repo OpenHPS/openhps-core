@@ -1,4 +1,4 @@
-import { AngleUnit, MetricLengthUnit } from "../../utils/unit";
+import { AngleUnit } from "../../utils/unit";
 import { LengthUnit } from "../../utils/unit/LengthUnit";
 import { SerializableObject, SerializableMember } from "../decorators";
 import { Absolute3DPosition } from "./Absolute3DPosition";
@@ -60,7 +60,7 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     public set latitude(lat: number) {
         this._lat = lat;
-        this._phi = AngleUnit.DEGREES.convert(this.latitude, AngleUnit.RADIANS);
+        this._phi = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
     }
 
     /**
@@ -84,7 +84,7 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     public set longitude(lng: number) {
         this._lng = lng;
-        this._lambda = AngleUnit.DEGREES.convert(this.longitude, AngleUnit.RADIANS);
+        this._lambda = AngleUnit.DEGREE.convert(this.longitude, AngleUnit.RADIAN);
     }
 
     /**
@@ -128,10 +128,10 @@ export class GeographicalPosition extends Absolute3DPosition {
      * @param destination Destination location
      */
     public distance(destination: GeographicalPosition): number {
-        const latRadA = AngleUnit.DEGREES.convert(this.latitude, AngleUnit.RADIANS);
-        const latRadB = AngleUnit.DEGREES.convert(destination.latitude, AngleUnit.RADIANS);
-        const deltaLat = AngleUnit.DEGREES.convert(destination.latitude - this.latitude, AngleUnit.RADIANS);
-        const deltaLon = AngleUnit.DEGREES.convert(destination.longitude - this.longitude, AngleUnit.RADIANS);
+        const latRadA = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
+        const latRadB = AngleUnit.DEGREE.convert(destination.latitude, AngleUnit.RADIAN);
+        const deltaLat = AngleUnit.DEGREE.convert(destination.latitude - this.latitude, AngleUnit.RADIAN);
+        const deltaLon = AngleUnit.DEGREE.convert(destination.longitude - this.longitude, AngleUnit.RADIAN);
         const a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
                 Math.cos(latRadA) * Math.cos(latRadB) *
                 Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
@@ -145,32 +145,32 @@ export class GeographicalPosition extends Absolute3DPosition {
      * @param destination Destination location
      */
     public bearing(destination: GeographicalPosition): number {
-        const lonRadA = AngleUnit.DEGREES.convert(this.longitude, AngleUnit.RADIANS);
-        const latRadA = AngleUnit.DEGREES.convert(this.latitude, AngleUnit.RADIANS);
-        const lonRadB = AngleUnit.DEGREES.convert(destination.longitude, AngleUnit.RADIANS);
-        const latRadB = AngleUnit.DEGREES.convert(destination.latitude, AngleUnit.RADIANS);
+        const lonRadA = AngleUnit.DEGREE.convert(this.longitude, AngleUnit.RADIAN);
+        const latRadA = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
+        const lonRadB = AngleUnit.DEGREE.convert(destination.longitude, AngleUnit.RADIAN);
+        const latRadB = AngleUnit.DEGREE.convert(destination.latitude, AngleUnit.RADIAN);
         const y = Math.sin(lonRadB - lonRadA) * Math.cos(latRadB);
         const x = Math.cos(latRadA) * Math.sin(latRadB) -  Math.sin(latRadA) * Math.cos(latRadB) * Math.cos(lonRadB - lonRadA);
-        return AngleUnit.RADIANS.convert(Math.atan2(y, x), AngleUnit.DEGREES);
+        return AngleUnit.RADIAN.convert(Math.atan2(y, x), AngleUnit.DEGREE);
     }
 
     public destination(
         bearing: number, 
         distance: number, 
-        bearingUnit: AngleUnit = AngleUnit.DEGREES, 
-        distanceUnit: LengthUnit = MetricLengthUnit.METER): Promise<GeographicalPosition> {
+        bearingUnit: AngleUnit = AngleUnit.DEGREE, 
+        distanceUnit: LengthUnit = LengthUnit.METER): Promise<GeographicalPosition> {
         return new Promise<GeographicalPosition>((resolve, reject) => {
-            const brng = bearingUnit.convert(bearing, AngleUnit.RADIANS);
-            const lonRadA = bearingUnit.convert(this.longitude, AngleUnit.RADIANS);
-            const latRadA = bearingUnit.convert(this.latitude, AngleUnit.RADIANS);
+            const brng = bearingUnit.convert(bearing, AngleUnit.RADIAN);
+            const lonRadA = bearingUnit.convert(this.longitude, AngleUnit.RADIAN);
+            const latRadA = bearingUnit.convert(this.latitude, AngleUnit.RADIAN);
             const latX = Math.asin(Math.sin(latRadA) * Math.cos(distance / GeographicalPosition.EARTH_RADIUS) +
                         Math.cos(latRadA) * Math.sin(distance / GeographicalPosition.EARTH_RADIUS) * Math.cos(brng));
             const lonX = lonRadA + Math.atan2(Math.sin(brng) * Math.sin(distance / GeographicalPosition.EARTH_RADIUS) * Math.cos(latRadA),
                                     Math.cos(distance / GeographicalPosition.EARTH_RADIUS) - Math.sin(latRadA) * Math.sin(latX));
     
             const location = new GeographicalPosition();
-            location.latitude = AngleUnit.RADIANS.convert(latX, AngleUnit.DEGREES);
-            location.longitude = AngleUnit.RADIANS.convert(lonX, AngleUnit.DEGREES);
+            location.latitude = AngleUnit.RADIAN.convert(latX, AngleUnit.DEGREE);
+            location.longitude = AngleUnit.RADIAN.convert(lonX, AngleUnit.DEGREE);
             resolve(location);
         });
     }
@@ -182,10 +182,10 @@ export class GeographicalPosition extends Absolute3DPosition {
     public midpoint(otherPosition: GeographicalPosition, distanceSelf: number = 1, distanceOther: number = 1): Promise<GeographicalPosition> {
         return new Promise<GeographicalPosition>((resolve, reject) => {
             if (distanceOther === distanceSelf) {
-                const lonRadA = AngleUnit.DEGREES.convert(this.longitude, AngleUnit.RADIANS);
-                const latRadA = AngleUnit.DEGREES.convert(this.latitude, AngleUnit.RADIANS);
-                const lonRadB = AngleUnit.DEGREES.convert(otherPosition.longitude, AngleUnit.RADIANS);
-                const latRadB = AngleUnit.DEGREES.convert(otherPosition.latitude, AngleUnit.RADIANS);
+                const lonRadA = AngleUnit.DEGREE.convert(this.longitude, AngleUnit.RADIAN);
+                const latRadA = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
+                const lonRadB = AngleUnit.DEGREE.convert(otherPosition.longitude, AngleUnit.RADIAN);
+                const latRadB = AngleUnit.DEGREE.convert(otherPosition.latitude, AngleUnit.RADIAN);
         
                 const Bx = Math.cos(latRadB) * Math.cos(lonRadB - lonRadA);
                 const By = Math.cos(latRadB) * Math.sin(lonRadB - lonRadA);
@@ -194,8 +194,8 @@ export class GeographicalPosition extends Absolute3DPosition {
                 const lonX = lonRadA + Math.atan2(By, Math.cos(latRadA) + Bx);
         
                 const location = new GeographicalPosition();
-                location.latitude = AngleUnit.RADIANS.convert(latX, AngleUnit.DEGREES);
-                location.longitude = AngleUnit.RADIANS.convert(lonX, AngleUnit.DEGREES);
+                location.latitude = AngleUnit.DEGREE.convert(latX, AngleUnit.RADIAN);
+                location.longitude = AngleUnit.DEGREE.convert(lonX, AngleUnit.RADIAN);
                 resolve(location);
             } else {
                 // Calculate bearings
@@ -239,8 +239,8 @@ export class GeographicalPosition extends Absolute3DPosition {
     }
 
     public fromVector(vector: Vector3, unit?: LengthUnit): void {
-        this.latitude = AngleUnit.RADIANS.convert(Math.asin(vector.z / GeographicalPosition.EARTH_RADIUS), AngleUnit.DEGREES);
-        this.longitude = AngleUnit.RADIANS.convert(Math.atan2(vector.y, vector.x), AngleUnit.DEGREES);
+        this.latitude = AngleUnit.RADIAN.convert(Math.asin(vector.z / GeographicalPosition.EARTH_RADIUS), AngleUnit.DEGREE);
+        this.longitude = AngleUnit.RADIAN.convert(Math.atan2(vector.y, vector.x), AngleUnit.DEGREE);
     }
 
 }

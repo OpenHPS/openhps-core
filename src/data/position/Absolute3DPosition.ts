@@ -13,10 +13,10 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
     private _timestamp: number = new Date().getTime();
     private _velocity: Velocity = new Velocity();
     private _orientation: Quaternion = new Quaternion();
-    private _unit: LengthUnit = LengthUnit.POINTS;
+    private _unit: LengthUnit = LengthUnit.METER;
     private _referenceSpaceUID: string;
     private _accuracy: number;
-    private _accuracyUnit: LengthUnit = LengthUnit.POINTS;
+    private _accuracyUnit: LengthUnit = LengthUnit.METER;
     
     /**
      * Position recording timestamp

@@ -1,5 +1,5 @@
 import { Position } from "./Position";
-import { Vector, Quaternion, LengthUnit, Vector3, Vector4 } from "../../utils";
+import { Vector, Quaternion, LengthUnit, Vector3 } from "../../utils";
 import { Velocity } from "./Velocity";
 
 /**

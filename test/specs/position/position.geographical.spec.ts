@@ -40,7 +40,7 @@ describe('position', () => {
         });
 
         it('should calculate the destination from a point in a direction', () => {
-            const destination = new GeographicalPosition(1, 1).destination(100, 20, AngleUnit.DEGREES);
+            const destination = new GeographicalPosition(1, 1).destination(100, 20, AngleUnit.DEGREE);
         });
 
     });

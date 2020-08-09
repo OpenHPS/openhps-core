@@ -32,7 +32,7 @@ describe('quaternion', () => {
     describe('euler rotation', () => {
 
         it('convert from object', () => {
-            const euler = new Euler(45, 90, 0, 'XYZ', AngleUnit.DEGREES);
+            const euler = new Euler(45, 90, 0, 'XYZ', AngleUnit.DEGREE);
             const orientation = Quaternion.fromEuler(euler);
             expect(Matrix4.round(orientation.toRotationMatrix(), 5)).to.eql(Matrix4.fromArray([
                 [ 0, 0, 1, 0 ],

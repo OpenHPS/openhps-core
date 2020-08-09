@@ -61,7 +61,7 @@ describe('data', () => {
                 let globalReferenceSpace = new ReferenceSpace(undefined);
     
                 let refSpace = new ReferenceSpace(globalReferenceSpace)
-                    .rotation({ yaw: 180, pitch: 0, roll: 0, unit: AngleUnit.DEGREES });
+                    .rotation({ yaw: 180, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
                 let result = Vector4.fromArray([2, 2, 0, 1]).applyMatrix4(refSpace.transformationMatrix);
                 expect(result.x).to.within(-2.1, -1.9);
                 expect(result.y).to.within(-2.1, -1.9);
@@ -163,7 +163,7 @@ describe('data', () => {
                 let calibratedReferenceSpace = new ReferenceSpace(model.referenceSpace)
                     .translation(2, 2, 1)            // Origin offset
                     .scale(1, 1, 1)                  // Same scale on all axis 1:1
-                    .rotation({ x: 0, y: 180, z: 0, unit: AngleUnit.DEGREES });   // Rotation is inverse (down is up, left is right)
+                    .rotation({ x: 0, y: 180, z: 0, unit: AngleUnit.DEGREE });   // Rotation is inverse (down is up, left is right)
                 
                 // Test node that provides a location with a different reference space
                 // This example will move the object forward. However, in our global

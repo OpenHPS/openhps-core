@@ -24,7 +24,7 @@ export class TriangulationNode<InOut extends DataFrame> extends RelativePosition
                 if (object.getPosition()) {
                     objects.push(object);
                     points.push(object.getPosition());
-                    angles.push(relativePosition.angleUnit.convert(relativePosition.angle, AngleUnit.RADIANS));
+                    angles.push(relativePosition.angleUnit.convert(relativePosition.angle, AngleUnit.RADIAN));
                 }
             });
 

@@ -74,7 +74,7 @@ describe('example', () => {
                 position.x = 0;
                 position.y = 0;
                 position.velocity.linear = new LinearVelocity(0, 0, 0);
-                position.velocity.angular = new AngularVelocity(10, 0, 0, AngularVelocityUnit.DEGREES_PER_SECOND);
+                position.velocity.angular = new AngularVelocity(10, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
                 position.timestamp = currentTime;
                 robot.setPosition(position);
                 return model.push(new DataFrame(robot))
@@ -90,7 +90,7 @@ describe('example', () => {
                 const position = robot.getPosition() as Absolute2DPosition;
                 expect(position.x).to.equal(0);
                 expect(position.y).to.equal(0);
-                const orientation = position.orientation.toEuler().toVector(AngleUnit.DEGREES);
+                const orientation = position.orientation.toEuler().toVector(AngleUnit.DEGREE);
                 expect(Math.round(orientation.x)).to.equal(10);
                 expect(Math.round(orientation.y)).to.equal(0);
                 expect(Math.round(orientation.z)).to.equal(0);
@@ -102,7 +102,7 @@ describe('example', () => {
                 const position = robot.getPosition() as Absolute2DPosition;
                 expect(position.x).to.equal(0);
                 expect(position.y).to.equal(0);
-                const orientation = position.orientation.toEuler().toVector(AngleUnit.DEGREES);
+                const orientation = position.orientation.toEuler().toVector(AngleUnit.DEGREE);
                 expect(Math.round(orientation.x)).to.equal(20);
                 expect(Math.round(orientation.y)).to.equal(0);
                 expect(Math.round(orientation.z)).to.equal(0);
@@ -119,7 +119,7 @@ describe('example', () => {
                 position.y = 0;
                 position.orientation = new Quaternion();
                 position.velocity.linear = new LinearVelocity(1, 0, 0);
-                position.velocity.angular = new AngularVelocity(0, 0, 0, AngularVelocityUnit.DEGREES_PER_SECOND);
+                position.velocity.angular = new AngularVelocity(0, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
                 position.timestamp = currentTime;
                 robot.setPosition(position);
                 return model.push(new DataFrame(robot))
@@ -135,12 +135,12 @@ describe('example', () => {
                 const position = robot.getPosition() as Absolute2DPosition;
                 expect(position.x).to.equal(1);
                 expect(position.y).to.equal(0);
-                const orientation = position.orientation.toEuler().toVector(AngleUnit.DEGREES);
+                const orientation = position.orientation.toEuler().toVector(AngleUnit.DEGREE);
                 expect(Math.round(orientation.x)).to.equal(0);
                 expect(Math.round(orientation.y)).to.equal(0);
                 expect(Math.round(orientation.z)).to.equal(0);
                 position.velocity.linear = new LinearVelocity(1, 0, 0);
-                position.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREES_PER_SECOND);
+                position.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
                 return model.push(new DataFrame(robot));
             }).then(() => {
                 currentTime++;
@@ -149,12 +149,12 @@ describe('example', () => {
                 const position = robot.getPosition() as Absolute2DPosition;
                 expect(Math.round(position.x)).to.equal(2);
                 expect(Math.round(position.y)).to.equal(1);
-                const orientation = position.orientation.toEuler().toVector(AngleUnit.DEGREES);
+                const orientation = position.orientation.toEuler().toVector(AngleUnit.DEGREE);
                 expect(Math.round(orientation.x)).to.equal(0);
                 expect(Math.round(orientation.y)).to.equal(0);
                 expect(Math.round(orientation.z)).to.equal(90);
                 position.velocity.linear = new LinearVelocity(2, -2, 0);
-                position.velocity.angular = new AngularVelocity(0, 0, 0, AngularVelocityUnit.DEGREES_PER_SECOND);
+                position.velocity.angular = new AngularVelocity(0, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
                 return model.push(new DataFrame(robot));
             }).then(() => {
                 currentTime++;
@@ -163,12 +163,12 @@ describe('example', () => {
                 const position = robot.getPosition() as Absolute2DPosition;
                 expect(Math.round(position.x)).to.equal(4);
                 expect(Math.round(position.y)).to.equal(3);
-                const orientation = position.orientation.toEuler().toVector(AngleUnit.DEGREES);
+                const orientation = position.orientation.toEuler().toVector(AngleUnit.DEGREE);
                 expect(Math.round(orientation.x)).to.equal(0);
                 expect(Math.round(orientation.y)).to.equal(0);
                 expect(Math.round(orientation.z)).to.equal(90);
                 position.velocity.linear = new LinearVelocity(2, 0, 0);
-                position.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREES_PER_SECOND);
+                position.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
                 return model.push(new DataFrame(robot));
             }).then(() => {
                 currentTime++;
@@ -177,7 +177,7 @@ describe('example', () => {
                 const position = robot.getPosition() as Absolute2DPosition;
                 expect(Math.round(position.x)).to.equal(2);
                 expect(Math.round(position.y)).to.equal(4);
-                const orientation = position.orientation.toEuler().toVector(AngleUnit.DEGREES);
+                const orientation = position.orientation.toEuler().toVector(AngleUnit.DEGREE);
                 expect(Math.round(orientation.x)).to.equal(0);
                 expect(Math.round(orientation.y)).to.equal(0);
                 expect(Math.round(orientation.z)).to.equal(180);

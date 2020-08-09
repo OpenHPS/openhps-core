@@ -15,7 +15,7 @@ export class RelativeAnglePosition implements RelativePosition {
     private _referenceObjectUID: string;
     private _referenceObjectType: string;
     private _accuracy: number;
-    private _accuracyUnit: LengthUnit = LengthUnit.POINTS;
+    private _accuracyUnit: LengthUnit = LengthUnit.METER;
 
     constructor(referenceObject?: any, angle?: number, angleUnit?: AngleUnit, orientation?: Quaternion) {
         if (referenceObject !== undefined) {

@@ -24,7 +24,7 @@ export class FrameDebounceNode<InOut extends DataFrame> extends ProcessingNode<I
             this._timer = setInterval(() => {
                 const currentTime = new Date().getTime();
                 
-            }, this._timeoutUnit.convert(this._timeout, TimeUnit.MILLI));
+            }, this._timeoutUnit.convert(this._timeout, TimeUnit.MILLISECOND));
             resolve();
             this.emit('ready');
         });

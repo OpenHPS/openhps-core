@@ -5,7 +5,7 @@ export class TimeService extends Service {
     private _timeCallback: () => number;
     private _timeUnit: TimeUnit;
 
-    constructor(timeCallback: () => number = () => new Date().getTime(), unit: TimeUnit = TimeUnit.MILLI) {
+    constructor(timeCallback: () => number = () => new Date().getTime(), unit: TimeUnit = TimeUnit.MILLISECOND) {
         super();
         this._timeCallback = timeCallback;
         this._timeUnit = unit;

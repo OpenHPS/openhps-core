@@ -13,11 +13,11 @@ import { DataSerializer } from "../DataSerializer";
 export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
     private _velocity: Velocity = new Velocity();
     private _orientation: Quaternion = new Quaternion();
-    private _unit: LengthUnit = LengthUnit.POINTS;
+    private _unit: LengthUnit = LengthUnit.METER;
     private _referenceSpaceUID: string;
     private _accuracy: number;
     private _timestamp: number = new Date().getTime();
-    private _accuracyUnit: LengthUnit = LengthUnit.POINTS;
+    private _accuracyUnit: LengthUnit = LengthUnit.METER;
 
     /**
      * Position recording timestamp

@@ -19,7 +19,7 @@ describe('node', () => {
 
             ModelBuilder.create()
                 .from(new ListSourceNode([frameA]), new ListSourceNode([frameB]))
-                .via(new SourceMergeNode(500, TimeUnit.MILLI))
+                .via(new SourceMergeNode(500, TimeUnit.MILLISECOND))
                 .to(new LoggingSinkNode((data: DataFrame) => {
                     done();
                 }))

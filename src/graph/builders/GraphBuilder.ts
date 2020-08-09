@@ -220,11 +220,11 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      * @param timeout Timeout
      * @param timeoutUnit Timeout unit
      */
-    public merge(by: (frame: DataFrame) => boolean = _ => true, timeout: number = 100, timeoutUnit: TimeUnit = TimeUnit.MILLI): GraphShapeBuilder<Builder> {
+    public merge(by: (frame: DataFrame) => boolean = _ => true, timeout: number = 100, timeoutUnit: TimeUnit = TimeUnit.MILLISECOND): GraphShapeBuilder<Builder> {
         return this.via(new ObjectMergeNode((object: DataObject) => true, by, timeout, timeoutUnit)); 
     }
 
-    public debounce(timeout: number = 100, timeoutUnit: TimeUnit = TimeUnit.MILLI): GraphShapeBuilder<Builder> {
+    public debounce(timeout: number = 100, timeoutUnit: TimeUnit = TimeUnit.MILLISECOND): GraphShapeBuilder<Builder> {
         return this.via(new FrameDebounceNode(timeout, timeoutUnit));
     }
 

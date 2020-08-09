@@ -24,9 +24,9 @@ describe('node', () => {
                 frame.addObject(beacon3);
 
                 frame.source = new DataObject("phone");
-                frame.source.addRelativePosition(new RelativeAnglePosition(beacon1, 270, AngleUnit.DEGREES));
-                frame.source.addRelativePosition(new RelativeAnglePosition(beacon2, 90, AngleUnit.DEGREES));
-                frame.source.addRelativePosition(new RelativeAnglePosition(beacon3, 330, AngleUnit.DEGREES));
+                frame.source.addRelativePosition(new RelativeAnglePosition(beacon1, 270, AngleUnit.DEGREE));
+                frame.source.addRelativePosition(new RelativeAnglePosition(beacon2, 90, AngleUnit.DEGREE));
+                frame.source.addRelativePosition(new RelativeAnglePosition(beacon3, 330, AngleUnit.DEGREE));
 
                 return frame;
             })());

@@ -50,7 +50,7 @@ describe('node', () => {
             const object = new DataObject();
             object.setPosition(new Absolute2DPosition(0, 0));
             object.getPosition().velocity.linear = new LinearVelocity(1, 1);
-            object.getPosition().orientation = Quaternion.fromEuler({ yaw: 90, pitch: 0, roll: 0, unit: AngleUnit.DEGREES });
+            object.getPosition().orientation = Quaternion.fromEuler({ yaw: 90, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
             frame.source = object;
 
             setTimeout(() => {
@@ -71,7 +71,7 @@ describe('node', () => {
             const object = new DataObject();
             object.setPosition(new Absolute2DPosition(3, 3));
             object.getPosition().velocity.linear = new LinearVelocity(2, 2);
-            object.getPosition().orientation = Quaternion.fromEuler({ yaw: 90, pitch: 0, roll: 0, unit: AngleUnit.DEGREES });
+            object.getPosition().orientation = Quaternion.fromEuler({ yaw: 90, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
             frame.source = object;
 
             setTimeout(() => {
@@ -86,14 +86,14 @@ describe('node', () => {
                 expect(Math.round(position.x)).to.equal(3);
                 expect(Math.round(position.y)).to.equal(3);
                 // Orientation should changed
-                expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREES).z)).to.equal(45);
+                expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).z)).to.equal(45);
                 done();
             };
 
             const frame = new DataFrame();
             const object = new DataObject();
             object.setPosition(new Absolute2DPosition(3, 3));
-            object.getPosition().velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREES_PER_SECOND);
+            object.getPosition().velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
             frame.source = object;
 
             setTimeout(() => {
@@ -108,14 +108,14 @@ describe('node', () => {
                 expect(Math.round(position.x * 10) / 10.).to.equal(0.6); // Should be less than 1
                 expect(Math.round(position.y * 10) / 10.).to.equal(0.6);
                 // Orientation should change
-                expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREES).z)).to.equal(90);
+                expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).z)).to.equal(90);
                 done();
             };
 
             const frame = new DataFrame();
             const object = new DataObject();
             object.setPosition(new Absolute2DPosition(0, 0));
-            object.getPosition().velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREES_PER_SECOND);
+            object.getPosition().velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
             object.getPosition().velocity.linear = new LinearVelocity(1, 0, 0);
             frame.source = object;
 
@@ -131,14 +131,14 @@ describe('node', () => {
                 expect(Math.round(position.x * 10) / 10.).to.equal(0.6); // Should be less than 1
                 expect(Math.round(position.y * 10) / 10.).to.equal(-0.6);
                 // Orientation should change
-                expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREES).z)).to.equal(-90);
+                expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).z)).to.equal(-90);
                 done();
             };
 
             const frame = new DataFrame();
             const object = new DataObject();
             object.setPosition(new Absolute2DPosition(0, 0));
-            object.getPosition().velocity.angular = new AngularVelocity(0, 0, -90, AngularVelocityUnit.DEGREES_PER_SECOND);
+            object.getPosition().velocity.angular = new AngularVelocity(0, 0, -90, AngularVelocityUnit.DEGREE_PER_SECOND);
             object.getPosition().velocity.linear = new LinearVelocity(1, 0, 0);
             frame.source = object;
 
@@ -155,14 +155,14 @@ describe('node', () => {
                 expect(Math.round(position.y * 10) / 10.).to.equal(0);
                 expect(Math.round(position.z * 10) / 10.).to.equal(0.6);
                 // Orientation should change
-                expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREES).y)).to.equal(90);
+                expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).y)).to.equal(90);
                 done();
             };
 
             const frame = new DataFrame();
             const object = new DataObject();
             object.setPosition(new Absolute3DPosition(0, 0, 0));
-            object.getPosition().velocity.angular = new AngularVelocity(0, 90, 0, AngularVelocityUnit.DEGREES_PER_SECOND);
+            object.getPosition().velocity.angular = new AngularVelocity(0, 90, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
             object.getPosition().velocity.linear = new LinearVelocity(1, 0, 0);
             frame.source = object;
 
@@ -179,14 +179,14 @@ describe('node', () => {
                 expect(Math.round(position.y * 10) / 10.).to.equal(0);
                 expect(Math.round(position.z * 10) / 10.).to.equal(-0.6);
                 // Orientation should change
-                expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREES).y)).to.equal(-90);
+                expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).y)).to.equal(-90);
                 done();
             };
 
             const frame = new DataFrame();
             const object = new DataObject();
             object.setPosition(new Absolute3DPosition(0, 0, 0));
-            object.getPosition().velocity.angular = new AngularVelocity(0, -90, 0, AngularVelocityUnit.DEGREES_PER_SECOND);
+            object.getPosition().velocity.angular = new AngularVelocity(0, -90, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
             object.getPosition().velocity.linear = new LinearVelocity(1, 0, 0);
             frame.source = object;
 

@@ -12,7 +12,7 @@ describe('node', () => {
                     this.graph.emit('destroy');
                     return null;
                 }))
-                .via(new TimedPullNode(100, TimeUnit.MILLI))
+                .via(new TimedPullNode(100, TimeUnit.MILLISECOND))
                 .to()
                 .build().then(model => {
                     
@@ -26,7 +26,7 @@ describe('node', () => {
                     done(`Pull request received when not expected`);
                     return null;
                 }))
-                .via(new TimedPullNode(800, TimeUnit.MILLI))
+                .via(new TimedPullNode(800, TimeUnit.MILLISECOND))
                 .to()
                 .build().then(m => {
                     model = m;
