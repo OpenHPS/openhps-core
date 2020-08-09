@@ -1,4 +1,4 @@
-import { DataFrame, DataObject, ReferenceSpace } from "./data";
+import { DataFrame, ReferenceSpace } from "./data";
 import { DataService, Service } from "./service";
 import { GraphImpl } from "./graph/_internal/implementations/GraphImpl";
 

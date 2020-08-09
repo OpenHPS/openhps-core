@@ -13,4 +13,8 @@ export class AngularVelocity extends Vector3 {
         );
     }
 
+    public static fromArray(array: number[], unit: AngularVelocityUnit = AngularVelocityUnit.RADIAN_PER_SECOND): AngularVelocity {
+        return new AngularVelocity(array[0], array[1], array[2], unit);
+    }
+
 }
