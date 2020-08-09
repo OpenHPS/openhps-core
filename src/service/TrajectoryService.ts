@@ -7,7 +7,7 @@ export abstract class TrajectoryService<T extends DataObject> extends DataServic
         super(dataType as new () => T, options);
     }
 
-    public abstract findCurrentPosition(uid: string): Promise<AbsolutePosition>;
+    public abstract findPosition(uid: string): Promise<AbsolutePosition>;
 
     public abstract findTrajectory(uid: string, start?: Date, end?: Date): Promise<AbsolutePosition[]>;
     

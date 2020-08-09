@@ -9,7 +9,7 @@ import { TrajectoryService } from "../TrajectoryService";
 export class MemoryTrajectoryService<T extends DataObject> extends TrajectoryService<T> {
     protected _data: Map<string, T> = new Map();
 
-    public findCurrentPosition(uid: string): Promise<AbsolutePosition> {
+    public findPosition(uid: string): Promise<AbsolutePosition> {
         return new Promise<AbsolutePosition>((resolve, reject) => {
 
         });

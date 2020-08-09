@@ -67,7 +67,7 @@ pipeline {
             cobertura coberturaReportFile: 'artifacts/coverage/cobertura-coverage.xml'
             publishHTML (target: [
                 allowMissing: false,
-                alwaysLinkToLastBuild: false,
+                alwaysLinkToLastBuild: true,
                 keepAll: true,
                 reportDir: 'docs',
                 reportFiles: '*.*',

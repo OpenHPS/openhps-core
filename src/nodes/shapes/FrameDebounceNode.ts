@@ -6,6 +6,7 @@ export class FrameDebounceNode<InOut extends DataFrame> extends ProcessingNode<I
     private _timeout: number;
     private _timeoutUnit: TimeUnit;
     private _timer: NodeJS.Timeout;
+    private _accept: boolean = true;
 
     constructor(timeout: number, timeoutUnit: TimeUnit) {
         super();
@@ -22,8 +23,7 @@ export class FrameDebounceNode<InOut extends DataFrame> extends ProcessingNode<I
     private _start(): Promise<void> {
         return new Promise((resolve, reject) => {
             this._timer = setInterval(() => {
-                const currentTime = new Date().getTime();
-                
+                this._accept = true;
             }, this._timeoutUnit.convert(this._timeout, TimeUnit.MILLISECOND));
             resolve();
             this.emit('ready');
@@ -38,7 +38,12 @@ export class FrameDebounceNode<InOut extends DataFrame> extends ProcessingNode<I
 
     public process(frame: InOut): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
-           
+           if (this._accept) {
+               this._accept = false;
+               resolve(frame);
+           } else {
+               resolve();
+           }
         });
     }
 
