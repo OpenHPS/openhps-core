@@ -16,40 +16,6 @@ describe('position', () => {
             });
         });
 
-        it('should trilaterate with three points', (done) => {
-            const positions = [
-                new Absolute3DPosition(1, 1, 1),
-                new Absolute3DPosition(3, 3, 3),
-                new Absolute3DPosition(5, 5, 5),
-            ];
-            const distances = [
-                3,
-                4,
-                3
-            ];
-            
-            Absolute3DPosition.trilaterate(positions, distances).then(result => {
-                done();
-            });
-        });
-
-        it('should triangulate with three points', (done) => {
-            const positions = [
-                new Absolute3DPosition(1, 1, 1),
-                new Absolute3DPosition(3, 3, 3),
-                new Absolute3DPosition(5, 5, 5),
-            ];
-            const angles = [
-                3,
-                4,
-                3
-            ];
-            
-            Absolute3DPosition.triangulate(positions, angles).then(result => {
-                done();
-            });
-        });
-
     });
 
 });

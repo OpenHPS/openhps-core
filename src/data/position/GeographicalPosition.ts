@@ -194,8 +194,8 @@ export class GeographicalPosition extends Absolute3DPosition {
                 const lonX = lonRadA + Math.atan2(By, Math.cos(latRadA) + Bx);
         
                 const location = new GeographicalPosition();
-                location.latitude = AngleUnit.DEGREE.convert(latX, AngleUnit.RADIAN);
-                location.longitude = AngleUnit.DEGREE.convert(lonX, AngleUnit.RADIAN);
+                location.latitude = AngleUnit.RADIAN.convert(latX, AngleUnit.DEGREE);
+                location.longitude = AngleUnit.RADIAN.convert(lonX, AngleUnit.DEGREE);
                 resolve(location);
             } else {
                 // Calculate bearings
@@ -217,24 +217,6 @@ export class GeographicalPosition extends Absolute3DPosition {
                     reject(ex);
                 });
             }
-        });
-    }
-
-    /**
-     * Multilaterate the given points and distances
-     * @param points Geographical positions to trilaterate
-     * @param distances Distances to each position
-     */
-    public static trilaterate(points: GeographicalPosition[], distances: number[]): Promise<GeographicalPosition> {
-        return new Promise<GeographicalPosition>((resolve, reject) => {
-            Absolute3DPosition.trilaterate(points, distances).then(point3d => {
-                const geopoint = new GeographicalPosition();
-                geopoint.fromVector(point3d);
-                geopoint.accuracy = points[0].accuracy;
-                resolve(geopoint);
-            }).catch(ex => {
-                reject(ex);
-            });
         });
     }
 

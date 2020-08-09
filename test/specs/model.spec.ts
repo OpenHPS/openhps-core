@@ -1,9 +1,10 @@
 import { expect } from 'chai';
 import 'mocha';
 import { ModelBuilder, DataFrame, Node, GraphBuilder } from '../../src';
-import { NamedNode, CallbackSourceNode, CallbackNode, CallbackSinkNode } from '../../src/nodes';
+import { NamedNode, CallbackSourceNode, CallbackNode, CallbackSinkNode, ProcessingNode } from '../../src/nodes';
 
 describe('model', () => {
+
     describe('builder', () => {
 
         it('should have an input and output by default', (done) => {
@@ -84,7 +85,43 @@ describe('model', () => {
 
     });
 
-    describe('resolve chain', () => {
+    describe('pushing', () => {
+
+        it('should throw an exception when a sink node throws an error', (done) => {
+            ModelBuilder.create()
+                .from()
+                .to(new CallbackSinkNode((data: DataFrame) => {
+                    throw new Error('Excepting this error');
+                }))
+                .build().then(model => {
+                    return model.push(new DataFrame());
+                }).then(() => {
+                    done('No error thrown');
+                }).catch(ex => {
+                    done();
+                });
+        });
+
+        it('should throw an exception when a processing node throws an error', (done) => {
+            ModelBuilder.create()
+                .from()
+                .via(new (class TestNode extends ProcessingNode<any> {
+                    public process(frame: DataFrame): Promise<any> {
+                        return new Promise((resolve, reject) => {
+                            reject(new Error('Expecting this error'));
+                        });
+                    }
+                }))
+                .to()
+                .build().then(model => {
+                    return model.push(new DataFrame());
+                }).then(() => {
+                    done('No error thrown');
+                }).catch(ex => {
+                    done();
+                });
+        });
+
         it('should only resolve a push after reaching a sink', (done) => {
             const resolved = new Array();
             ModelBuilder.create()
@@ -116,5 +153,7 @@ describe('model', () => {
                     });
                 });
         });
+
     });
+
 });

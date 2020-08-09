@@ -247,8 +247,8 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     /**
      * Buffer pushed objects
      */
-    public buffer(maxSize?: number): GraphShapeBuilder<Builder> {
-        return this.via(new MemoryBufferNode(maxSize));
+    public buffer(): GraphShapeBuilder<Builder> {
+        return this.via(new MemoryBufferNode());
     }
 
     public to(...nodes: Array<AbstractSinkNode<any> | string>): Builder {
