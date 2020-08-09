@@ -22,4 +22,11 @@ export class Velocity {
         this.angular = angular;
     }
 
+    /**
+     * Clone the velocity
+     */
+    public clone(): this {
+        return new Velocity(this.linear.clone(), this.angular.clone()) as this;
+    }
+
 }

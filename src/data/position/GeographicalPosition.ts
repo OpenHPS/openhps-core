@@ -225,4 +225,21 @@ export class GeographicalPosition extends Absolute3DPosition {
         this.longitude = AngleUnit.RADIAN.convert(Math.atan2(vector.y, vector.x), AngleUnit.DEGREE);
     }
 
+    /**
+     * Clone the position
+     */
+    public clone(): this {
+        const position = new GeographicalPosition(this.lat, this.lng, this.altitude);
+        position.unit = this.unit;
+        position.accuracy = this.accuracy;
+        position.accuracyUnit = this.accuracyUnit;
+        position.orientation = this.orientation.clone();
+        position.altitudeUnit = this.altitudeUnit;
+        position.velocity = this.velocity.clone();
+        position.timestamp = this.timestamp;
+        position.referenceSpaceUID = this.referenceSpaceUID;
+        return position as this;
+    }
+
+
 }

@@ -136,9 +136,15 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
      * Clone the position
      */
     public clone(): this {
-        const serialized = DataSerializer.serialize(this);
-        const clone = DataSerializer.deserialize(serialized) as this;
-        return clone;
+        const position = new Absolute3DPosition(this.x, this.y, this.z);
+        position.unit = this.unit;
+        position.accuracy = this.accuracy;
+        position.accuracyUnit = this.accuracyUnit;
+        position.orientation = this.orientation.clone();
+        position.velocity = this.velocity.clone();
+        position.timestamp = this.timestamp;
+        position.referenceSpaceUID = this.referenceSpaceUID;
+        return position as this;
     }
 
 }
