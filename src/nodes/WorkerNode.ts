@@ -8,6 +8,8 @@ import { DataService, DataObjectService, DataFrameService, Service, NodeDataServ
 import { GraphShapeBuilder } from "../graph/builders/GraphBuilder";
 import { ModelBuilder } from "../ModelBuilder";
 
+declare const __non_webpack_require__: typeof require;
+
 /**
  * 
  * ## Usage
@@ -41,7 +43,12 @@ export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFram
         this._options = options;
 
         this._worker = new Worker(this._options && this._options.debug ? './_internal/WorkerNodeRunnerDebug' : './_internal/WorkerNodeRunner');
-
+        // tslint:disable-next-line
+        const NativeWorker = typeof __non_webpack_require__ === "function" ? __non_webpack_require__("worker_threads").Worker : eval("require")("worker_threads").Worker;
+        if (NativeWorker) {
+            NativeWorker.defaultMaxListeners = 0;
+        }
+        
         this.once('build', this._onBuild.bind(this));
         this.once('destroy', this._onDestroy.bind(this));
         this.on('pull', this._onPull.bind(this));

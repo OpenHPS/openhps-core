@@ -37,7 +37,6 @@
     "reflect-metadata": ">=0.1.13",
     "threads": ">=1.6.3",
     "three": ">=0.119.1",
-    "tiny-worker": ">=2.3.0",
     "typedjson": ">=1.5.1",
     "uuid": ">=8.3.0",
     "worker-thread": ">=1.1.0"

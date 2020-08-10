@@ -17,9 +17,6 @@ module.exports = [{
         globalObject: `(typeof self !== 'undefined' ? self : this)`,
     },
     plugins: [
-        // new ThreadsPlugin({
-        //   globalObject: false
-        // }),
         new WebpackAutoInject({
             SHORT: '@openhps/core',
             components: {
@@ -39,7 +36,6 @@ module.exports = [{
       }
     },
     externals: {
-      "tiny-worker": "tiny-worker",
       "typed-function": "typed-function"
     },
 },{
@@ -58,9 +54,6 @@ module.exports = [{
         ]
     },
     plugins: [
-        // new ThreadsPlugin({
-        //   globalObject: false
-        // }), 
         new WebpackAutoInject({
             SHORT: '@openhps/core',
             components: {
@@ -80,7 +73,6 @@ module.exports = [{
       }
     },
     externals: {
-        "tiny-worker": "tiny-worker",
         "typed-function": "typed-function"
     },
     output: {
