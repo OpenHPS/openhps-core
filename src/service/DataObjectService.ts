@@ -6,7 +6,7 @@ import { DataObject, AbsolutePosition } from "../data";
  * processed in the model and objects that need to be tracked.
  */
 export abstract class DataObjectService<T extends DataObject> extends DataService<string, DataObject> {
-
+    
     constructor(dataType: new () => T | DataObject = DataObject, options?: any) {
         super(dataType as new () => T, options);
     }
@@ -28,4 +28,5 @@ export abstract class DataObjectService<T extends DataObject> extends DataServic
      * @param parentUID Parent UID
      */
     public abstract findByParentUID(parentUID: string): Promise<T[]>;
+
 }

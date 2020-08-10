@@ -23,7 +23,7 @@ export abstract class ProcessingNode<In extends DataFrame | DataFrame[] = DataFr
             this.process(frame).then(result => {
                 if (result === null || result === undefined) {
                     return resolve();
-                } else if (result instanceof Array) {
+                } else if (Array.isArray(result)) {
                     return resolve();
                 } else {
                     const oldFrameService = model.findDataService(frame);
@@ -36,7 +36,7 @@ export abstract class ProcessingNode<In extends DataFrame | DataFrame[] = DataFr
                         }
                         
                         // Update the frame
-                        servicePromises.push(frameService.insert(result));
+                        servicePromises.push(frameService.insert((result as DataFrame).uid, result));
                     }
                 }
                 

@@ -18,7 +18,8 @@ export abstract class NodeDataService<T extends NodeData | NodeData> extends Dat
     }
 
     public insertData(nodeUID: string, dataObject: DataObject, data: any): Promise<T> {
-        return this.insert(new NodeData(this.getUID(nodeUID, dataObject.uid), data) as T);
+        const uid = this.getUID(nodeUID, dataObject.uid);
+        return this.insert(uid, new NodeData(uid, data) as T);
     }
 
     protected getUID(nodeUID: string, dataObjectUID: string): string {

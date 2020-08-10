@@ -33,7 +33,7 @@ export class DummyDataFrameService<T extends DataFrame> extends DataFrameService
         });
     }
 
-    public insert(object: T): Promise<T> {
+    public insert(id: string, object: T): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             resolve();
         });

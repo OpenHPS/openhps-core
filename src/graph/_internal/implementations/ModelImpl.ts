@@ -222,7 +222,7 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
             
             if (frameService !== null && frameService !== undefined) { 
                 // Update the frame
-                servicePromises.push(frameService.insert(frame));
+                servicePromises.push(frameService.insert((frame as DataFrame).uid, frame));
             }
 
             Promise.all(servicePromises).then(() => {

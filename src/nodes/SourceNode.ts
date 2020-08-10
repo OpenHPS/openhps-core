@@ -41,7 +41,7 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[] = DataFrame
                         
                         if (frameService !== null && frameService !== undefined) { 
                             // Update the frame
-                            servicePromises.push(frameService.insert(f));
+                            servicePromises.push(frameService.insert(f.uid, f));
                         }
                     } else {
                         // No frame provided in pull
@@ -59,7 +59,7 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[] = DataFrame
                     
                     if (frameService !== null && frameService !== undefined) { 
                         // Update the frame
-                        servicePromises.push(frameService.insert(frame as DataFrame));
+                        servicePromises.push(frameService.insert(frame.uid, frame as DataFrame));
                     }
                 } else {
                     // No frame provided in pull

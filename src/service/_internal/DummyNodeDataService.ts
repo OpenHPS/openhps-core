@@ -14,7 +14,7 @@ export class DummyNodeDataService<T extends NodeData> extends NodeDataService<T>
         });
     }
 
-    public insert(object: T): Promise<T> {
+    public insert(id: string, object: T): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             resolve();
         });

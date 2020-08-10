@@ -21,8 +21,8 @@ describe('data object', () => {
             object2.parentUID = object1.uid;
 
             const insertPromises = new Array();
-            insertPromises.push(objectDataService.insert(object1));
-            insertPromises.push(objectDataService.insert(object2));
+            insertPromises.push(objectDataService.insert(object1.uid, object1));
+            insertPromises.push(objectDataService.insert(object2.uid, object2));
             
             Promise.all(insertPromises).then(() => {
                 done();
@@ -61,7 +61,7 @@ describe('data object', () => {
         it('should store objects', (done) => {
             var object = new DataObject("2");
             object.displayName = "Test";
-            objectDataService.insert(object).then(savedObject => {
+            objectDataService.insert(object.uid, object).then(savedObject => {
                 expect(savedObject.uid).to.equal("2");
                 expect(savedObject.displayName).to.equal("Test");
                 objectDataService.findByUID("2").then(savedObject => {
@@ -108,7 +108,7 @@ describe('data object', () => {
                     var object = new DummySensorObject("123");
                     object.setPosition(new Absolute2DPosition(3,2));
                     object.displayName = "Hello";
-                    objectDataService.insert(object).then(savedObject => {
+                    objectDataService.insert(object.uid, object).then(savedObject => {
                         done();
                     });
                 });

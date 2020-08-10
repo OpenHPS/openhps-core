@@ -150,7 +150,7 @@ describe('node', () => {
                 .build().then(m => {
                     model = m;
                     const dataService = model.findDataService(DataObject);
-                    dataService.insert(new DataObject("abc456")).then(() => {
+                    dataService.insert("abc456", new DataObject("abc456")).then(() => {
                         Promise.resolve(model.push(new DataFrame()));
                     });
                 });

@@ -14,7 +14,7 @@ export class DummyDataService<I, T> extends DataService<I, T> {
         });
     }
 
-    public insert(object: T): Promise<T> {
+    public insert(id: I, object: T): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             resolve();
         });

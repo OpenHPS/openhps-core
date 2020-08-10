@@ -55,9 +55,9 @@ describe('data frame service', () => {
                     frame3.createdTimestamp = Date.parse("10 Mar 1995 02:00:00 GMT");
         
                     Promise.all([
-                        frameDataService.insert(frame1),
-                        frameDataService.insert(frame2),
-                        frameDataService.insert(frame3)])
+                        frameDataService.insert(frame1.uid, frame1),
+                        frameDataService.insert(frame2.uid, frame2),
+                        frameDataService.insert(frame3.uid, frame3)])
                     .then(() => {
                         done();
                     }).catch(ex => {

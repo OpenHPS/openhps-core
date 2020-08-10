@@ -16,12 +16,12 @@ export abstract class DataService<I, T> extends Service {
     public set dataType(dataType: new () => T) {
         this._dataType = dataType;
     }
-    
-    public abstract findByUID(uid: I): Promise<T>;
+
+    public abstract findByUID(id: I): Promise<T>;
 
     public abstract findAll(): Promise<T[]>;
 
-    public abstract insert(object: T): Promise<T>;
+    public abstract insert(id: I, object: T): Promise<T>;
 
     public abstract delete(id: I): Promise<void>;
 

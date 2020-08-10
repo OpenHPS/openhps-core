@@ -56,7 +56,7 @@ export abstract class SinkNode<In extends DataFrame | DataFrame[] = DataFrame> e
                 if (service === null || service === undefined) { 
                     service = defaultService;
                 }
-                servicePromises.push(service.insert(object));
+                servicePromises.push(service.insert(object.uid, object));
             }
 
             // Push the frame to the sink node
