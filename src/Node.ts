@@ -55,43 +55,21 @@ export abstract class Node<In extends DataFrame | DataFrame[] = DataFrame, Out e
     public set graph(graph: AbstractGraph<any, any>) {
         this._graph = graph;
     }
-
+    
     protected get outlets(): Array<AbstractEdge<Out>> {
-        const edges = new Array();
-        this.graph.edges.forEach(edge => {
-            if (edge.inputNode === this) {
-                edges.push(edge);
-            }
-        });
-        return edges;
+        return this.graph.edges.filter(edge => edge.inputNode === this);
     }
 
     protected get inlets(): Array<AbstractEdge<In>> {
-        const edges = new Array();
-        this.graph.edges.forEach(edge => {
-            if (edge.outputNode === this) {
-                edges.push(edge);
-            }
-        });
-        return edges;
+        return this.graph.edges.filter(edge => edge.outputNode === this);
     }
 
     public get outputNodes(): Array<Node<any, any>> {
-        const edges = this.outlets;
-        const nodes = new Array();
-        edges.forEach(edge => {
-            nodes.push(edge.outputNode);
-        });
-        return nodes;
+        return this.outlets.map(edge => edge.outputNode) as Array<Node<any, any>>;
     }
 
     public get inputNodes(): Array<Node<any, any>> {
-        const edges = this.inlets;
-        const nodes = new Array();
-        edges.forEach(edge => {
-            nodes.push(edge.inputNode);
-        });
-        return nodes;
+        return this.inlets.map(edge => edge.inputNode) as Array<Node<any, any>>;
     }
     
     /**
@@ -149,11 +127,6 @@ export abstract class Node<In extends DataFrame | DataFrame[] = DataFrame, Out e
                 });
                 return reject();
             }
-
-            this.logger("debug", {
-                node: { uid: this.uid, name: this.name },
-                message: `Node received push`
-            });
 
             const callbackPromises = new Array();
             this.listeners('push').forEach(callback => {
