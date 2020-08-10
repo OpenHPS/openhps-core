@@ -227,7 +227,7 @@ describe('node', () => {
             callbackSink.callback = (frame: DataFrame) => {
                 const position = frame.source.getPosition() as Absolute2DPosition;
                 const distance = position.distanceTo(startPosition);
-                expect(distance).to.be.below(0.4);
+                expect(distance).to.be.below(0.5);
             };
 
             const startPosition = new Absolute2DPosition(0, 0);
@@ -247,6 +247,43 @@ describe('node', () => {
                         done(ex);
                     });
                 }, 500);
+            });
+        });
+
+        it('should not slow down when turning (with 1 intermediate calculation)', (done) => {
+            // Meaning it should not slow down, the travelled distance should not
+            // be lower
+
+            let distance = 0;
+            callbackSink.callback = (frame: DataFrame) => {
+                const position = frame.source.getPosition() as Absolute2DPosition;
+                distance = position.distanceTo(startPosition);
+            };
+
+            const startPosition = new Absolute2DPosition(0, 0);
+            startPosition.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
+            startPosition.velocity.linear = new LinearVelocity(1, 0, 0);
+
+            const frame = new DataFrame();
+            const object = new DataObject("robot");
+            object.setPosition(startPosition);
+            frame.source = object;
+
+            model.push(frame).then(() => {
+                let count = 100;
+                for (let i = 1 ; i <= count ;i ++) {
+                    setTimeout(() => {
+                        model.push(new DataFrame(new DataObject("robot"))).then(() => {
+                        }).catch(ex => {
+                            done(ex);
+                        });
+                    }, i * (1000 / count));
+                }
+                setTimeout(() => {
+                    expect(distance).to.be.above(0.8);
+                    expect(distance).to.be.below(1.0);
+                    done();
+                }, 1000);
             });
         });
 

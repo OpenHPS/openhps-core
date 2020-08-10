@@ -46,14 +46,9 @@ export class VelocityProcessingNode<InOut extends DataFrame = DataFrame> extends
                         const rY = linear.clone().divideScalar(angular.y === 0 ? 1 : angular.y);
                         const rZ = linear.clone().divideScalar(angular.z === 0 ? 1 : angular.z);
                         const rMin = rX.min(rY).min(rZ); // Rotation point
-                        const offset = new Vector3(
-                            linear.x === 0 ? 0 : rMin.x / linear.x,
-                            linear.y === 0 ? 0 : rMin.y / linear.y,
-                            linear.z === 0 ? 0 : rMin.z / linear.z
-                        ).multiply(linearMovement);
-                        relativePosition.applyMatrix4(new Matrix4().makeTranslation(-offset.x, -offset.y, -offset.z));
+                        relativePosition.applyMatrix4(new Matrix4().makeTranslation(-rMin.x, -rMin.y, -rMin.z));
                         relativePosition.applyMatrix4(new AxisAngle(angularMovement.x, angularMovement.y, angularMovement.z).toRotationMatrix());
-                        relativePosition.applyMatrix4(new Matrix4().makeTranslation(offset.x, offset.y, offset.z));
+                        relativePosition.applyMatrix4(new Matrix4().makeTranslation(rMin.x, rMin.y, rMin.z));
                         relativePosition.applyMatrix4(Matrix4.rotationFromAxisAngle(new Vector3(
                             angular.x !== 0 ? 1 : 0, 
                             angular.y !== 0 ? 1 : 0, 
