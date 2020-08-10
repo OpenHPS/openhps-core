@@ -110,11 +110,7 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
             resolve(newPoint);
         });
     }
-
-    public distance(other: Absolute3DPosition): number {
-        return Math.pow(Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2) + Math.pow((other.z - this.z), 2), 1 / 2.);
-    }
-
+    
     public fromVector(vector: Vector3, unit?: LengthUnit): void {
         this.x = vector.x;
         this.y = vector.y;

@@ -113,10 +113,6 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
         });
     }
 
-    public distance(other: Absolute2DPosition): number {
-        return Math.pow(Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2), 1 / 2.);
-    }
-
     public fromVector(vector: Vector2 | Vector3, unit?: LengthUnit): void {
         this.x = vector.x;
         this.y = vector.y;

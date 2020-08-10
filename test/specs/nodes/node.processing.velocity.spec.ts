@@ -195,6 +195,61 @@ describe('node', () => {
             }, 1000);
         });
 
+        it('should not speed up when turning (no intermediate calculations)', (done) => {
+            // Meaning it should not speed up, the travelled distance should not
+            // be higher than a direct path
+
+            callbackSink.callback = (frame: DataFrame) => {
+                const position = frame.source.getPosition() as Absolute2DPosition;
+                const distance = position.distanceTo(startPosition);
+                expect(distance).to.be.below(1);
+                done();
+            };
+
+            const startPosition = new Absolute2DPosition(0, 0);
+            startPosition.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
+            startPosition.velocity.linear = new LinearVelocity(1, 0, 0);
+
+            const frame = new DataFrame();
+            const object = new DataObject();
+            object.setPosition(startPosition);
+            frame.source = object;
+
+            setTimeout(() => {
+                Promise.resolve(model.push(frame));
+            }, 1000);
+        });
+
+        it('should not speed up when turning (with 1 intermediate calculation)', (done) => {
+            // Meaning it should not speed up, the travelled distance should not
+            // be higher than a direct path
+
+            callbackSink.callback = (frame: DataFrame) => {
+                const position = frame.source.getPosition() as Absolute2DPosition;
+                const distance = position.distanceTo(startPosition);
+                expect(distance).to.be.below(0.4);
+            };
+
+            const startPosition = new Absolute2DPosition(0, 0);
+            startPosition.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
+            startPosition.velocity.linear = new LinearVelocity(1, 0, 0);
+
+            const frame = new DataFrame();
+            const object = new DataObject("robot");
+            object.setPosition(startPosition);
+            frame.source = object;
+
+            model.push(frame).then(() => {
+                setTimeout(() => {
+                    model.push(new DataFrame(new DataObject("robot"))).then(() => {
+                        done();
+                    }).catch(ex => {
+                        done(ex);
+                    });
+                }, 500);
+            });
+        });
+
     });
 
 });

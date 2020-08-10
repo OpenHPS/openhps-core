@@ -3,7 +3,7 @@ import { ObjectProcessingNode } from "../../ObjectProcessingNode";
 import { TimeUnit } from "../../../utils";
 import { TimeService } from "../../../service";
 import { Model } from "../../../Model";
-import { Vector4, Matrix4, Vector3, Quaternion } from "../../../utils/math";
+import { Matrix4, Vector3, Quaternion, Euler, AxisAngle } from "../../../utils/math";
 
 /**
  * Linear and angular velocity processing
@@ -16,7 +16,7 @@ export class VelocityProcessingNode<InOut extends DataFrame = DataFrame> extends
             const timeService = model.findService(TimeService);
 
             if (object.getPosition() !== undefined) {
-                const lastPosition = object.getPosition().clone();
+                const lastPosition = object.getPosition();
                 if (lastPosition.velocity !== undefined) {
                     // Time since current calculation and previous velocity
                     const deltaTime = timeService.getUnit().convert(timeService.getTime() - lastPosition.timestamp, TimeUnit.SECOND);
@@ -27,38 +27,48 @@ export class VelocityProcessingNode<InOut extends DataFrame = DataFrame> extends
                         return resolve(object);
                     }
 
-                    // Process the linear velocity
-                    const linear = lastPosition.velocity.linear.clone().multiplyScalar(deltaTime);
-                    const rotation = lastPosition.velocity.angular.clone().multiplyScalar(deltaTime);
+                    const linear = lastPosition.velocity.linear;
+                    const angular = lastPosition.velocity.angular;
+                    const linearMovement = linear.clone().multiplyScalar(deltaTime);
+                    const angularMovement = angular.clone().multiplyScalar(deltaTime);
                     
                     // Relative position starts at the origin
                     // We will rotate this final relative position using the orientation
                     // and add it to the existing position vector of our last known position
                     const relativePosition = Vector3.fromArray([0, 0, 0]);
 
-                    if (rotation.equals(Vector3.fromArray([0, 0, 0]))) {
+                    if (angular.equals(Vector3.fromArray([0, 0, 0]))) {
                         // Simply apply the linear velocity
-                        relativePosition.applyMatrix4(new Matrix4().makeTranslation(linear.x, linear.y, linear.z));
-                    } else {
+                        relativePosition.applyMatrix4(new Matrix4().makeTranslation(linearMovement.x, linearMovement.y, linearMovement.z));
+                    } else if (!linear.equals(Vector3.fromArray([0, 0, 0]))) {
                         // Apply linear and angular velocity
-                        const rX = linear.clone().divideScalar(rotation.x === 0 ? 1 : Math.abs(rotation.x));
-                        const rY = linear.clone().divideScalar(rotation.y === 0 ? 1 : Math.abs(rotation.y));
-                        const rZ = linear.clone().divideScalar(rotation.z === 0 ? 1 : Math.abs(rotation.z));
-                        const rMin = rX.min(rY).min(rZ);
-                        relativePosition.applyMatrix4(new Matrix4().makeTranslation(-rMin.x, -rMin.y, -rMin.z));
-                        relativePosition.applyMatrix4(Quaternion.fromEuler(rotation.clone()).toRotationMatrix());
-                        relativePosition.negate();
+                        const rX = linear.clone().divideScalar(angular.x === 0 ? 1 : angular.x);
+                        const rY = linear.clone().divideScalar(angular.y === 0 ? 1 : angular.y);
+                        const rZ = linear.clone().divideScalar(angular.z === 0 ? 1 : angular.z);
+                        const rMin = rX.min(rY).min(rZ); // Rotation point
+                        const offset = new Vector3(
+                            linear.x === 0 ? 0 : rMin.x / linear.x,
+                            linear.y === 0 ? 0 : rMin.y / linear.y,
+                            linear.z === 0 ? 0 : rMin.z / linear.z
+                        ).multiply(linearMovement);
+                        relativePosition.applyMatrix4(new Matrix4().makeTranslation(-offset.x, -offset.y, -offset.z));
+                        relativePosition.applyMatrix4(new AxisAngle(angularMovement.x, angularMovement.y, angularMovement.z).toRotationMatrix());
+                        relativePosition.applyMatrix4(new Matrix4().makeTranslation(offset.x, offset.y, offset.z));
+                        relativePosition.applyMatrix4(Matrix4.rotationFromAxisAngle(new Vector3(
+                            angular.x !== 0 ? 1 : 0, 
+                            angular.y !== 0 ? 1 : 0, 
+                            angular.z !== 0 ? 1 : 0
+                        ), Math.PI / 2));
                         relativePosition.z = -relativePosition.z;
-                        relativePosition.applyMatrix4(new Matrix4().makeTranslation(rMin.x, rMin.y, rMin.z));
                     }
                     
                     // Predict the next location
-                    const newPosition = lastPosition;
+                    const newPosition = lastPosition.clone();
                     newPosition.timestamp = timeService.getTime();
                     newPosition.fromVector(newPosition.toVector3().add(relativePosition.applyMatrix4(lastPosition.orientation.toRotationMatrix())));
 
                     // New orientation in radians
-                    const newOrientation = lastPosition.orientation.toEuler().toVector3().add(lastPosition.velocity.angular.clone().multiplyScalar(deltaTime));
+                    const newOrientation = newPosition.orientation.toEuler().toVector3().add(lastPosition.velocity.angular.clone().multiplyScalar(deltaTime));
                     newPosition.orientation = Quaternion.fromEuler(newOrientation);
                     object.setPosition(newPosition);
                 }
