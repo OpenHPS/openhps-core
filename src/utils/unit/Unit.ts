@@ -176,30 +176,31 @@ export class Unit {
      * @param target Target unit
      */
     public convert(value: number, target: string | Unit): number {
-        const targetUnit: Unit = typeof target === 'string' ? Unit.findByName(target, this.baseName) : target;
+        const targetUnit: Unit = target instanceof Unit ? target :  Unit.findByName(target, this.baseName);
         
         // Do not convert if target unit is the same or undefined
         if (!targetUnit || targetUnit.name === this.name) {
             return value;
         }
 
+        let result: number = value;
         if (this._definitions.has(targetUnit.name)) {
             const definition = this._definitions.get(targetUnit.name);
-            return (value * definition.magnitude) + definition.offset;
+            result = (value * definition.magnitude) + definition.offset;
         } else if (targetUnit._definitions.has(this.name)) {
             const definition = targetUnit._definitions.get(this.name);
-            return (value / definition.magnitude) - definition.offset;
+            result = (value / definition.magnitude) - definition.offset;
         } else {
             // No direct conversion found, convert to base unit
             const baseUnitName = Unit.UNIT_BASES.get(this.baseName);
             const definitionToBase = this._definitions.get(baseUnitName);
             const definitionFromBase = targetUnit._definitions.get(baseUnitName);
-            // Unable to convert unit
-            if (!definitionToBase || !definitionFromBase) {
-                return value;
+            // Convert unit if definitions are found
+            if (definitionToBase && definitionFromBase) {
+                result = (((value * definitionToBase.magnitude) + definitionToBase.offset) / definitionFromBase.magnitude) - definitionFromBase.offset;
             }
-            return (((value * definitionToBase.magnitude) + definitionToBase.offset) / definitionFromBase.magnitude) - definitionFromBase.offset;
         }
+        return result;
     }
 
     public static convert(value: number, from: string | Unit, to: string | Unit): number {
