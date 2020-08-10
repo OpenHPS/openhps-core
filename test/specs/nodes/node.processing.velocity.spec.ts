@@ -195,6 +195,87 @@ describe('node', () => {
             }, 1000);
         });
 
+        it('should process angular velocity on the linear movement (zy)', (done) => {
+            callbackSink.callback = (frame: DataFrame) => {
+                const position = frame.source.getPosition() as Absolute3DPosition;
+                console.log(position)
+                // Linear position is (0, 0) + the linear and angular movement
+                expect(Math.round(position.x * 10) / 10.).to.equal(0.6);
+                expect(Math.round(position.y * 10) / 10.).to.equal(0.6);
+                expect(Math.round(position.z * 10) / 10.).to.equal(0.6);
+                // Orientation should change
+                expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).y)).to.equal(45);
+                expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).z)).to.equal(45);
+                done();
+            };
+
+            const frame = new DataFrame();
+            const object = new DataObject();
+            object.setPosition(new Absolute3DPosition(0, 0, 0));
+            object.getPosition().velocity.angular = new AngularVelocity(0, 90, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
+            object.getPosition().velocity.linear = new LinearVelocity(1, 0, 0);
+            frame.source = object;
+
+            setTimeout(() => {
+                Promise.resolve(model.push(frame));
+            }, 1000);
+        });
+
+        it('should not speed up when turning (no intermediate calculations)', (done) => {
+            // Meaning it should not speed up, the travelled distance should not
+            // be higher than a direct path
+
+            callbackSink.callback = (frame: DataFrame) => {
+                const position = frame.source.getPosition() as Absolute2DPosition;
+                const distance = position.distanceTo(startPosition);
+                expect(distance).to.be.below(1);
+                done();
+            };
+
+            const startPosition = new Absolute2DPosition(0, 0);
+            startPosition.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
+            startPosition.velocity.linear = new LinearVelocity(1, 0, 0);
+
+            const frame = new DataFrame();
+            const object = new DataObject();
+            object.setPosition(startPosition);
+            frame.source = object;
+
+            setTimeout(() => {
+                Promise.resolve(model.push(frame));
+            }, 1000);
+        });
+
+        it('should not speed up when turning (with 1 intermediate calculation)', (done) => {
+            // Meaning it should not speed up, the travelled distance should not
+            // be higher than a direct path
+
+            callbackSink.callback = (frame: DataFrame) => {
+                const position = frame.source.getPosition() as Absolute2DPosition;
+                const distance = position.distanceTo(startPosition);
+                expect(distance).to.be.below(0.4);
+            };
+
+            const startPosition = new Absolute2DPosition(0, 0);
+            startPosition.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
+            startPosition.velocity.linear = new LinearVelocity(1, 0, 0);
+
+            const frame = new DataFrame();
+            const object = new DataObject("robot");
+            object.setPosition(startPosition);
+            frame.source = object;
+
+            model.push(frame).then(() => {
+                setTimeout(() => {
+                    model.push(new DataFrame(new DataObject("robot"))).then(() => {
+                        done();
+                    }).catch(ex => {
+                        done(ex);
+                    });
+                }, 500);
+            });
+        });
+
     });
 
 });
