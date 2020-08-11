@@ -86,7 +86,9 @@
       "src"
     ],
     "exclude": [
-      "test"
+      "test",
+      "src/**/_internal/Worker*.ts",
+      "src/**/WorkerService.ts"
     ],
     "extension": [
       ".ts"

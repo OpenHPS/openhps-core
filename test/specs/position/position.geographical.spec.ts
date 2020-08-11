@@ -6,9 +6,42 @@ describe('position', () => {
 
     describe('GeographicalPosition', () => {
 
+        it('should convert latitude and latittude to XYZ coordinates', () => {
+            const pos = new GeographicalPosition(5, 6, 1);
+            expect(pos.lat).to.equal(5);
+            expect(pos.latitude).to.equal(5);
+            expect(pos.lng).to.equal(6);
+            expect(pos.longitude).to.equal(6);
+            expect(pos.altitude).to.equal(1);
+            expect(pos.x).to.not.equal(0);
+            expect(pos.y).to.not.equal(0);
+            expect(pos.z).to.not.equal(0);
+        });
+
+        it('should clone', () => {
+            const pos = new GeographicalPosition(5, 6, 1);
+            const copy = pos.clone();
+            pos.lat = 3;
+            expect(copy.lat).to.equal(5);
+            expect(copy.latitude).to.equal(5);
+            expect(copy.lng).to.equal(6);
+            expect(copy.longitude).to.equal(6);
+            expect(copy.altitude).to.equal(1);
+            expect(copy.x).to.not.equal(0);
+            expect(copy.y).to.not.equal(0);
+            expect(copy.z).to.not.equal(0);
+        });
+
         it('should calculate the midpoint', (done) => {
             const position = new GeographicalPosition(3, 3);
             position.midpoint(new GeographicalPosition(5, 5)).then(midpoint => {
+                done();
+            });
+        });
+
+        it('should calculate the midpoint with different distances', (done) => {
+            const position = new GeographicalPosition(3, 3);
+            position.midpoint(new GeographicalPosition(5, 5), 1, 2).then(midpoint => {
                 done();
             });
         });

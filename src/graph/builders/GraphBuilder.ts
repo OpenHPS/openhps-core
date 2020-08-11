@@ -72,15 +72,8 @@ export class GraphBuilder<In extends DataFrame | DataFrame[], Out extends DataFr
      * @param graph Graph builder or abstract graph
      */
     public addShape(graph: GraphBuilder<any, any> | AbstractGraph<any, any>): GraphBuilder<In, Out> {
+        this.from().via(graph).to();
         if (graph instanceof GraphBuilder) {
-            graph.graph.nodes.forEach(graphNode => {
-                (graphNode as Node<any, any>).graph = this.graph;
-                (graphNode as Node<any, any>).logger = this.graph.logger;
-                this.addNode(graphNode);
-            });
-            graph.graph.edges.forEach(graphEdge => {
-                this.addEdge(graphEdge);
-            });
             // Connect internal and external output to shape 
             this.graph.addEdge(new EdgeBuilder<any>()
                 .withInput(this.graph.internalInput)
@@ -90,13 +83,6 @@ export class GraphBuilder<In extends DataFrame | DataFrame[], Out extends DataFr
                 .withInput(graph.graph.internalOutput)
                 .withOutput(this.graph.internalOutput)
                 .build());
-        } else {
-            // Add graph as node
-            graph.nodes.forEach(graphNode => {
-                (graphNode as Node<any, any>).graph = this.graph;
-                (graphNode as Node<any, any>).logger = this.graph.logger;
-            });
-            this.from().via(graph as unknown as Node<any, any>).to();
         }
         return this;
     }
@@ -135,26 +121,34 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         this.graph = graph;
     }
 
+    protected viaGraphBuilder(graphBuilder: GraphBuilder<any, any>): GraphShapeBuilder<Builder> {
+        graphBuilder.graph.nodes.forEach(graphNode => {
+            (graphNode as Node<any, any>).graph = this.graph;
+            (graphNode as Node<any, any>).logger = this.graph.logger;
+            this.graph.addNode(graphNode);
+        });
+        graphBuilder.graph.edges.forEach(graphEdge => {
+            this.graph.addEdge(graphEdge);
+        });
+        return this;
+    }
+
+    protected viaGraph(graph: AbstractGraph<any, any>): GraphShapeBuilder<Builder> {
+        // Add graph as node
+        graph.nodes.forEach(graphNode => {
+            (graphNode as Node<any, any>).graph = this.graph;
+            (graphNode as Node<any, any>).logger = this.graph.logger;
+        });
+        return this.via(graph as unknown as Node<any, any>);
+    }
+
     public via(...nodes: Array<Node<any, any> | string | AbstractGraph<any, any> | GraphBuilder<any, any>>): GraphShapeBuilder<Builder> {
         const selectedNodes: Array<Node<any, any>> = new Array();
         nodes.forEach(node => {
             if (node instanceof GraphBuilder) {
-                node.graph.nodes.forEach(graphNode => {
-                    (graphNode as Node<any, any>).graph = this.graph;
-                    (graphNode as Node<any, any>).logger = this.graph.logger;
-                    this.graph.addNode(graphNode);
-                });
-                node.graph.edges.forEach(graphEdge => {
-                    this.graph.addEdge(graphEdge);
-                });
-                return this;
+                return this.viaGraphBuilder(node);
             } else if (node instanceof GraphImpl) {
-                // Add graph as node
-                node.nodes.forEach(graphNode => {
-                    (graphNode as Node<any, any>).graph = this.graph;
-                    (graphNode as Node<any, any>).logger = this.graph.logger;
-                });
-                return this.via(node as unknown as Node<any, any>);
+                return this.viaGraph(node);
             } else {
                 let nodeObject: Node;
                 if (typeof node === 'string') {
