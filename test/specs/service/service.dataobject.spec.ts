@@ -1,16 +1,15 @@
-import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, Absolute2DPosition, Absolute3DPosition, CallbackNode, CallbackSourceNode } from '../../../src';
+import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, Absolute2DPosition, Absolute3DPosition, CallbackNode, CallbackSourceNode, MemoryDataService } from '../../../src';
 import { LoggingSinkNode, StorageSinkNode } from '../../../src/nodes/sink';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 import { expect } from 'chai';
 import 'mocha';
-import { MemoryDataObjectService } from '../../../src/service/memory';
 
 describe('data object', () => {
     describe('service', () => {
         var objectDataService: DataObjectService<DataObject>;
 
         before((done) => {
-            objectDataService = new MemoryDataObjectService(DataObject);
+            objectDataService = new DataObjectService(new MemoryDataService(DataObject));
             var object1 = new DataObject();
             object1.setPosition(new Absolute2DPosition(5, 6));
             object1.displayName = "Test";

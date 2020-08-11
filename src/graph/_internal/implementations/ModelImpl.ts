@@ -1,8 +1,7 @@
 import { DataFrame, DataObject, ReferenceSpace } from "../../../data";
-import { Service, DataService, NodeData, TimeService } from "../../../service";
+import { Service, DataService, NodeData, TimeService, DataObjectService, MemoryDataService, DataFrameService, NodeDataService } from "../../../service";
 import { GraphImpl } from "./GraphImpl";
 import { Model } from "../../../Model";
-import { MemoryDataFrameService, MemoryDataObjectService, MemoryNodeDataService } from "../../../service/memory";
 import { ServiceProxy } from "../../../service/_internal";
 
 /**
@@ -101,13 +100,13 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
 
     private _addDefaultServices(): void {
         // Store data objects
-        this.addService(new MemoryDataObjectService<DataObject>());
+        this.addService(new DataObjectService(new MemoryDataService(DataObject)));
         // Store spaces in their own memory data object service
-        this.addService(new MemoryDataObjectService<ReferenceSpace>());
+        this.addService(new DataObjectService(new MemoryDataService(ReferenceSpace)));
         // Temporal storage of data frames
-        this.addService(new MemoryDataFrameService<DataFrame>());
+        this.addService(new DataFrameService(new MemoryDataService(DataFrame)));
         // Store node data
-        this.addService(new MemoryNodeDataService(NodeData));
+        this.addService(new NodeDataService(new MemoryDataService(NodeData)));
 
         this.addService(new TimeService());
     }

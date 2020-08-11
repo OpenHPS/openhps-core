@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { DataSerializer, DataFrame } from "../../data";
+import { DataSerializer, DataFrame, DataObject } from "../../data";
 import { Model } from "../../Model";
 import { Subject, Observable } from 'threads/observable';
 import { CallbackSinkNode } from "../sink";
@@ -7,11 +7,8 @@ import { CallbackSourceNode } from "../source";
 import { expose } from "threads";
 import { ModelBuilder } from "../../ModelBuilder";
 import { WorkerService } from "../../service/WorkerService";
-import { DummyService } from "../../service/_internal/DummyService";
-import { DummyDataObjectService } from "../../service/_internal/DummyDataObjectService";
-import { DummyDataFrameService } from "../../service/_internal/DummyDataFrameService";
-import { DummyDataService } from "../../service/_internal/DummyDataService";
-import { DummyNodeDataService } from "../../service/_internal/DummyNodeDataService";
+import { DummyDataService, DummyService } from "../../service/_internal/";
+import { DataObjectService, DataFrameService, NodeDataService, NodeData } from '../../service';
 
 let model: Model<any, any>;
 const input: Subject<void> = new Subject();
@@ -35,13 +32,13 @@ expose({
         workerData.services.forEach((service: any) => {
             switch (service.type) {
                 case "DataObjectService":
-                    modelBuilder.addService(new Proxy(new DummyDataObjectService(), new WorkerService(service.name, serviceInput, serviceOutput)));
+                    modelBuilder.addService(new Proxy(new DataObjectService(new DummyDataService(DataObject)), new WorkerService(service.name, serviceInput, serviceOutput)));
                     break;
                 case "DataFrameService":
-                    modelBuilder.addService(new Proxy(new DummyDataFrameService(), new WorkerService(service.name, serviceInput, serviceOutput)));
+                    modelBuilder.addService(new Proxy(new DataFrameService(new DummyDataService(DataFrame)), new WorkerService(service.name, serviceInput, serviceOutput)));
                     break;
                 case "NodeDataService":
-                    modelBuilder.addService(new Proxy(new DummyNodeDataService(), new WorkerService(service.name, serviceInput, serviceOutput)));
+                    modelBuilder.addService(new Proxy(new NodeDataService(new DummyDataService(NodeData)), new WorkerService(service.name, serviceInput, serviceOutput)));
                     break;
                 case "DataService":
                     modelBuilder.addService(new Proxy(new DummyDataService(null), new WorkerService(service.name, serviceInput, serviceOutput)));

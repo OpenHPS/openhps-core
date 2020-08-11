@@ -1,4 +1,5 @@
 import { DataService } from "../DataService";
+import { FilterQuery } from "../FilterQuery";
 
 export class DummyDataService<I, T> extends DataService<I, T> {
     
@@ -8,8 +9,14 @@ export class DummyDataService<I, T> extends DataService<I, T> {
         });
     }
 
-    public findAll(): Promise<T[]> {
+    public findAll(query?: FilterQuery<T>): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
+            resolve();
+        });
+    }
+
+    public findOne(query?: FilterQuery<T>): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
             resolve();
         });
     }
@@ -26,7 +33,7 @@ export class DummyDataService<I, T> extends DataService<I, T> {
         });
     }
 
-    public deleteAll(): Promise<void> {
+    public deleteAll(query?: FilterQuery<T>): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             resolve();
         });

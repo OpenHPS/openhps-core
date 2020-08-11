@@ -1,4 +1,6 @@
-import { DataService } from "../DataService";
+import { DataService } from "./DataService";
+import { FilterQuery } from "./FilterQuery";
+import { QueryEvaluator } from "./QueryEvaluator";
 
 export class MemoryDataService<I, T> extends DataService<I, T> {
     protected _data: Map<I, T> = new Map();
@@ -13,21 +15,21 @@ export class MemoryDataService<I, T> extends DataService<I, T> {
         });
     }
 
-    public findOne(query: (object: T) => boolean = () => true): Promise<T> {
+    public findOne(query?: FilterQuery<T>): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             for (const [_, object] of this._data) {
-                if (query(object))
+                if (QueryEvaluator.evaluate(object, query))
                     return resolve(object);
             }
             return resolve();
         });
     }
 
-    public findAll(query: (object: T) => boolean = () => true): Promise<T[]> {
+    public findAll(query?: FilterQuery<T>): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
             const data = new Array();
             this._data.forEach(object => {
-                if (query(object))
+                if (QueryEvaluator.evaluate(object, query))
                     data.push(object);
             });
             resolve(data);
@@ -56,9 +58,17 @@ export class MemoryDataService<I, T> extends DataService<I, T> {
         });
     }
 
-    public deleteAll(): Promise<void> {
+    public deleteAll(filter?: FilterQuery<T>): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this._data = new Map();
+            if (filter === undefined) {
+                this._data = new Map();
+            } else {
+                for (const [key, value] of this._data) {
+                    if (QueryEvaluator.evaluate(value, filter)) {
+                        this.delete(key);
+                    }
+                }
+            }
             resolve();
         });
     }

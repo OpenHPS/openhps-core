@@ -1,4 +1,4 @@
-import { DataService, DataObject, MemoryDataObjectService } from "../../../src";
+import { DataService, DataObject, DataObjectService, MemoryDataService } from "../../../src";
 import { DataServiceProxy } from '../../../src/service/_internal';
 import { expect } from 'chai';
 
@@ -8,7 +8,7 @@ describe('proxy', () => {
         var proxy: DataService<string, DataObject>;
 
         before(() => {
-            const service = new MemoryDataObjectService(DataObject);
+            const service = new DataObjectService(new MemoryDataService(DataObject));
             proxy = new Proxy(service, new DataServiceProxy());
         });
 
@@ -17,7 +17,7 @@ describe('proxy', () => {
         });
 
         it('should be able to proxy function calls', (done) => {
-            proxy.insert(new DataObject("123")).then(() => {
+            proxy.insert("123", new DataObject("123")).then(() => {
                 done();
             });
         });

@@ -1,5 +1,10 @@
 import { Service } from "./Service";
+import { FilterQuery } from "./FilterQuery";
 
+/**
+ * DataService for storing and querying data objects
+ * of a specific data type.
+ */
 export abstract class DataService<I, T> extends Service {
     private _dataType: new () => T;
 
@@ -19,12 +24,14 @@ export abstract class DataService<I, T> extends Service {
 
     public abstract findByUID(id: I): Promise<T>;
 
-    public abstract findAll(): Promise<T[]>;
+    public abstract findOne(query?: FilterQuery<T>): Promise<T>;
+
+    public abstract findAll(query?: FilterQuery<T>): Promise<T[]>;
 
     public abstract insert(id: I, object: T): Promise<T>;
 
     public abstract delete(id: I): Promise<void>;
 
-    public abstract deleteAll(): Promise<void>;
+    public abstract deleteAll(query?: FilterQuery<T>): Promise<void>;
 
 }
