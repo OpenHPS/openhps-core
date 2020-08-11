@@ -41,6 +41,18 @@ export class AxisAngle extends Vector3 {
      */
     public static fromQuaternion(quat: THREE.Quaternion): AxisAngle {
         const axis = new AxisAngle();
+        axis.angle = 2 * Math.acos(quat.w);
+        if (1 - (quat.w * quat.w) < 0.000001) {
+            axis.x = quat.x;
+            axis.y = quat.y;
+            axis.z = quat.z;
+        } else {
+            // http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/
+            const s = Math.sqrt(1 - (quat.w * quat.w));
+            axis.x = quat.x / s;
+            axis.y = quat.y / s;
+            axis.z = quat.z / s;
+        }
         return axis;
     }
     

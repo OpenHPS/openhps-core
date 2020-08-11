@@ -31,7 +31,6 @@ export class GeographicalPosition extends Absolute3DPosition {
     }
 
     public set x(value: number) {
-
     }
 
     public get y(): number {
@@ -39,7 +38,6 @@ export class GeographicalPosition extends Absolute3DPosition {
     }
 
     public set y(value: number) {
-        
     }
 
     public get z(): number {
@@ -47,7 +45,6 @@ export class GeographicalPosition extends Absolute3DPosition {
     }
     
     public set z(value: number) {
-        
     }
 
     /**
@@ -92,11 +89,11 @@ export class GeographicalPosition extends Absolute3DPosition {
      */
     @SerializableMember()
     public get lng(): number {
-        return this._lng;
+        return this.longitude;
     }
 
     public set lng(lng: number) {
-        this._lng = lng;
+        this.longitude = lng;
     }
 
     /**
