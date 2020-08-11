@@ -5,11 +5,16 @@
  */
 
 export interface QuerySelector<T> {
+    // Comparison
     $eq?: T;
     $gt?: T;
     $gte?: T;
     $lt?: T;
     $lte?: T;
+    $in?: T[];
+    $nin?: T[];
+    // Array
+    $elemMatch?: T extends Array<infer U> ? object : never;
 }
 
 export interface RootQuerySelector<T> {

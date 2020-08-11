@@ -1,5 +1,5 @@
 import 'mocha';
-import { FilterQuery, DataObject, QueryEvaluator, Absolute2DPosition } from '../../../src';
+import { FilterQuery, DataObject, QueryEvaluator, Absolute2DPosition, DataFrame } from '../../../src';
 import { expect } from 'chai';
 import { DummyDataObject } from '../../mock/data/object/DummyDataObject';
 
@@ -100,7 +100,7 @@ describe('query', () => {
             expect(QueryEvaluator.evaluate(object2, query)).to.be.false;
         });
 
-        describe('conditions', () => {
+        describe('comparison', () => {
 
             it('should evaluate $gt', () => {
                 const object1 = new DataObject("mvdewync", "Maxim");
@@ -171,6 +171,35 @@ describe('query', () => {
                 expect(QueryEvaluator.evaluate(object3, query)).to.be.false;
             });
     
+        });
+
+        describe('array query', () => {
+
+            it('should evaluate $elemMatch', () => {
+                const object1 = new DataObject("mvdewync", "Maxim");
+                const object2 = new DataObject("bsigner", "Beat");
+                const object3 = new DataObject("mvdewync2", "Maxim");
+                const frame1 = new DataFrame();
+                frame1.addObject(object1);
+                frame1.addObject(object2);
+                frame1.addObject(object3);
+                const frame2 = new DataFrame();
+                frame2.addObject(object3);
+                const frame3 = new DataFrame();
+                frame3.addObject(object1);
+
+                const query: FilterQuery<DataFrame> = {
+                    _objects: {
+                        $elemMatch: {
+                            uid: "mvdewync"
+                        }
+                    }
+                };
+                expect(QueryEvaluator.evaluate(frame1, query)).to.be.true;
+                expect(QueryEvaluator.evaluate(frame2, query)).to.be.false;
+                expect(QueryEvaluator.evaluate(frame3, query)).to.be.true;
+            });    
+
         });
 
     });

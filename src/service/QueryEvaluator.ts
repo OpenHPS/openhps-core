@@ -79,6 +79,25 @@ export class QueryEvaluator {
                 case "$eq":
                     result = result && value === subquery[selector];
                     break;
+                case "$in":
+                    result = result && Array.from(value).includes(subquery[selector]);
+                    break;
+                case "$nin":
+                    result = result && !Array.from(value).includes(subquery[selector]);
+                    break;
+                case "$elemMatch":
+                    let arrayResult: boolean = false;
+                    if (value instanceof Array) {
+                        Array.from(value).forEach(element => {
+                            arrayResult = arrayResult || QueryEvaluator.evaluateComponent(element, selector, subquery[selector]);
+                        });
+                    } else if (value instanceof Map) {
+                        value.forEach((element: any, key: any) => {
+                            arrayResult = arrayResult || QueryEvaluator.evaluate(element, subquery[selector]);
+                        });
+                    }
+                    result = result && arrayResult;
+                    break;
             }
         }
         return result;

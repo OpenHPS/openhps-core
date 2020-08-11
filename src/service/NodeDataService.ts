@@ -1,13 +1,11 @@
 import { DataService } from "./DataService";
 import { DataObject, SerializableObject, SerializableMember, } from "../data";
-import { FilterQuery } from "./FilterQuery";
+import { DataServiceImpl } from "./DataServiceImpl";
 
-export class NodeDataService<T extends NodeData | NodeData> extends DataService<string, T> {
-    private _dataService: DataService<string, T>;
+export class NodeDataService<T extends NodeData | NodeData> extends DataServiceImpl<string, T> {
 
     constructor(dataService: DataService<string, T>, dataType: new () => T | NodeData = NodeData) {
-        super(dataType as new () => T);
-        this._dataService = dataService;
+        super(dataService, dataType as new () => T);
     }
 
     public findData(nodeUID: string, dataObject: DataObject): Promise<any> {
@@ -36,30 +34,6 @@ export class NodeDataService<T extends NodeData | NodeData> extends DataService<
             hash = hash & hash; // Convert to 32bit integer
         }
         return hash.toString();
-    }
-
-    public findByUID(uid: string): Promise<T> {
-        return this._dataService.findByUID(uid);
-    }
-
-    public findOne(query?: FilterQuery<T>): Promise<T> {
-        return this._dataService.findOne(query);
-    }
-
-    public findAll(query?: FilterQuery<T>): Promise<T[]> {
-        return this._dataService.findAll(query);
-    }
-
-    public insert(id: string, object: T): Promise<T> {
-        return this._dataService.insert(id, object);
-    }
-
-    public delete(id: string): Promise<void> {
-        return this._dataService.delete(id);
-    }
-
-    public deleteAll(): Promise<void> {
-        return this._dataService.deleteAll();
     }
 
 }

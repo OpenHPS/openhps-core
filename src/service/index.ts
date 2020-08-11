@@ -9,3 +9,4 @@ export * from './TimeService';
 export * from './QueryEvaluator';
 export * from './FilterQuery';
 export * from './MemoryDataService';
+export * from './DataServiceImpl';
