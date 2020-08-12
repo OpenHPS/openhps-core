@@ -54,7 +54,6 @@ export class VelocityProcessingNode<InOut extends DataFrame = DataFrame> extends
                             angular.y !== 0 ? 1 : 0, 
                             angular.z !== 0 ? 1 : 0
                         ), Math.PI / 2));
-                        relativePosition.z = -relativePosition.z;
                     }
                     
                     // Predict the next location

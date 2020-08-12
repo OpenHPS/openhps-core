@@ -153,7 +153,7 @@ describe('node', () => {
                 // Linear position is (0, 0) + the linear and angular movement
                 expect(Math.round(position.x * 10) / 10.).to.equal(0.6); // Should be less than 1
                 expect(Math.round(position.y * 10) / 10.).to.equal(0);
-                expect(Math.round(position.z * 10) / 10.).to.equal(0.6);
+                expect(Math.round(position.z * 10) / 10.).to.equal(-0.6);
                 // Orientation should change
                 expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).y)).to.equal(90);
                 done();
@@ -177,7 +177,7 @@ describe('node', () => {
                 // Linear position is (0, 0) + the linear and angular movement
                 expect(Math.round(position.x * 10) / 10.).to.equal(0.6); // Should be less than 1
                 expect(Math.round(position.y * 10) / 10.).to.equal(0);
-                expect(Math.round(position.z * 10) / 10.).to.equal(-0.6);
+                expect(Math.round(position.z * 10) / 10.).to.equal(0.6);
                 // Orientation should change
                 expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).y)).to.equal(-90);
                 done();
@@ -188,6 +188,54 @@ describe('node', () => {
             object.setPosition(new Absolute3DPosition(0, 0, 0));
             object.getPosition().velocity.angular = new AngularVelocity(0, -90, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
             object.getPosition().velocity.linear = new LinearVelocity(1, 0, 0);
+            frame.source = object;
+
+            setTimeout(() => {
+                Promise.resolve(model.push(frame));
+            }, 1000);
+        });
+
+        it('should process angular velocity on the linear movement (x+)', (done) => {
+            callbackSink.callback = (frame: DataFrame) => {
+                const position = frame.source.getPosition() as Absolute3DPosition;
+                // Linear position is (0, 0) + the linear and angular movement
+                expect(Math.round(position.x * 10) / 10.).to.equal(0);
+                expect(Math.round(position.y * 10) / 10.).to.equal(0.6);
+                expect(Math.round(position.z * 10) / 10.).to.equal(0.6);
+                // Orientation should change
+                expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).x)).to.equal(90);
+                done();
+            };
+
+            const frame = new DataFrame();
+            const object = new DataObject();
+            object.setPosition(new Absolute3DPosition(0, 0, 0));
+            object.getPosition().velocity.angular = new AngularVelocity(90, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
+            object.getPosition().velocity.linear = new LinearVelocity(0, 1, 0);
+            frame.source = object;
+
+            setTimeout(() => {
+                Promise.resolve(model.push(frame));
+            }, 1000);
+        });
+
+        it('should process angular velocity on the linear movement (x-)', (done) => {
+            callbackSink.callback = (frame: DataFrame) => {
+                const position = frame.source.getPosition() as Absolute3DPosition;
+                // Linear position is (0, 0) + the linear and angular movement
+                expect(Math.round(position.x * 10) / 10.).to.equal(0);
+                expect(Math.round(position.y * 10) / 10.).to.equal(0.6);
+                expect(Math.round(position.z * 10) / 10.).to.equal(-0.6);
+                // Orientation should change
+                expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).x)).to.equal(-90);
+                done();
+            };
+
+            const frame = new DataFrame();
+            const object = new DataObject();
+            object.setPosition(new Absolute3DPosition(0, 0, 0));
+            object.getPosition().velocity.angular = new AngularVelocity(-90, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
+            object.getPosition().velocity.linear = new LinearVelocity(0, 1, 0);
             frame.source = object;
 
             setTimeout(() => {
