@@ -1,37 +1,39 @@
-import { Service } from "./Service";
+import { DataServiceDriver } from "./DataServiceDriver";
 import { FilterQuery } from "./FilterQuery";
 
-/**
- * DataService for storing and querying data objects
- * of a specific data type.
- */
-export abstract class DataService<I, T> extends Service {
-    private _dataType: new () => T;
+export abstract class DataService<I, T> extends DataServiceDriver<I, T> {
+    private _dataService: DataServiceDriver<I, T>;
 
-    constructor(dataType: new () => T, options?: any) {
-        super();
-        this.name = dataType.name;
-        this._dataType = dataType;
+    constructor(dataService: DataServiceDriver<I, T>) {
+        super(dataService.dataType);
+        this._dataService = dataService;
+
+        this.once('build', () => this._dataService.emitAsync('build'));
+        this.once('destroy', () => this._dataService.emitAsync('destroy'));
     }
 
-    public get dataType(): new () => T {
-        return this._dataType;
+    public findByUID(uid: I): Promise<T> {
+        return this._dataService.findByUID(uid);
     }
 
-    public set dataType(dataType: new () => T) {
-        this._dataType = dataType;
+    public findOne(query?: FilterQuery<T>): Promise<T> {
+        return this._dataService.findOne(query);
     }
 
-    public abstract findByUID(id: I): Promise<T>;
+    public findAll(query?: FilterQuery<T>): Promise<T[]> {
+        return this._dataService.findAll(query);
+    }
 
-    public abstract findOne(query?: FilterQuery<T>): Promise<T>;
+    public insert(id: I, object: T): Promise<T> {
+        return this._dataService.insert(id, object);
+    }
 
-    public abstract findAll(query?: FilterQuery<T>): Promise<T[]>;
+    public delete(id: I): Promise<void> {
+        return this._dataService.delete(id);
+    }
 
-    public abstract insert(id: I, object: T): Promise<T>;
-
-    public abstract delete(id: I): Promise<void>;
-
-    public abstract deleteAll(query?: FilterQuery<T>): Promise<void>;
+    public deleteAll(): Promise<void> {
+        return this._dataService.deleteAll();
+    }
 
 }

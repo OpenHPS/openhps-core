@@ -1,7 +1,7 @@
-import { DataService } from "../DataService";
+import { DataServiceDriver } from "../DataServiceDriver";
 import { FilterQuery } from "../FilterQuery";
 
-export class DummyDataService<I, T> extends DataService<I, T> {
+export class DummyDataService<I, T> extends DataServiceDriver<I, T> {
     
     public findByUID(uid: I): Promise<T> {
         return new Promise<T>((resolve, reject) => {

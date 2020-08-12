@@ -1,12 +1,7 @@
-import { DataService } from "./DataService";
 import { DataObject, SerializableObject, SerializableMember, } from "../data";
-import { DataServiceImpl } from "./DataServiceImpl";
+import { DataService } from "./DataService";
 
-export class NodeDataService<T extends NodeData | NodeData> extends DataServiceImpl<string, T> {
-
-    constructor(dataService: DataService<string, T>, dataType: new () => T | NodeData = NodeData) {
-        super(dataService, dataType as new () => T);
-    }
+export class NodeDataService<T extends NodeData | NodeData> extends DataService<string, T> {
 
     public findData(nodeUID: string, dataObject: DataObject): Promise<any> {
         return new Promise<any>((resolve, reject) => {

@@ -1,6 +1,6 @@
 import { ServiceProxy } from "./ServiceProxy";
-import { DataService } from "../DataService";
+import { DataServiceDriver } from "../DataServiceDriver";
 
-export class DataServiceProxy<I, T, S extends DataService<I, T>> extends ServiceProxy<S> {
+export class DataServiceProxy<I, T, S extends DataServiceDriver<I, T>> extends ServiceProxy<S> {
 
 }

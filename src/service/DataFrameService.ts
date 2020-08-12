@@ -1,13 +1,8 @@
 import { DataFrame } from "../data";
-import { DataService } from "./DataService";
 import { FilterQuery } from "./FilterQuery";
-import { DataServiceImpl } from "./DataServiceImpl";
+import { DataService } from "./DataService";
 
-export class DataFrameService<T extends DataFrame> extends DataServiceImpl<string, DataFrame> {
-
-    constructor(dataService: DataService<string, T>, dataType: new () => T | DataFrame = DataFrame) {
-        super(dataService, dataType as new () => T);
-    }
+export class DataFrameService<T extends DataFrame> extends DataService<string, DataFrame> {
 
     public findByDataObjectUID(uid: string): Promise<T[]> {
         return this.findAll({

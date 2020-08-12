@@ -1,7 +1,7 @@
 export * from './DataObjectService';
 export * from './Service';
 export * from './DataFrameService';
-export * from './DataService';
+export * from './DataServiceDriver';
 export * from './WorkerService';
 export * from './TrajectoryService';
 export * from './NodeDataService';
@@ -9,4 +9,4 @@ export * from './TimeService';
 export * from './QueryEvaluator';
 export * from './FilterQuery';
 export * from './MemoryDataService';
-export * from './DataServiceImpl';
+export * from './DataService';

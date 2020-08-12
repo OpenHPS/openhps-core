@@ -1,12 +1,7 @@
-import { DataService } from "./DataService";
 import { DataObject, AbsolutePosition } from "../data";
-import { DataServiceImpl } from "./DataServiceImpl";
+import { DataService } from "./DataService";
 
-export abstract class TrajectoryService<T extends DataObject> extends DataServiceImpl<string, DataObject> {
-
-    constructor(dataService: DataService<string, T>, dataType: new () => T | DataObject = DataObject) {
-        super(dataService, dataType as new () => T);
-    }
+export abstract class TrajectoryService<T extends DataObject> extends DataService<string, DataObject> {
 
     public abstract findPosition(uid: string): Promise<AbsolutePosition>;
 

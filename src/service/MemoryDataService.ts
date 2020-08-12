@@ -1,8 +1,8 @@
-import { DataService } from "./DataService";
+import { DataServiceDriver } from "./DataServiceDriver";
 import { FilterQuery } from "./FilterQuery";
 import { QueryEvaluator } from "./QueryEvaluator";
 
-export class MemoryDataService<I, T> extends DataService<I, T> {
+export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     protected _data: Map<I, T> = new Map();
 
     public findByUID(uid: I): Promise<T> {

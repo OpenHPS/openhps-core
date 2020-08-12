@@ -1,18 +1,13 @@
-import { DataService } from "./DataService";
 import { DataObject, AbsolutePosition, Absolute2DPosition } from "../data";
 import { FilterQuery } from "./FilterQuery";
 import { Vector3 } from "../utils";
-import { DataServiceImpl } from "./DataServiceImpl";
+import { DataService } from "./DataService";
 
 /**
  * The object service manages the data of objects that are currently being
  * processed in the model and objects that need to be tracked.
  */
-export class DataObjectService<T extends DataObject> extends DataServiceImpl<string, DataObject> {
-
-    constructor(dataService: DataService<string, T>, dataType: new () => T | DataObject = DataObject) {
-        super(dataService, dataType as new () => T);
-    }
+export class DataObjectService<T extends DataObject> extends DataService<string, DataObject> {
 
     /**
      * Find a data object by its display name
