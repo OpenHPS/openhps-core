@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataFrame, DataSerializer, Model, ModelBuilder, CallbackSinkNode, DataObject, ListSourceNode, SMAFilterNode, LoggingSinkNode, HPFilterNode } from '../../../../src';
+import { DataFrame, DataSerializer, Model, ModelBuilder, CallbackSinkNode, DataObject, ListSourceNode, SMAFilterNode, LoggingSinkNode, HPFilterNode, LPFilterNode } from '../../../../src';
 import { DummyDataFilterObject } from '../../../mock/data/object/DummyDataFilterObject';
 
 describe('node', () => {
-    describe('high-pass filter', () => {
+    describe('low-pass filter', () => {
       
         // TODO: test is not valid
         it('should filter values in a data frame', (done) => {
@@ -18,7 +18,7 @@ describe('node', () => {
                     new DataFrame(new DummyDataFilterObject("abc", 1)),
                     new DataFrame(new DummyDataFilterObject("abc", 0)),
                 ]))
-                .via(new HPFilterNode(
+                .via(new LPFilterNode(
                     (object: DataObject) => object instanceof DummyDataFilterObject,
                     (object: DummyDataFilterObject) => {
                         return 'reading';
@@ -28,7 +28,7 @@ describe('node', () => {
                     }))
                 .to(new LoggingSinkNode<DataFrame>((frame) => {
                     if ((frame.source as DummyDataFilterObject).reading >= 11) {
-                        done(new Error(`HPF did not work!`));
+                        done(new Error(`LPF did not work!`));
                     }
                     if (count < 4) {
                         Promise.resolve(model.pull());
