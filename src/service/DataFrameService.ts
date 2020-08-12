@@ -15,15 +15,16 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, D
     }
 
     public findBefore(timestamp: number): Promise<T[]> {
-        const filter: FilterQuery<any> = {
-            createdTimestamp: { $lte: timestamp }
-        };
-        return this.findAll(filter) as Promise<T[]>;
+        return this._findTimestamp({ $lte: timestamp });
     }
 
     public findAfter(timestamp: number): Promise<T[]> {
+        return this._findTimestamp({ $gte: timestamp });
+    }
+
+    private _findTimestamp(timestampFilter: any): Promise<T[]> {
         const filter: FilterQuery<any> = {
-            createdTimestamp: { $gte: timestamp }
+            createdTimestamp: timestampFilter
         };
         return this.findAll(filter) as Promise<T[]>;
     }

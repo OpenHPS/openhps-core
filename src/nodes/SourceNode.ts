@@ -35,47 +35,48 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[] = DataFrame
                 data.forEach(async f => {
                     if (!this._ignoreMerging)
                         f = await this._mergeFrame(f);
-
-                    if (f !== null || f !== undefined) {
-                        const frameService = model.findDataService(f);
-                        
-                        if (frameService !== null && frameService !== undefined) { 
-                            // Update the frame
-                            servicePromises.push(frameService.insert(f.uid, f));
-                        }
-                    } else {
-                        // No frame provided in pull
-                        return resolve();
-                    }
+                    servicePromises.push(this.persistFrame(f));
                 });
             } else {
-                if (data !== null || data !== undefined) {
-                    let frame: DataFrame = data as DataFrame;
-
-                    if (!this._ignoreMerging)
-                        frame = await this._mergeFrame(frame);
-
-                    const frameService = model.findDataService(frame);
-                    
-                    if (frameService !== null && frameService !== undefined) { 
-                        // Update the frame
-                        servicePromises.push(frameService.insert(frame.uid, frame as DataFrame));
-                    }
-                } else {
-                    // No frame provided in pull
-                    return resolve();
-                }
+                let f: DataFrame = data as DataFrame;
+                if (!this._ignoreMerging)
+                    f = await this._mergeFrame(f);
+                servicePromises.push(this.persistFrame(f));
             }
             
             this.outputNodes.forEach(node => {
                 pushPromises.push(node.push(data));
             });
             
-            Promise.all(pushPromises).then(() => {
+            Promise.all(servicePromises).then(() => {
+                return Promise.all(pushPromises);
+            }).then(() => {
                 resolve();
             }).catch(ex => {
                 reject(ex);
             });
+        });
+    }
+
+    protected persistFrame(f: DataFrame): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const model = (this.graph as Model);
+
+            if (f !== null || f !== undefined) {
+                const frameService = model.findDataService(f);
+                
+                if (frameService !== null && frameService !== undefined) { 
+                    // Update the frame
+                    frameService.insert(f.uid, f).then(() => {
+                        resolve();
+                    }).catch(ex => {
+                        reject(ex);
+                    });
+                }
+            } else {
+                // No frame provided in pull
+                resolve();
+            }
         });
     }
 
@@ -109,7 +110,7 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[] = DataFrame
 
                         object.merge(existingObject);
                         objResolve();
-                    }).catch(_ => {
+                    }).catch(() => {
                         // Ignore
                         objResolve();
                     });

@@ -5,8 +5,13 @@ import { FilterQuery, QuerySelector } from "./FilterQuery";
  */
 export class QueryEvaluator {
 
+    private static isRegexQuery(query: any): boolean {
+        return Object.prototype.toString.call(query) === '[object RegExp]';
+    }
+
     public static evaluateComponent<T>(object: T, key: string, query: any): boolean {
         let result = true;
+        const value = (object as any)[key];
         if (key.startsWith("$")) {
             switch (key) {
                 case "$and":
@@ -18,12 +23,12 @@ export class QueryEvaluator {
             }
         } else if (key.includes(".")) {
             result = result && QueryEvaluator.evaluatePath(object, key, query);
-        } else if (Object.prototype.toString.call(query) === '[object RegExp]') {
-            result = result && ((object as any)[key] as string).match(query) ? true : false;
+        } else if (QueryEvaluator.isRegexQuery(query)) {
+            result = result && (value as string).match(query) ? true : false;
         } else if (typeof query === 'object') {
-            result = result && QueryEvaluator.evaluateSelector((object as any)[key], query);
+            result = result && QueryEvaluator.evaluateSelector(value, query);
         } else {
-            result = result && (object as any)[key] === query;
+            result = result && value === query;
         }
         return result;
     }

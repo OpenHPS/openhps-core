@@ -30,7 +30,32 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
 
     private _onModelBuild(_: any): Promise<void> {
         return new Promise((resolve, reject) => {
-            let buildPromises = new Array();
+            // First resolve the building of services
+            this._buildServices().then(() => {
+                for (const service of this.findAllServices()) {
+                    if (!service.isReady()) {
+                        service.emit('ready');
+                    }
+                }
+                // Build nodes
+                return this._buildNodes(_);
+            }).then(() => {
+                for (const node of this.nodes) {
+                    if (!node.isReady()) {
+                        node.emit('ready');
+                    }
+                }
+                this.emit('ready');
+                resolve();
+            }).catch(ex => {
+                reject(ex);
+            });
+        });
+    }
+
+    private _buildServices(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const buildPromises = new Array();
             this._services.forEach(service => {
                 if (!service.isReady()) {
                     buildPromises.push(service.emitAsync('build'));
@@ -41,40 +66,19 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
                     buildPromises.push(service.emitAsync('build'));
                 }
             });
+            Promise.all(buildPromises).then(() => resolve()).catch(reject);
+        });
+    }
 
-            // First resolve the building of services
-            Promise.all(buildPromises).then(() => {
-                this._services.forEach(service => {
-                    if (!service.isReady()) {
-                        service.emit('ready');
-                    }
-                });
-                this._dataServices.forEach(service => {
-                    if (!service.isReady()) {
-                        service.emit('ready');
-                    }
-                });
-
-                // Build all nodes
-                buildPromises = new Array();
-                this.nodes.forEach(node => {
-                    if (!node.isReady()) {
-                        buildPromises.push(node.emitAsync('build', _));
-                    }
-                });
-                return Promise.all(buildPromises);
-            }).then(() => {
-                this.nodes.forEach(node => {
-                    if (!node.isReady()) {
-                        node.emit('ready');
-                    }
-                });
-                
-                this.emit('ready');
-                resolve();
-            }).catch(ex => {
-                reject(ex);
+    private _buildNodes(_: any): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const buildPromises = new Array();
+            this.nodes.forEach(node => {
+                if (!node.isReady()) {
+                    buildPromises.push(node.emitAsync('build', _));
+                }
             });
+            Promise.all(buildPromises).then(() => resolve()).catch(reject);
         });
     }
 
@@ -142,33 +146,40 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
     public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(dataType: new () => D): F;
     public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(object: D): F;
     public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(q: any): F {
+        let result: F;
         if (q === undefined || q === null) {
-            return null;
+            result = null;
         } else if (typeof q === 'string') {
             // Find by name
-            return this._findDataServiceByName(q);
+            result = this._findDataServiceByName(q);
         } else if (q instanceof Function) {
-             // Find by constructor
-             let service: F = this._findDataServiceByName(q.name);
-             if (service === null) {
-                 // Find the parent class
-                 let parent = Object.getPrototypeOf(q);
-                 while (true) {
-                     service = this._findDataServiceByName(parent.name);
-                     if (service !== null) {
-                         return service;
-                     }
-                     if (parent.name === "DataObject" || parent.name === "DataFrame") {
-                         return null;
-                     }
-                     parent = Object.getPrototypeOf(parent);
-                 }
-             } else {
-                 return service;
-             }
+            // Find by constructor
+            result = this._findDataServiceByType(q);
         } else {
             // Find by instance
-            return this.findDataService(q.constructor);
+            result = this.findDataService(q.constructor);
+        }
+        return result;
+    }
+
+    private _findDataServiceByType<D extends any, F extends DataService<any, D> = DataService<any, D>>(dataType: new () => D): F {
+        // Find by constructor
+        let service: F = this._findDataServiceByName(dataType.name);
+        if (service === null) {
+            // Find the parent class
+            let parent = Object.getPrototypeOf(dataType);
+            while (true) {
+                service = this._findDataServiceByName(parent.name);
+                if (service !== null) {
+                    return service;
+                }
+                if (parent.name === "DataObject" || parent.name === "DataFrame") {
+                    return null;
+                }
+                parent = Object.getPrototypeOf(parent);
+            }
+        } else {
+            return service;
         }
     }
 

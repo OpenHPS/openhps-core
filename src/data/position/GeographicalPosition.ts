@@ -136,7 +136,6 @@ export class GeographicalPosition extends Absolute3DPosition {
         return GeographicalPosition.EARTH_RADIUS * c;
     }
 
-
     /**
      * Get the bearing in degrees from this location to a destination
      * @param destination Destination location

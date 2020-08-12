@@ -43,29 +43,19 @@ export class GraphImpl<In extends DataFrame | DataFrame[], Out extends DataFrame
     }
 
     public get edges(): Array<AbstractEdge<any>> {
-        if (this._edges === undefined) {
-            return [];
-        }
-        return Array.from(this._edges.values());
+        return this._edges ? Array.from(this._edges.values()) : [];
     }
 
     public set edges(edges: Array<AbstractEdge<any>>) {
-        edges.forEach(edge => {
-            this.addEdge(edge);
-        });
+        edges.forEach(this.addEdge);
     }
 
     public get nodes(): Array<Node<any, any>> {
-        if (this._nodes === undefined) {
-            return [];
-        }
-        return Array.from(this._nodes.values());
+        return this._nodes ? Array.from(this._nodes.values()) : [];
     }
 
     public set nodes(nodes: Array<Node<any, any>>) {
-        nodes.forEach(node => {
-            this.addNode(node);
-        });
+        nodes.forEach(this.addNode);
     }
 
     public getNodeByUID(uid: string): Node<any, any> {
@@ -101,23 +91,11 @@ export class GraphImpl<In extends DataFrame | DataFrame[], Out extends DataFrame
     }
 
     private _getNodeOutlets(node: Node<any, any>): Array<AbstractEdge<Out>> {
-        const edges = new Array();
-        this.edges.forEach(edge => {
-            if (edge.inputNode === node) {
-                edges.push(edge);
-            }
-        });
-        return edges;
+        return this.edges.filter(edge => edge.inputNode === node);
     }
 
     private _getNodeInlets(node: Node<any, any>): Array<AbstractEdge<In>> {
-        const edges = new Array();
-        this.edges.forEach(edge => {
-            if (edge.outputNode === node) {
-                edges.push(edge);
-            }
-        });
-        return edges;
+        return this.edges.filter(edge => edge.outputNode === node);
     }
 
     /**

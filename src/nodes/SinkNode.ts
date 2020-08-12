@@ -93,17 +93,11 @@ export abstract class SinkNode<In extends DataFrame | DataFrame[] = DataFrame> e
                 if (object.uid === null) {
                     object.uid = uuidv4();
                 }
-
                 // Queue the storage of the object in a data service
-                const service = model.findDataService(object);
-                servicePromises.push(service.insert(object.uid, object));
+                servicePromises.push(model.findDataService(object).insert(object.uid, object));
             }
 
-            Promise.all(servicePromises).then(() => {
-                resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            Promise.all(servicePromises).then(() => resolve()).catch(reject);
         });
     }
 
