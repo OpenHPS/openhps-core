@@ -3,10 +3,10 @@ import { DataObject, IMUDataFrame } from "../../../data";
 import { Quaternion } from "../../../utils";
 
 /**
- * Absolute rotation processing node
+ * Geomagnetic orientation processing node
  * @source https://github.com/visakhanc/eCompass/blob/master/source/main.c
  */
-export class GeomagneticRotationProcessingNode extends FilterProcessingNode<IMUDataFrame> {
+export class GeomagneticOrientationProcessingNode extends FilterProcessingNode<IMUDataFrame> {
 
     public initFilter(object: DataObject, frame: IMUDataFrame, options?: FilterProcessingOptions): Promise<any> {
         return new Promise<any>((resolve, reject) => {

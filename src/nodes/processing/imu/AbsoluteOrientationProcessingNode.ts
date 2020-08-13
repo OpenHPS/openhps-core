@@ -3,10 +3,10 @@ import { Quaternion } from "../../../utils";
 import { FilterProcessingNode, FilterProcessingOptions } from "../dsp";
 
 /**
- * Absolute rotation processing node
+ * Absolute orientation processing node
  * @source https://www.w3.org/TR/motion-sensors/#relative-orientation-sensor
  */
-export class AbsoluteRotationProcessingNode extends FilterProcessingNode<IMUDataFrame> {
+export class AbsoluteOrientationProcessingNode extends FilterProcessingNode<IMUDataFrame> {
 
     public initFilter(object: DataObject, frame: IMUDataFrame, options?: FilterProcessingOptions): Promise<any> {
         return new Promise<any>((resolve, reject) => {

@@ -9,11 +9,7 @@ export class GravityProcessingNode extends FilterProcessingNode<IMUDataFrame> {
                 reject(new Error(`Gravity processing requires accelerometer and gyroscope readings!`));
             }
 
-            resolve({
-                alpha: 0,
-                beta: 0,
-                gamma: 0,
-            });
+            resolve(options);
         });
     }
 

@@ -7,7 +7,7 @@ const path = require('path');
 module.exports = [{
     mode: 'development',
     entry: './dist/index.js',
-    devtool: 'source-map',
+    devtool: 'inline-source-map',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'openhps-core.js',
@@ -67,6 +67,11 @@ module.exports = [{
             },
         }),
     ],
+    performance: {
+      hints: false,
+      maxEntrypointSize: 512000,
+      maxAssetSize: 512000
+    }, 
     resolve: {
       alias: {
         'typedjson': 'typedjson/js/typedjson.min.js',

@@ -10,7 +10,7 @@ export class RelativeRotationProcessingNode extends FilterProcessingNode<DataFra
 
     public initFilter(object: DataObject, frame: IMUDataFrame, options?: FilterProcessingOptions): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            if (frame.angularVelocity || frame.acceleration === undefined) {
+            if (frame.angularVelocity === undefined || frame.acceleration === undefined) {
                 reject(new Error(`Relative rotation processing requires accelerometer and gyroscope readings!`));
             }
 

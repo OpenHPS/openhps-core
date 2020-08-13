@@ -3,7 +3,7 @@ require("@babel/register")({
     plugins: [
         ["@babel/plugin-transform-runtime"]
     ],
-    only: ['node_modules/three/src/math/*.js'],
+    only: ['node_modules/three/src/**/*.js'],
     cache: true,
 });
 require('./WorkerNodeRunner');
