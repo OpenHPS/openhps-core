@@ -18,7 +18,6 @@ describe('node', () => {
                     new DataFrame(new DummyDataFilterObject("abc", 11))
                 ]))
                 .via(new BKFilterNode(
-                    (object: DataObject) => object instanceof DummyDataFilterObject,
                     (object: DummyDataFilterObject) => {
                         return 'reading';
                     },{
@@ -26,9 +25,10 @@ describe('node', () => {
                         A: 1,
                         B: 1,
                         C: 1,
-                        Q: 1
+                        Q: 1,
+                        objectFilter: (object: DataObject) => object instanceof DummyDataFilterObject,
                     }))
-                .to(new LoggingSinkNode<DataFrame>((frame) => {
+                .to(new LoggingSinkNode<DataFrame>((frame: DataFrame) => {
                     if ((frame.source as DummyDataFilterObject).reading >= 11) {
                         done(new Error(`BKF did not work!`));
                     }

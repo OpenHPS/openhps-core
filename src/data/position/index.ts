@@ -10,3 +10,5 @@ export * from './Velocity';
 export * from './AngularVelocity';
 export * from './LinearVelocity';
 export * from './RelativeVelocity';
+export * from './Acceleration';
+export * from './Magnetism';

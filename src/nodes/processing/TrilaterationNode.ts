@@ -2,10 +2,10 @@ import {
     DataFrame, 
     DataObject, 
     RelativeDistancePosition, 
-    Absolute3DPosition,
     AbsolutePosition
 } from "../../data";
 import { RelativePositionProcessing } from "./RelativePositionProcessing";
+import { ObjectProcessingNodeOptions } from "../ObjectProcessingNode";
 
 /**
  * Trillateration processing node
@@ -16,8 +16,8 @@ import { RelativePositionProcessing } from "./RelativePositionProcessing";
  */
 export class TrilaterationNode<InOut extends DataFrame> extends RelativePositionProcessing<InOut, RelativeDistancePosition> {
 
-    constructor(filterFn?: (object: DataObject, frame?: InOut) => boolean) {
-        super(RelativeDistancePosition, filterFn);
+    constructor(options?: ObjectProcessingNodeOptions) {
+        super(RelativeDistancePosition, options);
     }
 
     public processRelativePositions(dataObject: DataObject, relativePositions: Map<RelativeDistancePosition, DataObject>): Promise<DataObject> {

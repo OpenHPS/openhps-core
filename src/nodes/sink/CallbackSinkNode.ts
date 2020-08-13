@@ -1,19 +1,19 @@
 import { DataFrame } from "../../data/DataFrame";
-import { SinkNode } from "../SinkNode";
+import { SinkNode, SinkNodeOptions } from "../SinkNode";
 
-export class CallbackSinkNode<In extends DataFrame | DataFrame[]> extends SinkNode<In> {
-    private _callback: (frame: In) => Promise<void> | void;
+export class CallbackSinkNode<In extends DataFrame> extends SinkNode<In> {
+    private _callback: (frame: In | In[]) => Promise<void> | void;
 
-    constructor(callback: (frame: In) => Promise<void> | void = () => null) {
-        super();
+    constructor(callback: (frame: In | In[]) => Promise<void> | void = () => null, options?: SinkNodeOptions) {
+        super(options);
         this._callback = callback;
     }
     
-    public get callback(): (frame: In) => Promise<void> | void {
+    public get callback(): (frame: In | In[]) => Promise<void> | void {
         return this._callback;
     }
 
-    public set callback(callback: (frame: In) => Promise<void> | void) {
+    public set callback(callback: (frame: In | In[]) => Promise<void> | void) {
         this._callback = callback;
     }
 

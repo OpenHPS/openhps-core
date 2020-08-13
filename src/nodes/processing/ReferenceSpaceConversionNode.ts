@@ -1,5 +1,5 @@
 import { DataFrame, ReferenceSpace, DataObject } from "../../data";
-import { ObjectProcessingNode } from "../ObjectProcessingNode";
+import { ObjectProcessingNode, ObjectProcessingNodeOptions } from "../ObjectProcessingNode";
 import { Model } from "../../Model";
 
 /**
@@ -11,8 +11,8 @@ export class ReferenceSpaceConversionNode<InOut extends DataFrame> extends Objec
     private _referenceSpace: ReferenceSpace;
     private _inverse: boolean = false;
 
-    constructor(referenceSpace: ReferenceSpace | string, inverse: boolean = false) {
-        super();
+    constructor(referenceSpace: ReferenceSpace | string, inverse: boolean = false, options?: ObjectProcessingNodeOptions) {
+        super(options);
         if (referenceSpace instanceof ReferenceSpace) {
             this._referenceSpace = referenceSpace;
             this._referenceSpaceUID = referenceSpace.uid;

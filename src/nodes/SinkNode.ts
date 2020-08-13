@@ -4,17 +4,22 @@ import { DataObject } from "../data";
 import { v4 as uuidv4 } from 'uuid';
 import { AbstractSinkNode } from "../graph/interfaces/AbstractSinkNode";
 import { DataService } from "../service";
+import { NodeOptions } from "../Node";
 
 /**
  * Sink node
  */
-export abstract class SinkNode<In extends DataFrame | DataFrame[] = DataFrame> extends AbstractSinkNode<In> {
+export abstract class SinkNode<In extends DataFrame = DataFrame> extends AbstractSinkNode<In> {
 
-    constructor() {
-        super();
+    constructor(options?: SinkNodeOptions) {
+        super(options);
     }
 
-    public push(frame: In): Promise<void> {
+    public get options(): SinkNodeOptions {
+        return super.options as SinkNodeOptions;
+    }
+
+    public push(frame: In | In[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (frame === null || frame === undefined) {
                 this.logger("warning", {
@@ -38,7 +43,7 @@ export abstract class SinkNode<In extends DataFrame | DataFrame[] = DataFrame> e
         });
     }
 
-    protected persistDataFrame(frame: In): Promise<void> {
+    protected persistDataFrame(frame: In | In[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const model: Model<any, any> = (this.graph as Model<any, any>);
             const servicePromises = new Array();
@@ -71,7 +76,7 @@ export abstract class SinkNode<In extends DataFrame | DataFrame[] = DataFrame> e
         });
     }
 
-    protected persistDataObject(frame: In): Promise<void> {
+    protected persistDataObject(frame: In | In[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const model: Model<any, any> = (this.graph as Model<any, any>);
             const servicePromises = new Array();
@@ -101,6 +106,10 @@ export abstract class SinkNode<In extends DataFrame | DataFrame[] = DataFrame> e
         });
     }
 
-    public abstract onPush(frame: In): Promise<void>;
+    public abstract onPush(frame: In | In[]): Promise<void>;
 
+}
+
+export interface SinkNodeOptions extends NodeOptions {
+    persistence?: boolean;
 }

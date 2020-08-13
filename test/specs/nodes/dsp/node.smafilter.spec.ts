@@ -18,13 +18,13 @@ describe('node', () => {
                     new DataFrame(new DummyDataFilterObject("abc", 11)),
                 ]))
                 .via(new SMAFilterNode(
-                    (object: DataObject) => object instanceof DummyDataFilterObject,
                     (object: DummyDataFilterObject) => {
                         return 'reading';
                     },{
+                        objectFilter: (object: DataObject) => object instanceof DummyDataFilterObject,
                         taps: 4
                     }))
-                .to(new LoggingSinkNode<DataFrame>((frame) => {
+                .to(new LoggingSinkNode<DataFrame>((frame: DataFrame) => {
                     if ((frame.source as DummyDataFilterObject).reading >= 11) {
                         done(new Error(`SMA did not work!`));
                     }

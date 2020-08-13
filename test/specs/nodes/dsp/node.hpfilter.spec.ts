@@ -19,14 +19,14 @@ describe('node', () => {
                     new DataFrame(new DummyDataFilterObject("abc", 0)),
                 ]))
                 .via(new HPFilterNode(
-                    (object: DataObject) => object instanceof DummyDataFilterObject,
                     (object: DummyDataFilterObject) => {
                         return 'reading';
                     },{
                         cutOff: 0.5,
-                        sampleRate: 1
+                        sampleRate: 1,
+                        objectFilter: (object: DataObject) => object instanceof DummyDataFilterObject,
                     }))
-                .to(new LoggingSinkNode<DataFrame>((frame) => {
+                .to(new LoggingSinkNode<DataFrame>((frame: DataFrame) => {
                     if ((frame.source as DummyDataFilterObject).reading >= 11) {
                         done(new Error(`HPF did not work!`));
                     }

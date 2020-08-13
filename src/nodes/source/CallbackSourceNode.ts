@@ -1,11 +1,11 @@
 import { DataFrame } from "../../data/DataFrame";
-import { SourceNode } from "../SourceNode";
+import { SourceNode, SourceNodeOptions } from "../SourceNode";
 
 export class CallbackSourceNode<Out extends DataFrame> extends SourceNode<Out> {
     private _callback: () => Promise<Out> | Out;
 
-    constructor(callback: () => Promise<Out> | Out = () => null) {
-        super(null);
+    constructor(callback: () => Promise<Out> | Out = () => null, options?: SourceNodeOptions) {
+        super(null, options);
         this.callback = callback;
     }
     

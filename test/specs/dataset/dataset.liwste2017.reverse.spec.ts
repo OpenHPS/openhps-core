@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, ObjectMergeNode, Model, DataFrame, DataObject, RelativeDistancePosition, Absolute2DPosition, StorageSinkNode, TrilaterationNode, CallbackSinkNode, SourceMergeNode, TimeUnit, WorkerNode, DataSerializer, LengthUnit } from '../../../src';
+import { ModelBuilder, ObjectMergeNode, Model, DataFrame, DataObject, RelativeDistancePosition, Absolute2DPosition, TrilaterationNode, CallbackSinkNode, SourceMergeNode, TimeUnit, WorkerNode, DataSerializer, LengthUnit } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
 import { EvaluationDataFrame } from '../../mock/data/EvaluationDataFrame';
 import * as path from 'path';
@@ -30,7 +30,7 @@ describe('dataset', () => {
                     dataFrame.addObject(beacon);
                     return dataFrame;
                 }))
-                .to(new StorageSinkNode())
+                .to(new CallbackSinkNode())
                 .build().then(model => {
                     calibrationModel = model;
                     Promise.all([

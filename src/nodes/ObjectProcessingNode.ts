@@ -1,5 +1,5 @@
 import { DataFrame, DataObject } from "../data";
-import { ProcessingNode } from "./ProcessingNode";
+import { ProcessingNode, ProcessingNodeOptions } from "./ProcessingNode";
 import { Model } from "../Model";
 import { DataObjectService } from "../service";
 
@@ -7,20 +7,21 @@ import { DataObjectService } from "../service";
  * Processing node that processes each [[DataObject]] in a [[DataFrame]] individually
  */
 export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> extends ProcessingNode<InOut, InOut> {
-    private _filterFn: (object: DataObject, frame?: InOut) => boolean = (object: DataObject) => true;
+    private _objectFilter?: (object: DataObject, frame?: DataFrame) => boolean = () => true;
 
-    constructor(filterFn?: (object: DataObject, frame?: InOut) => boolean) {
-        super();
+    constructor(options?: ObjectProcessingNodeOptions) {
+        super(options);
+        this._objectFilter = this.options.objectFilter || this._objectFilter;
+    }
 
-        if (filterFn !== undefined) {
-            this._filterFn = filterFn;
-        }
+    public get options(): ObjectProcessingNodeOptions {
+        return super.options as ObjectProcessingNodeOptions;
     }
 
     public process(frame: InOut): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
             const processObjectPromises = new Array();
-            frame.getObjects().filter(value => this._filterFn(value, frame)).forEach(object => {
+            frame.getObjects().filter(value => this._objectFilter(value, frame)).forEach(object => {
                 processObjectPromises.push(this.processObject(object, frame));
             });
             Promise.all(processObjectPromises).then(objects => {
@@ -69,4 +70,11 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
         }
     }
 
+}
+
+export interface ObjectProcessingNodeOptions extends ProcessingNodeOptions {
+    /**
+     * Object filter to specify what data object are processed by this node
+     */
+    objectFilter?: (object: DataObject, frame?: DataFrame) => boolean;
 }

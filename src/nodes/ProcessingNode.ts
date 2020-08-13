@@ -1,63 +1,72 @@
 import { DataFrame, DataObject } from "../data";
-import { Node } from "../Node";
+import { Node, NodeOptions } from "../Node";
 import { NodeDataService, NodeData } from "../service";
 import { Model } from "../Model";
 
 /**
  * Processing node
  */
-export abstract class ProcessingNode<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame> extends Node<In, Out> {
+export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame> extends Node<In, Out> {
+    private _frameFilter: (frame: DataFrame) => boolean = () => true;
 
-    constructor() {
-        super();
-
+    constructor(options?: ProcessingNodeOptions) {
+        super(options);
+        this._frameFilter = this.options.frameFilter || this._frameFilter;
         this.on('push', this._onPush.bind(this));
     }
 
-    private _onPush(frame: In): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            const servicePromises = new Array();
-            const pushPromises = new Array();
-            const model = (this.graph as Model);
+    public get options(): ProcessingNodeOptions {
+        return super.options as ProcessingNodeOptions;
+    }
 
-            this.process(frame).then(result => {
-                if (result === null || result === undefined) {
-                    return resolve();
-                } else if (Array.isArray(result)) {
-                    return resolve();
-                } else {
-                    const oldFrameService = model.findDataService(frame);
-                    const frameService = model.findDataService(result);
-                    
-                    if (frameService !== null && frameService !== undefined) { 
-                        if (frameService.name !== oldFrameService.name) {
-                            // Delete frame from old service
-                            servicePromises.push(oldFrameService.delete((frame as DataFrame).uid));
-                        }
-                        
-                        // Update the frame
-                        servicePromises.push(frameService.insert((result as DataFrame).uid, result));
-                    }
-                }
-                
-                this.outputNodes.forEach(node => {
-                    pushPromises.push(node.push(result));
+    private _onPush(frame: In | In[]): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            const model = (this.graph as Model);
+            const processPromises = new Array();
+
+            if (Array.isArray(frame)) {
+                frame.filter(this._frameFilter).forEach(f => {
+                    processPromises.push(this.process(f));
                 });
-            }).catch(ex => {
+            } else if (this._frameFilter(frame)) {
+                processPromises.push(this.process(frame));
+            }
+
+            const output: Out[] = new Array();
+            Promise.all(processPromises).then(results => {
+                const servicePromises = new Array();
+                results.forEach(result => {
+                    if (result) {
+                        const oldFrameService = model.findDataService(frame);
+                        const frameService = model.findDataService(result);
+                        
+                        if (frameService !== null && frameService !== undefined) { 
+                            if (frameService.name !== oldFrameService.name) {
+                                // Delete frame from old service
+                                servicePromises.push(oldFrameService.delete((frame as DataFrame).uid));
+                            }
+                            
+                            // Update the frame
+                            servicePromises.push(frameService.insert((result as DataFrame).uid, result));
+                        }
+                        output.push(result);
+                    }
+                });
+                return Promise.all(servicePromises);
+            }).then(() => {
+                const pushPromises = new Array();
+                output.forEach(out => {
+                    this.outputNodes.forEach(node => {
+                        pushPromises.push(node.push(out));
+                    });
+                });
+                return Promise.all(pushPromises);
+            }).then(() => resolve()).catch(ex => {
                 if (ex === undefined) {
                     this.logger("warning", {
                         message: `Exception thrown in processing node ${this.uid} but no exception given!`
                     });
                 }
-                reject(ex);
-            });
-
-            // Push processed result to the next node
-            Promise.all(servicePromises).then(() => {
-                return Promise.all(pushPromises);
-            }).then(() => {
-                resolve();
-            }).catch(ex => {
                 reject(ex);
             });
         });
@@ -97,4 +106,11 @@ export abstract class ProcessingNode<In extends DataFrame | DataFrame[] = DataFr
     }
 
     public abstract process(frame: In): Promise<Out>;
+}
+
+export interface ProcessingNodeOptions extends NodeOptions {
+    /**
+     * Frame filter to specify what frames are processed by this node
+     */
+    frameFilter?: (frame: DataFrame) => boolean;
 }

@@ -5,7 +5,7 @@ import { DataFrame } from "../../../data/DataFrame";
 import { BroadcastNode } from "../../../nodes/shapes/BroadcastNode";
 import { AbstractNode } from "../../interfaces";
 
-export class GraphImpl<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends Node<In, Out> implements AbstractGraph<In, Out> {
+export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> implements AbstractGraph<In, Out> {
     private _nodes: Map<string, Node<any, any>> = new Map();
     private _edges: Map<string, AbstractEdge<any>> = new Map();
 
@@ -146,7 +146,7 @@ export class GraphImpl<In extends DataFrame | DataFrame[], Out extends DataFrame
         return this.internalOutput.pull();
     }
 
-    public push(frame: In): Promise<void> {
+    public push(frame: In | In[]): Promise<void> {
         return this.internalInput.push(frame);
     }
 

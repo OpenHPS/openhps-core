@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { VelocityProcessingNode, DataFrame, DataObject, Absolute2DPosition, LinearVelocity, Model, ModelBuilder, CallbackSourceNode, StorageSinkNode, CallbackSinkNode, AngularVelocity, AngleUnit, AngularVelocityUnit, Quaternion, Euler, Absolute3DPosition } from '../../../src';
+import { VelocityProcessingNode, DataFrame, DataObject, Absolute2DPosition, LinearVelocity, Model, ModelBuilder, CallbackSourceNode, CallbackSinkNode, AngularVelocity, AngleUnit, AngularVelocityUnit, Quaternion, Euler, Absolute3DPosition } from '../../../../src';
 
 describe('node', () => {
     describe('processing velocity', () => {

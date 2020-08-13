@@ -12,7 +12,7 @@ import { ReferenceSpaceConversionNode } from "../../nodes/processing/ReferenceSp
 /**
  * Graph builder
  */
-export class GraphBuilder<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> {
+export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
     private _graph: GraphImpl<In, Out>;
 
     protected constructor(graph: GraphImpl<In, Out> = new GraphImpl()) {
@@ -20,7 +20,7 @@ export class GraphBuilder<In extends DataFrame | DataFrame[], Out extends DataFr
         this.graph.name = "graph";
     }
 
-    public static create<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]>(): GraphBuilder<In, Out> {
+    public static create<In extends DataFrame, Out extends DataFrame>(): GraphBuilder<In, Out> {
         return new GraphBuilder();
     }
 
@@ -150,7 +150,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
             } else if (node instanceof GraphImpl) {
                 return this.viaGraph(node);
             } else {
-                let nodeObject: Node;
+                let nodeObject: Node<any, any>;
                 if (typeof node === 'string') {
                     nodeObject = this.graph.getNodeByUID(node);
                     if (nodeObject === undefined) {
@@ -158,7 +158,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
                     }
                 } else {
                     this.graph.addNode(node);
-                    nodeObject = node as Node;
+                    nodeObject = node as Node<any, any>;
                 }
 
                 this._insertNode(nodeObject);
@@ -249,7 +249,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         if (nodes.length !== 0) {
             const selectedNodes: Array<AbstractSinkNode<any>> = new Array();
             nodes.forEach(node => {
-                let nodeObject: Node;
+                let nodeObject: Node<any, any>;
                 if (typeof node === 'string') {
                     nodeObject = this.graph.getNodeByUID(node);
                     if (nodeObject === undefined) {

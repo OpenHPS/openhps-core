@@ -1,7 +1,7 @@
 import { DataFrame } from "../../data";
 import { Node } from "../../Node";
 
-export class FrameFlattenNode<InOut extends DataFrame> extends Node<InOut[], InOut> {
+export class FrameFlattenNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
     constructor() {
         super();

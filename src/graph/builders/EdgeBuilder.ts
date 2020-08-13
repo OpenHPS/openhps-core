@@ -14,7 +14,7 @@ import { AbstractNode } from "../interfaces";
  *      .build();
  * ```
  */
-export class EdgeBuilder<InOut extends DataFrame | DataFrame[]> {
+export class EdgeBuilder<InOut extends DataFrame> {
     private _edge: EdgeImpl<InOut>;
 
     constructor() {

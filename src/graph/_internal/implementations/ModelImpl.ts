@@ -7,7 +7,7 @@ import { ServiceProxy } from "../../../service/_internal";
 /**
  * [[Model]] implementation
  */
-export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame> extends GraphImpl<In, Out> implements Model<In, Out> {
+export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends GraphImpl<In, Out> implements Model<In, Out> {
     private _services: Map<string, Service> = new Map();
     private _dataServices: Map<string, DataService<any, any>> = new Map();
     private _referenceSpace: ReferenceSpace;
@@ -220,7 +220,7 @@ export class ModelImpl<In extends DataFrame | DataFrame[] = DataFrame, Out exten
         this._referenceSpace = space;
     }
 
-    public push(frame: In): Promise<void> {
+    public push(frame: In | In[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const servicePromises = new Array();
 

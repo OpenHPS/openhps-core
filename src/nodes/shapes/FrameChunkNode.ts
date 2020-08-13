@@ -2,7 +2,7 @@ import { DataFrame } from "../../data";
 import { Node } from "../../Node";
 import { TimeUnit } from "../../utils";
 
-export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut[]> {
+export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _count: number;
     private _queue: InOut[] = new Array();
 

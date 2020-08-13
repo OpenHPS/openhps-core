@@ -9,14 +9,14 @@ import { GraphImpl } from "./graph/_internal/implementations/GraphImpl";
  * ## Usage
  * Please refer to [[ModelBuilder]] for creating a new model
  */
-export interface Model<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame> extends GraphImpl<In, Out> {
+export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame> extends GraphImpl<In, Out> {
 
     /**
      * Push data to the model
      * 
      * @param frame Input frame
      */
-    push(frame: In): Promise<void>;
+    push(frame: In | In[]): Promise<void>;
 
     /**
      * Pull data from the model

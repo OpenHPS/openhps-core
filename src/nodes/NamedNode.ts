@@ -1,11 +1,12 @@
 import { DataFrame } from "../data";
 import { Node } from "../Node";
 
-export class NamedNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
+export class NamedNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
     constructor(name: string) {
-        super();
-        this.name = name;
+        super({
+            name
+        });
     }
 
 }

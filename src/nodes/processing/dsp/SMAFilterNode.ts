@@ -1,14 +1,13 @@
-import { PropertyFilterNode } from "./PropertyFilterNode";
-import { FilterOptions } from "./FilterNode";
+import { PropertyFilterProcessingNode } from "./PropertyFilterProcessingNode";
+import { FilterProcessingOptions } from "./FilterProcessingNode";
 import { DataFrame, DataObject } from '../../../data';
 import { Vector } from "../../../utils";
 
-export class SMAFilterNode<InOut extends DataFrame> extends PropertyFilterNode<InOut> {
+export class SMAFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
     
-    constructor(objectFilter: (object: DataObject, frame?: DataFrame) => boolean,
-                propertySelector: (object: DataObject, frame?: InOut) => PropertyKey,
+    constructor(propertySelector: (object: DataObject, frame?: InOut) => PropertyKey,
                 options: SMAFilterOptions) {
-        super(objectFilter, propertySelector, options);
+        super(propertySelector, options);
     }
 
     public initFilter(object: DataObject, value: number | Vector, options: SMAFilterOptions): Promise<any> {
@@ -48,9 +47,9 @@ export class SMAFilterNode<InOut extends DataFrame> extends PropertyFilterNode<I
     }
 }
 
-export class SMAFilterOptions extends FilterOptions {
+export interface SMAFilterOptions extends FilterProcessingOptions {
     /**
      * Taps to keep
      */
-    public taps: number;
+    taps: number;
 }

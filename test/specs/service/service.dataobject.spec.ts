@@ -1,5 +1,5 @@
 import { Model, ModelBuilder, DataFrame, DataObjectService, DataObject, Absolute2DPosition, Absolute3DPosition, CallbackNode, CallbackSourceNode, MemoryDataService } from '../../../src';
-import { LoggingSinkNode, StorageSinkNode } from '../../../src/nodes/sink';
+import { LoggingSinkNode, CallbackSinkNode } from '../../../src/nodes/sink';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 import { expect } from 'chai';
 import 'mocha';
@@ -208,7 +208,7 @@ describe('data object', () => {
             const model: Model = await ModelBuilder.create()
                 .from()
                 .via(new CallbackNode())
-                .to(new StorageSinkNode())
+                .to(new CallbackSinkNode())
                 .build();
             await model.push(frame);
             const result = await model.findDataService(DataObject).findByUID(object.uid);

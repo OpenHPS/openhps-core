@@ -2,11 +2,11 @@ import { DataFrame } from "../../data";
 import { Node } from "../../Node";
 import { AbstractNode } from "../../graph/interfaces";
 
-export class BalanceNode<InOut extends DataFrame | DataFrame[]> extends Node<InOut, InOut> {
+export class BalanceNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _busyNodes: Array<AbstractNode<any, any>> = new Array();
-    private _queue: Array<{frame: InOut, resolve: () => void, reject: (ex?: any) => void}> = new Array();
+    private _queue: Array<{frame: InOut | InOut[], resolve: () => void, reject: (ex?: any) => void}> = new Array();
 
-    public push(frame: InOut): Promise<void> {
+    public push(frame: InOut | InOut[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.logger("debug", {
                 node: this.uid,
@@ -43,7 +43,7 @@ export class BalanceNode<InOut extends DataFrame | DataFrame[]> extends Node<InO
             for (const node of this.outputNodes) {
                 if (this._busyNodes.indexOf(node) === -1) {
                     // Node is not busy - perform push
-                    const queue: {frame: InOut, resolve: () => void, reject: (ex?: any) => void} = this._queue.pop();
+                    const queue: {frame: InOut | InOut[], resolve: () => void, reject: (ex?: any) => void} = this._queue.pop();
                     node.push(queue.frame).then(_ => {
                         this._busyNodes.splice(this._busyNodes.indexOf(node), 1);
                         this._updateQueue();

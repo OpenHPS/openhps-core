@@ -11,29 +11,28 @@ import { AsyncEventEmitter } from './_internal/AsyncEventEmitter';
  * ## Usage
  * 
  */
-export abstract class Node<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame> extends AsyncEventEmitter implements AbstractNode<In, Out> {
+export abstract class Node<In extends DataFrame, Out extends DataFrame> extends AsyncEventEmitter implements AbstractNode<In, Out> {
     private _uid: string = uuidv4();
     private _name: string;
     private _graph: AbstractGraph<any, any>;
     private _ready: boolean = false;
+    private _options: NodeOptions;
     public logger: (level: string, log: any) => void = () => {};
 
-    constructor() {
+    constructor(options?: NodeOptions) {
         super();
-        // Set the display name of the node to the type name
-        this._name = this.constructor.name;
+        this._options = options || {};
 
-        this.logger("debug", {
-            node: {
-                uid: this.uid,
-                name: this.name
-            },
-            message: `Node has been constructed.`,
-        });
+        // Set the display name of the node to the type name
+        this._name = this._options.name || this.constructor.name;
 
         this.prependOnceListener('ready', () => {
             this._ready = true;
         });
+    }
+
+    public get options(): NodeOptions {
+        return this._options;
     }
 
     public isReady(): boolean {
@@ -118,7 +117,7 @@ export abstract class Node<In extends DataFrame | DataFrame[] = DataFrame, Out e
      * 
      * @param frame Data frame to push
      */
-    public push(frame: In): Promise<void> {
+    public push(frame: In | In[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (frame === null || frame === undefined) {
                 this.logger("warning", {
@@ -147,4 +146,12 @@ export abstract class Node<In extends DataFrame | DataFrame[] = DataFrame, Out e
         });
     }
 
+}
+
+export interface NodeOptions {
+    /**
+     * User friendly name of the node
+     *  Used for querying a node by its name.
+     */
+    name?: string;
 }

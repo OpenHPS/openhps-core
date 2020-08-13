@@ -35,7 +35,7 @@ describe('node', () => {
                     object.setPosition(new Absolute2DPosition(3, 3));
 
                     model.push(new DataFrame(object)).then(() => {
-                        return model.findDataService(ReferenceSpace).insert(myReferenceSpace);
+                        return model.findDataService(ReferenceSpace).insert(myReferenceSpace.uid, myReferenceSpace);
                     }).then(() => {
                         done();
                     }).catch(ex => {
@@ -76,7 +76,7 @@ describe('node', () => {
                     frame.addReferenceSpace(myReferenceSpace);
 
                     model.push(frame).then(() => {
-                        return model.findDataService(ReferenceSpace).insert(myReferenceSpace);
+                        return model.findDataService(ReferenceSpace).insert(myReferenceSpace.uid, myReferenceSpace);
                     }).then(() => {
                         done();
                     }).catch(ex => {

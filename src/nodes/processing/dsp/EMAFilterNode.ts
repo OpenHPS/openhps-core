@@ -1,14 +1,13 @@
-import { PropertyFilterNode } from "./PropertyFilterNode";
-import { FilterOptions } from "./FilterNode";
 import { DataFrame, DataObject } from '../../../data';
 import { Vector } from "../../../utils";
+import { PropertyFilterProcessingNode } from './PropertyFilterProcessingNode';
+import { FilterProcessingOptions } from './FilterProcessingNode';
 
-export class EMAFilterNode<InOut extends DataFrame> extends PropertyFilterNode<InOut> {
+export class EMAFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
     
-    constructor(objectFilter: (object: DataObject, frame?: DataFrame) => boolean,
-                propertySelector: (object: DataObject, frame?: InOut) => PropertyKey,
+    constructor(propertySelector: (object: DataObject, frame?: InOut) => PropertyKey,
                 options: EMAFilterOptions) {
-        super(objectFilter, propertySelector, options);
+        super(propertySelector, options);
     }
 
     public initFilter<T extends number | Vector>(object: DataObject, value: T, options: EMAFilterOptions): Promise<any> {
@@ -38,9 +37,9 @@ export class EMAFilterNode<InOut extends DataFrame> extends PropertyFilterNode<I
     }
 }
 
-export class EMAFilterOptions extends FilterOptions {
+export interface EMAFilterOptions extends FilterProcessingOptions {
     /**
      * Filter coefficient [0,1]
      */
-    public alpha: number;
+    alpha: number;
 }

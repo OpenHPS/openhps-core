@@ -8,7 +8,7 @@ import { Matrix4, Vector3, Quaternion, Euler, AxisAngle } from "../../../utils/m
 /**
  * Linear and angular velocity processing
  */
-export class VelocityProcessingNode<InOut extends DataFrame = DataFrame> extends ObjectProcessingNode<InOut> {
+export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
 
     public processObject(object: DataObject): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {

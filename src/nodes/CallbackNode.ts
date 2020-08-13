@@ -1,11 +1,11 @@
 import { DataFrame } from "../data/DataFrame";
 import { Node } from "../Node";
 
-export class CallbackNode<InOut extends DataFrame | DataFrame[] = DataFrame> extends Node<InOut, InOut> {
-    private _pushCallback: (frame: InOut) => void;
-    private _pullCallback: () => InOut;
+export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
+    private _pushCallback: (frame: InOut | InOut[]) => void;
+    private _pullCallback: () => InOut | InOut[];
 
-    constructor(pushCallback: (frame: InOut) => void = (frame: InOut) => { }, pullCallback: () => InOut = () => null) {
+    constructor(pushCallback: (frame: InOut | InOut[]) => void = (frame: InOut) => { }, pullCallback: () => InOut | InOut[] = () => null) {
         super();
         this.pushCallback = pushCallback;
         this.pullCallback = pullCallback;
@@ -14,23 +14,23 @@ export class CallbackNode<InOut extends DataFrame | DataFrame[] = DataFrame> ext
         this.on('pull', this._onPull.bind(this));
     }
     
-    public get pullCallback(): () => InOut {
+    public get pullCallback(): () => InOut | InOut[] {
         return this._pullCallback;
     }
 
-    public set pullCallback(pullCallback: () => InOut) {
+    public set pullCallback(pullCallback: () => InOut | InOut[]) {
         this._pullCallback = pullCallback;
     }
 
-    public get pushCallback(): (frame: InOut) => void {
+    public get pushCallback(): (frame: InOut | InOut[]) => void {
         return this._pushCallback;
     }
 
-    public set pushCallback(pushCallback: (frame: InOut) => void) {
+    public set pushCallback(pushCallback: (frame: InOut | InOut[]) => void) {
         this._pushCallback = pushCallback;
     }
 
-    private _onPush(frame: InOut): Promise<void> {
+    private _onPush(frame: InOut | InOut[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             try {
                 this.pushCallback(frame);
@@ -53,7 +53,7 @@ export class CallbackNode<InOut extends DataFrame | DataFrame[] = DataFrame> ext
 
     private _onPull(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            let result: InOut = null;
+            let result: InOut | InOut[] = null;
             try {
                 result = this.pullCallback();
             } catch (ex) {

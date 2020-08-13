@@ -1,11 +1,11 @@
 import { DataFrame, DataObject, RelativePosition } from "../../data";
-import { ObjectProcessingNode } from "../ObjectProcessingNode";
+import { ObjectProcessingNode, ObjectProcessingNodeOptions } from "../ObjectProcessingNode";
 
 export abstract class RelativePositionProcessing<InOut extends DataFrame, R extends RelativePosition> extends ObjectProcessingNode<InOut> {
     private _relativePositionType: new () => R;
 
-    constructor(relativePositionType: new () => R, filterFn?: (object: DataObject, frame?: InOut) => boolean) {
-        super(filterFn);
+    constructor(relativePositionType: new () => R, options?: ObjectProcessingNodeOptions) {
+        super(options);
         this._relativePositionType = relativePositionType;
     }
 

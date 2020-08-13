@@ -1,14 +1,13 @@
-import { PropertyFilterNode } from "./PropertyFilterNode";
-import { FilterOptions } from "./FilterNode";
+import { FilterProcessingOptions } from "./FilterProcessingNode";
 import { DataFrame, DataObject } from "../../../data";
 import { Vector } from "../../../utils";
+import { PropertyFilterProcessingNode } from "./PropertyFilterProcessingNode";
 
-export class HPFilterNode<InOut extends DataFrame> extends PropertyFilterNode<InOut> {
+export class HPFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
     
-    constructor(objectFilter: (object: DataObject, frame?: DataFrame) => boolean,
-                propertySelector: (object: DataObject, frame?: InOut) => PropertyKey,
+    constructor(propertySelector: (object: DataObject, frame?: InOut) => PropertyKey,
                 options: HPFilterOptions) {
-        super(objectFilter, propertySelector, options);
+        super(propertySelector, options);
     }
 
     public initFilter<T extends number | Vector>(object: DataObject, value: T, options: HPFilterOptions): Promise<{ x: T, y: T, alpha: number }> {
@@ -40,7 +39,7 @@ export class HPFilterNode<InOut extends DataFrame> extends PropertyFilterNode<In
     }
 }
 
-export class HPFilterOptions extends FilterOptions {
-    public sampleRate: number;
-    public cutOff: number;
+export interface HPFilterOptions extends FilterProcessingOptions {
+    sampleRate: number;
+    cutOff: number;
 }

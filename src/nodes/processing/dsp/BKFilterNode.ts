@@ -1,17 +1,16 @@
-import { PropertyFilterNode } from "./PropertyFilterNode";
-import { FilterOptions } from "./FilterNode";
+import { PropertyFilterProcessingNode } from "./PropertyFilterProcessingNode";
+import { FilterProcessingOptions } from "./FilterProcessingNode";
 import { DataObject, DataFrame } from '../../../data';
 import { Vector3 } from "../../../utils";
 
 /**
  * Basic Kalman Filter processing node
  */
-export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterNode<InOut> {
+export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
 
-    constructor(objectFilter: (object: DataObject, frame?: DataFrame) => boolean,
-                propertySelector: (object: DataObject, frame?: InOut) => PropertyKey,
+    constructor(propertySelector: (object: DataObject, frame?: InOut) => PropertyKey,
                 options: KalmanFilterOptions) {
-        super(objectFilter, propertySelector, options);
+        super(propertySelector, options);
     }
 
     public initFilter<T extends number | Vector3>(object: DataObject, value: T, options: KalmanFilterOptions): Promise<any> {
@@ -49,17 +48,17 @@ export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterNode<In
 
 }
 
-export class KalmanFilterOptions extends FilterOptions {
+export interface KalmanFilterOptions extends FilterProcessingOptions {
     /** Process noise */
-    public R: number | Vector3;
+    R: number | Vector3;
     /** Measurement noise */
-    public Q: number | Vector3;
+    Q: number | Vector3;
     /** State vector */
-    public A: number | Vector3;
+    A: number | Vector3;
     /** Control vector */
-    public B: number | Vector3;
+    B: number | Vector3;
     /** Measurement vector */
-    public C: number | Vector3;
+    C: number | Vector3;
 }
 
 /**

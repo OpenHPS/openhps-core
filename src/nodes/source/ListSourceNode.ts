@@ -1,5 +1,5 @@
 import { DataFrame } from "../../data/DataFrame";
-import { SourceNode } from "../SourceNode";
+import { SourceNode, SourceNodeOptions } from "../SourceNode";
 import { DataObject } from "../../data";
 
 /**
@@ -9,8 +9,8 @@ import { DataObject } from "../../data";
 export class ListSourceNode<Out extends DataFrame> extends SourceNode<Out> {
     private _inputData: Out[] = new Array();
 
-    constructor(inputData: Out[], source: DataObject = null) {
-        super(source);
+    constructor(inputData: Out[], source?: DataObject, options?: SourceNodeOptions) {
+        super(source, options);
         this._inputData = inputData;
     }
 

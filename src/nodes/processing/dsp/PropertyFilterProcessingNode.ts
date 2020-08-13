@@ -1,18 +1,14 @@
-import { FilterOptions } from "./FilterNode";
+import { FilterProcessingOptions } from "./FilterProcessingNode";
 import { DataFrame, DataObject } from "../../../data";
 import { ObjectProcessingNode } from "../../ObjectProcessingNode";
 import { Vector3 } from "../../../utils";
 
-export abstract class PropertyFilterNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
+export abstract class PropertyFilterProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
     private _propertySelector: (object: DataObject, frame?: InOut) =>  PropertyKey;
-    private _options: FilterOptions;
 
-    constructor(objectFilter: (object: DataObject, frame?: DataFrame) => boolean,
-                propertySelector: (object: DataObject, frame?: InOut) => PropertyKey, 
-                options?: FilterOptions) {
-        super(objectFilter);
-
-        this._options = options;
+    constructor(propertySelector: (object: DataObject, frame?: InOut) => PropertyKey, 
+                options?: FilterProcessingOptions) {
+        super(options);
         this._propertySelector = propertySelector;
     }
 
@@ -39,10 +35,10 @@ export abstract class PropertyFilterNode<InOut extends DataFrame> extends Object
                     nodeData = {};
                 }
                 if (nodeData[key] === undefined) {
-                    nodeData[key] = await this.initFilter(object, value, this._options);
+                    nodeData[key] = await this.initFilter(object, value, this.options);
                 }
 
-                this.filter(object, value, nodeData[key], this._options).then(result => {
+                this.filter(object, value, nodeData[key], this.options).then(result => {
                     resolve(result);
                 }).catch(ex => {
                     reject(ex);
@@ -55,8 +51,8 @@ export abstract class PropertyFilterNode<InOut extends DataFrame> extends Object
         });
     }
 
-    public abstract initFilter<T extends number | Vector3>(object: DataObject, value: T, options: FilterOptions): Promise<any>;
+    public abstract initFilter<T extends number | Vector3>(object: DataObject, value: T, options: FilterProcessingOptions): Promise<any>;
     
-    public abstract filter<T extends number | Vector3>(object: DataObject, value: T, filter: any, options?: FilterOptions): Promise<T>;
+    public abstract filter<T extends number | Vector3>(object: DataObject, value: T, filter: any, options?: FilterProcessingOptions): Promise<T>;
 
 }

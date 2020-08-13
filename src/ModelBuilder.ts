@@ -120,14 +120,14 @@ import { GraphBuilder } from "./graph/builders/GraphBuilder";
  *     });
  * ```
  */
-export class ModelBuilder<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame> extends GraphBuilder<In, Out> {
+export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends GraphBuilder<In, Out> {
 
     protected constructor() {
         super(new ModelImpl<In, Out>());
         this.graph.name = "model";
     }
 
-    public static create<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame>(): ModelBuilder<In, Out> {
+    public static create<In extends DataFrame, Out extends DataFrame>(): ModelBuilder<In, Out> {
         return new ModelBuilder();
     }
 

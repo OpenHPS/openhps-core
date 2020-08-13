@@ -1,6 +1,7 @@
 import { DataObject, DataFrame, RelativeAnglePosition, AbsolutePosition } from "../../data";
 import { AngleUnit, Vector3 } from "../../utils";
 import { RelativePositionProcessing } from "./RelativePositionProcessing";
+import { ObjectProcessingNodeOptions } from "../ObjectProcessingNode";
 
 /**
  * Triangulation processing node
@@ -11,8 +12,8 @@ import { RelativePositionProcessing } from "./RelativePositionProcessing";
  */
 export class TriangulationNode<InOut extends DataFrame> extends RelativePositionProcessing<InOut, RelativeAnglePosition> {
 
-    constructor(filterFn?: (object: DataObject, frame?: InOut) => boolean) {
-        super(RelativeAnglePosition, filterFn);
+    constructor(options?: ObjectProcessingNodeOptions) {
+        super(RelativeAnglePosition, options);
     }
 
     public processRelativePositions(dataObject: DataObject, relativePositions: Map<RelativeAnglePosition, DataObject>): Promise<DataObject> {

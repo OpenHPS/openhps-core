@@ -1,5 +1,5 @@
 import { DataFrame, DataSerializer } from "../data";
-import { Node } from "../Node";
+import { Node, NodeOptions } from "../Node";
 import { Thread, Worker, spawn, Pool } from "threads";
 import { Observable } from "threads/observable";
 import { PoolEvent } from "threads/dist/master/pool";
@@ -30,19 +30,17 @@ declare const __non_webpack_require__: typeof require;
  * }, { directory: __dirname });
  * ```
  */
-export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFrame | DataFrame[]> extends Node<In, Out> {
+export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
     private _worker: Worker;
     private _pool: Pool<Thread>;
     private _builderCallback: (builder: GraphShapeBuilder<ModelBuilder<any, any>>, modelBuilder?: ModelBuilder<any, any>) => void;
-    private _options: WorkerNodeOptions;
     private _serviceOutputFn: (id: string, success: boolean, result?: any) => Promise<void>;
 
-    constructor(builderCallback: (builder: GraphShapeBuilder<ModelBuilder<any, any>>, modelBuilder?: ModelBuilder<any, any>) => void, options: WorkerNodeOptions = new WorkerNodeOptions()) {
-        super();
+    constructor(builderCallback: (builder: GraphShapeBuilder<ModelBuilder<any, any>>, modelBuilder?: ModelBuilder<any, any>) => void, options?: WorkerNodeOptions) {
+        super(options);
         this._builderCallback = builderCallback;
-        this._options = options;
 
-        this._worker = new Worker(this._options && this._options.debug ? './_internal/WorkerNodeRunnerDebug' : './_internal/WorkerNodeRunner');
+        this._worker = new Worker(this.options && this.options.debug ? './_internal/WorkerNodeRunnerDebug' : './_internal/WorkerNodeRunner');
         // tslint:disable-next-line
         const NativeWorker = typeof __non_webpack_require__ === "function" ? __non_webpack_require__("worker_threads").Worker : eval("require")("worker_threads").Worker;
         if (NativeWorker) {
@@ -55,9 +53,13 @@ export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFram
         this.on('push', this._onPush.bind(this));
     }
 
+    public get options(): WorkerNodeOptions {
+        return super.options as WorkerNodeOptions;
+    }
+
     private _onPull(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            if (this._options.optimizedPull) {
+            if (this.options.optimizedPull) {
                 // Do not pass the pull request to the worker
                 const pullPromises = new Array();
                 this.inputNodes.forEach(node => {
@@ -83,7 +85,7 @@ export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFram
         });
     }
 
-    private _onPush(frame: In): Promise<void> {
+    private _onPush(frame: In | In[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this._pool.queue((worker: any) => {
                 const pushFn: (frame: any) => Promise<void> = worker.push;
@@ -142,7 +144,7 @@ export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFram
 
                 // Initialize the worker
                 initFn({
-                    dirname: this._options.directory,
+                    dirname: this.options.directory || __dirname,
                     builderCallback: this._builderCallback.toString(),
                     services: servicesArray
                 }).then(() => {
@@ -210,7 +212,7 @@ export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFram
             this.logger('debug', {
                 message: "Spawning new worker thread ..."
             });
-            this._pool = Pool(() => this._spawnWorker(), this._options.poolSize);
+            this._pool = Pool(() => this._spawnWorker(), this.options.poolSize || 4);
             this._pool.events().subscribe((value: PoolEvent<Thread>) => {
                 if (value.type === 'initialized') {
                     resolve();
@@ -220,9 +222,10 @@ export class WorkerNode<In extends DataFrame | DataFrame[], Out extends DataFram
         });
     }
 }
-export class WorkerNodeOptions {
-    directory?: string = __dirname;
-    poolSize?: number = 4;
-    optimizedPull?: boolean = false;
-    debug?: boolean = false;
+
+export interface WorkerNodeOptions extends NodeOptions {
+    directory?: string;
+    poolSize?: number;
+    optimizedPull?: boolean;
+    debug?: boolean;
 }

@@ -1,14 +1,13 @@
-import { PropertyFilterNode } from "./PropertyFilterNode";
-import { FilterOptions } from "./FilterNode";
+import { PropertyFilterProcessingNode } from "./PropertyFilterProcessingNode";
 import { DataFrame, DataObject } from '../../../data';
 import { Vector } from "../../../utils";
+import { FilterProcessingOptions } from "./FilterProcessingNode";
 
-export class LPFilterNode<InOut extends DataFrame> extends PropertyFilterNode<InOut> {
+export class LPFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
     
-    constructor(objectFilter: (object: DataObject, frame?: DataFrame) => boolean,
-                propertySelector: (object: DataObject, frame?: InOut) => PropertyKey,
+    constructor(propertySelector: (object: DataObject, frame?: InOut) => PropertyKey,
                 options: LPFilterOptions) {
-        super(objectFilter, propertySelector, options);
+        super(propertySelector, options);
     }
 
     public initFilter<T extends number | Vector>(object: DataObject, value: T, options: LPFilterOptions): Promise<any> {
@@ -38,7 +37,7 @@ export class LPFilterNode<InOut extends DataFrame> extends PropertyFilterNode<In
     }
 }
 
-export class LPFilterOptions extends FilterOptions {
-    public sampleRate: number;
-    public cutOff: number;
+export interface LPFilterOptions extends FilterProcessingOptions {
+    sampleRate: number;
+    cutOff: number;
 }

@@ -1,7 +1,7 @@
 import { AbstractNode } from './AbstractNode';
 import { DataFrame } from '../../data';
 
-export interface AbstractEdge<InOut extends DataFrame | DataFrame[]> {
+export interface AbstractEdge<InOut extends DataFrame> {
     /**
      * Get unique identifier of edge
      */
@@ -22,7 +22,7 @@ export interface AbstractEdge<InOut extends DataFrame | DataFrame[]> {
      * 
      * @param frame Data frame to push
      */
-    push(frame: InOut): Promise<void>;
+    push(frame: InOut | InOut[]): Promise<void>;
 
     /**
      * Pull data from the input node

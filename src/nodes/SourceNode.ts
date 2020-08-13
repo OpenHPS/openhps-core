@@ -2,30 +2,35 @@ import { DataFrame } from "../data/DataFrame";
 import { DataObject } from "../data";
 import { AbstractSourceNode } from "../graph/interfaces/AbstractSourceNode";
 import { Model } from "../Model";
+import { NodeOptions } from "../Node";
 
 /**
  * Source node
  */
-export abstract class SourceNode<Out extends DataFrame | DataFrame[] = DataFrame> extends AbstractSourceNode<Out> {
+export abstract class SourceNode<Out extends DataFrame = DataFrame> extends AbstractSourceNode<Out> {
     private _source: DataObject;
-    private _ignoreMerging: boolean;
+    private _persistence: boolean;
 
     /**
      * Construct a new source node
      * 
-     * @param ignoreMerging When set to true, the data frames will not be merged with
-     * services 
+     * @param source Source data object
+     * @param options Source node options
      */
-    constructor(source: DataObject, ignoreMerging: boolean = false) {
-        super();
+    constructor(source?: DataObject, options?: SourceNodeOptions) {
+        super(options);
         this._source = source;
         
-        this._ignoreMerging = ignoreMerging;
+        this._persistence = this.options.persistence || true;
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
     }
 
-    private _onPush(data: Out): Promise<void> {
+    public get options(): SourceNodeOptions {
+        return super.options as SourceNodeOptions;
+    }
+
+    private _onPush(data: Out | Out[]): Promise<void> {
         return new Promise<void>(async (resolve, reject) => {
             const servicePromises = new Array();
             const pushPromises = new Array();
@@ -33,14 +38,14 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[] = DataFrame
 
             if (data instanceof Array) {
                 data.forEach(async f => {
-                    if (!this._ignoreMerging)
-                        f = await this._mergeFrame(f);
+                    if (this._persistence)
+                        await this._mergeFrame(f);
                     servicePromises.push(this.persistFrame(f));
                 });
             } else {
-                let f: DataFrame = data as DataFrame;
-                if (!this._ignoreMerging)
-                    f = await this._mergeFrame(f);
+                const f: DataFrame = data as DataFrame;
+                if (this._persistence)
+                    await this._mergeFrame(f);
                 servicePromises.push(this.persistFrame(f));
             }
             
@@ -151,4 +156,12 @@ export abstract class SourceNode<Out extends DataFrame | DataFrame[] = DataFrame
 
     public abstract onPull(): Promise<Out>;
 
+}
+
+export interface SourceNodeOptions extends NodeOptions {
+    /**
+     * Merge objects from persisted source
+     * @default true
+     */
+    persistence?: boolean;
 }
