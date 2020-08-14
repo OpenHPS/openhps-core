@@ -1,4 +1,4 @@
-import { LengthUnit, AngleUnit, Unit, UnitPrefix } from '../../../src/utils/unit';
+import { LengthUnit, AngleUnit, Unit, UnitPrefix, AngularVelocityUnit } from '../../../src/utils/unit';
 
 import { expect } from 'chai';
 import 'mocha';
@@ -185,4 +185,24 @@ describe('units', () => {
         });
 
     });
+
+    describe('derived units', () => {
+
+        it('should convert deg/s to rad/s', () => {
+            const result = AngularVelocityUnit.DEGREE_PER_SECOND.convert(90, AngularVelocityUnit.RADIAN_PER_SECOND);
+            expect(Math.round(result * 100.) / 100.).to.equal(1.57);
+        });
+
+        it('should convert rad/s to rad/min', () => {
+            const result = AngularVelocityUnit.RADIAN_PER_SECOND.convert(1, AngularVelocityUnit.RADIAN_PER_MINUTE);
+            expect(result).to.equal(60);
+        });
+
+        it('should convert deg/min to rad/s', () => {
+            const result = AngularVelocityUnit.DEGREE_PER_MINUTE.convert(1, AngularVelocityUnit.RADIAN_PER_SECOND);
+            expect(result).to.equal(0.0002908882086657216);
+        });
+
+    });
+
 });

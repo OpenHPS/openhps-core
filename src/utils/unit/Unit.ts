@@ -25,12 +25,13 @@ export class Unit {
     private _aliases: string[] = new Array();
 
     // Unit bases (e.g. length, time, velocity, ...)
-    private static readonly UNIT_BASES: Map<string, string> = new Map();
+    protected static readonly UNIT_BASES: Map<string, string> = new Map();
     // Units (e.g. second, meter, ...)
-    private static readonly UNITS: Map<string, Unit> = new Map();
+    protected static readonly UNITS: Map<string, Unit> = new Map();
 
     /**
      * Create a new unit
+     * @param name Unit name
      * @param options Unit options
      */
     constructor(name?: string, options?: UnitOptions) {
@@ -40,14 +41,14 @@ export class Unit {
         config.definitions = config.definitions ? config.definitions : [];
 
         // Unit config
-        this._name = name;
+        this._name = name || config.name;
         this._baseName = config.baseName;
         this._aliases = config.aliases;
         this._prefixType = config.prefixes;
 
         // Unit definitions
         config.definitions.forEach(definition => {
-            const referenceUnit = Unit.findByName(definition.unit);
+            const referenceUnit = Unit.findByName(definition.unit, this.baseName);
             if (referenceUnit) {
                 this._definitions.set(referenceUnit.name, {
                     unit: definition.unit,
@@ -101,6 +102,38 @@ export class Unit {
         }
     }
 
+    public createDefinition(targetUnit: Unit): UnitDefinition {
+        const newDefinition: UnitDefinition = {
+            unit: targetUnit.name,
+            magnitude: 1,
+            offset: 0
+        };
+        if (this._definitions.has(targetUnit.name)) {
+            const definition = this._definitions.get(targetUnit.name);
+            newDefinition.magnitude = definition.magnitude;
+            newDefinition.offset = definition.offset;
+        } else if (targetUnit._definitions.has(this.name)) {
+            const definition = targetUnit._definitions.get(this.name);
+            newDefinition.magnitude = Math.pow(definition.magnitude, -1);
+            newDefinition.offset = -definition.offset;
+        } else {
+            // No direct conversion found, convert to base unit
+            const baseUnitName = Unit.UNIT_BASES.get(this.baseName);
+            const definitionToBase = this._definitions.get(baseUnitName);
+            const definitionFromBase = targetUnit._definitions.get(baseUnitName);
+            // Convert unit if definitions are found
+            if (definitionToBase && definitionFromBase) {
+                newDefinition.magnitude = definitionToBase.magnitude * Math.pow(definitionFromBase.magnitude, -1);
+                newDefinition.offset = definitionToBase.offset - definitionFromBase.offset;
+            }
+        }
+        return newDefinition;
+    }
+
+    /**
+     * Get the unit specifier
+     * @param prefix Unit prefix
+     */
     public specifier(prefix: UnitPrefix): this {
         // Check if the unit already exists
         const unitName = `${prefix.name}${this.name}`;
@@ -132,6 +165,24 @@ export class Unit {
         return Unit.registerUnit(unit) as this;
     }
 
+    protected findByName(name: string): Unit {
+        // Check all aliases in those units
+        for (const alias of this.aliases.concat(this.name)) {
+            if (name === alias) {
+                // Exact match with alias
+                return this;
+            } else if (name.endsWith(alias)) {
+                // Unit that we are looking for ends with the alias
+                // confirm that there is a prefix match
+                for (const prefix of this.prefixes) {
+                    if (name.match(prefix.abbrevationPattern) || name.match(prefix.namePattern)) {
+                        return this.specifier(prefix);
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Find a unit by its name
      * @param name Unit name
@@ -144,25 +195,14 @@ export class Unit {
             return Unit.UNITS.get(name);
         } else {
             // Check all units
-            for (const [unitName, unit] of Unit.UNITS) {
+            for (const [_, unit] of Unit.UNITS) {
                 if (baseName ? baseName !== unit.baseName : false) {
                     continue;
                 }
-
                 // Check all aliases in those units
-                for (const alias of unit.aliases.concat(unitName)) {
-                    if (name === alias) {
-                        // Exact match with alias
-                        return unit;
-                    } else if (name.endsWith(alias)) {
-                        // Unit that we are looking for ends with the alias
-                        // confirm that there is a prefix match
-                        for (const prefix of unit.prefixes) {
-                            if (name.match(prefix.abbrevationPattern) || name.match(prefix.namePattern)) {
-                                return unit.specifier(prefix);
-                            }
-                        }
-                    }
+                const result = unit.findByName(name);
+                if (result) {
+                    return result;
                 }
             }
             return undefined;
@@ -183,24 +223,8 @@ export class Unit {
             return value;
         }
 
-        let result: number = value;
-        if (this._definitions.has(targetUnit.name)) {
-            const definition = this._definitions.get(targetUnit.name);
-            result = (value * definition.magnitude) + definition.offset;
-        } else if (targetUnit._definitions.has(this.name)) {
-            const definition = targetUnit._definitions.get(this.name);
-            result = (value / definition.magnitude) - definition.offset;
-        } else {
-            // No direct conversion found, convert to base unit
-            const baseUnitName = Unit.UNIT_BASES.get(this.baseName);
-            const definitionToBase = this._definitions.get(baseUnitName);
-            const definitionFromBase = targetUnit._definitions.get(baseUnitName);
-            // Convert unit if definitions are found
-            if (definitionToBase && definitionFromBase) {
-                result = (((value * definitionToBase.magnitude) + definitionToBase.offset) / definitionFromBase.magnitude) - definitionFromBase.offset;
-            }
-        }
-        return result;
+        const definition = this.createDefinition(targetUnit);
+        return (value * definition.magnitude) + definition.offset;
     }
 
     public static convert(value: number, from: string | Unit, to: string | Unit): number {

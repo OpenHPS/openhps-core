@@ -1,6 +1,9 @@
 import { DataFrame, DataObject, LinearVelocity, IMUDataFrame } from "../../../data";
 import { FilterProcessingNode, FilterProcessingOptions } from "../dsp";
 
+/**
+ * Acceleration processing to linear velocity
+ */
 export class AccelerationProcessingNode extends FilterProcessingNode<IMUDataFrame> {
 
     public initFilter(object: DataObject, frame: IMUDataFrame, options?: FilterProcessingOptions): Promise<any> {
@@ -22,7 +25,9 @@ export class AccelerationProcessingNode extends FilterProcessingNode<IMUDataFram
             const accl = frame.acceleration;
             const dt = 1000. / frame.frequency;
             frame.linearVelocity = LinearVelocity.fromArray(accl.clone().multiplyScalar(dt).toArray());
-            object.getPosition().velocity.linear.add(frame.linearVelocity);
+            if (object.getPosition()) {
+                object.getPosition().velocity.linear.add(frame.linearVelocity);
+            }
             resolve(object);
         });
     }

@@ -111,7 +111,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
         this.addService(new DataFrameService(new MemoryDataService(DataFrame)));
         // Store node data
         this.addService(new NodeDataService(new MemoryDataService(NodeData)));
-
+        // Default time service using system time
         this.addService(new TimeService());
     }
 
@@ -236,14 +236,10 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
             }
 
             Promise.all(servicePromises).then(() => {
-                this.internalInput.push(frame).then(() => {
-                    resolve();
-                }).catch(ex => {
-                    reject(ex);
-                });
-            }).catch(ex => {
-                reject(ex);
-            });
+                return this.internalInput.push(frame);
+            }).then(() => {
+                resolve();
+            }).catch(reject);
         });
     }
 }
