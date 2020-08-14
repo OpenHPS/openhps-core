@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ReferenceSpace, AngleUnit, Model, ModelBuilder, GraphBuilder, CallbackNode, DataFrame, DataObject, Absolute3DPosition, SinkNode, CallbackSinkNode, CallbackSourceNode, Matrix4, Vector4 } from '../../../src';
-import { Vector3 } from 'three/src/math/Vector3';
+import { ReferenceSpace, AngleUnit, Model, ModelBuilder, GraphBuilder, CallbackNode, DataFrame, DataObject, Absolute3DPosition, SinkNode, CallbackSinkNode, CallbackSourceNode, Matrix4, Vector4, Absolute2DPosition, LinearVelocity, Quaternion } from '../../../src';
 
 describe('data', () => {
     describe('reference space', () => {
@@ -21,7 +20,7 @@ describe('data', () => {
     
                 let refSpace = new ReferenceSpace(globalReferenceSpace)
                     .translation(2.0, 2.0, 2.0);
-                let result = Vector4.fromArray([3, 3, 0, 1]).applyMatrix4(refSpace.transformationMatrix);
+                let result = refSpace.transform(new Absolute3DPosition(3, 3)) as Absolute3DPosition;
                 expect(result.x).to.equal(5);
                 expect(result.y).to.equal(5);
                 expect(result.z).to.equal(2);
@@ -36,7 +35,7 @@ describe('data', () => {
     
                 let refSpace = new ReferenceSpace(globalReferenceSpace)
                     .scale(2.0, 2.0, 2.0);
-                let result = Vector4.fromArray([3, 3, 0, 1]).applyMatrix4(refSpace.transformationMatrix);
+                let result = refSpace.transform(new Absolute3DPosition(3, 3)) as Absolute3DPosition;
                 expect(result.x).to.equal(6);
                 expect(result.y).to.equal(6);
                 expect(result.z).to.equal(0);
@@ -47,10 +46,25 @@ describe('data', () => {
     
                 let refSpace = new ReferenceSpace(globalReferenceSpace)
                     .scale(0.5, 0.5, 0.5);
-                let result = Vector4.fromArray([3, 3, 0, 1]).applyMatrix4(refSpace.transformationMatrix);
+                let result = refSpace.transform(new Absolute3DPosition(3, 3)) as Absolute3DPosition;
                 expect(result.x).to.equal(1.5);
                 expect(result.y).to.equal(1.5);
                 expect(result.z).to.equal(0);
+            });
+
+            it('should scale linear velocity', () => {
+                let globalReferenceSpace = new ReferenceSpace(undefined);
+    
+                let refSpace = new ReferenceSpace(globalReferenceSpace)
+                    .scale(0.5, 0.5, 0.5);
+                const position = new Absolute3DPosition(3, 3);
+                position.velocity.linear = new LinearVelocity(5, 0, 0);
+                let result = refSpace.transform(position) as Absolute3DPosition;
+                expect(result.x).to.equal(1.5);
+                expect(result.y).to.equal(1.5);
+                expect(result.z).to.equal(0);
+                expect(result.velocity.linear.x).to.equal(2.5);
+                expect(result.velocity.linear.y).to.equal(0);
             });
 
         });
@@ -62,10 +76,21 @@ describe('data', () => {
     
                 let refSpace = new ReferenceSpace(globalReferenceSpace)
                     .rotation({ yaw: 180, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
-                let result = Vector4.fromArray([2, 2, 0, 1]).applyMatrix4(refSpace.transformationMatrix);
+                let result = refSpace.transform(new Absolute3DPosition(2, 2)) as Absolute3DPosition;
                 expect(result.x).to.within(-2.1, -1.9);
                 expect(result.y).to.within(-2.1, -1.9);
                 expect(result.z).to.equal(0);
+            });
+            
+            it('should rotate the orientation (start position)', () => {
+                let globalReferenceSpace = new ReferenceSpace(undefined);
+    
+                let refSpace = new ReferenceSpace(globalReferenceSpace)
+                    .rotation({ yaw: 180, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
+                const position = new Absolute3DPosition(0, 0);
+                position.orientation = Quaternion.fromEuler({ yaw: 0, pitch: 0, roll: 0, unit: AngleUnit.DEGREE })
+                let result = refSpace.transform(position) as Absolute3DPosition;
+                expect(result.orientation.toEuler().toVector(AngleUnit.DEGREE).z).to.equal(180);
             });
 
         });

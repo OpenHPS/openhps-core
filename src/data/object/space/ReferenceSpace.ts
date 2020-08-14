@@ -1,16 +1,21 @@
 import { DataObject } from "../DataObject";
 import { Space } from "./Space";
 import { SerializableObject, SerializableMember } from "../../decorators";
-import { Matrix4, Euler, Quaternion, AxisAngle, Vector3, EulerOrder } from '../../../utils/math';
+import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder } from '../../../utils/math';
 import { AngleUnit } from "../../../utils";
+import { AbsolutePosition } from '../../position/AbsolutePosition';
 
 @SerializableObject()
 export class ReferenceSpace extends DataObject implements Space {
     // Raw transformation matrix
     @SerializableMember()
     private _transformationMatrix: Matrix4 = new Matrix4().identity() as Matrix4;
+    // Scale matrix (needed for scaling linear velocity)
     @SerializableMember()
-    private _rotationMatrix: Matrix4 = new Matrix4().identity() as Matrix4;
+    private _scaleMatrix: Matrix4 = new Matrix4().identity() as Matrix4;
+    // Rotation matrix (needed for orientation, angular velocity and linear velocity)
+    @SerializableMember()
+    private _rotation: Quaternion = new Quaternion();
     @SerializableMember()
     private _baseSpaceUID: string;
 
@@ -31,15 +36,8 @@ export class ReferenceSpace extends DataObject implements Space {
         return this._baseSpaceUID;
     }
 
-    /**
-     * Get the transformation matrix from this reference space to the relative space
-     */
-    public get transformationMatrix(): Matrix4 {
-        return this._transformationMatrix;
-    }
-
-    public get rotationMatrix(): Matrix4 {
-        return this._rotationMatrix;
+    public get scaleMatrix(): Matrix4 {
+        return this._scaleMatrix;
     }
 
     public orthographic(left: number, right: number, bottom: number, top: number, near: number, far: number): ReferenceSpace {
@@ -58,7 +56,8 @@ export class ReferenceSpace extends DataObject implements Space {
     }
 
     public scale(kX: number, kY: number, kZ: number = 1.0): ReferenceSpace {
-        this._transformationMatrix.multiply(new Matrix4().makeScale(kX, kY, kZ));
+        this._scaleMatrix = new Matrix4().makeScale(kX, kY, kZ);
+        this._transformationMatrix.multiply(this._scaleMatrix);
         return this;
     }
 
@@ -70,19 +69,42 @@ export class ReferenceSpace extends DataObject implements Space {
     public rotation(r: number[]): ReferenceSpace;
     public rotation(r: any): ReferenceSpace {
         if (r instanceof Quaternion) {
-            this._rotationMatrix = new Matrix4().makeRotationFromQuaternion(r);
-            this._transformationMatrix.multiply(this._rotationMatrix);
+            this._rotation = r.clone();
+            this._transformationMatrix.multiply(this._rotation.toRotationMatrix());
         } else if (r instanceof Euler) {
-            this._rotationMatrix = new Matrix4().makeRotationFromEuler(r);
-            this._transformationMatrix.multiply(this._rotationMatrix);
+            this._rotation = Quaternion.fromEuler(r);
+            this._transformationMatrix.multiply(this._rotation.toRotationMatrix());
         } else if (r instanceof AxisAngle) {
-            this._rotationMatrix = new Matrix4().makeRotationAxis(new Vector3(r.x, r.y, r.z), r.angle);
-            this._transformationMatrix.multiply(this._rotationMatrix);
+            this._rotation = Quaternion.fromAxisAngle(r);
+            this._transformationMatrix.multiply(this._rotation.toRotationMatrix());
         } else {
-            this._rotationMatrix = Quaternion.fromEuler(r).toRotationMatrix();
-            this._transformationMatrix.multiply(this._rotationMatrix);
+            this._rotation = Quaternion.fromEuler(r);
+            this._transformationMatrix.multiply(this._rotation.toRotationMatrix());
         }
         return this;
+    }
+
+    public transform(position: AbsolutePosition, inverse: boolean = false): AbsolutePosition {
+        const transformedPosition = position.clone();
+
+        const transformationMatrix = inverse ? new Matrix4().getInverse(this._transformationMatrix) : this._transformationMatrix;
+        const rotation = inverse ? this._rotation.clone().inverse() : this._rotation;
+        const scale = inverse ? new Matrix4().getInverse(this._scaleMatrix) : this._scaleMatrix;
+
+        // Transform the point using the transformation matrix
+        transformedPosition.fromVector(transformedPosition.toVector3().applyMatrix4(transformationMatrix));
+        // Transform the orientation (rotation)
+        if (transformedPosition.orientation) {
+            transformedPosition.orientation.multiply(rotation);
+        }
+        if (transformedPosition.velocity) {
+            // Transform the linear velocity (rotation and scale)
+            transformedPosition.velocity.linear.applyMatrix4(scale).applyMatrix4(Matrix4.rotationFromQuaternion(rotation));
+            // TODO: Transform the angular velocity (rotation axis)
+        }
+
+        transformedPosition.referenceSpaceUID = this.uid;
+        return transformedPosition;
     }
 
 }

@@ -1,5 +1,6 @@
 import { Matrix4, Quaternion, Euler, AxisAngle, EulerOrder } from "../../../utils/math";
 import { AngleUnit } from "../../../utils";
+import { AbsolutePosition } from "../../position";
 
 /**
  * Space interface.
@@ -38,12 +39,7 @@ export interface Space {
     rotation(r: { x: number, y: number, z: number, order?: EulerOrder, unit?: AngleUnit }): Space;
     rotation(r: number[]): Space;
 
-    /**
-     * Get the transformation matrix from this reference space to the relative space
-     */
-    transformationMatrix: Matrix4;
-
-    rotationMatrix: Matrix4;
-
     baseSpaceUID: string;
+
+    transform(position: AbsolutePosition, inverse: boolean): AbsolutePosition;
 }

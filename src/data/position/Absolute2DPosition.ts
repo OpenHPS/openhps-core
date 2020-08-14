@@ -114,19 +114,27 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
     }
 
     public fromVector(vector: Vector2 | Vector3, unit?: LengthUnit): void {
-        this.x = vector.x;
-        this.y = vector.y;
-        
-        if (unit !== undefined)
-            this.unit = unit;
+        if (unit) {
+            this.x = unit.convert(vector.x, this.unit);
+            this.y = unit.convert(vector.y, this.unit);
+        } else {
+            this.x = vector.x;
+            this.y = vector.y;
+        }
     }
 
-    public toVector3(): Vector3 {
-        return new Vector3(this.x, this.y, 0);
+    public toVector3(unit?: LengthUnit): Vector3 {
+        if (unit) {
+            return new Vector3(
+                this.unit.convert(this.x, unit), 
+                this.unit.convert(this.y, unit));
+        } else {
+            return new Vector3(this.x, this.y);
+        }
     }
 
     public equals(position: Absolute2DPosition): boolean {
-        return this.toVector3().equals(position.toVector3());
+        return this.toVector3(this.unit).equals(position.toVector3(this.unit));
     }
 
     /**

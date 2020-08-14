@@ -1,6 +1,6 @@
 import { DataFrame, DataObject, AbsolutePosition } from "../../../data";
 import { ObjectProcessingNode } from "../../ObjectProcessingNode";
-import { TimeUnit } from "../../../utils";
+import { TimeUnit, LengthUnit } from "../../../utils";
 import { TimeService } from "../../../service";
 import { Model } from "../../../Model";
 import { Matrix4, Vector3, Quaternion, Euler, AxisAngle } from "../../../utils/math";
@@ -59,7 +59,9 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                     // Predict the next location
                     const newPosition = lastPosition.clone();
                     newPosition.timestamp = timeService.getTime();
-                    newPosition.fromVector(newPosition.toVector3().add(relativePosition.applyMatrix4(lastPosition.orientation.toRotationMatrix())));
+                    newPosition.fromVector(newPosition.toVector3(LengthUnit.METER)
+                        .add(relativePosition.applyMatrix4(lastPosition.orientation.toRotationMatrix())), 
+                        LengthUnit.METER);
 
                     // New orientation in radians
                     const newOrientation = newPosition.orientation.toEuler().toVector3().add(lastPosition.velocity.angular.clone().multiplyScalar(deltaTime));

@@ -5,7 +5,6 @@ import { SerializableObject, SerializableMember, SerializableArrayMember } from 
 import { v4 as uuidv4 } from 'uuid';
 import { DataSerializer } from '../DataSerializer';
 import { Space } from "./space/Space";
-import { Matrix4, Quaternion } from "../../utils/math";
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -137,21 +136,7 @@ export class DataObject {
      */
     public getPosition(referenceSpace?: Space): AbsolutePosition {
         if (referenceSpace !== undefined && this._position !== undefined) {
-            const transformedPosition = this._position.clone();
-
-            // Inverse of transformation and rotation matrix
-            const invTransformationMatrix = new Matrix4().getInverse(referenceSpace.transformationMatrix);
-            const invRotationMatrix = new Matrix4().getInverse(referenceSpace.rotationMatrix);
-
-            // Transform the point using the transformation matrix
-            transformedPosition.fromVector(transformedPosition.toVector3().applyMatrix4(invTransformationMatrix));
-            // Transform the orientation (rotation)
-            if (transformedPosition.orientation) {
-                transformedPosition.orientation = Quaternion.fromRotationMatrix(transformedPosition.orientation.toRotationMatrix().multiply(invRotationMatrix));
-            }
-
-            transformedPosition.referenceSpaceUID = referenceSpace.uid;
-            return transformedPosition;
+            return referenceSpace.transform(this._position, true);
         } else {
             return this._position;
         }
@@ -163,26 +148,7 @@ export class DataObject {
      * @param referenceSpace (optional) reference space
      */
     public setPosition(position: AbsolutePosition, referenceSpace?: Space) {
-        if (referenceSpace !== undefined) {
-            const transformedPosition = position.clone();
-            const point = transformedPosition.toVector3();
-            
-            // Transform the point using the transformation matrix
-            transformedPosition.fromVector(point.applyMatrix4(referenceSpace.transformationMatrix));
-            // Transform the orientation (rotation)
-            if (transformedPosition.orientation) {
-                transformedPosition.orientation = Quaternion.fromRotationMatrix(transformedPosition.orientation.toRotationMatrix().multiply(referenceSpace.rotationMatrix));
-            }
-            
-            // Set the reference space
-            if (position.referenceSpaceUID === undefined) {
-                position.referenceSpaceUID = referenceSpace.uid;
-            }
-
-            this._position = transformedPosition;
-        } else {
-            this._position = position;
-        }
+        this._position = referenceSpace ? referenceSpace.transform(position, false) : position;
     }
 
     /**

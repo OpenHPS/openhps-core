@@ -39,7 +39,7 @@ export interface AbsolutePosition extends Position {
 
     fromVector(vector: Vector, unit?: LengthUnit): void;
 
-    toVector3(): Vector3;
+    toVector3(unit?: LengthUnit): Vector3;
 
     equals(position: AbsolutePosition): boolean;
 

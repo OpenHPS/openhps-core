@@ -112,20 +112,30 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
     }
     
     public fromVector(vector: Vector3, unit?: LengthUnit): void {
-        this.x = vector.x;
-        this.y = vector.y;
-        this.z = vector.z;
-
-        if (unit !== undefined)
-            this.unit = unit;
+        if (unit) {
+            this.x = unit.convert(vector.x, this.unit);
+            this.y = unit.convert(vector.y, this.unit);
+            this.z = unit.convert(vector.z, this.unit);
+        } else {
+            this.x = vector.x;
+            this.y = vector.y;
+            this.z = vector.z;
+        }
     }
 
-    public toVector3(): Vector3 {
-        return new Vector3(this.x, this.y, this.z);
+    public toVector3(unit?: LengthUnit): Vector3 {
+        if (unit) {
+            return new Vector3(
+                this.unit.convert(this.x, unit), 
+                this.unit.convert(this.y, unit), 
+                this.unit.convert(this.z, unit));
+        } else {
+            return new Vector3(this.x, this.y, this.z);
+        }
     }
 
     public equals(position: Absolute3DPosition): boolean {
-        return this.toVector3().equals(position.toVector3());
+        return this.toVector3(this.unit).equals(position.toVector3(this.unit));
     }
 
     /**

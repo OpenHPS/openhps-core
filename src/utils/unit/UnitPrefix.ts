@@ -10,9 +10,9 @@ export class UnitPrefix {
     public static readonly ZETTA =  new UnitPrefix("zetta", "Z", 1e21);
     public static readonly YOTTA =  new UnitPrefix("yotta", "Y", 1e24);
     public static readonly DECI =   new UnitPrefix("deci", "d", 1e-1);
-    public static readonly  CENTI =  new UnitPrefix("centi", "c", 1e-2);
-    public static readonly  MILLI =  new UnitPrefix("milli", "m", 1e-3);
-    public static readonly  MICRO =  new UnitPrefix("micro", "u", 1e-6);
+    public static readonly CENTI =  new UnitPrefix("centi", "c", 1e-2);
+    public static readonly MILLI =  new UnitPrefix("milli", "m", 1e-3);
+    public static readonly MICRO =  new UnitPrefix("micro", "u", 1e-6);
     public static readonly NANO =   new UnitPrefix("nano", "n", 1e-9);
     public static readonly PICO =   new UnitPrefix("pico", "p", 1e-12);
     public static readonly FEMTO =  new UnitPrefix("femto", "f", 1e-15);
