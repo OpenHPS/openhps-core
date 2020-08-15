@@ -29,12 +29,19 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
                 return reject();
             }
 
-            const persistObjectPromise = this.persistDataObject(frame);
-
             // Push the frame to the sink node
             this.onPush(frame).then(() => {
-                const persistFramePromise = this.persistDataFrame(frame);
-                return Promise.all([persistObjectPromise, persistFramePromise]);
+                const persistPromise = new Array();
+                if (frame instanceof Array) {
+                    frame.forEach((f: In) => {
+                        persistPromise.push(this.persistDataFrame(f));
+                        persistPromise.push(this.persistDataObject(f));
+                    });
+                } else {
+                    persistPromise.push(this.persistDataFrame(frame));
+                    persistPromise.push(this.persistDataObject(frame));
+                }
+                return Promise.all(persistPromise);
             }).then(() => {
                 resolve();
             }).catch(ex => {
@@ -43,29 +50,18 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
         });
     }
 
-    protected persistDataFrame(frame: In | In[]): Promise<void> {
+    protected persistDataFrame(frame: In): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const model: Model<any, any> = (this.graph as Model<any, any>);
             const servicePromises = new Array();
 
             // Remove the frame from the data frame service
             let frameService: DataService<any, any>;
-            if (frame instanceof Array) {
-                frame.forEach((f: DataFrame) => {
-                    // Check if there are frame services
-                    frameService = model.findDataService(f);
-                    if (frameService !== null && frameService !== undefined) { 
-                        // Update the frame
-                        servicePromises.push(frameService.delete(f.uid));
-                    }
-                });
-            } else if (frame instanceof DataFrame) {
-                // Check if there are frame services
-                frameService = model.findDataService(frame);
-                if (frameService !== null && frameService !== undefined) { 
-                    // Update the frame
-                    servicePromises.push(frameService.delete(frame.uid));
-                }
+            // Check if there are frame services
+            frameService = model.findDataService(frame);
+            if (frameService !== null && frameService !== undefined) { 
+                // Update the frame
+                servicePromises.push(frameService.delete(frame.uid));
             }
 
             Promise.all(servicePromises).then(() => {
@@ -76,23 +72,15 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
         });
     }
 
-    protected persistDataObject(frame: In | In[]): Promise<void> {
+    protected persistDataObject(frame: In): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const model: Model<any, any> = (this.graph as Model<any, any>);
             const servicePromises = new Array();
 
             const objects = new Array<DataObject>();
-            if (frame instanceof Array) {
-                frame.forEach((f: DataFrame) => {
-                    f.getObjects().forEach(object => {
-                        objects.push(object);
-                    });
-                });
-            } else {
-                (frame as DataFrame).getObjects().forEach(object => {
-                    objects.push(object);
-                });
-            }
+            frame.getObjects().forEach(object => {
+                objects.push(object);
+            });
 
             for (const object of objects) {
                 if (object.uid === null) {
@@ -111,5 +99,9 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
 }
 
 export interface SinkNodeOptions extends NodeOptions {
+    /**
+     * Store objects in data services
+     * @default true
+     */
     persistence?: boolean;
 }

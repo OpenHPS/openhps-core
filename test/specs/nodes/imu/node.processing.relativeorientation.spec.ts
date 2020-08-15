@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { CallbackSinkNode, Model, DataFrame, ModelBuilder, CallbackSourceNode, AccelerationProcessingNode, Acceleration, TimeService, Absolute2DPosition, DataObject, IMUDataFrame, AbsoluteOrientationProcessingNode, RelativeRotationProcessingNode, AngularVelocity, AngleUnit } from '../../../../src';
+import { CallbackSinkNode, Model, DataFrame, ModelBuilder, CallbackSourceNode, AccelerationProcessingNode, Acceleration, TimeService, Absolute2DPosition, DataObject, IMUDataFrame, RelativeRotationProcessingNode, AngularVelocity, AngleUnit, AngularVelocityUnit } from '../../../../src';
 
 describe('node', () => {
     describe('processing relative orientation', () => {
@@ -35,7 +35,7 @@ describe('node', () => {
             object.setPosition(new Absolute2DPosition(0, 0));
             frame.frequency = 1000;
             frame.acceleration = new Acceleration(1, 0, 0);
-            frame.angularVelocity = new AngularVelocity(0, 0, 90, AngleUnit.DEGREE);
+            frame.angularVelocity = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
             frame.source = object;
 
             Promise.resolve(model.push(frame));

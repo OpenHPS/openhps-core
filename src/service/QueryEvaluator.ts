@@ -13,14 +13,7 @@ export class QueryEvaluator {
         let result = true;
         const value = (object as any)[key];
         if (key.startsWith("$")) {
-            switch (key) {
-                case "$and":
-                    result = result && QueryEvaluator.evaluateOpAnd(object, query);
-                    break;
-                case "$or":
-                    result = result && QueryEvaluator.evaluateOpOr(object, query);
-                    break;
-            }
+            result = result && QueryEvaluator.evaluateOp(key, object, query);
         } else if (key.includes(".")) {
             result = result && QueryEvaluator.evaluatePath(object, key, query);
         } else if (QueryEvaluator.isRegexQuery(query)) {
@@ -68,58 +61,76 @@ export class QueryEvaluator {
     protected static evaluateSelector<T>(value: any, subquery: QuerySelector<T>): boolean {
         let result = true;
         for (const selector of Object.keys(subquery)) {
-            switch (selector) {
-                case "$gt":
-                    result = result && value > subquery[selector];
-                    break;
-                case "$gte":
-                    result = result && value >= subquery[selector];
-                    break;
-                case "$lt":
-                    result = result && value < subquery[selector];
-                    break;
-                case "$lte":
-                    result = result && value <= subquery[selector];
-                    break;
-                case "$eq":
-                    result = result && value === subquery[selector];
-                    break;
-                case "$in":
-                    result = result && Array.from(value).includes(subquery[selector]);
-                    break;
-                case "$nin":
-                    result = result && !Array.from(value).includes(subquery[selector]);
-                    break;
-                case "$elemMatch":
-                    let arrayResult: boolean = false;
-                    if (value instanceof Array) {
-                        Array.from(value).forEach(element => {
-                            arrayResult = arrayResult || QueryEvaluator.evaluateComponent(element, selector, subquery[selector]);
-                        });
-                    } else if (value instanceof Map) {
-                        value.forEach((element: any, key: any) => {
-                            arrayResult = arrayResult || QueryEvaluator.evaluate(element, subquery[selector]);
-                        });
-                    }
-                    result = result && arrayResult;
-                    break;
-            }
+            result = result && QueryEvaluator.evaluateComparisonSelector(selector, value, subquery);
+            result = result && QueryEvaluator.evaluateArraySelector(selector, value, subquery);
         }
         return result;
     }
 
-    protected static evaluateOpAnd<T>(object: T, subquery: Array<FilterQuery<T>>): boolean {
+
+    protected static evaluateComparisonSelector<T>(selector: string, value: any, subquery: QuerySelector<T>): boolean {
         let result = true;
-        for (const query of subquery) {
-            result = result && QueryEvaluator.evaluate(object, query);
+        switch (selector) {
+            case "$gt":
+                result = result && value > subquery[selector];
+                break;
+            case "$gte":
+                result = result && value >= subquery[selector];
+                break;
+            case "$lt":
+                result = result && value < subquery[selector];
+                break;
+            case "$lte":
+                result = result && value <= subquery[selector];
+                break;
+            case "$eq":
+                result = result && value === subquery[selector];
+                break;
         }
         return result;
     }
 
-    protected static evaluateOpOr<T>(object: T, subquery: Array<FilterQuery<T>>): boolean {
-        let result = false;
-        for (const query of subquery) {
-            result = result || QueryEvaluator.evaluate(object, query);
+    protected static evaluateArraySelector<T>(selector: string, value: any, subquery: QuerySelector<T>): boolean {
+        let result = true;
+        switch (selector) {
+            case "$in":
+                result = result && Array.from(value).includes(subquery[selector]);
+                break;
+            case "$nin":
+                result = result && !Array.from(value).includes(subquery[selector]);
+                break;
+            case "$elemMatch":
+                let arrayResult: boolean = false;
+                if (value instanceof Array) {
+                    Array.from(value).forEach(element => {
+                        arrayResult = arrayResult || QueryEvaluator.evaluateComponent(element, selector, subquery[selector]);
+                    });
+                } else if (value instanceof Map) {
+                    value.forEach((element: any, key: any) => {
+                        arrayResult = arrayResult || QueryEvaluator.evaluate(element, subquery[selector]);
+                    });
+                }
+                result = result && arrayResult;
+                break;
+        }
+        return result;
+    }
+
+    protected static evaluateOp<T>(key: string, object: T, subquery: Array<FilterQuery<T>>): boolean {
+        let result;
+        switch (key) {
+            case "$and":
+                result = true;
+                for (const query of subquery) {
+                    result = result && QueryEvaluator.evaluate(object, query);
+                }
+                break;
+            case "$or":
+                result = false;
+                for (const query of subquery) {
+                    result = result || QueryEvaluator.evaluate(object, query);
+                }
+                break;
         }
         return result;
     }
