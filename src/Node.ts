@@ -25,6 +25,8 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
 
         // Set the display name of the node to the type name
         this._name = this._options.name || this.constructor.name;
+        // Set the uid of the node if manually set
+        this._uid = this._options.uid || this._uid;
 
         this.prependOnceListener('ready', () => {
             this._ready = true;
@@ -140,15 +142,17 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
 
             Promise.all(callbackPromises).then(() => {
                 resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            }).catch(reject);
         });
     }
 
 }
 
 export interface NodeOptions {
+    /**
+     * Manually set the unique identifier of the node
+     */
+    uid?: string;
     /**
      * User friendly name of the node
      *  Used for querying a node by its name.

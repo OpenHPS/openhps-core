@@ -28,9 +28,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
             Promise.all(pushPromises).then(() => {
                 resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            }).catch(reject);
         });
     }
 

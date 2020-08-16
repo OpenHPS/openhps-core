@@ -1,7 +1,6 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const WebpackAutoInject = require('webpack-auto-inject-version');
 const ThreadsPlugin = require('threads-plugin');
-const webpack = require('webpack');
 const path = require('path');
 
 module.exports = [
@@ -29,9 +28,6 @@ module.exports = [
           dateFormat: 'isoDate',
         },
       },
-    }),
-    new webpack.DefinePlugin({
-
     }),
   ],
   resolve: {
@@ -68,9 +64,6 @@ module.exports = [
         },
       },
     }),
-    new webpack.DefinePlugin({
-
-    })
   ],
   performance: {
     hints: false,

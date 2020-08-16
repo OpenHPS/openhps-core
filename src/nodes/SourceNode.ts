@@ -19,7 +19,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
      */
     constructor(source?: DataObject, options?: SourceNodeOptions) {
         super(options);
-        this._source = source;
+        this._source = source || this.options.source;
         
         this._persistence = this.options.persistence || true;
         this.on('push', this._onPush.bind(this));
@@ -34,7 +34,6 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
         return new Promise<void>(async (resolve, reject) => {
             const servicePromises = new Array();
             const pushPromises = new Array();
-            const model = (this.graph as Model);
 
             if (data instanceof Array) {
                 data.forEach(async f => {
@@ -55,11 +54,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
             
             Promise.all(servicePromises).then(() => {
                 return Promise.all(pushPromises);
-            }).then(() => {
-                resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            }).then(() => resolve()).catch(reject);
         });
     }
 
@@ -91,17 +86,9 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
             const defaultService = model.findDataService(DataObject);
             const promises = new Array();
             const objects = new Array<DataObject>();
-            if (frame instanceof Array) {
-                frame.forEach((f: DataFrame) => {
-                    f.getObjects().forEach(object => {
-                        objects.push(object);
-                    });
-                });
-            } else {
-                (frame as DataFrame).getObjects().forEach(object => {
-                    objects.push(object);
-                });
-            }
+            frame.getObjects().forEach(object => {
+                objects.push(object);
+            });
             objects.forEach(object => {
                 promises.push(new Promise((objResolve, objReject) => {
                     let service = model.findDataService(object);
@@ -124,9 +111,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
 
             Promise.all(promises).then(() => {
                 resolve(frame);
-            }).catch(ex => {
-                reject(ex);
-            });
+            }).catch(reject);
         });
     }
 
@@ -138,11 +123,9 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
                 } else {
                     resolve();
                 }
-            }).then(_ => {
+            }).then(() => {
                 resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            }).catch(reject);
         });
     }
 
@@ -164,4 +147,8 @@ export interface SourceNodeOptions extends NodeOptions {
      * @default true
      */
     persistence?: boolean;
+    /**
+     * Source data object
+     */
+    source?: DataObject;
 }

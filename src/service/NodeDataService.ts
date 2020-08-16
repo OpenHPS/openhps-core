@@ -3,18 +3,18 @@ import { DataService } from "./DataService";
 
 export class NodeDataService<T extends NodeData | NodeData> extends DataService<string, T> {
 
-    public findData(nodeUID: string, dataObject: DataObject): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
-            this.findByUID(this.getUID(nodeUID, dataObject.uid)).then(nodeData => {
+    public findData(nodeUID: string, dataObject: DataObject | string): Promise<any> {
+        return new Promise<any>(async (resolve, reject) => {
+            this.findByUID(this.getUID(nodeUID, typeof dataObject === 'string' ? dataObject : dataObject.uid)).then(nodeData => {
                 resolve(nodeData.data);
-            }).catch(_ => {
+            }).catch(() => {
                 resolve(undefined);
             });
         });
     }
 
-    public insertData(nodeUID: string, dataObject: DataObject, data: any): Promise<T> {
-        const uid = this.getUID(nodeUID, dataObject.uid);
+    public insertData(nodeUID: string, dataObject: DataObject | string, data: any): Promise<T> {
+        const uid = this.getUID(nodeUID, typeof dataObject === 'string' ? dataObject : dataObject.uid);
         return this.insert(uid, new NodeData(uid, data) as T);
     }
 

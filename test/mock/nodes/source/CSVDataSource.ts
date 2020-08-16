@@ -1,4 +1,4 @@
-import { DataFrame, DataObject, ListSourceNode } from "../../../../src";
+import { DataFrame, DataObject, ListSourceNode, SourceNodeOptions } from "../../../../src";
 import * as path from 'path';
 import * as fs from 'fs';
 import * as csv from 'csv-parser';
@@ -6,13 +6,11 @@ import * as csv from 'csv-parser';
 export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
     private _rowCallback: (row: any) => Out;
     private _file: string;
-    private _headers: string[];
-    
-    constructor(file: string, rowCallback: (row: any) => Out, headers?: string[]) {
-        super([], new DataObject(path.basename(file)));
+
+    constructor(file: string, rowCallback: (row: any) => Out, options: csv.Options & SourceNodeOptions = {}) {
+        super([], new DataObject(path.basename(file)), options);
         this._rowCallback = rowCallback;
         this._file = file;
-        this._headers = headers;
 
         this.once("build", this._initCSV.bind(this));
     }
@@ -21,13 +19,15 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
         return new Promise((resolve, reject) => {
             const inputData = new Array();
             const stream = fs.createReadStream(this._file)
-                .pipe(csv(this._headers))
+                .pipe(csv(this.options as csv.Options))
                 .on('data', (row: any) => {
                     const frame = this._rowCallback(row);
-                    if (frame.source === undefined) {
-                        frame.source = this.source;
+                    if (frame !== null && frame !== undefined) {
+                        if (frame.source === undefined) {
+                            frame.source = this.source;
+                        }
+                        inputData.push(frame);   
                     }
-                    inputData.push(frame);   
                 })
                 .on('end', () => {
                     this.inputData = inputData;
@@ -47,7 +47,7 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
             }).catch(ex => {
                 reject(ex);
             });
-        })
+        });
     }
     
 }

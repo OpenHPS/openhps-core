@@ -40,7 +40,14 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         super(options);
         this._builderCallback = builderCallback;
 
-        this._worker = new Worker(this.options && this.options.debug ? './_internal/WorkerNodeRunnerDebug' : './_internal/WorkerNodeRunner');
+        // NOTE: We can not use a conditional expression as this breaks the webpack threads plugin
+        // tslint:disable-next-line
+        if (this.options && this.options.debug) {
+            this._worker = new Worker('./_internal/WorkerNodeRunnerDebug');
+        } else {
+            this._worker = new Worker('./_internal/WorkerNodeRunner');
+        }
+
         // tslint:disable-next-line
         const NativeWorker = typeof __non_webpack_require__ === "function" ? __non_webpack_require__("worker_threads").Worker : eval("require")("worker_threads").Worker;
         if (NativeWorker) {

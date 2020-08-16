@@ -84,9 +84,7 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
         return new Promise((resolve, reject) => {
             this.findNodeDataService().findData(this.uid, dataObject).then(data => {
                 resolve(data);
-            }).catch(ex => {
-                reject(ex);
-            });
+            }).catch(reject);
         });
     }
 
@@ -95,13 +93,9 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
      * @param dataObject 
      * @param data 
      */
-    protected setNodeData(dataObject: DataObject, data: any): Promise<void> {
+    protected setNodeData(dataObject: DataObject, data: any): Promise<NodeData> {
         return new Promise((resolve, reject) => {
-            this.findNodeDataService().insertData(this.uid, dataObject, data).then(() => {
-                resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            this.findNodeDataService().insertData(this.uid, dataObject, data).then(resolve).catch(reject);
         });
     }
 
