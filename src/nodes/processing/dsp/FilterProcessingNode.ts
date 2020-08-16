@@ -2,13 +2,10 @@ import { DataFrame, DataObject } from "../../../data";
 import { ObjectProcessingNode, ObjectProcessingNodeOptions } from "../../ObjectProcessingNode";
 
 export abstract class FilterProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
+    protected options: FilterProcessingOptions;
 
     constructor(options?: FilterProcessingOptions) {
         super(options);
-    }
-
-    public get options(): FilterProcessingOptions {
-        return super.options as FilterProcessingOptions;
     }
 
     public processObject(object: DataObject, frame: InOut): Promise<DataObject> {

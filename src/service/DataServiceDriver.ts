@@ -6,20 +6,12 @@ import { FilterQuery } from "./FilterQuery";
  * of a specific data type using a certain implementation.
  */
 export abstract class DataServiceDriver<I, T> extends Service {
-    private _dataType: new () => T;
+    public dataType: new () => T;
 
     constructor(dataType: new () => T, options?: any) {
         super();
         this.name = dataType.name;
-        this._dataType = dataType;
-    }
-
-    public get dataType(): new () => T {
-        return this._dataType;
-    }
-
-    public set dataType(dataType: new () => T) {
-        this._dataType = dataType;
+        this.dataType = dataType;
     }
 
     public abstract findByUID(id: I): Promise<T>;

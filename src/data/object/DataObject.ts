@@ -12,13 +12,26 @@ import { Space } from "./space/Space";
  */
 @SerializableObject()
 export class DataObject {
-    private _uid: string;
-    private _displayName: string;
-    private _position: AbsolutePosition;
-    private _relativePositions: Map<string, Map<string, RelativePosition>> = new Map();
-    private _parentUID: string;
+    /**
+     * Object identifier
+     */
+    @SerializableMember()
+    public uid: string;
+    /**
+     * Object display name
+     */
+    @SerializableMember()
+    public displayName: string;
+    /**
+     * Parent object identifier
+     */
+    @SerializableMember()
+    public parentUID: string;
     @SerializableMember()
     public createdTimestamp: number;
+
+    private _position: AbsolutePosition;
+    private _relativePositions: Map<string, Map<string, RelativePosition>> = new Map();
 
     /**
      * Create a new data object
@@ -56,54 +69,6 @@ export class DataObject {
             }
         });
         return this;
-    }
-    
-    /**
-     * Get the object identifier
-     */
-    @SerializableMember()
-    public get uid(): string {
-        return this._uid;
-    }
-
-    /**
-     * Set the object identifier
-     * @param uid Object identifier
-     */
-    public set uid(uid: string) {
-        this._uid = uid;
-    }
-        
-    /**
-     * Get the parent object identifier
-     */
-    @SerializableMember()
-    public get parentUID(): string {
-        return this._parentUID;
-    }
-
-    /**
-     * Set the parent object identifier
-     * @param uid Parent object identifier
-     */
-    public set parentUID(uid: string) {
-        this._parentUID = uid;
-    }
-
-    /**
-     * Get the object display name
-     */
-    @SerializableMember()
-    public get displayName(): string {
-        return this._displayName;
-    }
-
-    /**
-     * Set the display name of the object
-     * @param displayName Object display name
-     */
-    public set displayName(displayName: string) {
-        this._displayName = displayName;
     }
 
     /**

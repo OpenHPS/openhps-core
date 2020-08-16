@@ -10,13 +10,10 @@ import { NodeOptions } from "../Node";
  * Sink node
  */
 export abstract class SinkNode<In extends DataFrame = DataFrame> extends AbstractSinkNode<In> {
+    public options: SinkNodeOptions;
 
     constructor(options?: SinkNodeOptions) {
         super(options);
-    }
-
-    public get options(): SinkNodeOptions {
-        return super.options as SinkNodeOptions;
     }
 
     public push(frame: In | In[]): Promise<void> {

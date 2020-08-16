@@ -17,9 +17,16 @@ import { ReferenceSpace } from './object';
  */
 @SerializableObject()
 export class DataFrame {
+    /**
+     * Data frame unique identifier
+     */
     @SerializableMember()
-    private _uid: string = uuidv4();
-    private _createdTimestamp: number;
+    public uid: string = uuidv4();
+    /**
+     * Data frame created timestamp (ISO 8601)
+     */
+    @SerializableMember()
+    public createdTimestamp: number;
     private _source: DataObject;
     @SerializableMapMember(String, DataObject)
     private _objects: Map<string, DataObject> = new Map();
@@ -32,13 +39,6 @@ export class DataFrame {
         const timestamp = Date.now();
         this.createdTimestamp = timestamp;
         this.source = source;
-    }
-
-    /**
-     * Get the data frame unique identifier
-     */
-    public get uid(): string {
-        return this._uid;
     }
 
     /**
@@ -56,22 +56,6 @@ export class DataFrame {
     public set source(source: DataObject) {
         this.addObject(source);
         this._source = source;
-    }
-
-    /**
-     * Set data frame created timestamp (ISO 8601)
-     * @param timestamp 
-     */
-    public set createdTimestamp(timestamp: number) {
-        this._createdTimestamp = timestamp;
-    }
-
-    /**
-     * Get data frame created timestamp (ISO 8601)
-     */
-    @SerializableMember()
-    public get createdTimestamp(): number {
-        return this._createdTimestamp;
     }
 
     /**

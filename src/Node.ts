@@ -12,51 +12,47 @@ import { AsyncEventEmitter } from './_internal/AsyncEventEmitter';
  * 
  */
 export abstract class Node<In extends DataFrame, Out extends DataFrame> extends AsyncEventEmitter implements AbstractNode<In, Out> {
-    private _uid: string = uuidv4();
-    private _name: string;
-    private _graph: AbstractGraph<any, any>;
-    private _ready: boolean = false;
-    private _options: NodeOptions;
+    /**
+     * Unique identifier of node.
+     */
+    public uid: string = uuidv4();
+    /**
+     * Name of the node. Does not have to be unique.
+     */
+    public name: string;
+    /**
+     * Graph this model is part of
+     */
+    public graph: AbstractGraph<any, any>;
+    /**
+     * Node options
+     */
+    protected options: NodeOptions;
+    /**
+     * Node logger
+     */
     public logger: (level: string, log: any) => void = () => {};
+
+    private _ready: boolean = false;
 
     constructor(options?: NodeOptions) {
         super();
-        this._options = options || {};
+        this.options = options || {};
 
         // Set the display name of the node to the type name
-        this._name = this._options.name || this.constructor.name;
+        this.name = this.options.name || this.constructor.name;
         // Set the uid of the node if manually set
-        this._uid = this._options.uid || this._uid;
+        this.uid = this.options.uid || this.uid;
 
         this.prependOnceListener('ready', () => {
             this._ready = true;
         });
     }
 
-    public get options(): NodeOptions {
-        return this._options;
-    }
-
     public isReady(): boolean {
         return this._ready;
     }
 
-    public get name(): string {
-        return this._name;
-    }
-
-    public set name(name: string) {
-        this._name = name;
-    }
-
-    public get graph(): AbstractGraph<any, any> {
-        return this._graph;
-    }
-
-    public set graph(graph: AbstractGraph<any, any>) {
-        this._graph = graph;
-    }
-    
     protected get outlets(): Array<AbstractEdge<Out>> {
         return this.graph.edges.filter(edge => edge.inputNode === this);
     }
@@ -71,21 +67,6 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
 
     public get inputNodes(): Array<Node<any, any>> {
         return this.inlets.map(edge => edge.inputNode) as Array<Node<any, any>>;
-    }
-    
-    /**
-     * Get unique identifier of node
-     */
-    public get uid(): string {
-        return this._uid;
-    }
-
-    /**
-     * Set unique identifier of node
-     * @param uid Unique identifier
-     */
-    public set uid(uid: string) {
-        this._uid = uid;
     }
 
     /**

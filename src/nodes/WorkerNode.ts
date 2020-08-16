@@ -31,6 +31,8 @@ declare const __non_webpack_require__: typeof require;
  * ```
  */
 export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
+    protected options: WorkerNodeOptions;
+
     private _worker: Worker;
     private _pool: Pool<Thread>;
     private _builderCallback: (builder: GraphShapeBuilder<ModelBuilder<any, any>>, modelBuilder?: ModelBuilder<any, any>) => void;
@@ -58,10 +60,6 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         this.once('destroy', this._onDestroy.bind(this));
         this.on('pull', this._onPull.bind(this));
         this.on('push', this._onPush.bind(this));
-    }
-
-    public get options(): WorkerNodeOptions {
-        return super.options as WorkerNodeOptions;
     }
 
     private _onPull(): Promise<void> {

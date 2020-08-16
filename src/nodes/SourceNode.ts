@@ -8,7 +8,11 @@ import { NodeOptions } from "../Node";
  * Source node
  */
 export abstract class SourceNode<Out extends DataFrame = DataFrame> extends AbstractSourceNode<Out> {
-    private _source: DataObject;
+    /**
+     * Source data object responsible for generating data frames
+     */
+    protected source: DataObject;
+    protected options: SourceNodeOptions;
     private _persistence: boolean;
 
     /**
@@ -19,15 +23,11 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
      */
     constructor(source?: DataObject, options?: SourceNodeOptions) {
         super(options);
-        this._source = source || this.options.source;
+        this.source = source || this.options.source;
         
         this._persistence = this.options.persistence || true;
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
-    }
-
-    public get options(): SourceNodeOptions {
-        return super.options as SourceNodeOptions;
     }
 
     private _onPush(data: Out | Out[]): Promise<void> {
@@ -127,14 +127,6 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
                 resolve();
             }).catch(reject);
         });
-    }
-
-    public get source(): DataObject {
-        return this._source;
-    }
-
-    public set source(source: DataObject) {
-        this._source = source;
     }
 
     public abstract onPull(): Promise<Out>;

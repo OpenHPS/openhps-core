@@ -26,27 +26,6 @@ export class GeographicalPosition extends Absolute3DPosition {
         this._amsl = amsl;
     }
 
-    public get x(): number {
-        return GeographicalPosition.EARTH_RADIUS * Math.cos(this._phi) * Math.cos(this._lambda);
-    }
-
-    public set x(value: number) {
-    }
-
-    public get y(): number {
-        return GeographicalPosition.EARTH_RADIUS * Math.cos(this._phi) * Math.sin(this._lambda);
-    }
-
-    public set y(value: number) {
-    }
-
-    public get z(): number {
-        return GeographicalPosition.EARTH_RADIUS * Math.sin(this._phi);
-    }
-    
-    public set z(value: number) {
-    }
-
     /**
      * Geographical Latitude
      */
@@ -57,18 +36,7 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     public set latitude(lat: number) {
         this._lat = lat;
-        this._phi = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
-    }
-
-    /**
-     * Geographical Latitude
-     */
-    public get lat(): number {
-        return this.latitude;
-    }
-
-    public set lat(lat: number) {
-        this.latitude = lat;
+        this._calculateECR();
     }
 
     /**
@@ -81,20 +49,17 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     public set longitude(lng: number) {
         this._lng = lng;
+        this._calculateECR();
+    }
+
+    private _calculateECR(): void {
+        this._phi = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
         this._lambda = AngleUnit.DEGREE.convert(this.longitude, AngleUnit.RADIAN);
+        this.x = GeographicalPosition.EARTH_RADIUS * Math.cos(this._phi) * Math.cos(this._lambda);
+        this.y = GeographicalPosition.EARTH_RADIUS * Math.cos(this._phi) * Math.sin(this._lambda);
+        this.z = GeographicalPosition.EARTH_RADIUS * Math.sin(this._phi);
     }
 
-    /**
-     * Geographical Longitude
-     */
-    @SerializableMember()
-    public get lng(): number {
-        return this.longitude;
-    }
-
-    public set lng(lng: number) {
-        this.longitude = lng;
-    }
 
     /**
      * Altitude above mean sea level
@@ -225,7 +190,7 @@ export class GeographicalPosition extends Absolute3DPosition {
      * Clone the position
      */
     public clone(): this {
-        const position = new GeographicalPosition(this.lat, this.lng, this.altitude);
+        const position = new GeographicalPosition(this.latitude, this.longitude, this.altitude);
         position.unit = this.unit;
         position.accuracy = this.accuracy;
         position.accuracyUnit = this.accuracyUnit;

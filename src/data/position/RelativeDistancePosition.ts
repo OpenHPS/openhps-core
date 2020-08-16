@@ -8,13 +8,35 @@ import { DataSerializer } from "../DataSerializer";
  */
 @SerializableObject()
 export class RelativeDistancePosition implements RelativePosition {
-    private _timestamp: number = new Date().getTime();
-    private _distance: number;
-    private _distanceUnit: LengthUnit;
-    private _referenceObjectUID: string;
-    private _referenceObjectType: string;
-    private _accuracy: number;
-    private _accuracyUnit: LengthUnit = LengthUnit.METER;
+    /**
+     * Position recording timestamp
+     */
+    @SerializableMember()
+    public timestamp: number = new Date().getTime();
+    /**
+     * Reference object UID that this location is relative to
+     */
+    @SerializableMember()
+    public referenceObjectUID: string;
+    @SerializableMember()
+    public referenceObjectType: string;
+    /**
+     * Position accuracy
+     */
+    @SerializableMember()
+    public accuracy: number;
+    @SerializableMember()
+    public accuracyUnit: LengthUnit = LengthUnit.METER;
+    /**
+     * Distance to reference object
+     */
+    @SerializableMember()
+    public distance: number;
+    /**
+     * Distance unit
+     */
+    @SerializableMember()
+    public distanceUnit: LengthUnit;
 
     constructor(referenceObject?: any, distance?: number, distanceUnit?: LengthUnit) {
         if (referenceObject !== undefined) {
@@ -26,89 +48,7 @@ export class RelativeDistancePosition implements RelativePosition {
             }
         }
         this.distance = distance;
-        this._distanceUnit = distanceUnit;
-    }
-
-    /**
-     * Position accuracy
-     */
-    @SerializableMember()
-    public get accuracy(): number {
-        return this._accuracy;
-    }
-
-    public set accuracy(accuracy: number) {
-        this._accuracy = accuracy;
-    }
-    
-    @SerializableMember()
-    public get accuracyUnit(): LengthUnit {
-        return this._accuracyUnit;
-    }
-
-    public set accuracyUnit(accuracyUnit: LengthUnit) {
-        this._accuracyUnit = accuracyUnit;
-    }
-
-    /**
-     * Get the reference object UID that this location is relative to
-     */
-    @SerializableMember()
-    public get referenceObjectUID(): string {
-        return this._referenceObjectUID;
-    }
-
-    public set referenceObjectUID(referenceObjectUID: string) {
-        this._referenceObjectUID = referenceObjectUID;
-    }
-
-    @SerializableMember()
-    public get referenceObjectType(): string {
-        return this._referenceObjectType;
-    }
-
-    public set referenceObjectType(referenceObjectType: string) {
-        this._referenceObjectType = referenceObjectType;
-    }
-
-    /**
-     * Position recording timestamp
-     */
-    @SerializableMember()
-    public get timestamp(): number {
-        return this._timestamp;
-    }
-
-    public set timestamp(timestamp: number) {
-        this._timestamp = timestamp;
-    }
-
-    /**
-     * Get distance to reference object
-     */
-    @SerializableMember()
-    public get distance(): number {
-        return this._distance;
-    }
-
-    /**
-     * Set distance to reference object
-     * @param distance Distance to reference object
-     */
-    public set distance(distance: number) {
-        this._distance = distance;
-    }
-
-    /**
-     * Get distance unit
-     */
-    @SerializableMember()
-    public get distanceUnit(): LengthUnit {
-        return this._distanceUnit;
-    }
-
-    public set distanceUnit(distanceUnit: LengthUnit) {
-        this._distanceUnit = distanceUnit;
+        this.distanceUnit = distanceUnit;
     }
 
     public equals(position: this): boolean {

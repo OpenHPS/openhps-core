@@ -2,7 +2,6 @@ import { SerializableObject, SerializableMember } from "../decorators";
 import { LengthUnit, Vector3, Quaternion } from "../../utils";
 import { AbsolutePosition } from "./AbsolutePosition";
 import { Velocity } from "./Velocity";
-import { DataSerializer } from "../DataSerializer";
 
 /**
  * Absolute cartesian 3D position. This class extends a [[Vector3]]. This location can be used both as
@@ -10,93 +9,41 @@ import { DataSerializer } from "../DataSerializer";
  */
 @SerializableObject()
 export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
-    private _timestamp: number = new Date().getTime();
-    private _velocity: Velocity = new Velocity();
-    private _orientation: Quaternion = new Quaternion();
-    private _unit: LengthUnit = LengthUnit.METER;
-    private _referenceSpaceUID: string;
-    private _accuracy: number;
-    private _accuracyUnit: LengthUnit = LengthUnit.METER;
-    
     /**
      * Position recording timestamp
      */
     @SerializableMember()
-    public get timestamp(): number {
-        return this._timestamp;
-    }
-
-    public set timestamp(timestamp: number) {
-        this._timestamp = timestamp;
-    }
-
-    /**
-     * Position accuracy
-     */
-    @SerializableMember()
-    public get accuracy(): number {
-        return this._accuracy;
-    }
-
-    public set accuracy(accuracy: number) {
-        this._accuracy = accuracy;
-    }
-    
-    public get accuracyUnit(): LengthUnit {
-        return this._accuracyUnit;
-    }
-
-    public set accuracyUnit(accuracyUnit: LengthUnit) {
-        this._accuracyUnit = accuracyUnit;
-    }
-
-    /**
-     * Position reference space UID
-     */
-    @SerializableMember()
-    public get referenceSpaceUID(): string {
-        return this._referenceSpaceUID;
-    }
-
-    public set referenceSpaceUID(referenceSpaceUID: string) {
-        this._referenceSpaceUID = referenceSpaceUID;
-    }
-
+    public timestamp: number = new Date().getTime();
     /**
      * Velocity at recorded position
      */
     @SerializableMember()
-    public get velocity(): Velocity {
-        return this._velocity;
-    }
-
-    public set velocity(velocity: Velocity) {
-        this._velocity = velocity;
-    }
-
+    public velocity: Velocity = new Velocity();
     /**
      * Orientation at recorded position
      */
     @SerializableMember()
-    public get orientation(): Quaternion {
-        return this._orientation;
-    }
-
-    public set orientation(orientation: Quaternion) {
-        this._orientation = orientation;
-    }
-
+    public orientation: Quaternion = new Quaternion();
     /**
      * Position unit
      */
     @SerializableMember()
-    public get unit(): LengthUnit {
-        return this._unit;
-    }
-
-    public set unit(unit: LengthUnit) {
-        this._unit = unit;
-    }
+    public unit: LengthUnit = LengthUnit.METER;
+    /**
+     * Position reference space UID
+     */
+    @SerializableMember()
+    public referenceSpaceUID: string;
+    /**
+     * Position accuracy
+     */
+    @SerializableMember()
+    public accuracy: number;
+    /**
+     * Position accuracy unit
+     */
+    @SerializableMember()
+    public accuracyUnit: LengthUnit = LengthUnit.METER;
 
     /**
      * Midpoint to another location

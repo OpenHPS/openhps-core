@@ -2,42 +2,38 @@ import { DataServiceDriver } from "./DataServiceDriver";
 import { FilterQuery } from "./FilterQuery";
 
 export abstract class DataService<I, T> extends DataServiceDriver<I, T> {
-    private _dataService: DataServiceDriver<I, T>;
+    protected driver: DataServiceDriver<I, T>;
 
-    constructor(dataService: DataServiceDriver<I, T>) {
-        super(dataService.dataType);
-        this._dataService = dataService;
+    constructor(dataServiceDriver: DataServiceDriver<I, T>) {
+        super(dataServiceDriver.dataType);
+        this.driver = dataServiceDriver;
 
-        this.once('build', () => this._dataService.emitAsync('build'));
-        this.once('destroy', () => this._dataService.emitAsync('destroy'));
+        this.once('build', () => this.driver.emitAsync('build'));
+        this.once('destroy', () => this.driver.emitAsync('destroy'));
     }
 
-    protected get dataServiceDriver(): DataServiceDriver<I, T> {
-        return this._dataService;
-    }
-    
     public findByUID(uid: I): Promise<T> {
-        return this._dataService.findByUID(uid);
+        return this.driver.findByUID(uid);
     }
 
     public findOne(query?: FilterQuery<T>): Promise<T> {
-        return this._dataService.findOne(query);
+        return this.driver.findOne(query);
     }
 
     public findAll(query?: FilterQuery<T>): Promise<T[]> {
-        return this._dataService.findAll(query);
+        return this.driver.findAll(query);
     }
 
     public insert(id: I, object: T): Promise<T> {
-        return this._dataService.insert(id, object);
+        return this.driver.insert(id, object);
     }
 
     public delete(id: I): Promise<void> {
-        return this._dataService.delete(id);
+        return this.driver.delete(id);
     }
 
     public deleteAll(): Promise<void> {
-        return this._dataService.deleteAll();
+        return this.driver.deleteAll();
     }
 
 }

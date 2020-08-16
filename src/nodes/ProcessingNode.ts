@@ -7,16 +7,14 @@ import { Model } from "../Model";
  * Processing node
  */
 export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame> extends Node<In, Out> {
+    protected options: ProcessingNodeOptions;
+
     private _frameFilter: (frame: DataFrame) => boolean = () => true;
 
     constructor(options?: ProcessingNodeOptions) {
         super(options);
         this._frameFilter = this.options.frameFilter || this._frameFilter;
         this.on('push', this._onPush.bind(this));
-    }
-
-    public get options(): ProcessingNodeOptions {
-        return super.options as ProcessingNodeOptions;
     }
 
     private _onPush(frame: In | In[]): Promise<void> {

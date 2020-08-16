@@ -9,13 +9,27 @@ import { DataSerializer } from "../DataSerializer";
  */
 @SerializableObject()
 export class RelativeVelocity implements RelativePosition {
-    private _velocity: Velocity;
-
-    private _timestamp: number = new Date().getTime();
-    private _referenceObjectUID: string;
-    private _referenceObjectType: string;
-    private _accuracy: number;
-    private _accuracyUnit: LengthUnit = LengthUnit.METER;
+    /**
+     * Position recording timestamp
+     */
+    @SerializableMember()
+    public timestamp: number = new Date().getTime();
+    /**
+     * Reference object UID that this location is relative to
+     */
+    @SerializableMember()
+    public referenceObjectUID: string;
+    @SerializableMember()
+    public referenceObjectType: string;
+    /**
+     * Position accuracy
+     */
+    @SerializableMember()
+    public accuracy: number;
+    @SerializableMember()
+    public accuracyUnit: LengthUnit = LengthUnit.METER;
+    @SerializableMember()
+    public velocity: Velocity;
 
     constructor(referenceObject?: any, velocity?: Velocity) {
         if (referenceObject !== undefined) {
@@ -27,68 +41,6 @@ export class RelativeVelocity implements RelativePosition {
             }
         }
         this.velocity = velocity;
-    }
-
-    /**
-     * Position accuracy
-     */
-    @SerializableMember()
-    public get accuracy(): number {
-        return this._accuracy;
-    }
-
-    public set accuracy(accuracy: number) {
-        this._accuracy = accuracy;
-    }
-    
-    @SerializableMember()
-    public get accuracyUnit(): LengthUnit {
-        return this._accuracyUnit;
-    }
-
-    public set accuracyUnit(accuracyUnit: LengthUnit) {
-        this._accuracyUnit = accuracyUnit;
-    }
-
-    /**
-     * Get the reference object UID that this location is relative to
-     */
-    @SerializableMember()
-    public get referenceObjectUID(): string {
-        return this._referenceObjectUID;
-    }
-
-    public set referenceObjectUID(referenceObjectUID: string) {
-        this._referenceObjectUID = referenceObjectUID;
-    }
-
-    @SerializableMember()
-    public get referenceObjectType(): string {
-        return this._referenceObjectType;
-    }
-
-    public set referenceObjectType(referenceObjectType: string) {
-        this._referenceObjectType = referenceObjectType;
-    }
-
-    /**
-     * Position recording timestamp
-     */
-    @SerializableMember()
-    public get timestamp(): number {
-        return this._timestamp;
-    }
-
-    public set timestamp(timestamp: number) {
-        this._timestamp = timestamp;
-    }
-
-    public get velocity(): Velocity {
-        return this._velocity;
-    }
-
-    public set velocity(value: Velocity) {
-        this._velocity = value;
     }
 
     public equals(position: this): boolean {

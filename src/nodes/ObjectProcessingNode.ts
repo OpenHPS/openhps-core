@@ -7,15 +7,12 @@ import { DataObjectService } from "../service";
  * Processing node that processes each [[DataObject]] in a [[DataFrame]] individually
  */
 export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> extends ProcessingNode<InOut, InOut> {
+    protected options: ObjectProcessingNodeOptions;
     private _objectFilter?: (object: DataObject, frame?: DataFrame) => boolean = () => true;
 
     constructor(options?: ObjectProcessingNodeOptions) {
         super(options);
         this._objectFilter = this.options.objectFilter || this._objectFilter;
-    }
-
-    public get options(): ObjectProcessingNodeOptions {
-        return super.options as ObjectProcessingNodeOptions;
     }
 
     public process(frame: InOut): Promise<InOut> {
