@@ -1,15 +1,17 @@
 import { expect } from 'chai';
 import 'mocha';
-import { VelocityProcessingNode, DataFrame, DataObject, Absolute2DPosition, LinearVelocity, Model, ModelBuilder, CallbackSourceNode, CallbackSinkNode, AngularVelocity, AngleUnit, AngularVelocityUnit, Quaternion, Euler, Absolute3DPosition } from '../../../../src';
+import { VelocityProcessingNode, DataFrame, DataObject, Absolute2DPosition, LinearVelocity, Model, ModelBuilder, CallbackSourceNode, CallbackSinkNode, AngularVelocity, AngleUnit, AngularVelocityUnit, Quaternion, Euler, Absolute3DPosition, TimeService, TimeUnit } from '../../../../src';
 
 describe('node', () => {
     describe('processing velocity', () => {
         let model: Model;
         let callbackSink: CallbackSinkNode<DataFrame>;
+        let currentTime: number = 0;
 
         before((done) => {
             callbackSink = new CallbackSinkNode();
             ModelBuilder.create()
+                .addService(new TimeService(() => currentTime, TimeUnit.MILLISECOND))
                 .from(new CallbackSourceNode())
                 .via(new VelocityProcessingNode())
                 .to(callbackSink)
@@ -27,15 +29,16 @@ describe('node', () => {
                 done();
             };
 
+            currentTime = 0;
             const frame = new DataFrame();
             const object = new DataObject();
-            object.setPosition(new Absolute2DPosition(3, 3));
-            object.getPosition().velocity.linear = new LinearVelocity(2, 2);
+            const position = new Absolute2DPosition(3, 3);
+            position.velocity.linear = new LinearVelocity(2, 2);
+            position.timestamp = currentTime;
+            object.setPosition(position);
             frame.source = object;
-
-            setTimeout(() => {
-                Promise.resolve(model.push(frame));
-            }, 500);
+            currentTime += 500;
+            Promise.resolve(model.push(frame));
         });
 
         it('should process linear velocity from the origin in a given direction', (done) => {
@@ -46,16 +49,17 @@ describe('node', () => {
                 done();
             };
 
+            currentTime = 0;
             const frame = new DataFrame();
             const object = new DataObject();
-            object.setPosition(new Absolute2DPosition(0, 0));
-            object.getPosition().velocity.linear = new LinearVelocity(1, 1);
-            object.getPosition().orientation = Quaternion.fromEuler({ yaw: 90, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
+            const position = new Absolute2DPosition(0, 0);
+            position.velocity.linear = new LinearVelocity(1, 1);
+            position.orientation = Quaternion.fromEuler({ yaw: 90, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
+            position.timestamp = currentTime;
+            object.setPosition(position);
             frame.source = object;
-
-            setTimeout(() => {
-                Promise.resolve(model.push(frame));
-            }, 500);
+            currentTime += 500;
+            Promise.resolve(model.push(frame));
         });
 
 
@@ -67,16 +71,17 @@ describe('node', () => {
                 done();
             };
 
+            currentTime = 0;
             const frame = new DataFrame();
             const object = new DataObject();
-            object.setPosition(new Absolute2DPosition(3, 3));
-            object.getPosition().velocity.linear = new LinearVelocity(2, 2);
-            object.getPosition().orientation = Quaternion.fromEuler({ yaw: 90, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
+            const position = new Absolute2DPosition(3, 3);
+            position.velocity.linear = new LinearVelocity(2, 2);
+            position.orientation = Quaternion.fromEuler({ yaw: 90, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
+            position.timestamp = currentTime;
+            object.setPosition(position);
             frame.source = object;
-
-            setTimeout(() => {
-                Promise.resolve(model.push(frame));
-            }, 500);
+            currentTime += 500;
+            Promise.resolve(model.push(frame));
         });
 
         it('should process angular velocity on the orientation', (done) => {
@@ -90,15 +95,16 @@ describe('node', () => {
                 done();
             };
 
+            currentTime = 0;
             const frame = new DataFrame();
             const object = new DataObject();
-            object.setPosition(new Absolute2DPosition(3, 3));
-            object.getPosition().velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
+            const position = new Absolute2DPosition(3, 3);
+            position.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
+            position.timestamp = currentTime;
+            object.setPosition(position);
             frame.source = object;
-
-            setTimeout(() => {
-                Promise.resolve(model.push(frame));
-            }, 500);
+            currentTime += 500;
+            Promise.resolve(model.push(frame));
         });
 
         it('should process angular velocity on the linear movement (z+)', (done) => {
@@ -112,16 +118,17 @@ describe('node', () => {
                 done();
             };
 
+            currentTime = 0;
             const frame = new DataFrame();
             const object = new DataObject();
-            object.setPosition(new Absolute2DPosition(0, 0));
-            object.getPosition().velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
-            object.getPosition().velocity.linear = new LinearVelocity(1, 0, 0);
+            const position = new Absolute2DPosition(0, 0);
+            position.velocity.linear = new LinearVelocity(1, 0, 0);
+            position.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
+            position.timestamp = currentTime;
+            object.setPosition(position);
             frame.source = object;
-
-            setTimeout(() => {
-                Promise.resolve(model.push(frame));
-            }, 1000);
+            currentTime += 1000;
+            Promise.resolve(model.push(frame));
         });
 
         it('should process angular velocity on the linear movement (z-)', (done) => {
@@ -135,16 +142,17 @@ describe('node', () => {
                 done();
             };
 
+            currentTime = 0;
             const frame = new DataFrame();
             const object = new DataObject();
-            object.setPosition(new Absolute2DPosition(0, 0));
-            object.getPosition().velocity.angular = new AngularVelocity(0, 0, -90, AngularVelocityUnit.DEGREE_PER_SECOND);
-            object.getPosition().velocity.linear = new LinearVelocity(1, 0, 0);
+            const position = new Absolute2DPosition(0, 0);
+            position.velocity.linear = new LinearVelocity(1, 0, 0);
+            position.velocity.angular = new AngularVelocity(0, 0, -90, AngularVelocityUnit.DEGREE_PER_SECOND);
+            position.timestamp = currentTime;
+            object.setPosition(position);
             frame.source = object;
-
-            setTimeout(() => {
-                Promise.resolve(model.push(frame));
-            }, 1000);
+            currentTime += 1000;
+            Promise.resolve(model.push(frame));
         });
 
         it('should process angular velocity on the linear movement (y+)', (done) => {
@@ -159,16 +167,17 @@ describe('node', () => {
                 done();
             };
 
+            currentTime = 0;
             const frame = new DataFrame();
             const object = new DataObject();
-            object.setPosition(new Absolute3DPosition(0, 0, 0));
-            object.getPosition().velocity.angular = new AngularVelocity(0, 90, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
-            object.getPosition().velocity.linear = new LinearVelocity(1, 0, 0);
+            const position = new Absolute3DPosition(0, 0, 0);
+            position.velocity.linear = new LinearVelocity(1, 0, 0);
+            position.velocity.angular = new AngularVelocity(0, 90, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
+            position.timestamp = currentTime;
+            object.setPosition(position);
             frame.source = object;
-
-            setTimeout(() => {
-                Promise.resolve(model.push(frame));
-            }, 1000);
+            currentTime += 1000;
+            Promise.resolve(model.push(frame));
         });
 
         it('should process angular velocity on the linear movement (y-)', (done) => {
@@ -182,17 +191,18 @@ describe('node', () => {
                 expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).y)).to.equal(-90);
                 done();
             };
-
+                 
+            currentTime = 0;
             const frame = new DataFrame();
             const object = new DataObject();
-            object.setPosition(new Absolute3DPosition(0, 0, 0));
-            object.getPosition().velocity.angular = new AngularVelocity(0, -90, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
-            object.getPosition().velocity.linear = new LinearVelocity(1, 0, 0);
+            const position = new Absolute3DPosition(0, 0, 0);
+            position.velocity.linear = new LinearVelocity(1, 0, 0);
+            position.velocity.angular = new AngularVelocity(0, -90, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
+            position.timestamp = currentTime;
+            object.setPosition(position);
             frame.source = object;
-
-            setTimeout(() => {
-                Promise.resolve(model.push(frame));
-            }, 1000);
+            currentTime += 1000;
+            Promise.resolve(model.push(frame));
         });
 
         it('should process angular velocity on the linear movement (x+)', (done) => {
@@ -206,17 +216,18 @@ describe('node', () => {
                 expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).x)).to.equal(90);
                 done();
             };
-
+                   
+            currentTime = 0;
             const frame = new DataFrame();
             const object = new DataObject();
-            object.setPosition(new Absolute3DPosition(0, 0, 0));
-            object.getPosition().velocity.angular = new AngularVelocity(90, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
-            object.getPosition().velocity.linear = new LinearVelocity(0, 1, 0);
+            const position = new Absolute3DPosition(0, 0, 0);
+            position.velocity.linear = new LinearVelocity(0, 1, 0);
+            position.velocity.angular = new AngularVelocity(90, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
+            position.timestamp = currentTime;
+            object.setPosition(position);
             frame.source = object;
-
-            setTimeout(() => {
-                Promise.resolve(model.push(frame));
-            }, 1000);
+            currentTime += 1000;
+            Promise.resolve(model.push(frame));
         });
 
         it('should process angular velocity on the linear movement (x-)', (done) => {
@@ -231,16 +242,17 @@ describe('node', () => {
                 done();
             };
 
+            currentTime = 0;
             const frame = new DataFrame();
             const object = new DataObject();
-            object.setPosition(new Absolute3DPosition(0, 0, 0));
-            object.getPosition().velocity.angular = new AngularVelocity(-90, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
-            object.getPosition().velocity.linear = new LinearVelocity(0, 1, 0);
+            const position = new Absolute3DPosition(0, 0, 0);
+            position.velocity.linear = new LinearVelocity(0, 1, 0);
+            position.velocity.angular = new AngularVelocity(-90, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
+            position.timestamp = currentTime;
+            object.setPosition(position);
             frame.source = object;
-
-            setTimeout(() => {
-                Promise.resolve(model.push(frame));
-            }, 1000);
+            currentTime += 1000;
+            Promise.resolve(model.push(frame));
         });
 
         it('should not speed up when turning (no intermediate calculations)', (done) => {
@@ -254,18 +266,19 @@ describe('node', () => {
                 done();
             };
 
+            currentTime = 0;
+
             const startPosition = new Absolute2DPosition(0, 0);
             startPosition.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
             startPosition.velocity.linear = new LinearVelocity(1, 0, 0);
+            startPosition.timestamp = currentTime;
 
             const frame = new DataFrame();
             const object = new DataObject();
             object.setPosition(startPosition);
             frame.source = object;
-
-            setTimeout(() => {
-                Promise.resolve(model.push(frame));
-            }, 1000);
+            currentTime += 1000;
+            Promise.resolve(model.push(frame));
         });
 
         it('should not speed up when turning (with 1 intermediate calculation)', (done) => {
@@ -278,9 +291,11 @@ describe('node', () => {
                 expect(distance).to.be.below(0.5);
             };
 
+            currentTime = 0;
             const startPosition = new Absolute2DPosition(0, 0);
             startPosition.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
             startPosition.velocity.linear = new LinearVelocity(1, 0, 0);
+            startPosition.timestamp = currentTime;
 
             const frame = new DataFrame();
             const object = new DataObject("robot");
@@ -288,13 +303,12 @@ describe('node', () => {
             frame.source = object;
 
             model.push(frame).then(() => {
-                setTimeout(() => {
-                    model.push(new DataFrame(new DataObject("robot"))).then(() => {
-                        done();
-                    }).catch(ex => {
-                        done(ex);
-                    });
-                }, 500);
+                currentTime += 500;
+                model.push(new DataFrame(new DataObject("robot"))).then(() => {
+                    done();
+                }).catch(ex => {
+                    done(ex);
+                });
             });
         });
 
@@ -308,9 +322,12 @@ describe('node', () => {
                 distance = position.distanceTo(startPosition);
             };
 
+            currentTime = 0;
+
             const startPosition = new Absolute2DPosition(0, 0);
             startPosition.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
             startPosition.velocity.linear = new LinearVelocity(1, 0, 0);
+            startPosition.timestamp = currentTime;
 
             const frame = new DataFrame();
             const object = new DataObject("robot");
@@ -319,19 +336,20 @@ describe('node', () => {
 
             model.push(frame).then(() => {
                 let count = 100;
+                let promise = Promise.resolve();
                 for (let i = 1 ; i <= count ;i ++) {
-                    setTimeout(() => {
-                        model.push(new DataFrame(new DataObject("robot"))).then(() => {
-                        }).catch(ex => {
-                            done(ex);
-                        });
-                    }, i * (1000 / count));
+                    currentTime = i * (1000 / count);
+                    promise = promise.then(() => model.push(new DataFrame(new DataObject("robot"))).then(() => {
+                    }).catch(ex => {
+                        done(ex);
+                    }));
                 }
-                setTimeout(() => {
+                
+                promise.then(() => {
                     expect(distance).to.be.above(0.8);
                     expect(distance).to.be.below(1.0);
                     done();
-                }, 1000);
+                }).catch(done);
             });
         });
 
