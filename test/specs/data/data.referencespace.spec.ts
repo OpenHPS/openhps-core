@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ReferenceSpace, AngleUnit, Model, ModelBuilder, GraphBuilder, CallbackNode, DataFrame, DataObject, Absolute3DPosition, SinkNode, CallbackSinkNode, CallbackSourceNode, Matrix4, Vector4, Absolute2DPosition, LinearVelocity, Quaternion } from '../../../src';
+import { ReferenceSpace, AngleUnit, Model, ModelBuilder, GraphBuilder, CallbackNode, DataFrame, DataObject, Absolute3DPosition, SinkNode, CallbackSinkNode, CallbackSourceNode, Matrix4, Vector4, Absolute2DPosition, LinearVelocity, Quaternion, AxisAngle, Euler } from '../../../src';
 
 describe('data', () => {
     describe('reference space', () => {
@@ -91,6 +91,24 @@ describe('data', () => {
                 position.orientation = Quaternion.fromEuler({ yaw: 0, pitch: 0, roll: 0, unit: AngleUnit.DEGREE })
                 let result = refSpace.transform(position) as Absolute3DPosition;
                 expect(result.orientation.toEuler().toVector(AngleUnit.DEGREE).z).to.equal(180);
+            });
+
+            it('should transform a perspective', () => {
+                let globalReferenceSpace = new ReferenceSpace(undefined);
+                //  Corners of square
+                const corners = [
+                    new Absolute3DPosition(-3, -3),     // Bottom-left
+                    new Absolute3DPosition(-2, 2),      // Top-left
+                    new Absolute3DPosition(3, -3),      // Bottom-right
+                    new Absolute3DPosition(2, 2)        // Top-right
+                ];
+
+                let refSpace = new ReferenceSpace(globalReferenceSpace)
+                    .perspective(-0.5, 0.5, -0.5, 0.5, 2.0, 10.0);
+                corners.forEach(corner => {
+                    let result = refSpace.transform(corner, true) as Absolute3DPosition;
+                    console.log(result.toVector3());
+                })
             });
 
         });

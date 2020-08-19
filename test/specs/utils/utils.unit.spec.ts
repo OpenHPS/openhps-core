@@ -1,4 +1,4 @@
-import { LengthUnit, AngleUnit, Unit, UnitPrefix, AngularVelocityUnit } from '../../../src/utils/unit';
+import { LengthUnit, AngleUnit, Unit, UnitPrefix, AngularVelocityUnit, UnitValue } from '../../../src/utils/unit';
 
 import { expect } from 'chai';
 import 'mocha';
@@ -201,6 +201,17 @@ describe('units', () => {
         it('should convert deg/min to rad/s', () => {
             const result = AngularVelocityUnit.DEGREE_PER_MINUTE.convert(1, AngularVelocityUnit.RADIAN_PER_SECOND);
             expect(result).to.equal(0.0002908882086657216);
+        });
+
+    });
+
+    describe('unit value', () => {
+        
+        it('should convert', () => {
+            const value = new UnitValue(5, LengthUnit.METER);
+            const converted = value.to(LengthUnit.CENTIMETER);
+            expect(converted.valueOf()).to.equal(500);
+            expect(converted.unit.name).to.equal("centimeter");
         });
 
     });

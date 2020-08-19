@@ -3,6 +3,7 @@ export * from './UnitDefinition';
 export * from './UnitPrefix';
 export * from './UnitOptions';
 export * from './DerivedUnit';
+export * from './UnitValue';
 
 export * from './AngleUnit';
 export * from './AngularVelocityUnit';

@@ -1,7 +1,7 @@
 import { DataObject } from "../DataObject";
 import { Space } from "./Space";
 import { SerializableObject, SerializableMember } from "../../decorators";
-import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder } from '../../../utils/math';
+import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder, Vector3 } from '../../../utils/math';
 import { AngleUnit } from "../../../utils";
 import { AbsolutePosition } from '../../position/AbsolutePosition';
 
@@ -45,6 +45,16 @@ export class ReferenceSpace extends DataObject implements Space {
         return this;
     }
 
+    /**
+     * Transform perspective
+     * 
+     * @param left   Number Farthest left on the x-axis
+     * @param right  Number Farthest right on the x-axis
+     * @param bottom Number Farthest down on the y-axis
+     * @param top    Number Farthest up on the y-axis
+     * @param near   Number Distance to the near clipping plane along the -Z axis
+     * @param far    Number Distance to the far clipping plane along the -Z axis
+     */
     public perspective(left: number, right: number, bottom: number, top: number, near: number, far: number): ReferenceSpace {
         this._transformationMatrix.multiply(new Matrix4().makePerspective(left, right, bottom, top, near, far));
         return this;

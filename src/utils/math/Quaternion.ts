@@ -48,6 +48,15 @@ export class Quaternion extends THREE.Quaternion {
         super.w = value;
     }
 
+    public static fromThreeJS(threeQuaternion: THREE.Quaternion): Quaternion {
+        const quaternion = new Quaternion();
+        quaternion.x = threeQuaternion.x;
+        quaternion.y = threeQuaternion.y;
+        quaternion.z = threeQuaternion.z;
+        quaternion.w = threeQuaternion.w;
+        return quaternion;
+    }
+
     /**
      * Convert euler angles to quaternion
      * @param euler Euler
