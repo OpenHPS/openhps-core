@@ -48,10 +48,11 @@ export class Euler extends THREE.Euler {
     /**
      * Convert quaternion to euler
      *
-     * @param quat Quaternion
-     * @param order
+     * @param {THREE.Quaternion} quat Quaternion
+     * @param {string} [order='XYZ'] Euler order
+     * @returns {Euler} Euler instance
      */
-    public static fromQuaternion(quat: THREE.Quaternion, order?: EulerOrder): Euler {
+    public static fromQuaternion(quat: THREE.Quaternion, order: EulerOrder = 'XYZ'): Euler {
         const euler = new Euler();
         euler.setFromQuaternion(quat, order);
         return euler;
@@ -60,10 +61,11 @@ export class Euler extends THREE.Euler {
     /**
      * Convert rotation matrix to euler
      *
-     * @param matrix Rotation matrix
-     * @param order
+     * @param {Matrix4} matrix Rotation matrix
+     * @param {string} [order='XYZ'] Euler order
+     * @returns {Euler} Euler instance
      */
-    public static fromRotationMatrix(matrix: Matrix4, order?: EulerOrder): Euler {
+    public static fromRotationMatrix(matrix: Matrix4, order: EulerOrder = 'XYZ'): Euler {
         const euler = new Euler();
         euler.setFromRotationMatrix(matrix, order);
         return euler;
@@ -79,6 +81,8 @@ export class Euler extends THREE.Euler {
 
     /**
      * Convert quaternion to rotation matrix
+     *
+     * @returns {Matrix4} Rotation matrix
      */
     public toRotationMatrix(): Matrix4 {
         return Matrix4.rotationFromEuler(this);

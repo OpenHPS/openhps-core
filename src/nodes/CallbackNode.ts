@@ -6,7 +6,7 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _pullCallback: () => InOut | InOut[];
 
     constructor(
-        pushCallback: (frame: InOut | InOut[]) => void = (frame: InOut) => true,
+        pushCallback: (frame: InOut | InOut[]) => void = () => true,
         pullCallback: () => InOut | InOut[] = () => null,
     ) {
         super();

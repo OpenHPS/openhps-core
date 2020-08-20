@@ -49,6 +49,8 @@ export class RelativeVelocity implements RelativePosition {
 
     /**
      * Clone the position
+     *
+     * @returns {RelativeVelocity} Cloned relative velocity
      */
     public clone(): this {
         const serialized = DataSerializer.serialize(this);

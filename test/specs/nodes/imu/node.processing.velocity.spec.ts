@@ -340,9 +340,7 @@ describe('node', () => {
                 for (let i = 1 ; i <= count ;i ++) {
                     currentTime = i * (1000 / count);
                     promise = promise.then(() => model.push(new DataFrame(new DataObject("robot"))).then(() => {
-                    }).catch(ex => {
-                        done(ex);
-                    }));
+                    }).catch(done));
                 }
                 
                 promise.then(() => {

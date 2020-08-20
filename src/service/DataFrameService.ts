@@ -17,7 +17,8 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
     /**
      * Find data frames created before a certain timestamp
      *
-     * @param timestamp
+     * @param {number} timestamp Timestamp
+     * @returns {DataFrame[]} Array of data frames before the specified timestamp
      */
     public findBefore(timestamp: number): Promise<T[]> {
         return this._findTimestamp({ $lte: timestamp });
@@ -26,7 +27,8 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
     /**
      * Find data frames created after a certain timestamp
      *
-     * @param timestamp
+     * @param {number} timestamp Timestamp
+     * @returns {DataFrame[]} Array of data frames after the specified timestamp
      */
     public findAfter(timestamp: number): Promise<T[]> {
         return this._findTimestamp({ $gte: timestamp });

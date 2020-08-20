@@ -77,7 +77,8 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
     /**
      * Add graph shape to graph
      *
-     * @param graph Graph builder or abstract graph
+     * @param {GraphBuilder | AbstractGraph} graph Graph builder or abstract graph
+     * @returns {GraphBuilder} Current graph builder instance
      */
     public addShape(graph: GraphBuilder<any, any> | AbstractGraph<any, any>): GraphBuilder<In, Out> {
         this.from().via(graph).to();
@@ -179,7 +180,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     /**
      * Insert a new node in the existing graph
      *
-     * @param node Node to insert
+     * @param {Node} node Node to insert
      */
     private _insertNode(node: Node<any, any>): void {
         this.previousNodes.forEach((prevNode) => {
@@ -198,18 +199,20 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     /**
      * Filter frames based on function
      *
-     * @param filterFn Filter function (true to keep, false to remove)
+     * @param {Function} filterFn Filter function (true to keep, false to remove)
+     * @returns {GraphShapeBuilder} Current graph builder instance
      */
     public filter(filterFn: (object: DataObject, frame?: DataFrame) => boolean): GraphShapeBuilder<Builder>;
     public filter(filterFn: (frame: DataFrame) => boolean): GraphShapeBuilder<Builder>;
-    public filter(filterFn: (_: any) => boolean): GraphShapeBuilder<Builder> {
+    public filter(filterFn: (_?: any) => boolean): GraphShapeBuilder<Builder> {
         return this.via(new FrameFilterNode(filterFn));
     }
 
     /**
      * Filter objects inside frames
      *
-     * @param filterFn Filter function (true to keep, false to remove)
+     * @param {Function} filterFn Filter function (true to keep, false to remove)
+     * @returns {GraphShapeBuilder} Current graph builder instance
      */
     public filterObjects(filterFn: (object: DataObject, frame?: DataFrame) => boolean): GraphShapeBuilder<Builder> {
         return this.via(new ObjectFilterNode(filterFn));
@@ -218,16 +221,17 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     /**
      * Merge objects
      *
-     * @param by Merge key
-     * @param timeout Timeout
-     * @param timeoutUnit Timeout unit
+     * @param {Function} by Merge key
+     * @param {number} timeout Timeout
+     * @param {TimeUnit} timeoutUnit Timeout unit
+     * @returns {GraphShapeBuilder} Current graph shape builder
      */
     public merge(
-        by: (frame: DataFrame) => boolean = (_) => true,
+        by: (frame: DataFrame) => boolean = () => true,
         timeout = 100,
         timeoutUnit = TimeUnit.MILLISECOND,
     ): GraphShapeBuilder<Builder> {
-        return this.via(new ObjectMergeNode((object: DataObject) => true, by, timeout, timeoutUnit));
+        return this.via(new ObjectMergeNode(() => true, by, timeout, timeoutUnit));
     }
 
     public debounce(timeout = 100, timeoutUnit = TimeUnit.MILLISECOND): GraphShapeBuilder<Builder> {
@@ -237,7 +241,8 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     /**
      * Convert positions of all objects to a certain reference space
      *
-     * @param referenceSpace Reference space to convert to
+     * @param {ReferenceSpace | string} referenceSpace Reference space to convert to
+     * @returns {GraphShapeBuilder} Current graph shape builder
      */
     public convertToSpace(referenceSpace: ReferenceSpace | string): GraphShapeBuilder<Builder> {
         return this.via(new ReferenceSpaceConversionNode(referenceSpace, false));
@@ -246,7 +251,8 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     /**
      * Convert positions of all objects from a certain reference space
      *
-     * @param referenceSpace Reference space to convert from
+     * @param {ReferenceSpace | string} referenceSpace Reference space to convert from
+     * @returns {GraphShapeBuilder} Current graph shape builder
      */
     public convertFromSpace(referenceSpace: ReferenceSpace | string): GraphShapeBuilder<Builder> {
         return this.via(new ReferenceSpaceConversionNode(referenceSpace, true));
@@ -254,6 +260,8 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     /**
      * Buffer pushed objects
+     *
+     * @returns {GraphShapeBuilder} Current graph shape builder
      */
     public buffer(): GraphShapeBuilder<Builder> {
         return this.via(new MemoryBufferNode());

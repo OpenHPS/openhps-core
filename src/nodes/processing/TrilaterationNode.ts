@@ -65,7 +65,7 @@ export class TrilaterationNode<InOut extends DataFrame> extends RelativePosition
     }
 
     public trilaterate<P extends AbsolutePosition>(points: P[], distances: number[]): Promise<P> {
-        return new Promise<P>((resolve, reject) => {
+        return new Promise<P>((resolve) => {
             const vectors = [points[0].toVector3(), points[1].toVector3(), points[2].toVector3()];
             const eX = vectors[1].clone().sub(vectors[0]).divideScalar(vectors[1].clone().sub(vectors[0]).length());
             const i = eX.dot(vectors[2].clone().sub(vectors[0]));

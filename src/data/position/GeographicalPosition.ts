@@ -28,6 +28,8 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Geographical Latitude
+     *
+     * @returns {number} Latitude
      */
     @SerializableMember()
     public get latitude(): number {
@@ -41,6 +43,8 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Geographical Longitude
+     *
+     * @returns {number} Longitude
      */
     @SerializableMember()
     public get longitude(): number {
@@ -62,6 +66,8 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Altitude above mean sea level
+     *
+     * @returns {number} Altitude
      */
     @SerializableMember()
     public get altitude(): number {
@@ -74,6 +80,8 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Altitude unit
+     *
+     * @returns {LengthUnit} Altitude unit
      */
     @SerializableMember()
     public get altitudeUnit(): LengthUnit {
@@ -87,7 +95,8 @@ export class GeographicalPosition extends Absolute3DPosition {
     /**
      * Get the distance from this location to a destination
      *
-     * @param destination Destination location
+     * @param {GeographicalPosition} destination Destination location
+     * @returns {number} Distance between this point and destination
      */
     public distance(destination: GeographicalPosition): number {
         const latRadA = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
@@ -104,7 +113,8 @@ export class GeographicalPosition extends Absolute3DPosition {
     /**
      * Get the bearing in degrees from this location to a destination
      *
-     * @param destination Destination location
+     * @param {GeographicalPosition} destination Destination location
+     * @returns {number} Bearing in degrees from this position to destination
      */
     public bearing(destination: GeographicalPosition): number {
         const lonRadA = AngleUnit.DEGREE.convert(this.longitude, AngleUnit.RADIAN);
@@ -146,9 +156,10 @@ export class GeographicalPosition extends Absolute3DPosition {
     /**
      * Get the midpoint of two geographical locations
      *
-     * @param otherPosition Other location to get midpoint from
-     * @param distanceSelf
-     * @param distanceOther
+     * @param {GeographicalPosition} otherPosition Other position to get midpoint from
+     * @param {number} [distanceSelf=1] Distance to itself and midpoint
+     * @param {number} [distanceOther=1] Distance from other position to midpoint
+     * @returns {GeographicalPosition} Calculated midpoint
      */
     public midpoint(otherPosition: GeographicalPosition, distanceSelf = 1, distanceOther = 1): GeographicalPosition {
         if (distanceOther === distanceSelf) {
@@ -193,6 +204,8 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Clone the position
+     *
+     * @returns {GeographicalPosition} Cloned geographical position
      */
     public clone(): this {
         const position = new GeographicalPosition(this.latitude, this.longitude, this.altitude);

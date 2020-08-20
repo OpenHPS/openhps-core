@@ -50,7 +50,8 @@ export class Quaternion extends THREE.Quaternion {
     /**
      * Convert a threejs quaternion to serializable quaternion
      *
-     * @param threeQuaternion ThreeJS created quaternion
+     * @param {THREE.Quaternion} threeQuaternion ThreeJS created quaternion
+     * @returns {Quaternion} Serializable quaternion
      */
     public static fromThreeJS(threeQuaternion: THREE.Quaternion): Quaternion {
         const quaternion = new Quaternion();
@@ -64,7 +65,8 @@ export class Quaternion extends THREE.Quaternion {
     /**
      * Convert euler angles to quaternion
      *
-     * @param euler Euler
+     * @param {Vector3 | Euler} euler Euler vector
+     * @returns {Quaternion} Serializable quaternion
      */
     public static fromEuler(euler: Vector3): Quaternion;
     public static fromEuler(euler: Euler): Quaternion;
@@ -96,7 +98,8 @@ export class Quaternion extends THREE.Quaternion {
     /**
      * Convert axis angle rotation to quaternion
      *
-     * @param axis Axis-angle rotation
+     * @param {any} axis Axis-angle rotation
+     * @returns {Quaternion} Serializable quaternion
      */
     public static fromAxisAngle(axis: {
         x: number;
@@ -124,7 +127,8 @@ export class Quaternion extends THREE.Quaternion {
     /**
      * Convert rotation matrix to quaternion
      *
-     * @param matrix Rotation matrix
+     * @param {Matrix4} matrix Rotation matrix
+     * @returns {Quaternion} Serializable quaternion
      */
     public static fromRotationMatrix(matrix: Matrix4): Quaternion {
         const quaternion = new Quaternion();
@@ -135,7 +139,8 @@ export class Quaternion extends THREE.Quaternion {
     /**
      * Convert the quaternion to euler angles
      *
-     * @param order
+     * @param {EulerOrder} order Euler order
+     * @returns {Euler} Converted euler
      */
     public toEuler(order?: EulerOrder): Euler {
         return Euler.fromQuaternion(this, order);
@@ -143,6 +148,8 @@ export class Quaternion extends THREE.Quaternion {
 
     /**
      * Convert the quaternion to axis angles
+     *
+     * @returns {AxisAngle} Converted axis angle
      */
     public toAxisAngle(): AxisAngle {
         return AxisAngle.fromQuaternion(this);
@@ -150,6 +157,8 @@ export class Quaternion extends THREE.Quaternion {
 
     /**
      * Convert quaternion to rotation matrix
+     *
+     * @returns {Matrix4} Rotation matrix
      */
     public toRotationMatrix(): Matrix4 {
         return Matrix4.rotationFromQuaternion(this);

@@ -1,6 +1,7 @@
 import { Quaternion, Euler, AxisAngle, EulerOrder } from '../../../utils/math';
 import { AngleUnit } from '../../../utils';
 import { AbsolutePosition } from '../../position';
+import { ReferenceSpace } from './ReferenceSpace';
 
 /**
  * Space interface.
@@ -22,16 +23,17 @@ export interface Space {
     /**
      * Scale the reference space
      *
-     * @param kX
-     * @param kY
-     * @param kZ
+     * @param {number} kX Scale of X-axis
+     * @param {number} kY Scale of Y-axis
+     * @param {number} kZ Scale of Z-axis
+     * @returns {ReferenceSpace} Reference space instance
      */
     scale(kX: number, kY: number, kZ?: number): Space;
 
     /**
      * Rotate the space to the reference space
      *
-     * @param r Rotation
+     * @param {any} r Rotation
      */
     rotation(r: Quaternion): Space;
     rotation(r: Euler): Space;

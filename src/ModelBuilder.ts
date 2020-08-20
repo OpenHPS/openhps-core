@@ -133,7 +133,8 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
     /**
      * Model logger
      *
-     * @param logger Logging function
+     * @param {Function} logger Logging function
+     * @returns {ModelBuilder} Model builder instance
      */
     public withLogger(logger: (level: string, log: any) => void): ModelBuilder<In, Out> {
         this.graph.logger = logger;
@@ -148,7 +149,8 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
     /**
      * Add a service to the model
      *
-     * @param service Service to add
+     * @param {Service} service Service to add
+     * @returns {ModelBuilder} Model builder instance
      */
     public addService(service: Service): ModelBuilder<In, Out> {
         (this.graph as ModelImpl<In, Out>).addService(service);

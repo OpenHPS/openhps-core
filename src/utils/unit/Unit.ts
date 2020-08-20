@@ -51,8 +51,8 @@ export class Unit {
     /**
      * Create a new unit
      *
-     * @param name Unit name
-     * @param options Unit options
+     * @param {string} name Unit name
+     * @param {UnitOptions} options Unit options
      */
     constructor(name?: string, options?: UnitOptions) {
         const config: UnitOptions = options || { baseName: undefined };
@@ -81,6 +81,11 @@ export class Unit {
         Unit.registerUnit(this, config.override);
     }
 
+    /**
+     * Unit name
+     *
+     * @returns {string} Name
+     */
     @SerializableMember()
     public get name(): string {
         return this._name;
@@ -97,6 +102,11 @@ export class Unit {
         }
     }
 
+    /**
+     * Unit aliases
+     *
+     * @returns {string[]} Alias names as array
+     */
     public get aliases(): string[] {
         return this._aliases;
     }
@@ -153,7 +163,8 @@ export class Unit {
     /**
      * Get the unit specifier
      *
-     * @param prefix Unit prefix
+     * @param {UnitPrefix} prefix Unit prefix
+     * @returns {Unit} Unit with specifier
      */
     public specifier(prefix: UnitPrefix): this {
         // Check if the unit already exists
@@ -206,8 +217,9 @@ export class Unit {
     /**
      * Find a unit by its name
      *
-     * @param name Unit name
-     * @param baseName Optional base name to specific result
+     * @param {string} name Unit name
+     * @param {string} baseName Optional base name to specific result
+     * @returns {Unit} Unit if found
      */
     public static findByName(name: string, baseName?: string): Unit {
         if (name === undefined) {
@@ -233,8 +245,9 @@ export class Unit {
     /**
      * Convert a value in the current unit to a target unit
      *
-     * @param value Value to convert
-     * @param target Target unit
+     * @param {number} value Value to convert
+     * @param {string | Unit} target Target unit
+     * @returns {number} Converted unit
      */
     public convert(value: number, target: string | Unit): number {
         const targetUnit: Unit = target instanceof Unit ? target : Unit.findByName(target, this.baseName);
@@ -256,8 +269,9 @@ export class Unit {
     /**
      * Register a new unit
      *
-     * @param unit Unit to register
-     * @param override Override an existing unit with the same name
+     * @param {Unit} unit Unit to register
+     * @param {boolean} override Override an existing unit with the same name
+     * @returns {Unit} Registered unit
      */
     public static registerUnit(unit: Unit, override = false): Unit {
         if (!unit.name) {

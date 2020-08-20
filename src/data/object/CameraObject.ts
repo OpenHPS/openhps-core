@@ -2,7 +2,6 @@ import { SerializableObject, SerializableMember } from '../decorators';
 import { DataObject } from './DataObject';
 import { Matrix4, Quaternion } from '../../utils';
 import { Absolute3DPosition, Absolute2DPosition } from '../position';
-import { Space } from './space';
 import { Camera } from '../../utils/math/_internal';
 
 /**
@@ -42,28 +41,10 @@ export class CameraObject extends DataObject {
     }
 
     /**
-     * Get the current absolute position of the object
-     *
-     * @param referenceSpace (optional) reference space
-     */
-    public getPosition(referenceSpace?: Space): Absolute3DPosition {
-        return super.getPosition(referenceSpace) as Absolute3DPosition;
-    }
-
-    /**
-     * Set the current absolute position of the object
-     *
-     * @param position Position to set
-     * @param referenceSpace (optional) reference space
-     */
-    public setPosition(position: Absolute3DPosition, referenceSpace?: Space) {
-        super.setPosition(position, referenceSpace);
-    }
-
-    /**
      * Transform a 3d position to a 2d position shown by the camera
      *
-     * @param position 3D position
+     * @param {Absolute3DPosition} position 3D position
+     * @returns {Absolute2DPosition} Transformed position
      */
     public transform(position: Absolute3DPosition): Absolute2DPosition {
         return position as any;
@@ -72,7 +53,8 @@ export class CameraObject extends DataObject {
     /**
      * Transform a 2d position to a 3d position through the camera
      *
-     * @param position 2D position
+     * @param {Absolute2DPosition} position 2D position
+     * @returns {Absolute3DPosition} Transformed position
      */
     public inverseTransform(position: Absolute2DPosition): Absolute3DPosition {
         return position as any;

@@ -28,7 +28,7 @@ describe('position', () => {
             expect(copy.z).to.not.equal(0);
         });
 
-        it('should calculate the midpoint', (done) => {
+        it('should calculate the midpoint', () => {
             const position = new GeographicalPosition(3, 3);
             const midpoint = position.midpoint(new GeographicalPosition(5, 5));
         });

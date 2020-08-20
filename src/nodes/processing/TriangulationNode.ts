@@ -66,9 +66,10 @@ export class TriangulationNode<InOut extends DataFrame> extends RelativePosition
     /**
      * Triangulate a cartesian 3d location
      *
-     * @source https://ieeexplore.ieee.org/document/6693716?tp=&arnumber=6693716
-     * @param points
-     * @param angles
+     * @see {@link https://ieeexplore.ieee.org/document/6693716?tp=&arnumber=6693716}
+     * @param {AbsolutePosition[]} points Points to triangulate
+     * @param {number[]} angles Angles
+     * @returns {Promise<AbsolutePosition>} Promise for the triangulated absolute position
      */
     public triangulate<P extends AbsolutePosition>(points: P[], angles: number[]): Promise<P> {
         return new Promise<P>((resolve, reject) => {

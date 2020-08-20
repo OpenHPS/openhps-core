@@ -31,6 +31,8 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
     protected options: NodeOptions;
     /**
      * Node logger
+     *
+     * @returns {Function} Logger function
      */
     public logger: (level: string, log: any) => void = () => true;
 
@@ -73,7 +75,7 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
     /**
      * Send a pull request to the node
      *
-     * @param options Pull options
+     * @returns {Promise<void>} Pull promise
      */
     public pull(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
@@ -99,7 +101,8 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
     /**
      * Push data to the node
      *
-     * @param frame Data frame to push
+     * @param {DataFrame | DataFrame[]} frame Data frame to push
+     * @returns {Promise<void>} Push promise
      */
     public push(frame: In | In[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {

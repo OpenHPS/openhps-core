@@ -38,17 +38,19 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
     /**
      * Process an individual data object
      *
-     * @param dataObject Data object to process
-     * @param dataFrame Data frame this object belongs to
+     * @param {DataObject} dataObject Data object to process
+     * @param {DataFrame} dataFrame Data frame this object belongs to
+     * @returns {Promise<DataObject>} Processed data object promise
      */
     public abstract processObject(dataObject: DataObject, dataFrame?: InOut): Promise<DataObject>;
 
     /**
      * Find an object by its uid
      *
-     * @param uid
-     * @param dataFrame
-     * @param type
+     * @param {string} uid Unique identifier of object to find
+     * @param {DataFrame} dataFrame Optional data frame to look in
+     * @param {string} type Optional type of the object to find
+     * @returns {Promise<DataObject>} Data object promise if found
      */
     protected findObjectByUID(uid: string, dataFrame?: InOut, type?: string): Promise<DataObject> {
         if (dataFrame !== undefined) {

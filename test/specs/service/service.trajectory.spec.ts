@@ -89,9 +89,7 @@ describe('trajectory', () => {
             }).then(positions => {
                 expect(positions.length).to.equal(2);
                 done();
-            }).catch(ex => {
-                done(ex);
-            });
+            }).catch(done);
         });
         
     });

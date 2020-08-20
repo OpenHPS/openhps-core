@@ -27,6 +27,8 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
 
     /**
      * Start the timeout timer
+     *
+     * @returns {Promise<void>} Timer promise
      */
     private _start(): Promise<void> {
         return new Promise((resolve) => {
@@ -99,7 +101,15 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
         });
     }
 
-    public merge(frames: InOut[], _: string): Promise<InOut> {
+    /**
+     * Merge the data frames
+     *
+     * @param {DataFrame[]} frames Data frames to merge
+     * @param {string} [key=undefined] Key to merge on
+     * @returns {Promise<DataFrame>} Promise of merged data frame
+     */
+    // eslint-ignore-next-line
+    public merge(frames: InOut[], key?: string): Promise<InOut> {
         return new Promise<InOut>((resolve) => {
             const mergedFrame = frames[0];
 

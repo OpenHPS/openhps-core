@@ -18,8 +18,8 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
     /**
      * Construct a new source node
      *
-     * @param source Source data object
-     * @param options Source node options
+     * @param {DataObject} source Source data object
+     * @param {Object} [options=undefined] Source node options
      */
     constructor(source?: DataObject, options?: SourceNodeOptions) {
         super(options);
@@ -37,21 +37,21 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
 
             if (this._persistence) {
                 if (data instanceof Array) {
-                    data.forEach((f) => {
-                        servicePromises.push(this._mergeFrame(f).then(() => this.persistFrame(f)));
-                    });
+                    for (const f of data) {
+                        servicePromises.push(this._mergeFrame(f).then((f) => this.persistFrame(f)));
+                    }
                 } else {
-                    const f: DataFrame = data as DataFrame;
-                    servicePromises.push(this._mergeFrame(f).then(() => this.persistFrame(f)));
+                    servicePromises.push(this._mergeFrame(data).then((f) => this.persistFrame(f)));
                 }
             }
 
-            this.outputNodes.forEach((node) => {
-                pushPromises.push(node.push(data));
-            });
-
             Promise.all(servicePromises)
-                .then(() => Promise.all(pushPromises))
+                .then(() => {
+                    this.outputNodes.forEach((node) => {
+                        pushPromises.push(node.push(data));
+                    });
+                    return Promise.all(pushPromises);
+                })
                 .then(() => resolve())
                 .catch(reject);
         });

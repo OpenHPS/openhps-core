@@ -12,8 +12,8 @@ export class GravityProcessingNode extends FilterProcessingNode<IMUDataFrame> {
         });
     }
 
-    public filter(object: DataObject, frame: IMUDataFrame, filter: any): Promise<DataObject> {
-        return new Promise<DataObject>((resolve, reject) => {
+    public filter(object: DataObject, frame: IMUDataFrame): Promise<DataObject> {
+        return new Promise<DataObject>((resolve) => {
             if (frame.acceleration) {
                 // Simply subtract the acceleration (with gravity) from the linear acceleration
                 frame.gravity = new Acceleration(

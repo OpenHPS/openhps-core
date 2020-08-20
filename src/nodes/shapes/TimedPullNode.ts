@@ -44,6 +44,8 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
     /**
      * Start the timed pull
+     *
+     * @returns {Promise<void>} Start promise
      */
     private _start(): Promise<void> {
         return new Promise((resolve) => {

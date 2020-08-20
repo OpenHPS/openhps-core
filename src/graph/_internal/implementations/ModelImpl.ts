@@ -25,7 +25,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
     /**
      * Create a new OpenHPS model
      *
-     * @param name
+     * @param {string} name Model name
      */
     constructor(name = 'model') {
         super();
@@ -138,6 +138,8 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
 
     /**
      * Find service
+     *
+     * @returns {Service} Found service
      */
     public findService<F extends Service>(name: string): F;
     public findService<F extends Service>(serviceClass: new () => F): F;
@@ -162,6 +164,8 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
 
     /**
      * Find data service
+     *
+     * @returns {DataService} Found data service
      */
     public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(name: string): F;
     public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(
@@ -218,6 +222,8 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
 
     /**
      * Find all services and data services
+     *
+     * @returns {Service[]} Array of all services
      */
     public findAllServices(): Service[] {
         return Array.from(this._services.values()).concat(Array.from(this._dataServices.values()));
@@ -226,7 +232,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
     /**
      * Add service to model
      *
-     * @param service Service
+     * @param {Service} service Service to add
      */
     public addService(service: Service): void {
         if (service instanceof DataService) {

@@ -29,7 +29,7 @@ expose({
     /**
      * Worker intiailize
      *
-     * @param workerData Worker data containing model information
+     * @param {Any} workerData Worker data containing model information
      */
     async init(workerData: any) {
         // Set global dir name
@@ -103,6 +103,8 @@ expose({
     },
     /**
      * Pull from this work
+     *
+     * @returns {Promise<void>} Pull promise
      */
     pull(): Promise<void> {
         return model.pull();
@@ -110,19 +112,24 @@ expose({
     /**
      * Push to this worker
      *
-     * @param frame
+     * @param {any} frame Data frame
+     * @returns {Promise<void>} Push promise
      */
     push(frame: any): Promise<void> {
         return model.push(DataSerializer.deserialize(frame));
     },
     /**
      * Input observable for pull requests
+     *
+     * @returns {Observable<void>} Observable input
      */
     input(): Observable<void> {
         return Observable.from(input);
     },
     /**
      * Output observable for push requests
+     *
+     * @returns {Observable<any>} Observable output
      */
     output(): Observable<any> {
         return Observable.from(output);

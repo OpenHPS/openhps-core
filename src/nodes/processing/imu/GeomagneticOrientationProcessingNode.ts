@@ -5,7 +5,7 @@ import { Quaternion } from '../../../utils';
 /**
  * Geomagnetic orientation processing node
  *
- * @source https://github.com/visakhanc/eCompass/blob/master/source/main.c
+ * @see {@link https://github.com/visakhanc/eCompass/blob/master/source/main.c}
  */
 export class GeomagneticOrientationProcessingNode extends FilterProcessingNode<IMUDataFrame> {
     public initFilter(object: DataObject, frame: IMUDataFrame): Promise<any> {

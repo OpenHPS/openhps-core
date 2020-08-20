@@ -144,6 +144,8 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
 
     /**
      * Send a pull request to the graph
+     *
+     * @returns {Promise<void>} Pull promise
      */
     public pull(): Promise<void> {
         return this.internalOutput.pull();

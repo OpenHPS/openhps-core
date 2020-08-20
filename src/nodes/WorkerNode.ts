@@ -121,7 +121,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
             }
             this._pool
                 .terminate()
-                .then((_: any) => {
+                .then(() => {
                     resolve();
                 })
                 .catch(reject);
@@ -239,7 +239,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
     }
 
     private _onBuild(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>((resolve) => {
             this.logger('debug', {
                 message: 'Spawning new worker thread ...',
             });

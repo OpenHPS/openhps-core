@@ -10,7 +10,7 @@ export class LoggingSinkNode<In extends DataFrame> extends CallbackSinkNode<In> 
     /**
      * Create a new logger output sink
      *
-     * @param loggingFn Logging function
+     * @param {Function} loggingFn Logging function
      */
     constructor(loggingFn?: (frame: In | In[]) => void) {
         super(loggingFn);

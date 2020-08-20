@@ -34,8 +34,7 @@ export class DataFrame {
     /**
      * Create a new data frame
      *
-     * @param data Optional JSON to parse from
-     * @param source
+     * @param {DataObject} source Source data object
      */
     constructor(source?: DataObject) {
         const timestamp = Date.now();
@@ -44,18 +43,15 @@ export class DataFrame {
     }
 
     /**
-     * Get the source object that captured the data frame
+     * Source object that captured the data frame
+     *
+     * @returns {DataObject} Source data object
      */
     @SerializableMember()
     public get source(): DataObject {
         return this._source;
     }
 
-    /**
-     * Set the source object that captured the data frame
-     *
-     * @param source Object that captured the data frame
-     */
     public set source(source: DataObject) {
         this.addObject(source);
         this._source = source;
@@ -64,7 +60,8 @@ export class DataFrame {
     /**
      * Get known objects used in this data frame
      *
-     * @param dataType
+     * @param {new () => DataObject} dataType Data object type
+     * @returns {DataObject[]} Array of found data objects
      */
     public getObjects<T extends DataObject>(dataType?: new () => T): T[] {
         if (dataType === undefined) {
@@ -93,7 +90,7 @@ export class DataFrame {
     /**
      * Add a new object relevant to this data frame
      *
-     * @param object Relevant object
+     * @param {DataObject} object Relevant object
      */
     public addObject(object: DataObject): void {
         if (object === undefined) return;
@@ -103,7 +100,7 @@ export class DataFrame {
     /**
      * Add a new reference space relevant to this data frame
      *
-     * @param referenceSpace Relevant reference space
+     * @param {ReferenceSpace} referenceSpace Relevant reference space
      */
     public addReferenceSpace(referenceSpace: ReferenceSpace): void {
         this.addObject(referenceSpace);
@@ -112,7 +109,7 @@ export class DataFrame {
     /**
      * Remove an object from the data frame
      *
-     * @param object Object to remove
+     * @param {DataObject} object Object to remove
      */
     public removeObject(object: DataObject): void {
         this._objects.delete(object.uid);

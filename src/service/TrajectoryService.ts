@@ -22,9 +22,10 @@ export class TrajectoryService<T extends DataObject> extends DataService<Positio
     /**
      * Find the trajectory of an object from start to end date
      *
-     * @param uid
-     * @param start
-     * @param end
+     * @param {string} uid Unique identifier of data object
+     * @param {Date | number} start Start time or date
+     * @param {Date | number} end End time or date
+     * @returns {AbsolutePosition[]} Array of positions sorted by time
      */
     public findTrajectory(uid: string, start?: Date | number, end?: Date | number): Promise<AbsolutePosition[]> {
         return new Promise((resolve, reject) => {

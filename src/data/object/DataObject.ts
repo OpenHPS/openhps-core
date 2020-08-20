@@ -43,8 +43,8 @@ export class DataObject {
     /**
      * Create a new data object
      *
-     * @param uid Optional unique identifier
-     * @param displayName Optional display name
+     * @param {string} uid Optional unique identifier
+     * @param {string} displayName Optional display name
      */
     constructor(uid: string = uuidv4(), displayName?: string) {
         this.uid = uid;
@@ -80,6 +80,8 @@ export class DataObject {
     /**
      * Get the current absolute position of the object
      * relative to the global reference space
+     *
+     * @returns {AbsolutePosition} Absolute position of data object
      */
     @SerializableMember({
         deserializer(raw: any): AbsolutePosition {
@@ -104,7 +106,8 @@ export class DataObject {
     /**
      * Get the current absolute position of the object
      *
-     * @param referenceSpace (optional) reference space
+     * @param {ReferenceSpace} referenceSpace (optional) reference space
+     * @returns {AbsolutePosition} Position of the data object
      */
     public getPosition(referenceSpace?: Space): AbsolutePosition {
         if (referenceSpace !== undefined && this._position !== undefined) {
@@ -117,15 +120,17 @@ export class DataObject {
     /**
      * Set the current absolute position of the object
      *
-     * @param position Position to set
-     * @param referenceSpace (optional) reference space
+     * @param {AbsolutePosition} position Position to set
+     * @param {ReferenceSpace} referenceSpace (optional) reference space
      */
-    public setPosition(position: AbsolutePosition, referenceSpace?: Space) {
+    public setPosition(position: AbsolutePosition, referenceSpace?: Space): void {
         this._position = referenceSpace ? referenceSpace.transform(position, false) : position;
     }
 
     /**
      * Get relative positions
+     *
+     * @returns {RelativePosition[]} Array of relative positions
      */
     @SerializableArrayMember(Object, {
         deserializer(rawArray: any[]): RelativePosition[] {
@@ -167,7 +172,7 @@ export class DataObject {
     /**
      * Add a relative position to this data object
      *
-     * @param relativePosition
+     * @param {RelativePosition} relativePosition Relative position to add
      */
     public addRelativePosition(relativePosition: RelativePosition): void {
         if (relativePosition.referenceObjectUID === undefined) {
@@ -186,7 +191,8 @@ export class DataObject {
     /**
      * Get relative positions for a different target
      *
-     * @param referenceObjectUID
+     * @param {string} referenceObjectUID Reference object identifier
+     * @returns {RelativePosition[]} Array of relative positions for the reference object
      */
     public getRelativePositions(referenceObjectUID?: string): RelativePosition[] {
         if (referenceObjectUID === undefined) {
@@ -208,6 +214,8 @@ export class DataObject {
 
     /**
      * Clone the data object
+     *
+     * @returns {DataObject} Cloned data object
      */
     public clone(): this {
         return DataSerializer.deserialize(DataSerializer.serialize(this));

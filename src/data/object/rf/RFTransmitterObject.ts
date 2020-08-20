@@ -4,7 +4,11 @@ import { DataObject } from '../DataObject';
 
 @SerializableObject()
 export class RFTransmitterObject extends DataObject implements RFObject {
-    private _rfTransmissionPower = -1;
+    /**
+     * RF transmission power
+     */
+    @SerializableMember()
+    public txPower = -1;
     private _calibratedRSSI = -69;
     private _environmenFactor: number;
 
@@ -15,24 +19,9 @@ export class RFTransmitterObject extends DataObject implements RFObject {
     }
 
     /**
-     * Get RF transmission power
-     */
-    @SerializableMember()
-    public get txPower(): number {
-        return this._rfTransmissionPower;
-    }
-
-    /**
-     * Set RF transmission power
-     *
-     * @param transmissionPower RF transmission power
-     */
-    public set txPower(transmissionPower: number) {
-        this._rfTransmissionPower = transmissionPower;
-    }
-
-    /**
      * Get the calibrated rssi at 1 meter
+     *
+     * @returns {number} Calibrated RSSI
      */
     public get calibratedRSSI(): number {
         return this._calibratedRSSI;
@@ -40,6 +29,8 @@ export class RFTransmitterObject extends DataObject implements RFObject {
 
     /**
      * Set the calibrated rssi at 1 meter
+     *
+     * @param {number} calibratedRSSI Calibrated RSSI > 0
      */
     public set calibratedRSSI(calibratedRSSI: number) {
         if (calibratedRSSI > 0) {

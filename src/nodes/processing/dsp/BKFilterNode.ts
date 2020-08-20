@@ -68,7 +68,7 @@ export interface KalmanFilterOptions extends FilterProcessingOptions {
  * @author Wouter Bulten
  * @see {@link http://github.com/wouterbulten/kalmanjs}
  * @copyright Copyright 2015-2018 Wouter Bulten
- * @license MIT License
+ * @license MIT
  */
 class KalmanFilter<T extends Vector3> {
     /** Process noise */
@@ -103,7 +103,7 @@ class KalmanFilter<T extends Vector3> {
      *
      * @param  {number} z Measurement
      * @param  {number} u Control
-     * @returns {number}
+     * @returns {number} Filtered value
      */
     public filter(z: Vector3, u?: Vector3): Vector3 {
         if (this._x === undefined) {
@@ -135,7 +135,7 @@ class KalmanFilter<T extends Vector3> {
      * Predict next value
      *
      * @param  {number} [u] Control
-     * @returns {number}
+     * @returns {number} Predicted value
      */
     public predict(u?: Vector3): Vector3 {
         return this._A
@@ -147,7 +147,7 @@ class KalmanFilter<T extends Vector3> {
     /**
      * Return uncertainty of filter
      *
-     * @returns {number}
+     * @returns {number} Uncertainty
      */
     public uncertainty(): T {
         return this._A.clone().multiply(this._cov).multiply(this._A).add(this._R);
@@ -156,7 +156,7 @@ class KalmanFilter<T extends Vector3> {
     /**
      * Return the last filtered measurement
      *
-     * @returns {number}
+     * @returns {number} Last measurement
      */
     public get measurement(): T {
         return this._x;

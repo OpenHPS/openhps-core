@@ -84,7 +84,8 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
     /**
      * Get node data
      *
-     * @param dataObject
+     * @param {DataObject} dataObject Data object to get node data from
+     * @returns {Promise<any>} Promise with node data
      */
     protected getNodeData(dataObject: DataObject): Promise<any> {
         return new Promise((resolve, reject) => {
@@ -100,8 +101,9 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
     /**
      * Set node data
      *
-     * @param dataObject
-     * @param data
+     * @param {DataObject} dataObject Data object to store data for
+     * @param {any} data Data to store
+     * @returns {Promise<any>} Promise with stored node data
      */
     protected setNodeData(dataObject: DataObject, data: any): Promise<NodeData> {
         return new Promise((resolve, reject) => {

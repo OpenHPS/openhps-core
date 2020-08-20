@@ -14,7 +14,7 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
      * Position recording timestamp
      */
     @SerializableMember()
-    public timestamp = new Date().getTime();
+    public timestamp: number = new Date().getTime();
     /**
      * Velocity at recorded position
      */
@@ -49,9 +49,10 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
     /**
      * Midpoint to another location
      *
-     * @param otherPosition Other location
-     * @param distanceSelf
-     * @param distanceOther
+     * @param {Absolute2DPosition} otherPosition Other location
+     * @param {number} [distanceSelf=1] Distance from midpoint to itself
+     * @param {number} [distanceOther=1] Distance from midpoint to other point
+     * @returns {Absolute2DPosition} Midpoint position
      */
     public midpoint(otherPosition: Absolute2DPosition, distanceSelf = 1, distanceOther = 1): Absolute2DPosition {
         const newPoint = new Absolute2DPosition();
@@ -84,6 +85,8 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
 
     /**
      * Clone the position
+     *
+     * @returns {Absolute2DPosition} Cloned position
      */
     public clone(): this {
         const position = new Absolute2DPosition(this.x, this.y);

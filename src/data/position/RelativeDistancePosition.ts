@@ -57,6 +57,8 @@ export class RelativeDistancePosition implements RelativePosition {
 
     /**
      * Clone the position
+     *
+     * @returns {RelativeDistancePosition} Cloned relative distance
      */
     public clone(): this {
         const serialized = DataSerializer.serialize(this);

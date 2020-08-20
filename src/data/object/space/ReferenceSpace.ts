@@ -5,6 +5,11 @@ import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder } from '../../../util
 import { AngleUnit } from '../../../utils';
 import { AbsolutePosition } from '../../position/AbsolutePosition';
 
+/**
+ * Reference space
+ *
+ * @type {ReferenceSpace}
+ */
 @SerializableObject()
 export class ReferenceSpace extends DataObject implements Space {
     // Raw transformation matrix
@@ -55,12 +60,13 @@ export class ReferenceSpace extends DataObject implements Space {
     /**
      * Transform perspective
      *
-     * @param left   Number Farthest left on the x-axis
-     * @param right  Number Farthest right on the x-axis
-     * @param bottom Number Farthest down on the y-axis
-     * @param top    Number Farthest up on the y-axis
-     * @param near   Number Distance to the near clipping plane along the -Z axis
-     * @param far    Number Distance to the far clipping plane along the -Z axis
+     * @param {number} left Farthest left on the x-axis
+     * @param {number} right Farthest right on the x-axis
+     * @param {number} bottom Farthest down on the y-axis
+     * @param {number} top Farthest up on the y-axis
+     * @param {number} near Distance to the near clipping plane along the -Z axis
+     * @param {number} far Distance to the far clipping plane along the -Z axis
+     * @returns {ReferenceSpace} Reference space instance
      */
     public perspective(
         left: number,

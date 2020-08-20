@@ -65,6 +65,8 @@ export class RelativeAnglePosition implements RelativePosition {
 
     /**
      * Clone the position
+     *
+     * @returns {RelativeAnglePosition} Cloned relative angle
      */
     public clone(): this {
         const serialized = DataSerializer.serialize(this);
