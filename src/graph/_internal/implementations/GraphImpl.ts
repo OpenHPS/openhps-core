@@ -109,17 +109,17 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
         this._validateEdges();
     }
 
+    private _validateInternalNode(node: Node<any, any>): void {
+        if (node.outputNodes.length === 0 && node.inputNodes.length === 0) {
+            this.deleteNode(node);
+        } else if (!this._nodes.has(node.uid)) {
+            throw new Error(`Internal node ${node.uid} is not connected to the graph!`);
+        }
+    }
+
     private _validateNodes(): void {
-        if (this.internalInput.outputNodes.length === 0) {
-            this.deleteNode(this.internalInput);
-        } else if (!this._nodes.has(this.internalInput.uid)) {
-            throw new Error(`Internal input node ${this.internalInput.uid} is not added to the graph!`);
-        }
-        if (this.internalOutput.inputNodes.length === 0) {
-            this.deleteNode(this.internalOutput);
-        } else if (!this._nodes.has(this.internalInput.uid)) {
-            throw new Error(`Internal output node ${this.internalOutput.uid} is not added to the graph!`);
-        }
+        this._validateInternalNode(this.internalInput);
+        this._validateInternalNode(this.internalOutput);
 
         this._nodes.forEach((node) => {
             if (node.graph === undefined) {
@@ -133,11 +133,8 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
 
     private _validateEdges(): void {
         this._edges.forEach((edge) => {
-            if (!this._nodes.has(edge.inputNode.uid)) {
+            if (!this._nodes.has(edge.inputNode.uid) || !this._nodes.has(edge.outputNode.uid)) {
                 throw new Error(`Node ${edge.inputNode.uid} is used in an edge but not added to the graph!`);
-            }
-            if (!this._nodes.has(edge.outputNode.uid)) {
-                throw new Error(`Node ${edge.outputNode.uid} is used in an edge but not added to the graph!`);
             }
         });
     }

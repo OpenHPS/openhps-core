@@ -90,9 +90,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
                             .then((mergedFrame) => {
                                 resolve(mergedFrame);
                             })
-                            .catch((ex) => {
-                                reject(ex);
-                            });
+                            .catch(reject);
                     } else {
                         resolve();
                     }
