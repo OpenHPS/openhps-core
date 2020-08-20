@@ -1,6 +1,6 @@
-import { DataFrame } from "../../data";
-import { ProcessingNode } from "../ProcessingNode";
-import { TimeUnit } from "../../utils";
+import { DataFrame } from '../../data';
+import { ProcessingNode } from '../ProcessingNode';
+import { TimeUnit } from '../../utils';
 
 export class FrameDebounceNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
     private _timeout: number;
@@ -21,7 +21,7 @@ export class FrameDebounceNode<InOut extends DataFrame> extends ProcessingNode<I
      * Start the timeout timer
      */
     private _start(): Promise<void> {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             this._timer = setInterval(() => {
                 this._accept = true;
             }, this._timeoutUnit.convert(this._timeout, TimeUnit.MILLISECOND));
@@ -37,7 +37,7 @@ export class FrameDebounceNode<InOut extends DataFrame> extends ProcessingNode<I
     }
 
     public process(frame: InOut): Promise<InOut> {
-        return new Promise<InOut>(resolve => {
+        return new Promise<InOut>((resolve) => {
             if (this._accept) {
                 this._accept = false;
                 resolve(frame);
@@ -46,5 +46,4 @@ export class FrameDebounceNode<InOut extends DataFrame> extends ProcessingNode<I
             }
         });
     }
-
 }

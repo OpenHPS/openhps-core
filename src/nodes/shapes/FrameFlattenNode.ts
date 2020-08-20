@@ -1,8 +1,7 @@
-import { DataFrame } from "../../data";
-import { Node } from "../../Node";
+import { DataFrame } from '../../data';
+import { Node } from '../../Node';
 
 export class FrameFlattenNode<InOut extends DataFrame> extends Node<InOut, InOut> {
-
     constructor() {
         super();
         this.on('push', this._onPush.bind(this));
@@ -11,16 +10,17 @@ export class FrameFlattenNode<InOut extends DataFrame> extends Node<InOut, InOut
     private _onPush(frames: InOut[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const pushPromises: Array<Promise<void>> = [];
-            frames.forEach(frame => {
-                this.outputNodes.forEach(node => {
+            frames.forEach((frame) => {
+                this.outputNodes.forEach((node) => {
                     pushPromises.push(node.push(frame));
                 });
             });
 
-            Promise.all(pushPromises).then(() => {
-                resolve();
-            }).catch(reject);
+            Promise.all(pushPromises)
+                .then(() => {
+                    resolve();
+                })
+                .catch(reject);
         });
     }
-
 }

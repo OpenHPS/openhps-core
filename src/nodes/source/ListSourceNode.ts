@@ -1,6 +1,6 @@
-import { DataFrame } from "../../data/DataFrame";
-import { SourceNode, SourceNodeOptions } from "../SourceNode";
-import { DataObject } from "../../data";
+import { DataFrame } from '../../data/DataFrame';
+import { SourceNode, SourceNodeOptions } from '../SourceNode';
+import { DataObject } from '../../data';
 
 /**
  * This source node is initialised with an array of data. This data
@@ -21,18 +21,17 @@ export class ListSourceNode<Out extends DataFrame> extends SourceNode<Out> {
     public set inputData(inputData: Out[]) {
         this._inputData = inputData;
     }
-    
+
     public get size(): number {
         return this._inputData.length;
     }
 
     public onPull(): Promise<Out> {
-        return new Promise<Out>(resolve => {
+        return new Promise<Out>((resolve) => {
             if (this._inputData.length !== 0) {
                 resolve(this._inputData.shift());
             }
             resolve(null);
         });
     }
-
 }

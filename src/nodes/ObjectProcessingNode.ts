@@ -1,7 +1,7 @@
-import { DataFrame, DataObject } from "../data";
-import { ProcessingNode, ProcessingNodeOptions } from "./ProcessingNode";
-import { Model } from "../Model";
-import { DataObjectService } from "../service";
+import { DataFrame, DataObject } from '../data';
+import { ProcessingNode, ProcessingNodeOptions } from './ProcessingNode';
+import { Model } from '../Model';
+import { DataObjectService } from '../service';
 
 /**
  * Processing node that processes each [[DataObject]] in a [[DataFrame]] individually
@@ -18,15 +18,20 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
     public process(frame: InOut): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
             const processObjectPromises: Array<Promise<DataObject>> = [];
-            frame.getObjects().filter(value => this._objectFilter(value, frame)).forEach(object => {
-                processObjectPromises.push(this.processObject(object, frame));
-            });
-            Promise.all(processObjectPromises).then(objects => {
-                objects.forEach(object => {
-                    frame.addObject(object);
+            frame
+                .getObjects()
+                .filter((value) => this._objectFilter(value, frame))
+                .forEach((object) => {
+                    processObjectPromises.push(this.processObject(object, frame));
                 });
-                resolve(frame);
-            }).catch(reject);
+            Promise.all(processObjectPromises)
+                .then((objects) => {
+                    objects.forEach((object) => {
+                        frame.addObject(object);
+                    });
+                    resolve(frame);
+                })
+                .catch(reject);
         });
     }
 
@@ -41,20 +46,20 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
     /**
      * Find an object by its uid
      *
-     * @param uid 
-     * @param dataFrame 
-     * @param type 
+     * @param uid
+     * @param dataFrame
+     * @param type
      */
     protected findObjectByUID(uid: string, dataFrame?: InOut, type?: string): Promise<DataObject> {
         if (dataFrame !== undefined) {
             if (dataFrame.hasObject(new DataObject(uid))) {
-                return new Promise<DataObject>(resolve => {
+                return new Promise<DataObject>((resolve) => {
                     resolve(dataFrame.getObjectByUID(uid));
                 });
             }
         }
 
-        const model = (this.graph as Model<any, any>);
+        const model = this.graph as Model<any, any>;
         const defaultService = model.findDataService(DataObject);
         if (type === undefined) {
             return defaultService.findByUID(uid);
@@ -66,7 +71,6 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
             return service.findByUID(uid);
         }
     }
-
 }
 
 export interface ObjectProcessingNodeOptions extends ProcessingNodeOptions {

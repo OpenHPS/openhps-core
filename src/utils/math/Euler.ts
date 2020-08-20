@@ -9,7 +9,6 @@ import { Vector3 } from './Vector3';
  */
 @SerializableObject()
 export class Euler extends THREE.Euler {
-
     constructor(x?: number, y?: number, z?: number, order?: EulerOrder, unit?: AngleUnit) {
         super(x, y, z, order);
         if (unit) {
@@ -45,7 +44,7 @@ export class Euler extends THREE.Euler {
     public set z(value: number) {
         super.z = value;
     }
-    
+
     /**
      * Convert quaternion to euler
      *
@@ -69,12 +68,13 @@ export class Euler extends THREE.Euler {
         euler.setFromRotationMatrix(matrix, order);
         return euler;
     }
-    
+
     public toVector(unit: AngleUnit = AngleUnit.RADIAN): Vector3 {
         return new Vector3(
-            AngleUnit.RADIAN.convert(this.x, unit), 
+            AngleUnit.RADIAN.convert(this.x, unit),
             AngleUnit.RADIAN.convert(this.y, unit),
-            AngleUnit.RADIAN.convert(this.z, unit));
+            AngleUnit.RADIAN.convert(this.z, unit),
+        );
     }
 
     /**
@@ -83,13 +83,6 @@ export class Euler extends THREE.Euler {
     public toRotationMatrix(): Matrix4 {
         return Matrix4.rotationFromEuler(this);
     }
-
 }
 
-export type EulerOrder = 
-    'XYZ' |
-    'XZY' |
-    'YXZ' |
-    'YZX' |
-    'ZXY' |
-    'ZYX';
+export type EulerOrder = 'XYZ' | 'XZY' | 'YXZ' | 'YZX' | 'ZXY' | 'ZYX';

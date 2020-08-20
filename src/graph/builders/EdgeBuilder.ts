@@ -1,11 +1,11 @@
-import { DataFrame } from "../../data/DataFrame";
-import { EdgeImpl } from "../_internal/implementations/EdgeImpl";
-import { AbstractEdge } from "../interfaces/AbstractEdge";
-import { AbstractNode } from "../interfaces";
+import { DataFrame } from '../../data/DataFrame';
+import { EdgeImpl } from '../_internal/implementations/EdgeImpl';
+import { AbstractEdge } from '../interfaces/AbstractEdge';
+import { AbstractNode } from '../interfaces';
 
 /**
  * Edge builder
- * 
+ *
  * ## Usage
  * ```typescript
  * const edge = new EdgeBuilder()
@@ -38,5 +38,4 @@ export class EdgeBuilder<InOut extends DataFrame> {
     public build(): AbstractEdge<InOut> {
         return this._edge;
     }
-
 }

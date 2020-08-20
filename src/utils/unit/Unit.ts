@@ -1,12 +1,12 @@
 import 'reflect-metadata';
-import { SerializableObject, SerializableMember } from "../../data/decorators";
+import { SerializableObject, SerializableMember } from '../../data/decorators';
 import { UnitOptions } from './UnitOptions';
 import { UnitDefinition } from './UnitDefinition';
 import { UnitPrefix, UnitPrefixType } from './UnitPrefix';
 
 /**
  * Unit
- * 
+ *
  * ## Usage
  * ### Creation
  * ```typescript
@@ -16,7 +16,7 @@ import { UnitPrefix, UnitPrefixType } from './UnitPrefix';
  *  prefixes: 'decimal'
  * })
  * ```
- * 
+ *
  * ### Specifiers
  * You can specify the prefix using the ```specifier(...)``` function.
  * ```typescript
@@ -34,7 +34,7 @@ import { UnitPrefix, UnitPrefixType } from './UnitPrefix';
         } else {
             throw new Error(`Unit does not define a serialization name! Unable to deserialize!`);
         }
-    }
+    },
 })
 export class Unit {
     private _name: string;
@@ -67,13 +67,13 @@ export class Unit {
         this._prefixType = config.prefixes;
 
         // Unit definitions
-        config.definitions.forEach(definition => {
+        config.definitions.forEach((definition) => {
             const referenceUnit = Unit.findByName(definition.unit, this.baseName);
             if (referenceUnit) {
                 this._definitions.set(referenceUnit.name, {
                     unit: definition.unit,
                     magnitude: definition.magnitude ? definition.magnitude : 1,
-                    offset: definition.offset ? definition.offset : 0
+                    offset: definition.offset ? definition.offset : 0,
                 });
             }
         });
@@ -115,10 +115,10 @@ export class Unit {
 
     protected get prefixes(): UnitPrefix[] {
         switch (this._prefixType) {
-        case 'decimal':
-            return UnitPrefix.DECIMAL;
-        case 'none':
-            return [];
+            case 'decimal':
+                return UnitPrefix.DECIMAL;
+            case 'none':
+                return [];
         }
     }
 
@@ -126,7 +126,7 @@ export class Unit {
         const newDefinition: UnitDefinition = {
             unit: targetUnit.name,
             magnitude: 1,
-            offset: 0
+            offset: 0,
         };
         if (this._definitions.has(targetUnit.name)) {
             const definition = this._definitions.get(targetUnit.name);
@@ -163,8 +163,7 @@ export class Unit {
         }
 
         // Confirm that the prefix is allowed
-        if (!this.prefixes.includes(prefix))
-            throw new Error(`Prefix '${prefix.name}' is not allowed for this unit!`);
+        if (!this.prefixes.includes(prefix)) throw new Error(`Prefix '${prefix.name}' is not allowed for this unit!`);
 
         // Get the unit constructor of the extended class. This allows
         // serializing of units that are extended (e.g. LengthUnit)
@@ -173,7 +172,7 @@ export class Unit {
         unit._name = unitName;
         unit._baseName = this.baseName;
         const aliases: Array<string> = [];
-        this.aliases.forEach(alias => {
+        this.aliases.forEach((alias) => {
             aliases.push(`${prefix.name}${alias}`);
             aliases.push(`${prefix.abbrevation}${alias}`);
         });
@@ -181,7 +180,7 @@ export class Unit {
         unit._definitions.set(this.name, {
             unit: this.name,
             magnitude: prefix.magnitude,
-            offset: 0
+            offset: 0,
         });
         return Unit.registerUnit(unit) as this;
     }
@@ -233,20 +232,20 @@ export class Unit {
 
     /**
      * Convert a value in the current unit to a target unit
-     * 
+     *
      * @param value Value to convert
      * @param target Target unit
      */
     public convert(value: number, target: string | Unit): number {
-        const targetUnit: Unit = target instanceof Unit ? target :  Unit.findByName(target, this.baseName);
-        
+        const targetUnit: Unit = target instanceof Unit ? target : Unit.findByName(target, this.baseName);
+
         // Do not convert if target unit is the same or undefined
         if (!targetUnit || targetUnit.name === this.name) {
             return value;
         }
 
         const definition = this.createDefinition(targetUnit);
-        return (value * definition.magnitude) + definition.offset;
+        return value * definition.magnitude + definition.offset;
     }
 
     public static convert(value: number, from: string | Unit, to: string | Unit): number {
@@ -276,5 +275,4 @@ export class Unit {
         }
         return unit;
     }
-    
 }

@@ -1,6 +1,6 @@
-import { Unit } from "./Unit";
-import { SerializableObject } from "../../data/decorators";
-import { UnitOptions } from "./UnitOptions";
+import { Unit } from './Unit';
+import { SerializableObject } from '../../data/decorators';
+import { UnitOptions } from './UnitOptions';
 
 @SerializableObject()
 export class DerivedUnit extends Unit {
@@ -20,7 +20,7 @@ export class DerivedUnit extends Unit {
         if (Unit.UNITS.has(options.name)) {
             return Unit.UNITS.get(options.name) as this;
         }
-        
+
         const UnitConstructor = Object.getPrototypeOf(this).constructor;
         const unit = new UnitConstructor();
         unit._name = options.name;
@@ -29,10 +29,10 @@ export class DerivedUnit extends Unit {
         const definition = {
             unit: this.name,
             magnitude: 1,
-            offset: 0
+            offset: 0,
         };
 
-        subunits.forEach(subunit => {
+        subunits.forEach((subunit) => {
             const currentUnit: Unit = this._units.get(subunit.baseName);
             const unitPower: number = this._unitPower.get(subunit.baseName);
             const newDefinition = subunit.createDefinition(currentUnit);
@@ -41,9 +41,8 @@ export class DerivedUnit extends Unit {
             definition.magnitude *= isFinite(newMagnitude) ? newMagnitude : 0;
             definition.offset += isFinite(newOffset) ? newOffset : 0;
         });
-        
+
         unit._definitions.set(this.name, definition);
         return Unit.registerUnit(unit) as this;
     }
-
 }

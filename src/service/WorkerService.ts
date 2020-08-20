@@ -1,16 +1,33 @@
-import { DataSerializer } from "../data";
-import { Subject } from "threads/observable";
+import { DataSerializer } from '../data';
+import { Subject } from 'threads/observable';
 import { v4 as uuidv4 } from 'uuid';
-import { ServiceProxy } from "./_internal";
-import { Service } from "./Service";
+import { ServiceProxy } from './_internal';
+import { Service } from './Service';
 
 export class WorkerService extends ServiceProxy<Service> {
-    private _inputObservable: Subject<{ id: string; serviceName: string; method: string; parameters: any }>;
-    private _outputObservable: Subject<{ id: string; success: boolean; result?: any}>;
+    private _inputObservable: Subject<{
+        id: string;
+        serviceName: string;
+        method: string;
+        parameters: any;
+    }>;
+    private _outputObservable: Subject<{
+        id: string;
+        success: boolean;
+        result?: any;
+    }>;
     private _promises: Map<string, { resolve: (data?: any) => void; reject: (ex?: any) => void }> = new Map();
 
-    constructor(name: string, inputObservable: Subject<{ id: string; serviceName: string; method: string; parameters: any }>, 
-                outputObservable: Subject<{ id: string; success: boolean; result?: any}>) {
+    constructor(
+        name: string,
+        inputObservable: Subject<{
+            id: string;
+            serviceName: string;
+            method: string;
+            parameters: any;
+        }>,
+        outputObservable: Subject<{ id: string; success: boolean; result?: any }>,
+    ) {
         super();
         this.name = name;
         this._inputObservable = inputObservable;
@@ -18,7 +35,7 @@ export class WorkerService extends ServiceProxy<Service> {
         this._outputObservable.subscribe(this._onOutput.bind(this));
     }
 
-    private _onOutput(next: { id: string; success: boolean; result?: any}): void {
+    private _onOutput(next: { id: string; success: boolean; result?: any }): void {
         if (this._promises.has(next.id)) {
             const promise = this._promises.get(next.id);
             if (next.success) {
@@ -26,7 +43,7 @@ export class WorkerService extends ServiceProxy<Service> {
                     promise.resolve();
                 } else if (Array.isArray(next.result)) {
                     const result: Array<any> = [];
-                    next.result.forEach(r => {
+                    next.result.forEach((r) => {
                         if (r['__type']) {
                             result.push(DataSerializer.deserialize(r));
                         } else {
@@ -48,7 +65,7 @@ export class WorkerService extends ServiceProxy<Service> {
         }
     }
 
-    public get? (target: Service, p: PropertyKey): any {
+    public get?(target: Service, p: PropertyKey): any {
         const ownResult = (this as any)[p];
         if (ownResult) {
             return ownResult;
@@ -64,24 +81,24 @@ export class WorkerService extends ServiceProxy<Service> {
      * @param p
      */
     public createHandler(target: Service, p: PropertyKey): (...args: any[]) => any {
-        return (...args: any[]) => new Promise<any>((resolve, reject) => {
-            const uuid = uuidv4();
-            this._promises.set(uuid, { resolve, reject });
-            const serializedArgs: Array<any> = [];
-            args.forEach(arg => {
-                if (DataSerializer.findTypeByName(arg.constructor.name)) {
-                    serializedArgs.push(DataSerializer.serialize(arg));
-                } else {
-                    serializedArgs.push(arg);
-                }
+        return (...args: any[]) =>
+            new Promise<any>((resolve, reject) => {
+                const uuid = uuidv4();
+                this._promises.set(uuid, { resolve, reject });
+                const serializedArgs: Array<any> = [];
+                args.forEach((arg) => {
+                    if (DataSerializer.findTypeByName(arg.constructor.name)) {
+                        serializedArgs.push(DataSerializer.serialize(arg));
+                    } else {
+                        serializedArgs.push(arg);
+                    }
+                });
+                this._inputObservable.next({
+                    id: uuid,
+                    serviceName: this.name,
+                    method: p as string,
+                    parameters: serializedArgs,
+                });
             });
-            this._inputObservable.next({
-                id: uuid,
-                serviceName: this.name,
-                method: p as string,
-                parameters: serializedArgs
-            });
-        });
     }
-
 }

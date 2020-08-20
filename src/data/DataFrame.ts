@@ -5,9 +5,9 @@ import { ReferenceSpace } from './object';
 
 /**
  * Data frame that is passed through each node in a model.
- * 
+ *
  * ## Usage
- * 
+ *
  * ### Creation
  * A data frame can be created with an optional source [[DataObject]] that represents
  * the object responsible for generating the frame.
@@ -69,15 +69,14 @@ export class DataFrame {
     public getObjects<T extends DataObject>(dataType?: new () => T): T[] {
         if (dataType === undefined) {
             const filteredObjects: T[] = [];
-            this._objects.forEach(object => {
+            this._objects.forEach((object) => {
                 filteredObjects.push(object as T);
             });
             return filteredObjects;
         } else {
             const filteredObjects: T[] = [];
-            this._objects.forEach(object => {
-                if (object.constructor.name === dataType.name)
-                    filteredObjects.push(object as T);
+            this._objects.forEach((object) => {
+                if (object.constructor.name === dataType.name) filteredObjects.push(object as T);
             });
             return filteredObjects;
         }
@@ -97,8 +96,7 @@ export class DataFrame {
      * @param object Relevant object
      */
     public addObject(object: DataObject): void {
-        if (object === undefined)
-            return;
+        if (object === undefined) return;
         this._objects.set(object.uid, object);
     }
 
@@ -110,7 +108,7 @@ export class DataFrame {
     public addReferenceSpace(referenceSpace: ReferenceSpace): void {
         this.addObject(referenceSpace);
     }
-    
+
     /**
      * Remove an object from the data frame
      *

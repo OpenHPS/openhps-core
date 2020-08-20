@@ -1,6 +1,6 @@
-import { DataFrame } from "../../data/DataFrame";
-import { Node } from "../../Node";
-import { TimeUnit } from "../../utils/unit";
+import { DataFrame } from '../../data/DataFrame';
+import { Node } from '../../Node';
+import { TimeUnit } from '../../utils/unit';
 
 export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _interval: number;
@@ -18,7 +18,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _onPush(frame: InOut): Promise<void> {
         return new Promise((resolve, reject) => {
             const pushPromises: Array<Promise<void>> = [];
-            this.outputNodes.forEach(node => {
+            this.outputNodes.forEach((node) => {
                 pushPromises.push(node.push(frame));
             });
 
@@ -26,15 +26,17 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
             clearInterval(this._timer);
             this._timer = setInterval(this._intervalFn.bind(this), this._interval);
 
-            Promise.all(pushPromises).then(() => {
-                resolve();
-            }).catch(reject);
+            Promise.all(pushPromises)
+                .then(() => {
+                    resolve();
+                })
+                .catch(reject);
         });
     }
 
     private _intervalFn(): void {
         const promises: Array<Promise<void>> = [];
-        this.inputNodes.forEach(node => {
+        this.inputNodes.forEach((node) => {
             promises.push(node.pull());
         });
         Promise.resolve(promises);
@@ -44,7 +46,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
      * Start the timed pull
      */
     private _start(): Promise<void> {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             this._timer = setInterval(this._intervalFn.bind(this), this._interval);
             resolve();
             this.emit('ready');
@@ -56,5 +58,4 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
             clearInterval(this._timer);
         }
     }
-
 }

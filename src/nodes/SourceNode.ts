@@ -1,8 +1,8 @@
-import { DataFrame } from "../data/DataFrame";
-import { DataObject } from "../data";
-import { AbstractSourceNode } from "../graph/interfaces/AbstractSourceNode";
-import { Model } from "../Model";
-import { NodeOptions } from "../Node";
+import { DataFrame } from '../data/DataFrame';
+import { DataObject } from '../data';
+import { AbstractSourceNode } from '../graph/interfaces/AbstractSourceNode';
+import { Model } from '../Model';
+import { NodeOptions } from '../Node';
 
 /**
  * Source node
@@ -17,14 +17,14 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
 
     /**
      * Construct a new source node
-     * 
+     *
      * @param source Source data object
      * @param options Source node options
      */
     constructor(source?: DataObject, options?: SourceNodeOptions) {
         super(options);
         this.source = source || this.options.source;
-        
+
         this._persistence = this.options.persistence || true;
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
@@ -37,7 +37,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
 
             if (this._persistence) {
                 if (data instanceof Array) {
-                    data.forEach(f => {
+                    data.forEach((f) => {
                         servicePromises.push(this._mergeFrame(f).then(() => this.persistFrame(f)));
                     });
                 } else {
@@ -45,27 +45,33 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
                     servicePromises.push(this._mergeFrame(f).then(() => this.persistFrame(f)));
                 }
             }
-            
-            this.outputNodes.forEach(node => {
+
+            this.outputNodes.forEach((node) => {
                 pushPromises.push(node.push(data));
             });
-            
-            Promise.all(servicePromises).then(() => Promise.all(pushPromises)).then(() => resolve()).catch(reject);
+
+            Promise.all(servicePromises)
+                .then(() => Promise.all(pushPromises))
+                .then(() => resolve())
+                .catch(reject);
         });
     }
 
     protected persistFrame(f: DataFrame): Promise<void> {
         return new Promise((resolve, reject) => {
-            const model = (this.graph as Model);
+            const model = this.graph as Model;
 
             if (f !== null || f !== undefined) {
                 const frameService = model.findDataService(f);
-                
-                if (frameService !== null && frameService !== undefined) { 
+
+                if (frameService !== null && frameService !== undefined) {
                     // Update the frame
-                    frameService.insert(f.uid, f).then(() => {
-                        resolve();
-                    }).catch(reject);
+                    frameService
+                        .insert(f.uid, f)
+                        .then(() => {
+                            resolve();
+                        })
+                        .catch(reject);
                 }
             } else {
                 // No frame provided in pull
@@ -76,55 +82,64 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
 
     private _mergeFrame(frame: DataFrame): Promise<DataFrame> {
         return new Promise<DataFrame>((resolve, reject) => {
-            const model = (this.graph as Model<any, any>);
+            const model = this.graph as Model<any, any>;
             const defaultService = model.findDataService(DataObject);
             const promises: Array<Promise<void>> = [];
             const objects: DataObject[] = [];
-            frame.getObjects().forEach(object => {
+            frame.getObjects().forEach((object) => {
                 objects.push(object);
             });
-            objects.forEach(object => {
-                promises.push(new Promise(objResolve => {
-                    let service = model.findDataService(object);
-                    if (service === null || service === undefined) {
-                        service = defaultService;
-                    }
-                    service.findByUID(object.uid).then((existingObject: DataObject) => {
-                        if (existingObject === null) {
-                            objResolve();
+            objects.forEach((object) => {
+                promises.push(
+                    new Promise((objResolve) => {
+                        let service = model.findDataService(object);
+                        if (service === null || service === undefined) {
+                            service = defaultService;
                         }
+                        service
+                            .findByUID(object.uid)
+                            .then((existingObject: DataObject) => {
+                                if (existingObject === null) {
+                                    objResolve();
+                                }
 
-                        object.merge(existingObject);
-                        objResolve();
-                    }).catch(() => {
-                        // Ignore
-                        objResolve();
-                    });
-                }));
+                                object.merge(existingObject);
+                                objResolve();
+                            })
+                            .catch(() => {
+                                // Ignore
+                                objResolve();
+                            });
+                    }),
+                );
             });
 
-            Promise.all(promises).then(() => {
-                resolve(frame);
-            }).catch(reject);
+            Promise.all(promises)
+                .then(() => {
+                    resolve(frame);
+                })
+                .catch(reject);
         });
     }
 
     private _onPull(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this.onPull().then(frame => {
-                if (frame !== undefined && frame !== null) {
-                    return this.push(frame);
-                } else {
+            this.onPull()
+                .then((frame) => {
+                    if (frame !== undefined && frame !== null) {
+                        return this.push(frame);
+                    } else {
+                        resolve();
+                    }
+                })
+                .then(() => {
                     resolve();
-                }
-            }).then(() => {
-                resolve();
-            }).catch(reject);
+                })
+                .catch(reject);
         });
     }
 
     public abstract onPull(): Promise<Out>;
-
 }
 
 export interface SourceNodeOptions extends NodeOptions {

@@ -1,7 +1,7 @@
-import { RelativePosition } from "./RelativePosition";
+import { RelativePosition } from './RelativePosition';
 import { AngleUnit, Quaternion, LengthUnit } from '../../utils';
 import { SerializableObject, SerializableMember } from '../decorators';
-import { DataSerializer } from "../DataSerializer";
+import { DataSerializer } from '../DataSerializer';
 
 /**
  * Relative location to another reference object measured in the angle.
@@ -71,5 +71,4 @@ export class RelativeAnglePosition implements RelativePosition {
         const clone = DataSerializer.deserialize(serialized) as this;
         return clone;
     }
-
 }

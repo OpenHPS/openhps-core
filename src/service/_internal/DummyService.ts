@@ -1,5 +1,3 @@
-import { Service } from "../Service";
+import { Service } from '../Service';
 
-export class DummyService extends Service {
-
-}
+export class DummyService extends Service {}

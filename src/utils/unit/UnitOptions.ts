@@ -1,5 +1,5 @@
-import { UnitDefinition } from "./UnitDefinition";
-import { UnitPrefixType } from "./UnitPrefix";
+import { UnitDefinition } from './UnitDefinition';
+import { UnitPrefixType } from './UnitPrefix';
 
 export interface UnitOptions {
     baseName: string;

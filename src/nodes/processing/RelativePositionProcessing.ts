@@ -1,7 +1,10 @@
-import { DataFrame, DataObject, RelativePosition } from "../../data";
-import { ObjectProcessingNode, ObjectProcessingNodeOptions } from "../ObjectProcessingNode";
+import { DataFrame, DataObject, RelativePosition } from '../../data';
+import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
 
-export abstract class RelativePositionProcessing<InOut extends DataFrame, R extends RelativePosition> extends ObjectProcessingNode<InOut> {
+export abstract class RelativePositionProcessing<
+    InOut extends DataFrame,
+    R extends RelativePosition
+> extends ObjectProcessingNode<InOut> {
     private _relativePositionType: new () => R;
 
     constructor(relativePositionType: new () => R, options?: ObjectProcessingNodeOptions) {
@@ -21,25 +24,37 @@ export abstract class RelativePositionProcessing<InOut extends DataFrame, R exte
                     } else {
                         index.set(relativePosition.referenceObjectUID, [relativePosition]);
                     }
-                    referencePromises.push(this.findObjectByUID(relativePosition.referenceObjectUID, dataFrame, relativePosition.referenceObjectType));
+                    referencePromises.push(
+                        this.findObjectByUID(
+                            relativePosition.referenceObjectUID,
+                            dataFrame,
+                            relativePosition.referenceObjectType,
+                        ),
+                    );
                 }
             }
 
-            Promise.all(referencePromises).then(referenceObjects => {
-                const relativePositions: Map<R, DataObject> = new Map();
-                referenceObjects.forEach((referenceObject: DataObject) => {
-                    index.get(referenceObject.uid).forEach(relativePosition => {
-                        relativePositions.set(relativePosition, referenceObject);
+            Promise.all(referencePromises)
+                .then((referenceObjects) => {
+                    const relativePositions: Map<R, DataObject> = new Map();
+                    referenceObjects.forEach((referenceObject: DataObject) => {
+                        index.get(referenceObject.uid).forEach((relativePosition) => {
+                            relativePositions.set(relativePosition, referenceObject);
+                        });
                     });
-                });
 
-                return this.processRelativePositions(dataObject, relativePositions, dataFrame);
-            }).then(modifiedObject => {
-                resolve(modifiedObject);
-            }).catch(reject);
+                    return this.processRelativePositions(dataObject, relativePositions, dataFrame);
+                })
+                .then((modifiedObject) => {
+                    resolve(modifiedObject);
+                })
+                .catch(reject);
         });
     }
 
-    public abstract processRelativePositions(dataObject: DataObject, relativePositions: Map<R, DataObject>, dataFrame?: InOut): Promise<DataObject>;
-
+    public abstract processRelativePositions(
+        dataObject: DataObject,
+        relativePositions: Map<R, DataObject>,
+        dataFrame?: InOut,
+    ): Promise<DataObject>;
 }

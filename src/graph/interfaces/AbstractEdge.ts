@@ -19,7 +19,7 @@ export interface AbstractEdge<InOut extends DataFrame> {
 
     /**
      * Push data to the output node
-     * 
+     *
      * @param frame Data frame to push
      */
     push(frame: InOut | InOut[]): Promise<void>;
@@ -28,5 +28,4 @@ export interface AbstractEdge<InOut extends DataFrame> {
      * Pull data from the input node
      */
     pull(): Promise<void>;
-
 }

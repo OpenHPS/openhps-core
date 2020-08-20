@@ -1,15 +1,16 @@
-import { DataObject, SerializableObject, SerializableMember, } from "../data";
-import { DataService } from "./DataService";
+import { DataObject, SerializableObject, SerializableMember } from '../data';
+import { DataService } from './DataService';
 
 export class NodeDataService<T extends NodeData | NodeData> extends DataService<string, T> {
-
     public findData(nodeUID: string, dataObject: DataObject | string): Promise<any> {
-        return new Promise<any>(resolve => {
-            this.findByUID(this.getUID(nodeUID, typeof dataObject === 'string' ? dataObject : dataObject.uid)).then(nodeData => {
-                resolve(nodeData.data);
-            }).catch(() => {
-                resolve(undefined);
-            });
+        return new Promise<any>((resolve) => {
+            this.findByUID(this.getUID(nodeUID, typeof dataObject === 'string' ? dataObject : dataObject.uid))
+                .then((nodeData) => {
+                    resolve(nodeData.data);
+                })
+                .catch(() => {
+                    resolve(undefined);
+                });
         });
     }
 
@@ -30,7 +31,6 @@ export class NodeDataService<T extends NodeData | NodeData> extends DataService<
         }
         return hash.toString();
     }
-
 }
 
 @SerializableObject()
@@ -44,5 +44,4 @@ export class NodeData {
         this.uid = uid;
         this.data = data;
     }
-
 }

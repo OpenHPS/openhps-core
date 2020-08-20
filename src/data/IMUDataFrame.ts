@@ -1,7 +1,7 @@
-import { DataFrame } from "./DataFrame";
-import { SerializableObject, SerializableMember } from "./decorators";
-import { Magnetism, Acceleration, LinearVelocity, AngularVelocity } from "./position";
-import { Quaternion } from "../utils";
+import { DataFrame } from './DataFrame';
+import { SerializableObject, SerializableMember } from './decorators';
+import { Magnetism, Acceleration, LinearVelocity, AngularVelocity } from './position';
+import { Quaternion } from '../utils';
 
 @SerializableObject()
 export class IMUDataFrame extends DataFrame {

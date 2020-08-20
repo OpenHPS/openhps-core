@@ -1,8 +1,8 @@
-import { DataObject } from "../DataObject";
-import { Space } from "./Space";
-import { SerializableObject, SerializableMember } from "../../decorators";
+import { DataObject } from '../DataObject';
+import { Space } from './Space';
+import { SerializableObject, SerializableMember } from '../../decorators';
 import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder } from '../../../utils/math';
-import { AngleUnit } from "../../../utils";
+import { AngleUnit } from '../../../utils';
 import { AbsolutePosition } from '../../position/AbsolutePosition';
 
 @SerializableObject()
@@ -40,14 +40,21 @@ export class ReferenceSpace extends DataObject implements Space {
         return this._scaleMatrix;
     }
 
-    public orthographic(left: number, right: number, bottom: number, top: number, near: number, far: number): ReferenceSpace {
+    public orthographic(
+        left: number,
+        right: number,
+        bottom: number,
+        top: number,
+        near: number,
+        far: number,
+    ): ReferenceSpace {
         this._transformationMatrix.multiply(new Matrix4().makeOrthographic(left, right, bottom, top, near, far));
         return this;
     }
 
     /**
      * Transform perspective
-     * 
+     *
      * @param left   Number Farthest left on the x-axis
      * @param right  Number Farthest right on the x-axis
      * @param bottom Number Farthest down on the y-axis
@@ -55,7 +62,14 @@ export class ReferenceSpace extends DataObject implements Space {
      * @param near   Number Distance to the near clipping plane along the -Z axis
      * @param far    Number Distance to the far clipping plane along the -Z axis
      */
-    public perspective(left: number, right: number, bottom: number, top: number, near: number, far: number): ReferenceSpace {
+    public perspective(
+        left: number,
+        right: number,
+        bottom: number,
+        top: number,
+        near: number,
+        far: number,
+    ): ReferenceSpace {
         this._transformationMatrix.multiply(new Matrix4().makePerspective(left, right, bottom, top, near, far));
         return this;
     }
@@ -97,7 +111,9 @@ export class ReferenceSpace extends DataObject implements Space {
     public transform(position: AbsolutePosition, inverse = false): AbsolutePosition {
         const transformedPosition = position.clone();
 
-        const transformationMatrix = inverse ? new Matrix4().getInverse(this._transformationMatrix) : this._transformationMatrix;
+        const transformationMatrix = inverse
+            ? new Matrix4().getInverse(this._transformationMatrix)
+            : this._transformationMatrix;
         const rotation = inverse ? this._rotation.clone().inverse() : this._rotation;
         const scale = inverse ? new Matrix4().getInverse(this._scaleMatrix) : this._scaleMatrix;
 
@@ -109,12 +125,13 @@ export class ReferenceSpace extends DataObject implements Space {
         }
         if (transformedPosition.velocity) {
             // Transform the linear velocity (rotation and scale)
-            transformedPosition.velocity.linear.applyMatrix4(scale).applyMatrix4(Matrix4.rotationFromQuaternion(rotation));
+            transformedPosition.velocity.linear
+                .applyMatrix4(scale)
+                .applyMatrix4(Matrix4.rotationFromQuaternion(rotation));
             // TODO: Transform the angular velocity (rotation axis)
         }
 
         transformedPosition.referenceSpaceUID = this.uid;
         return transformedPosition;
     }
-
 }

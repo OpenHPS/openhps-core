@@ -1,5 +1,5 @@
-import { DataFrame } from "../../data/DataFrame";
-import { Node } from "../../Node";
+import { DataFrame } from '../../data/DataFrame';
+import { Node } from '../../Node';
 
 export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _dataFrames: InOut[];
@@ -17,23 +17,24 @@ export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut
             if (this._dataFrames.length !== 0) {
                 const frame = this._dataFrames.pop();
                 const pushPromises: Array<Promise<void>> = [];
-                this.outputNodes.forEach(node => {
+                this.outputNodes.forEach((node) => {
                     pushPromises.push(node.push(frame));
                 });
-                Promise.all(pushPromises).then(() => {
-                    resolve();
-                }).catch(reject);
+                Promise.all(pushPromises)
+                    .then(() => {
+                        resolve();
+                    })
+                    .catch(reject);
             } else {
                 resolve();
             }
         });
-    } 
+    }
 
     public onPush(frame: InOut): Promise<void> {
-        return new Promise<void>(resolve => {
+        return new Promise<void>((resolve) => {
             this._dataFrames.push(frame);
             resolve();
         });
     }
-
 }

@@ -1,8 +1,8 @@
-import { RelativePosition } from "./RelativePosition";
+import { RelativePosition } from './RelativePosition';
 import { SerializableObject, SerializableMember } from '../decorators';
-import { Velocity } from "./Velocity";
-import { LengthUnit } from "../../utils";
-import { DataSerializer } from "../DataSerializer";
+import { Velocity } from './Velocity';
+import { LengthUnit } from '../../utils';
+import { DataSerializer } from '../DataSerializer';
 
 /**
  * Relative velocity to another reference object
@@ -55,5 +55,4 @@ export class RelativeVelocity implements RelativePosition {
         const clone = DataSerializer.deserialize(serialized) as this;
         return clone;
     }
-
 }

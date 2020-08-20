@@ -6,7 +6,6 @@ import * as THREE from './_internal';
  */
 @SerializableObject()
 export class Vector2 extends THREE.Vector2 {
-
     @SerializableMember()
     public get x(): number {
         return super.x;
@@ -30,5 +29,4 @@ export class Vector2 extends THREE.Vector2 {
         vector.fromArray(array);
         return vector;
     }
-
 }

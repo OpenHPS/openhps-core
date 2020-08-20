@@ -11,7 +11,6 @@ import { AngleUnit } from '../unit';
  */
 @SerializableObject()
 export class Quaternion extends THREE.Quaternion {
-
     @SerializableMember()
     public get x(): number {
         return super.x;
@@ -70,7 +69,13 @@ export class Quaternion extends THREE.Quaternion {
     public static fromEuler(euler: Vector3): Quaternion;
     public static fromEuler(euler: Euler): Quaternion;
     public static fromEuler(euler: { yaw: number; pitch: number; roll: number; unit?: AngleUnit }): Quaternion;
-    public static fromEuler(euler: { x: number; y: number; z: number; order?: EulerOrder; unit?: AngleUnit }): Quaternion;
+    public static fromEuler(euler: {
+        x: number;
+        y: number;
+        z: number;
+        order?: EulerOrder;
+        unit?: AngleUnit;
+    }): Quaternion;
     public static fromEuler(euler: number[]): Quaternion;
     public static fromEuler(euler: any): Quaternion {
         const quaternion = new Quaternion();
@@ -90,10 +95,16 @@ export class Quaternion extends THREE.Quaternion {
 
     /**
      * Convert axis angle rotation to quaternion
-     * 
+     *
      * @param axis Axis-angle rotation
      */
-    public static fromAxisAngle(axis: { x: number; y: number; z: number; angle?: number; unit?: AngleUnit }): Quaternion;
+    public static fromAxisAngle(axis: {
+        x: number;
+        y: number;
+        z: number;
+        angle?: number;
+        unit?: AngleUnit;
+    }): Quaternion;
     public static fromAxisAngle(axis: number[]): Quaternion;
     public static fromAxisAngle(axis: AxisAngle): Quaternion;
     public static fromAxisAngle(axis: any): Quaternion {
@@ -143,5 +154,4 @@ export class Quaternion extends THREE.Quaternion {
     public toRotationMatrix(): Matrix4 {
         return Matrix4.rotationFromQuaternion(this);
     }
-
 }

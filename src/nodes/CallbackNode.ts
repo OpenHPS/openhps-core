@@ -1,11 +1,14 @@
-import { DataFrame } from "../data/DataFrame";
-import { Node } from "../Node";
+import { DataFrame } from '../data/DataFrame';
+import { Node } from '../Node';
 
 export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _pushCallback: (frame: InOut | InOut[]) => void;
     private _pullCallback: () => InOut | InOut[];
 
-    constructor(pushCallback: (frame: InOut | InOut[]) => void = (frame: InOut) => true, pullCallback: () => InOut | InOut[] = () => null) {
+    constructor(
+        pushCallback: (frame: InOut | InOut[]) => void = (frame: InOut) => true,
+        pullCallback: () => InOut | InOut[] = () => null,
+    ) {
         super();
         this.pushCallback = pushCallback;
         this.pullCallback = pullCallback;
@@ -13,7 +16,7 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
     }
-    
+
     public get pullCallback(): () => InOut | InOut[] {
         return this._pullCallback;
     }
@@ -39,13 +42,15 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
             }
 
             const pushPromises: Array<Promise<void>> = [];
-            this.outputNodes.forEach(node => {
+            this.outputNodes.forEach((node) => {
                 pushPromises.push(node.push(frame));
             });
 
-            Promise.all(pushPromises).then(() => {
-                resolve();
-            }).catch(reject);
+            Promise.all(pushPromises)
+                .then(() => {
+                    resolve();
+                })
+                .catch(reject);
         });
     }
 
@@ -57,20 +62,21 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
             } catch (ex) {
                 return reject(ex);
             }
-            
+
             if (result !== undefined && result !== null) {
                 const pushPromises: Array<Promise<void>> = [];
-                this.outputNodes.forEach(node => {
+                this.outputNodes.forEach((node) => {
                     pushPromises.push(node.push(result));
                 });
-    
-                Promise.all(pushPromises).then(() => {
-                    resolve();
-                }).catch(reject);
+
+                Promise.all(pushPromises)
+                    .then(() => {
+                        resolve();
+                    })
+                    .catch(reject);
             } else {
                 resolve();
             }
         });
     }
-    
-} 
+}

@@ -1,5 +1,5 @@
-import { RFTransmitterObject } from "./RFTransmitterObject";
-import { SerializableObject, SerializableMember } from "../../decorators";
+import { RFTransmitterObject } from './RFTransmitterObject';
+import { SerializableObject, SerializableMember } from '../../decorators';
 
 @SerializableObject()
 export class WLANObject extends RFTransmitterObject {
@@ -16,5 +16,4 @@ export class WLANObject extends RFTransmitterObject {
     public set channel(channel: number) {
         this._channel = channel;
     }
-
 }

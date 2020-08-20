@@ -1,14 +1,14 @@
-import { Unit } from "./Unit";
+import { Unit } from './Unit';
 
 /**
  * Unit value
- * 
+ *
  * ## Usage
  * ### Creation
  * ```typescript
  * const value = new UnitValue(5, LengthUnit.METER);
  * ```
- * 
+ *
  * ### Conversion
  * ```typescript
  * const value = new UnitValue(5, LengthUnit.METER);
@@ -76,5 +76,4 @@ export class UnitValue implements Number {
     public valueOf(): number {
         return this._value.valueOf();
     }
-
 }

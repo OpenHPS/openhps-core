@@ -1,6 +1,6 @@
-import { Quaternion, Euler, AxisAngle, EulerOrder } from "../../../utils/math";
-import { AngleUnit } from "../../../utils";
-import { AbsolutePosition } from "../../position";
+import { Quaternion, Euler, AxisAngle, EulerOrder } from '../../../utils/math';
+import { AngleUnit } from '../../../utils';
+import { AbsolutePosition } from '../../position';
 
 /**
  * Space interface.
@@ -14,17 +14,17 @@ export interface Space {
     uid: string;
 
     orthographic(left: number, right: number, bottom: number, top: number, near: number, far: number): Space;
-    
+
     perspective(left: number, right: number, bottom: number, top: number, near: number, far: number): Space;
 
     translation(dX: number, dY: number, dZ?: number): Space;
 
     /**
      * Scale the reference space
-     * 
-     * @param kX 
-     * @param kY 
-     * @param kZ 
+     *
+     * @param kX
+     * @param kY
+     * @param kZ
      */
     scale(kX: number, kY: number, kZ?: number): Space;
 

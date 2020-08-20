@@ -6,13 +6,4 @@ import { Matrix4 } from 'three/src/math/Matrix4';
 import { Euler } from 'three/src/math/Euler';
 import { MathUtils } from 'three/src/math/MathUtils';
 import { Camera } from 'three/src/cameras/Camera';
-export { 
-    Quaternion, 
-    Vector3, 
-    Vector4, 
-    Matrix4, 
-    Euler, 
-    Vector2, 
-    MathUtils,
-    Camera
-};
+export { Quaternion, Vector3, Vector4, Matrix4, Euler, Vector2, MathUtils, Camera };

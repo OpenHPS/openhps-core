@@ -1,13 +1,19 @@
-import { DataFrame, DataObject, ReferenceSpace } from "../../data";
-import { GraphImpl } from "../_internal/implementations";
-import { Node } from "../../Node";
-import { AbstractSourceNode, AbstractEdge, AbstractGraph, AbstractSinkNode, AbstractNode } from "../interfaces";
-import { EdgeBuilder } from "./EdgeBuilder";
-import { TimeUnit } from "../../utils";
-import { FrameChunkNode, FrameFlattenNode, FrameFilterNode, ObjectMergeNode, MemoryBufferNode } from "../../nodes/shapes";
-import { ObjectFilterNode } from "../../nodes/shapes/ObjectFilterNode";
-import { FrameDebounceNode } from "../../nodes/shapes/FrameDebounceNode";
-import { ReferenceSpaceConversionNode } from "../../nodes/processing/ReferenceSpaceConversionNode";
+import { DataFrame, DataObject, ReferenceSpace } from '../../data';
+import { GraphImpl } from '../_internal/implementations';
+import { Node } from '../../Node';
+import { AbstractSourceNode, AbstractEdge, AbstractGraph, AbstractSinkNode, AbstractNode } from '../interfaces';
+import { EdgeBuilder } from './EdgeBuilder';
+import { TimeUnit } from '../../utils';
+import {
+    FrameChunkNode,
+    FrameFlattenNode,
+    FrameFilterNode,
+    ObjectMergeNode,
+    MemoryBufferNode,
+} from '../../nodes/shapes';
+import { ObjectFilterNode } from '../../nodes/shapes/ObjectFilterNode';
+import { FrameDebounceNode } from '../../nodes/shapes/FrameDebounceNode';
+import { ReferenceSpaceConversionNode } from '../../nodes/processing/ReferenceSpaceConversionNode';
 
 /**
  * Graph builder
@@ -17,7 +23,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
 
     protected constructor(graph: GraphImpl<In, Out> = new GraphImpl()) {
         this._graph = graph;
-        this.graph.name = "graph";
+        this.graph.name = 'graph';
     }
 
     public static create<In extends DataFrame, Out extends DataFrame>(): GraphBuilder<In, Out> {
@@ -36,15 +42,16 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
             } else {
                 this.graph.addNode(node);
                 if (node instanceof AbstractSourceNode) {
-                    this.graph.addEdge(EdgeBuilder.create()
-                        .from(this.graph.internalInput)
-                        .to(node)
-                        .build());
+                    this.graph.addEdge(EdgeBuilder.create().from(this.graph.internalInput).to(node).build());
                 }
                 selectedNodes.push(node);
             }
         });
-        return new GraphShapeBuilder(this, this.graph, selectedNodes.length === 0 ? [this.graph.internalInput] : selectedNodes);
+        return new GraphShapeBuilder(
+            this,
+            this.graph,
+            selectedNodes.length === 0 ? [this.graph.internalInput] : selectedNodes,
+        );
     }
 
     public addNode(node: AbstractNode<any, any>): GraphBuilder<In, Out> {
@@ -75,15 +82,13 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
     public addShape(graph: GraphBuilder<any, any> | AbstractGraph<any, any>): GraphBuilder<In, Out> {
         this.from().via(graph).to();
         if (graph instanceof GraphBuilder) {
-            // Connect internal and external output to shape 
-            this.graph.addEdge(EdgeBuilder.create()
-                .from(this.graph.internalInput)
-                .to(graph.graph.internalInput)
-                .build());
-            this.graph.addEdge(EdgeBuilder.create()
-                .from(graph.graph.internalOutput)
-                .to(this.graph.internalOutput)
-                .build());
+            // Connect internal and external output to shape
+            this.graph.addEdge(
+                EdgeBuilder.create().from(this.graph.internalInput).to(graph.graph.internalInput).build(),
+            );
+            this.graph.addEdge(
+                EdgeBuilder.create().from(graph.graph.internalOutput).to(this.graph.internalOutput).build(),
+            );
         }
         return this;
     }
@@ -94,21 +99,20 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
 
     public build(): Promise<AbstractGraph<In, Out>> {
         return new Promise((resolve, reject) => {
-            this.graph.nodes.forEach(node => {
+            this.graph.nodes.forEach((node) => {
                 node.logger = this.graph.logger;
             });
             this.graph.validate();
             this.graph.once('ready', () => {
                 resolve(this.graph);
             });
-            this.graph.emitAsync('build', this).catch(ex => {
+            this.graph.emitAsync('build', this).catch((ex) => {
                 // Destroy model
                 this.graph.emit('destroy');
                 reject(ex);
             });
         });
     }
-    
 }
 
 export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
@@ -123,12 +127,12 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     }
 
     protected viaGraphBuilder(graphBuilder: GraphBuilder<any, any>): GraphShapeBuilder<Builder> {
-        graphBuilder.graph.nodes.forEach(graphNode => {
+        graphBuilder.graph.nodes.forEach((graphNode) => {
             (graphNode as Node<any, any>).graph = this.graph;
             (graphNode as Node<any, any>).logger = this.graph.logger;
             this.graph.addNode(graphNode);
         });
-        graphBuilder.graph.edges.forEach(graphEdge => {
+        graphBuilder.graph.edges.forEach((graphEdge) => {
             this.graph.addEdge(graphEdge);
         });
         return this;
@@ -136,16 +140,18 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     protected viaGraph(graph: AbstractGraph<any, any>): GraphShapeBuilder<Builder> {
         // Add graph as node
-        graph.nodes.forEach(graphNode => {
+        graph.nodes.forEach((graphNode) => {
             (graphNode as Node<any, any>).graph = this.graph;
             (graphNode as Node<any, any>).logger = this.graph.logger;
         });
-        return this.via(graph as unknown as Node<any, any>);
+        return this.via((graph as unknown) as Node<any, any>);
     }
 
-    public via(...nodes: Array<Node<any, any> | string | AbstractGraph<any, any> | GraphBuilder<any, any>>): GraphShapeBuilder<Builder> {
+    public via(
+        ...nodes: Array<Node<any, any> | string | AbstractGraph<any, any> | GraphBuilder<any, any>>
+    ): GraphShapeBuilder<Builder> {
         const selectedNodes: Array<Node<any, any>> = [];
-        nodes.forEach(node => {
+        nodes.forEach((node) => {
             if (node instanceof GraphBuilder) {
                 return this.viaGraphBuilder(node);
             } else if (node instanceof GraphImpl) {
@@ -176,11 +182,8 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      * @param node Node to insert
      */
     private _insertNode(node: Node<any, any>): void {
-        this.previousNodes.forEach(prevNode => {
-            this.graph.addEdge(EdgeBuilder.create()
-                .from(prevNode)
-                .to(node)
-                .build());
+        this.previousNodes.forEach((prevNode) => {
+            this.graph.addEdge(EdgeBuilder.create().from(prevNode).to(node).build());
         });
     }
 
@@ -219,8 +222,12 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      * @param timeout Timeout
      * @param timeoutUnit Timeout unit
      */
-    public merge(by: (frame: DataFrame) => boolean = _ => true, timeout = 100, timeoutUnit = TimeUnit.MILLISECOND): GraphShapeBuilder<Builder> {
-        return this.via(new ObjectMergeNode((object: DataObject) => true, by, timeout, timeoutUnit)); 
+    public merge(
+        by: (frame: DataFrame) => boolean = (_) => true,
+        timeout = 100,
+        timeoutUnit = TimeUnit.MILLISECOND,
+    ): GraphShapeBuilder<Builder> {
+        return this.via(new ObjectMergeNode((object: DataObject) => true, by, timeout, timeoutUnit));
     }
 
     public debounce(timeout = 100, timeoutUnit = TimeUnit.MILLISECOND): GraphShapeBuilder<Builder> {
@@ -235,7 +242,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     public convertToSpace(referenceSpace: ReferenceSpace | string): GraphShapeBuilder<Builder> {
         return this.via(new ReferenceSpaceConversionNode(referenceSpace, false));
     }
-    
+
     /**
      * Convert positions of all objects from a certain reference space
      *
@@ -255,7 +262,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     public to(...nodes: Array<AbstractSinkNode<any> | string>): Builder {
         if (nodes.length !== 0) {
             const selectedNodes: Array<AbstractSinkNode<any>> = [];
-            nodes.forEach(node => {
+            nodes.forEach((node) => {
                 let nodeObject: Node<any, any>;
                 if (typeof node === 'string') {
                     nodeObject = this.graph.getNodeByUID(node);
@@ -268,17 +275,13 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
                 }
 
                 this._insertNode(nodeObject);
-                this.graph.addEdge(EdgeBuilder.create()
-                    .from(nodeObject)
-                    .to(this.graph.internalOutput)
-                    .build());
+                this.graph.addEdge(EdgeBuilder.create().from(nodeObject).to(this.graph.internalOutput).build());
                 selectedNodes.push(nodeObject as AbstractSinkNode<any>);
             });
-            this.previousNodes = selectedNodes; 
+            this.previousNodes = selectedNodes;
         } else {
             this._insertNode(this.graph.internalOutput);
         }
         return this.graphBuilder;
     }
-
 }

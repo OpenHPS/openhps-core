@@ -1,6 +1,6 @@
-import { FilterProcessingNode } from "../dsp";
-import { DataObject, IMUDataFrame } from "../../../data";
-import { Quaternion } from "../../../utils";
+import { FilterProcessingNode } from '../dsp';
+import { DataObject, IMUDataFrame } from '../../../data';
+import { Quaternion } from '../../../utils';
 
 /**
  * Geomagnetic orientation processing node
@@ -8,7 +8,6 @@ import { Quaternion } from "../../../utils";
  * @source https://github.com/visakhanc/eCompass/blob/master/source/main.c
  */
 export class GeomagneticOrientationProcessingNode extends FilterProcessingNode<IMUDataFrame> {
-
     public initFilter(object: DataObject, frame: IMUDataFrame): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             if (frame.angularVelocity || frame.acceleration === undefined) {
@@ -24,13 +23,13 @@ export class GeomagneticOrientationProcessingNode extends FilterProcessingNode<I
     }
 
     public filter(object: DataObject, frame: IMUDataFrame): Promise<DataObject> {
-        return new Promise<DataObject>(resolve => {
+        return new Promise<DataObject>((resolve) => {
             const accl = frame.acceleration;
             const mag = frame.magnetism;
-            
+
             /* Calculate pitch and roll, in the range (-pi,pi) */
             const pitch = Math.atan2(-accl.x, Math.sqrt(accl.z * accl.z + accl.y * accl.y));
-            const roll = Math.atan2(accl.y, Math.sqrt(accl.z * accl.z  + accl.x * accl.x));
+            const roll = Math.atan2(accl.y, Math.sqrt(accl.z * accl.z + accl.x * accl.x));
 
             /* Calculate Azimuth:
              * Magnetic horizontal components, after compensating for Roll(r) and Pitch(p) are:
@@ -38,10 +37,14 @@ export class GeomagneticOrientationProcessingNode extends FilterProcessingNode<I
              * Yh = Y*cos(r) - Z*sin(r)
              * Azimuth = arcTan(Y_h/X_h)
              */
-            const Xh = mag.x * Math.cos(pitch) + mag.y * Math.sin(roll) * Math.sin(pitch) + mag.z * Math.cos(roll) * Math.sin(pitch);
+            const Xh =
+                mag.x * Math.cos(pitch) +
+                mag.y * Math.sin(roll) * Math.sin(pitch) +
+                mag.z * Math.cos(roll) * Math.sin(pitch);
             const Yh = mag.y * Math.cos(roll) - mag.z * Math.sin(roll);
             let azimuth = Math.atan2(Yh, Xh);
-            if (azimuth < 0) {	/* Convert Azimuth in the range (0, 2pi) */
+            if (azimuth < 0) {
+                /* Convert Azimuth in the range (0, 2pi) */
                 azimuth = 2 * Math.PI + azimuth;
             }
 
@@ -50,5 +53,4 @@ export class GeomagneticOrientationProcessingNode extends FilterProcessingNode<I
             resolve(object);
         });
     }
-
 }

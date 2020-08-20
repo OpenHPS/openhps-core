@@ -1,6 +1,6 @@
-import { DataServiceDriver } from "./DataServiceDriver";
-import { FilterQuery } from "./FilterQuery";
-import { QueryEvaluator } from "./QueryEvaluator";
+import { DataServiceDriver } from './DataServiceDriver';
+import { FilterQuery } from './FilterQuery';
+import { QueryEvaluator } from './QueryEvaluator';
 
 export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     protected _data: Map<I, T> = new Map();
@@ -16,28 +16,26 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     }
 
     public findOne(query?: FilterQuery<T>): Promise<T> {
-        return new Promise<T>(resolve => {
+        return new Promise<T>((resolve) => {
             for (const [, object] of this._data) {
-                if (QueryEvaluator.evaluate(object, query))
-                    return resolve(object);
+                if (QueryEvaluator.evaluate(object, query)) return resolve(object);
             }
             return resolve();
         });
     }
 
     public findAll(query?: FilterQuery<T>): Promise<T[]> {
-        return new Promise<T[]>(resolve => {
+        return new Promise<T[]>((resolve) => {
             const data: T[] = [];
-            this._data.forEach(object => {
-                if (QueryEvaluator.evaluate(object, query))
-                    data.push(object);
+            this._data.forEach((object) => {
+                if (QueryEvaluator.evaluate(object, query)) data.push(object);
             });
             resolve(data);
         });
     }
 
     public insert(id: I, object: T): Promise<T> {
-        return new Promise<T>(resolve => {
+        return new Promise<T>((resolve) => {
             if (id && object) {
                 this._data.set(id, object);
                 resolve(object);
@@ -59,7 +57,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     }
 
     public deleteAll(filter?: FilterQuery<T>): Promise<void> {
-        return new Promise<void>(resolve => {
+        return new Promise<void>((resolve) => {
             if (filter === undefined) {
                 this._data = new Map();
             } else {
@@ -72,5 +70,4 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
             resolve();
         });
     }
-    
 }

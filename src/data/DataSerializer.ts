@@ -1,8 +1,8 @@
-import { TypedJSON } from "typedjson";
+import { TypedJSON } from 'typedjson';
 
 /**
  * Data serializer allows the serialization of objects using the [[SerializableObject]] decorator.
- * 
+ *
  * ## Usage
  * Objects are registered upon loading with the [[SerializableObject]] decorator.
  * Manual registration is possible using:
@@ -30,7 +30,7 @@ export class DataSerializer {
     public static findTypeByName(name: string): new () => any {
         return this._serializableTypes.get(name);
     }
-    
+
     /**
      * Serialize data
      *
@@ -57,7 +57,7 @@ export class DataSerializer {
 
     protected static serializeArray<T>(data: T[]): any[] {
         const serializedResult: any[] = [];
-        data.forEach(d => {
+        data.forEach((d) => {
             if (d === null || d === undefined || d !== Object(d)) {
                 serializedResult.push(d);
             } else {
@@ -77,7 +77,7 @@ export class DataSerializer {
     /**
      * Deserialize data
      *
-     * @param serializedData Data to deserialze 
+     * @param serializedData Data to deserialze
      * @param dataType Optional data type to specify deserialization type
      */
     public static deserialize<T>(serializedData: any, dataType?: new () => T): T;
@@ -90,7 +90,8 @@ export class DataSerializer {
         if (Array.isArray(serializedData)) {
             return DataSerializer.deserializeArray(serializedData, dataType);
         } else {
-            const detectedType = serializedData['__type'] !== undefined ? this.findTypeByName(serializedData['__type']) : Object;
+            const detectedType =
+                serializedData['__type'] !== undefined ? this.findTypeByName(serializedData['__type']) : Object;
             const finalType = dataType === undefined ? detectedType : dataType;
             if (finalType === undefined) {
                 return serializedData;
@@ -101,7 +102,7 @@ export class DataSerializer {
 
     protected static deserializeArray<T>(serializedData: any[], dataType?: new () => T): T[] {
         const deserializedResult: T[] = [];
-        serializedData.forEach(d => {
+        serializedData.forEach((d) => {
             if (d === null || d === undefined) {
                 deserializedResult.push(d);
             } else {
@@ -110,10 +111,9 @@ export class DataSerializer {
                 if (finalType === undefined) {
                     deserializedResult.push(d);
                 }
-                deserializedResult.push(new TypedJSON(finalType).parse(d));   
+                deserializedResult.push(new TypedJSON(finalType).parse(d));
             }
         });
         return deserializedResult;
     }
-
 }

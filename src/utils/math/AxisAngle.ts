@@ -1,7 +1,7 @@
-import { AngleUnit } from "../unit";
-import { SerializableObject, SerializableMember } from "../../data/decorators";
-import { Matrix4 } from "./Matrix4";
-import { Vector3 } from "./Vector3";
+import { AngleUnit } from '../unit';
+import { SerializableObject, SerializableMember } from '../../data/decorators';
+import { Matrix4 } from './Matrix4';
+import { Vector3 } from './Vector3';
 import * as THREE from './_internal';
 
 /**
@@ -15,7 +15,7 @@ export class AxisAngle extends Vector3 {
         super(
             unit.convert(x ? x : 0, AngleUnit.RADIAN),
             unit.convert(y ? y : 0, AngleUnit.RADIAN),
-            unit.convert(z ? z : 0, AngleUnit.RADIAN)
+            unit.convert(z ? z : 0, AngleUnit.RADIAN),
         );
 
         if (angle !== null) {
@@ -25,7 +25,7 @@ export class AxisAngle extends Vector3 {
             this.normalize();
         }
     }
-    
+
     @SerializableMember()
     public get angle(): number {
         return this._angle;
@@ -43,25 +43,24 @@ export class AxisAngle extends Vector3 {
     public static fromQuaternion(quat: THREE.Quaternion): AxisAngle {
         const axis = new AxisAngle();
         axis.angle = 2 * Math.acos(quat.w);
-        if (1 - (quat.w * quat.w) < 0.000001) {
+        if (1 - quat.w * quat.w < 0.000001) {
             axis.x = quat.x;
             axis.y = quat.y;
             axis.z = quat.z;
         } else {
             // http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/
-            const s = Math.sqrt(1 - (quat.w * quat.w));
+            const s = Math.sqrt(1 - quat.w * quat.w);
             axis.x = quat.x / s;
             axis.y = quat.y / s;
             axis.z = quat.z / s;
         }
         return axis;
     }
-    
+
     /**
      * Convert axis angle to rotation matrix
      */
     public toRotationMatrix(): Matrix4 {
         return Matrix4.rotationFromAxisAngle(this, this.angle);
     }
-
 }

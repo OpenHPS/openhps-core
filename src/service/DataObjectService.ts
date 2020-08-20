@@ -1,14 +1,13 @@
-import { DataObject, AbsolutePosition, Absolute2DPosition } from "../data";
-import { FilterQuery } from "./FilterQuery";
-import { Vector3 } from "../utils";
-import { DataService } from "./DataService";
+import { DataObject, AbsolutePosition, Absolute2DPosition } from '../data';
+import { FilterQuery } from './FilterQuery';
+import { Vector3 } from '../utils';
+import { DataService } from './DataService';
 
 /**
  * The object service manages the data of objects that are currently being
  * processed in the model and objects that need to be tracked.
  */
 export class DataObjectService<T extends DataObject> extends DataService<string, T> {
-
     /**
      * Find a data object by its display name
      *
@@ -16,7 +15,7 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
      */
     public findByDisplayName(displayName: string): Promise<T[]> {
         const filter: FilterQuery<any> = {
-            displayName
+            displayName,
         };
         return this.findAll(filter) as Promise<T[]>;
     }
@@ -51,9 +50,8 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
      */
     public findByParentUID(parentUID: string): Promise<T[]> {
         const filter: FilterQuery<any> = {
-            parentUID
+            parentUID,
         };
         return this.findAll(filter) as Promise<T[]>;
     }
-    
 }

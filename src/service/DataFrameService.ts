@@ -1,16 +1,15 @@
-import { DataFrame } from "../data";
-import { FilterQuery } from "./FilterQuery";
-import { DataService } from "./DataService";
+import { DataFrame } from '../data';
+import { FilterQuery } from './FilterQuery';
+import { DataService } from './DataService';
 
 export class DataFrameService<T extends DataFrame> extends DataService<string, T> {
-
     public findByDataObjectUID(uid: string): Promise<T[]> {
         const filter: FilterQuery<any> = {
             _objects: {
                 $elemMatch: {
-                    uid
-                }
-            }
+                    uid,
+                },
+            },
         };
         return this.findAll(filter) as Promise<T[]>;
     }
@@ -18,7 +17,7 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
     /**
      * Find data frames created before a certain timestamp
      *
-     * @param timestamp 
+     * @param timestamp
      */
     public findBefore(timestamp: number): Promise<T[]> {
         return this._findTimestamp({ $lte: timestamp });
@@ -27,7 +26,7 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
     /**
      * Find data frames created after a certain timestamp
      *
-     * @param timestamp 
+     * @param timestamp
      */
     public findAfter(timestamp: number): Promise<T[]> {
         return this._findTimestamp({ $gte: timestamp });
@@ -35,9 +34,8 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
 
     private _findTimestamp(timestampFilter: any): Promise<T[]> {
         const filter: FilterQuery<any> = {
-            createdTimestamp: timestampFilter
+            createdTimestamp: timestampFilter,
         };
         return this.findAll(filter) as Promise<T[]>;
     }
-
 }

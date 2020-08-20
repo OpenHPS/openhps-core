@@ -1,7 +1,7 @@
-import { RelativePosition } from "./RelativePosition";
-import { LengthUnit } from "../../utils";
+import { RelativePosition } from './RelativePosition';
+import { LengthUnit } from '../../utils';
 import { SerializableObject, SerializableMember } from '../decorators';
-import { DataSerializer } from "../DataSerializer";
+import { DataSerializer } from '../DataSerializer';
 
 /**
  * Relative location to another reference object in distance.
@@ -63,5 +63,4 @@ export class RelativeDistancePosition implements RelativePosition {
         const clone = DataSerializer.deserialize(serialized) as this;
         return clone;
     }
-
 }

@@ -1,23 +1,22 @@
-import { DataFrame, ReferenceSpace } from "./data";
-import { DataService, Service } from "./service";
-import { GraphImpl } from "./graph/_internal/implementations/GraphImpl";
+import { DataFrame, ReferenceSpace } from './data';
+import { DataService, Service } from './service';
+import { GraphImpl } from './graph/_internal/implementations/GraphImpl';
 
 /**
  * This model contains multiple [[Node]]s, [[Service]]s to sample
  * [[DataFrame]]s that are pushed or pulled from this model.
- * 
+ *
  * ## Usage
  * ### Creation
  * Please refer to [[ModelBuilder]] for creating a new model
- * 
+ *
  * ### Pushing and Pulling
- * 
+ *
  */
 export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame> extends GraphImpl<In, Out> {
-
     /**
      * Push data to the model
-     * 
+     *
      * @param frame Input frame
      */
     push(frame: In | In[]): Promise<void>;
@@ -32,7 +31,7 @@ export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame =
      */
     findService<F extends Service>(name: string): F;
     findService<F extends Service>(serviceClass: new () => F): F;
-    
+
     /**
      * Find data service
      */

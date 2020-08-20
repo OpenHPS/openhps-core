@@ -1,5 +1,5 @@
-import { DataServiceDriver } from "./DataServiceDriver";
-import { FilterQuery } from "./FilterQuery";
+import { DataServiceDriver } from './DataServiceDriver';
+import { FilterQuery } from './FilterQuery';
 
 export abstract class DataService<I, T> extends DataServiceDriver<I, T> {
     protected driver: DataServiceDriver<I, T>;
@@ -35,5 +35,4 @@ export abstract class DataService<I, T> extends DataServiceDriver<I, T> {
     public deleteAll(): Promise<void> {
         return this.driver.deleteAll();
     }
-
 }

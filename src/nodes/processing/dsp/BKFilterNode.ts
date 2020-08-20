@@ -1,21 +1,23 @@
-import { PropertyFilterProcessingNode } from "./PropertyFilterProcessingNode";
-import { FilterProcessingOptions } from "./FilterProcessingNode";
+import { PropertyFilterProcessingNode } from './PropertyFilterProcessingNode';
+import { FilterProcessingOptions } from './FilterProcessingNode';
 import { DataObject, DataFrame } from '../../../data';
-import { Vector3 } from "../../../utils";
+import { Vector3 } from '../../../utils';
 
 /**
  * Basic Kalman Filter processing node
  */
 export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
-
-    constructor(propertySelector: (object: DataObject, frame?: InOut) => PropertyKey,
-                options: KalmanFilterOptions) {
+    constructor(propertySelector: (object: DataObject, frame?: InOut) => PropertyKey, options: KalmanFilterOptions) {
         super(propertySelector, options);
     }
 
-    public initFilter<T extends number | Vector3>(object: DataObject, value: T, options: KalmanFilterOptions): Promise<any> {
-        return new Promise<any>(resolve => {
-            Object.keys(options).forEach(key => {
+    public initFilter<T extends number | Vector3>(
+        object: DataObject,
+        value: T,
+        options: KalmanFilterOptions,
+    ): Promise<any> {
+        return new Promise<any>((resolve) => {
+            Object.keys(options).forEach((key) => {
                 if (typeof (options as any)[key] === 'number') {
                     (options as any)[key] = new Vector3((options as any)[key], 0, 0);
                 }
@@ -23,9 +25,9 @@ export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterProcess
             resolve({ x: undefined, cov: NaN, ...options });
         });
     }
-    
+
     public filter<T extends number | Vector3>(object: DataObject, value: T, filter: any): Promise<T> {
-        return new Promise<T>(resolve => {
+        return new Promise<T>((resolve) => {
             const kf = new KalmanFilter(filter.R, filter.Q, filter.A, filter.B, filter.C, filter.x, filter.cov);
             const numeric = typeof value === 'number';
             if (numeric) {
@@ -45,7 +47,6 @@ export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterProcess
             }
         });
     }
-
 }
 
 export interface KalmanFilterOptions extends FilterProcessingOptions {
@@ -115,7 +116,12 @@ class KalmanFilter<T extends Vector3> {
             const predCov = this.uncertainty();
 
             // Kalman gain
-            const K = predCov.clone().multiply(this._C).multiply(new Vector3(1, 1, 1).divide(this._C.clone().multiply(predCov).multiply(this._C).add(this._Q)));
+            const K = predCov
+                .clone()
+                .multiply(this._C)
+                .multiply(
+                    new Vector3(1, 1, 1).divide(this._C.clone().multiply(predCov).multiply(this._C).add(this._Q)),
+                );
 
             // Correction
             this._x = predX.clone().add(K.clone().multiply(z.clone().sub(this._C.clone().multiply(predX)))) as T;
@@ -132,9 +138,12 @@ class KalmanFilter<T extends Vector3> {
      * @returns {number}
      */
     public predict(u?: Vector3): Vector3 {
-        return this._A.clone().multiply(this._x).add(u === undefined ? new Vector3() : this._B.clone().multiply(u));
+        return this._A
+            .clone()
+            .multiply(this._x)
+            .add(u === undefined ? new Vector3() : this._B.clone().multiply(u));
     }
-    
+
     /**
      * Return uncertainty of filter
      *
@@ -143,7 +152,7 @@ class KalmanFilter<T extends Vector3> {
     public uncertainty(): T {
         return this._A.clone().multiply(this._cov).multiply(this._A).add(this._R);
     }
-    
+
     /**
      * Return the last filtered measurement
      *

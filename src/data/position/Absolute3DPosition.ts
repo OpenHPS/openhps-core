@@ -1,7 +1,7 @@
-import { SerializableObject, SerializableMember } from "../decorators";
-import { LengthUnit, Vector3, Quaternion } from "../../utils";
-import { AbsolutePosition } from "./AbsolutePosition";
-import { Velocity } from "./Velocity";
+import { SerializableObject, SerializableMember } from '../decorators';
+import { LengthUnit, Vector3, Quaternion } from '../../utils';
+import { AbsolutePosition } from './AbsolutePosition';
+import { Velocity } from './Velocity';
 
 /**
  * Absolute cartesian 3D position. This class extends a [[Vector3]]. This location can be used both as
@@ -58,7 +58,7 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
         newPoint.set((this.x + otherPosition.x) / 2, (this.y + otherPosition.y) / 2, (this.z + otherPosition.z) / 2);
         return newPoint;
     }
-    
+
     public fromVector(vector: Vector3, unit?: LengthUnit): void {
         if (unit) {
             this.x = unit.convert(vector.x, this.unit);
@@ -74,9 +74,10 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
     public toVector3(unit?: LengthUnit): Vector3 {
         if (unit) {
             return new Vector3(
-                this.unit.convert(this.x, unit), 
-                this.unit.convert(this.y, unit), 
-                this.unit.convert(this.z, unit));
+                this.unit.convert(this.x, unit),
+                this.unit.convert(this.y, unit),
+                this.unit.convert(this.z, unit),
+            );
         } else {
             return new Vector3(this.x, this.y, this.z);
         }
@@ -100,5 +101,4 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
         position.referenceSpaceUID = this.referenceSpaceUID;
         return position as this;
     }
-
 }

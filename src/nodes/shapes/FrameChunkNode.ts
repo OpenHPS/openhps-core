@@ -1,6 +1,6 @@
-import { DataFrame } from "../../data";
-import { Node } from "../../Node";
-import { TimeUnit } from "../../utils";
+import { DataFrame } from '../../data';
+import { Node } from '../../Node';
+import { TimeUnit } from '../../utils';
 
 export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _count: number;
@@ -18,13 +18,15 @@ export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> 
             this._queue.push(frame);
             if (this._queue.length >= this._count) {
                 const pushPromises: Array<Promise<void>> = [];
-                this.outputNodes.forEach(outputNode => {
+                this.outputNodes.forEach((outputNode) => {
                     pushPromises.push(outputNode.push(this._queue));
                 });
                 this._queue = [];
-                Promise.all(pushPromises).then(() => {
-                    resolve();
-                }).catch(reject);
+                Promise.all(pushPromises)
+                    .then(() => {
+                        resolve();
+                    })
+                    .catch(reject);
             } else {
                 resolve();
             }

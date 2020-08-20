@@ -1,10 +1,9 @@
-import { SerializableObject, SerializableMember } from "../decorators";
-import { AngularVelocity } from "./AngularVelocity";
-import { LinearVelocity } from "./LinearVelocity";
+import { SerializableObject, SerializableMember } from '../decorators';
+import { AngularVelocity } from './AngularVelocity';
+import { LinearVelocity } from './LinearVelocity';
 
 @SerializableObject()
 export class Velocity {
-    
     /**
      * Linear velocity
      */
@@ -28,5 +27,4 @@ export class Velocity {
     public clone(): this {
         return new Velocity(this.linear.clone(), this.angular.clone()) as this;
     }
-
 }

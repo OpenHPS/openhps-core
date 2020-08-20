@@ -1,17 +1,18 @@
 import { v4 as uuidv4 } from 'uuid';
-import { AbstractNode } from "./graph/interfaces/AbstractNode";
-import { DataFrame } from "./data/DataFrame";
-import { AbstractGraph } from "./graph/interfaces/AbstractGraph";
+import { AbstractNode } from './graph/interfaces/AbstractNode';
+import { DataFrame } from './data/DataFrame';
+import { AbstractGraph } from './graph/interfaces/AbstractGraph';
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
 import { AsyncEventEmitter } from './_internal/AsyncEventEmitter';
 
 /**
  * The graph node has an input and output [[DataFrame]]
- * 
+ *
  * ## Usage
- * 
+ *
  */
-export abstract class Node<In extends DataFrame, Out extends DataFrame> extends AsyncEventEmitter implements AbstractNode<In, Out> {
+export abstract class Node<In extends DataFrame, Out extends DataFrame> extends AsyncEventEmitter
+    implements AbstractNode<In, Out> {
     /**
      * Unique identifier of node.
      */
@@ -54,54 +55,56 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
     }
 
     protected get outlets(): Array<AbstractEdge<Out>> {
-        return this.graph.edges.filter(edge => edge.inputNode === this);
+        return this.graph.edges.filter((edge) => edge.inputNode === this);
     }
 
     protected get inlets(): Array<AbstractEdge<In>> {
-        return this.graph.edges.filter(edge => edge.outputNode === this);
+        return this.graph.edges.filter((edge) => edge.outputNode === this);
     }
 
     public get outputNodes(): Array<Node<DataFrame, DataFrame>> {
-        return this.outlets.map(edge => edge.outputNode) as Array<Node<DataFrame, DataFrame>>;
+        return this.outlets.map((edge) => edge.outputNode) as Array<Node<DataFrame, DataFrame>>;
     }
 
     public get inputNodes(): Array<Node<DataFrame, DataFrame>> {
-        return this.inlets.map(edge => edge.inputNode) as Array<Node<DataFrame, DataFrame>>;
+        return this.inlets.map((edge) => edge.inputNode) as Array<Node<DataFrame, DataFrame>>;
     }
 
     /**
      * Send a pull request to the node
-     * 
+     *
      * @param options Pull options
      */
     public pull(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const callbackPromises: Array<Promise<void>> = [];
-            this.listeners('pull').forEach(callback => {
+            this.listeners('pull').forEach((callback) => {
                 callbackPromises.push(callback());
             });
 
             if (callbackPromises.length === 0) {
-                this.inputNodes.forEach(node => {
+                this.inputNodes.forEach((node) => {
                     callbackPromises.push(node.pull());
                 });
             }
 
-            Promise.all(callbackPromises).then(() => {
-                resolve();
-            }).catch(reject);
+            Promise.all(callbackPromises)
+                .then(() => {
+                    resolve();
+                })
+                .catch(reject);
         });
     }
 
     /**
      * Push data to the node
-     * 
+     *
      * @param frame Data frame to push
      */
     public push(frame: In | In[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (frame === null || frame === undefined) {
-                this.logger("warning", {
+                this.logger('warning', {
                     node: { uid: this.uid, name: this.name },
                     message: `Node received null data frame!`,
                 });
@@ -109,22 +112,23 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
             }
 
             const callbackPromises: Array<Promise<void>> = [];
-            this.listeners('push').forEach(callback => {
+            this.listeners('push').forEach((callback) => {
                 callbackPromises.push(callback(frame));
             });
 
             if (callbackPromises.length === 0) {
-                this.outputNodes.forEach(node => {
+                this.outputNodes.forEach((node) => {
                     callbackPromises.push(node.push(frame));
                 });
             }
 
-            Promise.all(callbackPromises).then(() => {
-                resolve();
-            }).catch(reject);
+            Promise.all(callbackPromises)
+                .then(() => {
+                    resolve();
+                })
+                .catch(reject);
         });
     }
-
 }
 
 export interface NodeOptions {

@@ -1,5 +1,5 @@
-import { AsyncEventEmitter } from "../_internal/AsyncEventEmitter";
-import { ModelImpl } from "../graph/_internal/implementations";
+import { AsyncEventEmitter } from '../_internal/AsyncEventEmitter';
+import { ModelImpl } from '../graph/_internal/implementations';
 
 /**
  * Service is accessible by each [[Node]] inside the [[Model]]
@@ -25,5 +25,4 @@ export abstract class Service extends AsyncEventEmitter {
     public isReady(): boolean {
         return this._ready;
     }
-
 }

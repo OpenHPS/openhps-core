@@ -1,2 +1,2 @@
-export * from "./EdgeBuilder";
+export * from './EdgeBuilder';
 export * from './GraphBuilder';

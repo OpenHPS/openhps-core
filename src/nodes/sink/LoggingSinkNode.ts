@@ -1,5 +1,5 @@
-import { DataFrame } from "../../data/DataFrame";
-import { CallbackSinkNode } from "./CallbackSinkNode";
+import { DataFrame } from '../../data/DataFrame';
+import { CallbackSinkNode } from './CallbackSinkNode';
 
 /**
  * This sink node will serialize the data frames pushed to this
@@ -7,7 +7,6 @@ import { CallbackSinkNode } from "./CallbackSinkNode";
  * specified in the constructor.
  */
 export class LoggingSinkNode<In extends DataFrame> extends CallbackSinkNode<In> {
-    
     /**
      * Create a new logger output sink
      *
@@ -17,9 +16,8 @@ export class LoggingSinkNode<In extends DataFrame> extends CallbackSinkNode<In> 
         super(loggingFn);
         if (loggingFn === undefined) {
             this.callback = (frame: In | In[]) => {
-                this.logger("info", frame);
+                this.logger('info', frame);
             };
         }
     }
-    
-} 
+}

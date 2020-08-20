@@ -1,13 +1,23 @@
-import { DataFrame, DataObject, ReferenceSpace } from "../../../data";
-import { Service, DataService, NodeData, TimeService, DataObjectService, MemoryDataService, DataFrameService, NodeDataService } from "../../../service";
-import { GraphImpl } from "./GraphImpl";
-import { Model } from "../../../Model";
-import { ServiceProxy } from "../../../service/_internal";
+import { DataFrame, DataObject, ReferenceSpace } from '../../../data';
+import {
+    Service,
+    DataService,
+    NodeData,
+    TimeService,
+    DataObjectService,
+    MemoryDataService,
+    DataFrameService,
+    NodeDataService,
+} from '../../../service';
+import { GraphImpl } from './GraphImpl';
+import { Model } from '../../../Model';
+import { ServiceProxy } from '../../../service/_internal';
 
 /**
  * [[Model]] implementation
  */
-export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends GraphImpl<In, Out> implements Model<In, Out> {
+export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends GraphImpl<In, Out>
+    implements Model<In, Out> {
     private _services: Map<string, Service> = new Map();
     private _dataServices: Map<string, DataService<any, any>> = new Map();
     private _referenceSpace: ReferenceSpace;
@@ -17,90 +27,99 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
      *
      * @param name
      */
-    constructor(name = "model") {
+    constructor(name = 'model') {
         super();
         this.name = name;
         this.referenceSpace = new ReferenceSpace(undefined);
-        
+
         this._addDefaultServices();
 
-        this.removeAllListeners("build");
-        this.removeAllListeners("destroy");
-        this.once("build", this._onModelBuild.bind(this));
-        this.once("destroy", this._onModelDestroy.bind(this));
+        this.removeAllListeners('build');
+        this.removeAllListeners('destroy');
+        this.once('build', this._onModelBuild.bind(this));
+        this.once('destroy', this._onModelDestroy.bind(this));
     }
 
     private _onModelBuild(_: any): Promise<void> {
         return new Promise((resolve, reject) => {
             // First resolve the building of services
-            this._buildServices().then(() => {
-                for (const service of this.findAllServices()) {
-                    if (!service.isReady()) {
-                        service.emit('ready');
+            this._buildServices()
+                .then(() => {
+                    for (const service of this.findAllServices()) {
+                        if (!service.isReady()) {
+                            service.emit('ready');
+                        }
                     }
-                }
-                // Build nodes
-                return this._buildNodes(_);
-            }).then(() => {
-                for (const node of this.nodes) {
-                    if (!node.isReady()) {
-                        node.emit('ready');
+                    // Build nodes
+                    return this._buildNodes(_);
+                })
+                .then(() => {
+                    for (const node of this.nodes) {
+                        if (!node.isReady()) {
+                            node.emit('ready');
+                        }
                     }
-                }
-                this.emit('ready');
-                resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+                    this.emit('ready');
+                    resolve();
+                })
+                .catch((ex) => {
+                    reject(ex);
+                });
         });
     }
 
     private _buildServices(): Promise<void> {
         return new Promise((resolve, reject) => {
             const buildPromises: Array<Promise<boolean>> = [];
-            this._services.forEach(service => {
+            this._services.forEach((service) => {
                 if (!service.isReady()) {
                     buildPromises.push(service.emitAsync('build'));
                 }
             });
-            this._dataServices.forEach(service => {
+            this._dataServices.forEach((service) => {
                 if (!service.isReady()) {
                     buildPromises.push(service.emitAsync('build'));
                 }
             });
-            Promise.all(buildPromises).then(() => resolve()).catch(reject);
+            Promise.all(buildPromises)
+                .then(() => resolve())
+                .catch(reject);
         });
     }
 
     private _buildNodes(_: any): Promise<void> {
         return new Promise((resolve, reject) => {
             const buildPromises: Array<Promise<boolean>> = [];
-            this.nodes.forEach(node => {
+            this.nodes.forEach((node) => {
                 if (!node.isReady()) {
                     buildPromises.push(node.emitAsync('build', _));
                 }
             });
-            Promise.all(buildPromises).then(() => resolve()).catch(reject);
+            Promise.all(buildPromises)
+                .then(() => resolve())
+                .catch(reject);
         });
     }
 
     private _onModelDestroy(_?: any): Promise<void> {
         return new Promise((resolve, reject) => {
             const destroyPromises: Array<Promise<boolean>> = [];
-            this._services.forEach(service => {
+            this._services.forEach((service) => {
                 destroyPromises.push(service.emitAsync('destroy', _));
             });
-            this._dataServices.forEach(service => {
+            this._dataServices.forEach((service) => {
                 destroyPromises.push(service.emitAsync('destroy', _));
             });
-            this.nodes.forEach(node => {
+            this.nodes.forEach((node) => {
                 destroyPromises.push(node.emitAsync('destroy', _));
             });
-            Promise.all(destroyPromises).then(() => {
-                resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            Promise.all(destroyPromises)
+                .then(() => {
+                    resolve();
+                })
+                .catch((ex) => {
+                    reject(ex);
+                });
         });
     }
 
@@ -145,7 +164,9 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
      * Find data service
      */
     public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(name: string): F;
-    public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(dataType: new () => D): F;
+    public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(
+        dataType: new () => D,
+    ): F;
     public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(object: D): F;
     public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(q: any): F {
         let result: F;
@@ -164,7 +185,9 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
         return result;
     }
 
-    private _findDataServiceByType<D extends any, F extends DataService<any, D> = DataService<any, D>>(dataType: new () => D): F {
+    private _findDataServiceByType<D extends any, F extends DataService<any, D> = DataService<any, D>>(
+        dataType: new () => D,
+    ): F {
         // Find by constructor
         let service: F = this._findDataServiceByName(dataType.name);
         if (service === null) {
@@ -175,7 +198,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
                 if (service !== null) {
                     return service;
                 }
-                if (parent.name === "DataObject" || parent.name === "DataFrame") {
+                if (parent.name === 'DataObject' || parent.name === 'DataFrame') {
                     return null;
                 }
                 parent = Object.getPrototypeOf(parent);
@@ -208,10 +231,10 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
     public addService(service: Service): void {
         if (service instanceof DataService) {
             // Data service
-            this._dataServices.set(service.name, new Proxy(service , new ServiceProxy()));
+            this._dataServices.set(service.name, new Proxy(service, new ServiceProxy()));
         } else {
             // Normal service
-            this._services.set(service.name, new Proxy(service , new ServiceProxy()));
+            this._services.set(service.name, new Proxy(service, new ServiceProxy()));
         }
     }
 
@@ -229,18 +252,21 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
 
             // Merge the changes in the frame service
             let frameService = this.findDataService(frame.constructor.name);
-            if (frameService === null || frameService === undefined) { 
-                frameService = this.findDataService("DataFrame"); 
+            if (frameService === null || frameService === undefined) {
+                frameService = this.findDataService('DataFrame');
             }
-            
-            if (frameService !== null && frameService !== undefined) { 
+
+            if (frameService !== null && frameService !== undefined) {
                 // Update the frame
                 servicePromises.push(frameService.insert((frame as DataFrame).uid, frame));
             }
 
-            Promise.all(servicePromises).then(() => this.internalInput.push(frame)).then(() => {
-                resolve();
-            }).catch(reject);
+            Promise.all(servicePromises)
+                .then(() => this.internalInput.push(frame))
+                .then(() => {
+                    resolve();
+                })
+                .catch(reject);
         });
     }
 }

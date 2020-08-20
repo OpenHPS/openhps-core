@@ -1,6 +1,6 @@
-import { DataFrame, DataObject, IMUDataFrame } from "../../../data";
-import { Quaternion } from "../../../utils";
-import { FilterProcessingNode } from "../dsp";
+import { DataFrame, DataObject, IMUDataFrame } from '../../../data';
+import { Quaternion } from '../../../utils';
+import { FilterProcessingNode } from '../dsp';
 
 /**
  * Relative rotation processing node
@@ -8,7 +8,6 @@ import { FilterProcessingNode } from "../dsp";
  * @source https://www.w3.org/TR/motion-sensors/#relative-orientation-sensor
  */
 export class RelativeRotationProcessingNode extends FilterProcessingNode<DataFrame> {
-
     public initFilter(_: DataObject, frame: IMUDataFrame): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             if (frame.angularVelocity === undefined || frame.acceleration === undefined) {
@@ -24,13 +23,13 @@ export class RelativeRotationProcessingNode extends FilterProcessingNode<DataFra
     }
 
     public filter(object: DataObject, frame: IMUDataFrame, filter: any): Promise<DataObject> {
-        return new Promise<DataObject>(resolve => {
+        return new Promise<DataObject>((resolve) => {
             const accl = frame.acceleration;
             const gyro = object.getPosition().velocity.angular;
             const bias = 0.98;
 
-            const dt = 1000. / frame.frequency;
-            
+            const dt = 1000 / frame.frequency;
+
             // Treat the acceleration vector as an orientation vector by normalizing it.
             // Keep in mind that the if the device is flipped, the vector will just be
             // pointing in the other direction, so we have no way to know from the
@@ -42,13 +41,12 @@ export class RelativeRotationProcessingNode extends FilterProcessingNode<DataFra
             const scale = Math.PI / 2;
 
             const alpha: number = filter.alpha + gyro.z * dt;
-            const beta: number = bias * (filter.beta + gyro.x * dt) + (1.0 - bias) * (accl.x * scale / norm);
-            const gamma: number = bias * (filter.gamma + gyro.y * dt) + (1.0 - bias) * (accl.y * -scale / norm);
+            const beta: number = bias * (filter.beta + gyro.x * dt) + (1.0 - bias) * ((accl.x * scale) / norm);
+            const gamma: number = bias * (filter.gamma + gyro.y * dt) + (1.0 - bias) * ((accl.y * -scale) / norm);
 
             frame.relativeOrientation = Quaternion.fromEuler([beta, gamma, alpha]);
 
             resolve(object);
         });
     }
-
 }

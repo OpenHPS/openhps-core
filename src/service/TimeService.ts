@@ -1,5 +1,5 @@
-import { Service } from "./Service";
-import { TimeUnit } from "../utils";
+import { Service } from './Service';
+import { TimeUnit } from '../utils';
 
 export class TimeService extends Service {
     private _timeCallback: () => number;
@@ -10,7 +10,7 @@ export class TimeService extends Service {
         this._timeCallback = timeCallback;
         this._timeUnit = unit;
     }
-    
+
     /**
      * Get the current time
      */
@@ -24,5 +24,4 @@ export class TimeService extends Service {
     public getUnit(): TimeUnit {
         return this._timeUnit;
     }
-
 }

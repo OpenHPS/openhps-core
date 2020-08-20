@@ -1,9 +1,9 @@
-import { SerializableObject, SerializableMember } from "../decorators";
-import { DataObject } from "./DataObject";
-import { Matrix4, Quaternion } from "../../utils";
-import { Absolute3DPosition, Absolute2DPosition } from "../position";
-import { Space } from "./space";
-import { Camera } from "../../utils/math/_internal";
+import { SerializableObject, SerializableMember } from '../decorators';
+import { DataObject } from './DataObject';
+import { Matrix4, Quaternion } from '../../utils';
+import { Absolute3DPosition, Absolute2DPosition } from '../position';
+import { Space } from './space';
+import { Camera } from '../../utils/math/_internal';
 
 /**
  * Camera source object
@@ -77,5 +77,4 @@ export class CameraObject extends DataObject {
     public inverseTransform(position: Absolute2DPosition): Absolute3DPosition {
         return position as any;
     }
-
 }

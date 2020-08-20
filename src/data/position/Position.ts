@@ -2,7 +2,6 @@
  * General abstract position class consisting of orientation, velocity, position unit and an accuracy.
  */
 export interface Position {
-
     /**
      * Position recording timestamp
      */

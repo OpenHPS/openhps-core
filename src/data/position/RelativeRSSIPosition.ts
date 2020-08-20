@@ -1,5 +1,5 @@
-import { RelativeDistancePosition } from "./RelativeDistancePosition";
-import { SerializableObject, SerializableMember } from "../decorators";
+import { RelativeDistancePosition } from './RelativeDistancePosition';
+import { SerializableObject, SerializableMember } from '../decorators';
 
 @SerializableObject()
 export class RelativeRSSIPosition extends RelativeDistancePosition {
@@ -28,7 +28,9 @@ export class RelativeRSSIPosition extends RelativeDistancePosition {
 
     public set distance(distance: number) {
         super.distance = distance;
-        this.rssi = this.calibratedRSSI - (this.calibratedRSSI + (10 * this.environmenFactor * Math.log10(Math.abs(distance)) - this.calibratedRSSI));
+        this.rssi =
+            this.calibratedRSSI -
+            (this.calibratedRSSI + (10 * this.environmenFactor * Math.log10(Math.abs(distance)) - this.calibratedRSSI));
     }
 
     @SerializableMember()

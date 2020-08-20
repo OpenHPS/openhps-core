@@ -1,32 +1,34 @@
-import { PropertyFilterProcessingNode } from "./PropertyFilterProcessingNode";
+import { PropertyFilterProcessingNode } from './PropertyFilterProcessingNode';
 import { DataFrame, DataObject } from '../../../data';
-import { Vector } from "../../../utils";
-import { FilterProcessingOptions } from "./FilterProcessingNode";
+import { Vector } from '../../../utils';
+import { FilterProcessingOptions } from './FilterProcessingNode';
 
 export class LPFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
-    
-    constructor(propertySelector: (object: DataObject, frame?: InOut) => PropertyKey,
-                options: LPFilterOptions) {
+    constructor(propertySelector: (object: DataObject, frame?: InOut) => PropertyKey, options: LPFilterOptions) {
         super(propertySelector, options);
     }
 
     public initFilter<T extends number | Vector>(object: DataObject, value: T, options: LPFilterOptions): Promise<any> {
-        return new Promise<any>(resolve => {
+        return new Promise<any>((resolve) => {
             const rc = 1.0 / (options.cutOff * 2 * Math.PI);
             const dt = 1.0 / options.sampleRate;
             const alpha = dt / (rc + dt);
 
             resolve({
                 x: value,
-                alpha
+                alpha,
             });
         });
     }
-    
-    public filter<T extends number | Vector>(object: DataObject, value: T, filter: { x: any; alpha: number }): Promise<T> {
-        return new Promise<T>(resolve => {
+
+    public filter<T extends number | Vector>(
+        object: DataObject,
+        value: T,
+        filter: { x: any; alpha: number },
+    ): Promise<T> {
+        return new Promise<T>((resolve) => {
             if (typeof value === 'number') {
-                filter.x = filter.x + (filter.alpha * (value - filter.x));
+                filter.x = filter.x + filter.alpha * (value - filter.x);
             } else {
                 const vector = value as Vector;
                 const filterVector = filter.x as Vector;

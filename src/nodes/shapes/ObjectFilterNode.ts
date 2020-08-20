@@ -1,5 +1,5 @@
-import { DataFrame, DataObject } from "../../data";
-import { ProcessingNode } from "../ProcessingNode";
+import { DataFrame, DataObject } from '../../data';
+import { ProcessingNode } from '../ProcessingNode';
 
 export class ObjectFilterNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
     private _filterFn: (object: DataObject, frame?: DataFrame) => boolean;
@@ -10,7 +10,7 @@ export class ObjectFilterNode<InOut extends DataFrame> extends ProcessingNode<In
     }
 
     public process(frame: InOut): Promise<InOut> {
-        return new Promise<InOut>(resolve => {
+        return new Promise<InOut>((resolve) => {
             for (const object of frame.getObjects()) {
                 if (!this._filterFn(object, frame)) {
                     frame.removeObject(object);
@@ -19,5 +19,4 @@ export class ObjectFilterNode<InOut extends DataFrame> extends ProcessingNode<In
             resolve(frame);
         });
     }
-
 }

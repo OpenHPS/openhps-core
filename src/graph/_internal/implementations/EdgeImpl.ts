@@ -1,7 +1,7 @@
-import { AbstractEdge } from "../../interfaces/AbstractEdge";
+import { AbstractEdge } from '../../interfaces/AbstractEdge';
 import { v4 as uuidv4 } from 'uuid';
-import { AbstractNode } from "../../interfaces";
-import { DataFrame } from "../../../data";
+import { AbstractNode } from '../../interfaces';
+import { DataFrame } from '../../../data';
 
 export class EdgeImpl<InOut extends DataFrame> implements AbstractEdge<InOut> {
     private _uid: string = uuidv4();
@@ -42,7 +42,7 @@ export class EdgeImpl<InOut extends DataFrame> implements AbstractEdge<InOut> {
 
     /**
      * Push data to the output node
-     * 
+     *
      * @param frame Data frame to push
      */
     public push(frame: InOut | InOut[]): Promise<void> {

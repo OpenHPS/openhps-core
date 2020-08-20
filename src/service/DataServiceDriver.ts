@@ -1,5 +1,5 @@
-import { Service } from "./Service";
-import { FilterQuery } from "./FilterQuery";
+import { Service } from './Service';
+import { FilterQuery } from './FilterQuery';
 
 /**
  * DataService driver for storing and querying data objects
@@ -25,5 +25,4 @@ export abstract class DataServiceDriver<I, T> extends Service {
     public abstract delete(id: I): Promise<void>;
 
     public abstract deleteAll(query?: FilterQuery<T>): Promise<void>;
-
 }

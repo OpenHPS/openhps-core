@@ -1,12 +1,11 @@
-import { Position } from "./Position";
-import { Vector, Quaternion, LengthUnit, Vector3 } from "../../utils";
-import { Velocity } from "./Velocity";
+import { Position } from './Position';
+import { Vector, Quaternion, LengthUnit, Vector3 } from '../../utils';
+import { Velocity } from './Velocity';
 
 /**
  * Absolute position
  */
 export interface AbsolutePosition extends Position {
-    
     /**
      * Position reference space UID
      */
@@ -31,7 +30,7 @@ export interface AbsolutePosition extends Position {
      * Position accuracy
      */
     accuracy: number;
-    
+
     /**
      * Position accuracy unit
      */
@@ -42,5 +41,4 @@ export interface AbsolutePosition extends Position {
     toVector3(unit?: LengthUnit): Vector3;
 
     equals(position: AbsolutePosition): boolean;
-
 }

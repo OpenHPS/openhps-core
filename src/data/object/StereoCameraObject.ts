@@ -1,6 +1,6 @@
-import { CameraObject } from "./CameraObject";
-import { SerializableObject, SerializableMember } from "../decorators";
-import { DataObject } from "./DataObject";
+import { CameraObject } from './CameraObject';
+import { SerializableObject, SerializableMember } from '../decorators';
+import { DataObject } from './DataObject';
 
 @SerializableObject()
 export class StereoCameraObject extends DataObject {
@@ -17,5 +17,4 @@ export class StereoCameraObject extends DataObject {
             this.uid = left.uid + right.uid;
         }
     }
-
 }

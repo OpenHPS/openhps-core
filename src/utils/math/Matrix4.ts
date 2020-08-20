@@ -6,7 +6,6 @@ import * as THREE from './_internal';
  */
 @SerializableObject()
 export class Matrix4 extends THREE.Matrix4 {
-
     public static round(value: Matrix4, decimals = 0): Matrix4 {
         const pow = Math.pow(10, decimals);
         value.elements.forEach((e, i) => {
@@ -14,7 +13,7 @@ export class Matrix4 extends THREE.Matrix4 {
         });
         return value;
     }
-    
+
     /**
      * Create a matrix from array
      *
@@ -60,5 +59,4 @@ export class Matrix4 extends THREE.Matrix4 {
         matrix.makeRotationFromQuaternion(new THREE.Quaternion().setFromAxisAngle(vector, angle));
         return matrix;
     }
-
 }

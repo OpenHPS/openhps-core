@@ -1,15 +1,15 @@
-import { AbsolutePosition } from "../position/AbsolutePosition";
+import { AbsolutePosition } from '../position/AbsolutePosition';
 import { RelativePosition } from '../position/RelativePosition';
 import { TypedJSON } from 'typedjson';
 import { SerializableObject, SerializableMember, SerializableArrayMember } from '../decorators';
 import { v4 as uuidv4 } from 'uuid';
 import { DataSerializer } from '../DataSerializer';
-import { Space } from "./space/Space";
+import { Space } from './space/Space';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
  * a more abstract object such as a Wi-Fi access point or [[Space]].
- * 
+ *
  * ## Usage
  * ### Creation
  * Objects can be created with an optional uid and display name.
@@ -42,7 +42,7 @@ export class DataObject {
 
     /**
      * Create a new data object
-     * 
+     *
      * @param uid Optional unique identifier
      * @param displayName Optional display name
      */
@@ -53,8 +53,7 @@ export class DataObject {
     }
 
     public merge(object: DataObject): DataObject {
-        if (this.displayName === undefined)
-            this.displayName = object.displayName;
+        if (this.displayName === undefined) this.displayName = object.displayName;
         if (this.getPosition() === undefined && object.getPosition() !== undefined)
             this.setPosition(object.getPosition().clone());
         object._relativePositions.forEach((value: Map<string, RelativePosition>, key: string) => {
@@ -88,7 +87,7 @@ export class DataObject {
                 return undefined;
             }
             return new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw);
-        }
+        },
     })
     public get position(): AbsolutePosition {
         return this.getPosition();
@@ -134,20 +133,20 @@ export class DataObject {
                 return [];
             }
             const output: RelativePosition[] = [];
-            rawArray.forEach(raw => {
+            rawArray.forEach((raw) => {
                 if (raw.__type !== undefined) {
                     output.push(new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw));
                 }
             });
             return output;
-        }
+        },
     })
     public get relativePositions(): RelativePosition[] {
         const relativePostions: RelativePosition[] = [];
         if (this._relativePositions !== undefined) {
             this._relativePositions.forEach((values: Map<string, RelativePosition>) => {
-                values.forEach(value => {
-                    relativePostions.push(value); 
+                values.forEach((value) => {
+                    relativePostions.push(value);
                 });
             });
         }
@@ -156,7 +155,7 @@ export class DataObject {
 
     public set relativePositions(relativePostions: RelativePosition[]) {
         this._relativePositions = new Map();
-        relativePostions.forEach(relativePostion => {
+        relativePostions.forEach((relativePostion) => {
             this.addRelativePosition(relativePostion);
         });
     }
@@ -168,7 +167,7 @@ export class DataObject {
     /**
      * Add a relative position to this data object
      *
-     * @param relativePosition 
+     * @param relativePosition
      */
     public addRelativePosition(relativePosition: RelativePosition): void {
         if (relativePosition.referenceObjectUID === undefined) {
@@ -179,7 +178,9 @@ export class DataObject {
             this._relativePositions.set(relativePosition.referenceObjectUID, new Map());
         }
 
-        this._relativePositions.get(relativePosition.referenceObjectUID).set(relativePosition.constructor.name, relativePosition);
+        this._relativePositions
+            .get(relativePosition.referenceObjectUID)
+            .set(relativePosition.constructor.name, relativePosition);
     }
 
     /**
@@ -211,5 +212,4 @@ export class DataObject {
     public clone(): this {
         return DataSerializer.deserialize(DataSerializer.serialize(this));
     }
-
 }
