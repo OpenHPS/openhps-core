@@ -1,4 +1,4 @@
-import { DataFrame, DataObject, Acceleration, IMUDataFrame } from "../../../data";
+import { DataObject, Acceleration, IMUDataFrame } from "../../../data";
 import { FilterProcessingOptions, FilterProcessingNode } from "../dsp";
 
 export class GravityProcessingNode extends FilterProcessingNode<IMUDataFrame> {
@@ -13,15 +13,13 @@ export class GravityProcessingNode extends FilterProcessingNode<IMUDataFrame> {
         });
     }
 
-    public filter(object: DataObject, frame: IMUDataFrame, filter: any, options?: FilterProcessingOptions): Promise<DataObject> {
+    public filter(object: DataObject, frame: IMUDataFrame, filter: any): Promise<DataObject> {
         return new Promise<DataObject>((resolve, reject) => {
             if (frame.acceleration) {
                 // Simply subtract the acceleration (with gravity) from the linear acceleration
                 frame.gravity = new Acceleration(frame.acceleration.x - frame.linearAcceleration.x,
                     frame.acceleration.y - frame.linearAcceleration.y,
                     frame.acceleration.z - frame.linearAcceleration.z);
-            } else {
-
             }
             resolve(object);
         });

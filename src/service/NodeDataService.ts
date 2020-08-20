@@ -4,7 +4,7 @@ import { DataService } from "./DataService";
 export class NodeDataService<T extends NodeData | NodeData> extends DataService<string, T> {
 
     public findData(nodeUID: string, dataObject: DataObject | string): Promise<any> {
-        return new Promise<any>(async (resolve, reject) => {
+        return new Promise<any>(resolve => {
             this.findByUID(this.getUID(nodeUID, typeof dataObject === 'string' ? dataObject : dataObject.uid)).then(nodeData => {
                 resolve(nodeData.data);
             }).catch(() => {
@@ -23,9 +23,9 @@ export class NodeDataService<T extends NodeData | NodeData> extends DataService<
         let hash = 0;
         for (let i = 0; i < str.length; i++) {
             const char = str.charCodeAt(i);
-            // tslint:disable-next-line
+            // eslint-disable-next-line
             hash = ((hash << 5) - hash) + char;
-            // tslint:disable-next-line
+            // eslint-disable-next-line
             hash = hash & hash; // Convert to 32bit integer
         }
         return hash.toString();

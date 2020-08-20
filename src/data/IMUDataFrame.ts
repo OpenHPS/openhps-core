@@ -6,7 +6,7 @@ import { Quaternion } from "../utils";
 @SerializableObject()
 export class IMUDataFrame extends DataFrame {
     @SerializableMember()
-    public frequency: number = 0;
+    public frequency = 0;
     @SerializableMember()
     public magnetism: Magnetism;
     @SerializableMember()

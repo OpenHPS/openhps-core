@@ -16,6 +16,7 @@ export class RFReceiverObject extends DataObject implements RFObject {
 
     /**
      * Set RF sensitivity
+     *
      * @param sensitivity RF sensitivity 
      */
     public set rxSensitivity(sensitivity: number) {

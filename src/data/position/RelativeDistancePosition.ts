@@ -52,7 +52,7 @@ export class RelativeDistancePosition implements RelativePosition {
     }
 
     public equals(position: this): boolean {
-        return false;
+        return this.timestamp === position.timestamp;
     }
 
     /**

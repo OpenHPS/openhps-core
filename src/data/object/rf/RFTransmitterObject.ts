@@ -4,8 +4,8 @@ import { DataObject } from '../DataObject';
 
 @SerializableObject()
 export class RFTransmitterObject extends DataObject implements RFObject {
-    private _rfTransmissionPower: number = -1;
-    private _calibratedRSSI: number = -69;
+    private _rfTransmissionPower = -1;
+    private _calibratedRSSI = -69;
     private _environmenFactor: number;
 
     constructor(uid?: string, calibratedRSSI?: number, txPower?: number) {
@@ -24,6 +24,7 @@ export class RFTransmitterObject extends DataObject implements RFObject {
 
     /**
      * Set RF transmission power
+     *
      * @param transmissionPower RF transmission power
      */
     public set txPower(transmissionPower: number) {

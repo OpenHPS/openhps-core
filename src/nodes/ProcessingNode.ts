@@ -20,7 +20,7 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
     private _onPush(frame: In | In[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const model = (this.graph as Model);
-            const processPromises = new Array();
+            const processPromises: Array<Promise<Out>> = [];
 
             if (Array.isArray(frame)) {
                 frame.filter(this._frameFilter).forEach(f => {
@@ -30,9 +30,9 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
                 processPromises.push(this.process(frame));
             }
 
-            const output: Out[] = new Array();
+            const output: Out[] = [];
             Promise.all(processPromises).then(results => {
-                const servicePromises = new Array();
+                const servicePromises: Array<Promise<unknown>> = [];
                 results.forEach(result => {
                     if (result) {
                         const oldFrameService = model.findDataService(frame);
@@ -52,7 +52,7 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
                 });
                 return Promise.all(servicePromises);
             }).then(() => {
-                const pushPromises = new Array();
+                const pushPromises: Array<Promise<void>> = [];
                 output.forEach(out => {
                     this.outputNodes.forEach(node => {
                         pushPromises.push(node.push(out));
@@ -76,6 +76,7 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
 
     /**
      * Get node data
+     *
      * @param dataObject 
      */
     protected getNodeData(dataObject: DataObject): Promise<any> {
@@ -88,6 +89,7 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
 
     /**
      * Set node data
+     *
      * @param dataObject 
      * @param data 
      */

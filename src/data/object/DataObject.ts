@@ -9,6 +9,13 @@ import { Space } from "./space/Space";
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
  * a more abstract object such as a Wi-Fi access point or [[Space]].
+ * 
+ * ## Usage
+ * ### Creation
+ * Objects can be created with an optional uid and display name.
+ * ```typescript
+ * const myObject = new DataObject("mvdewync", "Maxim");
+ * ```
  */
 @SerializableObject()
 export class DataObject {
@@ -97,6 +104,7 @@ export class DataObject {
 
     /**
      * Get the current absolute position of the object
+     *
      * @param referenceSpace (optional) reference space
      */
     public getPosition(referenceSpace?: Space): AbsolutePosition {
@@ -109,6 +117,7 @@ export class DataObject {
 
     /**
      * Set the current absolute position of the object
+     *
      * @param position Position to set
      * @param referenceSpace (optional) reference space
      */
@@ -124,7 +133,7 @@ export class DataObject {
             if (rawArray === undefined) {
                 return [];
             }
-            const output = new Array();
+            const output: RelativePosition[] = [];
             rawArray.forEach(raw => {
                 if (raw.__type !== undefined) {
                     output.push(new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw));
@@ -134,10 +143,12 @@ export class DataObject {
         }
     })
     public get relativePositions(): RelativePosition[] {
-        const relativePostions: RelativePosition[] = new Array();
+        const relativePostions: RelativePosition[] = [];
         if (this._relativePositions !== undefined) {
             this._relativePositions.forEach((values: Map<string, RelativePosition>) => {
-                values.forEach(value => { relativePostions.push(value); });
+                values.forEach(value => {
+                    relativePostions.push(value); 
+                });
             });
         }
         return relativePostions;
@@ -156,6 +167,7 @@ export class DataObject {
 
     /**
      * Add a relative position to this data object
+     *
      * @param relativePosition 
      */
     public addRelativePosition(relativePosition: RelativePosition): void {
@@ -172,6 +184,8 @@ export class DataObject {
 
     /**
      * Get relative positions for a different target
+     *
+     * @param referenceObjectUID
      */
     public getRelativePositions(referenceObjectUID?: string): RelativePosition[] {
         if (referenceObjectUID === undefined) {
@@ -189,6 +203,13 @@ export class DataObject {
         } else {
             return undefined;
         }
+    }
+
+    /**
+     * Clone the data object
+     */
+    public clone(): this {
+        return DataSerializer.deserialize(DataSerializer.serialize(this));
     }
 
 }

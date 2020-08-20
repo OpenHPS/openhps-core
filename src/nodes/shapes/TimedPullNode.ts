@@ -17,7 +17,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
     private _onPush(frame: InOut): Promise<void> {
         return new Promise((resolve, reject) => {
-            const pushPromises = new Array();
+            const pushPromises: Array<Promise<void>> = [];
             this.outputNodes.forEach(node => {
                 pushPromises.push(node.push(frame));
             });
@@ -33,7 +33,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     }
 
     private _intervalFn(): void {
-        const promises = new Array();
+        const promises: Array<Promise<void>> = [];
         this.inputNodes.forEach(node => {
             promises.push(node.pull());
         });
@@ -44,7 +44,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
      * Start the timed pull
      */
     private _start(): Promise<void> {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             this._timer = setInterval(this._intervalFn.bind(this), this._interval);
             resolve();
             this.emit('ready');

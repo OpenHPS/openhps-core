@@ -10,7 +10,7 @@ export class FrameFlattenNode<InOut extends DataFrame> extends Node<InOut, InOut
 
     private _onPush(frames: InOut[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const pushPromises = new Array();
+            const pushPromises: Array<Promise<void>> = [];
             frames.forEach(frame => {
                 this.outputNodes.forEach(node => {
                     pushPromises.push(node.push(frame));
@@ -19,11 +19,8 @@ export class FrameFlattenNode<InOut extends DataFrame> extends Node<InOut, InOut
 
             Promise.all(pushPromises).then(() => {
                 resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            }).catch(reject);
         });
     }
-
 
 }

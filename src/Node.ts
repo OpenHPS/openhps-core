@@ -31,9 +31,9 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
     /**
      * Node logger
      */
-    public logger: (level: string, log: any) => void = () => {};
+    public logger: (level: string, log: any) => void = () => true;
 
-    private _ready: boolean = false;
+    private _ready = false;
 
     constructor(options?: NodeOptions) {
         super();
@@ -61,12 +61,12 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
         return this.graph.edges.filter(edge => edge.outputNode === this);
     }
 
-    public get outputNodes(): Array<Node<any, any>> {
-        return this.outlets.map(edge => edge.outputNode) as Array<Node<any, any>>;
+    public get outputNodes(): Array<Node<DataFrame, DataFrame>> {
+        return this.outlets.map(edge => edge.outputNode) as Array<Node<DataFrame, DataFrame>>;
     }
 
-    public get inputNodes(): Array<Node<any, any>> {
-        return this.inlets.map(edge => edge.inputNode) as Array<Node<any, any>>;
+    public get inputNodes(): Array<Node<DataFrame, DataFrame>> {
+        return this.inlets.map(edge => edge.inputNode) as Array<Node<DataFrame, DataFrame>>;
     }
 
     /**
@@ -76,7 +76,7 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
      */
     public pull(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const callbackPromises = new Array();
+            const callbackPromises: Array<Promise<void>> = [];
             this.listeners('pull').forEach(callback => {
                 callbackPromises.push(callback());
             });
@@ -89,9 +89,7 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
 
             Promise.all(callbackPromises).then(() => {
                 resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            }).catch(reject);
         });
     }
 
@@ -110,7 +108,7 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
                 return reject();
             }
 
-            const callbackPromises = new Array();
+            const callbackPromises: Array<Promise<void>> = [];
             this.listeners('push').forEach(callback => {
                 callbackPromises.push(callback(frame));
             });

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataObject, RelativeDistancePosition } from '../../../src';
+import { DataObject, RelativeDistancePosition, ModelBuilder, CallbackNode, DataFrame, Absolute2DPosition, AbsolutePosition } from '../../../src';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 import { DataSerializer } from '../../../src/data/DataSerializer';
 

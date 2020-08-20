@@ -11,7 +11,7 @@ export class EMAFilterNode<InOut extends DataFrame> extends PropertyFilterProces
     }
 
     public initFilter<T extends number | Vector>(object: DataObject, value: T, options: EMAFilterOptions): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
+        return new Promise<any>(resolve => {
             if (options.alpha > 1 || options.alpha < 0) {
                 throw new Error(`Filter coefficient needs to be between 0 and 1!`);
             }
@@ -23,8 +23,8 @@ export class EMAFilterNode<InOut extends DataFrame> extends PropertyFilterProces
         });
     }
     
-    public filter<T extends number | Vector>(object: DataObject, value: T, filter: { x: any, alpha: number }): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
+    public filter<T extends number | Vector>(object: DataObject, value: T, filter: { x: any; alpha: number }): Promise<T> {
+        return new Promise<T>(resolve => {
             if (typeof value === 'number') {
                 filter.x = (filter.x * (1 - filter.alpha)) + (filter.alpha * value) as T;
             } else {

@@ -48,7 +48,9 @@ export class Euler extends THREE.Euler {
     
     /**
      * Convert quaternion to euler
+     *
      * @param quat Quaternion
+     * @param order
      */
     public static fromQuaternion(quat: THREE.Quaternion, order?: EulerOrder): Euler {
         const euler = new Euler();
@@ -58,7 +60,9 @@ export class Euler extends THREE.Euler {
 
     /**
      * Convert rotation matrix to euler
+     *
      * @param matrix Rotation matrix
+     * @param order
      */
     public static fromRotationMatrix(matrix: Matrix4, order?: EulerOrder): Euler {
         const euler = new Euler();

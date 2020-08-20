@@ -43,14 +43,14 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         this._builderCallback = builderCallback;
 
         // NOTE: We can not use a conditional expression as this breaks the webpack threads plugin
-        // tslint:disable-next-line
+        // eslint-disable-next-line
         if (this.options && this.options.debug) {
             this._worker = new Worker('./_internal/WorkerNodeRunnerDebug');
         } else {
             this._worker = new Worker('./_internal/WorkerNodeRunner');
         }
 
-        // tslint:disable-next-line
+        // eslint-disable-next-line
         const NativeWorker = typeof __non_webpack_require__ === "function" ? __non_webpack_require__("worker_threads").Worker : eval("require")("worker_threads").Worker;
         if (NativeWorker) {
             NativeWorker.defaultMaxListeners = 0;
@@ -66,26 +66,22 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         return new Promise<void>((resolve, reject) => {
             if (this.options.optimizedPull) {
                 // Do not pass the pull request to the worker
-                const pullPromises = new Array();
+                const pullPromises: Array<Promise<void>> = [];
                 this.inputNodes.forEach(node => {
                     pullPromises.push(node.pull());
                 });
 
                 Promise.all(pullPromises).then(() => {
                     resolve();
-                }).catch(ex => {
-                    reject(ex);
-                });
+                }).catch(reject);
             } else {
                 // Pass the pull request to the worker
                 this._pool.queue((worker: any) => {
-                    const pullFn: () =>  Promise<void> = worker.pull;
+                    const pullFn: () => Promise<void> = worker.pull;
                     return pullFn();
                 }).then(() => {
                     resolve();
-                }).catch(ex => {
-                    reject(ex);
-                });
+                }).catch(reject);
             }
         });
     }
@@ -97,9 +93,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                 return pushFn(DataSerializer.serialize(frame));
             }).then(() => {
                 resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            }).catch(reject);
         });
     }
 
@@ -110,9 +104,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
             }
             this._pool.terminate().then((_: any) => {
                 resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            }).catch(reject);
         });
     }
 
@@ -122,7 +114,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                 const initFn: (workerData: any) => Promise<void> = (thread as any).init;
                 const outputFn: () => Observable<any> = (thread as any).output;
                 const inputFn: () => Observable<void> = (thread as any).input;
-                const serviceInput: () => Observable<{ id: string, serviceName: string, method: string, parameters: any }> = (thread as any).serviceInput;
+                const serviceInput: () => Observable<{ id: string; serviceName: string; method: string; parameters: any }> = (thread as any).serviceInput;
                 this._serviceOutputFn = (thread as any).serviceOutput;
 
                 this.logger('debug', { message: "Worker thread spawned!" });
@@ -135,15 +127,15 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                 // Serialize this model services to the worker
                 const model = (this.graph as Model<any, any>);
                 const services = model.findAllServices();
-                const servicesArray = new Array();
+                const servicesArray: any[] = [];
                 services.forEach(service => {
                     servicesArray.push({
                         name: service.name,
                         type: service instanceof DataObjectService ? "DataObjectService" :
                             service instanceof DataFrameService ? "DataFrameService" :
-                            service instanceof NodeDataService ? "NodeDataService" :
-                            service instanceof DataService ? "DataService" :
-                            service instanceof Service ? "Service" : ""
+                                service instanceof NodeDataService ? "NodeDataService" :
+                                    service instanceof DataService ? "DataService" :
+                                        service instanceof Service ? "Service" : ""
                     });
                 });
 
@@ -154,19 +146,17 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                     services: servicesArray
                 }).then(() => {
                     resolve(thread);
-                }).catch(ex => {
-                    reject(ex);
-                });
+                }).catch(reject);
             });
         });
     }
 
-    private _onWorkerService(value: { id: string, serviceName: string, method: string, parameters: any }): void {
+    private _onWorkerService(value: { id: string; serviceName: string; method: string; parameters: any }): void {
         const model = (this.graph as Model<any, any>);
         const service = model.findDataService(value.serviceName);
         if ((service as any)[value.method]) {
             const serializedParams = value.parameters;
-            const params = new Array();
+            const params: any[] = [];
             serializedParams.forEach((param: any) => {
                 if (param["__type"]) {
                     params.push(DataSerializer.deserialize(param));
@@ -177,7 +167,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
             const promise = (service as any)[value.method](...params) as Promise<any>;
             promise.then(_ => {
                 if (Array.isArray(_)) {
-                    const result = new Array();
+                    const result: any[] = [];
                     _.forEach(r => {
                         result.push(DataSerializer.serialize(r));
                     });
@@ -193,7 +183,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
     }
 
     private _onWorkerPull(): void {
-        const pullPromises = new Array();
+        const pullPromises: Array<Promise<void>> = [];
         this.inputNodes.forEach(node => {
             pullPromises.push(node.pull());
         });
@@ -202,9 +192,9 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
     }
 
     private _onWorkerPush(value: any): void {
-        const deserializedFrame = DataSerializer.deserialize(value);
+        const deserializedFrame: DataFrame = DataSerializer.deserialize(value);
 
-        const pushPromises = new Array();
+        const pushPromises: Array<Promise<void>> = [];
         this.outputNodes.forEach(node => {
             pushPromises.push(node.push(deserializedFrame));
         });

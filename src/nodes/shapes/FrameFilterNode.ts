@@ -10,12 +10,12 @@ export class FrameFilterNode<InOut extends DataFrame> extends ProcessingNode<InO
     }
 
     public process(frame: InOut): Promise<InOut> {
-        return new Promise<InOut>((resolve, reject) => {
-           if (this._filterFn(frame)) {
-               resolve(frame);
-           } else {
-               resolve();
-           }
+        return new Promise<InOut>(resolve => {
+            if (this._filterFn(frame)) {
+                resolve(frame);
+            } else {
+                resolve();
+            }
         });
     }
 

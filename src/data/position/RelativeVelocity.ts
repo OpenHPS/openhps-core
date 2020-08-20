@@ -44,7 +44,7 @@ export class RelativeVelocity implements RelativePosition {
     }
 
     public equals(position: this): boolean {
-        return false;
+        return this.timestamp === position.timestamp;
     }
 
     /**

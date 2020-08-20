@@ -37,6 +37,7 @@ export class AxisAngle extends Vector3 {
 
     /**
      * Convert quaternion to axis angles
+     *
      * @param quat Quaternion
      */
     public static fromQuaternion(quat: THREE.Quaternion): AxisAngle {

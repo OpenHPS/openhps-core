@@ -10,16 +10,12 @@ export class ObjectFilterNode<InOut extends DataFrame> extends ProcessingNode<In
     }
 
     public process(frame: InOut): Promise<InOut> {
-        return new Promise<InOut>((resolve, reject) => {
-            const removedObjects = new Array();
-            frame.getObjects().forEach(object => {
+        return new Promise<InOut>(resolve => {
+            for (const object of frame.getObjects()) {
                 if (!this._filterFn(object, frame)) {
-                    removedObjects.push(object);
+                    frame.removeObject(object);
                 }
-            });
-            removedObjects.forEach(object => {
-                frame.removeObject(object);
-            });
+            }
             resolve(frame);
         });
     }

@@ -1,41 +1,41 @@
 import { DataServiceDriver } from "../DataServiceDriver";
-import { FilterQuery } from "../FilterQuery";
 
 export class DummyDataService<I, T> extends DataServiceDriver<I, T> {
     
-    public findByUID(uid: I): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
+    public findByUID(): Promise<T> {
+        return new Promise<T>(resolve => {
             resolve();
         });
     }
 
-    public findAll(query?: FilterQuery<T>): Promise<T[]> {
-        return new Promise<T[]>((resolve, reject) => {
+    public findAll(): Promise<T[]> {
+        return new Promise<T[]>(resolve => {
             resolve();
         });
     }
 
-    public findOne(query?: FilterQuery<T>): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
+    public findOne(): Promise<T> {
+        return new Promise<T>(resolve => {
             resolve();
         });
     }
 
-    public insert(id: I, object: T): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
+    public insert(): Promise<T> {
+        return new Promise<T>(resolve => {
             resolve();
         });
     }
 
-    public delete(id: I): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+    public delete(): Promise<void> {
+        return new Promise<void>(resolve => {
             resolve();
         });
     }
 
-    public deleteAll(query?: FilterQuery<T>): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+    public deleteAll(): Promise<void> {
+        return new Promise<void>(resolve => {
             resolve();
         });
     }
+
 }

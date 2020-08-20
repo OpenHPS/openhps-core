@@ -6,7 +6,7 @@ export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut
 
     constructor() {
         super();
-        this._dataFrames = new Array();
+        this._dataFrames = [];
 
         this.on('pull', this.onPull.bind(this));
         this.on('push', this.onPush.bind(this));
@@ -16,15 +16,13 @@ export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut
         return new Promise<void>((resolve, reject) => {
             if (this._dataFrames.length !== 0) {
                 const frame = this._dataFrames.pop();
-                const pushPromises = new Array();
+                const pushPromises: Array<Promise<void>> = [];
                 this.outputNodes.forEach(node => {
                     pushPromises.push(node.push(frame));
                 });
                 Promise.all(pushPromises).then(() => {
                     resolve();
-                }).catch(ex => {
-                    reject(ex);
-                });
+                }).catch(reject);
             } else {
                 resolve();
             }
@@ -32,7 +30,7 @@ export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut
     } 
 
     public onPush(frame: InOut): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>(resolve => {
             this._dataFrames.push(frame);
             resolve();
         });

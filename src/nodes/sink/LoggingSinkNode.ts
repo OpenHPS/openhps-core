@@ -7,8 +7,10 @@ import { CallbackSinkNode } from "./CallbackSinkNode";
  * specified in the constructor.
  */
 export class LoggingSinkNode<In extends DataFrame> extends CallbackSinkNode<In> {
+    
     /**
      * Create a new logger output sink
+     *
      * @param loggingFn Logging function
      */
     constructor(loggingFn?: (frame: In | In[]) => void) {

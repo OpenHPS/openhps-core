@@ -7,7 +7,11 @@ import { GraphImpl } from "./graph/_internal/implementations/GraphImpl";
  * [[DataFrame]]s that are pushed or pulled from this model.
  * 
  * ## Usage
+ * ### Creation
  * Please refer to [[ModelBuilder]] for creating a new model
+ * 
+ * ### Pushing and Pulling
+ * 
  */
 export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame> extends GraphImpl<In, Out> {
 

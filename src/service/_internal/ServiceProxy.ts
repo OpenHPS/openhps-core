@@ -1,15 +1,16 @@
 import { Service } from "../Service";
+import { AnyNaptrRecord } from "dns";
 
 export class ServiceProxy<S extends Service> extends Service implements ProxyHandler<S> {
     
-    public get? (target: S, p: PropertyKey, receiver: any): any {
+    public get? (target: S, p: PropertyKey): any {
         if (typeof ((target as any)[p]) === "function") {
             return this.createHandler(target, p);
         }
         return (target as any)[p];
     }
     
-    public set? (target: S, p: PropertyKey, value: any, receiver: any): boolean {
+    public set? (target: S, p: PropertyKey, value: AnyNaptrRecord): boolean {
         (target as any)[p] = value;
         return true;
     }

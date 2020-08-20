@@ -17,7 +17,7 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
 
     public process(frame: InOut): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
-            const processObjectPromises = new Array();
+            const processObjectPromises: Array<Promise<DataObject>> = [];
             frame.getObjects().filter(value => this._objectFilter(value, frame)).forEach(object => {
                 processObjectPromises.push(this.processObject(object, frame));
             });
@@ -26,14 +26,13 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
                     frame.addObject(object);
                 });
                 resolve(frame);
-            }).catch(ex => {
-                reject(ex);
-            });
+            }).catch(reject);
         });
     }
 
     /**
      * Process an individual data object
+     *
      * @param dataObject Data object to process
      * @param dataFrame Data frame this object belongs to
      */
@@ -41,6 +40,7 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
 
     /**
      * Find an object by its uid
+     *
      * @param uid 
      * @param dataFrame 
      * @param type 
@@ -48,7 +48,7 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
     protected findObjectByUID(uid: string, dataFrame?: InOut, type?: string): Promise<DataObject> {
         if (dataFrame !== undefined) {
             if (dataFrame.hasObject(new DataObject(uid))) {
-                return new Promise<DataObject>((resolve, reject) => {
+                return new Promise<DataObject>(resolve => {
                     resolve(dataFrame.getObjectByUID(uid));
                 });
             }

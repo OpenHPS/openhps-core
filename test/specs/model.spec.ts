@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, DataFrame, Node, GraphBuilder } from '../../src';
+import { ModelBuilder, DataFrame, Node, GraphBuilder, EdgeBuilder } from '../../src';
 import { NamedNode, CallbackSourceNode, CallbackNode, CallbackSinkNode, ProcessingNode } from '../../src/nodes';
 
 describe('model', () => {
@@ -82,6 +82,25 @@ describe('model', () => {
                 });
         });
 
+
+    });
+
+    describe('graph builder', () => {
+
+        it('should support adding nodes and edges manually', (done) => {
+            const node1 = new NamedNode("1");
+            const node2 = new NamedNode("2");
+            GraphBuilder.create()
+                .addNode(node1)
+                .addNode(node2)
+                .addEdge(EdgeBuilder.create()
+                    .from(node1)
+                    .to(node2)
+                    .build())
+                .build().then(graph => {
+                    done();
+                });
+        });
 
     });
 

@@ -9,9 +9,9 @@ import { Model } from "../../Model";
 export class ReferenceSpaceConversionNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
     private _referenceSpaceUID: string;
     private _referenceSpace: ReferenceSpace;
-    private _inverse: boolean = false;
+    private _inverse = false;
 
-    constructor(referenceSpace: ReferenceSpace | string, inverse: boolean = false, options?: ObjectProcessingNodeOptions) {
+    constructor(referenceSpace: ReferenceSpace | string, inverse = false, options?: ObjectProcessingNodeOptions) {
         super(options);
         if (referenceSpace instanceof ReferenceSpace) {
             this._referenceSpace = referenceSpace;
@@ -25,11 +25,11 @@ export class ReferenceSpaceConversionNode<InOut extends DataFrame> extends Objec
     }
 
     private _onRegisterService(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>(resolve => {
             const service = (this.graph as Model).findDataService<ReferenceSpace>(ReferenceSpace);
             // Update reference space when modified
-            service.on('insert', (space: ReferenceSpace) => {
-                if (space.uid === this._referenceSpaceUID) {
+            service.on('insert', (uid: string, space: ReferenceSpace) => {
+                if (uid === this._referenceSpaceUID) {
                     this._referenceSpace = space;
                 }
             });
@@ -38,7 +38,7 @@ export class ReferenceSpaceConversionNode<InOut extends DataFrame> extends Objec
             service.findByUID(this._referenceSpaceUID).then((space: ReferenceSpace) => {
                 this._referenceSpace = space;
                 resolve();
-            }).catch(ex => {
+            }).catch(() => {
                 // Ignore, most likely not calibrated or stored yet
                 resolve();
             });
@@ -46,7 +46,7 @@ export class ReferenceSpaceConversionNode<InOut extends DataFrame> extends Objec
     }
 
     public processObject(object: DataObject, frame: InOut): Promise<DataObject> {
-        return new Promise<DataObject>((resolve, reject) => {
+        return new Promise<DataObject>(resolve => {
             // First check if a reference space is provided inside
             // the data frame. If not, use the stored reference space
             let referenceSpace = frame.getObjectByUID(this._referenceSpaceUID) as ReferenceSpace;

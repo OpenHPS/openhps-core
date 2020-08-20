@@ -17,6 +17,7 @@ export class EdgeImpl<InOut extends DataFrame> implements AbstractEdge<InOut> {
 
     /**
      * Set unique identifier of edge
+     *
      * @param uid Unique identifier
      */
     public set uid(uid: string) {

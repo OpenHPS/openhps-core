@@ -1,9 +1,9 @@
-import { DataFrame, DataObject, AbsolutePosition } from "../../../data";
+import { DataFrame, DataObject } from "../../../data";
 import { ObjectProcessingNode } from "../../ObjectProcessingNode";
 import { TimeUnit, LengthUnit } from "../../../utils";
 import { TimeService } from "../../../service";
 import { Model } from "../../../Model";
-import { Matrix4, Vector3, Quaternion, Euler, AxisAngle } from "../../../utils/math";
+import { Matrix4, Vector3, Quaternion, AxisAngle } from "../../../utils/math";
 
 /**
  * Linear and angular velocity processing
@@ -11,7 +11,7 @@ import { Matrix4, Vector3, Quaternion, Euler, AxisAngle } from "../../../utils/m
 export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
 
     public processObject(object: DataObject): Promise<DataObject> {
-        return new Promise<DataObject>((resolve, reject) => {
+        return new Promise<DataObject>(resolve => {
             const model = (this.graph as Model);
             const timeService = model.findService(TimeService);
 
@@ -61,7 +61,7 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                     newPosition.timestamp = timeService.getTime();
                     newPosition.fromVector(newPosition.toVector3(LengthUnit.METER)
                         .add(relativePosition.applyMatrix4(lastPosition.orientation.toRotationMatrix())), 
-                        LengthUnit.METER);
+                    LengthUnit.METER);
 
                     // New orientation in radians
                     const newOrientation = newPosition.orientation.toEuler().toVector3().add(lastPosition.velocity.angular.clone().multiplyScalar(deltaTime));

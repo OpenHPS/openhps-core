@@ -44,12 +44,17 @@ module.exports = [
     minimize: true,
     minimizer: [
       new TerserPlugin({
+        cache: true,
+        parallel: true,
         terserOptions: {
           keep_classnames: true,
           keep_fnames: true
         }
       })
-    ]
+    ],
+    portableRecords: true,
+    usedExports: true,
+    providedExports: true
   },
   plugins: [
     new WebpackAutoInject({

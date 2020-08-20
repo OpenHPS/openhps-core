@@ -8,7 +8,7 @@ import { FilterQuery } from "./FilterQuery";
 export abstract class DataServiceDriver<I, T> extends Service {
     public dataType: new () => T;
 
-    constructor(dataType: new () => T, options?: any) {
+    constructor(dataType: new () => T) {
         super();
         this.name = dataType.name;
         this.dataType = dataType;

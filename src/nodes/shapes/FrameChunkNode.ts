@@ -4,7 +4,7 @@ import { TimeUnit } from "../../utils";
 
 export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _count: number;
-    private _queue: InOut[] = new Array();
+    private _queue: InOut[] = [];
 
     constructor(count: number, timeout?: number, timeoutUnit?: TimeUnit) {
         super();
@@ -17,16 +17,14 @@ export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> 
         return new Promise<void>((resolve, reject) => {
             this._queue.push(frame);
             if (this._queue.length >= this._count) {
-                const pushPromises = new Array();
+                const pushPromises: Array<Promise<void>> = [];
                 this.outputNodes.forEach(outputNode => {
                     pushPromises.push(outputNode.push(this._queue));
                 });
-                this._queue = new Array();
+                this._queue = [];
                 Promise.all(pushPromises).then(() => {
                     resolve();
-                }).catch(ex => {
-                    reject(ex);
-                });
+                }).catch(reject);
             } else {
                 resolve();
             }

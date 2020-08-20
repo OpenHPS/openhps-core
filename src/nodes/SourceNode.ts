@@ -31,30 +31,26 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
     }
 
     private _onPush(data: Out | Out[]): Promise<void> {
-        return new Promise<void>(async (resolve, reject) => {
-            const servicePromises = new Array();
-            const pushPromises = new Array();
+        return new Promise<void>((resolve, reject) => {
+            const servicePromises: Array<Promise<void>> = [];
+            const pushPromises: Array<Promise<void>> = [];
 
-            if (data instanceof Array) {
-                data.forEach(async f => {
-                    if (this._persistence)
-                        await this._mergeFrame(f);
-                    servicePromises.push(this.persistFrame(f));
-                });
-            } else {
-                const f: DataFrame = data as DataFrame;
-                if (this._persistence)
-                    await this._mergeFrame(f);
-                servicePromises.push(this.persistFrame(f));
+            if (this._persistence) {
+                if (data instanceof Array) {
+                    data.forEach(f => {
+                        servicePromises.push(this._mergeFrame(f).then(() => this.persistFrame(f)));
+                    });
+                } else {
+                    const f: DataFrame = data as DataFrame;
+                    servicePromises.push(this._mergeFrame(f).then(() => this.persistFrame(f)));
+                }
             }
             
             this.outputNodes.forEach(node => {
                 pushPromises.push(node.push(data));
             });
             
-            Promise.all(servicePromises).then(() => {
-                return Promise.all(pushPromises);
-            }).then(() => resolve()).catch(reject);
+            Promise.all(servicePromises).then(() => Promise.all(pushPromises)).then(() => resolve()).catch(reject);
         });
     }
 
@@ -69,9 +65,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
                     // Update the frame
                     frameService.insert(f.uid, f).then(() => {
                         resolve();
-                    }).catch(ex => {
-                        reject(ex);
-                    });
+                    }).catch(reject);
                 }
             } else {
                 // No frame provided in pull
@@ -84,13 +78,13 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
         return new Promise<DataFrame>((resolve, reject) => {
             const model = (this.graph as Model<any, any>);
             const defaultService = model.findDataService(DataObject);
-            const promises = new Array();
-            const objects = new Array<DataObject>();
+            const promises: Array<Promise<void>> = [];
+            const objects: DataObject[] = [];
             frame.getObjects().forEach(object => {
                 objects.push(object);
             });
             objects.forEach(object => {
-                promises.push(new Promise((objResolve, objReject) => {
+                promises.push(new Promise(objResolve => {
                     let service = model.findDataService(object);
                     if (service === null || service === undefined) {
                         service = defaultService;
@@ -136,6 +130,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
 export interface SourceNodeOptions extends NodeOptions {
     /**
      * Merge objects from persisted source
+     *
      * @default true
      */
     persistence?: boolean;

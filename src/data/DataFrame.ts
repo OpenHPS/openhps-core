@@ -33,7 +33,9 @@ export class DataFrame {
 
     /**
      * Create a new data frame
+     *
      * @param data Optional JSON to parse from
+     * @param source
      */
     constructor(source?: DataObject) {
         const timestamp = Date.now();
@@ -51,6 +53,7 @@ export class DataFrame {
 
     /**
      * Set the source object that captured the data frame
+     *
      * @param source Object that captured the data frame
      */
     public set source(source: DataObject) {
@@ -60,19 +63,21 @@ export class DataFrame {
 
     /**
      * Get known objects used in this data frame
+     *
+     * @param dataType
      */
     public getObjects<T extends DataObject>(dataType?: new () => T): T[] {
         if (dataType === undefined) {
-            const filteredObjects = new Array();
+            const filteredObjects: T[] = [];
             this._objects.forEach(object => {
-                filteredObjects.push(object);
+                filteredObjects.push(object as T);
             });
             return filteredObjects;
         } else {
-            const filteredObjects = new Array();
+            const filteredObjects: T[] = [];
             this._objects.forEach(object => {
                 if (object.constructor.name === dataType.name)
-                    filteredObjects.push(object);
+                    filteredObjects.push(object as T);
             });
             return filteredObjects;
         }
@@ -88,6 +93,7 @@ export class DataFrame {
 
     /**
      * Add a new object relevant to this data frame
+     *
      * @param object Relevant object
      */
     public addObject(object: DataObject): void {
@@ -98,6 +104,7 @@ export class DataFrame {
 
     /**
      * Add a new reference space relevant to this data frame
+     *
      * @param referenceSpace Relevant reference space
      */
     public addReferenceSpace(referenceSpace: ReferenceSpace): void {
@@ -106,6 +113,7 @@ export class DataFrame {
     
     /**
      * Remove an object from the data frame
+     *
      * @param object Object to remove
      */
     public removeObject(object: DataObject): void {

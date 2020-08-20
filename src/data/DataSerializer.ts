@@ -33,6 +33,7 @@ export class DataSerializer {
     
     /**
      * Serialize data
+     *
      * @param data Data to serialize
      */
     public static serialize<T>(data: T): any {
@@ -54,8 +55,8 @@ export class DataSerializer {
         }
     }
 
-    protected static serializeArray<T>(data: T[]): any {
-        const serializedResult = new Array();
+    protected static serializeArray<T>(data: T[]): any[] {
+        const serializedResult: any[] = [];
         data.forEach(d => {
             if (d === null || d === undefined || d !== Object(d)) {
                 serializedResult.push(d);
@@ -75,6 +76,7 @@ export class DataSerializer {
 
     /**
      * Deserialize data
+     *
      * @param serializedData Data to deserialze 
      * @param dataType Optional data type to specify deserialization type
      */
@@ -98,7 +100,7 @@ export class DataSerializer {
     }
 
     protected static deserializeArray<T>(serializedData: any[], dataType?: new () => T): T[] {
-        const deserializedResult = new Array();
+        const deserializedResult: T[] = [];
         serializedData.forEach(d => {
             if (d === null || d === undefined) {
                 deserializedResult.push(d);

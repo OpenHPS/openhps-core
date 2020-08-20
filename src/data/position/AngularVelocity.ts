@@ -5,7 +5,7 @@ import { Vector3 } from "../../utils/math";
 @SerializableObject()
 export class AngularVelocity extends Vector3 {
 
-    constructor(x?: number, y?: number, z?: number, unit: AngularVelocityUnit = AngularVelocityUnit.RADIAN_PER_SECOND) {
+    constructor(x?: number, y?: number, z?: number, unit = AngularVelocityUnit.RADIAN_PER_SECOND) {
         super(
             unit.convert(x ? x : 0, AngularVelocityUnit.RADIAN_PER_SECOND),
             unit.convert(y ? y : 0, AngularVelocityUnit.RADIAN_PER_SECOND),

@@ -48,6 +48,11 @@ export class Quaternion extends THREE.Quaternion {
         super.w = value;
     }
 
+    /**
+     * Convert a threejs quaternion to serializable quaternion
+     *
+     * @param threeQuaternion ThreeJS created quaternion
+     */
     public static fromThreeJS(threeQuaternion: THREE.Quaternion): Quaternion {
         const quaternion = new Quaternion();
         quaternion.x = threeQuaternion.x;
@@ -59,12 +64,13 @@ export class Quaternion extends THREE.Quaternion {
 
     /**
      * Convert euler angles to quaternion
+     *
      * @param euler Euler
      */
     public static fromEuler(euler: Vector3): Quaternion;
     public static fromEuler(euler: Euler): Quaternion;
-    public static fromEuler(euler: { yaw: number, pitch: number, roll: number, unit?: AngleUnit }): Quaternion;
-    public static fromEuler(euler: { x: number, y: number, z: number, order?: EulerOrder, unit?: AngleUnit }): Quaternion;
+    public static fromEuler(euler: { yaw: number; pitch: number; roll: number; unit?: AngleUnit }): Quaternion;
+    public static fromEuler(euler: { x: number; y: number; z: number; order?: EulerOrder; unit?: AngleUnit }): Quaternion;
     public static fromEuler(euler: number[]): Quaternion;
     public static fromEuler(euler: any): Quaternion {
         const quaternion = new Quaternion();
@@ -87,7 +93,7 @@ export class Quaternion extends THREE.Quaternion {
      * 
      * @param axis Axis-angle rotation
      */
-    public static fromAxisAngle(axis: { x: number, y: number, z: number, angle?: number, unit?: AngleUnit }): Quaternion;
+    public static fromAxisAngle(axis: { x: number; y: number; z: number; angle?: number; unit?: AngleUnit }): Quaternion;
     public static fromAxisAngle(axis: number[]): Quaternion;
     public static fromAxisAngle(axis: AxisAngle): Quaternion;
     public static fromAxisAngle(axis: any): Quaternion {
@@ -106,6 +112,7 @@ export class Quaternion extends THREE.Quaternion {
 
     /**
      * Convert rotation matrix to quaternion
+     *
      * @param matrix Rotation matrix
      */
     public static fromRotationMatrix(matrix: Matrix4): Quaternion {
@@ -116,6 +123,8 @@ export class Quaternion extends THREE.Quaternion {
 
     /**
      * Convert the quaternion to euler angles
+     *
+     * @param order
      */
     public toEuler(order?: EulerOrder): Euler {
         return Euler.fromQuaternion(this, order);

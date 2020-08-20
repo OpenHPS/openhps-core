@@ -7,10 +7,11 @@ import { DataService } from "./DataService";
  * The object service manages the data of objects that are currently being
  * processed in the model and objects that need to be tracked.
  */
-export class DataObjectService<T extends DataObject> extends DataService<string, DataObject> {
+export class DataObjectService<T extends DataObject> extends DataService<string, T> {
 
     /**
      * Find a data object by its display name
+     *
      * @param displayName Name to search for
      */
     public findByDisplayName(displayName: string): Promise<T[]> {
@@ -22,6 +23,7 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
 
     /**
      * Find a data object by its current absolute position
+     *
      * @param position Current absolute position
      */
     public findByPosition(position: AbsolutePosition): Promise<T[]> {
@@ -44,7 +46,8 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
 
     /**
      * Find all data objects with a parent UID
-     * @param parentUID Parent UID
+     *
+     * @param parentUID string Parent UID
      */
     public findByParentUID(parentUID: string): Promise<T[]> {
         const filter: FilterQuery<any> = {
@@ -52,5 +55,5 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
         };
         return this.findAll(filter) as Promise<T[]>;
     }
-
+    
 }

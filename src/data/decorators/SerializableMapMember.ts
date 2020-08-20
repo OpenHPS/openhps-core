@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { jsonMapMember } from "typedjson";
 import { IJsonMapMemberOptions } from "typedjson/js/typedjson/json-map-member";
 

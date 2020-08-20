@@ -2,13 +2,10 @@ import { ObjectProcessingNode, ObjectProcessingNodeOptions } from "../../../Obje
 import { DataObject, IMUDataFrame } from "../../../../data";
 
 export class MagnetometerCalibrationNode extends ObjectProcessingNode<IMUDataFrame> {
+    protected options: MagnetomerCalibrationOptions;
 
     constructor(options: MagnetomerCalibrationOptions) {
         super(options);
-    }
-
-    public get options(): MagnetomerCalibrationOptions {
-        return super.options as MagnetomerCalibrationOptions;
     }
 
     public processObject(object: DataObject, frame: IMUDataFrame): Promise<DataObject> {

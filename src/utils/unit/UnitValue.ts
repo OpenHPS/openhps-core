@@ -16,11 +16,11 @@ import { Unit } from "./Unit";
  * ```
  */
 export class UnitValue implements Number {
-    private _value: Number;
+    private _value: number;
     private _unit: Unit;
 
-    constructor(value: any, unit: Unit) {
-        this._value = Number(value);
+    constructor(value: number, unit: Unit) {
+        this._value = value;
         this._unit = unit;
     }
 
@@ -35,7 +35,9 @@ export class UnitValue implements Number {
 
     /**
      * Returns a string representation of an object.
-     * @param radix Specifies a radix for converting numeric values to strings. This value is only used for numbers.
+     *
+     * @param radix Number Specifies a radix for converting numeric values to strings. This value is only used for numbers.
+     * @returns string Unit value as string
      */
     public toString(radix?: number): string {
         return this._value.toString(radix);
@@ -43,6 +45,7 @@ export class UnitValue implements Number {
 
     /**
      * Returns a string representing a number in fixed-point notation.
+     *
      * @param fractionDigits Number of digits after the decimal point. Must be in the range 0 - 20, inclusive.
      */
     public toFixed(fractionDigits?: number): string {
@@ -51,6 +54,7 @@ export class UnitValue implements Number {
 
     /**
      * Returns a string containing a number represented in exponential notation.
+     *
      * @param fractionDigits Number of digits after the decimal point. Must be in the range 0 - 20, inclusive.
      */
     public toExponential(fractionDigits?: number): string {
@@ -59,6 +63,7 @@ export class UnitValue implements Number {
 
     /**
      * Returns a string containing a number represented either in exponential or fixed-point notation with a specified number of digits.
+     *
      * @param precision Number of significant digits. Must be in the range 1 - 21, inclusive.
      */
     public toPrecision(precision?: number): string {

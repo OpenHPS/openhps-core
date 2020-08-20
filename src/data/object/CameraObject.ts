@@ -43,6 +43,7 @@ export class CameraObject extends DataObject {
 
     /**
      * Get the current absolute position of the object
+     *
      * @param referenceSpace (optional) reference space
      */
     public getPosition(referenceSpace?: Space): Absolute3DPosition {
@@ -51,6 +52,7 @@ export class CameraObject extends DataObject {
 
     /**
      * Set the current absolute position of the object
+     *
      * @param position Position to set
      * @param referenceSpace (optional) reference space
      */
@@ -60,18 +62,20 @@ export class CameraObject extends DataObject {
 
     /**
      * Transform a 3d position to a 2d position shown by the camera
+     *
      * @param position 3D position
      */
     public transform(position: Absolute3DPosition): Absolute2DPosition {
-        return null;
+        return position as any;
     }
 
     /**
      * Transform a 2d position to a 3d position through the camera
+     *
      * @param position 2D position
      */
     public inverseTransform(position: Absolute2DPosition): Absolute3DPosition {
-        return null;
+        return position as any;
     }
 
 }

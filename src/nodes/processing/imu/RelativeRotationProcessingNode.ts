@@ -1,14 +1,15 @@
 import { DataFrame, DataObject, IMUDataFrame } from "../../../data";
 import { Quaternion } from "../../../utils";
-import { FilterProcessingNode, FilterProcessingOptions } from "../dsp";
+import { FilterProcessingNode } from "../dsp";
 
 /**
  * Relative rotation processing node
+ *
  * @source https://www.w3.org/TR/motion-sensors/#relative-orientation-sensor
  */
 export class RelativeRotationProcessingNode extends FilterProcessingNode<DataFrame> {
 
-    public initFilter(object: DataObject, frame: IMUDataFrame, options?: FilterProcessingOptions): Promise<any> {
+    public initFilter(_: DataObject, frame: IMUDataFrame): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             if (frame.angularVelocity === undefined || frame.acceleration === undefined) {
                 reject(new Error(`Relative rotation processing requires accelerometer and gyroscope readings!`));
@@ -22,8 +23,8 @@ export class RelativeRotationProcessingNode extends FilterProcessingNode<DataFra
         });
     }
 
-    public filter(object: DataObject, frame: IMUDataFrame, filter: any, options?: FilterProcessingOptions): Promise<DataObject> {
-        return new Promise<DataObject>((resolve, reject) => {
+    public filter(object: DataObject, frame: IMUDataFrame, filter: any): Promise<DataObject> {
+        return new Promise<DataObject>(resolve => {
             const accl = frame.acceleration;
             const gyro = object.getPosition().velocity.angular;
             const bias = 0.98;

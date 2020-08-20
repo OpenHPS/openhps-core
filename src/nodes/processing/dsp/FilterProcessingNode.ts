@@ -39,7 +39,7 @@ export abstract class FilterProcessingNode<InOut extends DataFrame> extends Obje
 
 }
 
-// tslint:disable-next-line
+// eslint-disable-next-line
 export interface FilterProcessingOptions extends ObjectProcessingNodeOptions {
     
 }

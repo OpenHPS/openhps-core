@@ -11,7 +11,7 @@ export class LPFilterNode<InOut extends DataFrame> extends PropertyFilterProcess
     }
 
     public initFilter<T extends number | Vector>(object: DataObject, value: T, options: LPFilterOptions): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
+        return new Promise<any>(resolve => {
             const rc = 1.0 / (options.cutOff * 2 * Math.PI);
             const dt = 1.0 / options.sampleRate;
             const alpha = dt / (rc + dt);
@@ -23,8 +23,8 @@ export class LPFilterNode<InOut extends DataFrame> extends PropertyFilterProcess
         });
     }
     
-    public filter<T extends number | Vector>(object: DataObject, value: T, filter: { x: any, alpha: number }): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
+    public filter<T extends number | Vector>(object: DataObject, value: T, filter: { x: any; alpha: number }): Promise<T> {
+        return new Promise<T>(resolve => {
             if (typeof value === 'number') {
                 filter.x = filter.x + (filter.alpha * (value - filter.x));
             } else {

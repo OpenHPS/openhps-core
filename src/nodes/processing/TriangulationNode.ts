@@ -1,4 +1,4 @@
-import { DataObject, DataFrame, RelativeAnglePosition, AbsolutePosition } from "../../data";
+import { DataObject, DataFrame, RelativeAnglePosition, AbsolutePosition, Absolute2DPosition, Absolute3DPosition, GeographicalPosition } from "../../data";
 import { AngleUnit, Vector3 } from "../../utils";
 import { RelativePositionProcessing } from "./RelativePositionProcessing";
 import { ObjectProcessingNodeOptions } from "../ObjectProcessingNode";
@@ -16,37 +16,35 @@ export class TriangulationNode<InOut extends DataFrame> extends RelativePosition
         super(RelativeAnglePosition, options);
     }
 
-    public processRelativePositions(dataObject: DataObject, relativePositions: Map<RelativeAnglePosition, DataObject>): Promise<DataObject> {
+    public processRelativePositions<P extends Absolute2DPosition | Absolute3DPosition | GeographicalPosition>(dataObject: DataObject, relativePositions: Map<RelativeAnglePosition, DataObject>): Promise<DataObject> {
         return new Promise((resolve, reject) => {
-            const objects = new Array<DataObject>();
-            const points = new Array();
-            const angles = new Array();
+            const objects: DataObject[] = [];
+            const points: P[] = [];
+            const angles: number[] = [];
             relativePositions.forEach((object, relativePosition) => {
                 if (object.getPosition()) {
                     objects.push(object);
-                    points.push(object.getPosition());
+                    points.push(object.getPosition() as P);
                     angles.push(relativePosition.angleUnit.convert(relativePosition.angle, AngleUnit.RADIAN));
                 }
             });
 
             switch (objects.length) {
-                case 0:
-                case 1:
-                    return resolve(dataObject);
-                case 2:
-                    break;
-                case 3:
-                    // TODO: Currently only for 2d
-                    this.triangulate(points, angles).then(position => {
-                        if (position !== null)
-                            dataObject.setPosition(position);
-                        resolve(dataObject);
-                    }).catch(ex => {
-                        reject(ex);
-                    });
-                    break;
-                default:
-                    return resolve(dataObject);
+            case 0:
+            case 1:
+                return resolve(dataObject);
+            case 2:
+                break;
+            case 3:
+                // TODO: Currently only for 2d
+                this.triangulate(points, angles).then(position => {
+                    if (position !== null)
+                        dataObject.setPosition(position);
+                    resolve(dataObject);
+                }).catch(reject);
+                break;
+            default:
+                return resolve(dataObject);
             }
         });
     }

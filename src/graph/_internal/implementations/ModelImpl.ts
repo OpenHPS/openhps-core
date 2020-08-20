@@ -14,8 +14,10 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
 
     /**
      * Create a new OpenHPS model
+     *
+     * @param name
      */
-    constructor(name: string = "model") {
+    constructor(name = "model") {
         super();
         this.name = name;
         this.referenceSpace = new ReferenceSpace(undefined);
@@ -55,7 +57,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
 
     private _buildServices(): Promise<void> {
         return new Promise((resolve, reject) => {
-            const buildPromises = new Array();
+            const buildPromises: Array<Promise<boolean>> = [];
             this._services.forEach(service => {
                 if (!service.isReady()) {
                     buildPromises.push(service.emitAsync('build'));
@@ -72,7 +74,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
 
     private _buildNodes(_: any): Promise<void> {
         return new Promise((resolve, reject) => {
-            const buildPromises = new Array();
+            const buildPromises: Array<Promise<boolean>> = [];
             this.nodes.forEach(node => {
                 if (!node.isReady()) {
                     buildPromises.push(node.emitAsync('build', _));
@@ -84,15 +86,15 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
 
     private _onModelDestroy(_?: any): Promise<void> {
         return new Promise((resolve, reject) => {
-            const destroyPromises = new Array();
+            const destroyPromises: Array<Promise<boolean>> = [];
             this._services.forEach(service => {
-                destroyPromises.push(service.emit('destroy', _));
+                destroyPromises.push(service.emitAsync('destroy', _));
             });
             this._dataServices.forEach(service => {
-                destroyPromises.push(service.emit('destroy', _));
+                destroyPromises.push(service.emitAsync('destroy', _));
             });
             this.nodes.forEach(node => {
-                destroyPromises.push(node.emit('destroy', _));
+                destroyPromises.push(node.emitAsync('destroy', _));
             });
             Promise.all(destroyPromises).then(() => {
                 resolve();
@@ -168,7 +170,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
         if (service === null) {
             // Find the parent class
             let parent = Object.getPrototypeOf(dataType);
-            while (true) {
+            while (!service) {
                 service = this._findDataServiceByName(parent.name);
                 if (service !== null) {
                     return service;
@@ -200,6 +202,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
 
     /**
      * Add service to model
+     *
      * @param service Service
      */
     public addService(service: Service): void {
@@ -222,7 +225,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
 
     public push(frame: In | In[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const servicePromises = new Array();
+            const servicePromises: Array<Promise<unknown>> = [];
 
             // Merge the changes in the frame service
             let frameService = this.findDataService(frame.constructor.name);
@@ -235,9 +238,7 @@ export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends Grap
                 servicePromises.push(frameService.insert((frame as DataFrame).uid, frame));
             }
 
-            Promise.all(servicePromises).then(() => {
-                return this.internalInput.push(frame);
-            }).then(() => {
+            Promise.all(servicePromises).then(() => this.internalInput.push(frame)).then(() => {
                 resolve();
             }).catch(reject);
         });

@@ -30,23 +30,18 @@ describe('position', () => {
 
         it('should calculate the midpoint', (done) => {
             const position = new GeographicalPosition(3, 3);
-            position.midpoint(new GeographicalPosition(5, 5)).then(midpoint => {
-                done();
-            });
+            const midpoint = position.midpoint(new GeographicalPosition(5, 5));
         });
 
-        it('should calculate the midpoint with different distances', (done) => {
+        it('should calculate the midpoint with different distances', () => {
             const position = new GeographicalPosition(3, 3);
-            position.midpoint(new GeographicalPosition(5, 5), 1, 2).then(midpoint => {
-                done();
-            });
+            const midpoint = position.midpoint(new GeographicalPosition(5, 5), 1, 2);
         });
 
         it('should calculate the distance between two points', () => {
             const distance = new GeographicalPosition(1, 1).distance( new GeographicalPosition(4, 9));
         });
-
-        
+       
         it('should calculate the bearing between two points', () => {
             const bearing = new GeographicalPosition(1, 1).bearing(new GeographicalPosition(4, 9));
         });

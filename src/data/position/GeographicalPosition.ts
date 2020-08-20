@@ -17,7 +17,7 @@ export class GeographicalPosition extends Absolute3DPosition {
     private _phi: number;
     private _lambda: number;
 
-    public static EARTH_RADIUS: number = 6371008; 
+    public static EARTH_RADIUS = 6371008; 
 
     constructor(lat?: number, lng?: number, amsl?: number) {
         super();
@@ -87,6 +87,7 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Get the distance from this location to a destination
+     *
      * @param destination Destination location
      */
     public distance(destination: GeographicalPosition): number {
@@ -103,6 +104,7 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Get the bearing in degrees from this location to a destination
+     *
      * @param destination Destination location
      */
     public bearing(destination: GeographicalPosition): number {
@@ -118,67 +120,58 @@ export class GeographicalPosition extends Absolute3DPosition {
     public destination(
         bearing: number, 
         distance: number, 
-        bearingUnit: AngleUnit = AngleUnit.DEGREE, 
-        distanceUnit: LengthUnit = LengthUnit.METER): Promise<GeographicalPosition> {
-        return new Promise<GeographicalPosition>((resolve, reject) => {
-            const brng = bearingUnit.convert(bearing, AngleUnit.RADIAN);
-            const lonRadA = bearingUnit.convert(this.longitude, AngleUnit.RADIAN);
-            const latRadA = bearingUnit.convert(this.latitude, AngleUnit.RADIAN);
-            const latX = Math.asin(Math.sin(latRadA) * Math.cos(distance / GeographicalPosition.EARTH_RADIUS) +
-                        Math.cos(latRadA) * Math.sin(distance / GeographicalPosition.EARTH_RADIUS) * Math.cos(brng));
-            const lonX = lonRadA + Math.atan2(Math.sin(brng) * Math.sin(distance / GeographicalPosition.EARTH_RADIUS) * Math.cos(latRadA),
-                                    Math.cos(distance / GeographicalPosition.EARTH_RADIUS) - Math.sin(latRadA) * Math.sin(latX));
-    
-            const location = new GeographicalPosition();
-            location.latitude = AngleUnit.RADIAN.convert(latX, AngleUnit.DEGREE);
-            location.longitude = AngleUnit.RADIAN.convert(lonX, AngleUnit.DEGREE);
-            resolve(location);
-        });
+        bearingUnit = AngleUnit.DEGREE, 
+        distanceUnit = LengthUnit.METER): GeographicalPosition {
+        const brng = bearingUnit.convert(bearing, AngleUnit.RADIAN);
+        const lonRadA = bearingUnit.convert(this.longitude, AngleUnit.RADIAN);
+        const latRadA = bearingUnit.convert(this.latitude, AngleUnit.RADIAN);
+        const latX = Math.asin(Math.sin(latRadA) * Math.cos(distance / GeographicalPosition.EARTH_RADIUS) +
+                    Math.cos(latRadA) * Math.sin(distance / GeographicalPosition.EARTH_RADIUS) * Math.cos(brng));
+        const lonX = lonRadA + Math.atan2(Math.sin(brng) * Math.sin(distance / GeographicalPosition.EARTH_RADIUS) * Math.cos(latRadA),
+            Math.cos(distance / GeographicalPosition.EARTH_RADIUS) - Math.sin(latRadA) * Math.sin(latX));
+
+        const location = new GeographicalPosition();
+        location.latitude = AngleUnit.RADIAN.convert(latX, AngleUnit.DEGREE);
+        location.longitude = AngleUnit.RADIAN.convert(lonX, AngleUnit.DEGREE);
+        return location;
     }
 
     /**
      * Get the midpoint of two geographical locations
+     *
      * @param otherPosition Other location to get midpoint from
+     * @param distanceSelf
+     * @param distanceOther
      */
-    public midpoint(otherPosition: GeographicalPosition, distanceSelf: number = 1, distanceOther: number = 1): Promise<GeographicalPosition> {
-        return new Promise<GeographicalPosition>((resolve, reject) => {
-            if (distanceOther === distanceSelf) {
-                const lonRadA = AngleUnit.DEGREE.convert(this.longitude, AngleUnit.RADIAN);
-                const latRadA = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
-                const lonRadB = AngleUnit.DEGREE.convert(otherPosition.longitude, AngleUnit.RADIAN);
-                const latRadB = AngleUnit.DEGREE.convert(otherPosition.latitude, AngleUnit.RADIAN);
-        
-                const Bx = Math.cos(latRadB) * Math.cos(lonRadB - lonRadA);
-                const By = Math.cos(latRadB) * Math.sin(lonRadB - lonRadA);
-                const latX = Math.atan2(Math.sin(latRadA) + Math.sin(latRadB),
-                                    Math.sqrt((Math.cos(latRadA) + Bx) * (Math.cos(latRadA) + Bx) + By * By));
-                const lonX = lonRadA + Math.atan2(By, Math.cos(latRadA) + Bx);
-        
-                const location = new GeographicalPosition();
-                location.latitude = AngleUnit.RADIAN.convert(latX, AngleUnit.DEGREE);
-                location.longitude = AngleUnit.RADIAN.convert(lonX, AngleUnit.DEGREE);
-                resolve(location);
-            } else {
-                // Calculate bearings
-                const bearingAB = this.bearing(otherPosition);
-                const bearingBA = otherPosition.bearing(this);
-                // Calculate two reference points
-                const destinationPromises = new Array();
-                destinationPromises.push(this.destination(bearingAB, distanceSelf));
-                destinationPromises.push(otherPosition.destination(bearingBA, distanceOther));
-
-                Promise.all(destinationPromises).then(destinations => {
-                    const C = destinations[0];
-                    const D = destinations[1];
-                    // Calculate the middle of C and D
-                    const midpoint = C.midpoint(D);
-                    midpoint.accuracy = Math.round((C.distance(D) / 2) * 100.) / 100.;
-                    resolve(midpoint);
-                }).catch(ex => {
-                    reject(ex);
-                });
-            }
-        });
+    public midpoint(otherPosition: GeographicalPosition, distanceSelf = 1, distanceOther = 1): GeographicalPosition {
+        if (distanceOther === distanceSelf) {
+            const lonRadA = AngleUnit.DEGREE.convert(this.longitude, AngleUnit.RADIAN);
+            const latRadA = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
+            const lonRadB = AngleUnit.DEGREE.convert(otherPosition.longitude, AngleUnit.RADIAN);
+            const latRadB = AngleUnit.DEGREE.convert(otherPosition.latitude, AngleUnit.RADIAN);
+    
+            const Bx = Math.cos(latRadB) * Math.cos(lonRadB - lonRadA);
+            const By = Math.cos(latRadB) * Math.sin(lonRadB - lonRadA);
+            const latX = Math.atan2(Math.sin(latRadA) + Math.sin(latRadB),
+                Math.sqrt((Math.cos(latRadA) + Bx) * (Math.cos(latRadA) + Bx) + By * By));
+            const lonX = lonRadA + Math.atan2(By, Math.cos(latRadA) + Bx);
+    
+            const location = new GeographicalPosition();
+            location.latitude = AngleUnit.RADIAN.convert(latX, AngleUnit.DEGREE);
+            location.longitude = AngleUnit.RADIAN.convert(lonX, AngleUnit.DEGREE);
+            return location;
+        } else {
+            // Calculate bearings
+            const bearingAB = this.bearing(otherPosition);
+            const bearingBA = otherPosition.bearing(this);
+            // Calculate two reference points
+            const C = this.destination(bearingAB, distanceSelf);
+            const D =otherPosition.destination(bearingBA, distanceOther)
+            // Calculate the middle of C and D
+            const midpoint = C.midpoint(D);
+            midpoint.accuracy = Math.round((C.distance(D) / 2) * 100.) / 100.;
+            return midpoint;
+        }
     }
 
     public fromVector(vector: Vector3, unit?: LengthUnit): void {

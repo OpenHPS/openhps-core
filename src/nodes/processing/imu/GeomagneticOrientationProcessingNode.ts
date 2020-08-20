@@ -1,14 +1,15 @@
-import { FilterProcessingOptions, FilterProcessingNode } from "../dsp";
+import { FilterProcessingNode } from "../dsp";
 import { DataObject, IMUDataFrame } from "../../../data";
 import { Quaternion } from "../../../utils";
 
 /**
  * Geomagnetic orientation processing node
+ *
  * @source https://github.com/visakhanc/eCompass/blob/master/source/main.c
  */
 export class GeomagneticOrientationProcessingNode extends FilterProcessingNode<IMUDataFrame> {
 
-    public initFilter(object: DataObject, frame: IMUDataFrame, options?: FilterProcessingOptions): Promise<any> {
+    public initFilter(object: DataObject, frame: IMUDataFrame): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             if (frame.angularVelocity || frame.acceleration === undefined) {
                 reject(new Error(`Relative rotation processing requires accelerometer and gyroscope readings!`));
@@ -22,8 +23,8 @@ export class GeomagneticOrientationProcessingNode extends FilterProcessingNode<I
         });
     }
 
-    public filter(object: DataObject, frame: IMUDataFrame, filter: any, options?: FilterProcessingOptions): Promise<DataObject> {
-        return new Promise<DataObject>((resolve, reject) => {
+    public filter(object: DataObject, frame: IMUDataFrame): Promise<DataObject> {
+        return new Promise<DataObject>(resolve => {
             const accl = frame.acceleration;
             const mag = frame.magnetism;
             

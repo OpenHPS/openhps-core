@@ -2,7 +2,10 @@ import {
     DataFrame, 
     DataObject, 
     RelativeDistancePosition, 
-    AbsolutePosition
+    AbsolutePosition,
+    Absolute2DPosition,
+    Absolute3DPosition,
+    GeographicalPosition
 } from "../../data";
 import { RelativePositionProcessing } from "./RelativePositionProcessing";
 import { ObjectProcessingNodeOptions } from "../ObjectProcessingNode";
@@ -20,38 +23,38 @@ export class TrilaterationNode<InOut extends DataFrame> extends RelativePosition
         super(RelativeDistancePosition, options);
     }
 
-    public processRelativePositions(dataObject: DataObject, relativePositions: Map<RelativeDistancePosition, DataObject>): Promise<DataObject> {
+    public processRelativePositions<P extends Absolute2DPosition | Absolute3DPosition | GeographicalPosition>(dataObject: DataObject, relativePositions: Map<RelativeDistancePosition, DataObject>): Promise<DataObject> {
         return new Promise((resolve, reject) => {
-            const objects = new Array<DataObject>();
-            const points = new Array();
-            const distances = new Array();
+            const objects: DataObject[] = [];
+            const points: P[] = [];
+            const distances: number[] = [];
             relativePositions.forEach((object, relativePosition) => {
                 if (object.getPosition()) {
                     objects.push(object);
-                    points.push(object.getPosition());
+                    points.push(object.getPosition() as P);
                     distances.push(relativePosition.distance);
                 }
             });
 
+            let position: P;
             switch (objects.length) {
-                case 0:
-                case 1:
-                    return resolve(dataObject);
-                case 2:
-                    const midpoint = points[0].midpoint(points[1], distances[0], distances[1]);
-                    if (midpoint !== null)
-                        dataObject.setPosition(midpoint);
-                    return resolve(dataObject);
-                case 3:
-                    this.trilaterate(points, distances).then(position => {
-                        if (position !== null)
-                            dataObject.setPosition(position);
-                        resolve(dataObject);
-                    }).catch(ex => {
-                        reject(ex);
-                    });
-                default:
-                    return resolve(dataObject);
+            case 0:
+            case 1:
+                return resolve(dataObject);
+            case 2:
+                position = points[0].midpoint(points[1] as any, distances[0], distances[1]) as P;
+                if (position !== null)
+                    dataObject.setPosition(position);
+                return resolve(dataObject);
+            case 3:
+                this.trilaterate(points, distances).then(position => {
+                    if (position !== null)
+                        dataObject.setPosition(position);
+                    resolve(dataObject);
+                }).catch(reject);
+                break;
+            default:
+                return resolve(dataObject);
             }
         });
     }

@@ -29,7 +29,7 @@ export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node
 
     private _onBuild(_: any): Promise<void> {
         return new Promise((resolve, reject) => {
-            const buildPromises = new Array();
+            const buildPromises: Array<Promise<boolean>> = [];
             this.nodes.forEach(node => {
                 buildPromises.push(node.emitAsync('build', _));
             });

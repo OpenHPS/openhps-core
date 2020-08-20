@@ -7,7 +7,7 @@ import { DataObject } from "../../data";
  * is popped when pulling from this node.
  */
 export class ListSourceNode<Out extends DataFrame> extends SourceNode<Out> {
-    private _inputData: Out[] = new Array();
+    private _inputData: Out[] = [];
 
     constructor(inputData: Out[], source?: DataObject, options?: SourceNodeOptions) {
         super(source, options);
@@ -27,7 +27,7 @@ export class ListSourceNode<Out extends DataFrame> extends SourceNode<Out> {
     }
 
     public onPull(): Promise<Out> {
-        return new Promise<Out>((resolve, reject) => {
+        return new Promise<Out>(resolve => {
             if (this._inputData.length !== 0) {
                 resolve(this._inputData.shift());
             }

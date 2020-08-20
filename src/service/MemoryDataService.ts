@@ -16,8 +16,8 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     }
 
     public findOne(query?: FilterQuery<T>): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
-            for (const [_, object] of this._data) {
+        return new Promise<T>(resolve => {
+            for (const [, object] of this._data) {
                 if (QueryEvaluator.evaluate(object, query))
                     return resolve(object);
             }
@@ -26,8 +26,8 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     }
 
     public findAll(query?: FilterQuery<T>): Promise<T[]> {
-        return new Promise<T[]>((resolve, reject) => {
-            const data = new Array();
+        return new Promise<T[]>(resolve => {
+            const data: T[] = [];
             this._data.forEach(object => {
                 if (QueryEvaluator.evaluate(object, query))
                     data.push(object);
@@ -37,7 +37,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     }
 
     public insert(id: I, object: T): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
+        return new Promise<T>(resolve => {
             if (id && object) {
                 this._data.set(id, object);
                 resolve(object);
@@ -59,7 +59,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     }
 
     public deleteAll(filter?: FilterQuery<T>): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>(resolve => {
             if (filter === undefined) {
                 this._data = new Map();
             } else {

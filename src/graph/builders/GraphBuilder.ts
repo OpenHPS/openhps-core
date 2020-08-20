@@ -25,7 +25,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
     }
 
     public from(...nodes: Array<Node<any, any> | string>): GraphShapeBuilder<any> {
-        const selectedNodes: Array<Node<any, any>> = new Array();
+        const selectedNodes: Array<Node<any, any>> = [];
         nodes.forEach((node: Node<any, any> | string) => {
             if (typeof node === 'string') {
                 let existingNode = this.graph.getNodeByUID(node);
@@ -36,9 +36,9 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
             } else {
                 this.graph.addNode(node);
                 if (node instanceof AbstractSourceNode) {
-                    this.graph.addEdge(new EdgeBuilder<any>()
-                        .withInput(this.graph.internalInput)
-                        .withOutput(node)
+                    this.graph.addEdge(EdgeBuilder.create()
+                        .from(this.graph.internalInput)
+                        .to(node)
                         .build());
                 }
                 selectedNodes.push(node);
@@ -69,19 +69,20 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
 
     /**
      * Add graph shape to graph
+     *
      * @param graph Graph builder or abstract graph
      */
     public addShape(graph: GraphBuilder<any, any> | AbstractGraph<any, any>): GraphBuilder<In, Out> {
         this.from().via(graph).to();
         if (graph instanceof GraphBuilder) {
             // Connect internal and external output to shape 
-            this.graph.addEdge(new EdgeBuilder<any>()
-                .withInput(this.graph.internalInput)
-                .withOutput(graph.graph.internalInput)
+            this.graph.addEdge(EdgeBuilder.create()
+                .from(this.graph.internalInput)
+                .to(graph.graph.internalInput)
                 .build());
-            this.graph.addEdge(new EdgeBuilder<any>()
-                .withInput(graph.graph.internalOutput)
-                .withOutput(this.graph.internalOutput)
+            this.graph.addEdge(EdgeBuilder.create()
+                .from(graph.graph.internalOutput)
+                .to(this.graph.internalOutput)
                 .build());
         }
         return this;
@@ -143,7 +144,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     }
 
     public via(...nodes: Array<Node<any, any> | string | AbstractGraph<any, any> | GraphBuilder<any, any>>): GraphShapeBuilder<Builder> {
-        const selectedNodes: Array<Node<any, any>> = new Array();
+        const selectedNodes: Array<Node<any, any>> = [];
         nodes.forEach(node => {
             if (node instanceof GraphBuilder) {
                 return this.viaGraphBuilder(node);
@@ -171,13 +172,14 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     /**
      * Insert a new node in the existing graph
+     *
      * @param node Node to insert
      */
     private _insertNode(node: Node<any, any>): void {
         this.previousNodes.forEach(prevNode => {
-            this.graph.addEdge(new EdgeBuilder<any>()
-                .withInput(prevNode)
-                .withOutput(node)
+            this.graph.addEdge(EdgeBuilder.create()
+                .from(prevNode)
+                .to(node)
                 .build());
         });
     }
@@ -192,6 +194,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     /**
      * Filter frames based on function
+     *
      * @param filterFn Filter function (true to keep, false to remove)
      */
     public filter(filterFn: (object: DataObject, frame?: DataFrame) => boolean): GraphShapeBuilder<Builder>;
@@ -202,6 +205,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     /**
      * Filter objects inside frames
+     *
      * @param filterFn Filter function (true to keep, false to remove)
      */
     public filterObjects(filterFn: (object: DataObject, frame?: DataFrame) => boolean): GraphShapeBuilder<Builder> {
@@ -210,20 +214,22 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     /**
      * Merge objects
+     *
      * @param by Merge key
      * @param timeout Timeout
      * @param timeoutUnit Timeout unit
      */
-    public merge(by: (frame: DataFrame) => boolean = _ => true, timeout: number = 100, timeoutUnit: TimeUnit = TimeUnit.MILLISECOND): GraphShapeBuilder<Builder> {
+    public merge(by: (frame: DataFrame) => boolean = _ => true, timeout = 100, timeoutUnit = TimeUnit.MILLISECOND): GraphShapeBuilder<Builder> {
         return this.via(new ObjectMergeNode((object: DataObject) => true, by, timeout, timeoutUnit)); 
     }
 
-    public debounce(timeout: number = 100, timeoutUnit: TimeUnit = TimeUnit.MILLISECOND): GraphShapeBuilder<Builder> {
+    public debounce(timeout = 100, timeoutUnit = TimeUnit.MILLISECOND): GraphShapeBuilder<Builder> {
         return this.via(new FrameDebounceNode(timeout, timeoutUnit));
     }
 
     /**
      * Convert positions of all objects to a certain reference space
+     *
      * @param referenceSpace Reference space to convert to
      */
     public convertToSpace(referenceSpace: ReferenceSpace | string): GraphShapeBuilder<Builder> {
@@ -232,6 +238,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     
     /**
      * Convert positions of all objects from a certain reference space
+     *
      * @param referenceSpace Reference space to convert from
      */
     public convertFromSpace(referenceSpace: ReferenceSpace | string): GraphShapeBuilder<Builder> {
@@ -247,7 +254,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     public to(...nodes: Array<AbstractSinkNode<any> | string>): Builder {
         if (nodes.length !== 0) {
-            const selectedNodes: Array<AbstractSinkNode<any>> = new Array();
+            const selectedNodes: Array<AbstractSinkNode<any>> = [];
             nodes.forEach(node => {
                 let nodeObject: Node<any, any>;
                 if (typeof node === 'string') {
@@ -261,9 +268,9 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
                 }
 
                 this._insertNode(nodeObject);
-                this.graph.addEdge(new EdgeBuilder<any>()
-                    .withInput(nodeObject)
-                    .withOutput(this.graph.internalOutput)
+                this.graph.addEdge(EdgeBuilder.create()
+                    .from(nodeObject)
+                    .to(this.graph.internalOutput)
                     .build());
                 selectedNodes.push(nodeObject as AbstractSinkNode<any>);
             });

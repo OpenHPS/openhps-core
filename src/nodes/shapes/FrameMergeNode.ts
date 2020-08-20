@@ -3,13 +3,13 @@ import { ProcessingNode } from "../ProcessingNode";
 import { TimeUnit } from "../../utils";
 
 export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
-    private _queue: Map<Object, QueuedMerge<InOut>> = new Map();
+    private _queue: Map<any, QueuedMerge<InOut>> = new Map();
     private _timeout: number;
     private _timer: NodeJS.Timeout;
-    private _mergeFn: (frame: InOut) => Object;
-    private _groupFn: (frame: InOut) => Object | Object[];
+    private _mergeFn: (frame: InOut) => any;
+    private _groupFn: (frame: InOut) => any;
 
-    constructor(mergeFn: (frame: InOut) => Object | Object[], groupFn: (frame: InOut) => Object, timeout: number, timeoutUnit: TimeUnit) {
+    constructor(mergeFn: (frame: InOut) => any, groupFn: (frame: InOut) => any, timeout: number, timeoutUnit: TimeUnit) {
         super();
         this._mergeFn = mergeFn;
         this._groupFn = groupFn;
@@ -24,7 +24,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
      * Start the timeout timer
      */
     private _start(): Promise<void> {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             this._timer = setInterval(this._timerTick.bind(this), this._timeout);
             resolve();
         });
@@ -32,7 +32,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
 
     private _timerTick(): void {
         const currentTime = new Date().getTime();
-        const mergePromises = new Array();
+        const mergePromises: Array<Promise<InOut>> = [];
         this._queue.forEach(queue => {
             if (currentTime - queue.timestamp >= this._timeout) {
                 // Merge node
@@ -41,14 +41,14 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
             }
         });
         Promise.all(mergePromises).then(mergedFrames => {
-            const pushPromises = new Array();
+            const pushPromises: Array<Promise<void>> = [];
             mergedFrames.forEach(mergedFrame => {
                 this.outputNodes.forEach(outputNode => {
                     pushPromises.push(outputNode.push(mergedFrame));
                 });
             });
             return Promise.all(pushPromises);
-        }).then(() => {}).catch(ex => {
+        }).catch(ex => {
             this.logger('error', ex);
         });
     }
@@ -61,7 +61,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
     
     public process(frame: InOut): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
-            const merge: Object | Object[] = this._mergeFn(frame);
+            const merge = this._mergeFn(frame);
             if (merge === undefined) {
                 return resolve();
             }
@@ -90,8 +90,8 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
         });
     }
 
-    public merge(frames: InOut[], key: string): Promise<InOut> {
-        return new Promise<InOut>((resolve, reject) => {
+    public merge(frames: InOut[], _: string): Promise<InOut> {
+        return new Promise<InOut>(resolve => {
             const mergedFrame = frames[0];
 
             for (let i = 1; i < frames.length; i++) {
@@ -132,11 +132,11 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
  * Queued merge
  */
 class QueuedMerge<InOut extends DataFrame> {
-    public key: Object;
-    public frames: Map<Object, InOut> = new Map();
+    public key: any;
+    public frames: Map<any, InOut> = new Map();
     public timestamp: number;
 
-    constructor(key: Object) {
+    constructor(key: any) {
         this.key = key;
         this.timestamp = new Date().getTime();
     }

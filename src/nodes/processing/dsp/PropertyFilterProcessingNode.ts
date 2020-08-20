@@ -14,7 +14,7 @@ export abstract class PropertyFilterProcessingNode<InOut extends DataFrame> exte
 
     
     public processObject(object: DataObject, frame: InOut): Promise<DataObject> {
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             // Extract all sensor values from the frame
             const propertyKey = this._propertySelector(object, frame);
             const property = (object as any)[propertyKey];
@@ -28,7 +28,7 @@ export abstract class PropertyFilterProcessingNode<InOut extends DataFrame> exte
     }
 
     private _filterValue<T extends number | Vector3>(object: DataObject, key: PropertyKey, value: T): Promise<T> {
-        return new Promise<T>(async (resolve, reject) => {
+        return new Promise<T>((resolve, reject) => {
             // Get existing filter data
             this.getNodeData(object).then(async nodeData => {
                 if (nodeData === undefined) {

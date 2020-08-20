@@ -133,6 +133,7 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
 
     /**
      * Model logger
+     *
      * @param logger Logging function 
      */
     public withLogger(logger: (level: string, log: any) => void): ModelBuilder<In, Out> {
@@ -147,6 +148,7 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
 
     /**
      * Add a service to the model
+     *
      * @param service Service to add
      */
     public addService(service: Service): ModelBuilder<In, Out> {

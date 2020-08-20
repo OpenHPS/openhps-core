@@ -21,9 +21,7 @@ export class SourceMergeNode<InOut extends DataFrame> extends FrameMergeNode<InO
                 return null;
             }
             return frame.source.uid;
-        }, (frame: InOut) => {
-            return frame.uid;
-        }, timeout, timeoutUnit);
+        }, (frame: InOut) => frame.uid, timeout, timeoutUnit);
     }
 
 }

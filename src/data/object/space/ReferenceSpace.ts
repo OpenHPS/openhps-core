@@ -1,7 +1,7 @@
 import { DataObject } from "../DataObject";
 import { Space } from "./Space";
 import { SerializableObject, SerializableMember } from "../../decorators";
-import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder, Vector3 } from '../../../utils/math';
+import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder } from '../../../utils/math';
 import { AngleUnit } from "../../../utils";
 import { AbsolutePosition } from '../../position/AbsolutePosition';
 
@@ -9,13 +9,13 @@ import { AbsolutePosition } from '../../position/AbsolutePosition';
 export class ReferenceSpace extends DataObject implements Space {
     // Raw transformation matrix
     @SerializableMember()
-    private _transformationMatrix: Matrix4 = new Matrix4().identity() as Matrix4;
+    private _transformationMatrix = new Matrix4().identity() as Matrix4;
     // Scale matrix (needed for scaling linear velocity)
     @SerializableMember()
-    private _scaleMatrix: Matrix4 = new Matrix4().identity() as Matrix4;
+    private _scaleMatrix = new Matrix4().identity() as Matrix4;
     // Rotation matrix (needed for orientation, angular velocity and linear velocity)
     @SerializableMember()
-    private _rotation: Quaternion = new Quaternion();
+    private _rotation = new Quaternion();
     @SerializableMember()
     private _baseSpaceUID: string;
 
@@ -60,12 +60,12 @@ export class ReferenceSpace extends DataObject implements Space {
         return this;
     }
 
-    public translation(dX: number, dY: number, dZ: number = 0): ReferenceSpace {
+    public translation(dX: number, dY: number, dZ = 0): ReferenceSpace {
         this._transformationMatrix.multiply(new Matrix4().makeTranslation(dX, dY, dZ));
         return this;
     }
 
-    public scale(kX: number, kY: number, kZ: number = 1.0): ReferenceSpace {
+    public scale(kX: number, kY: number, kZ = 1.0): ReferenceSpace {
         this._scaleMatrix = new Matrix4().makeScale(kX, kY, kZ);
         this._transformationMatrix.multiply(this._scaleMatrix);
         return this;
@@ -74,8 +74,8 @@ export class ReferenceSpace extends DataObject implements Space {
     public rotation(r: Quaternion): ReferenceSpace;
     public rotation(r: Euler): ReferenceSpace;
     public rotation(r: AxisAngle): ReferenceSpace;
-    public rotation(r: { yaw: number, pitch: number, roll: number, unit?: AngleUnit }): ReferenceSpace;
-    public rotation(r: { x: number, y: number, z: number, order?: EulerOrder, unit?: AngleUnit }): ReferenceSpace;
+    public rotation(r: { yaw: number; pitch: number; roll: number; unit?: AngleUnit }): ReferenceSpace;
+    public rotation(r: { x: number; y: number; z: number; order?: EulerOrder; unit?: AngleUnit }): ReferenceSpace;
     public rotation(r: number[]): ReferenceSpace;
     public rotation(r: any): ReferenceSpace {
         if (r instanceof Quaternion) {
@@ -94,7 +94,7 @@ export class ReferenceSpace extends DataObject implements Space {
         return this;
     }
 
-    public transform(position: AbsolutePosition, inverse: boolean = false): AbsolutePosition {
+    public transform(position: AbsolutePosition, inverse = false): AbsolutePosition {
         const transformedPosition = position.clone();
 
         const transformationMatrix = inverse ? new Matrix4().getInverse(this._transformationMatrix) : this._transformationMatrix;

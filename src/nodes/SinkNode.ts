@@ -28,7 +28,7 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
 
             // Push the frame to the sink node
             this.onPush(frame).then(() => {
-                const persistPromise = new Array();
+                const persistPromise: Array<Promise<void>> = [];
                 if (frame instanceof Array) {
                     frame.forEach((f: In) => {
                         persistPromise.push(this.persistDataFrame(f));
@@ -41,21 +41,17 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
                 return Promise.all(persistPromise);
             }).then(() => {
                 resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            }).catch(reject);
         });
     }
 
     protected persistDataFrame(frame: In): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>(resolve => {
             const model: Model<any, any> = (this.graph as Model<any, any>);
-            const servicePromises = new Array();
+            const servicePromises: Array<Promise<void>> = [];
 
             // Remove the frame from the data frame service
-            let frameService: DataService<any, any>;
-            // Check if there are frame services
-            frameService = model.findDataService(frame);
+            const frameService: DataService<any, any> = model.findDataService(frame);
             if (frameService !== null && frameService !== undefined) { 
                 // Update the frame
                 servicePromises.push(frameService.delete(frame.uid));
@@ -72,9 +68,9 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
     protected persistDataObject(frame: In): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const model: Model<any, any> = (this.graph as Model<any, any>);
-            const servicePromises = new Array();
+            const servicePromises: Array<Promise<DataObject>> = [];
 
-            const objects = new Array<DataObject>();
+            const objects: DataObject[] = [];
             frame.getObjects().forEach(object => {
                 objects.push(object);
             });
@@ -98,6 +94,7 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
 export interface SinkNodeOptions extends NodeOptions {
     /**
      * Store objects in data services
+     *
      * @default true
      */
     persistence?: boolean;

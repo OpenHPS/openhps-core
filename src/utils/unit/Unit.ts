@@ -4,6 +4,25 @@ import { UnitOptions } from './UnitOptions';
 import { UnitDefinition } from './UnitDefinition';
 import { UnitPrefix, UnitPrefixType } from './UnitPrefix';
 
+/**
+ * Unit
+ * 
+ * ## Usage
+ * ### Creation
+ * ```typescript
+ * const myUnit = new Unit("meter", {
+ *  baseName: "length",
+ *  aliases: ["m", "meters"],
+ *  prefixes: 'decimal'
+ * })
+ * ```
+ * 
+ * ### Specifiers
+ * You can specify the prefix using the ```specifier(...)``` function.
+ * ```typescript
+ * const nanoUnit = myUnit.specifier(UnitPrefix.NANO);
+ * ```
+ */
 @SerializableObject({
     initializer: <T extends Unit | Unit>(_: T, rawSourceObject: T) => {
         if (rawSourceObject.name !== undefined) {
@@ -22,7 +41,7 @@ export class Unit {
     private _baseName: string;
     private _definitions: Map<string, UnitDefinition> = new Map();
     private _prefixType: UnitPrefixType = 'none';
-    private _aliases: string[] = new Array();
+    private _aliases: string[] = [];
 
     // Unit bases (e.g. length, time, velocity, ...)
     protected static readonly UNIT_BASES: Map<string, string> = new Map();
@@ -31,6 +50,7 @@ export class Unit {
 
     /**
      * Create a new unit
+     *
      * @param name Unit name
      * @param options Unit options
      */
@@ -95,10 +115,10 @@ export class Unit {
 
     protected get prefixes(): UnitPrefix[] {
         switch (this._prefixType) {
-            case 'decimal':
-                return UnitPrefix.DECIMAL;
-            case 'none':
-                return [];
+        case 'decimal':
+            return UnitPrefix.DECIMAL;
+        case 'none':
+            return [];
         }
     }
 
@@ -132,6 +152,7 @@ export class Unit {
 
     /**
      * Get the unit specifier
+     *
      * @param prefix Unit prefix
      */
     public specifier(prefix: UnitPrefix): this {
@@ -151,7 +172,7 @@ export class Unit {
         const unit = new UnitConstructor();
         unit._name = unitName;
         unit._baseName = this.baseName;
-        const aliases = new Array();
+        const aliases: Array<string> = [];
         this.aliases.forEach(alias => {
             aliases.push(`${prefix.name}${alias}`);
             aliases.push(`${prefix.abbrevation}${alias}`);
@@ -185,6 +206,7 @@ export class Unit {
 
     /**
      * Find a unit by its name
+     *
      * @param name Unit name
      * @param baseName Optional base name to specific result
      */
@@ -195,7 +217,7 @@ export class Unit {
             return Unit.UNITS.get(name);
         } else {
             // Check all units
-            for (const [_, unit] of Unit.UNITS) {
+            for (const [, unit] of Unit.UNITS) {
                 if (baseName ? baseName !== unit.baseName : false) {
                     continue;
                 }
@@ -232,7 +254,13 @@ export class Unit {
         return fromUnit.convert(value, to);
     }
 
-    public static registerUnit(unit: Unit, override: boolean = false): Unit {
+    /**
+     * Register a new unit
+     *
+     * @param unit Unit to register
+     * @param override Override an existing unit with the same name
+     */
+    public static registerUnit(unit: Unit, override = false): Unit {
         if (!unit.name) {
             return unit;
         }

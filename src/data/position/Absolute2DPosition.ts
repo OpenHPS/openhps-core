@@ -14,22 +14,22 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
      * Position recording timestamp
      */
     @SerializableMember()
-    public timestamp: number = new Date().getTime();
+    public timestamp = new Date().getTime();
     /**
      * Velocity at recorded position
      */
     @SerializableMember()
-    public velocity: Velocity = new Velocity();
+    public velocity = new Velocity();
     /**
      * Orientation at recorded position
      */
     @SerializableMember()
-    public orientation: Quaternion = new Quaternion();
+    public orientation = new Quaternion();
     /**
      * Position unit
      */
     @SerializableMember()
-    public unit: LengthUnit = LengthUnit.METER;
+    public unit = LengthUnit.METER;
     /**
      * Position reference space UID
      */
@@ -44,19 +44,20 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
      * Position accuracy unit
      */
     @SerializableMember()
-    public accuracyUnit: LengthUnit = LengthUnit.METER;
+    public accuracyUnit = LengthUnit.METER;
 
     /**
      * Midpoint to another location
+     *
      * @param otherPosition Other location
+     * @param distanceSelf
+     * @param distanceOther
      */
-    public midpoint(otherPosition: Absolute2DPosition, distanceSelf: number = 1, distanceOther: number = 1): Promise<Absolute2DPosition> {
-        return new Promise<Absolute2DPosition>((resolve, reject) => {
-            const newPoint = new Absolute2DPosition();
-            newPoint.accuracy = this.accuracy + otherPosition.accuracy / 2;
-            newPoint.set((this.x + otherPosition.x) / 2, (this.y + otherPosition.y) / 2);
-            resolve(newPoint);
-        });
+    public midpoint(otherPosition: Absolute2DPosition, distanceSelf = 1, distanceOther = 1): Absolute2DPosition {
+        const newPoint = new Absolute2DPosition();
+        newPoint.accuracy = this.accuracy + otherPosition.accuracy / 2;
+        newPoint.set((this.x + otherPosition.x) / 2, (this.y + otherPosition.y) / 2);
+        return newPoint;
     }
 
     public fromVector(vector: Vector2 | Vector3, unit?: LengthUnit): void {

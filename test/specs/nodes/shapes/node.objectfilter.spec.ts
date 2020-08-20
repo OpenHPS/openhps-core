@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
-import { LoggingSinkNode, CallbackSinkNode } from '../../../../src/nodes/sink';
-import { DataFrame, DataObject, Absolute2DPosition, RelativeDistancePosition, ModelBuilder, ListSourceNode, SourceMergeNode, TimeUnit, FrameChunkNode } from '../../../../src';
+import { CallbackSinkNode } from '../../../../src/nodes/sink';
+import { DataFrame, DataObject, ModelBuilder } from '../../../../src';
 
 describe('node', () => {
     describe('object filter', () => {

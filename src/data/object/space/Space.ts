@@ -1,4 +1,4 @@
-import { Matrix4, Quaternion, Euler, AxisAngle, EulerOrder } from "../../../utils/math";
+import { Quaternion, Euler, AxisAngle, EulerOrder } from "../../../utils/math";
 import { AngleUnit } from "../../../utils";
 import { AbsolutePosition } from "../../position";
 
@@ -30,13 +30,14 @@ export interface Space {
 
     /**
      * Rotate the space to the reference space
+     *
      * @param r Rotation
      */
     rotation(r: Quaternion): Space;
     rotation(r: Euler): Space;
     rotation(r: AxisAngle): Space;
-    rotation(r: { yaw: number, pitch: number, roll: number, unit?: AngleUnit }): Space;
-    rotation(r: { x: number, y: number, z: number, order?: EulerOrder, unit?: AngleUnit }): Space;
+    rotation(r: { yaw: number; pitch: number; roll: number; unit?: AngleUnit }): Space;
+    rotation(r: { x: number; y: number; z: number; order?: EulerOrder; unit?: AngleUnit }): Space;
     rotation(r: number[]): Space;
 
     baseSpaceUID: string;

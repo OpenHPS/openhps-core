@@ -15,6 +15,7 @@ export interface Position {
 
     /**
      * Check if this position equals another position
+     *
      * @param position Other position
      */
     equals(position: this): boolean;

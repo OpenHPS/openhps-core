@@ -17,16 +17,20 @@ import { AbstractNode } from "../interfaces";
 export class EdgeBuilder<InOut extends DataFrame> {
     private _edge: EdgeImpl<InOut>;
 
-    constructor() {
+    protected constructor() {
         this._edge = new EdgeImpl<InOut>();
     }
 
-    public withInput(node: AbstractNode<any, InOut>): EdgeBuilder<InOut> {
+    public static create<InOut extends DataFrame>(): EdgeBuilder<InOut> {
+        return new EdgeBuilder();
+    }
+
+    public from(node: AbstractNode<any, InOut>): EdgeBuilder<InOut> {
         this._edge.inputNode = node;
         return this;
     }
 
-    public withOutput(node: AbstractNode<InOut, any>): EdgeBuilder<InOut> {
+    public to(node: AbstractNode<InOut, any>): EdgeBuilder<InOut> {
         this._edge.outputNode = node;
         return this;
     }

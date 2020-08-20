@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { IJsonArrayMemberOptions } from "typedjson/js/typedjson/json-array-member";
 import { jsonArrayMember } from 'typedjson';
 

@@ -60,7 +60,7 @@ export class RelativeAnglePosition implements RelativePosition {
     }
 
     public equals(position: this): boolean {
-        return false;
+        return this.timestamp === position.timestamp;
     }
 
     /**

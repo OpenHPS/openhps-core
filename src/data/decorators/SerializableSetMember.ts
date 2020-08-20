@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { jsonSetMember } from "typedjson";
 import { IJsonSetMemberOptions } from "typedjson/js/typedjson/json-set-member";
 

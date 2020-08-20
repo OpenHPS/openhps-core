@@ -5,7 +5,7 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _pushCallback: (frame: InOut | InOut[]) => void;
     private _pullCallback: () => InOut | InOut[];
 
-    constructor(pushCallback: (frame: InOut | InOut[]) => void = (frame: InOut) => { }, pullCallback: () => InOut | InOut[] = () => null) {
+    constructor(pushCallback: (frame: InOut | InOut[]) => void = (frame: InOut) => true, pullCallback: () => InOut | InOut[] = () => null) {
         super();
         this.pushCallback = pushCallback;
         this.pullCallback = pullCallback;
@@ -38,16 +38,14 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
                 return reject(ex);
             }
 
-            const pushPromises = new Array();
+            const pushPromises: Array<Promise<void>> = [];
             this.outputNodes.forEach(node => {
                 pushPromises.push(node.push(frame));
             });
 
             Promise.all(pushPromises).then(() => {
                 resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            }).catch(reject);
         });
     }
 
@@ -61,16 +59,14 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
             }
             
             if (result !== undefined && result !== null) {
-                const pushPromises = new Array();
+                const pushPromises: Array<Promise<void>> = [];
                 this.outputNodes.forEach(node => {
                     pushPromises.push(node.push(result));
                 });
     
                 Promise.all(pushPromises).then(() => {
                     resolve();
-                }).catch(ex => {
-                    reject(ex);
-                });
+                }).catch(reject);
             } else {
                 resolve();
             }

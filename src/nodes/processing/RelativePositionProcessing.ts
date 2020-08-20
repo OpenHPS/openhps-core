@@ -11,7 +11,7 @@ export abstract class RelativePositionProcessing<InOut extends DataFrame, R exte
 
     public processObject(dataObject: DataObject, dataFrame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
-            const referencePromises = new Array();
+            const referencePromises: Array<Promise<DataObject>> = [];
             const index = new Map<string, R[]>();
             for (const relativePosition of dataObject.relativePositions) {
                 // Only use relative distance locations
@@ -36,9 +36,7 @@ export abstract class RelativePositionProcessing<InOut extends DataFrame, R exte
                 return this.processRelativePositions(dataObject, relativePositions, dataFrame);
             }).then(modifiedObject => {
                 resolve(modifiedObject);
-            }).catch(ex => {
-                reject(ex);
-            });
+            }).catch(reject);
         });
     }
 

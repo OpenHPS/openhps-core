@@ -9,7 +9,6 @@ describe('node', () => {
             describe('magnetometer', () => {
 
                 it('should calibrate', (done) => {
-                    done();
                     const source = new CSVDataSource('test/data/imu/magnetometer_calibration.csv', (row: any) => {
                         const source = new DataObject('M1');
                         const frame = new IMUDataFrame(source);
@@ -42,6 +41,7 @@ describe('node', () => {
                                     expect(data.scaleX).to.not.be.NaN;
                                     expect(data.scaleY).to.not.be.NaN;
                                     expect(data.scaleZ).to.not.be.NaN;
+                                    done();
                                 }).catch(done);
                             });
                         });

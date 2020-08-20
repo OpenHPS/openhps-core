@@ -14,7 +14,7 @@ export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterProcess
     }
 
     public initFilter<T extends number | Vector3>(object: DataObject, value: T, options: KalmanFilterOptions): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
+        return new Promise<any>(resolve => {
             Object.keys(options).forEach(key => {
                 if (typeof (options as any)[key] === 'number') {
                     (options as any)[key] = new Vector3((options as any)[key], 0, 0);
@@ -24,8 +24,8 @@ export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterProcess
         });
     }
     
-    public filter<T extends number | Vector3>(object: DataObject, value: T, filter: any, options?: KalmanFilterOptions): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
+    public filter<T extends number | Vector3>(object: DataObject, value: T, filter: any): Promise<T> {
+        return new Promise<T>(resolve => {
             const kf = new KalmanFilter(filter.R, filter.Q, filter.A, filter.B, filter.C, filter.x, filter.cov);
             const numeric = typeof value === 'number';
             if (numeric) {
@@ -63,6 +63,7 @@ export interface KalmanFilterOptions extends FilterProcessingOptions {
 
 /**
  * Basic Kalman Filter
+ *
  * @author Wouter Bulten
  * @see {@link http://github.com/wouterbulten/kalmanjs}
  * @copyright Copyright 2015-2018 Wouter Bulten
@@ -98,9 +99,10 @@ class KalmanFilter<T extends Vector3> {
 
     /**
      * Filter a new value
-     * @param  {Number} z Measurement
-     * @param  {Number} u Control
-     * @return {Number}
+     *
+     * @param  {number} z Measurement
+     * @param  {number} u Control
+     * @returns {number}
      */
     public filter(z: Vector3, u?: Vector3): Vector3 {
         if (this._x === undefined) {
@@ -125,8 +127,9 @@ class KalmanFilter<T extends Vector3> {
 
     /**
      * Predict next value
-     * @param  {Number} [u] Control
-     * @return {Number}
+     *
+     * @param  {number} [u] Control
+     * @returns {number}
      */
     public predict(u?: Vector3): Vector3 {
         return this._A.clone().multiply(this._x).add(u === undefined ? new Vector3() : this._B.clone().multiply(u));
@@ -134,7 +137,8 @@ class KalmanFilter<T extends Vector3> {
     
     /**
      * Return uncertainty of filter
-     * @return {Number}
+     *
+     * @returns {number}
      */
     public uncertainty(): T {
         return this._A.clone().multiply(this._cov).multiply(this._A).add(this._R);
@@ -142,7 +146,8 @@ class KalmanFilter<T extends Vector3> {
     
     /**
      * Return the last filtered measurement
-     * @return {Number}
+     *
+     * @returns {number}
      */
     public get measurement(): T {
         return this._x;

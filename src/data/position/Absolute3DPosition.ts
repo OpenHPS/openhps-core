@@ -47,15 +47,16 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
 
     /**
      * Midpoint to another location
+     *
      * @param otherPosition Other location
+     * @param distanceSelf
+     * @param distanceOther
      */
-    public midpoint(otherPosition: Absolute3DPosition, distanceSelf: number = 1, distanceOther: number = 1): Promise<Absolute3DPosition> {
-        return new Promise<Absolute3DPosition>((resolve, reject) => {
-            const newPoint = new Absolute3DPosition();
-            newPoint.accuracy = this.accuracy + otherPosition.accuracy / 2;
-            newPoint.set((this.x + otherPosition.x) / 2, (this.y + otherPosition.y) / 2, (this.z + otherPosition.z) / 2);
-            resolve(newPoint);
-        });
+    public midpoint(otherPosition: Absolute3DPosition, distanceSelf = 1, distanceOther = 1): Absolute3DPosition {
+        const newPoint = new Absolute3DPosition();
+        newPoint.accuracy = this.accuracy + otherPosition.accuracy / 2;
+        newPoint.set((this.x + otherPosition.x) / 2, (this.y + otherPosition.y) / 2, (this.z + otherPosition.z) / 2);
+        return newPoint;
     }
     
     public fromVector(vector: Vector3, unit?: LengthUnit): void {
