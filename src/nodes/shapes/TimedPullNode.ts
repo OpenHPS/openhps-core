@@ -6,7 +6,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _interval: number;
     private _timer: NodeJS.Timeout;
 
-    constructor(interval: number, intervalUnit: TimeUnit = TimeUnit.MILLISECOND) {
+    constructor(interval: number, intervalUnit = TimeUnit.MILLISECOND) {
         super();
         this._interval = intervalUnit.convert(interval, TimeUnit.MILLISECOND);
 

@@ -8,7 +8,7 @@ import { DataSerializer } from '../DataSerializer';
  * Relative velocity to another reference object
  */
 @SerializableObject()
-export class RelativeVelocity implements RelativePosition {
+export class RelativeVelocity implements RelativePosition<Velocity> {
     /**
      * Position recording timestamp
      */
@@ -41,6 +41,14 @@ export class RelativeVelocity implements RelativePosition {
             }
         }
         this.velocity = velocity;
+    }
+
+    public get referenceValue(): Velocity {
+        return this.velocity;
+    }
+
+    public set referenceValue(value: Velocity) {
+        this.velocity = value;
     }
 
     public equals(position: this): boolean {

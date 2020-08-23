@@ -29,7 +29,7 @@ expose({
     /**
      * Worker intiailize
      *
-     * @param {Any} workerData Worker data containing model information
+     * @param {any} workerData Worker data containing model information
      */
     async init(workerData: any) {
         // Set global dir name

@@ -1,5 +1,6 @@
 import { DataObject, SerializableObject, SerializableMember } from '../data';
 import { DataService } from './DataService';
+import { HashUtils } from '../utils/_internal/HashUtils';
 
 export class NodeDataService<T extends NodeData | NodeData> extends DataService<string, T> {
     public findData(nodeUID: string, dataObject: DataObject | string): Promise<any> {
@@ -20,16 +21,7 @@ export class NodeDataService<T extends NodeData | NodeData> extends DataService<
     }
 
     protected getUID(nodeUID: string, dataObjectUID: string): string {
-        const str = nodeUID + dataObjectUID;
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-            const char = str.charCodeAt(i);
-            // eslint-disable-next-line
-            hash = ((hash << 5) - hash) + char;
-            // eslint-disable-next-line
-            hash = hash & hash; // Convert to 32bit integer
-        }
-        return hash.toString();
+        return HashUtils.hash(nodeUID + dataObjectUID);
     }
 }
 

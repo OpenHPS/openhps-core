@@ -6,8 +6,6 @@ import { Velocity } from './Velocity';
 /**
  * Absolute cartesian 3D position. This class extends a [[Vector3]]. This location can be used both as
  * an absolute location or relative location.
- *
- * @type {Absolute3DPosition}
  */
 @SerializableObject()
 export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
@@ -50,7 +48,7 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
     /**
      * Midpoint to another location
      *
-     * @param {Absolute3Dposition} otherPosition Other location
+     * @param {Absolute3DPosition} otherPosition Other location
      * @param {number} distanceSelf Distance to itself
      * @param {number} distanceOther Distance to other position
      * @returns {Absolute3DPosition} Calculated midpoint

@@ -3,6 +3,12 @@ import { DataService } from './DataService';
 import { FilterQuery } from './FilterQuery';
 
 export class TrajectoryService<T extends DataObject> extends DataService<PositionIdentifier, T> {
+    /**
+     * Find the last stored position of an object.
+     *
+     * @param {string} uid Unique identifier of data object
+     * @returns {Promise<AbsolutePosition>} Promise of last known position
+     */
     public findPosition(uid: string): Promise<AbsolutePosition> {
         return new Promise((resolve, reject) => {
             const filter: FilterQuery<any> = {

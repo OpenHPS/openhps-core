@@ -4,7 +4,7 @@ import { LengthUnit } from '../../utils';
 /**
  * Relative position to another reference object or space.
  */
-export interface RelativePosition extends Position {
+export interface RelativePosition<T = number> extends Position {
     /**
      * Position accuracy
      */
@@ -18,6 +18,8 @@ export interface RelativePosition extends Position {
     referenceObjectUID: string;
 
     referenceObjectType: string;
+
+    referenceValue: T;
 
     equals(position: this): boolean;
 

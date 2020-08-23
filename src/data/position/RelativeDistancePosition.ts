@@ -51,6 +51,14 @@ export class RelativeDistancePosition implements RelativePosition {
         this.distanceUnit = distanceUnit;
     }
 
+    public get referenceValue(): number {
+        return this.distance;
+    }
+
+    public set referenceValue(value: number) {
+        this.distance = value;
+    }
+
     public equals(position: this): boolean {
         return this.timestamp === position.timestamp;
     }

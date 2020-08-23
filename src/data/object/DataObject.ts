@@ -38,7 +38,7 @@ export class DataObject {
     public createdTimestamp: number;
 
     private _position: AbsolutePosition;
-    private _relativePositions: Map<string, Map<string, RelativePosition>> = new Map();
+    private _relativePositions: Map<string, Map<string, RelativePosition<any>>> = new Map();
 
     /**
      * Create a new data object
@@ -56,12 +56,12 @@ export class DataObject {
         if (this.displayName === undefined) this.displayName = object.displayName;
         if (this.getPosition() === undefined && object.getPosition() !== undefined)
             this.setPosition(object.getPosition().clone());
-        object._relativePositions.forEach((value: Map<string, RelativePosition>, key: string) => {
+        object._relativePositions.forEach((value: Map<string, RelativePosition<any>>, key: string) => {
             const newRelativePositions = this._relativePositions.get(key);
             if (newRelativePositions === undefined) {
                 this._relativePositions.set(key, value);
             } else {
-                value.forEach((existingRelativePosition: RelativePosition) => {
+                value.forEach((existingRelativePosition: RelativePosition<any>) => {
                     const newRelativePosition = newRelativePositions.get(existingRelativePosition.constructor.name);
                     if (!newRelativePosition) {
                         this.addRelativePosition(existingRelativePosition);
@@ -106,7 +106,7 @@ export class DataObject {
     /**
      * Get the current absolute position of the object
      *
-     * @param {ReferenceSpace} referenceSpace (optional) reference space
+     * @param {Space} referenceSpace (optional) reference space
      * @returns {AbsolutePosition} Position of the data object
      */
     public getPosition(referenceSpace?: Space): AbsolutePosition {
@@ -121,7 +121,7 @@ export class DataObject {
      * Set the current absolute position of the object
      *
      * @param {AbsolutePosition} position Position to set
-     * @param {ReferenceSpace} referenceSpace (optional) reference space
+     * @param {Space} referenceSpace (optional) reference space
      */
     public setPosition(position: AbsolutePosition, referenceSpace?: Space): void {
         this._position = referenceSpace ? referenceSpace.transform(position, false) : position;
@@ -133,11 +133,11 @@ export class DataObject {
      * @returns {RelativePosition[]} Array of relative positions
      */
     @SerializableArrayMember(Object, {
-        deserializer(rawArray: any[]): RelativePosition[] {
+        deserializer(rawArray: any[]): RelativePosition<any>[] {
             if (rawArray === undefined) {
                 return [];
             }
-            const output: RelativePosition[] = [];
+            const output: RelativePosition<any>[] = [];
             rawArray.forEach((raw) => {
                 if (raw.__type !== undefined) {
                     output.push(new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw));
@@ -146,10 +146,10 @@ export class DataObject {
             return output;
         },
     })
-    public get relativePositions(): RelativePosition[] {
-        const relativePostions: RelativePosition[] = [];
+    public get relativePositions(): RelativePosition<any>[] {
+        const relativePostions: RelativePosition<any>[] = [];
         if (this._relativePositions !== undefined) {
-            this._relativePositions.forEach((values: Map<string, RelativePosition>) => {
+            this._relativePositions.forEach((values: Map<string, RelativePosition<any>>) => {
                 values.forEach((value) => {
                     relativePostions.push(value);
                 });
@@ -158,7 +158,7 @@ export class DataObject {
         return relativePostions;
     }
 
-    public set relativePositions(relativePostions: RelativePosition[]) {
+    public set relativePositions(relativePostions: RelativePosition<any>[]) {
         this._relativePositions = new Map();
         relativePostions.forEach((relativePostion) => {
             this.addRelativePosition(relativePostion);
@@ -174,7 +174,7 @@ export class DataObject {
      *
      * @param {RelativePosition} relativePosition Relative position to add
      */
-    public addRelativePosition(relativePosition: RelativePosition): void {
+    public addRelativePosition(relativePosition: RelativePosition<any>): void {
         if (relativePosition.referenceObjectUID === undefined) {
             return;
         }
@@ -194,7 +194,7 @@ export class DataObject {
      * @param {string} referenceObjectUID Reference object identifier
      * @returns {RelativePosition[]} Array of relative positions for the reference object
      */
-    public getRelativePositions(referenceObjectUID?: string): RelativePosition[] {
+    public getRelativePositions(referenceObjectUID?: string): RelativePosition<any>[] {
         if (referenceObjectUID === undefined) {
             return this.relativePositions;
         } else if (this._relativePositions.has(referenceObjectUID)) {
@@ -204,12 +204,16 @@ export class DataObject {
         }
     }
 
-    public getRelativePosition(referenceObjectUID: string): RelativePosition {
+    public getRelativePosition(referenceObjectUID: string): RelativePosition<any> {
         if (this._relativePositions.has(referenceObjectUID)) {
             return Array.from(this._relativePositions.get(referenceObjectUID).values())[0];
         } else {
             return undefined;
         }
+    }
+
+    public hasRelativePosition(referenceObjectUID: string): boolean {
+        return this._relativePositions.has(referenceObjectUID);
     }
 
     /**

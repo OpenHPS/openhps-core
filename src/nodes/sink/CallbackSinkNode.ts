@@ -19,13 +19,7 @@ export class CallbackSinkNode<In extends DataFrame> extends SinkNode<In> {
 
     public onPush(frame: In): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            Promise.resolve(this.callback(frame))
-                .then((output) => {
-                    resolve(output);
-                })
-                .catch((ex) => {
-                    reject(ex);
-                });
+            Promise.resolve(this.callback(frame)).then(resolve).catch(reject);
         });
     }
 }
