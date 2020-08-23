@@ -23,9 +23,7 @@ export class CallbackSourceNode<Out extends DataFrame> extends SourceNode<Out> {
                 .then((output) => {
                     resolve(output);
                 })
-                .catch((ex) => {
-                    reject(ex);
-                });
+                .catch(reject);
         });
     }
 }

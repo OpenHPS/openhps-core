@@ -25,5 +25,37 @@ describe('node', () => {
                 });
         });
 
+        it('should chunk data frames in frames of 3 unless a timeout happens', (done) => {
+            let itt = 0;
+            let model;
+            ModelBuilder.create()
+                .from()
+                .chunk(3, 1)
+                .to(new CallbackSinkNode((data: DataFrame[]) => {
+                    switch (itt) {
+                        case 0:
+                            expect(data.length).to.equal(3);
+                            break;
+                        case 1:
+                            expect(data.length).to.equal(2);
+                            model.emit('destroy');
+                            done();
+                            break;
+                    }
+                    itt++;
+                }))
+                .build().then(m => {
+                    model = m;
+                    Promise.all([model.push(new DataFrame(new DataObject("a"))),
+                        model.push(new DataFrame(new DataObject("b"))),
+                        model.push(new DataFrame(new DataObject("c"))),
+                        model.push(new DataFrame(new DataObject("d"))),
+                        model.push(new DataFrame(new DataObject("e")))]).then(() => {
+
+                    });
+                });
+        });
+
+
     });
 });

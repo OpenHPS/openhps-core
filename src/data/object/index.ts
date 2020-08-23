@@ -3,3 +3,4 @@ export * from './CameraObject';
 export * from './StereoCameraObject';
 export * from './space';
 export * from './rf';
+export * from './Fingerprint';

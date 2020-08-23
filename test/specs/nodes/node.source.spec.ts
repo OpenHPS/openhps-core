@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, DataFrame, CallbackSourceNode, DataObject, Absolute2DPosition, CallbackSinkNode, Model, LinearVelocity, Vector3 } from '../../../src';
+import { ModelBuilder, DataFrame, CallbackSourceNode, DataObject, Absolute2DPosition, CallbackSinkNode, Model, LinearVelocity, Vector3, ListSourceNode } from '../../../src';
 
 describe('node source', () => {
 

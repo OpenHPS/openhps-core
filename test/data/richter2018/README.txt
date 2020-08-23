@@ -1,0 +1,1 @@
+Richter, Philipp; Lohan, Elena Simona; Talvitie, Jukka (2018): WLAN (WiFi) RSS database for fingerprinting positioning. Zenodo. Dataset. https://doi.org/10.5281/zenodo.1161525

@@ -7,7 +7,7 @@ import { DataSerializer } from '../DataSerializer';
  * Relative location to another reference object measured in the angle.
  */
 @SerializableObject()
-export class RelativeAnglePosition implements RelativePosition {
+export class RelativeAnglePosition implements RelativePosition<number> {
     /**
      * Position recording timestamp
      */
@@ -57,6 +57,14 @@ export class RelativeAnglePosition implements RelativePosition {
         if (orientation) {
             this.orientation = orientation;
         }
+    }
+
+    public get referenceValue(): number {
+        return this.angle;
+    }
+
+    public set referenceValue(value: number) {
+        this.angle = value;
     }
 
     public equals(position: this): boolean {
