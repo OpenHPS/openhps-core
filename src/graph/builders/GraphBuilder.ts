@@ -1,5 +1,4 @@
 import { DataFrame, DataObject, ReferenceSpace } from '../../data';
-import { GraphImpl } from '../_internal/implementations';
 import { Node } from '../../Node';
 import { AbstractSourceNode, AbstractEdge, AbstractGraph, AbstractSinkNode, AbstractNode } from '../interfaces';
 import { EdgeBuilder } from './EdgeBuilder';
@@ -11,6 +10,7 @@ import {
     ObjectMergeNode,
     MemoryBufferNode,
 } from '../../nodes/shapes';
+import { GraphShape } from '../GraphShape';
 import { ObjectFilterNode } from '../../nodes/shapes/ObjectFilterNode';
 import { FrameDebounceNode } from '../../nodes/shapes/FrameDebounceNode';
 import { ReferenceSpaceConversionNode } from '../../nodes/processing/ReferenceSpaceConversionNode';
@@ -19,9 +19,9 @@ import { ReferenceSpaceConversionNode } from '../../nodes/processing/ReferenceSp
  * Graph builder
  */
 export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
-    private _graph: GraphImpl<In, Out>;
+    private _graph: GraphShape<In, Out>;
 
-    protected constructor(graph: GraphImpl<In, Out> = new GraphImpl()) {
+    protected constructor(graph: GraphShape<In, Out> = new GraphShape()) {
         this._graph = graph;
         this.graph.name = 'graph';
     }
@@ -94,7 +94,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
         return this;
     }
 
-    public get graph(): GraphImpl<In, Out> {
+    public get graph(): GraphShape<In, Out> {
         return this._graph;
     }
 
@@ -119,9 +119,9 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
 export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     protected graphBuilder: Builder;
     protected previousNodes: Array<Node<any, any>>;
-    protected graph: GraphImpl<any, any>;
+    protected graph: GraphShape<any, any>;
 
-    constructor(graphBuilder: Builder, graph: GraphImpl<any, any>, nodes: Array<Node<any, any>>) {
+    constructor(graphBuilder: Builder, graph: GraphShape<any, any>, nodes: Array<Node<any, any>>) {
         this.graphBuilder = graphBuilder;
         this.previousNodes = nodes;
         this.graph = graph;
@@ -155,7 +155,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         nodes.forEach((node) => {
             if (node instanceof GraphBuilder) {
                 return this.viaGraphBuilder(node);
-            } else if (node instanceof GraphImpl) {
+            } else if (node instanceof GraphShape) {
                 return this.viaGraph(node);
             } else {
                 let nodeObject: Node<any, any>;
