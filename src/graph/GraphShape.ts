@@ -1,11 +1,11 @@
-import { Node } from '../../../Node';
-import { AbstractEdge } from '../../interfaces/AbstractEdge';
-import { AbstractGraph } from '../../interfaces/AbstractGraph';
-import { DataFrame } from '../../../data/DataFrame';
-import { BroadcastNode } from '../../../nodes/shapes/BroadcastNode';
-import { AbstractNode } from '../../interfaces';
+import { Node } from '../Node';
+import { AbstractEdge } from './interfaces/AbstractEdge';
+import { AbstractGraph } from './interfaces/AbstractGraph';
+import { DataFrame } from '../data/DataFrame';
+import { BroadcastNode } from '../nodes/shapes/BroadcastNode';
+import { AbstractNode } from './interfaces';
 
-export class GraphImpl<In extends DataFrame, Out extends DataFrame> extends Node<In, Out>
+export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Node<In, Out>
     implements AbstractGraph<In, Out> {
     private _nodes: Map<string, Node<any, any>> = new Map();
     private _edges: Map<string, AbstractEdge<any>> = new Map();

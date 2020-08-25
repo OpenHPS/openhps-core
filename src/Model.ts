@@ -1,6 +1,6 @@
 import { DataFrame, ReferenceSpace } from './data';
 import { DataService, Service } from './service';
-import { GraphImpl } from './graph/_internal/implementations/GraphImpl';
+import { GraphShape } from './graph/GraphShape';
 
 /**
  * This model contains multiple [[Node]]s, [[Service]]s to sample
@@ -13,7 +13,8 @@ import { GraphImpl } from './graph/_internal/implementations/GraphImpl';
  * ### Pushing and Pulling
  *
  */
-export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame> extends GraphImpl<In, Out> {
+export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame>
+    extends GraphShape<In, Out> {
     /**
      * Push data to the model
      *
