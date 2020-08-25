@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Service } from './service';
 import { DataFrame, ReferenceSpace } from './data';
-import { ModelImpl } from './graph/_internal/implementations';
+import { ModelGraph } from './graph/_internal/implementations';
 import { Model } from './Model';
 import { GraphBuilder } from './graph/builders/GraphBuilder';
 
@@ -122,7 +122,7 @@ import { GraphBuilder } from './graph/builders/GraphBuilder';
  */
 export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends GraphBuilder<In, Out> {
     protected constructor() {
-        super(new ModelImpl<In, Out>());
+        super(new ModelGraph<In, Out>());
         this.graph.name = 'model';
     }
 
@@ -142,7 +142,7 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
     }
 
     public withReferenceSpace(space: ReferenceSpace): ModelBuilder<In, Out> {
-        (this.graph as ModelImpl<In, Out>).referenceSpace = space;
+        (this.graph as ModelGraph<In, Out>).referenceSpace = space;
         return this;
     }
 
@@ -153,7 +153,7 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
      * @returns {ModelBuilder} Model builder instance
      */
     public addService(service: Service): ModelBuilder<In, Out> {
-        (this.graph as ModelImpl<In, Out>).addService(service);
+        (this.graph as ModelGraph<In, Out>).addService(service);
         return this;
     }
 
@@ -162,7 +162,7 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
             this.graph.nodes.forEach((node) => {
                 node.logger = this.graph.logger;
             });
-            (this.graph as ModelImpl<In, Out>).findAllServices().forEach((service) => {
+            (this.graph as ModelGraph<In, Out>).findAllServices().forEach((service) => {
                 service.logger = this.graph.logger;
             });
             this.graph.validate();

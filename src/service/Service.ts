@@ -1,5 +1,5 @@
 import { AsyncEventEmitter } from '../_internal/AsyncEventEmitter';
-import { ModelImpl } from '../graph/_internal/implementations';
+import { ModelGraph } from '../graph/_internal/implementations';
 
 /**
  * Service is accessible by each [[Node]] inside the [[Model]]
@@ -10,7 +10,7 @@ export abstract class Service extends AsyncEventEmitter {
      */
     public name: string;
     public logger: (level: string, log: any) => void = () => true;
-    public model: ModelImpl<any, any>;
+    public model: ModelGraph<any, any>;
     private _ready = false;
 
     constructor() {

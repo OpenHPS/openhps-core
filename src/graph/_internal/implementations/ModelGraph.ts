@@ -9,14 +9,14 @@ import {
     DataFrameService,
     NodeDataService,
 } from '../../../service';
-import { GraphImpl } from './GraphImpl';
+import { GraphShape } from '../../GraphShape';
 import { Model } from '../../../Model';
 import { ServiceProxy } from '../../../service/_internal';
 
 /**
  * [[Model]] implementation
  */
-export class ModelImpl<In extends DataFrame, Out extends DataFrame> extends GraphImpl<In, Out>
+export class ModelGraph<In extends DataFrame, Out extends DataFrame> extends GraphShape<In, Out>
     implements Model<In, Out> {
     private _services: Map<string, Service> = new Map();
     private _dataServices: Map<string, DataService<any, any>> = new Map();
