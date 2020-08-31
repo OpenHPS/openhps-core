@@ -1,14 +1,21 @@
 import 'reflect-metadata';
-import { DataSerializer, DataFrame, DataObject } from '../../data';
-import { Model } from '../../Model';
+import {
+    DataSerializer,
+    DataFrame,
+    DataObject,
+    Model,
+    CallbackSinkNode,
+    CallbackSourceNode,
+    ModelBuilder,
+    WorkerService,
+    DataObjectService,
+    DataFrameService,
+    NodeDataService,
+    NodeData,
+} from '../../'; // @openhps/core
 import { Subject, Observable } from 'threads/observable';
-import { CallbackSinkNode } from '../sink';
-import { CallbackSourceNode } from '../source';
 import { expose } from 'threads';
-import { ModelBuilder } from '../../ModelBuilder';
-import { WorkerService } from '../../service/WorkerService';
 import { DummyDataService, DummyService } from '../../service/_internal/';
-import { DataObjectService, DataFrameService, NodeDataService, NodeData } from '../../service';
 
 let model: Model<any, any>;
 const input: Subject<void> = new Subject();
@@ -35,6 +42,10 @@ expose({
         // Set global dir name
         // eslint-disable-next-line no-global-assign
         __dirname = workerData.dirname;
+        // Load external scripts
+        if (workerData.imports && workerData.imports.length > 0) {
+            importScripts(workerData.imports);
+        }
         // Create model
         // eslint-disable-next-line
         const builderCallback = eval(workerData.builderCallback);

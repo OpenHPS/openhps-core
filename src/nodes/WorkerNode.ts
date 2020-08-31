@@ -29,6 +29,16 @@ declare const __non_webpack_require__: typeof require;
  *      builder.to(new TimeConsumingNode());
  * }, { directory: __dirname });
  * ```
+ *
+ * ### Web Worker
+ * ```typescript
+ * const workerNode = new WorkerNode((builder) => {
+ *      const TimeConsumingNode = require(path.join(__dirname, '../TimeConsumingNode'));
+ *      builder.to(new TimeConsumingNode());
+ * }, {
+ *      worker: 'worker.openhps-core.min.js'    // Worker JS file
+ * });
+ * ```
  */
 export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
     protected options: WorkerNodeOptions;
@@ -49,6 +59,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         options?: WorkerNodeOptions,
     ) {
         super(options);
+        this.options.worker = this.options.worker || './_internal/WorkerNodeRunner';
         this._builderCallback = builderCallback;
 
         // NOTE: We can not use a conditional expression as this breaks the webpack threads plugin
@@ -56,13 +67,15 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         if (this.options && this.options.debug) {
             this._worker = new Worker('./_internal/WorkerNodeRunnerDebug');
         } else {
-            this._worker = new Worker('./_internal/WorkerNodeRunner');
+            this._worker = new Worker(this.options.worker);
         }
 
-        // eslint-disable-next-line
-        const NativeWorker = typeof __non_webpack_require__ === "function" ? __non_webpack_require__("worker_threads").Worker : eval("require")("worker_threads").Worker;
-        if (NativeWorker) {
-            NativeWorker.defaultMaxListeners = 0;
+        if (typeof process.env.NODE_ENV === 'undefined') {
+            // eslint-disable-next-line
+            const NativeWorker = typeof __non_webpack_require__ === "function" ? __non_webpack_require__("worker_threads").Worker : eval("require")("worker_threads").Worker;
+            if (NativeWorker) {
+                NativeWorker.defaultMaxListeners = 0;
+            }
         }
 
         this.once('build', this._onBuild.bind(this));
@@ -176,6 +189,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                     dirname: this.options.directory || __dirname,
                     builderCallback: this._builderCallback.toString(),
                     services: servicesArray,
+                    imports: this.options.imports || [],
                 })
                     .then(() => {
                         resolve(thread);
@@ -259,4 +273,13 @@ export interface WorkerNodeOptions extends NodeOptions {
     poolSize?: number;
     optimizedPull?: boolean;
     debug?: boolean;
+    /**
+     * Worker runner file. When running in the browser, this is the js file named
+     * ```worker.openhps-core.min.js```
+     */
+    worker?: string;
+    /**
+     * Worker external imports
+     */
+    imports?: string[];
 }

@@ -1,10 +1,9 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const WebpackAutoInject = require('webpack-auto-inject-version');
-const ThreadsPlugin = require('threads-plugin');
 const path = require('path');
 
-module.exports = [
-{
+module.exports = [{
+  name: 'openhps-core-development',
   mode: 'development',
   entry: './dist/index.js',
   devtool: 'source-map',
@@ -37,6 +36,7 @@ module.exports = [
   },
   externals: [],
 },{
+  name: 'openhps-core-production',
   mode: 'production',
   entry: './dist/index.js',
   devtool: 'source-map',
@@ -84,6 +84,50 @@ module.exports = [
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'openhps-core.min.js',
+    library: '@openhps/core',
+    libraryTarget: 'umd',
+    umdNamedDefine: true,
+    globalObject: `(typeof self !== 'undefined' ? self : this)`,
+  }
+},{
+  name: 'openhps-core-worker-development',
+  mode: 'development',
+  entry: './dist/nodes/_internal/WorkerNodeRunner.js',
+  devtool: 'source-map',
+  externals: {'../../': '@openhps/core'},
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'worker.openhps-core.js',
+    library: '@openhps/core',
+    libraryTarget: 'umd',
+    umdNamedDefine: true,
+    globalObject: `(typeof self !== 'undefined' ? self : this)`,
+  }
+},{
+  name: 'openhps-core-worker-production',
+  mode: 'production',
+  entry: './dist/nodes/_internal/WorkerNodeRunner.js',
+  devtool: 'source-map',
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        cache: true,
+        parallel: true,
+        terserOptions: {
+          keep_classnames: true,
+          keep_fnames: true
+        }
+      })
+    ],
+    portableRecords: true,
+    usedExports: true,
+    providedExports: true
+  },
+  externals: {'../../': '@openhps/core'},
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'worker.openhps-core.min.js',
     library: '@openhps/core',
     libraryTarget: 'umd',
     umdNamedDefine: true,

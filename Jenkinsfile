@@ -72,6 +72,8 @@ pipeline {
             ])
             archiveArtifacts artifacts: 'dist/openhps-core.js', fingerprint: true
             archiveArtifacts artifacts: 'dist/openhps-core.min.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/worker.openhps-core.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/worker.openhps-core.min.js', fingerprint: true
             deleteDir()
         }
     }
