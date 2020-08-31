@@ -20,11 +20,6 @@ import { Space } from './space/Space';
 @SerializableObject()
 export class DataObject {
     /**
-     * Object identifier
-     */
-    @SerializableMember()
-    public uid: string;
-    /**
      * Object display name
      */
     @SerializableMember()
@@ -37,6 +32,7 @@ export class DataObject {
     @SerializableMember()
     public createdTimestamp: number;
 
+    private _uid: string;
     private _position: AbsolutePosition;
     private _relativePositions: Map<string, Map<string, RelativePosition<any>>> = new Map();
 
@@ -75,6 +71,20 @@ export class DataObject {
             }
         });
         return this;
+    }
+
+    /**
+     * Object identifier
+     *
+     * @returns {string} Unique object identifier
+     */
+    @SerializableMember()
+    public get uid(): string {
+        return this._uid;
+    }
+
+    public set uid(value: string) {
+        this._uid = value;
     }
 
     /**

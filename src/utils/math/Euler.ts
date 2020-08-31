@@ -19,31 +19,13 @@ export class Euler extends THREE.Euler {
     }
 
     @SerializableMember()
-    public get x(): number {
-        return super.x;
-    }
-
-    public set x(value: number) {
-        super.x = value;
-    }
+    public x: number;
 
     @SerializableMember()
-    public get y(): number {
-        return super.y;
-    }
-
-    public set y(value: number) {
-        super.y = value;
-    }
+    public y: number;
 
     @SerializableMember()
-    public get z(): number {
-        return super.z;
-    }
-
-    public set z(value: number) {
-        super.z = value;
-    }
+    public z: number;
 
     /**
      * Convert quaternion to euler
