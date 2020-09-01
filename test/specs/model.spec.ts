@@ -14,6 +14,18 @@ describe('model', () => {
                 });
         });
 
+        it('should be able to push chunks of frames', (done) => {
+            ModelBuilder.create()
+                .build().then(model => {
+                    return model.push([
+                        new DataFrame(),
+                        new DataFrame()
+                    ]);
+                }).then(() => {
+                    done();
+                });
+        });
+
         it('should be able to broadcast to multiple nodes', (done) => {
             ModelBuilder.create()
                 .from()

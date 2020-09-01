@@ -257,14 +257,18 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame> extends Gra
             const servicePromises: Array<Promise<unknown>> = [];
 
             // Merge the changes in the frame service
-            let frameService = this.findDataService(frame.constructor.name);
-            if (frameService === null || frameService === undefined) {
-                frameService = this.findDataService('DataFrame');
-            }
+            const frameService = this.findDataService(frame.constructor.name);
 
             if (frameService !== null && frameService !== undefined) {
-                // Update the frame
-                servicePromises.push(frameService.insert((frame as DataFrame).uid, frame));
+                if (Array.isArray(frame)) {
+                    frame.forEach((f) => {
+                        // Update the frame
+                        servicePromises.push(frameService.insert(f.uid, frame));
+                    });
+                } else {
+                    // Update the frame
+                    servicePromises.push(frameService.insert((frame as In).uid, frame));
+                }
             }
 
             Promise.all(servicePromises)
