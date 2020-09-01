@@ -1,5 +1,6 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const WebpackAutoInject = require('webpack-auto-inject-version');
+const InjectPlugin = require('webpack-inject-plugin').default;
 const path = require('path');
 
 module.exports = [{
@@ -68,7 +69,7 @@ module.exports = [{
           dateFormat: 'isoDate',
         },
       },
-    }),
+    })
   ],
   performance: {
     hints: false,
@@ -102,7 +103,12 @@ module.exports = [{
     libraryTarget: 'umd',
     umdNamedDefine: true,
     globalObject: `(typeof self !== 'undefined' ? self : this)`,
-  }
+  },
+  plugins: [
+    new InjectPlugin(function() {
+      return "importScripts('openhps-core.min.js'); __WEBPACK_EXTERNAL_MODULE____ = self['@openhps/core'];"
+    })
+  ]
 },{
   name: 'openhps-core-worker-production',
   mode: 'production',
@@ -132,5 +138,10 @@ module.exports = [{
     libraryTarget: 'umd',
     umdNamedDefine: true,
     globalObject: `(typeof self !== 'undefined' ? self : this)`,
-  }
+  },
+  plugins: [
+    new InjectPlugin(function() {
+      return "importScripts('openhps-core.min.js'); __WEBPACK_EXTERNAL_MODULE____ = self['@openhps/core'];"
+    })
+  ]
 }];
