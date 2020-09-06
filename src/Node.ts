@@ -11,7 +11,8 @@ import { AsyncEventEmitter } from './_internal/AsyncEventEmitter';
  * ## Usage
  *
  */
-export abstract class Node<In extends DataFrame, Out extends DataFrame> extends AsyncEventEmitter
+export abstract class Node<In extends DataFrame, Out extends DataFrame>
+    extends AsyncEventEmitter
     implements AbstractNode<In, Out> {
     /**
      * Unique identifier of node.

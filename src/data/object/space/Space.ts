@@ -1,7 +1,6 @@
-import { Quaternion, Euler, AxisAngle, EulerOrder } from '../../../utils/math';
+import { Quaternion, Euler, AxisAngle, EulerOrder, Matrix4 } from '../../../utils/math';
 import { AngleUnit } from '../../../utils';
 import { AbsolutePosition } from '../../position';
-import { ReferenceSpace } from './ReferenceSpace';
 
 /**
  * Space interface.
@@ -44,5 +43,14 @@ export interface Space {
 
     baseSpaceUID: string;
 
+    /**
+     * Transform a position
+     *
+     * @param {AbsolutePosition} position Position to transform
+     * @param {boolean} inverse Inverse transformation
+     * @returns {AbsolutePosition} Transformed position
+     */
     transform(position: AbsolutePosition, inverse: boolean): AbsolutePosition;
+
+    transformationMatrix: Matrix4;
 }

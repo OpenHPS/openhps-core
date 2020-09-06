@@ -16,7 +16,8 @@ import { ServiceProxy } from '../../../service/_internal';
 /**
  * [[Model]] implementation
  */
-export class ModelGraph<In extends DataFrame, Out extends DataFrame> extends GraphShape<In, Out>
+export class ModelGraph<In extends DataFrame, Out extends DataFrame>
+    extends GraphShape<In, Out>
     implements Model<In, Out> {
     private _services: Map<string, Service> = new Map();
     private _dataServices: Map<string, DataService<any, any>> = new Map();

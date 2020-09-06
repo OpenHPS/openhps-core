@@ -114,6 +114,13 @@ export class ReferenceSpace extends DataObject implements Space {
         return this;
     }
 
+    /**
+     * Transform a position
+     *
+     * @param {AbsolutePosition} position Position to transform
+     * @param {boolean} inverse Inverse transformation
+     * @returns {AbsolutePosition} Transformed position
+     */
     public transform(position: AbsolutePosition, inverse = false): AbsolutePosition {
         const transformedPosition = position.clone();
 
@@ -139,5 +146,9 @@ export class ReferenceSpace extends DataObject implements Space {
 
         transformedPosition.referenceSpaceUID = this.uid;
         return transformedPosition;
+    }
+
+    public get transformationMatrix(): Matrix4 {
+        return this._transformationMatrix;
     }
 }
