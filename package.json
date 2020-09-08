@@ -12,7 +12,7 @@
     "access": "public"
   },
   "main": "dist/index.js",
-  "type": "module",
+  "type": "commonjs",
   "types": "dist/index.d.ts",
   "unpkg": "dist/openhps-core.min.js",
   "jsdelivr": "dist/openhps-core.min.js",
