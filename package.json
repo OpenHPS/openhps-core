@@ -18,6 +18,7 @@
   "jsdelivr": "dist/openhps-core.min.js",
   "scripts": {
     "test": "mocha --experimental-worker",
+    "test:jenkins": "jenkins-mocha --cobertura",
     "cover": "nyc mocha && nyc report --reporter=cobertura",
     "lint": "eslint src/**",
     "clean": "shx rm -rf ./dist && shx rm -rf ./docs",
@@ -40,7 +41,6 @@
     "reflect-metadata": ">=0.1.13",
     "threads": ">=1.6.3",
     "three": "^0.120.1",
-    "three.cjs": "^0.71.1",
     "typedjson": ">=1.5.1",
     "uuid": ">=8.3.0",
     "worker-thread": ">=1.1.0"
@@ -54,7 +54,6 @@
     "@types/chai": "^4.2.12",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.55",
-    "@types/three": "^0.103.2",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
@@ -66,6 +65,7 @@
     "eslint-plugin-jsdoc": "^30.3.1",
     "eslint-plugin-prettier": ">=3.1.4",
     "husky": "^4.0.10",
+    "jenkins-mocha": "^8.0.0",
     "mocha": "^6.2.3",
     "nyc": "^14.1.1",
     "prettier": "^2.1.1",
@@ -118,7 +118,7 @@
     "hooks": {
       "pre-commit": "npm run lint",
       "pre-push": "npm run test",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS --no-verify"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   }
 }
