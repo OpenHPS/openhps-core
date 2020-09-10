@@ -6,6 +6,7 @@ pipeline {
                 echo 'Building ...'
                 sh 'npm install'
                 sh 'npm run clean'
+                sh 'npm run build:three'
                 sh 'npm run build:typescript'
                 sh 'npm run build:webpack'
             }
