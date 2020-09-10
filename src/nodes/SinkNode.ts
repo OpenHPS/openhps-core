@@ -10,7 +10,7 @@ import { NodeOptions } from '../Node';
  * Sink node
  */
 export abstract class SinkNode<In extends DataFrame = DataFrame> extends AbstractSinkNode<In> {
-    public options: SinkNodeOptions;
+    protected options: SinkNodeOptions;
 
     constructor(options?: SinkNodeOptions) {
         super(options);
