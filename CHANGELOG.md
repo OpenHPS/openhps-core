@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-alpha.80](https://github.com/OpenHPS/openhps-core/compare/v0.1.0-alpha.79...v0.1.0-alpha.80) (2020-09-10)
+
 ## 0.1.0-alpha.79 (2020-09-10)
 
 
