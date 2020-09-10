@@ -1,7 +1,0 @@
-node_modules/
-docs/
-coverage/
-artifacts/
-.nyc_output/
-test/
-Jenkinsfile

@@ -29,5 +29,13 @@ module.exports = {
         "plugin:eslint-plugin-jsdoc/recommended",
         "plugin:eslint-plugin-import/recommended",
         "prettier"
+    ],
+    "overrides": [
+        {
+          "files": ["src/*.js"],
+          "rules": {
+
+          }
+        }
     ]
 };
