@@ -1,5 +1,4 @@
-import { Node, Model } from "../../../src";
-import { DataFrame, DataObject } from "../../../src/data";
+import { DataFrame, DataObject, Node, Model } from "../../../src";
 
 export class DataServiceTestNode extends Node<DataFrame, DataFrame> {
 

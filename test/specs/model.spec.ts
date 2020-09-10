@@ -1,27 +1,35 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, DataFrame, Node, GraphBuilder, EdgeBuilder } from '../../src';
-import { NamedNode, CallbackSourceNode, CallbackNode, CallbackSinkNode, ProcessingNode } from '../../src/nodes';
+import {
+    ModelBuilder,
+    DataFrame,
+    Node,
+    GraphBuilder,
+    EdgeBuilder,
+    NamedNode,
+    CallbackSourceNode,
+    CallbackNode,
+    CallbackSinkNode,
+    ProcessingNode,
+} from '../../src';
 
 describe('model', () => {
-
     describe('builder', () => {
-
         it('should have an input and output by default', (done) => {
             ModelBuilder.create()
-                .build().then(model => {
+                .build()
+                .then((model) => {
                     done();
                 });
         });
 
         it('should be able to push chunks of frames', (done) => {
             ModelBuilder.create()
-                .build().then(model => {
-                    return model.push([
-                        new DataFrame(),
-                        new DataFrame()
-                    ]);
-                }).then(() => {
+                .build()
+                .then((model) => {
+                    return model.push([new DataFrame(), new DataFrame()]);
+                })
+                .then(() => {
                     done();
                 });
         });
@@ -29,11 +37,12 @@ describe('model', () => {
         it('should be able to broadcast to multiple nodes', (done) => {
             ModelBuilder.create()
                 .from()
-                .via(new NamedNode("1"))
-                .via(new NamedNode("2.1"), new NamedNode("2.2"), new NamedNode("2.3"))
-                .via(new NamedNode("3"))
+                .via(new NamedNode('1'))
+                .via(new NamedNode('2.1'), new NamedNode('2.2'), new NamedNode('2.3'))
+                .via(new NamedNode('3'))
                 .to()
-                .build().then(model => {
+                .build()
+                .then((model) => {
                     done();
                 });
         });
@@ -41,94 +50,100 @@ describe('model', () => {
         it('should reject building when node rejects build', (done) => {
             ModelBuilder.create()
                 .from()
-                .via(new NamedNode("1"))
-                .via(new (class TestNode extends Node<any, any> {
-                    constructor() {
-                        super();
-                        this.once('build', () => new Promise((resolve, reject) => {
-                            reject('Test');
-                        }));
-                    }
-                }))
-                .via(new NamedNode("3"))
+                .via(new NamedNode('1'))
+                .via(
+                    new (class TestNode extends Node<any, any> {
+                        constructor() {
+                            super();
+                            this.once(
+                                'build',
+                                () =>
+                                    new Promise((resolve, reject) => {
+                                        reject('Test');
+                                    }),
+                            );
+                        }
+                    })(),
+                )
+                .via(new NamedNode('3'))
                 .to()
-                .build().then(model => {
-                    done("Model builded succesfully");
-                }).catch(ex => {
-                    expect(ex).to.equal("Test");
+                .build()
+                .then((model) => {
+                    done('Model builded succesfully');
+                })
+                .catch((ex) => {
+                    expect(ex).to.equal('Test');
                     done();
                 });
         });
 
         it('should be able to take uids in from, via and to', (done) => {
             ModelBuilder.create()
-                .addNode(new NamedNode("1"))
-                .addNode(new NamedNode("2"))
-                .addNode(new NamedNode("3"))
-                .addNode(new NamedNode("4"))
+                .addNode(new NamedNode('1'))
+                .addNode(new NamedNode('2'))
+                .addNode(new NamedNode('3'))
+                .addNode(new NamedNode('4'))
                 .from()
-                .via("1")
-                .via("2", "3")
+                .via('1')
+                .via('2', '3')
                 .to()
-                .from("1")
-                .via("4")
+                .from('1')
+                .via('4')
                 .to()
-                .build().then(model => {
+                .build()
+                .then((model) => {
                     done();
-                }).catch(ex => {
+                })
+                .catch((ex) => {
                     done(ex);
                 });
         });
 
-        
         it('should be able to take graph shapes', (done) => {
             ModelBuilder.create()
-                .addShape(GraphBuilder.create()
-                    .from()
-                    .via(new NamedNode("1"), new NamedNode("2"))
-                    .to())
-                .build().then(model => {
+                .addShape(GraphBuilder.create().from().via(new NamedNode('1'), new NamedNode('2')).to())
+                .build()
+                .then((model) => {
                     done();
-                }).catch(ex => {
+                })
+                .catch((ex) => {
                     done(ex);
                 });
         });
-
-
     });
 
     describe('graph builder', () => {
-
         it('should support adding nodes and edges manually', (done) => {
-            const node1 = new NamedNode("1");
-            const node2 = new NamedNode("2");
+            const node1 = new NamedNode('1');
+            const node2 = new NamedNode('2');
             GraphBuilder.create()
                 .addNode(node1)
                 .addNode(node2)
-                .addEdge(EdgeBuilder.create()
-                    .from(node1)
-                    .to(node2)
-                    .build())
-                .build().then(graph => {
+                .addEdge(EdgeBuilder.create().from(node1).to(node2).build())
+                .build()
+                .then((graph) => {
                     done();
                 });
         });
-
     });
 
     describe('pushing', () => {
-
         it('should throw an exception when a sink node throws an error', (done) => {
             ModelBuilder.create()
                 .from()
-                .to(new CallbackSinkNode((data: DataFrame) => {
-                    throw new Error('Excepting this error');
-                }))
-                .build().then(model => {
+                .to(
+                    new CallbackSinkNode((data: DataFrame) => {
+                        throw new Error('Excepting this error');
+                    }),
+                )
+                .build()
+                .then((model) => {
                     return model.push(new DataFrame());
-                }).then(() => {
+                })
+                .then(() => {
                     done('No error thrown');
-                }).catch(ex => {
+                })
+                .catch((ex) => {
                     done();
                 });
         });
@@ -136,55 +151,69 @@ describe('model', () => {
         it('should throw an exception when a processing node throws an error', (done) => {
             ModelBuilder.create()
                 .from()
-                .via(new (class TestNode extends ProcessingNode<any> {
-                    public process(frame: DataFrame): Promise<any> {
-                        return new Promise((resolve, reject) => {
-                            reject(new Error('Expecting this error'));
-                        });
-                    }
-                }))
+                .via(
+                    new (class TestNode extends ProcessingNode<any> {
+                        public process(frame: DataFrame): Promise<any> {
+                            return new Promise((resolve, reject) => {
+                                reject(new Error('Expecting this error'));
+                            });
+                        }
+                    })(),
+                )
                 .to()
-                .build().then(model => {
+                .build()
+                .then((model) => {
                     return model.push(new DataFrame());
-                }).then(() => {
+                })
+                .then(() => {
                     done('No error thrown');
-                }).catch(ex => {
+                })
+                .catch((ex) => {
                     done();
                 });
         });
 
         it('should only resolve a push after reaching a sink', (done) => {
-            const resolved = new Array();
+            const resolved = [];
             ModelBuilder.create()
-                .from(new CallbackSourceNode(() => {
-                    resolved.push(1);
-                    return null;
-                }))
-                .via(new CallbackNode(() => {
-                    let counter = 0;
-                    for(let i = 0 ; i < 100000 ; i ++) {
-                        counter += i;
-                    }
-                    resolved.push(2);
-                },
-                () => {
-                    resolved.push(2);
-                    return null;
-                }))
-                .to(new CallbackSinkNode(() => {
-                    resolved.push(3); 
-                }))
-                .build().then(model => {
-                    Promise.resolve(model.push(new DataFrame())).then(() => {
-                        expect(resolved[0]).to.equal(2);
-                        expect(resolved[1]).to.equal(3);
-                        done();
-                    }).catch(ex => {
-                        done(ex);
-                    });
+                .from(
+                    new CallbackSourceNode(() => {
+                        resolved.push(1);
+                        return null;
+                    }),
+                )
+                .via(
+                    new CallbackNode(
+                        () => {
+                            let counter = 0;
+                            for (let i = 0; i < 100000; i++) {
+                                counter += i;
+                            }
+                            resolved.push(2);
+                        },
+                        () => {
+                            resolved.push(2);
+                            return null;
+                        },
+                    ),
+                )
+                .to(
+                    new CallbackSinkNode(() => {
+                        resolved.push(3);
+                    }),
+                )
+                .build()
+                .then((model) => {
+                    Promise.resolve(model.push(new DataFrame()))
+                        .then(() => {
+                            expect(resolved[0]).to.equal(2);
+                            expect(resolved[1]).to.equal(3);
+                            done();
+                        })
+                        .catch((ex) => {
+                            done(ex);
+                        });
                 });
         });
-
     });
-
 });

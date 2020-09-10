@@ -4,43 +4,48 @@ import { DataFrame, DataObject, ModelBuilder, CallbackSourceNode, TimedPullNode,
 
 describe('node', () => {
     describe('timed pull', () => {
-
         it('should automatically pull', (done) => {
             ModelBuilder.create()
-                .from(new CallbackSourceNode(function() {
-                    done();
-                    this.graph.emit('destroy');
-                    return null;
-                }))
+                .from(
+                    new CallbackSourceNode(function () {
+                        done();
+                        this.graph.emit('destroy');
+                        return null;
+                    }),
+                )
                 .via(new TimedPullNode(100, TimeUnit.MILLISECOND))
                 .to()
-                .build().then(model => {
-                    
-                });
+                .build();
         });
 
         it('should reset the timer when a frame is pushed', (done) => {
             let model = null;
             ModelBuilder.create()
-                .from(new CallbackSourceNode(function() {
-                    done(`Pull request received when not expected`);
-                    return null;
-                }))
+                .from(
+                    new CallbackSourceNode(function () {
+                        done(`Pull request received when not expected`);
+                        return null;
+                    }),
+                )
                 .via(new TimedPullNode(800, TimeUnit.MILLISECOND))
                 .to()
-                .build().then(m => {
+                .build()
+                .then((m) => {
                     model = m;
                     return new Promise((resolve, _) => setTimeout(() => resolve(), 500));
-                }).then(() => {
+                })
+                .then(() => {
                     return model.push(new DataFrame()); // Timer should have reset
-                }).then(() => {
+                })
+                .then(() => {
                     return new Promise((resolve, _) => setTimeout(() => resolve(), 500));
-                }).then(() => {    
+                })
+                .then(() => {
                     return model.emitAsync('destroy');
-                }).then(() => {    
+                })
+                .then(() => {
                     done();
                 });
         });
-
     });
 });

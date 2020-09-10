@@ -1,5 +1,4 @@
-import { Node } from "../../../src";
-import { DataFrame, DataObject } from "../../../src/data";
+import { DataFrame, DataObject, Node } from "../../../src";
 
 export class TimeConsumingNode extends Node<DataFrame, DataFrame> {
 

@@ -73,6 +73,7 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
                     );
 
                     // New orientation in radians
+                    console.log(newPosition.orientation);
                     const newOrientation = newPosition.orientation
                         .toEuler()
                         .toVector3()

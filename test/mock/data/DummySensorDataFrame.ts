@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { DataFrame, SerializableObject, SerializableMember, DataObject } from '../../../src';
 
 @SerializableObject()

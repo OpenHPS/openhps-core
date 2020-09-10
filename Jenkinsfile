@@ -25,7 +25,8 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing ...'
-                sh 'npm run test:jenkins'
+                sh 'npm run test'
+                sh 'npm run cover'
             }
         }
         stage('Publish') {
@@ -71,9 +72,13 @@ pipeline {
                 reportName: "Documentation"
             ])
             archiveArtifacts artifacts: 'dist/openhps-core.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/openhps-core.js.map', fingerprint: true
             archiveArtifacts artifacts: 'dist/openhps-core.min.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/openhps-core.min.js.map', fingerprint: true
             archiveArtifacts artifacts: 'dist/worker.openhps-core.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/worker.openhps-core.js.map', fingerprint: true
             archiveArtifacts artifacts: 'dist/worker.openhps-core.min.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/worker.openhps-core.min.js.map', fingerprint: true
             deleteDir()
         }
     }

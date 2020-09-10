@@ -1,12 +1,30 @@
 import { expect } from 'chai';
 import 'mocha';
-import { VelocityProcessingNode, DataFrame, DataObject, Absolute2DPosition, LinearVelocity, Model, ModelBuilder, CallbackSourceNode, CallbackSinkNode, AngularVelocity, AngleUnit, AngularVelocityUnit, Quaternion, Euler, Absolute3DPosition, TimeService, TimeUnit } from '../../../../src';
+import {
+    VelocityProcessingNode,
+    DataFrame,
+    DataObject,
+    Absolute2DPosition,
+    LinearVelocity,
+    Model,
+    ModelBuilder,
+    CallbackSourceNode,
+    CallbackSinkNode,
+    AngularVelocity,
+    AngleUnit,
+    AngularVelocityUnit,
+    Quaternion,
+    Euler,
+    Absolute3DPosition,
+    TimeService,
+    TimeUnit,
+} from '../../../../src';
 
 describe('node', () => {
     describe('processing velocity', () => {
         let model: Model;
         let callbackSink: CallbackSinkNode<DataFrame>;
-        let currentTime: number = 0;
+        let currentTime = 0;
 
         before((done) => {
             callbackSink = new CallbackSinkNode();
@@ -15,7 +33,8 @@ describe('node', () => {
                 .from(new CallbackSourceNode())
                 .via(new VelocityProcessingNode())
                 .to(callbackSink)
-                .build().then(m => {
+                .build()
+                .then((m) => {
                     model = m;
                     done();
                 });
@@ -44,8 +63,8 @@ describe('node', () => {
         it('should process linear velocity from the origin in a given direction', (done) => {
             callbackSink.callback = (frame: DataFrame) => {
                 const position = frame.source.getPosition() as Absolute2DPosition;
-                expect(Math.round(position.x * 10.) / 10.).to.equal(-0.5);
-                expect(Math.round(position.y * 10.) / 10.).to.equal(0.5);
+                expect(Math.round(position.x * 10) / 10).to.equal(-0.5);
+                expect(Math.round(position.y * 10) / 10).to.equal(0.5);
                 done();
             };
 
@@ -62,12 +81,11 @@ describe('node', () => {
             Promise.resolve(model.push(frame));
         });
 
-
         it('should process linear velocity from (3, 3) in a given direction', (done) => {
             callbackSink.callback = (frame: DataFrame) => {
                 const position = frame.source.getPosition() as Absolute2DPosition;
-                expect(Math.round(position.x * 10.) / 10.).to.equal(2);
-                expect(Math.round(position.y * 10.) / 10.).to.equal(4);
+                expect(Math.round(position.x * 10) / 10).to.equal(2);
+                expect(Math.round(position.y * 10) / 10).to.equal(4);
                 done();
             };
 
@@ -111,8 +129,8 @@ describe('node', () => {
             callbackSink.callback = (frame: DataFrame) => {
                 const position = frame.source.getPosition() as Absolute2DPosition;
                 // Linear position is (0, 0) + the linear and angular movement
-                expect(Math.round(position.x * 10) / 10.).to.equal(0.6); // Should be less than 1
-                expect(Math.round(position.y * 10) / 10.).to.equal(0.6);
+                expect(Math.round(position.x * 10) / 10).to.equal(0.6); // Should be less than 1
+                expect(Math.round(position.y * 10) / 10).to.equal(0.6);
                 // Orientation should change
                 expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).z)).to.equal(90);
                 done();
@@ -135,8 +153,8 @@ describe('node', () => {
             callbackSink.callback = (frame: DataFrame) => {
                 const position = frame.source.getPosition() as Absolute2DPosition;
                 // Linear position is (0, 0) + the linear and angular movement
-                expect(Math.round(position.x * 10) / 10.).to.equal(0.6); // Should be less than 1
-                expect(Math.round(position.y * 10) / 10.).to.equal(-0.6);
+                expect(Math.round(position.x * 10) / 10).to.equal(0.6); // Should be less than 1
+                expect(Math.round(position.y * 10) / 10).to.equal(-0.6);
                 // Orientation should change
                 expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).z)).to.equal(-90);
                 done();
@@ -159,9 +177,9 @@ describe('node', () => {
             callbackSink.callback = (frame: DataFrame) => {
                 const position = frame.source.getPosition() as Absolute3DPosition;
                 // Linear position is (0, 0) + the linear and angular movement
-                expect(Math.round(position.x * 10) / 10.).to.equal(0.6); // Should be less than 1
-                expect(Math.round(position.y * 10) / 10.).to.equal(0);
-                expect(Math.round(position.z * 10) / 10.).to.equal(-0.6);
+                expect(Math.round(position.x * 10) / 10).to.equal(0.6); // Should be less than 1
+                expect(Math.round(position.y * 10) / 10).to.equal(0);
+                expect(Math.round(position.z * 10) / 10).to.equal(-0.6);
                 // Orientation should change
                 expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).y)).to.equal(90);
                 done();
@@ -184,14 +202,14 @@ describe('node', () => {
             callbackSink.callback = (frame: DataFrame) => {
                 const position = frame.source.getPosition() as Absolute3DPosition;
                 // Linear position is (0, 0) + the linear and angular movement
-                expect(Math.round(position.x * 10) / 10.).to.equal(0.6); // Should be less than 1
-                expect(Math.round(position.y * 10) / 10.).to.equal(0);
-                expect(Math.round(position.z * 10) / 10.).to.equal(0.6);
+                expect(Math.round(position.x * 10) / 10).to.equal(0.6); // Should be less than 1
+                expect(Math.round(position.y * 10) / 10).to.equal(0);
+                expect(Math.round(position.z * 10) / 10).to.equal(0.6);
                 // Orientation should change
                 expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).y)).to.equal(-90);
                 done();
             };
-                 
+
             currentTime = 0;
             const frame = new DataFrame();
             const object = new DataObject();
@@ -209,14 +227,14 @@ describe('node', () => {
             callbackSink.callback = (frame: DataFrame) => {
                 const position = frame.source.getPosition() as Absolute3DPosition;
                 // Linear position is (0, 0) + the linear and angular movement
-                expect(Math.round(position.x * 10) / 10.).to.equal(0);
-                expect(Math.round(position.y * 10) / 10.).to.equal(0.6);
-                expect(Math.round(position.z * 10) / 10.).to.equal(0.6);
+                expect(Math.round(position.x * 10) / 10).to.equal(0);
+                expect(Math.round(position.y * 10) / 10).to.equal(0.6);
+                expect(Math.round(position.z * 10) / 10).to.equal(0.6);
                 // Orientation should change
                 expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).x)).to.equal(90);
                 done();
             };
-                   
+
             currentTime = 0;
             const frame = new DataFrame();
             const object = new DataObject();
@@ -234,9 +252,9 @@ describe('node', () => {
             callbackSink.callback = (frame: DataFrame) => {
                 const position = frame.source.getPosition() as Absolute3DPosition;
                 // Linear position is (0, 0) + the linear and angular movement
-                expect(Math.round(position.x * 10) / 10.).to.equal(0);
-                expect(Math.round(position.y * 10) / 10.).to.equal(0.6);
-                expect(Math.round(position.z * 10) / 10.).to.equal(-0.6);
+                expect(Math.round(position.x * 10) / 10).to.equal(0);
+                expect(Math.round(position.y * 10) / 10).to.equal(0.6);
+                expect(Math.round(position.z * 10) / 10).to.equal(-0.6);
                 // Orientation should change
                 expect(Math.round(position.orientation.toEuler().toVector(AngleUnit.DEGREE).x)).to.equal(-90);
                 done();
@@ -298,17 +316,20 @@ describe('node', () => {
             startPosition.timestamp = currentTime;
 
             const frame = new DataFrame();
-            const object = new DataObject("robot");
+            const object = new DataObject('robot');
             object.setPosition(startPosition);
             frame.source = object;
 
             model.push(frame).then(() => {
                 currentTime += 500;
-                model.push(new DataFrame(new DataObject("robot"))).then(() => {
-                    done();
-                }).catch(ex => {
-                    done(ex);
-                });
+                model
+                    .push(new DataFrame(new DataObject('robot')))
+                    .then(() => {
+                        done();
+                    })
+                    .catch((ex) => {
+                        done(ex);
+                    });
             });
         });
 
@@ -330,27 +351,31 @@ describe('node', () => {
             startPosition.timestamp = currentTime;
 
             const frame = new DataFrame();
-            const object = new DataObject("robot");
+            const object = new DataObject('robot');
             object.setPosition(startPosition);
             frame.source = object;
 
             model.push(frame).then(() => {
-                let count = 100;
+                const count = 100;
                 let promise = Promise.resolve();
-                for (let i = 1 ; i <= count ;i ++) {
+                for (let i = 1; i <= count; i++) {
                     currentTime = i * (1000 / count);
-                    promise = promise.then(() => model.push(new DataFrame(new DataObject("robot"))).then(() => {
-                    }).catch(done));
+                    promise = promise.then(() =>
+                        model
+                            .push(new DataFrame(new DataObject('robot')))
+                            .then(() => {})
+                            .catch(done),
+                    );
                 }
-                
-                promise.then(() => {
-                    expect(distance).to.be.above(0.8);
-                    expect(distance).to.be.below(1.0);
-                    done();
-                }).catch(done);
+
+                promise
+                    .then(() => {
+                        expect(distance).to.be.above(0.8);
+                        expect(distance).to.be.below(1.0);
+                        done();
+                    })
+                    .catch(done);
             });
         });
-
     });
-
 });

@@ -3,16 +3,14 @@ import 'mocha';
 import { DataSerializer, DataObject } from '../../../src';
 
 describe('dataserializer', () => {
-
     it('should register and unregister serializable objects', () => {
         DataSerializer.unregisterType(DataObject);
-        expect(DataSerializer.findTypeByName("DataObject")).to.equal(undefined);
+        expect(DataSerializer.findTypeByName('DataObject')).to.equal(undefined);
         DataSerializer.registerType(DataObject);
-        expect(DataSerializer.findTypeByName("DataObject")).to.equal(DataObject);
+        expect(DataSerializer.findTypeByName('DataObject')).to.equal(DataObject);
     });
 
     describe('serializing', () => {
-
         it('should return undefined when serialized data is null', () => {
             expect(DataSerializer.serialize(undefined)).to.equal(undefined);
         });
@@ -26,14 +24,12 @@ describe('dataserializer', () => {
         it('should serialize unregistered types', () => {
             DataSerializer.unregisterType(DataObject);
             const serialized = DataSerializer.serialize(new DataObject());
-            expect(serialized.__type).to.equal("DataObject");
+            expect(serialized.__type).to.equal('DataObject');
             DataSerializer.registerType(DataObject);
         });
-
     });
 
     describe('deserializing', () => {
-
         it('should return undefined when deserialized data is null', () => {
             expect(DataSerializer.deserialize(undefined)).to.equal(undefined);
         });
@@ -45,7 +41,5 @@ describe('dataserializer', () => {
             expect(deserialized.length).to.equal(2);
             expect(deserialized[0]).to.be.instanceOf(DataObject);
         });
-
     });
-
 });
