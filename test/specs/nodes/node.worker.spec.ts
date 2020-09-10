@@ -6,7 +6,7 @@ import * as path from 'path';
 describe('node', () => {
     describe('worker node', () => {
         // Overhead in ms
-        const overhead = 20;
+        const overhead = 25;
 
         it('should take 30ms with 1 worker', (done) => {
             let model;
