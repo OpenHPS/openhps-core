@@ -173,7 +173,7 @@ describe('data object', () => {
         });
     });
 
-    describe('output layer', () => {
+    describe('output node', () => {
         let model: Model<DataFrame, DataFrame>;
         let objectDataService: DataObjectService<DataObject>;
 
@@ -254,6 +254,51 @@ describe('data object', () => {
             await model.push(frame);
             const result = await model.findDataService(DataObject).findByUID(object.uid);
             expect(result.displayName).to.equal('Test');
+        });
+    });
+
+    
+    describe('output node without persistence', () => {
+        let model: Model<DataFrame, DataFrame>;
+        let objectDataService: DataObjectService<DataObject>;
+
+        before((done) => {
+            ModelBuilder.create()
+                .from()
+                .to(new CallbackSinkNode(() => {}, {
+                    persistence: false
+                }))
+                .build()
+                .then((m) => {
+                    model = m;
+                    objectDataService = model.findDataService(DataObject);
+                    done();
+                });
+        });
+
+        it('should not store objects at the output layer', (done) => {
+            const object = new DataObject();
+            object.setPosition(new Absolute2DPosition(1, 2));
+            object.displayName = 'Test';
+            const frame = new DataFrame();
+            frame.addObject(object);
+            model
+                .push(frame)
+                .then(() => {
+                    // Check if it is stored
+                    objectDataService
+                        .findAll()
+                        .then((objects) => {
+                            expect(objects.length).to.equal(0);
+                            done();
+                        })
+                        .catch((ex) => {
+                            done(ex);
+                        });
+                })
+                .catch((ex) => {
+                    done(ex);
+                });
         });
     });
 });
