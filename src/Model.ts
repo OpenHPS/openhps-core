@@ -1,6 +1,7 @@
 import { DataFrame, ReferenceSpace } from './data';
 import { DataService, Service } from './service';
 import { GraphShape } from './graph/GraphShape';
+import { PullOptions, PushOptions } from './graph';
 
 /**
  * This model contains multiple [[Node]]s, [[Service]]s to sample
@@ -19,13 +20,16 @@ export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame =
      * Push data to the model
      *
      * @param frame Input frame
+     * @param {PushOptions} [options] Push options
      */
-    push(frame: In | In[]): Promise<void>;
+    push(frame: In | In[], options?: PushOptions): Promise<void>;
 
     /**
      * Pull data from the model
+     *
+     * @param {PullOptions} [options] Pull options
      */
-    pull(): Promise<void>;
+    pull(options?: PullOptions): Promise<void>;
 
     /**
      * Find service

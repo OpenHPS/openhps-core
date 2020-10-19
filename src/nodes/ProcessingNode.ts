@@ -2,6 +2,7 @@ import { DataFrame, DataObject } from '../data';
 import { Node, NodeOptions } from '../Node';
 import { NodeDataService, NodeData } from '../service';
 import { Model } from '../Model';
+import { PushOptions } from '../graph';
 
 /**
  * Processing node
@@ -20,7 +21,7 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
         this.on('push', this._onPush.bind(this));
     }
 
-    private _onPush(frame: In | In[]): Promise<void> {
+    private _onPush(frame: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const model = this.graph as Model;
             const processPromises: Array<Promise<Out>> = [];

@@ -12,6 +12,7 @@ import {
 import { GraphShape } from '../../GraphShape';
 import { Model } from '../../../Model';
 import { ServiceProxy } from '../../../service/_internal';
+import { PushOptions } from '../../interfaces';
 
 /**
  * [[Model]] implementation
@@ -253,7 +254,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
         this._referenceSpace = space;
     }
 
-    public push(frame: In | In[]): Promise<void> {
+    public push(frame: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const servicePromises: Array<Promise<unknown>> = [];
 
@@ -273,7 +274,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
             }
 
             Promise.all(servicePromises)
-                .then(() => this.internalInput.push(frame))
+                .then(() => this.internalInput.push(frame, options))
                 .then(() => {
                     resolve();
                 })

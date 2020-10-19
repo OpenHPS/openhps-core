@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { AbstractSinkNode } from '../graph/interfaces/AbstractSinkNode';
 import { DataService } from '../service';
 import { NodeOptions } from '../Node';
+import { PushOptions } from '../graph';
 
 /**
  * Sink node
@@ -19,7 +20,7 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
         this.options.removeFrames = this.options['removeFrames'] === undefined ? true : this.options.removeFrames;
     }
 
-    public push(frame: In | In[]): Promise<void> {
+    public push(frame: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (frame === null || frame === undefined) {
                 this.logger('warning', {
@@ -105,7 +106,7 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
         });
     }
 
-    public abstract onPush(frame: In | In[]): Promise<void>;
+    public abstract onPush(frame: In | In[], options?: PushOptions): Promise<void>;
 }
 
 export interface SinkNodeOptions extends NodeOptions {

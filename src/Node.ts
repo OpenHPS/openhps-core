@@ -4,6 +4,7 @@ import { DataFrame } from './data/DataFrame';
 import { AbstractGraph } from './graph/interfaces/AbstractGraph';
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
 import { AsyncEventEmitter } from './_internal/AsyncEventEmitter';
+import { PullOptions, PushOptions } from './graph';
 
 /**
  * The graph node has an input and output [[DataFrame]]
@@ -76,9 +77,10 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
     /**
      * Send a pull request to the node
      *
+     * @param {PullOptions} [options] Pull options
      * @returns {Promise<void>} Pull promise
      */
-    public pull(): Promise<void> {
+    public pull(options?: PullOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const callbackPromises: Array<Promise<void>> = [];
             this.listeners('pull').forEach((callback) => {
@@ -87,7 +89,7 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
 
             if (callbackPromises.length === 0) {
                 this.inputNodes.forEach((node) => {
-                    callbackPromises.push(node.pull());
+                    callbackPromises.push(node.pull(options));
                 });
             }
 
@@ -103,9 +105,10 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
      * Push data to the node
      *
      * @param {DataFrame | DataFrame[]} frame Data frame to push
+     * @param {PushOptions} [options] Push options
      * @returns {Promise<void>} Push promise
      */
-    public push(frame: In | In[]): Promise<void> {
+    public push(frame: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (frame === null || frame === undefined) {
                 this.logger('warning', {
@@ -122,7 +125,7 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
 
             if (callbackPromises.length === 0) {
                 this.outputNodes.forEach((node) => {
-                    callbackPromises.push(node.push(frame));
+                    callbackPromises.push(node.push(frame, options));
                 });
             }
 
