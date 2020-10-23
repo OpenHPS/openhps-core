@@ -1,5 +1,5 @@
 --require reflect-metadata
---require test/tsconfig.mocha.js
+--require test/tsconfig.js
 --require source-map-support/register
 --recursive
 

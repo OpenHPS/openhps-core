@@ -12,40 +12,16 @@ import { AngleUnit } from '../unit';
 @SerializableObject()
 export class Quaternion extends THREE.Quaternion {
     @SerializableMember()
-    public get x(): number {
-        return super.x;
-    }
-
-    public set x(value: number) {
-        super.x = value;
-    }
+    public x: number;
 
     @SerializableMember()
-    public get y(): number {
-        return super.y;
-    }
-
-    public set y(value: number) {
-        super.y = value;
-    }
+    public y: number;
 
     @SerializableMember()
-    public get z(): number {
-        return super.z;
-    }
-
-    public set z(value: number) {
-        super.z = value;
-    }
+    public z: number;
 
     @SerializableMember()
-    public get w(): number {
-        return super.w;
-    }
-
-    public set w(value: number) {
-        super.w = value;
-    }
+    public w: number;
 
     /**
      * Convert a threejs quaternion to serializable quaternion

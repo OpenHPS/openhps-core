@@ -3,19 +3,12 @@
         "target": "es6",
         "module": "commonjs",
         "moduleResolution": "node",
-        "noImplicitAny": true,
-        "removeComments": false,
+        "noImplicitAny": false,
+        "removeComments": true,
         "preserveConstEnums": true,
-        "sourceMap": true,
-        "outDir": "./dist",
         "declaration": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
     },
-    "include": [
-        "src/**/*",
-    ],
-    "exclude": [
-        "node_modules"
-    ]
+    "transpileOnline": true
 }

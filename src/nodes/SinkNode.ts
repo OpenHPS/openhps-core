@@ -5,18 +5,22 @@ import { v4 as uuidv4 } from 'uuid';
 import { AbstractSinkNode } from '../graph/interfaces/AbstractSinkNode';
 import { DataService } from '../service';
 import { NodeOptions } from '../Node';
+import { PushOptions } from '../graph';
 
 /**
  * Sink node
  */
 export abstract class SinkNode<In extends DataFrame = DataFrame> extends AbstractSinkNode<In> {
-    public options: SinkNodeOptions;
+    protected options: SinkNodeOptions;
 
     constructor(options?: SinkNodeOptions) {
         super(options);
+
+        this.options.persistence = this.options['persistence'] === undefined ? true : this.options.persistence;
+        this.options.removeFrames = this.options['removeFrames'] === undefined ? true : this.options.removeFrames;
     }
 
-    public push(frame: In | In[]): Promise<void> {
+    public push(frame: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (frame === null || frame === undefined) {
                 this.logger('warning', {
@@ -27,17 +31,25 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
             }
 
             // Push the frame to the sink node
-            this.onPush(frame)
+            this.onPush(frame, options)
                 .then(() => {
                     const persistPromise: Array<Promise<void>> = [];
                     if (frame instanceof Array) {
                         frame.forEach((f: In) => {
-                            persistPromise.push(this.persistDataFrame(f));
-                            persistPromise.push(this.persistDataObject(f));
+                            if (this.options.removeFrames) {
+                                persistPromise.push(this.removeDataFrame(f));
+                            }
+                            if (this.options.persistence) {
+                                persistPromise.push(this.persistDataObject(f));
+                            }
                         });
                     } else {
-                        persistPromise.push(this.persistDataFrame(frame));
-                        persistPromise.push(this.persistDataObject(frame));
+                        if (this.options.removeFrames) {
+                            persistPromise.push(this.removeDataFrame(frame));
+                        }
+                        if (this.options.persistence) {
+                            persistPromise.push(this.persistDataObject(frame));
+                        }
                     }
                     return Promise.all(persistPromise);
                 })
@@ -48,7 +60,7 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
         });
     }
 
-    protected persistDataFrame(frame: In): Promise<void> {
+    protected removeDataFrame(frame: In): Promise<void> {
         return new Promise<void>((resolve) => {
             const model: Model<any, any> = this.graph as Model<any, any>;
             const servicePromises: Array<Promise<void>> = [];
@@ -94,7 +106,7 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
         });
     }
 
-    public abstract onPush(frame: In | In[]): Promise<void>;
+    public abstract onPush(frame: In | In[], options?: PushOptions): Promise<void>;
 }
 
 export interface SinkNodeOptions extends NodeOptions {
@@ -104,4 +116,10 @@ export interface SinkNodeOptions extends NodeOptions {
      * @default true
      */
     persistence?: boolean;
+    /**
+     * Remove data frames from services
+     *
+     * @default true
+     */
+    removeFrames?: boolean;
 }

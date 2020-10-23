@@ -12,11 +12,13 @@ import {
 import { GraphShape } from '../../GraphShape';
 import { Model } from '../../../Model';
 import { ServiceProxy } from '../../../service/_internal';
+import { PushOptions } from '../../interfaces';
 
 /**
  * [[Model]] implementation
  */
-export class ModelGraph<In extends DataFrame, Out extends DataFrame> extends GraphShape<In, Out>
+export class ModelGraph<In extends DataFrame, Out extends DataFrame>
+    extends GraphShape<In, Out>
     implements Model<In, Out> {
     private _services: Map<string, Service> = new Map();
     private _dataServices: Map<string, DataService<any, any>> = new Map();
@@ -252,23 +254,27 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame> extends Gra
         this._referenceSpace = space;
     }
 
-    public push(frame: In | In[]): Promise<void> {
+    public push(frame: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const servicePromises: Array<Promise<unknown>> = [];
 
             // Merge the changes in the frame service
-            let frameService = this.findDataService(frame.constructor.name);
-            if (frameService === null || frameService === undefined) {
-                frameService = this.findDataService('DataFrame');
-            }
+            const frameService = this.findDataService(frame.constructor.name);
 
             if (frameService !== null && frameService !== undefined) {
-                // Update the frame
-                servicePromises.push(frameService.insert((frame as DataFrame).uid, frame));
+                if (Array.isArray(frame)) {
+                    frame.forEach((f) => {
+                        // Update the frame
+                        servicePromises.push(frameService.insert(f.uid, frame));
+                    });
+                } else {
+                    // Update the frame
+                    servicePromises.push(frameService.insert((frame as In).uid, frame));
+                }
             }
 
             Promise.all(servicePromises)
-                .then(() => this.internalInput.push(frame))
+                .then(() => this.internalInput.push(frame, options))
                 .then(() => {
                     resolve();
                 })

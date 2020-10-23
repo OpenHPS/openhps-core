@@ -3,6 +3,7 @@ import { DataObject } from '../data';
 import { AbstractSourceNode } from '../graph/interfaces/AbstractSourceNode';
 import { Model } from '../Model';
 import { NodeOptions } from '../Node';
+import { PullOptions, PushOptions } from '../graph';
 
 /**
  * Source node
@@ -30,7 +31,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
         this.on('pull', this._onPull.bind(this));
     }
 
-    private _onPush(data: Out | Out[]): Promise<void> {
+    private _onPush(data: Out | Out[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const servicePromises: Array<Promise<void>> = [];
             const pushPromises: Array<Promise<void>> = [];
@@ -48,7 +49,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
             Promise.all(servicePromises)
                 .then(() => {
                     this.outputNodes.forEach((node) => {
-                        pushPromises.push(node.push(data));
+                        pushPromises.push(node.push(data, options));
                     });
                     return Promise.all(pushPromises);
                 })
@@ -122,12 +123,12 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
         });
     }
 
-    private _onPull(): Promise<void> {
+    private _onPull(options?: PullOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.onPull()
                 .then((frame) => {
                     if (frame !== undefined && frame !== null) {
-                        return this.push(frame);
+                        return this.push(frame, options);
                     } else {
                         resolve();
                     }

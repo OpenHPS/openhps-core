@@ -2,6 +2,7 @@ import { DataFrame, DataObject } from '../data';
 import { Node, NodeOptions } from '../Node';
 import { NodeDataService, NodeData } from '../service';
 import { Model } from '../Model';
+import { GraphOptions, PushOptions } from '../graph';
 
 /**
  * Processing node
@@ -20,17 +21,17 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
         this.on('push', this._onPush.bind(this));
     }
 
-    private _onPush(frame: In | In[]): Promise<void> {
+    private _onPush(frame: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const model = this.graph as Model;
             const processPromises: Array<Promise<Out>> = [];
 
             if (Array.isArray(frame)) {
                 frame.filter(this._frameFilter).forEach((f) => {
-                    processPromises.push(this.process(f));
+                    processPromises.push(this.process(f, options));
                 });
             } else if (this._frameFilter(frame)) {
-                processPromises.push(this.process(frame));
+                processPromises.push(this.process(frame, options));
             }
 
             const output: Out[] = [];
@@ -60,7 +61,7 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
                     const pushPromises: Array<Promise<void>> = [];
                     output.forEach((out) => {
                         this.outputNodes.forEach((node) => {
-                            pushPromises.push(node.push(out));
+                            pushPromises.push(node.push(out, options));
                         });
                     });
                     return Promise.all(pushPromises);
@@ -111,7 +112,7 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
         });
     }
 
-    public abstract process(frame: In): Promise<Out>;
+    public abstract process(frame: In, options?: GraphOptions): Promise<Out>;
 }
 
 export interface ProcessingNodeOptions extends NodeOptions {

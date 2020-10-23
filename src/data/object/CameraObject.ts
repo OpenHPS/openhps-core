@@ -1,8 +1,7 @@
 import { SerializableObject, SerializableMember } from '../decorators';
 import { DataObject } from './DataObject';
-import { Matrix4, Quaternion } from '../../utils';
+import { Matrix4 } from '../../utils';
 import { Absolute3DPosition, Absolute2DPosition } from '../position';
-import { Camera } from '../../utils/math/_internal';
 
 /**
  * Camera source object
@@ -26,19 +25,6 @@ export class CameraObject extends DataObject {
      */
     @SerializableMember()
     public projectionMatrixInverse: Matrix4;
-
-    public static fromThreeJS(camera: Camera): CameraObject {
-        const cameraObject = new CameraObject(camera.uuid);
-        cameraObject.projectionMatrix = camera.projectionMatrix;
-        cameraObject.projectionMatrixInverse = camera.projectionMatrixInverse;
-        cameraObject.matrixWorldInverse = camera.matrixWorldInverse;
-        const position = new Absolute3DPosition();
-        position.x = camera.position.x;
-        position.y = camera.position.y;
-        position.z = camera.position.z;
-        position.orientation = Quaternion.fromThreeJS(camera.quaternion);
-        return cameraObject;
-    }
 
     /**
      * Transform a 3d position to a 2d position shown by the camera

@@ -3,9 +3,7 @@ import 'mocha';
 import { GeographicalPosition, AngleUnit } from '../../../src';
 
 describe('position', () => {
-
     describe('GeographicalPosition', () => {
-
         it('should convert latitude and latittude to XYZ coordinates', () => {
             const pos = new GeographicalPosition(5, 6, 1);
             expect(pos.latitude).to.equal(5);
@@ -39,9 +37,9 @@ describe('position', () => {
         });
 
         it('should calculate the distance between two points', () => {
-            const distance = new GeographicalPosition(1, 1).distance( new GeographicalPosition(4, 9));
+            const distance = new GeographicalPosition(1, 1).distance(new GeographicalPosition(4, 9));
         });
-       
+
         it('should calculate the bearing between two points', () => {
             const bearing = new GeographicalPosition(1, 1).bearing(new GeographicalPosition(4, 9));
         });
@@ -49,7 +47,5 @@ describe('position', () => {
         it('should calculate the destination from a point in a direction', () => {
             const destination = new GeographicalPosition(1, 1).destination(100, 20, AngleUnit.DEGREE);
         });
-
     });
-
 });

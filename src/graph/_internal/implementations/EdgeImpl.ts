@@ -1,6 +1,6 @@
 import { AbstractEdge } from '../../interfaces/AbstractEdge';
 import { v4 as uuidv4 } from 'uuid';
-import { AbstractNode } from '../../interfaces';
+import { AbstractNode, PullOptions, PushOptions } from '../../interfaces';
 import { DataFrame } from '../../../data';
 
 export class EdgeImpl<InOut extends DataFrame> implements AbstractEdge<InOut> {
@@ -15,18 +15,20 @@ export class EdgeImpl<InOut extends DataFrame> implements AbstractEdge<InOut> {
      * Push data to the output node
      *
      * @param {DataFrame | DataFrame[]} frame Data frame to push
+     * @param {PushOptions} [options] Push options
      * @returns {Promise<void>} Push promise
      */
-    public push(frame: InOut | InOut[]): Promise<void> {
+    public push(frame: InOut | InOut[], options?: PushOptions): Promise<void> {
         return this.outputNode.push(frame);
     }
 
     /**
      * Pull data from the input node
      *
+     * @param {PullOptions} [options] Pull options
      * @returns {Promise<void>} Pull promise
      */
-    public pull(): Promise<void> {
+    public pull(options?: PullOptions): Promise<void> {
         return this.inputNode.pull();
     }
 }

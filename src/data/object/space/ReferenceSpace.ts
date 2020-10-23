@@ -14,10 +14,10 @@ import { AbsolutePosition } from '../../position/AbsolutePosition';
 export class ReferenceSpace extends DataObject implements Space {
     // Raw transformation matrix
     @SerializableMember()
-    private _transformationMatrix = new Matrix4().identity() as Matrix4;
+    private _transformationMatrix = new Matrix4();
     // Scale matrix (needed for scaling linear velocity)
     @SerializableMember()
-    private _scaleMatrix = new Matrix4().identity() as Matrix4;
+    private _scaleMatrix = new Matrix4();
     // Rotation matrix (needed for orientation, angular velocity and linear velocity)
     @SerializableMember()
     private _rotation = new Quaternion();
@@ -114,6 +114,13 @@ export class ReferenceSpace extends DataObject implements Space {
         return this;
     }
 
+    /**
+     * Transform a position
+     *
+     * @param {AbsolutePosition} position Position to transform
+     * @param {boolean} inverse Inverse transformation
+     * @returns {AbsolutePosition} Transformed position
+     */
     public transform(position: AbsolutePosition, inverse = false): AbsolutePosition {
         const transformedPosition = position.clone();
 
@@ -139,5 +146,9 @@ export class ReferenceSpace extends DataObject implements Space {
 
         transformedPosition.referenceSpaceUID = this.uid;
         return transformedPosition;
+    }
+
+    public get transformationMatrix(): Matrix4 {
+        return this._transformationMatrix;
     }
 }

@@ -6,6 +6,7 @@ pipeline {
                 echo 'Building ...'
                 sh 'npm install'
                 sh 'npm run clean'
+                sh 'npm run build:three'
                 sh 'npm run build:typescript'
                 sh 'npm run build:webpack'
             }
@@ -71,7 +72,13 @@ pipeline {
                 reportName: "Documentation"
             ])
             archiveArtifacts artifacts: 'dist/openhps-core.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/openhps-core.js.map', fingerprint: true
             archiveArtifacts artifacts: 'dist/openhps-core.min.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/openhps-core.min.js.map', fingerprint: true
+            archiveArtifacts artifacts: 'dist/worker.openhps-core.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/worker.openhps-core.js.map', fingerprint: true
+            archiveArtifacts artifacts: 'dist/worker.openhps-core.min.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/worker.openhps-core.min.js.map', fingerprint: true
             deleteDir()
         }
     }

@@ -27,11 +27,7 @@ export class RelativeDistancePosition implements RelativePosition {
     public accuracy: number;
     @SerializableMember()
     public accuracyUnit: LengthUnit = LengthUnit.METER;
-    /**
-     * Distance to reference object
-     */
-    @SerializableMember()
-    public distance: number;
+    private _distance: number;
     /**
      * Distance unit
      */
@@ -49,6 +45,20 @@ export class RelativeDistancePosition implements RelativePosition {
         }
         this.distance = distance;
         this.distanceUnit = distanceUnit;
+    }
+
+    /**
+     * Distance to reference object
+     *
+     * @returns {number} Distance
+     */
+    @SerializableMember()
+    public get distance(): number {
+        return this._distance;
+    }
+
+    public set distance(value: number) {
+        this._distance = value;
     }
 
     public get referenceValue(): number {

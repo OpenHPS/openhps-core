@@ -1,12 +1,28 @@
 import { expect } from 'chai';
 import 'mocha';
-import { CallbackSinkNode, Model, DataFrame, ModelBuilder, CallbackSourceNode, AccelerationProcessingNode, Acceleration, TimeService, Absolute2DPosition, DataObject, IMUDataFrame, RelativeRotationProcessingNode, AngularVelocity, AngleUnit, AngularVelocityUnit } from '../../../../src';
+import {
+    CallbackSinkNode,
+    Model,
+    DataFrame,
+    ModelBuilder,
+    CallbackSourceNode,
+    AccelerationProcessingNode,
+    Acceleration,
+    TimeService,
+    Absolute2DPosition,
+    DataObject,
+    IMUDataFrame,
+    RelativeRotationProcessingNode,
+    AngularVelocity,
+    AngleUnit,
+    AngularVelocityUnit,
+} from '../../../../src';
 
 describe('node', () => {
     describe('processing relative orientation', () => {
         let model: Model;
         let callbackSink: CallbackSinkNode<IMUDataFrame>;
-        let time: number = 0;
+        const time = 0;
         let timeService: TimeService;
 
         before((done) => {
@@ -17,7 +33,8 @@ describe('node', () => {
                 .from(new CallbackSourceNode())
                 .via(new RelativeRotationProcessingNode())
                 .to(callbackSink)
-                .build().then(m => {
+                .build()
+                .then((m) => {
                     model = m;
                     done();
                 });
@@ -26,7 +43,7 @@ describe('node', () => {
         it('should convert angular velocity to relative rotation', (done) => {
             callbackSink.callback = (frame: IMUDataFrame) => {
                 const linearVelocity = frame.source.getPosition().velocity.linear;
-                console.log(linearVelocity)
+                console.log(linearVelocity);
                 done();
             };
 
@@ -40,6 +57,5 @@ describe('node', () => {
 
             Promise.resolve(model.push(frame));
         });
-
     });
 });

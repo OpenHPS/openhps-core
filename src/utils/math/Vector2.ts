@@ -7,22 +7,10 @@ import * as THREE from './_internal';
 @SerializableObject()
 export class Vector2 extends THREE.Vector2 {
     @SerializableMember()
-    public get x(): number {
-        return super.x;
-    }
-
-    public set x(value: number) {
-        super.x = value;
-    }
+    public x: number;
 
     @SerializableMember()
-    public get y(): number {
-        return super.y;
-    }
-
-    public set y(value: number) {
-        super.y = value;
-    }
+    public y: number;
 
     public static fromArray(array: number[]): Vector2 {
         const vector = new Vector2();

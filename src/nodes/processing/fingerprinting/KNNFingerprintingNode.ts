@@ -192,8 +192,8 @@ class KDTree {
     /**
      * Euclidean distance function
      *
-     * @param {number[]} fingerprint
-     * @param {number[]} point
+     * @param {number[]} fingerprint Fingerprint position
+     * @param {number[]} point Point to get euclidean distance for
      * @returns {number} Euclidean distance
      */
     private _distance(fingerprint: number[], point: number[]): number {
