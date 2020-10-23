@@ -1,6 +1,6 @@
+import { GraphOptions } from './GraphOptions';
+
 /**
  * Provides options for pull requests to nodes
  */
-export interface PullOptions {
-
-}
+export type PullOptions = GraphOptions;

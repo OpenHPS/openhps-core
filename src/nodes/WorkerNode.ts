@@ -201,7 +201,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
 
     private _onWorkerService(value: { id: string; serviceName: string; method: string; parameters: any }): void {
         const model = this.graph as Model<any, any>;
-        const service = model.findDataService(value.serviceName);
+        const service: Service = model.findDataService(value.serviceName) || model.findService(value.serviceName);
         if ((service as any)[value.method]) {
             const serializedParams = value.parameters;
             const params: any[] = [];
@@ -213,7 +213,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                 }
             });
             const promise = (service as any)[value.method](...params) as Promise<any>;
-            promise
+            Promise.resolve(promise)
                 .then((_) => {
                     if (Array.isArray(_)) {
                         const result: any[] = [];

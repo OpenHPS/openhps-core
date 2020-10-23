@@ -31,7 +31,7 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
             }
 
             // Push the frame to the sink node
-            this.onPush(frame)
+            this.onPush(frame, options)
                 .then(() => {
                     const persistPromise: Array<Promise<void>> = [];
                     if (frame instanceof Array) {
