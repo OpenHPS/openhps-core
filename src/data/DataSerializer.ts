@@ -13,6 +13,11 @@ import { TypedJSON } from 'typedjson';
 export class DataSerializer {
     private static _serializableTypes: Map<string, new () => any> = new Map();
 
+    /**
+     * Manually register a new type
+     *
+     * @param {new () => any} type Type to register
+     */
     public static registerType(type: new () => any): void {
         this._serializableTypes.set(type.name, type);
     }

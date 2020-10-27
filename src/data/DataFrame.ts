@@ -27,7 +27,8 @@ export class DataFrame {
      */
     @SerializableMember()
     public createdTimestamp: number;
-    private _source: DataObject;
+    @SerializableMember()
+    private _source: string;
     @SerializableMapMember(String, DataObject)
     private _objects: Map<string, DataObject> = new Map();
 
@@ -47,14 +48,14 @@ export class DataFrame {
      *
      * @returns {DataObject} Source data object
      */
-    @SerializableMember()
     public get source(): DataObject {
-        return this._source;
+        return this.getObjectByUID(this._source);
     }
 
-    public set source(source: DataObject) {
-        this.addObject(source);
-        this._source = source;
+    public set source(object: DataObject) {
+        if (object === undefined) return;
+        this.addObject(object);
+        this._source = object.uid;
     }
 
     /**

@@ -1,6 +1,5 @@
 /**
  * Graph options for push and pull requests.
  */
-export interface GraphOptions {
-
-}
+// eslint-disable-next-line
+export interface GraphOptions {}

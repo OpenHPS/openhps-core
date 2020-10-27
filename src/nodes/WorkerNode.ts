@@ -4,9 +4,10 @@ import { Thread, Worker, spawn, Pool } from 'threads';
 import { Observable } from 'threads/observable';
 import { PoolEvent } from 'threads/dist/master/pool';
 import { Model } from '../Model';
-import { DataService, DataObjectService, DataFrameService, Service, NodeDataService } from '../service';
+import { DataService, DataObjectService, DataFrameService, Service, NodeDataService, TimeService } from '../service';
 import { GraphShapeBuilder } from '../graph/builders/GraphBuilder';
 import { ModelBuilder } from '../ModelBuilder';
+import { PullOptions, PushOptions } from '../graph';
 
 declare const __non_webpack_require__: typeof require;
 
@@ -84,7 +85,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         this.on('push', this._onPush.bind(this));
     }
 
-    private _onPull(): Promise<void> {
+    private _onPull(options?: PullOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (this.options.optimizedPull) {
                 // Do not pass the pull request to the worker
@@ -113,7 +114,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         });
     }
 
-    private _onPush(frame: In | In[]): Promise<void> {
+    private _onPush(frame: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this._pool
                 .queue((worker: any) => {
@@ -164,7 +165,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
 
                 // Serialize this model services to the worker
                 const model = this.graph as Model<any, any>;
-                const services = model.findAllServices();
+                const services = this.options.services || model.findAllServices();
                 const servicesArray: any[] = [];
                 services.forEach((service) => {
                     servicesArray.push({
@@ -257,20 +258,29 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
             this.logger('debug', {
                 message: 'Spawning new worker thread ...',
             });
-            this._pool = Pool(() => this._spawnWorker(), this.options.poolSize || 4);
+            this._pool = Pool(() => this._spawnWorker(), {
+                size: this.options.poolSize || 4,
+                concurrency: this.options.poolConcurrency || 2,
+            });
             this._pool.events().subscribe((value: PoolEvent<Thread>) => {
                 if (value.type === 'initialized') {
                     resolve();
                 }
             });
-            this.emit('ready');
         });
     }
 }
 
 export interface WorkerNodeOptions extends NodeOptions {
     directory?: string;
+    /**
+     * Pool size, defaults to 4 but should equal the amount of available cores - 1
+     */
     poolSize?: number;
+    /**
+     * Concurrent tasks send to the same worker in the pool
+     */
+    poolConcurrency?: number;
     optimizedPull?: boolean;
     debug?: boolean;
     /**
@@ -282,4 +292,8 @@ export interface WorkerNodeOptions extends NodeOptions {
      * Worker external imports
      */
     imports?: string[];
+    /**
+     * Services to clone from main thread. When not specified it will clone all services
+     */
+    services?: Service[];
 }

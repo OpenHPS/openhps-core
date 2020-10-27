@@ -2,6 +2,7 @@ import { DataFrame, DataObject } from '../data';
 import { ProcessingNode, ProcessingNodeOptions } from './ProcessingNode';
 import { Model } from '../Model';
 import { DataObjectService } from '../service';
+import { GraphOptions } from '../graph';
 
 /**
  * Processing node that processes each [[DataObject]] in a [[DataFrame]] individually
@@ -15,14 +16,14 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
         this._objectFilter = this.options.objectFilter || this._objectFilter;
     }
 
-    public process(frame: InOut): Promise<InOut> {
+    public process(frame: InOut, options?: GraphOptions): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
             const processObjectPromises: Array<Promise<DataObject>> = [];
             frame
                 .getObjects()
                 .filter((value) => this._objectFilter(value, frame))
                 .forEach((object) => {
-                    processObjectPromises.push(this.processObject(object, frame));
+                    processObjectPromises.push(this.processObject(object, frame, options));
                 });
             Promise.all(processObjectPromises)
                 .then((objects) => {
@@ -40,9 +41,14 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
      *
      * @param {DataObject} dataObject Data object to process
      * @param {DataFrame} dataFrame Data frame this object belongs to
+     * @param {GraphOptions} options Graph options
      * @returns {Promise<DataObject>} Processed data object promise
      */
-    public abstract processObject(dataObject: DataObject, dataFrame?: InOut): Promise<DataObject>;
+    public abstract processObject(
+        dataObject: DataObject,
+        dataFrame?: InOut,
+        options?: GraphOptions,
+    ): Promise<DataObject>;
 
     /**
      * Find an object by its uid

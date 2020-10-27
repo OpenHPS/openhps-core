@@ -1,34 +1,38 @@
 import { Suite } from 'benchmark';
-import { Absolute3DPosition, AngularVelocity, DataFrame, DataObject, GraphBuilder, LinearVelocity, LoggingSinkNode, Model, ModelBuilder, VelocityProcessingNode, WorkerNode } from '../../src';
+import { Absolute3DPosition, AngularVelocity, DataFrame, DataObject, GraphBuilder, LinearVelocity, LoggingSinkNode, Model, ModelBuilder, Quaternion, TimeService, VelocityProcessingNode, WorkerNode } from '../../src';
 import * as path from 'path';
+import { ComputingNode } from '../mock/nodes/ComputingNode';
+import Benchmark = require('benchmark');
 
 const models = new Array();
 const frames: DataFrame[] = new Array();
 const suite = new Suite();
-const settings = {
+const settings: Benchmark.Options = {
     defer: true,
-    minSamples: 10,
-    initCount: 10
+    minSamples: 50,
+    initCount: 2
 };
 
 async function init() {
     models.push(await ModelBuilder.create()
         .addShape(GraphBuilder.create()
             .from()
-            .via(new VelocityProcessingNode())
+            .via(new ComputingNode(1000))
             .to(new LoggingSinkNode()))
         .build());
     for (let i = 0 ; i < 8 ; i++) {
         models.push(await createModel(i + 1));
     }
     
-    for (let i = 0 ; i < 100 ; i++) {
+    for (let i = 0 ; i < 20 ; i++) {
         const dummyFrame = new DataFrame();
-        const dummyObject = new DataObject("dummy data object");
+        const dummyObject = new DataObject("dummy", "Dummy Data Object");
         const position = new Absolute3DPosition(0, 0, 0);
         position.velocity.linear = new LinearVelocity(0.1, 0.1, 0.1);
         position.velocity.angular = new AngularVelocity(0.1, 0.1, 0.1);
+        position.orientation = new Quaternion(0, 0, 0, 1);
         dummyObject.setPosition(position);
+        dummyFrame.source = dummyObject;
         dummyFrame.addObject(dummyObject);
         frames.push(dummyFrame);
     }
@@ -36,18 +40,23 @@ async function init() {
 
 function createModel(workers: number): Promise<Model> {
     return new Promise((resolve, reject) => {
+        let model: Model;
         ModelBuilder.create()
             .addShape(GraphBuilder.create()
                 .from()
-                .via(new WorkerNode((builder) => {
-                    const VelocityProcessingNode = require(path.join(__dirname, '../../src')).VelocityProcessingNode;
-                    builder.via(new VelocityProcessingNode());
+                .via(new WorkerNode((builder, modelBuilder) => {
+                    const ComputingNode = require(path.join(__dirname, '../mock/nodes/ComputingNode')).ComputingNode;
+                    builder.via(new ComputingNode(1000));
                 }, {
                     poolSize: workers,
                     directory: __dirname,
+                    services: []
                 }))
                 .to(new LoggingSinkNode()))
-            .build().then((model: Model) => {
+            .build().then((m: Model) => {
+                model = m;
+                return model.push(new DataFrame());
+            }).then(() => {
                 resolve(model);
             }).catch(ex => {
                 reject(ex);
@@ -56,11 +65,11 @@ function createModel(workers: number): Promise<Model> {
 }
 
 function testFunction(model: Model, deferred: any): void {
-    const pushPromises = new Array();
+    let promises = new Array();
     frames.forEach(frame => {
-        pushPromises.push(model.push(frame));
+        promises.push(model.push(frame));
     });
-    Promise.all(pushPromises).then(() => {
+    Promise.all(promises).then(() => {
         deferred.resolve();
     }).catch(ex => {
         console.log(ex);
@@ -100,18 +109,6 @@ init().then(() => {
     }, settings)
     .on('cycle', function(event: any) {
         console.log(String(event.target));
-        console.log(event.target.name);
-        console.log(event.target.stats.rme);
-        console.log(event.target.stats.sample.length);
-        console.log(event.target.count); // The number of times a test was executed.
-        console.log(event.target.cycles); // The number of cycles performed while benchmarking.
-        console.log(event.target.hz); //The number of executions per second.
-    })
-    .on('complete', function() {
-        for (var i = 0; i < this.length; i++) {
-            console.log(this[i].hz + " ops/sec");
-            console.log(this[i].stats.sample.length);
-        }
     })
     .run();    
 });

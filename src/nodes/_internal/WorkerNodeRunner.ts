@@ -16,6 +16,7 @@ import {
 import { Subject, Observable } from 'threads/observable';
 import { expose } from 'threads';
 import { DummyDataService, DummyService } from '../../service/_internal/';
+import { threadId } from 'worker_threads';
 
 let model: Model<any, any>;
 const input: Subject<void> = new Subject();
@@ -50,7 +51,7 @@ expose({
         // eslint-disable-next-line
         const builderCallback = eval(workerData.builderCallback);
         const modelBuilder = ModelBuilder.create();
-        // Add remote worker services
+        // Add remote worker services if not already added
         workerData.services.forEach((service: any) => {
             switch (service.type) {
                 case 'DataObjectService':
@@ -96,6 +97,7 @@ expose({
         // Add source node with input observable
         const traversalBuilder = modelBuilder.from(
             new CallbackSourceNode(() => {
+                // Send a pull request to the main thread
                 input.next();
                 return null;
             }),
@@ -107,6 +109,7 @@ expose({
 
         traversalBuilder.to(
             new CallbackSinkNode((frame: DataFrame) => {
+                // Serialize the frame and transmit it to the main thread
                 output.next(DataSerializer.serialize(frame));
             }),
         );
