@@ -1,30 +1,24 @@
 import { Suite } from 'benchmark';
-import { Absolute3DPosition, AngularVelocity, DataFrame, DataObject, GraphBuilder, LinearVelocity, LoggingSinkNode, Model, ModelBuilder, Quaternion, TimeService, VelocityProcessingNode, WorkerNode } from '../../src';
+import { Absolute3DPosition, AngularVelocity, CallbackSinkNode, DataFrame, DataObject, GraphBuilder, LinearVelocity, LoggingSinkNode, Model, ModelBuilder, Quaternion, TimeService, VelocityProcessingNode, WorkerNode } from '../../src';
 import * as path from 'path';
 import { ComputingNode } from '../mock/nodes/ComputingNode';
 import Benchmark = require('benchmark');
 
-const models = new Array();
 const frames: DataFrame[] = new Array();
 const suite = new Suite();
 const settings: Benchmark.Options = {
     defer: true,
-    minSamples: 50,
-    initCount: 2
+    minSamples: 100,
+    initCount: 5,
 };
+const settingsCreate: Benchmark.Options = {
+    defer: true,
+    minSamples: 1
+};
+let model: Model;
 
 async function init() {
-    models.push(await ModelBuilder.create()
-        .addShape(GraphBuilder.create()
-            .from()
-            .via(new ComputingNode(1000))
-            .to(new LoggingSinkNode()))
-        .build());
-    for (let i = 0 ; i < 8 ; i++) {
-        models.push(await createModel(i + 1));
-    }
-    
-    for (let i = 0 ; i < 20 ; i++) {
+    for (let i = 0 ; i < 100 ; i++) {
         const dummyFrame = new DataFrame();
         const dummyObject = new DataObject("dummy", "Dummy Data Object");
         const position = new Absolute3DPosition(0, 0, 0);
@@ -46,13 +40,18 @@ function createModel(workers: number): Promise<Model> {
                 .from()
                 .via(new WorkerNode((builder, modelBuilder) => {
                     const ComputingNode = require(path.join(__dirname, '../mock/nodes/ComputingNode')).ComputingNode;
-                    builder.via(new ComputingNode(1000));
+                    builder.via(new ComputingNode(20000));
                 }, {
                     poolSize: workers,
+                    poolConcurrency: 10,
                     directory: __dirname,
                     services: []
                 }))
-                .to(new LoggingSinkNode()))
+                .to(new CallbackSinkNode(() => {
+                    
+                }, {
+                    uid: "sink"
+                })))
             .build().then((m: Model) => {
                 model = m;
                 return model.push(new DataFrame());
@@ -69,46 +68,67 @@ function testFunction(model: Model, deferred: any): void {
     frames.forEach(frame => {
         promises.push(model.push(frame));
     });
-    Promise.all(promises).then(() => {
-        deferred.resolve();
-    }).catch(ex => {
-        console.log(ex);
-        deferred.resolve();
-    });
+    const sink = model.getNodeByUID("sink") as CallbackSinkNode<any>;
+    let count = 0;
+    sink.callback = (frame) => {
+        count++;
+        if (count === frames.length) {
+            deferred.resolve();
+        }
+    };
+    Promise.resolve(promises);
 }
 
 init().then(() => {
     console.log("Initialized! Starting benchmarks ...");
 
-    suite.add("worker#none", (deferred: any) => {
-        testFunction(models[0], deferred);
-    }, settings)
-    .add("worker#1", (deferred: any) => {
-        testFunction(models[1], deferred);
-    }, settings)
-    .add("worker#2", (deferred: any) => {
-        testFunction(models[2], deferred);
-    }, settings)
-    .add("worker#3", (deferred: any) => {
-        testFunction(models[3], deferred);
-    }, settings)
-    .add("worker#4", (deferred: any) => {
-        testFunction(models[4], deferred);
-    }, settings)
-    .add("worker#5", (deferred: any) => {
-        testFunction(models[5], deferred);
-    }, settings)
-    .add("worker#6", (deferred: any) => {
-        testFunction(models[6], deferred);
-    }, settings)
-    .add("worker#7", (deferred: any) => {
-        testFunction(models[7], deferred);
-    }, settings)
-    .add("worker#8", (deferred: any) => {
-        testFunction(models[8], deferred);
-    }, settings)
-    .on('cycle', function(event: any) {
-        console.log(String(event.target));
-    })
-    .run();    
+    suite.add("worker#none-create", (deferred: any) => {
+        if (model !== undefined && model.name == "none")
+            return deferred.resolve();
+        ModelBuilder.create()
+            .addShape(GraphBuilder.create()
+                .from()
+                .via(new ComputingNode(20000))
+                .to(new CallbackSinkNode(() => {
+
+                }, {
+                    uid: "sink"
+                })))
+            .build().then((m: Model) => {
+                m.name = "none";
+                model = m;
+                deferred.resolve();
+            });
+    }, settingsCreate)
+    .add("worker#none", (deferred: any) => {
+        testFunction(model, deferred);
+    }, {
+        onComplete: () => {
+            model.emit('destroy');
+        },
+        ...settings
+    });
+    for (let i = 1 ; i <= 16 ; i++) {
+        suite.add(`worker#${i}-create`, (deferred: any) => {
+            if (model !== undefined && model.name == `${i}`)
+                return deferred.resolve();
+            createModel(i).then((m: Model) => {
+                model = m;
+                model.name = `${i}`;
+                deferred.resolve();
+            });
+        }, settingsCreate)
+        .add(`worker#${i}`, (deferred: any) => {
+            testFunction(model, deferred);
+        }, {
+            onComplete: () => {
+                model.emit('destroy');
+            },
+            ...settings
+        })
+    }
+    suite.on('cycle', function(event: any) {
+            console.log(String(event.target));
+        })
+        .run({ async: true });    
 });

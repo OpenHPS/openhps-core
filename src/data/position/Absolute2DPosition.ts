@@ -14,7 +14,7 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
      * Position recording timestamp
      */
     @SerializableMember()
-    public timestamp: number = new Date().getTime();
+    public timestamp: number = Date.now();
     /**
      * Velocity at recorded position
      */

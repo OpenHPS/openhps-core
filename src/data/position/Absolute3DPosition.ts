@@ -13,7 +13,7 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
      * Position recording timestamp
      */
     @SerializableMember()
-    public timestamp: number = new Date().getTime();
+    public timestamp: number = Date.now();
     /**
      * Velocity at recorded position
      */

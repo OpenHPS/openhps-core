@@ -281,4 +281,8 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
                 .catch(reject);
         });
     }
+
+    public destroy(): Promise<boolean> {
+        return this.emitAsync('destroy');
+    }
 }

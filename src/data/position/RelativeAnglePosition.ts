@@ -12,7 +12,7 @@ export class RelativeAnglePosition implements RelativePosition<number> {
      * Position recording timestamp
      */
     @SerializableMember()
-    public timestamp: number = new Date().getTime();
+    public timestamp: number = Date.now();
     /**
      * Reference object UID that this location is relative to
      */

@@ -44,7 +44,7 @@ export class DataObject {
      */
     constructor(uid: string = uuidv4(), displayName?: string) {
         this.uid = uid;
-        this.createdTimestamp = new Date().getTime();
+        this.createdTimestamp = Date.now();
         this.displayName = displayName;
     }
 

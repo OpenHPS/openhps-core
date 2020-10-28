@@ -50,6 +50,12 @@ export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame =
     findAllServices(): Service[];
 
     /**
+     * Destroy the model, added nodes and services
+     *  Equivalent of model.emitAsync('destroy');
+     */
+    destroy(): Promise<boolean>;
+
+    /**
      * Model reference space
      */
     referenceSpace: ReferenceSpace;
