@@ -4,7 +4,7 @@ import { Thread, Worker, spawn, Pool } from 'threads';
 import { Observable } from 'threads/observable';
 import { PoolEvent } from 'threads/dist/master/pool';
 import { Model } from '../Model';
-import { DataService, DataObjectService, DataFrameService, Service, NodeDataService, TimeService } from '../service';
+import { DataService, DataObjectService, DataFrameService, Service, NodeDataService } from '../service';
 import { GraphShapeBuilder } from '../graph/builders/GraphBuilder';
 import { ModelBuilder } from '../ModelBuilder';
 import { PullOptions, PushOptions } from '../graph';
@@ -185,10 +185,17 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                     });
                 });
 
+                // Code
+                let code = this._builderCallback.toString();
+                if (this.options.typescript) {
+                    // eslint-disable-next-line
+                    code = require('typescript').transpile(code);
+                }
+
                 // Initialize the worker
                 initFn({
                     dirname: this.options.directory || __dirname,
-                    builderCallback: this._builderCallback.toString(),
+                    builderCallback: code,
                     services: servicesArray,
                     imports: this.options.imports || [],
                 })
@@ -296,4 +303,5 @@ export interface WorkerNodeOptions extends NodeOptions {
      * Services to clone from main thread. When not specified it will clone all services
      */
     services?: Service[];
+    typescript?: boolean;
 }

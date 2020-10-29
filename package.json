@@ -22,6 +22,7 @@
   "scripts": {
     "test": "mocha --experimental-worker",
     "test:jenkins": "jenkins-mocha --cobertura",
+    "benchmark": "ts-node test/bench/worker.bench.ts",
     "cover": "nyc mocha && nyc report --reporter=cobertura",
     "lint": "eslint src/**",
     "clean": "shx rm -rf ./dist && shx rm -rf ./docs",

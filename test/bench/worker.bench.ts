@@ -39,7 +39,7 @@ function createModel(workers: number): Promise<Model> {
             .addShape(GraphBuilder.create()
                 .from()
                 .via(new WorkerNode((builder, modelBuilder) => {
-                    const ComputingNode = require(path.join(__dirname, '../mock/nodes/ComputingNode')).ComputingNode;
+                    const { ComputingNode } = require(path.join(__dirname, '../mock/nodes/ComputingNode'));
                     builder.via(new ComputingNode(20000));
                 }, {
                     poolSize: workers,
