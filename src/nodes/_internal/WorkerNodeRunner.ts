@@ -105,7 +105,7 @@ expose({
 
         // eslint-disable-next-line
         const path = require('path');
-        builderCallback(traversalBuilder, modelBuilder);
+        builderCallback(traversalBuilder, modelBuilder, workerData.args);
 
         traversalBuilder.to(
             new CallbackSinkNode((frame: DataFrame) => {

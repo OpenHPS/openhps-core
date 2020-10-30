@@ -49,6 +49,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
     private _builderCallback: (
         builder: GraphShapeBuilder<ModelBuilder<any, any>>,
         modelBuilder?: ModelBuilder<any, any>,
+        args?: any,
     ) => void;
     private _serviceOutputFn: (id: string, success: boolean, result?: any) => Promise<void>;
 
@@ -56,6 +57,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         builderCallback: (
             builder: GraphShapeBuilder<ModelBuilder<any, any>>,
             modelBuilder?: ModelBuilder<any, any>,
+            args?: any,
         ) => void,
         options?: WorkerNodeOptions,
     ) {
@@ -133,6 +135,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
             if (this._pool === undefined) {
                 return resolve();
             }
+
             this._pool
                 .terminate()
                 .then(() => {
@@ -198,6 +201,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                     builderCallback: code,
                     services: servicesArray,
                     imports: this.options.imports || [],
+                    args: this.options.args || {},
                 })
                     .then(() => {
                         resolve(thread);
@@ -304,4 +308,5 @@ export interface WorkerNodeOptions extends NodeOptions {
      */
     services?: Service[];
     typescript?: boolean;
+    args?: any;
 }

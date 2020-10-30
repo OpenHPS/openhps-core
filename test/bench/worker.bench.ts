@@ -3,13 +3,18 @@ import { Absolute3DPosition, AngularVelocity, CallbackSinkNode, DataFrame, DataO
 import * as path from 'path';
 import { ComputingNode } from '../mock/nodes/ComputingNode';
 import Benchmark = require('benchmark');
+import * as fs from 'fs';
+
+const size = parseInt(process.argv[2]);
+const minSamples = parseInt(process.argv[3]);
 
 const frames: DataFrame[] = new Array();
 const suite = new Suite();
 const settings: Benchmark.Options = {
     defer: true,
-    minSamples: 100,
+    minSamples,
     initCount: 5,
+    delay: 10
 };
 const settingsCreate: Benchmark.Options = {
     defer: true,
@@ -38,14 +43,17 @@ function createModel(workers: number): Promise<Model> {
         ModelBuilder.create()
             .addShape(GraphBuilder.create()
                 .from()
-                .via(new WorkerNode((builder, modelBuilder) => {
+                .via(new WorkerNode((builder, modelBuilder, args) => {
                     const { ComputingNode } = require(path.join(__dirname, '../mock/nodes/ComputingNode'));
-                    builder.via(new ComputingNode(20000));
+                    builder.via(new ComputingNode(args.size));
                 }, {
                     poolSize: workers,
-                    poolConcurrency: 10,
+                    poolConcurrency: parseInt(process.argv[4]),
                     directory: __dirname,
-                    services: []
+                    services: [],
+                    args: {
+                        size
+                    }
                 }))
                 .to(new CallbackSinkNode(() => {
                     
@@ -88,7 +96,7 @@ init().then(() => {
         ModelBuilder.create()
             .addShape(GraphBuilder.create()
                 .from()
-                .via(new ComputingNode(20000))
+                .via(new ComputingNode(size))
                 .to(new CallbackSinkNode(() => {
 
                 }, {
@@ -108,7 +116,7 @@ init().then(() => {
         },
         ...settings
     });
-    for (let i = 1 ; i <= 16 ; i++) {
+    for (let i = 1 ; i <= parseInt(process.argv[5]) ; i++) {
         suite.add(`worker#${i}-create`, (deferred: any) => {
             if (model !== undefined && model.name == `${i}`)
                 return deferred.resolve();
@@ -123,12 +131,17 @@ init().then(() => {
         }, {
             onComplete: () => {
                 model.emit('destroy');
+                model = undefined;
             },
             ...settings
         })
     }
     suite.on('cycle', function(event: any) {
-            console.log(String(event.target));
-        })
-        .run({ async: true });    
+        console.log(String(event.target));
+    }).on('complete', function () {
+        for (let i = 1; i < this.length; i += 2) {
+            fs.writeFileSync("benchmark_" + Date.now() + ".json", JSON.stringify(this[i], null, 4))
+        }
+    })
+    .run();    
 });
