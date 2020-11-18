@@ -10,8 +10,11 @@ export abstract class DataServiceDriver<I, T> extends Service {
 
     constructor(dataType: new () => T) {
         super();
-        this.name = dataType.name;
-        this.dataType = dataType;
+
+        if (dataType) {
+            this.name = dataType.name;
+            this.dataType = dataType;
+        }
     }
 
     public abstract findByUID(id: I): Promise<T>;

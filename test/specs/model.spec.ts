@@ -77,12 +77,36 @@ describe('model', () => {
                 });
         });
 
-        it('should be able to take uids in from, via and to', (done) => {
+        it('should be able to take names in from, via and to', (done) => {
             ModelBuilder.create()
                 .addNode(new NamedNode('1'))
                 .addNode(new NamedNode('2'))
                 .addNode(new NamedNode('3'))
                 .addNode(new NamedNode('4'))
+                .from()
+                .via('1')
+                .via('2', '3')
+                .to()
+                .from('1')
+                .via('4')
+                .to()
+                .build()
+                .then((model) => {
+                    done();
+                })
+                .catch((ex) => {
+                    done(ex);
+                });
+        });
+
+        it('should be able to take names from other shapes', (done) => {
+            ModelBuilder.create()
+                .addShape(GraphBuilder.create()
+                    .addNode(new NamedNode('1'))
+                    .addNode(new NamedNode('2'))
+                    .addNode(new NamedNode('3'))
+                    .addNode(new NamedNode('4'))
+                )
                 .from()
                 .via('1')
                 .via('2', '3')
@@ -215,5 +239,9 @@ describe('model', () => {
                         });
                 });
         });
+    });
+
+    describe('serialization', () => {
+
     });
 });

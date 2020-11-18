@@ -78,19 +78,28 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
      * Add graph shape to graph
      *
      * @param {GraphBuilder | AbstractGraph} graph Graph builder or abstract graph
+     * @param shape
      * @returns {GraphBuilder} Current graph builder instance
      */
-    public addShape(graph: GraphBuilder<any, any> | AbstractGraph<any, any>): GraphBuilder<In, Out> {
-        this.from().via(graph).to();
-        if (graph instanceof GraphBuilder) {
-            // Connect internal and external output to shape
-            this.graph.addEdge(
-                EdgeBuilder.create().from(this.graph.internalInput).to(graph.graph.internalInput).build(),
-            );
-            this.graph.addEdge(
-                EdgeBuilder.create().from(graph.graph.internalOutput).to(this.graph.internalOutput).build(),
-            );
+    public addShape(shape: GraphBuilder<any, any> | AbstractGraph<any, any>): GraphBuilder<In, Out> {
+        let graph: AbstractGraph<any, any>;
+        if (shape instanceof GraphBuilder) {
+            graph = shape.graph;
+        } else {
+            graph = shape;
         }
+
+        // Add the graph node and edges
+        graph.nodes.forEach((node) => {
+            this.addNode(node);
+        });
+        graph.edges.forEach((edge) => {
+            this.addEdge(edge);
+        });
+
+        // Connect internal and external output to shape
+        this.graph.addEdge(EdgeBuilder.create().from(this.graph.internalInput).to(graph.internalInput).build());
+        this.graph.addEdge(EdgeBuilder.create().from(graph.internalOutput).to(this.graph.internalOutput).build());
         return this;
     }
 

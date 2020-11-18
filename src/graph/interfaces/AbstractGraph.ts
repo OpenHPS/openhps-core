@@ -9,6 +9,16 @@ export interface AbstractGraph<In extends DataFrame, Out extends DataFrame> exte
     uid: string;
 
     /**
+     * Get the internal input node
+     */
+    internalInput?: AbstractNode<In, any>;
+
+    /**
+     * Get the external output node
+     */
+    internalOutput?: AbstractNode<any, Out>;
+
+    /**
      * Get all the edges in the graph
      */
     edges: Array<AbstractEdge<any>>;

@@ -14,7 +14,7 @@ const settings: Benchmark.Options = {
     defer: true,
     minSamples,
     initCount: 5,
-    delay: 10
+    delay: 2
 };
 const settingsCreate: Benchmark.Options = {
     defer: true,
