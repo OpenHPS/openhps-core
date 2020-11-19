@@ -123,6 +123,58 @@ describe('model', () => {
                 });
         });
 
+        it('should be able to take names in other shapes', (done) => {
+            ModelBuilder.create()
+                .addShape(GraphBuilder.create()
+                    .addNode(new NamedNode('1'))
+                    .addNode(new NamedNode('2'))
+                    .addNode(new NamedNode('3'))
+                    .addNode(new NamedNode('4'))
+                )
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .via('1')
+                    .via('2', '3')
+                    .to())
+                .addShape(GraphBuilder.create()
+                    .from('1')
+                    .via('4')
+                    .to())
+                .build()
+                .then((model) => {
+                    done();
+                })
+                .catch((ex) => {
+                    done(ex);
+                });
+        });
+
+        it('should throw an error on unresolved placeholder nodes', (done) => {
+            ModelBuilder.create()
+                .addShape(GraphBuilder.create()
+                    .addNode(new NamedNode('1'))
+                    .addNode(new NamedNode('2'))
+                    .addNode(new NamedNode('3'))
+                    .addNode(new NamedNode('4'))
+                )
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .via('1')
+                    .via('2', '3', '5')
+                    .to())
+                .addShape(GraphBuilder.create()
+                    .from('1')
+                    .via('4')
+                    .to())
+                .build()
+                .then((model) => {
+                    done(`No error thrown`);
+                })
+                .catch((ex) => {
+                    done();
+                });
+        });
+
         it('should be able to take graph shapes', (done) => {
             ModelBuilder.create()
                 .addShape(GraphBuilder.create().from().via(new NamedNode('1'), new NamedNode('2')).to())

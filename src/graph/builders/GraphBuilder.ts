@@ -14,6 +14,7 @@ import { GraphShape } from '../GraphShape';
 import { ObjectFilterNode } from '../../nodes/shapes/ObjectFilterNode';
 import { FrameDebounceNode } from '../../nodes/shapes/FrameDebounceNode';
 import { ReferenceSpaceConversionNode } from '../../nodes/processing/ReferenceSpaceConversionNode';
+import { PlaceholderNode } from '../../nodes/_internal/PlaceholderNode';
 
 /**
  * Graph builder
@@ -34,11 +35,13 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
         const selectedNodes: Array<Node<any, any>> = [];
         nodes.forEach((node: Node<any, any> | string) => {
             if (typeof node === 'string') {
-                let existingNode = this.graph.getNodeByUID(node);
-                if (existingNode === undefined) {
-                    existingNode = this.graph.getNodeByName(node);
+                let nodeObject = this.graph.getNodeByUID(node) || this.graph.getNodeByName(node);
+                if (nodeObject === undefined) {
+                    // Add a placeholder
+                    nodeObject = new PlaceholderNode(node);
                 }
-                selectedNodes.push(existingNode);
+                this.graph.addNode(nodeObject);
+                selectedNodes.push(nodeObject);
             } else {
                 this.graph.addNode(node);
                 if (node instanceof AbstractSourceNode) {
@@ -91,7 +94,21 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
 
         // Add the graph node and edges
         graph.nodes.forEach((node) => {
-            this.addNode(node);
+            // Check if the node is a placeholder
+            if (node instanceof PlaceholderNode) {
+                // Try to find a node with the same uid/name as the placeholder node
+                const existingNode = this.graph.getNodeByUID(node.name) || this.graph.getNodeByName(node.name);
+                if (existingNode) {
+                    // Edit the edges connected to this placeholder
+                    const outputEdges = graph.edges.filter((edge) => edge.inputNode === node);
+                    const inputEdges = graph.edges.filter((edge) => edge.outputNode === node);
+                    outputEdges.map((edge) => (edge.inputNode = existingNode));
+                    inputEdges.map((edge) => (edge.outputNode = existingNode));
+                    this.addNode(existingNode);
+                }
+            } else {
+                this.addNode(node);
+            }
         });
         graph.edges.forEach((edge) => {
             this.addEdge(edge);
@@ -169,15 +186,16 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
             } else {
                 let nodeObject: Node<any, any>;
                 if (typeof node === 'string') {
-                    nodeObject = this.graph.getNodeByUID(node);
+                    nodeObject = this.graph.getNodeByUID(node) || this.graph.getNodeByName(node);
                     if (nodeObject === undefined) {
-                        nodeObject = this.graph.getNodeByName(node);
+                        // Add a placeholder
+                        nodeObject = new PlaceholderNode(node);
                     }
                 } else {
-                    this.graph.addNode(node);
                     nodeObject = node as Node<any, any>;
                 }
 
+                this.graph.addNode(nodeObject);
                 this._insertNode(nodeObject);
                 selectedNodes.push(nodeObject);
             }
@@ -282,15 +300,16 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
             nodes.forEach((node) => {
                 let nodeObject: Node<any, any>;
                 if (typeof node === 'string') {
-                    nodeObject = this.graph.getNodeByUID(node);
+                    nodeObject = this.graph.getNodeByUID(node) || this.graph.getNodeByName(node);
                     if (nodeObject === undefined) {
-                        nodeObject = this.graph.getNodeByName(node);
+                        // Add a placeholder
+                        nodeObject = new PlaceholderNode(node);
                     }
                 } else {
-                    this.graph.addNode(node);
                     nodeObject = node;
                 }
 
+                this.graph.addNode(nodeObject);
                 this._insertNode(nodeObject);
                 this.graph.addEdge(EdgeBuilder.create().from(nodeObject).to(this.graph.internalOutput).build());
                 selectedNodes.push(nodeObject as AbstractSinkNode<any>);

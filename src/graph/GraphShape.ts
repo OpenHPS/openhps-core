@@ -114,7 +114,7 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame>
         if (node.outputNodes.length === 0 && node.inputNodes.length === 0) {
             this.deleteNode(node);
         } else if (!this._nodes.has(node.uid)) {
-            throw new Error(`Internal node ${node.uid} is not connected to the graph!`);
+            throw new Error(`Internal node ${node.uid} (${node.name}) is not connected to the graph!`);
         }
     }
 
@@ -124,18 +124,24 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame>
 
         this._nodes.forEach((node) => {
             if (node.graph === undefined) {
-                throw new Error(`Node ${node.uid} does not have a graph set!`);
+                throw new Error(`Node ${node.uid} (${node.name}) does not have a graph set!`);
             }
             if (this._getNodeInlets(node).length === 0 && this._getNodeOutlets(node).length === 0) {
-                throw new Error(`Node ${node.uid} is not connected to the graph!`);
+                throw new Error(`Node ${node.uid} (${node.name}) is not connected to the graph!`);
             }
         });
     }
 
     private _validateEdges(): void {
         this._edges.forEach((edge) => {
-            if (!this._nodes.has(edge.inputNode.uid) || !this._nodes.has(edge.outputNode.uid)) {
-                throw new Error(`Node ${edge.inputNode.uid} is used in an edge but not added to the graph!`);
+            if (!this._nodes.has(edge.inputNode.uid)) {
+                throw new Error(
+                    `Node ${edge.inputNode.uid} (${edge.inputNode.name}) is used in an edge but not added to the graph!`,
+                );
+            } else if (!this._nodes.has(edge.outputNode.uid)) {
+                throw new Error(
+                    `Node ${edge.outputNode.uid} (${edge.outputNode.name}) is used in an edge but not added to the graph!`,
+                );
             }
         });
     }
