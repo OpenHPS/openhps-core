@@ -32,13 +32,13 @@ describe('node', () => {
                 .build()
                 .then((m) => {
                     model = m;
-                    return new Promise((resolve, _) => setTimeout(() => resolve(), 500));
+                    return new Promise((resolve, _) => setTimeout(() => resolve(undefined), 500));
                 })
                 .then(() => {
                     return model.push(new DataFrame()); // Timer should have reset
                 })
                 .then(() => {
-                    return new Promise((resolve, _) => setTimeout(() => resolve(), 500));
+                    return new Promise((resolve, _) => setTimeout(() => resolve(undefined), 500));
                 })
                 .then(() => {
                     return model.emitAsync('destroy');

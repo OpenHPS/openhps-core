@@ -42,7 +42,7 @@ export class DataSerializer {
      * @param {any} data Data to serialize
      * @returns {any} Serialized data
      */
-    public static serialize<T>(data: T): any {
+    public static serialize<T extends any>(data: T): any {
         if (data === null || data === undefined) {
             return undefined;
         }

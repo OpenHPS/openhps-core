@@ -20,7 +20,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
             for (const [, object] of this._data) {
                 if (QueryEvaluator.evaluate(object, query)) return resolve(object);
             }
-            return resolve();
+            return resolve(undefined);
         });
     }
 
@@ -40,7 +40,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
                 this._data.set(id, object);
                 resolve(object);
             } else {
-                resolve();
+                resolve(undefined);
             }
         });
     }

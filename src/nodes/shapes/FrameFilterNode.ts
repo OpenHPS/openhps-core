@@ -14,7 +14,7 @@ export class FrameFilterNode<InOut extends DataFrame> extends ProcessingNode<InO
             if (this._filterFn(frame)) {
                 resolve(frame);
             } else {
-                resolve();
+                resolve(undefined);
             }
         });
     }

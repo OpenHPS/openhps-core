@@ -72,7 +72,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
         return new Promise<InOut>((resolve, reject) => {
             const merge = this._mergeFn(frame);
             if (merge === undefined) {
-                return resolve();
+                return resolve(undefined);
             }
             (Array.isArray(merge) ? merge : [merge]).forEach((key) => {
                 let queue = this._queue.get(key);
@@ -80,7 +80,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
                     queue = new QueuedMerge(key);
                     queue.frames.set(this._groupFn(frame), frame);
                     this._queue.set(key, queue);
-                    resolve();
+                    resolve(undefined);
                 } else {
                     queue.frames.set(this._groupFn(frame), frame);
                     // Check if there are enough frames
@@ -92,7 +92,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
                             })
                             .catch(reject);
                     } else {
-                        resolve();
+                        resolve(undefined);
                     }
                 }
             });

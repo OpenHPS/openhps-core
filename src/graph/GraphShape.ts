@@ -3,7 +3,7 @@ import { AbstractEdge } from './interfaces/AbstractEdge';
 import { AbstractGraph } from './interfaces/AbstractGraph';
 import { DataFrame } from '../data/DataFrame';
 import { BroadcastNode } from '../nodes/shapes/BroadcastNode';
-import { AbstractNode } from './interfaces';
+import { AbstractNode, PullOptions, PushOptions } from './interfaces';
 
 export class GraphShape<In extends DataFrame, Out extends DataFrame>
     extends Node<In, Out>
@@ -149,13 +149,21 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame>
     /**
      * Send a pull request to the graph
      *
+     * @param {PullOptions} [options] Pull options
      * @returns {Promise<void>} Pull promise
      */
-    public pull(): Promise<void> {
-        return this.internalOutput.pull();
+    public pull(options?: PullOptions): Promise<void> {
+        return this.internalOutput.pull(options);
     }
 
-    public push(frame: In | In[]): Promise<void> {
-        return this.internalInput.push(frame);
+    /**
+     * Push data to the graph
+     *
+     * @param {DataFrame | DataFrame[]} frame Data frame to push
+     * @param {PushOptions} [options] Push options
+     * @returns {Promise<void>} Push promise
+     */
+    public push(frame: In | In[], options?: PushOptions): Promise<void> {
+        return this.internalInput.push(frame, options);
     }
 }

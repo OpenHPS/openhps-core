@@ -44,7 +44,7 @@ export class FrameDebounceNode<InOut extends DataFrame> extends ProcessingNode<I
                 this._accept = false;
                 resolve(frame);
             } else {
-                resolve();
+                resolve(undefined);
             }
         });
     }
