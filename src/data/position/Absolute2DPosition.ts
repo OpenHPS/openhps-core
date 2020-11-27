@@ -19,17 +19,17 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
      * Velocity at recorded position
      */
     @SerializableMember()
-    public velocity = new Velocity();
+    public velocity: Velocity = new Velocity();
     /**
      * Orientation at recorded position
      */
     @SerializableMember()
-    public orientation = new Quaternion();
+    public orientation: Quaternion = new Quaternion();
     /**
      * Position unit
      */
     @SerializableMember()
-    public unit = LengthUnit.METER;
+    public unit: LengthUnit = LengthUnit.METER;
     /**
      * Position reference space UID
      */
@@ -44,7 +44,7 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
      * Position accuracy unit
      */
     @SerializableMember()
-    public accuracyUnit = LengthUnit.METER;
+    public accuracyUnit: LengthUnit = LengthUnit.METER;
 
     /**
      * Midpoint to another location

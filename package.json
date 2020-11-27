@@ -44,7 +44,7 @@
   "dependencies": {
     "reflect-metadata": ">=0.1.13",
     "threads": ">=1.6.3",
-    "typedjson": ">=1.5.1",
+    "typedjson": ">=1.5.2",
     "uuid": "^8.3.1",
     "worker-thread": ">=1.1.0"
   },

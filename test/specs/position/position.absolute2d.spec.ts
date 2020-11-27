@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Absolute2DPosition } from '../../../src';
+import { Absolute2DPosition, DataSerializer, LinearVelocity, Velocity } from '../../../src';
 
 describe('position', () => {
     describe('Absolute2DPosition', () => {
