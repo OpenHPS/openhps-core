@@ -3,6 +3,7 @@ import { SerializableMember, SerializableObject } from '../decorators';
 import { LengthUnit } from '../../utils';
 import { Vector3, Vector2, Quaternion } from '../../utils/math';
 import { Velocity } from './Velocity';
+import { TimeService } from '../../service';
 
 /**
  * Absolute cartesian 2D position. This class implements a [[Vector2]]. This location can be used both as
@@ -14,7 +15,7 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
      * Position recording timestamp
      */
     @SerializableMember()
-    public timestamp: number = Date.now();
+    public timestamp: number = TimeService.now();
     /**
      * Velocity at recorded position
      */

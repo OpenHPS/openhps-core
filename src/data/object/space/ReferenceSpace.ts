@@ -14,13 +14,13 @@ import { AbsolutePosition } from '../../position/AbsolutePosition';
 export class ReferenceSpace extends DataObject implements Space {
     // Raw transformation matrix
     @SerializableMember()
-    private _transformationMatrix = new Matrix4();
+    private _transformationMatrix: Matrix4 = new Matrix4();
     // Scale matrix (needed for scaling linear velocity)
     @SerializableMember()
-    private _scaleMatrix = new Matrix4();
+    private _scaleMatrix: Matrix4 = new Matrix4();
     // Rotation matrix (needed for orientation, angular velocity and linear velocity)
     @SerializableMember()
-    private _rotation = new Quaternion();
+    private _rotation: Quaternion = new Quaternion();
     @SerializableMember()
     private _baseSpaceUID: string;
 

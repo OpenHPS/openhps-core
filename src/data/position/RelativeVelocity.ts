@@ -3,6 +3,7 @@ import { SerializableObject, SerializableMember } from '../decorators';
 import { Velocity } from './Velocity';
 import { LengthUnit } from '../../utils';
 import { DataSerializer } from '../DataSerializer';
+import { TimeService } from '../../service';
 
 /**
  * Relative velocity to another reference object
@@ -13,7 +14,7 @@ export class RelativeVelocity implements RelativePosition<Velocity> {
      * Position recording timestamp
      */
     @SerializableMember()
-    public timestamp: number = Date.now();
+    public timestamp: number = TimeService.now();
     /**
      * Reference object UID that this location is relative to
      */

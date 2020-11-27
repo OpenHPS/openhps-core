@@ -5,6 +5,7 @@ import { SerializableObject, SerializableMember, SerializableArrayMember } from 
 import { v4 as uuidv4 } from 'uuid';
 import { DataSerializer } from '../DataSerializer';
 import { Space } from './space/Space';
+import { TimeService } from '../../service';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -44,7 +45,7 @@ export class DataObject {
      */
     constructor(uid: string = uuidv4(), displayName?: string) {
         this.uid = uid;
-        this.createdTimestamp = Date.now();
+        this.createdTimestamp = TimeService.now();
         this.displayName = displayName;
     }
 

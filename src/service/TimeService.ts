@@ -4,11 +4,37 @@ import { TimeUnit } from '../utils';
 export class TimeService extends Service {
     private _timeCallback: () => number;
     private _timeUnit: TimeUnit;
+    private static _defaultTimeCallback: () => number;
+    private static _defaultUnit: TimeUnit;
 
-    constructor(timeCallback: () => number = () => Date.now(), unit: TimeUnit = TimeUnit.MILLISECOND) {
+    constructor(timeCallback?: () => number, unit: TimeUnit = TimeUnit.MILLISECOND) {
         super();
         this._timeCallback = timeCallback;
         this._timeUnit = unit;
+
+        // Speciy the default time callback used by class initializers
+        if (!TimeService._defaultTimeCallback) {
+            TimeService.initialize();
+        }
+
+        // If time callback is undefined, use the default
+        if (!this._timeCallback) {
+            this._timeCallback = TimeService.now;
+            this._timeUnit = TimeService.getUnit();
+        }
+    }
+
+    public static initialize() {
+        // Speciy the default time callback used by class initializers
+        try {
+            // eslint-disable-next-line
+            const microtime = require('microtime');
+            TimeService._defaultTimeCallback = () => microtime.now();
+            TimeService._defaultUnit = TimeUnit.NANOSECOND;
+        } catch (ex) {
+            TimeService._defaultTimeCallback = () => Date.now();
+            TimeService._defaultUnit = TimeUnit.MILLISECOND;
+        }
     }
 
     /**
@@ -27,5 +53,19 @@ export class TimeService extends Service {
      */
     public getUnit(): TimeUnit {
         return this._timeUnit;
+    }
+
+    public static now(): number {
+        if (!TimeService._defaultTimeCallback) {
+            TimeService.initialize();
+        }
+        return TimeService._defaultTimeCallback();
+    }
+
+    public static getUnit(): TimeUnit {
+        if (!TimeService._defaultTimeCallback) {
+            TimeService.initialize();
+        }
+        return TimeService._defaultUnit;
     }
 }

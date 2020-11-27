@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { DataObject } from './object/DataObject';
 import { SerializableObject, SerializableMember, SerializableMapMember } from './decorators';
 import { ReferenceSpace } from './object';
+import { TimeService } from '../service';
 
 /**
  * Data frame that is passed through each node in a model.
@@ -38,7 +39,7 @@ export class DataFrame {
      * @param {DataObject} source Source data object
      */
     constructor(source?: DataObject) {
-        const timestamp = Date.now();
+        const timestamp = TimeService.now();
         this.createdTimestamp = timestamp;
         this.source = source;
     }

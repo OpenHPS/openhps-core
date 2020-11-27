@@ -2,6 +2,7 @@ import { SerializableObject, SerializableMember } from '../decorators';
 import { LengthUnit, Vector3, Quaternion } from '../../utils';
 import { AbsolutePosition } from './AbsolutePosition';
 import { Velocity } from './Velocity';
+import { TimeService } from '../../service';
 
 /**
  * Absolute cartesian 3D position. This class extends a [[Vector3]]. This location can be used both as
@@ -13,7 +14,7 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
      * Position recording timestamp
      */
     @SerializableMember()
-    public timestamp: number = Date.now();
+    public timestamp: number = TimeService.now();
     /**
      * Velocity at recorded position
      */
