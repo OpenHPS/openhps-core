@@ -29,10 +29,10 @@ export class TimeService extends Service {
         try {
             // eslint-disable-next-line
             const microtime = require('microtime');
-            TimeService._defaultTimeCallback = () => microtime.now();
-            TimeService._defaultUnit = TimeUnit.NANOSECOND;
+            TimeService._defaultTimeCallback = microtime.now;
+            TimeService._defaultUnit = TimeUnit.MICROSECOND;
         } catch (ex) {
-            TimeService._defaultTimeCallback = () => Date.now();
+            TimeService._defaultTimeCallback = Date.now;
             TimeService._defaultUnit = TimeUnit.MILLISECOND;
         }
     }
