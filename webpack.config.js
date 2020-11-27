@@ -24,7 +24,7 @@ module.exports = env => [
         'typedjson': `typedjson/js/typedjson${env.prod ? ".min" : ""}.js`,
       }
     },
-    externals: [],
+    externals: ['microtime'],
     optimization: {
       minimize: env.prod,
       minimizer: [
@@ -51,7 +51,7 @@ module.exports = env => [
     mode: env.prod ? "production" : "development",
     entry: './dist/nodes/_internal/WorkerNodeRunner.js',
     devtool: 'source-map',
-    externals: {'../../': LIBRARY_NAME},
+    externals: {'../../': LIBRARY_NAME, 'microtime': 'microtime'},
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: `worker.${PROJECT_NAME}${env.prod ? ".min" : ""}.js`,
