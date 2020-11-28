@@ -28,7 +28,7 @@ export class TimeService extends Service {
     }
 
     public static initialize() {
-        // Speciy the default time callback used by class initializers
+        // Specify the default time callback used by class initializers
         try {
             // eslint-disable-next-line
             const microtime = require('microtime');

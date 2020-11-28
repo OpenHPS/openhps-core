@@ -1,11 +1,11 @@
 import { DataFrame } from '../../data/DataFrame';
-import { Node } from '../../Node';
+import { Node, NodeOptions } from '../../Node';
 
 export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut> {
-    private _dataFrames: InOut[];
+    protected _dataFrames: InOut[];
 
-    constructor() {
-        super();
+    constructor(options?: MemoryBufferOptions) {
+        super(options);
         this._dataFrames = [];
 
         this.on('pull', this.onPull.bind(this));
@@ -15,7 +15,7 @@ export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut
     public onPull(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (this._dataFrames.length !== 0) {
-                const frame = this._dataFrames.pop();
+                const frame = this._dataFrames.shift();
                 const pushPromises: Array<Promise<void>> = [];
                 this.outputNodes.forEach((node) => {
                     pushPromises.push(node.push(frame));
@@ -38,3 +38,5 @@ export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut
         });
     }
 }
+
+export type MemoryBufferOptions = NodeOptions;
