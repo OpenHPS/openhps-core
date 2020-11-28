@@ -17,10 +17,10 @@ export interface AbstractNode<In extends DataFrame, Out extends DataFrame> exten
     /**
      * Push data to the node
      *
-     * @param {In | In[]} frame Data frame to push
+     * @param {DataFrame | DataFrame[]} frame Data frame to push
      * @param {PushOptions} [options] Push options
      */
-    push(frame: In | In[], options?: PushOptions): Promise<void>;
+    push(frame: DataFrame | DataFrame[], options?: PushOptions): Promise<void>;
 
     /**
      * Pull data from the node

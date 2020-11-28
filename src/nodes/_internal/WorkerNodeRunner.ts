@@ -16,7 +16,6 @@ import {
 import { Subject, Observable } from 'threads/observable';
 import { expose } from 'threads';
 import { DummyDataService, DummyService } from '../../service/_internal/';
-import { threadId } from 'worker_threads';
 
 let model: Model<any, any>;
 const input: Subject<void> = new Subject();

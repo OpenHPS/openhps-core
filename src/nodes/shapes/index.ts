@@ -7,3 +7,4 @@ export * from './ObjectMergeNode';
 export * from './FrameFilterNode';
 export * from './FrameFlattenNode';
 export * from './FrameChunkNode';
+export * from './UnitConversionNode';

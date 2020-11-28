@@ -21,6 +21,9 @@ export class TimeService extends Service {
         if (!this._timeCallback) {
             this._timeCallback = TimeService.now;
             this._timeUnit = TimeService.getUnit();
+        } else {
+            TimeService._defaultTimeCallback = timeCallback;
+            TimeService._defaultUnit = unit;
         }
     }
 
@@ -55,6 +58,11 @@ export class TimeService extends Service {
         return this._timeUnit;
     }
 
+    /**
+     * Get the current time
+     *
+     * @returns {number} Current time in a specific unit
+     */
     public static now(): number {
         if (!TimeService._defaultTimeCallback) {
             TimeService.initialize();

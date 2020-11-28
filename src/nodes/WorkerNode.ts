@@ -93,7 +93,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                 // Do not pass the pull request to the worker
                 const pullPromises: Array<Promise<void>> = [];
                 this.inputNodes.forEach((node) => {
-                    pullPromises.push(node.pull());
+                    pullPromises.push(node.pull(options));
                 });
 
                 Promise.all(pullPromises)
@@ -120,8 +120,8 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         return new Promise<void>((resolve, reject) => {
             this._pool
                 .queue((worker: any) => {
-                    const pushFn: (frame: any) => Promise<void> = worker.push;
-                    return pushFn(DataSerializer.serialize(frame));
+                    const pushFn: (frame: any, options?: PushOptions) => Promise<void> = worker.push;
+                    return pushFn(DataSerializer.serialize(frame), options);
                 })
                 .then(() => {
                     resolve();

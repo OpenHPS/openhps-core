@@ -14,7 +14,6 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
      */
     protected source: DataObject;
     protected options: SourceNodeOptions;
-    private _persistence: boolean;
 
     /**
      * Construct a new source node
@@ -26,7 +25,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
         super(options);
         this.source = source || this.options.source;
 
-        this._persistence = this.options.persistence || true;
+        this.options.persistence = this.options.persistence || true;
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
     }
@@ -36,7 +35,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
             const servicePromises: Array<Promise<void>> = [];
             const pushPromises: Array<Promise<void>> = [];
 
-            if (this._persistence) {
+            if (this.options.persistence) {
                 if (data instanceof Array) {
                     for (const f of data) {
                         servicePromises.push(this._mergeFrame(f).then((f) => this.persistFrame(f)));

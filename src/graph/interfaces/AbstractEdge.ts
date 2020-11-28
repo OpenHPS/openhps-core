@@ -22,7 +22,7 @@ export interface AbstractEdge<InOut extends DataFrame> {
     /**
      * Push data to the output node
      *
-     * @param {InOut | InOut[]} frame Data frame to push
+     * @param {DataFrame | DataFrame[]} frame Data frame to push
      * @param {PushOptions} [options] Push options
      */
     push(frame: InOut | InOut[], options?: PushOptions): Promise<void>;

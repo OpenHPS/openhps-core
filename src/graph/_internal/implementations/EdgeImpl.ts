@@ -19,7 +19,7 @@ export class EdgeImpl<InOut extends DataFrame> implements AbstractEdge<InOut> {
      * @returns {Promise<void>} Push promise
      */
     public push(frame: InOut | InOut[], options?: PushOptions): Promise<void> {
-        return this.outputNode.push(frame);
+        return this.outputNode.push(frame, options);
     }
 
     /**
@@ -29,6 +29,6 @@ export class EdgeImpl<InOut extends DataFrame> implements AbstractEdge<InOut> {
      * @returns {Promise<void>} Pull promise
      */
     public pull(options?: PullOptions): Promise<void> {
-        return this.inputNode.pull();
+        return this.inputNode.pull(options);
     }
 }

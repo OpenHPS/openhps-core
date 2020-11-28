@@ -9,18 +9,16 @@ import { Matrix4, Vector3, Quaternion, AxisAngle } from '../../../utils/math';
  * Linear and angular velocity processing
  */
 export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
-    public processObject(object: DataObject): Promise<DataObject> {
+    public processObject(object: DataObject, frame: InOut): Promise<DataObject> {
         return new Promise<DataObject>((resolve) => {
-            const model = this.graph as Model;
-            const timeService = model.findService(TimeService);
-
             if (object.getPosition() !== undefined) {
                 const lastPosition = object.getPosition();
                 if (lastPosition.velocity !== undefined) {
                     // Time since current calculation and previous velocity
-                    const deltaTime = timeService
-                        .getUnit()
-                        .convert(timeService.getTime() - lastPosition.timestamp, TimeUnit.SECOND);
+                    const deltaTime = TimeService.getUnit().convert(
+                        frame.createdTimestamp - lastPosition.timestamp,
+                        TimeUnit.SECOND,
+                    );
 
                     if (deltaTime < 0) {
                         // Delta time is negative, this means the previous location
@@ -64,7 +62,7 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
 
                     // Predict the next location
                     const newPosition = lastPosition.clone();
-                    newPosition.timestamp = timeService.getTime();
+                    newPosition.timestamp = frame.createdTimestamp;
                     newPosition.fromVector(
                         newPosition
                             .toVector3(LengthUnit.METER)

@@ -14,7 +14,7 @@ export interface QuerySelector<T> {
     $in?: T[];
     $nin?: T[];
     // Array
-    $elemMatch?: T extends Array<infer U> ? any : never;
+    $elemMatch?: T extends Array<any> ? any : never;
 }
 
 export interface RootQuerySelector<T> {

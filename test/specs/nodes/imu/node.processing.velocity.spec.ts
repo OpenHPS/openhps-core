@@ -14,7 +14,6 @@ import {
     AngleUnit,
     AngularVelocityUnit,
     Quaternion,
-    Euler,
     Absolute3DPosition,
     TimeService,
     TimeUnit,
@@ -49,14 +48,14 @@ describe('node', () => {
             };
 
             currentTime = 0;
-            const frame = new DataFrame();
             const object = new DataObject();
             const position = new Absolute2DPosition(3, 3);
             position.velocity.linear = new LinearVelocity(2, 2);
             position.timestamp = currentTime;
             object.setPosition(position);
-            frame.source = object;
             currentTime += 500;
+            const frame = new DataFrame();
+            frame.source = object;
             Promise.resolve(model.push(frame));
         });
 
@@ -69,15 +68,15 @@ describe('node', () => {
             };
 
             currentTime = 0;
-            const frame = new DataFrame();
             const object = new DataObject();
             const position = new Absolute2DPosition(0, 0);
             position.velocity.linear = new LinearVelocity(1, 1);
             position.orientation = Quaternion.fromEuler({ yaw: 90, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
             position.timestamp = currentTime;
             object.setPosition(position);
-            frame.source = object;
             currentTime += 500;
+            const frame = new DataFrame();
+            frame.source = object;
             Promise.resolve(model.push(frame));
         });
 
@@ -90,15 +89,15 @@ describe('node', () => {
             };
 
             currentTime = 0;
-            const frame = new DataFrame();
             const object = new DataObject();
             const position = new Absolute2DPosition(3, 3);
             position.velocity.linear = new LinearVelocity(2, 2);
             position.orientation = Quaternion.fromEuler({ yaw: 90, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
             position.timestamp = currentTime;
             object.setPosition(position);
-            frame.source = object;
             currentTime += 500;
+            const frame = new DataFrame();
+            frame.source = object;
             Promise.resolve(model.push(frame));
         });
 
@@ -114,14 +113,14 @@ describe('node', () => {
             };
 
             currentTime = 0;
-            const frame = new DataFrame();
             const object = new DataObject();
             const position = new Absolute2DPosition(3, 3);
             position.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
             position.timestamp = currentTime;
             object.setPosition(position);
-            frame.source = object;
             currentTime += 500;
+            const frame = new DataFrame();
+            frame.source = object;
             Promise.resolve(model.push(frame));
         });
 
@@ -137,15 +136,15 @@ describe('node', () => {
             };
 
             currentTime = 0;
-            const frame = new DataFrame();
             const object = new DataObject();
             const position = new Absolute2DPosition(0, 0);
             position.velocity.linear = new LinearVelocity(1, 0, 0);
             position.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
             position.timestamp = currentTime;
             object.setPosition(position);
-            frame.source = object;
             currentTime += 1000;
+            const frame = new DataFrame();
+            frame.source = object;
             Promise.resolve(model.push(frame));
         });
 
@@ -161,15 +160,15 @@ describe('node', () => {
             };
 
             currentTime = 0;
-            const frame = new DataFrame();
             const object = new DataObject();
             const position = new Absolute2DPosition(0, 0);
             position.velocity.linear = new LinearVelocity(1, 0, 0);
             position.velocity.angular = new AngularVelocity(0, 0, -90, AngularVelocityUnit.DEGREE_PER_SECOND);
             position.timestamp = currentTime;
             object.setPosition(position);
-            frame.source = object;
             currentTime += 1000;
+            const frame = new DataFrame();
+            frame.source = object;
             Promise.resolve(model.push(frame));
         });
 
@@ -186,15 +185,15 @@ describe('node', () => {
             };
 
             currentTime = 0;
-            const frame = new DataFrame();
             const object = new DataObject();
             const position = new Absolute3DPosition(0, 0, 0);
             position.velocity.linear = new LinearVelocity(1, 0, 0);
             position.velocity.angular = new AngularVelocity(0, 90, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
             position.timestamp = currentTime;
             object.setPosition(position);
-            frame.source = object;
             currentTime += 1000;
+            const frame = new DataFrame();
+            frame.source = object;
             Promise.resolve(model.push(frame));
         });
 
@@ -211,15 +210,15 @@ describe('node', () => {
             };
 
             currentTime = 0;
-            const frame = new DataFrame();
             const object = new DataObject();
             const position = new Absolute3DPosition(0, 0, 0);
             position.velocity.linear = new LinearVelocity(1, 0, 0);
             position.velocity.angular = new AngularVelocity(0, -90, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
             position.timestamp = currentTime;
             object.setPosition(position);
-            frame.source = object;
             currentTime += 1000;
+            const frame = new DataFrame();
+            frame.source = object;
             Promise.resolve(model.push(frame));
         });
 
@@ -236,15 +235,15 @@ describe('node', () => {
             };
 
             currentTime = 0;
-            const frame = new DataFrame();
             const object = new DataObject();
             const position = new Absolute3DPosition(0, 0, 0);
             position.velocity.linear = new LinearVelocity(0, 1, 0);
             position.velocity.angular = new AngularVelocity(90, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
             position.timestamp = currentTime;
             object.setPosition(position);
-            frame.source = object;
             currentTime += 1000;
+            const frame = new DataFrame();
+            frame.source = object;
             Promise.resolve(model.push(frame));
         });
 
@@ -261,15 +260,15 @@ describe('node', () => {
             };
 
             currentTime = 0;
-            const frame = new DataFrame();
             const object = new DataObject();
             const position = new Absolute3DPosition(0, 0, 0);
             position.velocity.linear = new LinearVelocity(0, 1, 0);
             position.velocity.angular = new AngularVelocity(-90, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
             position.timestamp = currentTime;
             object.setPosition(position);
-            frame.source = object;
             currentTime += 1000;
+            const frame = new DataFrame();
+            frame.source = object;
             Promise.resolve(model.push(frame));
         });
 
@@ -291,11 +290,11 @@ describe('node', () => {
             startPosition.velocity.linear = new LinearVelocity(1, 0, 0);
             startPosition.timestamp = currentTime;
 
-            const frame = new DataFrame();
             const object = new DataObject();
             object.setPosition(startPosition);
-            frame.source = object;
             currentTime += 1000;
+            const frame = new DataFrame();
+            frame.source = object;
             Promise.resolve(model.push(frame));
         });
 

@@ -1,4 +1,4 @@
-import { DataObject, SerializableObject, SerializableMember } from '../data';
+import { DataObject } from '../data';
 import { DataService } from './DataService';
 import { HashUtils } from '../utils/_internal/HashUtils';
 
@@ -25,11 +25,8 @@ export class NodeDataService<T extends NodeData | NodeData> extends DataService<
     }
 }
 
-@SerializableObject()
 export class NodeData {
-    @SerializableMember()
     uid: string;
-    @SerializableMember()
     data: any;
 
     constructor(uid?: string, data?: any) {
