@@ -132,7 +132,9 @@ describe('data', () => {
 
                 const refSpace = new ReferenceSpace(globalReferenceSpace).perspective(-0.5, 0.5, -0.5, 0.5, 2.0, 10.0);
                 corners.forEach((corner) => {
-                    const result = refSpace.transform(corner, true) as Absolute3DPosition;
+                    const result = refSpace.transform(corner, {
+                        inverse: true
+                    }) as Absolute3DPosition;
                     console.log(result.toVector3());
                 });
             });

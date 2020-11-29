@@ -122,7 +122,9 @@ export class DataObject {
      */
     public getPosition(referenceSpace?: Space): AbsolutePosition {
         if (referenceSpace !== undefined && this._position !== undefined) {
-            return referenceSpace.transform(this._position, true);
+            return referenceSpace.transform(this._position, {
+                inverse: true,
+            });
         } else {
             return this._position;
         }
@@ -135,7 +137,11 @@ export class DataObject {
      * @param {Space} referenceSpace (optional) reference space
      */
     public setPosition(position: AbsolutePosition, referenceSpace?: Space): void {
-        this._position = referenceSpace ? referenceSpace.transform(position, false) : position;
+        this._position = referenceSpace
+            ? referenceSpace.transform(position, {
+                  inverse: false,
+              })
+            : position;
     }
 
     /**

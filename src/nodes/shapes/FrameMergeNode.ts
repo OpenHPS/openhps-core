@@ -32,7 +32,9 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
      */
     private _start(): Promise<void> {
         return new Promise((resolve) => {
-            this._timer = setInterval(this._timerTick.bind(this), this._timeout);
+            if (this._timeout > 0) {
+                this._timer = setInterval(this._timerTick.bind(this), this._timeout);
+            }
             resolve();
         });
     }

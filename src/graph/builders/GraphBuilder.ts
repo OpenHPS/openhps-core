@@ -9,6 +9,7 @@ import {
     FrameFilterNode,
     ObjectMergeNode,
     MemoryBufferNode,
+    FrameCloneNode,
 } from '../../nodes/shapes';
 import { GraphShape } from '../GraphShape';
 import { ObjectFilterNode } from '../../nodes/shapes/ObjectFilterNode';
@@ -263,6 +264,10 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     public debounce(timeout = 100, timeoutUnit = TimeUnit.MILLISECOND): GraphShapeBuilder<Builder> {
         return this.via(new FrameDebounceNode(timeout, timeoutUnit));
+    }
+
+    public clone(): GraphShapeBuilder<Builder> {
+        return this.via(new FrameCloneNode());
     }
 
     /**

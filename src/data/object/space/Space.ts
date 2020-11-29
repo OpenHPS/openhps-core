@@ -47,10 +47,14 @@ export interface Space {
      * Transform a position
      *
      * @param {AbsolutePosition} position Position to transform
-     * @param {boolean} inverse Inverse transformation
+     * @param {SpaceTransformationOptions} [options] Transformation options
      * @returns {AbsolutePosition} Transformed position
      */
-    transform(position: AbsolutePosition, inverse: boolean): AbsolutePosition;
+    transform(position: AbsolutePosition, options?: SpaceTransformationOptions): AbsolutePosition;
 
     transformationMatrix: Matrix4;
+}
+
+export interface SpaceTransformationOptions {
+    inverse?: boolean;
 }

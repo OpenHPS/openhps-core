@@ -3,6 +3,7 @@ import { DataObject } from './object/DataObject';
 import { SerializableObject, SerializableMember, SerializableMapMember } from './decorators';
 import { ReferenceSpace } from './object';
 import { TimeService } from '../service';
+import { DataSerializer } from './DataSerializer';
 
 /**
  * Data frame that is passed through each node in a model.
@@ -115,5 +116,14 @@ export class DataFrame {
      */
     public removeObject(object: DataObject): void {
         this._objects.delete(object.uid);
+    }
+
+    /**
+     * Clone the data frame
+     *
+     * @returns {DataFrame} Cloned data frame
+     */
+    public clone(): this {
+        return DataSerializer.deserialize(DataSerializer.serialize(this));
     }
 }

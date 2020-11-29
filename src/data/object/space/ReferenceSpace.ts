@@ -1,5 +1,5 @@
 import { DataObject } from '../DataObject';
-import { Space } from './Space';
+import { Space, SpaceTransformationOptions } from './Space';
 import { SerializableObject, SerializableMember } from '../../decorators';
 import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder } from '../../../utils/math';
 import { AngleUnit } from '../../../utils';
@@ -118,17 +118,18 @@ export class ReferenceSpace extends DataObject implements Space {
      * Transform a position
      *
      * @param {AbsolutePosition} position Position to transform
-     * @param {boolean} inverse Inverse transformation
+     * @param {SpaceTransformationOptions} [options] Transformation options
      * @returns {AbsolutePosition} Transformed position
      */
-    public transform(position: AbsolutePosition, inverse = false): AbsolutePosition {
+    public transform(position: AbsolutePosition, options?: SpaceTransformationOptions): AbsolutePosition {
+        const config = options || {};
         const transformedPosition = position.clone();
 
-        const transformationMatrix = inverse
+        const transformationMatrix = config.inverse
             ? new Matrix4().getInverse(this._transformationMatrix)
             : this._transformationMatrix;
-        const rotation = inverse ? this._rotation.clone().inverse() : this._rotation;
-        const scale = inverse ? new Matrix4().getInverse(this._scaleMatrix) : this._scaleMatrix;
+        const rotation = config.inverse ? this._rotation.clone().inverse() : this._rotation;
+        const scale = config.inverse ? new Matrix4().getInverse(this._scaleMatrix) : this._scaleMatrix;
 
         // Transform the point using the transformation matrix
         transformedPosition.fromVector(transformedPosition.toVector3().applyMatrix4(transformationMatrix));
