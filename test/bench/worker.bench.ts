@@ -108,6 +108,16 @@ init().then(() => {
                 deferred.resolve();
             });
     }, settingsCreate)
+    .add("worker#computenode", (deferred: any) => {
+        const sink = model.getNodeByUID("sink") as CallbackSinkNode<any>;
+        sink.callback = (frame) => {
+            deferred.resolve();
+        };
+        Promise.resolve(model.push(frames[0]));
+    }, {
+        minSamples: 10,
+        defer: true
+    })
     .add("worker#none", (deferred: any) => {
         testFunction(model, deferred);
     }, {

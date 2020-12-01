@@ -1,4 +1,4 @@
-import { DataFrame, DataObject, DataSerializer, Node } from "../../../src";
+import { DataFrame, Node } from "../../../src";
 
 export class ComputingNode extends Node<DataFrame, DataFrame> {
     private _computations: number;
@@ -10,7 +10,7 @@ export class ComputingNode extends Node<DataFrame, DataFrame> {
     }
     
     public onPush(frame: DataFrame): Promise<void> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this.listPrimes(this._computations);
             const pushPromises = new Array();
             this.outputNodes.forEach(node => {

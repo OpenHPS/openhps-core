@@ -9,6 +9,7 @@ import {
     DataFrame,
     Absolute2DPosition,
     AbsolutePosition,
+    CallbackSinkNode,
 } from '../../../src';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 
@@ -41,6 +42,24 @@ describe('data', () => {
             expect(clone.displayName).to.equal('abc');
             expect(clone.getPosition()).to.not.be.undefined;
         });
+
+        it('should support listeners', (done) => {
+            const dataObject = new DataObject('123');
+            ModelBuilder.create()
+                .from()
+                .via(new CallbackNode(frame => {
+                    frame.source.displayName = "maxim";
+                }))
+                .to(new CallbackSinkNode())
+                .build().then(model => {
+                    dataObject.addListener(model, obj => {
+                        expect(obj.displayName).to.eq("maxim");
+                        done();
+                    });
+                    model.push(new DataFrame(dataObject));
+                });
+        });
+
     });
 
     describe('sensor object', () => {

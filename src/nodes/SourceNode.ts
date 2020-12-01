@@ -12,7 +12,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
     /**
      * Source data object responsible for generating data frames
      */
-    protected source: DataObject;
+    private _source: DataObject;
     protected options: SourceNodeOptions;
 
     /**
@@ -23,11 +23,49 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
      */
     constructor(source?: DataObject, options?: SourceNodeOptions) {
         super(options);
-        this.source = source || this.options.source;
+        this._source = source || this.options.source;
 
         this.options.persistence = this.options.persistence || true;
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
+
+        // Register for source changes
+        if (this._source) {
+            this.once('build', this._onRegisterService.bind(this));
+        }
+    }
+
+    /**
+     * Get the source data object
+     *
+     * @returns {DataObject} Source data object
+     */
+    public get source(): DataObject {
+        return this._source;
+    }
+
+    private _onRegisterService(): Promise<void> {
+        return new Promise<void>((resolve) => {
+            const service = (this.graph as Model).findDataService(this.source);
+            // Update source when modified
+            service.on('insert', (uid: string, object: DataObject) => {
+                if (uid === this.source.uid) {
+                    this._source = object;
+                }
+            });
+
+            // Update to the latest version
+            service
+                .findByUID(this.source.uid)
+                .then((object: DataObject) => {
+                    this._source = object;
+                    resolve();
+                })
+                .catch(() => {
+                    // Ignore, most likely not calibrated or stored yet
+                    resolve();
+                });
+        });
     }
 
     private _onPush(data: Out | Out[], options?: PushOptions): Promise<void> {
@@ -38,10 +76,10 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
             if (this.options.persistence) {
                 if (data instanceof Array) {
                     for (const f of data) {
-                        servicePromises.push(this._mergeFrame(f).then((f) => this.persistFrame(f)));
+                        servicePromises.push(this.mergeFrame(f).then((f) => this.persistFrame(f)));
                     }
                 } else {
-                    servicePromises.push(this._mergeFrame(data).then((f) => this.persistFrame(f)));
+                    servicePromises.push(this.mergeFrame(data).then((f) => this.persistFrame(f)));
                 }
             }
 
@@ -80,7 +118,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
         });
     }
 
-    private _mergeFrame(frame: DataFrame): Promise<DataFrame> {
+    protected mergeFrame(frame: DataFrame): Promise<DataFrame> {
         return new Promise<DataFrame>((resolve, reject) => {
             const model = this.graph as Model<any, any>;
             const defaultService = model.findDataService(DataObject);
@@ -103,7 +141,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
                                     objResolve();
                                 }
 
-                                object.merge(existingObject);
+                                this.mergeObject(object, existingObject);
                                 objResolve();
                             })
                             .catch(() => {
@@ -120,6 +158,35 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
                 })
                 .catch(reject);
         });
+    }
+
+    /**
+     * Merge an object
+     *
+     * @param {DataObject} newObject New object
+     * @param {DataObject} oldObject Existing object
+     * @returns {DataObject} Existing object
+     */
+    protected mergeObject(newObject: DataObject, oldObject: DataObject): DataObject {
+        newObject.displayName = newObject.displayName || oldObject.displayName;
+        newObject.position = newObject.position || oldObject.position;
+        newObject.parentUID = newObject.parentUID || oldObject.parentUID;
+        oldObject.relativePositions.forEach((relativePosition) => {
+            // Get the new relative position by its uid and type
+            const newPosition = newObject.getRelativePosition(
+                relativePosition.referenceObjectUID,
+                relativePosition.constructor.name,
+            );
+
+            if (newPosition && newPosition.timestamp < relativePosition.timestamp) {
+                // New object contains older relative position
+                newObject.addRelativePosition(relativePosition);
+            } else {
+                // New object does not contain stored relative position
+                newObject.addRelativePosition(relativePosition);
+            }
+        });
+        return newObject;
     }
 
     private _onPull(options?: PullOptions): Promise<void> {

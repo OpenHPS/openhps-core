@@ -209,7 +209,10 @@ describe('data', () => {
                     object.setPosition(new Absolute3DPosition(5, 5, 5), calibratedReferenceSpace);
                 };
 
-                Promise.resolve(model.push(new DataFrame(new DataObject('test'))))
+                Promise.resolve(model.findDataService(DataObject).findByUID('test'))
+                    .then(obj => {
+                        return model.push(new DataFrame(obj));
+                    })
                     .then(() => {
                         return model.findDataService(DataObject).findByUID('test');
                     })
@@ -258,7 +261,10 @@ describe('data', () => {
                     object.setPosition(currentPosition, calibratedReferenceSpace);
                 };
 
-                Promise.resolve(model.push(new DataFrame(new DataObject('test'))))
+                Promise.resolve(model.findDataService(DataObject).findByUID('test'))
+                    .then(obj => {
+                        return model.push(new DataFrame(obj));
+                    })
                     .then(() => {
                         return model.findDataService(DataObject).findByUID('test');
                     })

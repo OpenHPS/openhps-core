@@ -10,10 +10,7 @@ import {
     Absolute2DPosition,
     TrilaterationNode,
     CallbackSinkNode,
-    SourceMergeNode,
     TimeUnit,
-    WorkerNode,
-    DataSerializer,
     LengthUnit,
 } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';

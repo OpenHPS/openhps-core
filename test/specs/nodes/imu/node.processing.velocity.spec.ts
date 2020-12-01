@@ -321,14 +321,15 @@ describe('node', () => {
 
             model.push(frame).then(() => {
                 currentTime += 500;
-                model
-                    .push(new DataFrame(new DataObject('robot')))
-                    .then(() => {
-                        done();
-                    })
-                    .catch((ex) => {
-                        done(ex);
-                    });
+                model.findDataService(object).findByUID("robot").then(obj => {
+                    return model.push(new DataFrame(obj));
+                })
+                .then(() => {
+                    done();
+                })
+                .catch((ex) => {
+                    done(ex);
+                });
             });
         });
 
@@ -360,10 +361,11 @@ describe('node', () => {
                 for (let i = 1; i <= count; i++) {
                     currentTime = i * (1000 / count);
                     promise = promise.then(() =>
-                        model
-                            .push(new DataFrame(new DataObject('robot')))
-                            .then(() => {})
-                            .catch(done),
+                        model.findDataService(object).findByUID("robot").then(obj => {
+                            return model.push(new DataFrame(obj));
+                        })
+                        .then(() => {})
+                        .catch(done),
                     );
                 }
 

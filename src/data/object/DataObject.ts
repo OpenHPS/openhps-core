@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { DataSerializer } from '../DataSerializer';
 import { Space } from './space/Space';
 import { TimeService } from '../../service';
+import { Model } from '../../Model';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -47,31 +48,6 @@ export class DataObject {
         this.uid = uid;
         this.createdTimestamp = TimeService.now();
         this.displayName = displayName;
-    }
-
-    public merge(object: DataObject): DataObject {
-        if (this.displayName === undefined) this.displayName = object.displayName;
-        if (this.getPosition() === undefined && object.getPosition() !== undefined)
-            this.setPosition(object.getPosition().clone());
-        object._relativePositions.forEach((value: Map<string, RelativePosition<any>>, key: string) => {
-            const newRelativePositions = this._relativePositions.get(key);
-            if (newRelativePositions === undefined) {
-                this._relativePositions.set(key, value);
-            } else {
-                value.forEach((existingRelativePosition: RelativePosition<any>) => {
-                    const newRelativePosition = newRelativePositions.get(existingRelativePosition.constructor.name);
-                    if (!newRelativePosition) {
-                        this.addRelativePosition(existingRelativePosition);
-                    } else {
-                        // Check timestamp. If existing one is newer, override
-                        if (existingRelativePosition.timestamp > newRelativePosition.timestamp) {
-                            this.addRelativePosition(existingRelativePosition);
-                        }
-                    }
-                });
-            }
-        });
-        return this;
     }
 
     /**
@@ -221,9 +197,14 @@ export class DataObject {
         }
     }
 
-    public getRelativePosition(referenceObjectUID: string): RelativePosition<any> {
+    public getRelativePosition(referenceObjectUID: string, type?: string): RelativePosition<any> {
         if (this._relativePositions.has(referenceObjectUID)) {
-            return Array.from(this._relativePositions.get(referenceObjectUID).values())[0];
+            const positions = this._relativePositions.get(referenceObjectUID);
+            if (type) {
+                return positions.get(type);
+            } else {
+                return Array.from(positions.values())[0];
+            }
         } else {
             return undefined;
         }
@@ -240,5 +221,23 @@ export class DataObject {
      */
     public clone(): this {
         return DataSerializer.deserialize(DataSerializer.serialize(this));
+    }
+
+    /**
+     * Register a new listener for this data object
+     *
+     * @param {Model} model Model to fetch data services from
+     * @param {(object: DataObject) => void} callback Callback function
+     */
+    public addListener(model: Model, callback: (object: this) => void): void {
+        const service = model.findDataService(this);
+        if (!service) {
+            return;
+        }
+        service.on('insert', (uid: string, object: this) => {
+            if (uid === this.uid) {
+                callback(object);
+            }
+        });
     }
 }
