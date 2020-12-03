@@ -3,4 +3,5 @@ dist/
 docs/
 coverage/
 artifacts/
+src/utils/math/three/
 .nyc_output/
