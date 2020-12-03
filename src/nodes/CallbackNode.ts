@@ -1,5 +1,5 @@
 import { DataFrame } from '../data/DataFrame';
-import { Node } from '../Node';
+import { Node, NodeOptions } from '../Node';
 
 export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _pushCallback: (frame: InOut | InOut[]) => void;
@@ -8,8 +8,9 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     constructor(
         pushCallback: (frame: InOut | InOut[]) => void = () => true,
         pullCallback: () => InOut | InOut[] = () => null,
+        options?: NodeOptions,
     ) {
-        super();
+        super(options);
         this.pushCallback = pushCallback;
         this.pullCallback = pullCallback;
 

@@ -3,6 +3,12 @@ import { FilterQuery } from './FilterQuery';
 import { DataService } from './DataService';
 
 export class DataFrameService<T extends DataFrame> extends DataService<string, T> {
+    /**
+     * Find data frames that are being processed, containing an specific object
+     *
+     * @param {string} uid Data object uid
+     * @returns {DataFrame[]} Array of data frames
+     */
     public findByDataObjectUID(uid: string): Promise<T[]> {
         const filter: FilterQuery<any> = {
             _objects: {

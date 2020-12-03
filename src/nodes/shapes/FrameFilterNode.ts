@@ -1,11 +1,11 @@
 import { DataFrame } from '../../data';
-import { ProcessingNode } from '../ProcessingNode';
+import { ProcessingNode, ProcessingNodeOptions } from '../ProcessingNode';
 
 export class FrameFilterNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
     private _filterFn: (frame: InOut) => boolean;
 
-    constructor(filterFn: (frame: InOut) => boolean) {
-        super();
+    constructor(filterFn: (frame: InOut) => boolean, options?: ProcessingNodeOptions) {
+        super(options);
         this._filterFn = filterFn;
     }
 

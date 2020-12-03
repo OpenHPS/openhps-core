@@ -4,6 +4,10 @@ import { HashUtils } from '../../utils/_internal/HashUtils';
 
 @SerializableObject()
 export class Fingerprint extends DataObject {
+    constructor(displayName?: string) {
+        super(null, displayName);
+    }
+
     @SerializableMember()
     public get uid(): string {
         return HashUtils.hash(
@@ -15,6 +19,8 @@ export class Fingerprint extends DataObject {
     }
 
     public set uid(value: string) {
-        // no
+        if (value) {
+            throw new Error(`The uid of a fingerprint can not be set manually!`);
+        }
     }
 }

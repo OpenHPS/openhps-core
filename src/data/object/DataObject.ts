@@ -184,7 +184,7 @@ export class DataObject {
     /**
      * Get relative positions for a different target
      *
-     * @param {string} referenceObjectUID Reference object identifier
+     * @param {string} [referenceObjectUID] Reference object identifier
      * @returns {RelativePosition[]} Array of relative positions for the reference object
      */
     public getRelativePositions(referenceObjectUID?: string): RelativePosition<any>[] {
@@ -197,6 +197,13 @@ export class DataObject {
         }
     }
 
+    /**
+     * Get relative position of a specified object
+     *
+     * @param {string} referenceObjectUID Reference object identifier
+     * @param {string} type Constructor type of the relative position
+     * @returns {RelativePosition} Relative position to reference object
+     */
     public getRelativePosition(referenceObjectUID: string, type?: string): RelativePosition<any> {
         if (this._relativePositions.has(referenceObjectUID)) {
             const positions = this._relativePositions.get(referenceObjectUID);

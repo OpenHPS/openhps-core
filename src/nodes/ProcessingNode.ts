@@ -13,11 +13,9 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
 > {
     protected options: ProcessingNodeOptions;
 
-    private _frameFilter: (frame: DataFrame) => boolean = () => true;
-
     constructor(options?: ProcessingNodeOptions) {
         super(options);
-        this._frameFilter = this.options.frameFilter || this._frameFilter;
+        this.options.frameFilter = this.options.frameFilter || (() => true);
         this.on('push', this._onPush.bind(this));
     }
 
@@ -27,10 +25,10 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
             const processPromises: Array<Promise<Out>> = [];
 
             if (Array.isArray(frame)) {
-                frame.filter(this._frameFilter).forEach((f) => {
+                frame.filter(this.options.frameFilter).forEach((f) => {
                     processPromises.push(this.process(f, options));
                 });
-            } else if (this._frameFilter(frame)) {
+            } else if (this.options.frameFilter(frame)) {
                 processPromises.push(this.process(frame, options));
             }
 

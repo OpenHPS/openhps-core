@@ -9,11 +9,11 @@ module.exports = env => [
   {
     name: PROJECT_NAME,
     mode: env.prod ? "production" : "development",
-    entry: './dist/index.js',
+    entry: './dist/cjs/index.js',
     devtool: 'source-map',
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: `${PROJECT_NAME}${env.prod ? ".min" : ""}.js`,
+      filename: `web/${PROJECT_NAME}${env.prod ? ".min" : ""}.js`,
       library: LIBRARY_NAME,
       libraryTarget: 'umd',
       umdNamedDefine: true,
@@ -24,7 +24,7 @@ module.exports = env => [
         'typedjson': `typedjson/js/typedjson${env.prod ? ".min" : ""}.js`,
       }
     },
-    externals: ['microtime'],
+    externals: ['microtime', 'typescript'],
     optimization: {
       minimize: env.prod,
       minimizer: [
@@ -49,12 +49,12 @@ module.exports = env => [
   }, {
     name:`${PROJECT_NAME}-worker`,
     mode: env.prod ? "production" : "development",
-    entry: './dist/nodes/_internal/WorkerNodeRunner.js',
+    entry: './dist/cjs/nodes/_internal/WorkerNodeRunner.js',
     devtool: 'source-map',
     externals: {'../../': LIBRARY_NAME, 'microtime': 'microtime'},
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: `worker.${PROJECT_NAME}${env.prod ? ".min" : ""}.js`,
+      filename: `web/worker.${PROJECT_NAME}${env.prod ? ".min" : ""}.js`,
       library: LIBRARY_NAME,
       libraryTarget: 'umd',
       umdNamedDefine: true,

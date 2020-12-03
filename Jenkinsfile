@@ -7,7 +7,8 @@ pipeline {
                 sh 'npm install'
                 sh 'npm run clean'
                 sh 'npm run build:three'
-                sh 'npm run build:typescript'
+                sh 'npm run build:cjs'
+                sh 'npm run build:esm'
                 sh 'npm run build:webpack'
             }
         }
@@ -71,14 +72,14 @@ pipeline {
                 reportFiles: '*.*',
                 reportName: "Documentation"
             ])
-            archiveArtifacts artifacts: 'dist/openhps-core.js', fingerprint: true
-            archiveArtifacts artifacts: 'dist/openhps-core.js.map', fingerprint: true
-            archiveArtifacts artifacts: 'dist/openhps-core.min.js', fingerprint: true
-            archiveArtifacts artifacts: 'dist/openhps-core.min.js.map', fingerprint: true
-            archiveArtifacts artifacts: 'dist/worker.openhps-core.js', fingerprint: true
-            archiveArtifacts artifacts: 'dist/worker.openhps-core.js.map', fingerprint: true
-            archiveArtifacts artifacts: 'dist/worker.openhps-core.min.js', fingerprint: true
-            archiveArtifacts artifacts: 'dist/worker.openhps-core.min.js.map', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-core.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-core.js.map', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-core.min.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-core.min.js.map', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/worker.openhps-core.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/worker.openhps-core.js.map', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/worker.openhps-core.min.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/worker.openhps-core.min.js.map', fingerprint: true
             deleteDir()
         }
     }

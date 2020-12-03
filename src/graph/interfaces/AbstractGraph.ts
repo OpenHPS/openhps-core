@@ -27,4 +27,6 @@ export interface AbstractGraph<In extends DataFrame, Out extends DataFrame> exte
      * Get all the nodes in the graph
      */
     nodes: Array<AbstractNode<any, any>>;
+
+    logger: (level: string, log: any) => void;
 }
