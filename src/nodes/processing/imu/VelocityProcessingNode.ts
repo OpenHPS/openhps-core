@@ -2,7 +2,6 @@ import { DataFrame, DataObject } from '../../../data';
 import { ObjectProcessingNode } from '../../ObjectProcessingNode';
 import { TimeUnit, LengthUnit } from '../../../utils';
 import { TimeService } from '../../../service';
-import { Model } from '../../../Model';
 import { Matrix4, Vector3, Quaternion, AxisAngle } from '../../../utils/math';
 
 /**

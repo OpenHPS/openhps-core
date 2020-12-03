@@ -292,8 +292,4 @@ describe('model', () => {
                 });
         });
     });
-
-    describe('serialization', () => {
-
-    });
 });

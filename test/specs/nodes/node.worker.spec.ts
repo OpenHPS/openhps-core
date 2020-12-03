@@ -26,7 +26,6 @@ describe('node', () => {
                         {
                             directory: __dirname,
                             poolSize: 1,
-                            debug: true,
                         },
                     ),
                 )
@@ -79,8 +78,7 @@ describe('node', () => {
                         },
                         {
                             directory: __dirname,
-                            poolSize: 2,
-                            debug: true,
+                            poolSize: 2
                         },
                     ),
                 )
@@ -134,7 +132,6 @@ describe('node', () => {
                         {
                             directory: __dirname,
                             poolSize: 3,
-                            debug: true,
                         },
                     ),
                 )
@@ -187,7 +184,6 @@ describe('node', () => {
                         {
                             directory: __dirname,
                             poolSize: 1,
-                            debug: true,
                         },
                     ),
                 )

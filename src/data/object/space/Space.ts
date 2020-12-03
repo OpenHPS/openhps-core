@@ -25,7 +25,7 @@ export interface Space {
      * @param {number} kX Scale of X-axis
      * @param {number} kY Scale of Y-axis
      * @param {number} kZ Scale of Z-axis
-     * @returns {ReferenceSpace} Reference space instance
+     * @returns {Space} Reference space instance
      */
     scale(kX: number, kY: number, kZ?: number): Space;
 

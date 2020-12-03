@@ -18,7 +18,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
     /**
      * Construct a new source node
      *
-     * @param {DataObject} source Source data object
+     * @param {DataObject} [source] Source data object
      * @param {Object} [options=undefined] Source node options
      */
     constructor(source?: DataObject, options?: SourceNodeOptions) {

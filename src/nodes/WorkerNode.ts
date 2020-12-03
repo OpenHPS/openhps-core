@@ -66,12 +66,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         this._builderCallback = builderCallback;
 
         // NOTE: We can not use a conditional expression as this breaks the webpack threads plugin
-        // eslint-disable-next-line
-        if (this.options && this.options.debug) {
-            this._worker = new Worker('./_internal/WorkerNodeRunnerDebug');
-        } else {
-            this._worker = new Worker(this.options.worker);
-        }
+        this._worker = new Worker(this.options.worker);
 
         if (typeof process.env.NODE_ENV === 'undefined') {
             // eslint-disable-next-line
@@ -293,7 +288,6 @@ export interface WorkerNodeOptions extends NodeOptions {
      */
     poolConcurrency?: number;
     optimizedPull?: boolean;
-    debug?: boolean;
     /**
      * Worker runner file. When running in the browser, this is the js file named
      * ```worker.openhps-core.min.js```

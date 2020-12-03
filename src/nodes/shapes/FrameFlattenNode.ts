@@ -1,9 +1,9 @@
 import { DataFrame } from '../../data';
-import { Node } from '../../Node';
+import { Node, NodeOptions } from '../../Node';
 
 export class FrameFlattenNode<InOut extends DataFrame> extends Node<InOut, InOut> {
-    constructor() {
-        super();
+    constructor(options?: NodeOptions) {
+        super(options);
         this.on('push', this._onPush.bind(this));
     }
 

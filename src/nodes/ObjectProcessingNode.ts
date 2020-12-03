@@ -9,11 +9,10 @@ import { GraphOptions } from '../graph';
  */
 export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> extends ProcessingNode<InOut, InOut> {
     protected options: ObjectProcessingNodeOptions;
-    private _objectFilter?: (object: DataObject, frame?: DataFrame) => boolean = () => true;
 
     constructor(options?: ObjectProcessingNodeOptions) {
         super(options);
-        this._objectFilter = this.options.objectFilter || this._objectFilter;
+        this.options.objectFilter = this.options.objectFilter || (() => true);
     }
 
     public process(frame: InOut, options?: GraphOptions): Promise<InOut> {
@@ -21,7 +20,7 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
             const processObjectPromises: Array<Promise<DataObject>> = [];
             frame
                 .getObjects()
-                .filter((value) => this._objectFilter(value, frame))
+                .filter((value) => this.options.objectFilter(value, frame))
                 .forEach((object) => {
                     processObjectPromises.push(this.processObject(object, frame, options));
                 });
