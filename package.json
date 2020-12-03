@@ -116,7 +116,8 @@
       "test",
       "src/**/_internal/Worker*.ts",
       "src/**/WorkerService.ts",
-      "src/service/_internal/DummyDataService.ts"
+      "src/service/_internal/DummyDataService.ts",
+      "src/utils/math/three/**"
     ],
     "extension": [
       ".ts"
