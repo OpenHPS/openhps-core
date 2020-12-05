@@ -11,6 +11,7 @@ import {
     CallbackNode,
     CallbackSinkNode,
     ProcessingNode,
+    Model,
 } from '../../src';
 
 describe('model', () => {
@@ -292,4 +293,26 @@ describe('model', () => {
                 });
         });
     });
+
+    describe('pulling', () => {
+        it('should pull multiple frames through the options', (done) => {
+            let count = 0;
+            ModelBuilder.create()
+                .from(new CallbackSourceNode(() => {
+                    return new DataFrame();
+                }))
+                .to(new CallbackSinkNode(frame => {
+                    count++;
+                    if (count === 3){
+                        done();
+                    }
+                }))
+                .build().then((model: Model) => {
+                    return model.pull({
+                        count: 3
+                    });
+                });
+        });
+    });
+
 });

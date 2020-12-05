@@ -9,6 +9,7 @@
         "declaration": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
+        "sourceMap": false
     },
     "transpileOnline": true
 }

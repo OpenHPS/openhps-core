@@ -62,19 +62,18 @@ describe('units', () => {
             expect(deserializedUnit.definitions[0]).to.not.be.undefined;
         });
 
-        // it('should not deserialize an unknown unit', (done) => {
-        //     const serialized = {
-        //         name: "abc",
-        //         __type: "Unit"
-        //     };
-        //     try {
-        //         const deserialized = DataSerializer.deserialize(serialized);
-        //         console.log(deserialized);
-        //         done(`No error thrown!`);
-        //     } catch (ex) {
-        //         done();
-        //     }
-        // });
+        it('should not deserialize an unknown unit', (done) => {
+            const serialized = {
+                name: "abc",
+                __type: "Unit"
+            };
+            try {
+                const deserialized = DataSerializer.deserialize(serialized);
+                done(`No error thrown!`);
+            } catch (ex) {
+                done();
+            }
+        });
     });
 
     describe('parsing', () => {

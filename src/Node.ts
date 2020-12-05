@@ -84,7 +84,7 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
         return new Promise<void>((resolve, reject) => {
             const callbackPromises: Array<Promise<void>> = [];
             this.listeners('pull').forEach((callback) => {
-                callbackPromises.push(callback());
+                callbackPromises.push(callback(options));
             });
 
             if (callbackPromises.length === 0) {
@@ -120,7 +120,7 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
 
             const callbackPromises: Array<Promise<void>> = [];
             this.listeners('push').forEach((callback) => {
-                callbackPromises.push(callback(frame));
+                callbackPromises.push(callback(frame, options));
             });
 
             if (callbackPromises.length === 0) {

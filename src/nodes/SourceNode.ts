@@ -189,21 +189,27 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
         return newObject;
     }
 
-    private _onPull(options?: PullOptions): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            this.onPull()
-                .then((frame) => {
-                    if (frame !== undefined && frame !== null) {
-                        return this.push(frame, options);
-                    } else {
-                        resolve();
-                    }
-                })
-                .then(() => {
-                    resolve();
-                })
-                .catch(reject);
-        });
+    private _onPull(options: PullOptions = {}): Promise<void> {
+        const count = options.count || 1;
+        let promise = Promise.resolve();
+        for (let i = 0; i < count; i++) {
+            promise = promise.then(
+                () =>
+                    new Promise((resolve, reject) => {
+                        this.onPull()
+                            .then((frame) => {
+                                if (frame !== undefined && frame !== null) {
+                                    return this.push(frame, options);
+                                } else {
+                                    resolve();
+                                }
+                            })
+                            .then(resolve)
+                            .catch(reject);
+                    }),
+            );
+        }
+        return promise;
     }
 
     public abstract onPull(): Promise<Out>;

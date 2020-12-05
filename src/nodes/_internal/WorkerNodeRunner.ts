@@ -16,6 +16,7 @@ import {
 import { Subject, Observable } from 'threads/observable';
 import { expose } from 'threads';
 import { DummyDataService, DummyService } from '../../service/_internal/';
+import { PullOptions, PushOptions } from '../../graph';
 
 let model: Model<any, any>;
 const input: Subject<void> = new Subject();
@@ -117,19 +118,21 @@ expose({
     /**
      * Pull from this work
      *
+     * @param {PullOptions} [options] Pull options
      * @returns {Promise<void>} Pull promise
      */
-    pull(): Promise<void> {
-        return model.pull();
+    pull(options?: PullOptions): Promise<void> {
+        return model.pull(options);
     },
     /**
      * Push to this worker
      *
-     * @param {any} frame Data frame
+     * @param {DataFrame} frame Data frame
+     * @param {PushOptions} [options] Push options
      * @returns {Promise<void>} Push promise
      */
-    push(frame: any): Promise<void> {
-        return model.push(DataSerializer.deserialize(frame));
+    push(frame: DataFrame, options?: PushOptions): Promise<void> {
+        return model.push(DataSerializer.deserialize(frame), options);
     },
     /**
      * Input observable for pull requests

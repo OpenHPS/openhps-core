@@ -33,7 +33,7 @@ module.exports = env => [
           parallel: true,
           terserOptions: {
             keep_classnames: true,
-            keep_fnames: true
+            keep_fnames: true,
           }
         })
       ],
