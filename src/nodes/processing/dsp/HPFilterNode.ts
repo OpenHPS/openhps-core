@@ -4,7 +4,7 @@ import { Vector } from '../../../utils';
 import { PropertyFilterProcessingNode } from './PropertyFilterProcessingNode';
 
 export class HPFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
-    constructor(propertySelector: (object: DataObject, frame?: InOut) => PropertyKey, options: HPFilterOptions) {
+    constructor(propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey], options: HPFilterOptions) {
         super(propertySelector, options);
     }
 

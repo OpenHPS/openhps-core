@@ -33,7 +33,7 @@ describe('node', () => {
                 .via(
                     new HPFilterNode(
                         (object: DummyDataFilterObject) => {
-                            return 'reading';
+                            return [object, 'reading'];
                         },
                         {
                             cutOff: 0.5,

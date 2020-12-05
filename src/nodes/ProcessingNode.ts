@@ -88,12 +88,7 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
      */
     protected getNodeData(dataObject: DataObject): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.findNodeDataService()
-                .findData(this.uid, dataObject)
-                .then((data) => {
-                    resolve(data);
-                })
-                .catch(reject);
+            this.findNodeDataService().findData(this.uid, dataObject).then(resolve).catch(reject);
         });
     }
 

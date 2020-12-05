@@ -4,7 +4,10 @@ import { PropertyFilterProcessingNode } from './PropertyFilterProcessingNode';
 import { FilterProcessingOptions } from './FilterProcessingNode';
 
 export class EMAFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
-    constructor(propertySelector: (object: DataObject, frame?: InOut) => PropertyKey, options: EMAFilterOptions) {
+    constructor(
+        propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey],
+        options: EMAFilterOptions,
+    ) {
         super(propertySelector, options);
     }
 

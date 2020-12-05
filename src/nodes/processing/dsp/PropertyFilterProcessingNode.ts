@@ -4,10 +4,10 @@ import { ObjectProcessingNode } from '../../ObjectProcessingNode';
 import { Vector3 } from '../../../utils';
 
 export abstract class PropertyFilterProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
-    private _propertySelector: (object: DataObject, frame?: InOut) => PropertyKey;
+    private _propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey];
 
     constructor(
-        propertySelector: (object: DataObject, frame?: InOut) => PropertyKey,
+        propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey],
         options?: FilterProcessingOptions,
     ) {
         super(options);
@@ -17,11 +17,11 @@ export abstract class PropertyFilterProcessingNode<InOut extends DataFrame> exte
     public processObject(object: DataObject, frame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             // Extract all sensor values from the frame
-            const propertyKey = this._propertySelector(object, frame);
-            const property = (object as any)[propertyKey];
-            Promise.resolve(this._filterValue(object, propertyKey, property))
+            const [obj, propertyKey] = this._propertySelector(object, frame);
+            const property = obj[propertyKey];
+            Promise.resolve(this._filterValue(obj, propertyKey, property))
                 .then((value: number) => {
-                    (object as any)[propertyKey] = value;
+                    obj[propertyKey] = value;
                     resolve(object);
                 })
                 .catch((ex) => {

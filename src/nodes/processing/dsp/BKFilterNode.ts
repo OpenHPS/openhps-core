@@ -7,7 +7,10 @@ import { Vector3 } from '../../../utils';
  * Basic Kalman Filter processing node
  */
 export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
-    constructor(propertySelector: (object: DataObject, frame?: InOut) => PropertyKey, options: KalmanFilterOptions) {
+    constructor(
+        propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey],
+        options: KalmanFilterOptions,
+    ) {
         super(propertySelector, options);
     }
 

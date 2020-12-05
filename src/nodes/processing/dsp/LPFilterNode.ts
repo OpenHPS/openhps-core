@@ -4,7 +4,7 @@ import { Vector } from '../../../utils';
 import { FilterProcessingOptions } from './FilterProcessingNode';
 
 export class LPFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
-    constructor(propertySelector: (object: DataObject, frame?: InOut) => PropertyKey, options: LPFilterOptions) {
+    constructor(propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey], options: LPFilterOptions) {
         super(propertySelector, options);
     }
 

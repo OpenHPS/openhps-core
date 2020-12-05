@@ -29,7 +29,7 @@ describe('node', () => {
                 .via(
                     new BKFilterNode(
                         (object: DummyDataFilterObject) => {
-                            return 'reading';
+                            return [object, 'reading'];
                         },
                         {
                             R: 1,

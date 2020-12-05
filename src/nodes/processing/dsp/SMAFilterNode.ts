@@ -4,7 +4,10 @@ import { DataFrame, DataObject } from '../../../data';
 import { Vector } from '../../../utils';
 
 export class SMAFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
-    constructor(propertySelector: (object: DataObject, frame?: InOut) => PropertyKey, options: SMAFilterOptions) {
+    constructor(
+        propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey],
+        options: SMAFilterOptions,
+    ) {
         super(propertySelector, options);
     }
 
