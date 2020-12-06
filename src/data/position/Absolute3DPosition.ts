@@ -39,7 +39,7 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
      * Position accuracy
      */
     @SerializableMember()
-    public accuracy = 0;
+    public accuracy: number;
 
     /**
      * Midpoint to another location

@@ -120,8 +120,19 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
      */
     public mergeObjects(objects: DataObject[]): DataObject {
         const baseObject = objects[0];
+
+        // Relative positions
+        for (let i = 1; i < objects.length; i++) {
+            objects[i].getRelativePositions().forEach((relativePos) => {
+                baseObject.addRelativePosition(relativePos);
+            });
+        }
+
         // Weighted position merging
         const positions = objects.map((object) => object.getPosition()).filter((position) => position !== undefined);
+        if (positions.length === 0) {
+            return baseObject;
+        }
         const baseUnit = positions[0].unit;
         const accuracyMax = positions.sort((a, b) => a.accuracy - b.accuracy)[0].accuracy + 1;
         const newPosition: AbsolutePosition = positions[0].clone();
@@ -137,12 +148,6 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
         }
         newPosition.fromVector(newPosition.toVector3().divideScalar(newPosition.accuracy));
         baseObject.setPosition(newPosition);
-        // Relative positions
-        for (let i = 1; i < objects.length; i++) {
-            objects[i].getRelativePositions().forEach((relativePos) => {
-                baseObject.addRelativePosition(relativePos);
-            });
-        }
         return baseObject;
     }
 

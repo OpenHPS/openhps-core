@@ -40,7 +40,7 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
      * Position accuracy
      */
     @SerializableMember()
-    public accuracy = 0;
+    public accuracy: number;
 
     /**
      * Midpoint to another location

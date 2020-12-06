@@ -81,8 +81,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
     /**
      * Add graph shape to graph
      *
-     * @param {GraphBuilder | AbstractGraph} graph Graph builder or abstract graph
-     * @param shape
+     * @param {GraphBuilder | AbstractGraph} shape Graph builder or abstract graph
      * @returns {GraphBuilder} Current graph builder instance
      */
     public addShape(shape: GraphBuilder<any, any> | AbstractGraph<any, any>): GraphBuilder<In, Out> {

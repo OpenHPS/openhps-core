@@ -2,7 +2,7 @@ import { DataFrame, DataObject } from '../data';
 import { Node, NodeOptions } from '../Node';
 import { NodeDataService, NodeData } from '../service';
 import { Model } from '../Model';
-import { GraphOptions, PushOptions } from '../graph';
+import { PushOptions } from '../graph';
 
 /**
  * Processing node
