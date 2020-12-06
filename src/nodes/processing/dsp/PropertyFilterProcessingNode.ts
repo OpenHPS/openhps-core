@@ -19,14 +19,12 @@ export abstract class PropertyFilterProcessingNode<InOut extends DataFrame> exte
             // Extract all sensor values from the frame
             const [obj, propertyKey] = this._propertySelector(object, frame);
             const property = obj[propertyKey];
-            Promise.resolve(this._filterValue(obj, propertyKey, property))
+            this._filterValue(object, propertyKey, property)
                 .then((value: number) => {
                     obj[propertyKey] = value;
                     resolve(object);
                 })
-                .catch((ex) => {
-                    reject(ex);
-                });
+                .catch(reject);
         });
     }
 
@@ -43,19 +41,13 @@ export abstract class PropertyFilterProcessingNode<InOut extends DataFrame> exte
                     }
 
                     this.filter(object, value, nodeData[key], this.options)
-                        .then((result) => {
-                            resolve(result);
-                        })
-                        .catch((ex) => {
-                            reject(ex);
-                        })
+                        .then(resolve)
+                        .catch(reject)
                         .finally(() => {
                             this.setNodeData(object, nodeData);
                         });
                 })
-                .catch((ex) => {
-                    reject(ex);
-                });
+                .catch(reject);
         });
     }
 
