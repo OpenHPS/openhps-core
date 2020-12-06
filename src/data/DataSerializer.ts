@@ -1,5 +1,6 @@
 import { TypedJSON } from 'typedjson';
 import { Deserializer } from 'typedjson/js/typedjson/deserializer';
+import { Serializer } from 'typedjson/js/typedjson/serializer';
 
 /**
  * Data serializer allows the serialization of objects using the [[SerializableObject]] decorator.
@@ -76,9 +77,21 @@ export class DataSerializer {
     }
 
     protected static serializeObject<T>(data: T, dataType: new () => T): any {
-        const serialized = new TypedJSON(dataType as new () => T).toPlainJson(data) as any;
-        serialized['__type'] = dataType.name;
-        return serialized;
+        const typedJSON = new TypedJSON(dataType as new () => T);
+        const serializer: Serializer = (typedJSON as any).serializer;
+        // Error callback throwing does not work, capture error and put in 'error' variable
+        // TODO: Fix this, this is ugly
+        let error = undefined;
+        serializer.setErrorHandler((ex) => {
+            error = ex;
+        });
+        const serialized = typedJSON.toPlainJson(data) as any;
+        if (error) {
+            throw error;
+        } else {
+            serialized['__type'] = dataType.name;
+            return serialized;
+        }
     }
 
     /**

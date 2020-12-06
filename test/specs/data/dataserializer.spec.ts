@@ -27,6 +27,17 @@ describe('dataserializer', () => {
             expect(serialized.__type).to.equal('DataObject');
             DataSerializer.registerType(DataObject);
         });
+
+        it('should throw an error when serializing fails', (done) => {
+            const obj = new DataObject();
+            (obj as any).createdTimestamp = { test: "abc" };
+            try {
+                DataSerializer.serialize(obj);
+                done('No error thrown!');
+            } catch (ex) {
+                done();
+            }
+        });
     });
 
     describe('deserializing', () => {
