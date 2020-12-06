@@ -39,12 +39,7 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
      * Position accuracy
      */
     @SerializableMember()
-    public accuracy: number;
-    /**
-     * Position accuracy unit
-     */
-    @SerializableMember()
-    public accuracyUnit: LengthUnit = LengthUnit.METER;
+    public accuracy = 0;
 
     /**
      * Midpoint to another location
@@ -98,7 +93,6 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
         const position = new Absolute3DPosition(this.x, this.y, this.z);
         position.unit = this.unit;
         position.accuracy = this.accuracy;
-        position.accuracyUnit = this.accuracyUnit;
         position.orientation = this.orientation.clone();
         position.velocity = this.velocity.clone();
         position.timestamp = this.timestamp;

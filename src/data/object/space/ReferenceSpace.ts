@@ -123,6 +123,7 @@ export class ReferenceSpace extends DataObject implements Space {
      */
     public transform(position: AbsolutePosition, options?: SpaceTransformationOptions): AbsolutePosition {
         const config = options || {};
+        // Clone the position
         const transformedPosition = position.clone();
 
         const transformationMatrix = config.inverse

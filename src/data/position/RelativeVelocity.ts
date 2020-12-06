@@ -1,7 +1,6 @@
 import { RelativePosition } from './RelativePosition';
 import { SerializableObject, SerializableMember } from '../decorators';
 import { Velocity } from './Velocity';
-import { LengthUnit } from '../../utils';
 import { DataSerializer } from '../DataSerializer';
 import { TimeService } from '../../service';
 
@@ -27,8 +26,6 @@ export class RelativeVelocity implements RelativePosition<Velocity> {
      */
     @SerializableMember()
     public accuracy: number;
-    @SerializableMember()
-    public accuracyUnit: LengthUnit = LengthUnit.METER;
     @SerializableMember()
     public velocity: Velocity;
 

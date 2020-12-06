@@ -211,7 +211,6 @@ export class GeographicalPosition extends Absolute3DPosition {
         const position = new GeographicalPosition(this.latitude, this.longitude, this.altitude);
         position.unit = this.unit;
         position.accuracy = this.accuracy;
-        position.accuracyUnit = this.accuracyUnit;
         position.orientation = this.orientation.clone();
         position.altitudeUnit = this.altitudeUnit;
         position.velocity = this.velocity.clone();

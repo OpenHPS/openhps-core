@@ -1,25 +1,37 @@
-import { DataFrame } from '../../data';
-import { ProcessingNode } from '../ProcessingNode';
+import { AbsolutePosition, DataFrame, DataObject } from '../../data';
+import { ProcessingNode, ProcessingNodeOptions } from '../ProcessingNode';
 import { TimeUnit } from '../../utils';
+import { TimeService } from '../../service';
+import { PushOptions } from '../../graph';
+import { ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
 
+/**
+ * ## Usage
+ * ```typescript
+ * new FrameMergeNode();
+ * ```
+ */
 export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
     private _queue: Map<any, QueuedMerge<InOut>> = new Map();
     private _timeout: number;
     private _timer: NodeJS.Timeout;
-    private _mergeFn: (frame: InOut) => any;
-    private _groupFn: (frame: InOut) => any;
+    private _mergeKeyFn: (frame: InOut, options?: PushOptions) => any;
+    private _groupFn: (frame: InOut, options?: PushOptions) => any;
+    protected options: FrameMergeOptions;
 
     constructor(
-        mergeFn: (frame: InOut) => any,
-        groupFn: (frame: InOut) => any,
-        timeout: number,
-        timeoutUnit: TimeUnit,
+        mergeFn: (frame: InOut, options?: PushOptions) => any,
+        groupFn: (frame: InOut, options?: PushOptions) => any,
+        options?: FrameMergeOptions,
     ) {
-        super();
-        this._mergeFn = mergeFn;
+        super(options);
+        this._mergeKeyFn = mergeFn;
         this._groupFn = groupFn;
 
-        this._timeout = timeoutUnit.convert(timeout, TimeUnit.MILLISECOND);
+        this.options.timeout = this.options.timeout || 100;
+        this.options.timeoutUnit = this.options.timeoutUnit || TimeUnit.MILLISECOND;
+
+        this._timeout = this.options.timeoutUnit.convert(this.options.timeout, TimeUnit.MILLISECOND);
 
         this.once('build', this._start.bind(this));
         this.once('destroy', this._stop.bind(this));
@@ -70,35 +82,68 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
         }
     }
 
-    public process(frame: InOut): Promise<InOut> {
+    public process(frame: InOut, options?: PushOptions): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
-            const merge = this._mergeFn(frame);
+            // Merge key(s)
+            const merge = this._mergeKeyFn(frame, options);
             if (merge === undefined) {
                 return resolve(undefined);
             }
             (Array.isArray(merge) ? merge : [merge]).forEach((key) => {
                 let queue = this._queue.get(key);
                 if (queue === undefined) {
+                    // Create a new queued data frame based on the key
                     queue = new QueuedMerge(key);
-                    queue.frames.set(this._groupFn(frame), frame);
+                    // Group the frames by the grouping function
+                    queue.frames.set(this._groupFn(frame, options), frame);
                     this._queue.set(key, queue);
                     resolve(undefined);
                 } else {
-                    queue.frames.set(this._groupFn(frame), frame);
+                    queue.frames.set(this._groupFn(frame, options), frame);
                     // Check if there are enough frames
                     if (queue.frames.size >= this.inputNodes.length) {
                         this._queue.delete(key);
-                        this.merge(Array.from(queue.frames.values()), key)
-                            .then((mergedFrame) => {
-                                resolve(mergedFrame);
-                            })
-                            .catch(reject);
+                        this.merge(Array.from(queue.frames.values()), key).then(resolve).catch(reject);
                     } else {
                         resolve(undefined);
                     }
                 }
             });
         });
+    }
+
+    /**
+     * Merge multiple data objects together
+     *
+     * @param {DataObject[]} objects Data objects
+     * @returns {DataObject} Merged data object
+     */
+    public mergeObjects(objects: DataObject[]): DataObject {
+        const baseObject = objects[0];
+        // Weighted position merging
+        const positions = objects.map((object) => object.getPosition()).filter((position) => position !== undefined);
+        const baseUnit = positions[0].unit;
+        const accuracyMax = positions.sort((a, b) => a.accuracy - b.accuracy)[0].accuracy + 1;
+        const newPosition: AbsolutePosition = positions[0].clone();
+        newPosition.fromVector(newPosition.toVector3().multiplyScalar(accuracyMax - newPosition.accuracy));
+        newPosition.accuracy = accuracyMax - newPosition.accuracy;
+        for (let i = 1; i < positions.length; i++) {
+            newPosition.fromVector(
+                newPosition
+                    .toVector3()
+                    .add(positions[i].toVector3(baseUnit).multiplyScalar(accuracyMax - positions[i].accuracy)),
+            );
+            newPosition.accuracy += accuracyMax - positions[i].accuracy;
+        }
+        newPosition.fromVector(newPosition.toVector3().divideScalar(newPosition.accuracy));
+        baseObject.setPosition(newPosition);
+        // Relative positions
+        for (let i = 1; i < objects.length; i++) {
+            objects[i].getRelativePositions().forEach((relativePos) => {
+                baseObject.addRelativePosition(relativePos);
+            });
+        }
+        return baseObject;
     }
 
     /**
@@ -112,25 +157,24 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
     public merge(frames: InOut[], key?: string): Promise<InOut> {
         return new Promise<InOut>((resolve) => {
             const mergedFrame = frames[0];
+            const mergedObjects: Map<string, DataObject[]> = new Map();
+            mergedFrame.getObjects().forEach((object) => {
+                if (mergedObjects.get(object.uid)) {
+                    mergedObjects.get(object.uid).push(object);
+                } else {
+                    mergedObjects.set(object.uid, [object]);
+                }
+            });
 
             for (let i = 1; i < frames.length; i++) {
                 const frame = frames[i];
                 frame.getObjects().forEach((object) => {
-                    if (mergedFrame.hasObject(object)) {
-                        const existingObject = mergedFrame.getObjectByUID(object.uid);
-                        // Merge object
-                        object.relativePositions.forEach((value) => {
-                            existingObject.addRelativePosition(value);
-                        });
-                        if (existingObject.getPosition() === undefined) {
-                            existingObject.setPosition(object.getPosition());
-                        } else if (existingObject.getPosition().accuracy < object.getPosition().accuracy) {
-                            // TODO: Merge location using different tactic + check accuracy unit
-                            existingObject.setPosition(object.getPosition());
-                        }
-                    } else {
+                    if (!mergedFrame.hasObject(object)) {
                         // Add object
                         mergedFrame.addObject(object);
+                        mergedObjects.set(object.uid, [object]);
+                    } else {
+                        mergedObjects.get(object.uid).push(object);
                     }
                 });
                 // Merge properties
@@ -141,6 +185,13 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
                     }
                 });
             }
+
+            // Merge objects using the merging function
+            mergedObjects.forEach((values, key) => {
+                const mergedObject = this.mergeObjects(values);
+                mergedFrame.addObject(mergedObject);
+            });
+
             resolve(mergedFrame);
         });
     }
@@ -156,6 +207,11 @@ class QueuedMerge<InOut extends DataFrame> {
 
     constructor(key: any) {
         this.key = key;
-        this.timestamp = new Date().getTime();
+        this.timestamp = TimeService.now();
     }
+}
+
+export interface FrameMergeOptions extends ObjectProcessingNodeOptions {
+    timeout?: number;
+    timeoutUnit?: TimeUnit;
 }

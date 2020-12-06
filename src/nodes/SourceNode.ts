@@ -3,7 +3,7 @@ import { DataObject } from '../data';
 import { AbstractSourceNode } from '../graph/interfaces/AbstractSourceNode';
 import { Model } from '../Model';
 import { NodeOptions } from '../Node';
-import { PullOptions, PushOptions } from '../graph';
+import { GraphOptions, PullOptions, PushOptions } from '../graph';
 
 /**
  * Source node
@@ -190,6 +190,12 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
     }
 
     private _onPull(options: PullOptions = {}): Promise<void> {
+        const newOptions: PushOptions = {
+            sourceNode: this.uid,
+            // Expand options after setting source node
+            // original source node should not be overridden
+            ...(options as GraphOptions),
+        };
         const count = options.count || 1;
         let promise = Promise.resolve();
         for (let i = 0; i < count; i++) {
@@ -199,7 +205,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
                         this.onPull()
                             .then((frame) => {
                                 if (frame !== undefined && frame !== null) {
-                                    return this.push(frame, options);
+                                    return this.push(frame, newOptions);
                                 } else {
                                     resolve();
                                 }

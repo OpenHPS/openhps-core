@@ -31,11 +31,6 @@ export interface AbsolutePosition extends Position {
      */
     accuracy: number;
 
-    /**
-     * Position accuracy unit
-     */
-    accuracyUnit: LengthUnit;
-
     fromVector(vector: Vector, unit?: LengthUnit): void;
 
     toVector3(unit?: LengthUnit): Vector3;

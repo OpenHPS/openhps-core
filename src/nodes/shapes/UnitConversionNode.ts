@@ -20,6 +20,7 @@ export class UnitConversionNode<InOut extends DataFrame> extends ObjectProcessin
 
             if (position && position.unit !== this._unit) {
                 position.fromVector(position.toVector3(this._unit));
+                position.unit = this._unit;
                 object.setPosition(position);
             }
             resolve(object);

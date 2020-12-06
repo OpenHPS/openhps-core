@@ -40,12 +40,7 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
      * Position accuracy
      */
     @SerializableMember()
-    public accuracy: number;
-    /**
-     * Position accuracy unit
-     */
-    @SerializableMember()
-    public accuracyUnit: LengthUnit = LengthUnit.METER;
+    public accuracy = 0;
 
     /**
      * Midpoint to another location
@@ -93,7 +88,6 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
         const position = new Absolute2DPosition(this.x, this.y);
         position.unit = this.unit;
         position.accuracy = this.accuracy;
-        position.accuracyUnit = this.accuracyUnit;
         position.orientation = this.orientation.clone();
         position.velocity = this.velocity.clone();
         position.timestamp = this.timestamp;

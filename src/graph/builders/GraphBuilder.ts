@@ -259,7 +259,12 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         timeout = 100,
         timeoutUnit = TimeUnit.MILLISECOND,
     ): GraphShapeBuilder<Builder> {
-        return this.via(new ObjectMergeNode(() => true, by, timeout, timeoutUnit));
+        return this.via(
+            new ObjectMergeNode(by, {
+                timeout,
+                timeoutUnit,
+            }),
+        );
     }
 
     public debounce(timeout = 100, timeoutUnit = TimeUnit.MILLISECOND): GraphShapeBuilder<Builder> {

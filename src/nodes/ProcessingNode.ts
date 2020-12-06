@@ -105,7 +105,7 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
         });
     }
 
-    public abstract process(frame: In, options?: GraphOptions): Promise<Out>;
+    public abstract process(frame: In, options?: PushOptions): Promise<Out>;
 }
 
 export interface ProcessingNodeOptions extends NodeOptions {

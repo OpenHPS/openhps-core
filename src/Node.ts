@@ -108,7 +108,7 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
      * @param {PushOptions} [options] Push options
      * @returns {Promise<void>} Push promise
      */
-    public push(frame: In | In[], options?: PushOptions): Promise<void> {
+    public push(frame: In | In[], options: PushOptions = {}): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (frame === null || frame === undefined) {
                 this.logger('warning', {
@@ -118,14 +118,19 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
                 return reject();
             }
 
+            const newOptions: PushOptions = {
+                ...options,
+                pushNode: this.uid,
+            };
+
             const callbackPromises: Array<Promise<void>> = [];
             this.listeners('push').forEach((callback) => {
-                callbackPromises.push(callback(frame, options));
+                callbackPromises.push(callback(frame, newOptions));
             });
 
             if (callbackPromises.length === 0) {
                 this.outputNodes.forEach((node) => {
-                    callbackPromises.push(node.push(frame, options));
+                    callbackPromises.push(node.push(frame, newOptions));
                 });
             }
 

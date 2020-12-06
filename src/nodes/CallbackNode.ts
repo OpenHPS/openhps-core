@@ -1,4 +1,5 @@
 import { DataFrame } from '../data/DataFrame';
+import { GraphOptions, PullOptions, PushOptions } from '../graph';
 import { Node, NodeOptions } from '../Node';
 
 export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
@@ -34,7 +35,7 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
         this._pushCallback = pushCallback;
     }
 
-    private _onPush(frame: InOut | InOut[]): Promise<void> {
+    private _onPush(frame: InOut | InOut[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             try {
                 this.pushCallback(frame);
@@ -44,7 +45,12 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
             const pushPromises: Array<Promise<void>> = [];
             this.outputNodes.forEach((node) => {
-                pushPromises.push(node.push(frame));
+                pushPromises.push(
+                    node.push(frame, {
+                        ...options,
+                        pushNode: this.uid,
+                    }),
+                );
             });
 
             Promise.all(pushPromises)
@@ -55,7 +61,7 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
         });
     }
 
-    private _onPull(): Promise<void> {
+    private _onPull(options?: PullOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             let result: InOut | InOut[] = null;
             try {
@@ -67,7 +73,7 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
             if (result !== undefined && result !== null) {
                 const pushPromises: Array<Promise<void>> = [];
                 this.outputNodes.forEach((node) => {
-                    pushPromises.push(node.push(result));
+                    pushPromises.push(node.push(result, options as GraphOptions));
                 });
 
                 Promise.all(pushPromises)
@@ -76,7 +82,16 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
                     })
                     .catch(reject);
             } else {
-                resolve();
+                const pullPromises: Array<Promise<void>> = [];
+                this.inputNodes.forEach((node) => {
+                    pullPromises.push(node.pull(options));
+                });
+
+                Promise.all(pullPromises)
+                    .then(() => {
+                        resolve();
+                    })
+                    .catch(reject);
             }
         });
     }

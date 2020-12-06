@@ -205,6 +205,28 @@ describe('model', () => {
     });
 
     describe('pushing', () => {
+        it('should store the last node uid in the optionsxx', (done) => {
+            ModelBuilder.create()
+                .from(new CallbackSourceNode(() => {
+                    return new DataFrame();
+                }, {
+                    uid: "n_s"
+                }))
+                .via(new CallbackNode(() => {}, () => undefined, {
+                    uid: "n_1"
+                }))
+                .via(new CallbackNode(() => {}, () => undefined, {
+                    uid: "n_2"
+                }))
+                .to(new CallbackSinkNode((frame, options) => {
+                    expect(options.pushNode).to.equal("n_2");
+                    done();
+                }))
+                .build().then(model =>{
+                    return model.pull();
+                });
+        });
+
         it('should throw an exception when a sink node throws an error', (done) => {
             ModelBuilder.create()
                 .from()

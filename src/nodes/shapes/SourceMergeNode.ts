@@ -1,6 +1,5 @@
 import { DataFrame } from '../../data';
-import { TimeUnit } from '../../utils';
-import { FrameMergeNode } from './FrameMergeNode';
+import { FrameMergeNode, FrameMergeOptions } from './FrameMergeNode';
 
 /**
  * Source merge node. This node merges the data frames from multiple sources into one.
@@ -14,7 +13,7 @@ import { FrameMergeNode } from './FrameMergeNode';
  * When frames of the same source are received they are overridden.
  */
 export class SourceMergeNode<InOut extends DataFrame> extends FrameMergeNode<InOut> {
-    constructor(timeout: number, timeoutUnit: TimeUnit) {
+    constructor(options?: FrameMergeOptions) {
         super(
             (frame: InOut) => {
                 if (frame.source === undefined) {
@@ -23,8 +22,7 @@ export class SourceMergeNode<InOut extends DataFrame> extends FrameMergeNode<InO
                 return frame.source.uid;
             },
             (frame: InOut) => frame.uid,
-            timeout,
-            timeoutUnit,
+            options,
         );
     }
 }

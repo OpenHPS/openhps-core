@@ -1,5 +1,5 @@
 import { RelativePosition } from './RelativePosition';
-import { AngleUnit, Quaternion, LengthUnit } from '../../utils';
+import { AngleUnit, Quaternion } from '../../utils';
 import { SerializableObject, SerializableMember } from '../decorators';
 import { DataSerializer } from '../DataSerializer';
 
@@ -25,8 +25,6 @@ export class RelativeAnglePosition implements RelativePosition<number> {
      */
     @SerializableMember()
     public accuracy: number;
-    @SerializableMember()
-    public accuracyUnit: LengthUnit = LengthUnit.METER;
     /**
      * Orientation at recorded position
      */

@@ -150,14 +150,15 @@ describe('dataset', () => {
                     .from(scanSourceNodeA, scanSourceNodeB, scanSourceNodeC)
                     .via(
                         new ObjectMergeNode(
-                            (object: DataObject, frame: DataFrame) => {
-                                return frame.source.uid !== object.uid;
-                            },
                             (frame: DataFrame) => {
                                 return frame.source.uid;
                             },
-                            100,
-                            TimeUnit.MILLISECOND,
+                            {
+                                objectFilter: (object: DataObject, frame: DataFrame) => {
+                                    return frame.source.uid !== object.uid;
+                                },
+                                timeout: 100
+                            }
                         ),
                     )
                     .via(new TrilaterationNode<EvaluationDataFrame>())

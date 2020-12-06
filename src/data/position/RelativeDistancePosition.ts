@@ -25,8 +25,6 @@ export class RelativeDistancePosition implements RelativePosition {
      */
     @SerializableMember()
     public accuracy: number;
-    @SerializableMember()
-    public accuracyUnit: LengthUnit = LengthUnit.METER;
     private _distance: number;
     /**
      * Distance unit

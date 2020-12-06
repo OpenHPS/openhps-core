@@ -57,4 +57,7 @@ export interface Space {
 
 export interface SpaceTransformationOptions {
     inverse?: boolean;
+    includeAccuracy?: boolean;
+    includeAngularVelocity?: boolean;
+    includeLinearVelocity?: boolean;
 }

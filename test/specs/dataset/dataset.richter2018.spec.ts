@@ -91,12 +91,12 @@ describe('dataset', () => {
                 .from(rssSource, locationSource)
                 .via(
                     new ObjectMergeNode(
-                        (object: DataObject) => object.uid == 'phone',
                         (frame: DataFrame) => {
                             return frame.source.uid;
                         },
-                        500,
-                        TimeUnit.MILLISECOND,
+                        {
+                            objectFilter: (object: DataObject) => object.uid == 'phone',
+                        }
                     ),
                 )
                 .via(
@@ -689,10 +689,10 @@ describe('dataset', () => {
                     )
                     .via(
                         new ObjectMergeNode<EvaluationDataFrame>(
-                            (object: DataObject) => object.uid == 'phone',
                             (frame: EvaluationDataFrame) => frame.source.uid,
-                            500,
-                            TimeUnit.MILLISECOND,
+                            {
+                                objectFilter: (object: DataObject) => object.uid == 'phone',
+                            }
                         ),
                     )
                     .via(
@@ -790,10 +790,10 @@ describe('dataset', () => {
                     )
                     .via(
                         new ObjectMergeNode<EvaluationDataFrame>(
-                            (object: DataObject) => object.uid == 'phone',
                             (frame: EvaluationDataFrame) => frame.source.uid,
-                            500,
-                            TimeUnit.MILLISECOND,
+                            {
+                                objectFilter: (object: DataObject) => object.uid == 'phone',
+                            }
                         ),
                     )
                     .via(
