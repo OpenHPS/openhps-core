@@ -18,9 +18,7 @@ export class Fingerprint extends DataObject {
         );
     }
 
-    public set uid(value: string) {
-        if (value) {
-            throw new Error(`The uid of a fingerprint can not be set manually!`);
-        }
+    public set uid(_: string) {
+        // Ignore. Do not throw error as this will break deserialization
     }
 }

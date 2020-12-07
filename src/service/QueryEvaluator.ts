@@ -101,7 +101,11 @@ export class QueryEvaluator {
                 result = false;
                 if (value instanceof Array) {
                     Array.from(value).forEach((element) => {
-                        result = result || QueryEvaluator.evaluateComponent(element, selector, subquery[selector]);
+                        if (element['key'] && element['value']) {
+                            result = result || QueryEvaluator.evaluate(element['value'], subquery[selector]);
+                        } else {
+                            result = result || QueryEvaluator.evaluateComponent(element, selector, subquery[selector]);
+                        }
                     });
                 } else if (value instanceof Map) {
                     value.forEach((element) => {

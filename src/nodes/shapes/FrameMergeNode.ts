@@ -94,18 +94,25 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
                 if (queue === undefined) {
                     // Create a new queued data frame based on the key
                     queue = new QueuedMerge(key);
+                    queue.promises.push(resolve);
                     // Group the frames by the grouping function
                     queue.frames.set(this._groupFn(frame, options), frame);
                     this._queue.set(key, queue);
-                    resolve(undefined);
                 } else {
                     queue.frames.set(this._groupFn(frame, options), frame);
                     // Check if there are enough frames
                     if (queue.frames.size >= this.inputNodes.length) {
                         this._queue.delete(key);
-                        this.merge(Array.from(queue.frames.values()), key).then(resolve).catch(reject);
+                        this.merge(Array.from(queue.frames.values()), key)
+                            .then(resolve)
+                            .catch(reject)
+                            .finally(() => {
+                                queue.promises.forEach((fn) => {
+                                    fn(undefined);
+                                });
+                            });
                     } else {
-                        resolve(undefined);
+                        queue.promises.push(resolve);
                     }
                 }
             });
@@ -208,6 +215,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
 class QueuedMerge<InOut extends DataFrame> {
     public key: any;
     public frames: Map<any, InOut> = new Map();
+    public promises: Array<(value: InOut) => void> = [];
     public timestamp: number;
 
     constructor(key: any) {

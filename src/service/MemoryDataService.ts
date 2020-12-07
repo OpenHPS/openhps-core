@@ -3,12 +3,15 @@ import { FilterQuery } from './FilterQuery';
 import { QueryEvaluator } from './QueryEvaluator';
 
 export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
-    protected _data: Map<I, T> = new Map();
+    protected _data: Map<I, any> = new Map();
+
+    protected serialize: (obj: T) => any = (obj) => obj;
+    protected deserialize: (obj: any) => T = (obj) => obj;
 
     public findByUID(uid: I): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             if (this._data.has(uid)) {
-                resolve(this._data.get(uid));
+                resolve(this.deserialize(this._data.get(uid)));
             } else {
                 reject(`${this.dataType.name} with identifier #${uid} not found!`);
             }
@@ -18,7 +21,9 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     public findOne(query?: FilterQuery<T>): Promise<T> {
         return new Promise<T>((resolve) => {
             for (const [, object] of this._data) {
-                if (QueryEvaluator.evaluate(object, query)) return resolve(object);
+                if (QueryEvaluator.evaluate(object, query)) {
+                    return resolve(this.deserialize(object));
+                }
             }
             return resolve(undefined);
         });
@@ -28,7 +33,9 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
         return new Promise<T[]>((resolve) => {
             const data: T[] = [];
             this._data.forEach((object) => {
-                if (QueryEvaluator.evaluate(object, query)) data.push(object);
+                if (QueryEvaluator.evaluate(object, query)) {
+                    data.push(this.deserialize(object));
+                }
             });
             resolve(data);
         });
@@ -37,7 +44,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     public insert(id: I, object: T): Promise<T> {
         return new Promise<T>((resolve) => {
             if (id && object) {
-                this._data.set(id, object);
+                this._data.set(id, this.serialize(object));
                 resolve(object);
             } else {
                 resolve(undefined);
