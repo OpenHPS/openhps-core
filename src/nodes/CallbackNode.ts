@@ -45,12 +45,7 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
             const pushPromises: Array<Promise<void>> = [];
             this.outputNodes.forEach((node) => {
-                pushPromises.push(
-                    node.push(frame, {
-                        ...options,
-                        pushNode: this.uid,
-                    }),
-                );
+                pushPromises.push(node.push(frame, options));
             });
 
             Promise.all(pushPromises)

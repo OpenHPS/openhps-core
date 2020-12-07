@@ -13,3 +13,4 @@ export * from './RelativeVelocity';
 export * from './Acceleration';
 export * from './Magnetism';
 export * from './RelativeRSSIPosition';
+export * from './Orientation';

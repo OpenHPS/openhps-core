@@ -7,6 +7,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _interval: number;
     private _timer: NodeJS.Timeout;
     private _pushFinished = true;
+    private _pullFinished = true;
     protected options: TimedPullOptions;
 
     constructor(interval: number, intervalUnit = TimeUnit.MILLISECOND, options?: TimedPullOptions) {
@@ -42,12 +43,19 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     }
 
     private _intervalFn(): void {
-        if (this._pushFinished || !this.options.throttlePull) {
+        if ((this._pushFinished && this._pullFinished) || !this.options.throttlePull) {
+            this._pullFinished = true;
             const promises: Array<Promise<void>> = [];
             this.inputNodes.forEach((node) => {
-                promises.push(node.pull());
+                promises.push(node.pull(this.options.pullOptions));
             });
-            Promise.resolve(promises);
+            Promise.all(promises)
+                .then(() => {
+                    this._pullFinished = true;
+                })
+                .catch((ex) => {
+                    this.logger('error', ex);
+                });
         }
     }
 

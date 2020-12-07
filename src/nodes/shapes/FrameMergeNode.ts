@@ -1,11 +1,13 @@
 import { AbsolutePosition, DataFrame, DataObject } from '../../data';
-import { ProcessingNode, ProcessingNodeOptions } from '../ProcessingNode';
+import { ProcessingNode } from '../ProcessingNode';
 import { TimeUnit } from '../../utils';
 import { TimeService } from '../../service';
 import { PushOptions } from '../../graph';
 import { ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
 
 /**
+ * Merges two or more frames together based on a merge key.
+ *
  * ## Usage
  * ```typescript
  * new FrameMergeNode();
@@ -30,6 +32,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
 
         this.options.timeout = this.options.timeout || 100;
         this.options.timeoutUnit = this.options.timeoutUnit || TimeUnit.MILLISECOND;
+        this.options.objectFilter = this.options.objectFilter || (() => true);
 
         this._timeout = this.options.timeoutUnit.convert(this.options.timeout, TimeUnit.MILLISECOND);
 
@@ -52,13 +55,17 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
     }
 
     private _timerTick(): void {
-        const currentTime = new Date().getTime();
+        const currentTime = TimeService.now();
         const mergePromises: Array<Promise<InOut>> = [];
         this._queue.forEach((queue) => {
             if (currentTime - queue.timestamp >= this._timeout) {
                 // Merge node
                 mergePromises.push(this.merge(Array.from(queue.frames.values()), queue.key as string));
                 this._queue.delete(queue.key);
+                // Resolve pending promises
+                queue.promises.forEach((fn) => {
+                    fn(undefined);
+                });
             }
         });
         Promise.all(mergePromises)
@@ -140,22 +147,51 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
         if (positions.length === 0) {
             return baseObject;
         }
-        const baseUnit = positions[0].unit;
-        const accuracyMax = positions.sort((a, b) => a.accuracy - b.accuracy)[0].accuracy + 1;
-        const newPosition: AbsolutePosition = positions[0].clone();
-        newPosition.fromVector(newPosition.toVector3().multiplyScalar(accuracyMax - newPosition.accuracy));
-        newPosition.accuracy = accuracyMax - newPosition.accuracy;
+        let newPosition: AbsolutePosition = positions[0];
         for (let i = 1; i < positions.length; i++) {
-            newPosition.fromVector(
-                newPosition
-                    .toVector3()
-                    .add(positions[i].toVector3(baseUnit).multiplyScalar(accuracyMax - positions[i].accuracy)),
-            );
-            newPosition.accuracy += accuracyMax - positions[i].accuracy;
+            newPosition = this.mergePositions(newPosition, positions[i]);
         }
-        newPosition.fromVector(newPosition.toVector3().divideScalar(newPosition.accuracy));
+        newPosition.accuracy = newPosition.accuracy / positions.length;
+        if (newPosition.velocity.linear) {
+            newPosition.velocity.linear.accuracy = newPosition.velocity.linear.accuracy / positions.length;
+        }
         baseObject.setPosition(newPosition);
         return baseObject;
+    }
+
+    public mergePositions(positionA: AbsolutePosition, positionB: AbsolutePosition): AbsolutePosition {
+        const newPosition = positionA.clone();
+        if (!positionB) {
+            return newPosition;
+        }
+        // Accuracy of the two positions
+        const posAccuracyA = positionA.accuracy || 1;
+        const posAccuracyB = positionB.unit.convert(positionB.accuracy, positionA.unit) || 1;
+        // Apply position merging
+        newPosition.fromVector(
+            newPosition
+                .toVector3()
+                .multiplyScalar(-posAccuracyA)
+                .add(positionB.toVector3(newPosition.unit).multiplyScalar(-posAccuracyB)),
+        );
+        if (positionB.velocity.linear) {
+            if (newPosition.velocity.linear) {
+                const lvAccuracyA = newPosition.velocity.linear.accuracy || 1;
+                const lvAccuracyB = positionB.velocity.linear.accuracy || 1;
+                // Merge linear velocity
+                newPosition.velocity.linear
+                    .multiplyScalar(-lvAccuracyA)
+                    .add(positionB.velocity.linear.clone().multiplyScalar(-lvAccuracyB));
+                newPosition.velocity.linear.divideScalar(-lvAccuracyA - lvAccuracyB);
+                newPosition.velocity.linear.accuracy = lvAccuracyA + lvAccuracyB;
+            } else {
+                newPosition.velocity.linear = positionB.velocity.linear.clone();
+            }
+        }
+        // Divide weight
+        newPosition.fromVector(newPosition.toVector3().divideScalar(-posAccuracyA - posAccuracyB));
+        newPosition.accuracy = positionA.accuracy + positionB.accuracy;
+        return newPosition;
     }
 
     /**
@@ -199,7 +235,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
             }
 
             // Merge objects using the merging function
-            mergedObjects.forEach((values, key) => {
+            mergedObjects.forEach((values) => {
                 const mergedObject = this.mergeObjects(values);
                 mergedFrame.addObject(mergedObject);
             });

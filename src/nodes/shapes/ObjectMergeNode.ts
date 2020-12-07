@@ -1,8 +1,9 @@
-import { AbsolutePosition, DataFrame, DataObject } from '../../data';
+import { DataFrame, DataObject } from '../../data';
+import { PushOptions } from '../../graph';
 import { FrameMergeNode, FrameMergeOptions } from './FrameMergeNode';
 
 export class ObjectMergeNode<InOut extends DataFrame> extends FrameMergeNode<InOut> {
-    constructor(groupFn: (frame: InOut) => any, options?: FrameMergeOptions) {
+    constructor(groupFn: (frame: InOut, options?: PushOptions) => any, options?: FrameMergeOptions) {
         super(
             (frame: InOut) =>
                 frame
@@ -17,8 +18,16 @@ export class ObjectMergeNode<InOut extends DataFrame> extends FrameMergeNode<InO
     public merge(frames: InOut[], objectUID: string): Promise<InOut> {
         return new Promise<InOut>((resolve) => {
             const mergedFrame = frames[0];
+            const mergedObjects: Map<string, DataObject[]> = new Map();
+            mergedFrame.getObjects().forEach((object) => {
+                if (mergedObjects.get(object.uid)) {
+                    mergedObjects.get(object.uid).push(object);
+                } else {
+                    mergedObjects.set(object.uid, [object]);
+                }
+            });
+
             const existingObject = mergedFrame.getObjectByUID(objectUID);
-            const positions: AbsolutePosition[] = [];
 
             for (let i = 1; i < frames.length; i++) {
                 const frame = frames[i];
@@ -29,10 +38,15 @@ export class ObjectMergeNode<InOut extends DataFrame> extends FrameMergeNode<InO
                     object.relativePositions.forEach((value) => {
                         existingObject.addRelativePosition(value);
                     });
-                    const position = object.getPosition();
-                    if (position) {
-                        positions.push(object.getPosition());
-                    }
+                    frame.getObjects().forEach((object) => {
+                        if (!mergedFrame.hasObject(object)) {
+                            // Add object
+                            mergedFrame.addObject(object);
+                            mergedObjects.set(object.uid, [object]);
+                        } else {
+                            mergedObjects.get(object.uid).push(object);
+                        }
+                    });
 
                     // Merge properties
                     Object.keys(frame).forEach((propertyName) => {
@@ -44,25 +58,11 @@ export class ObjectMergeNode<InOut extends DataFrame> extends FrameMergeNode<InO
                 }
             }
 
-            if (positions.length === 1) {
-                existingObject.setPosition(positions[0]);
-            } else if (positions.length > 0) {
-                // Weighted merging
-                const baseUnit = positions[0].unit;
-                const newPosition: AbsolutePosition = positions[0].clone();
-                newPosition.fromVector(newPosition.toVector3().divideScalar(newPosition.accuracy));
-                let totalAccuracy = newPosition.accuracy;
-                for (let i = 1; i < positions.length; i++) {
-                    newPosition.fromVector(
-                        newPosition
-                            .toVector3(baseUnit)
-                            .add(positions[i].toVector3(baseUnit).divideScalar(positions[i].accuracy)),
-                    );
-                    totalAccuracy += positions[i].accuracy;
-                }
-                newPosition.fromVector(newPosition.toVector3(baseUnit).multiplyScalar(totalAccuracy));
-                existingObject.setPosition(newPosition);
-            }
+            // Merge objects using the merging function
+            mergedObjects.forEach((values) => {
+                const mergedObject = this.mergeObjects(values);
+                mergedFrame.addObject(mergedObject);
+            });
 
             resolve(mergedFrame);
         });

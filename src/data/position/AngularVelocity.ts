@@ -1,9 +1,14 @@
 import { AngularVelocityUnit } from '../../utils/unit/AngularVelocityUnit';
-import { SerializableObject } from '../decorators';
+import { SerializableMember, SerializableObject } from '../decorators';
 import { Vector3 } from '../../utils/math';
 
 @SerializableObject()
 export class AngularVelocity extends Vector3 {
+    @SerializableMember({
+        isRequired: false,
+    })
+    public accuracy: number;
+
     constructor(x?: number, y?: number, z?: number, unit = AngularVelocityUnit.RADIAN_PER_SECOND) {
         super(
             unit.convert(x ? x : 0, AngularVelocityUnit.RADIAN_PER_SECOND),

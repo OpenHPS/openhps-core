@@ -205,7 +205,7 @@ describe('model', () => {
     });
 
     describe('pushing', () => {
-        it('should store the last node uid in the optionsxx', (done) => {
+        it('should store the source in the options', (done) => {
             ModelBuilder.create()
                 .from(new CallbackSourceNode(() => {
                     return new DataFrame();
@@ -219,7 +219,7 @@ describe('model', () => {
                     uid: "n_2"
                 }))
                 .to(new CallbackSinkNode((frame, options) => {
-                    expect(options.pushNode).to.equal("n_2");
+                    expect(options.sourceNode).to.equal("n_s");
                     done();
                 }))
                 .build().then(model =>{

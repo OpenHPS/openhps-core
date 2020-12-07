@@ -118,19 +118,14 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
                 return reject();
             }
 
-            const newOptions: PushOptions = {
-                ...options,
-                pushNode: this.uid,
-            };
-
             const callbackPromises: Array<Promise<void>> = [];
             this.listeners('push').forEach((callback) => {
-                callbackPromises.push(callback(frame, newOptions));
+                callbackPromises.push(callback(frame, options));
             });
 
             if (callbackPromises.length === 0) {
                 this.outputNodes.forEach((node) => {
-                    callbackPromises.push(node.push(frame, newOptions));
+                    callbackPromises.push(node.push(frame, options));
                 });
             }
 

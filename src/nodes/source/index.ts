@@ -1,2 +1,3 @@
 export * from './ListSourceNode';
 export * from './CallbackSourceNode';
+export * from './HistorySourceNode';

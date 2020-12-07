@@ -4,6 +4,7 @@ import { SerializableObject, SerializableMember } from '../../decorators';
 import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder } from '../../../utils/math';
 import { AngleUnit } from '../../../utils';
 import { AbsolutePosition } from '../../position/AbsolutePosition';
+import { Vector3 } from '../../../utils/math/_internal';
 
 /**
  * Reference space
@@ -144,6 +145,9 @@ export class ReferenceSpace extends DataObject implements Space {
                 .applyMatrix4(scale)
                 .applyMatrix4(Matrix4.rotationFromQuaternion(rotation));
             // TODO: Transform the angular velocity (rotation axis)
+        }
+        if (transformedPosition.accuracy) {
+            transformedPosition.accuracy = new Vector3(transformedPosition.accuracy, 0, 0).applyMatrix4(scale).x;
         }
 
         transformedPosition.referenceSpaceUID = this.uid;

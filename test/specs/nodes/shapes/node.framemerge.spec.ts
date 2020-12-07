@@ -12,6 +12,7 @@ import {
     PushOptions,
     Absolute2DPosition,
     AbsolutePosition,
+    LinearVelocity,
 } from '../../../../src';
 
 describe('node', () => {
@@ -75,6 +76,7 @@ describe('node', () => {
                         const object = new DataObject('abc');
                         const position = new Absolute2DPosition(1, 1);
                         position.accuracy = 1;
+                        position.velocity.linear = new LinearVelocity(2, 2);
                         object.setPosition(position);
                         frame.source = object;
                         return frame;
@@ -84,6 +86,7 @@ describe('node', () => {
                         const object = new DataObject('abc');
                         const position = new Absolute2DPosition(0, 0);
                         position.accuracy = 1;
+                        position.velocity.linear = new LinearVelocity(1, 1);
                         object.setPosition(position);
                         frame.source = object;
                         return frame;
@@ -92,6 +95,7 @@ describe('node', () => {
                         const frame = new DataFrame();
                         const object = new DataObject('abc');
                         const position = new Absolute2DPosition(5, 5);
+                        position.velocity.linear = new LinearVelocity(6, 6);
                         position.accuracy = 1;
                         object.setPosition(position);
                         frame.source = object;
@@ -106,6 +110,7 @@ describe('node', () => {
                 )
                 .to(
                     new CallbackSinkNode((frame: DataFrame) => {
+                        expect(frame.source.getPosition().velocity.linear.x).to.equal(3);
                         expect(frame.source.getPosition().toVector3().x).to.equal(2);
                         expect(frame.getObjects().length).to.equal(1);
                         done();
