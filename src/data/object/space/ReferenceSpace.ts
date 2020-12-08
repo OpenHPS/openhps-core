@@ -2,7 +2,7 @@ import { DataObject } from '../DataObject';
 import { Space, SpaceTransformationOptions } from './Space';
 import { SerializableObject, SerializableMember } from '../../decorators';
 import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder } from '../../../utils/math';
-import { AngleUnit } from '../../../utils';
+import { AngleUnit, LengthUnit, Unit } from '../../../utils';
 import { AbsolutePosition } from '../../position/AbsolutePosition';
 import { Vector3 } from '../../../utils/math/_internal';
 
@@ -24,6 +24,8 @@ export class ReferenceSpace extends DataObject implements Space {
     private _rotation: Quaternion = new Quaternion();
     @SerializableMember()
     private _baseSpaceUID: string;
+    @SerializableMember()
+    public unit: LengthUnit;
 
     constructor(baseSpace?: ReferenceSpace, transformationMatrix?: Matrix4) {
         super();
@@ -139,7 +141,7 @@ export class ReferenceSpace extends DataObject implements Space {
         if (transformedPosition.orientation) {
             transformedPosition.orientation.multiply(rotation);
         }
-        if (transformedPosition.velocity) {
+        if (transformedPosition.velocity && transformedPosition.velocity.linear) {
             // Transform the linear velocity (rotation and scale)
             transformedPosition.velocity.linear
                 .applyMatrix4(scale)

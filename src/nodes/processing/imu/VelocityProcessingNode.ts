@@ -61,11 +61,14 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
 
                     // Predict the next location
                     const newPosition = lastPosition.clone();
+                    if (!newPosition.orientation) {
+                        newPosition.orientation = new Quaternion();
+                    }
                     newPosition.timestamp = frame.createdTimestamp;
                     newPosition.fromVector(
                         newPosition
                             .toVector3(LengthUnit.METER)
-                            .add(relativePosition.applyMatrix4(lastPosition.orientation.toRotationMatrix())),
+                            .add(relativePosition.applyMatrix4(newPosition.orientation.toRotationMatrix())),
                         LengthUnit.METER,
                     );
 

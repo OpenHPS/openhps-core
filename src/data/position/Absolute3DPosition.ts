@@ -24,7 +24,7 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
      * Orientation at recorded position
      */
     @SerializableMember()
-    public orientation: Quaternion = new Quaternion();
+    public orientation: Quaternion;
     /**
      * Position unit
      */
@@ -93,8 +93,8 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
         const position = new Absolute3DPosition(this.x, this.y, this.z);
         position.unit = this.unit;
         position.accuracy = this.accuracy;
-        position.orientation = this.orientation.clone();
-        position.velocity = this.velocity.clone();
+        position.orientation = this.orientation ? this.orientation.clone() : undefined;
+        position.velocity = this.velocity ? this.velocity.clone() : undefined;
         position.timestamp = this.timestamp;
         position.referenceSpaceUID = this.referenceSpaceUID;
         return position as this;

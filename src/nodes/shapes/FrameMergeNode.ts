@@ -4,6 +4,7 @@ import { TimeUnit } from '../../utils';
 import { TimeService } from '../../service';
 import { PushOptions } from '../../graph';
 import { ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
+import { Quaternion } from '../../utils/math/';
 
 /**
  * Merges two or more frames together based on a merge key.
@@ -147,9 +148,9 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
         if (positions.length === 0) {
             return baseObject;
         }
-        let newPosition: AbsolutePosition = positions[0];
+        let newPosition: AbsolutePosition = positions[0].clone();
         for (let i = 1; i < positions.length; i++) {
-            newPosition = this.mergePositions(newPosition, positions[i]);
+            newPosition = this.mergePositions(newPosition, positions[i].clone());
         }
         newPosition.accuracy = newPosition.accuracy / positions.length;
         if (newPosition.velocity.linear) {
@@ -160,37 +161,63 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
     }
 
     public mergePositions(positionA: AbsolutePosition, positionB: AbsolutePosition): AbsolutePosition {
-        const newPosition = positionA.clone();
+        const newPosition = positionA;
         if (!positionB) {
             return newPosition;
         }
+
         // Accuracy of the two positions
         const posAccuracyA = positionA.accuracy || 1;
         const posAccuracyB = positionB.unit.convert(positionB.accuracy, positionA.unit) || 1;
+
         // Apply position merging
         newPosition.fromVector(
             newPosition
                 .toVector3()
-                .multiplyScalar(-posAccuracyA)
-                .add(positionB.toVector3(newPosition.unit).multiplyScalar(-posAccuracyB)),
+                .multiplyScalar(1 / posAccuracyA)
+                .add(positionB.toVector3(newPosition.unit).multiplyScalar(1 / posAccuracyB)),
         );
+        newPosition.fromVector(newPosition.toVector3().divideScalar(1 / posAccuracyA + 1 / posAccuracyB));
+        newPosition.accuracy = 1 / (posAccuracyA + posAccuracyB);
+
         if (positionB.velocity.linear) {
             if (newPosition.velocity.linear) {
                 const lvAccuracyA = newPosition.velocity.linear.accuracy || 1;
                 const lvAccuracyB = positionB.velocity.linear.accuracy || 1;
                 // Merge linear velocity
                 newPosition.velocity.linear
-                    .multiplyScalar(-lvAccuracyA)
-                    .add(positionB.velocity.linear.clone().multiplyScalar(-lvAccuracyB));
-                newPosition.velocity.linear.divideScalar(-lvAccuracyA - lvAccuracyB);
-                newPosition.velocity.linear.accuracy = lvAccuracyA + lvAccuracyB;
+                    .multiplyScalar(1 / lvAccuracyA)
+                    .add(positionB.velocity.linear.multiplyScalar(1 / lvAccuracyB));
+                newPosition.velocity.linear.divideScalar(1 / lvAccuracyA + 1 / lvAccuracyB);
+                newPosition.velocity.linear.accuracy = 1 / (lvAccuracyA + lvAccuracyB);
             } else {
-                newPosition.velocity.linear = positionB.velocity.linear.clone();
+                newPosition.velocity.linear = positionB.velocity.linear;
             }
         }
-        // Divide weight
-        newPosition.fromVector(newPosition.toVector3().divideScalar(-posAccuracyA - posAccuracyB));
-        newPosition.accuracy = positionA.accuracy + positionB.accuracy;
+        if (positionB.orientation) {
+            if (newPosition.orientation) {
+                const quatAccuracyA = 1;
+                const quatAccuracyB = 1;
+                // Merge orientation
+                newPosition.orientation = Quaternion.fromEuler(
+                    newPosition.orientation
+                        .toEuler()
+                        .toVector3()
+                        .multiplyScalar(1 / quatAccuracyA)
+                        .add(
+                            positionB.orientation
+                                .toEuler()
+                                .toVector3()
+                                .multiplyScalar(1 / quatAccuracyB),
+                        )
+                        .divideScalar(1 / quatAccuracyA + 1 / quatAccuracyB),
+                );
+            } else {
+                newPosition.orientation = positionB.orientation;
+            }
+        }
+        // Average timestamp
+        newPosition.timestamp = Math.round((positionA.timestamp + positionB.timestamp) / 2);
         return newPosition;
     }
 

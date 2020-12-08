@@ -8,13 +8,13 @@ export class Velocity {
      * Linear velocity
      */
     @SerializableMember()
-    public linear: LinearVelocity = new LinearVelocity();
+    public linear: LinearVelocity;
 
     /**
      * Angular velocity
      */
     @SerializableMember()
-    public angular: AngularVelocity = new AngularVelocity();
+    public angular: AngularVelocity;
 
     constructor(linear: LinearVelocity = new LinearVelocity(), angular: AngularVelocity = new AngularVelocity()) {
         this.linear = linear;
