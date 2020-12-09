@@ -1,4 +1,5 @@
 import { DataFrame } from '../../data';
+import { PushOptions } from '../../graph';
 import { Node, NodeOptions } from '../../Node';
 
 export class FrameFlattenNode<InOut extends DataFrame> extends Node<InOut, InOut> {
@@ -7,16 +8,9 @@ export class FrameFlattenNode<InOut extends DataFrame> extends Node<InOut, InOut
         this.on('push', this._onPush.bind(this));
     }
 
-    private _onPush(frames: InOut[]): Promise<void> {
+    private _onPush(frames: InOut[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const pushPromises: Array<Promise<void>> = [];
-            frames.forEach((frame) => {
-                this.outlets.forEach((outlet) => {
-                    pushPromises.push(outlet.push(frame));
-                });
-            });
-
-            Promise.all(pushPromises)
+            Promise.all(frames.map((frame) => this.outlets.map((outlet) => outlet.push(frame, options))))
                 .then(() => {
                     resolve();
                 })

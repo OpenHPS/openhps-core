@@ -47,6 +47,8 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
      */
     private _start(): Promise<void> {
         return new Promise((resolve) => {
+            this.options.minCount = this.options.minCount || this.inlets.length;
+
             if (this._timeout > 0) {
                 this._timer = setInterval(this._timerTick.bind(this), this._timeout);
             }
@@ -89,7 +91,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
 
     public process(frame: InOut, options?: PushOptions): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
-            if (this.inputNodes.length === 1) {
+            if (this.options.minCount === 1) {
                 return resolve(frame);
             }
 
@@ -110,7 +112,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
                 } else {
                     queue.frames.set(this._groupFn(frame, options), frame);
                     // Check if there are enough frames
-                    if (queue.frames.size >= this.inputNodes.length) {
+                    if (queue.frames.size >= this.options.minCount) {
                         this._queue.delete(key);
                         this.merge(Array.from(queue.frames.values()), key)
                             .then(resolve)
@@ -276,4 +278,5 @@ class QueuedMerge<InOut extends DataFrame> {
 export interface FrameMergeOptions extends ObjectProcessingNodeOptions {
     timeout?: number;
     timeoutUnit?: TimeUnit;
+    minCount?: number;
 }
