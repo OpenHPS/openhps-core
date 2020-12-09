@@ -60,7 +60,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
         const currentTime = TimeService.now();
         const mergePromises: Array<Promise<InOut>> = [];
         this._queue.forEach((queue) => {
-            if (currentTime - queue.timestamp >= this._timeout) {
+            if (currentTime - queue.timestamp >= this._timeout && queue.frames.size >= this.options.minCount) {
                 // Merge node
                 mergePromises.push(this.merge(Array.from(queue.frames.values()), queue.key as string));
                 this._queue.delete(queue.key);
@@ -91,7 +91,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
 
     public process(frame: InOut, options?: PushOptions): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
-            if (this.options.minCount === 1) {
+            if (this.inlets.length === 1) {
                 return resolve(frame);
             }
 
@@ -112,7 +112,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
                 } else {
                     queue.frames.set(this._groupFn(frame, options), frame);
                     // Check if there are enough frames
-                    if (queue.frames.size >= this.options.minCount) {
+                    if (queue.frames.size >= this.inlets.length) {
                         this._queue.delete(key);
                         this.merge(Array.from(queue.frames.values()), key)
                             .then(resolve)

@@ -23,8 +23,9 @@ export class FrameCloneNode<InOut extends DataFrame> extends Node<InOut, InOut> 
 
     private _repack(frame: InOut): InOut {
         const newFrame = new DataFrame();
+        newFrame.createdTimestamp = frame.createdTimestamp;
         frame.getObjects().forEach((object) => {
-            newFrame.addObject(object);
+            newFrame.addObject(object.clone());
         });
         return newFrame as InOut;
     }
@@ -32,4 +33,8 @@ export class FrameCloneNode<InOut extends DataFrame> extends Node<InOut, InOut> 
 
 export interface FrameCloneOptions extends NodeOptions {
     repack?: boolean;
+    /**
+     * Remove the frame that is cloned from the data service
+     */
+    removeFrame?: boolean;
 }
