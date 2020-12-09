@@ -1,5 +1,5 @@
 import { DataFrame } from '../../data/DataFrame';
-import { PullOptions } from '../../graph';
+import { PullOptions, PushOptions } from '../../graph';
 import { Node, NodeOptions } from '../../Node';
 import { TimeUnit } from '../../utils/unit';
 
@@ -19,12 +19,10 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
         this.once('destroy', this._stop.bind(this));
     }
 
-    private _onPush(frame: InOut): Promise<void> {
+    private _onPush(frame: InOut, options?: PushOptions): Promise<void> {
         return new Promise((resolve, reject) => {
             const pushPromises: Array<Promise<void>> = [];
-            this.outputNodes.forEach((node) => {
-                pushPromises.push(node.push(frame));
-            });
+            pushPromises.push(...this.outlets.map((outlet) => outlet.push(frame, options)));
 
             // Restart the timer
             clearInterval(this._timer);

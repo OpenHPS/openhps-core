@@ -72,9 +72,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
             .then((mergedFrames) => {
                 const pushPromises: Array<Promise<void>> = [];
                 mergedFrames.forEach((mergedFrame) => {
-                    this.outputNodes.forEach((outputNode) => {
-                        pushPromises.push(outputNode.push(mergedFrame));
-                    });
+                    pushPromises.push(...this.outlets.map((outlet) => outlet.push(mergedFrame)));
                 });
                 return Promise.all(pushPromises);
             })

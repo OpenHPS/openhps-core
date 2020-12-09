@@ -241,8 +241,8 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
 
     private _onWorkerPull(options?: PullOptions): void {
         const pullPromises: Array<Promise<void>> = [];
-        this.inputNodes.forEach((node) => {
-            pullPromises.push(node.pull(options));
+        this.inlets.forEach((inlet) => {
+            pullPromises.push(inlet.pull(options));
         });
 
         Promise.all(pullPromises);
@@ -252,8 +252,8 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         const deserializedFrame: DataFrame = DataSerializer.deserialize(value);
 
         const pushPromises: Array<Promise<void>> = [];
-        this.outputNodes.forEach((node) => {
-            pushPromises.push(node.push(deserializedFrame, options));
+        this.outlets.forEach((outlet) => {
+            pushPromises.push(outlet.push(deserializedFrame as any, options));
         });
 
         Promise.all(pushPromises);

@@ -150,7 +150,6 @@ export class ReferenceSpace extends DataObject implements Space {
         // Transform the orientation (rotation)
         if (newPosition.orientation) {
             // TODO: This is just ugly
-            console.log(newPosition.orientation.toEuler().toVector3());
             const newEulerOrientation = newPosition.orientation
                 .toEuler()
                 .toVector3()

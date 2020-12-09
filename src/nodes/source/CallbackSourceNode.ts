@@ -1,25 +1,18 @@
 import { DataFrame } from '../../data/DataFrame';
+import { PullOptions } from '../../graph';
 import { SourceNode, SourceNodeOptions } from '../SourceNode';
 
 export class CallbackSourceNode<Out extends DataFrame> extends SourceNode<Out> {
-    private _callback: () => Promise<Out> | Out;
+    public callback: (options?: PullOptions) => Promise<Out> | Out;
 
-    constructor(callback: () => Promise<Out> | Out = () => null, options?: SourceNodeOptions) {
+    constructor(callback: (options?: PullOptions) => Promise<Out> | Out = () => null, options?: SourceNodeOptions) {
         super(null, options);
         this.callback = callback;
     }
 
-    public get callback(): () => Promise<Out> | Out {
-        return this._callback;
-    }
-
-    public set callback(callback: () => Promise<Out> | Out) {
-        this._callback = callback;
-    }
-
-    public onPull(): Promise<Out> {
+    public onPull(options?: PullOptions): Promise<Out> {
         return new Promise<Out>((resolve, reject) => {
-            Promise.resolve(this.callback())
+            Promise.resolve(this.callback(options))
                 .then((output) => {
                     resolve(output);
                 })

@@ -58,18 +58,36 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
         return this._ready;
     }
 
-    protected get outlets(): Array<AbstractEdge<Out>> {
+    /**
+     * Get the outgoing edges
+     *
+     * @returns {Array<AbstractEdge<Out>>} Outgoing edges
+     */
+    public get outlets(): Array<AbstractEdge<Out>> {
         return this.graph.edges.filter((edge) => edge.inputNode === this);
     }
 
-    protected get inlets(): Array<AbstractEdge<In>> {
+    /**
+     * Get the incoming edges
+     *
+     * @returns {Array<AbstractEdge<In>>} Incoming edges
+     */
+    public get inlets(): Array<AbstractEdge<In>> {
         return this.graph.edges.filter((edge) => edge.outputNode === this);
     }
 
+    /**
+     * @deprecated Use outlets instead
+     * @returns {Array<Node<DataFrame, DataFrame>>} Array of outgoing nodes
+     */
     public get outputNodes(): Array<Node<DataFrame, DataFrame>> {
         return this.outlets.map((edge) => edge.outputNode) as Array<Node<DataFrame, DataFrame>>;
     }
 
+    /**
+     * @deprecated Use inlets instead
+     * @returns {Array<Node<DataFrame, DataFrame>>} Array of incoming nodes
+     */
     public get inputNodes(): Array<Node<DataFrame, DataFrame>> {
         return this.inlets.map((edge) => edge.inputNode) as Array<Node<DataFrame, DataFrame>>;
     }
@@ -88,8 +106,8 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
             });
 
             if (callbackPromises.length === 0) {
-                this.inputNodes.forEach((node) => {
-                    callbackPromises.push(node.pull(options));
+                this.inlets.forEach((inlet) => {
+                    callbackPromises.push(inlet.pull(options));
                 });
             }
 
@@ -124,8 +142,8 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
             });
 
             if (callbackPromises.length === 0) {
-                this.outputNodes.forEach((node) => {
-                    callbackPromises.push(node.push(frame, options));
+                this.outlets.forEach((outlet) => {
+                    callbackPromises.push(outlet.push(frame as any, options));
                 });
             }
 

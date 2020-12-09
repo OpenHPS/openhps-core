@@ -1,4 +1,5 @@
 import { DataFrame } from '../../data/DataFrame';
+import { GraphOptions, PullOptions } from '../../graph';
 import { Node, NodeOptions } from '../../Node';
 
 export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut> {
@@ -12,14 +13,12 @@ export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut
         this.on('push', this.onPush.bind(this));
     }
 
-    public onPull(): Promise<void> {
+    public onPull(options?: PullOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (this._dataFrames.length !== 0) {
                 const frame = this._dataFrames.shift();
                 const pushPromises: Array<Promise<void>> = [];
-                this.outputNodes.forEach((node) => {
-                    pushPromises.push(node.push(frame));
-                });
+                pushPromises.push(...this.outlets.map((outlet) => outlet.push(frame, options as GraphOptions)));
                 Promise.all(pushPromises)
                     .then(() => {
                         resolve();

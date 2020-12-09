@@ -11,8 +11,8 @@ export class FrameCloneNode<InOut extends DataFrame> extends Node<InOut, InOut> 
     private _onPush(frame: InOut, options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const pushPromises: Array<Promise<void>> = [];
-            this.outputNodes.forEach((node) => {
-                pushPromises.push(node.push(frame.clone(), options));
+            this.outlets.forEach((outlet) => {
+                pushPromises.push(outlet.push(frame.clone(), options));
             });
 
             Promise.all(pushPromises)

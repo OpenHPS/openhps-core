@@ -111,7 +111,7 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame>
     }
 
     private _validateInternalNode(node: Node<any, any>): void {
-        if (node.outputNodes.length === 0 && node.inputNodes.length === 0) {
+        if (node.outlets.length === 0 && node.inlets.length === 0) {
             this.deleteNode(node);
         } else if (!this._nodes.has(node.uid)) {
             throw new Error(`Internal node ${node.uid} (${node.name}) is not connected to the graph!`);

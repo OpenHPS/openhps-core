@@ -105,6 +105,9 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
                     outputEdges.map((edge) => (edge.inputNode = existingNode));
                     inputEdges.map((edge) => (edge.outputNode = existingNode));
                     this.addNode(existingNode);
+                } else {
+                    // Add the node as a placeholder
+                    this.addNode(node);
                 }
             } else {
                 this.addNode(node);
@@ -270,6 +273,11 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         return this.via(new FrameDebounceNode(timeout, timeoutUnit));
     }
 
+    /**
+     * Clone frames
+     *
+     * @returns {GraphShapeBuilder} Current graph shape builder
+     */
     public clone(): GraphShapeBuilder<Builder> {
         return this.via(new FrameCloneNode());
     }

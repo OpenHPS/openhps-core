@@ -11,8 +11,8 @@ export class FrameFlattenNode<InOut extends DataFrame> extends Node<InOut, InOut
         return new Promise<void>((resolve, reject) => {
             const pushPromises: Array<Promise<void>> = [];
             frames.forEach((frame) => {
-                this.outputNodes.forEach((node) => {
-                    pushPromises.push(node.push(frame));
+                this.outlets.forEach((outlet) => {
+                    pushPromises.push(outlet.push(frame));
                 });
             });
 

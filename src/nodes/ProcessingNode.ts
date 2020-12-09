@@ -58,8 +58,8 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
                 .then(() => {
                     const pushPromises: Array<Promise<void>> = [];
                     output.forEach((out) => {
-                        this.outputNodes.forEach((node) => {
-                            pushPromises.push(node.push(out, options));
+                        this.outlets.forEach((outlet) => {
+                            pushPromises.push(outlet.push(out, options));
                         });
                     });
                     return Promise.all(pushPromises);

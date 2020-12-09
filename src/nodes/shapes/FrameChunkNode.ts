@@ -35,8 +35,8 @@ export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> 
     private _flushQueue(): Promise<void> {
         return new Promise((resolve, reject) => {
             const pushPromises: Array<Promise<void>> = [];
-            this.outputNodes.forEach((outputNode) => {
-                pushPromises.push(outputNode.push(this._queue));
+            this.outlets.forEach((outlet) => {
+                pushPromises.push(outlet.push(this._queue));
             });
             this._queue = [];
 

@@ -86,8 +86,8 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
 
             Promise.all(servicePromises)
                 .then(() => {
-                    this.outputNodes.forEach((node) => {
-                        pushPromises.push(node.push(data, options));
+                    this.outlets.forEach((outlet) => {
+                        pushPromises.push(outlet.push(data, options));
                     });
                     return Promise.all(pushPromises);
                 })

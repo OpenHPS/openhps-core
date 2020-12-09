@@ -147,7 +147,6 @@ describe('data', () => {
                     const result = refSpace.transform(corner, {
                         inverse: true
                     }) as Absolute3DPosition;
-                    console.log(result.toVector3());
                 });
             });
         });
