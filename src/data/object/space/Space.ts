@@ -1,5 +1,5 @@
 import { Quaternion, Euler, AxisAngle, EulerOrder, Matrix4 } from '../../../utils/math';
-import { AngleUnit } from '../../../utils';
+import { AngleUnit, LengthUnit } from '../../../utils';
 import { AbsolutePosition } from '../../position';
 
 /**
@@ -41,6 +41,8 @@ export interface Space {
     rotation(r: { x: number; y: number; z: number; order?: EulerOrder; unit?: AngleUnit }): Space;
     rotation(r: number[]): Space;
 
+    unit(u: LengthUnit): Space;
+
     baseSpaceUID: string;
 
     /**
@@ -57,7 +59,4 @@ export interface Space {
 
 export interface SpaceTransformationOptions {
     inverse?: boolean;
-    includeAccuracy?: boolean;
-    includeAngularVelocity?: boolean;
-    includeLinearVelocity?: boolean;
 }

@@ -17,9 +17,73 @@ import {
     Absolute3DPosition,
     TimeService,
     TimeUnit,
+    VelocityCalculationNode,
 } from '../../../../src';
 
 describe('node', () => {
+    describe('calculating velocity', () => {
+        let model: Model;
+        let callbackSink: CallbackSinkNode<DataFrame>;
+        let currentTime = 0;
+
+        before((done) => {
+            callbackSink = new CallbackSinkNode();
+            ModelBuilder.create()
+                .addService(new TimeService(() => currentTime, TimeUnit.MILLISECOND))
+                .from(new CallbackSourceNode())
+                .via(new VelocityProcessingNode())
+                .via(new VelocityCalculationNode())
+                .to(callbackSink)
+                .build()
+                .then((m) => {
+                    model = m;
+                    done();
+                });
+        });
+
+        it('should calculate linear velocity when not provided', (done) => {
+            callbackSink.callback = (frame: DataFrame) => {
+            };
+
+            currentTime = 0;
+            const startPosition = new Absolute2DPosition(0, 0);
+            startPosition.timestamp = currentTime;
+
+            const frame = new DataFrame();
+            const object = new DataObject('robot');
+            object.setPosition(startPosition);
+            frame.source = object;
+
+            model.push(frame).then(() => {
+                currentTime += 500;
+                const object = new DataObject('robot');
+                const nextPosition = new Absolute2DPosition(1, 1);
+                nextPosition.timestamp = currentTime;
+                object.setPosition(nextPosition);
+                callbackSink.callback = (frame: DataFrame) => {
+                    const position = frame.source.getPosition();
+                    expect(position.toVector3().x).to.equal(1);
+                    expect(position.linearVelocity.x).to.equal(2);
+                };
+                model.push(new DataFrame(object)).then(() => {
+                    currentTime += 500;
+                    callbackSink.callback = (frame: DataFrame) => {
+                        const position = frame.source.getPosition();
+                        expect(position.toVector3().x).to.equal(2);
+                        expect(position.linearVelocity.x).to.equal(2);
+                    };
+                    return model.push(new DataFrame(object.clone()));
+                }).then(() => {
+                    done();
+                })
+                .catch((ex) => {
+                    done(ex);
+                });
+            });
+        });
+
+    });
+
     describe('processing velocity', () => {
         let model: Model;
         let callbackSink: CallbackSinkNode<DataFrame>;
@@ -50,7 +114,7 @@ describe('node', () => {
             currentTime = 0;
             const object = new DataObject();
             const position = new Absolute2DPosition(3, 3);
-            position.velocity.linear = new LinearVelocity(2, 2);
+            position.linearVelocity = new LinearVelocity(2, 2);
             position.timestamp = currentTime;
             object.setPosition(position);
             currentTime += 500;
@@ -70,7 +134,7 @@ describe('node', () => {
             currentTime = 0;
             const object = new DataObject();
             const position = new Absolute2DPosition(0, 0);
-            position.velocity.linear = new LinearVelocity(1, 1);
+            position.linearVelocity = new LinearVelocity(1, 1);
             position.orientation = Quaternion.fromEuler({ yaw: 90, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
             position.timestamp = currentTime;
             object.setPosition(position);
@@ -91,7 +155,7 @@ describe('node', () => {
             currentTime = 0;
             const object = new DataObject();
             const position = new Absolute2DPosition(3, 3);
-            position.velocity.linear = new LinearVelocity(2, 2);
+            position.linearVelocity = new LinearVelocity(2, 2);
             position.orientation = Quaternion.fromEuler({ yaw: 90, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
             position.timestamp = currentTime;
             object.setPosition(position);
@@ -115,7 +179,7 @@ describe('node', () => {
             currentTime = 0;
             const object = new DataObject();
             const position = new Absolute2DPosition(3, 3);
-            position.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
+            position.angularVelocity = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
             position.timestamp = currentTime;
             object.setPosition(position);
             currentTime += 500;

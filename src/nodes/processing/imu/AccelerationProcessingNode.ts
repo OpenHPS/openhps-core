@@ -24,8 +24,14 @@ export class AccelerationProcessingNode extends FilterProcessingNode<IMUDataFram
             const accl = frame.linearAcceleration || frame.acceleration;
             const dt = 1000 / frame.frequency;
             frame.linearVelocity = LinearVelocity.fromArray(accl.clone().multiplyScalar(dt).toArray());
-            if (object.getPosition()) {
-                object.getPosition().velocity.linear.add(frame.linearVelocity);
+            const position = object.getPosition();
+            if (!position) {
+                return resolve(object);
+            }
+            if (!position.linearVelocity) {
+                position.linearVelocity = frame.linearVelocity.clone();
+            } else {
+                position.linearVelocity.add(frame.linearVelocity);
             }
             resolve(object);
         });

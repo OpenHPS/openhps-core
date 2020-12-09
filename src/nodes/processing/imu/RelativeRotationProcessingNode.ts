@@ -25,7 +25,7 @@ export class RelativeRotationProcessingNode extends FilterProcessingNode<DataFra
     public filter(object: DataObject, frame: IMUDataFrame, filter: any): Promise<DataObject> {
         return new Promise<DataObject>((resolve) => {
             const accl = frame.acceleration;
-            const gyro = object.getPosition().velocity.angular;
+            const gyro = object.getPosition().angularVelocity || frame.angularVelocity;
             const bias = 0.98;
 
             const dt = 1000 / frame.frequency;

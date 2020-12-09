@@ -4,7 +4,6 @@ import { TimeUnit } from '../../utils';
 import { TimeService } from '../../service';
 import { PushOptions } from '../../graph';
 import { ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
-import { Quaternion } from '../../utils/math/';
 
 /**
  * Merges two or more frames together based on a merge key.
@@ -92,6 +91,10 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
 
     public process(frame: InOut, options?: PushOptions): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
+            if (this.inputNodes.length === 1) {
+                return resolve(frame);
+            }
+
             // Merge key(s)
             const merge = this._mergeKeyFn(frame, options);
             if (merge === undefined) {
@@ -153,8 +156,8 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
             newPosition = this.mergePositions(newPosition, positions[i].clone());
         }
         newPosition.accuracy = newPosition.accuracy / positions.length;
-        if (newPosition.velocity.linear) {
-            newPosition.velocity.linear.accuracy = newPosition.velocity.linear.accuracy / positions.length;
+        if (newPosition.linearVelocity) {
+            newPosition.linearVelocity.accuracy = newPosition.linearVelocity.accuracy / positions.length;
         }
         baseObject.setPosition(newPosition);
         return baseObject;
@@ -180,38 +183,23 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
         newPosition.fromVector(newPosition.toVector3().divideScalar(1 / posAccuracyA + 1 / posAccuracyB));
         newPosition.accuracy = 1 / (posAccuracyA + posAccuracyB);
 
-        if (positionB.velocity.linear) {
-            if (newPosition.velocity.linear) {
-                const lvAccuracyA = newPosition.velocity.linear.accuracy || 1;
-                const lvAccuracyB = positionB.velocity.linear.accuracy || 1;
+        if (positionB.linearVelocity) {
+            if (newPosition.linearVelocity) {
+                const lvAccuracyA = newPosition.linearVelocity.accuracy || 1;
+                const lvAccuracyB = positionB.linearVelocity.accuracy || 1;
                 // Merge linear velocity
-                newPosition.velocity.linear
+                newPosition.linearVelocity
                     .multiplyScalar(1 / lvAccuracyA)
-                    .add(positionB.velocity.linear.multiplyScalar(1 / lvAccuracyB));
-                newPosition.velocity.linear.divideScalar(1 / lvAccuracyA + 1 / lvAccuracyB);
-                newPosition.velocity.linear.accuracy = 1 / (lvAccuracyA + lvAccuracyB);
+                    .add(positionB.linearVelocity.multiplyScalar(1 / lvAccuracyB));
+                newPosition.linearVelocity.divideScalar(1 / lvAccuracyA + 1 / lvAccuracyB);
+                newPosition.linearVelocity.accuracy = 1 / (lvAccuracyA + lvAccuracyB);
             } else {
-                newPosition.velocity.linear = positionB.velocity.linear;
+                newPosition.linearVelocity = positionB.linearVelocity;
             }
         }
         if (positionB.orientation) {
             if (newPosition.orientation) {
-                const quatAccuracyA = 1;
-                const quatAccuracyB = 1;
-                // Merge orientation
-                newPosition.orientation = Quaternion.fromEuler(
-                    newPosition.orientation
-                        .toEuler()
-                        .toVector3()
-                        .multiplyScalar(1 / quatAccuracyA)
-                        .add(
-                            positionB.orientation
-                                .toEuler()
-                                .toVector3()
-                                .multiplyScalar(1 / quatAccuracyB),
-                        )
-                        .divideScalar(1 / quatAccuracyA + 1 / quatAccuracyB),
-                );
+                newPosition.orientation.slerp(positionB.orientation, 0.5);
             } else {
                 newPosition.orientation = positionB.orientation;
             }

@@ -10,6 +10,7 @@ import {
     Absolute2DPosition,
     AbsolutePosition,
     CallbackSinkNode,
+    LinearVelocity,
 } from '../../../src';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 
@@ -38,7 +39,7 @@ describe('data', () => {
             dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject('ref_c'), 3));
             const clone = dataObject.clone();
             dataObject.displayName = '123';
-            dataObject.getPosition().velocity.linear.x = 10;
+            dataObject.getPosition().linearVelocity = new LinearVelocity(10, 0);
             expect(clone.displayName).to.equal('abc');
             expect(clone.getPosition()).to.not.be.undefined;
         });

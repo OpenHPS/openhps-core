@@ -195,11 +195,11 @@ export class GeographicalPosition extends Absolute3DPosition {
     }
 
     public fromVector(vector: Vector3, unit?: LengthUnit): void {
-        this.latitude = AngleUnit.RADIAN.convert(
-            Math.asin(vector.z / GeographicalPosition.EARTH_RADIUS),
-            AngleUnit.DEGREE,
-        );
-        this.longitude = AngleUnit.RADIAN.convert(Math.atan2(vector.y, vector.x), AngleUnit.DEGREE);
+        const x = unit.convert(vector.x, LengthUnit.METER);
+        const y = unit.convert(vector.y, LengthUnit.METER);
+        const z = unit.convert(vector.z, LengthUnit.METER);
+        this.latitude = AngleUnit.RADIAN.convert(Math.asin(z / GeographicalPosition.EARTH_RADIUS), AngleUnit.DEGREE);
+        this.longitude = AngleUnit.RADIAN.convert(Math.atan2(y, x), AngleUnit.DEGREE);
     }
 
     /**

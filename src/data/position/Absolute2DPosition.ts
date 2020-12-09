@@ -4,6 +4,8 @@ import { LengthUnit } from '../../utils';
 import { Vector3, Vector2, Quaternion } from '../../utils/math';
 import { Velocity } from './Velocity';
 import { TimeService } from '../../service';
+import { LinearVelocity } from './LinearVelocity';
+import { AngularVelocity } from './AngularVelocity';
 
 /**
  * Absolute cartesian 2D position. This class implements a [[Vector2]]. This location can be used both as
@@ -55,6 +57,50 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
         newPoint.accuracy = this.accuracy + otherPosition.accuracy / 2;
         newPoint.set((this.x + otherPosition.x) / 2, (this.y + otherPosition.y) / 2);
         return newPoint;
+    }
+
+    /**
+     * Get the linear velocity
+     *
+     * @returns {LinearVelocity} Linear velocity
+     */
+    public get linearVelocity(): LinearVelocity {
+        if (!this.velocity) {
+            return undefined;
+        }
+        return this.velocity.linear;
+    }
+
+    /**
+     * Set the linear velocity
+     */
+    public set linearVelocity(value: LinearVelocity) {
+        if (!this.velocity) {
+            this.velocity = new Velocity();
+        }
+        this.velocity.linear = value;
+    }
+
+    /**
+     * Get the angular velocity
+     *
+     * @returns {AngularVelocity} Angular velocity
+     */
+    public get angularVelocity(): AngularVelocity {
+        if (!this.velocity) {
+            return undefined;
+        }
+        return this.velocity.angular;
+    }
+
+    /**
+     * Set the angular velocity
+     */
+    public set angularVelocity(value: AngularVelocity) {
+        if (!this.velocity) {
+            this.velocity = new Velocity();
+        }
+        this.velocity.angular = value;
     }
 
     public fromVector(vector: Vector2 | Vector3, unit?: LengthUnit): void {

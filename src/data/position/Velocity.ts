@@ -16,7 +16,7 @@ export class Velocity {
     @SerializableMember()
     public angular: AngularVelocity;
 
-    constructor(linear: LinearVelocity = new LinearVelocity(), angular: AngularVelocity = new AngularVelocity()) {
+    constructor(linear?: LinearVelocity, angular?: AngularVelocity) {
         this.linear = linear;
         this.angular = angular;
     }
@@ -27,6 +27,9 @@ export class Velocity {
      * @returns {Velocity} Cloned velocity object
      */
     public clone(): this {
-        return new Velocity(this.linear.clone(), this.angular.clone()) as this;
+        return new Velocity(
+            this.linear ? this.linear.clone() : undefined,
+            this.angular ? this.angular.clone() : undefined,
+        ) as this;
     }
 }

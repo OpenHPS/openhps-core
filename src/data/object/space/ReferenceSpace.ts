@@ -2,7 +2,7 @@ import { DataObject } from '../DataObject';
 import { Space, SpaceTransformationOptions } from './Space';
 import { SerializableObject, SerializableMember } from '../../decorators';
 import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder } from '../../../utils/math';
-import { AngleUnit, LengthUnit, Unit } from '../../../utils';
+import { AngleUnit, LengthUnit } from '../../../utils';
 import { AbsolutePosition } from '../../position/AbsolutePosition';
 import { Vector3 } from '../../../utils/math/_internal';
 
@@ -25,7 +25,7 @@ export class ReferenceSpace extends DataObject implements Space {
     @SerializableMember()
     private _baseSpaceUID: string;
     @SerializableMember()
-    public unit: LengthUnit;
+    private _unit: LengthUnit;
 
     constructor(baseSpace?: ReferenceSpace, transformationMatrix?: Matrix4) {
         super();
@@ -83,6 +83,11 @@ export class ReferenceSpace extends DataObject implements Space {
         return this;
     }
 
+    public unit(unit: LengthUnit): ReferenceSpace {
+        this._unit = unit;
+        return this;
+    }
+
     public translation(dX: number, dY: number, dZ = 0): ReferenceSpace {
         this._transformationMatrix.multiply(new Matrix4().makeTranslation(dX, dY, dZ));
         return this;
@@ -127,7 +132,12 @@ export class ReferenceSpace extends DataObject implements Space {
     public transform(position: AbsolutePosition, options?: SpaceTransformationOptions): AbsolutePosition {
         const config = options || {};
         // Clone the position
-        const transformedPosition = position.clone();
+        const newPosition = position.clone();
+        // Transform the position to the length unit
+        if (this.unit) {
+            newPosition.fromVector(newPosition.toVector3(this._unit));
+            newPosition.accuracy = newPosition.unit.convert(newPosition.accuracy, this._unit);
+        }
 
         const transformationMatrix = config.inverse
             ? new Matrix4().getInverse(this._transformationMatrix)
@@ -136,24 +146,27 @@ export class ReferenceSpace extends DataObject implements Space {
         const scale = config.inverse ? new Matrix4().getInverse(this._scaleMatrix) : this._scaleMatrix;
 
         // Transform the point using the transformation matrix
-        transformedPosition.fromVector(transformedPosition.toVector3().applyMatrix4(transformationMatrix));
+        newPosition.fromVector(newPosition.toVector3().applyMatrix4(transformationMatrix));
         // Transform the orientation (rotation)
-        if (transformedPosition.orientation) {
-            transformedPosition.orientation.multiply(rotation);
+        if (newPosition.orientation) {
+            // TODO: This is just ugly
+            console.log(newPosition.orientation.toEuler().toVector3());
+            const newEulerOrientation = newPosition.orientation
+                .toEuler()
+                .toVector3()
+                .add(Euler.fromQuaternion(rotation as Quaternion).toVector3());
+            newPosition.orientation = Quaternion.fromEuler(newEulerOrientation);
         }
-        if (transformedPosition.velocity && transformedPosition.velocity.linear) {
+        if (newPosition.linearVelocity) {
             // Transform the linear velocity (rotation and scale)
-            transformedPosition.velocity.linear
-                .applyMatrix4(scale)
-                .applyMatrix4(Matrix4.rotationFromQuaternion(rotation));
-            // TODO: Transform the angular velocity (rotation axis)
+            newPosition.linearVelocity.applyMatrix4(scale).applyMatrix4(Matrix4.rotationFromQuaternion(rotation));
         }
-        if (transformedPosition.accuracy) {
-            transformedPosition.accuracy = new Vector3(transformedPosition.accuracy, 0, 0).applyMatrix4(scale).x;
+        if (newPosition.accuracy) {
+            newPosition.accuracy = new Vector3(newPosition.accuracy, 0, 0).applyMatrix4(scale).x;
         }
 
-        transformedPosition.referenceSpaceUID = this.uid;
-        return transformedPosition;
+        newPosition.referenceSpaceUID = this.uid;
+        return newPosition;
     }
 
     public get transformationMatrix(): Matrix4 {

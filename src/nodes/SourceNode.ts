@@ -25,13 +25,14 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
         super(options);
         this._source = source || this.options.source;
 
+        // Default source settings
         this.options.persistence = this.options.persistence || true;
+
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
 
-        // Register for source changes
-        if (this._source) {
-            this.once('build', this._onRegisterService.bind(this));
+        if (this.source) {
+            this.once('build', this._initRegisterService.bind(this));
         }
     }
 
@@ -44,7 +45,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
         return this._source;
     }
 
-    private _onRegisterService(): Promise<void> {
+    private _initRegisterService(): Promise<void> {
         return new Promise<void>((resolve) => {
             const service = (this.graph as Model).findDataService(this.source);
             // Update source when modified

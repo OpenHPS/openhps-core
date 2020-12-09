@@ -1,6 +1,8 @@
 import { Position } from './Position';
 import { Vector, Quaternion, LengthUnit, Vector3 } from '../../utils';
 import { Velocity } from './Velocity';
+import { LinearVelocity } from './LinearVelocity';
+import { AngularVelocity } from './AngularVelocity';
 
 /**
  * Absolute position
@@ -13,6 +15,8 @@ export interface AbsolutePosition extends Position {
 
     /**
      * Velocity at recorded position
+     *
+     * @deprecated use linearVelocity and angularVelocity instead
      */
     velocity: Velocity;
 
@@ -30,6 +34,10 @@ export interface AbsolutePosition extends Position {
      * Position accuracy
      */
     accuracy: number;
+
+    linearVelocity: LinearVelocity;
+
+    angularVelocity: AngularVelocity;
 
     fromVector(vector: Vector, unit?: LengthUnit): void;
 
