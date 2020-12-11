@@ -1,10 +1,11 @@
 import { SerializableObject, SerializableMember } from '../decorators';
-import { LengthUnit, Vector3, Quaternion } from '../../utils';
+import { LengthUnit, Vector3 } from '../../utils';
 import { AbsolutePosition } from './AbsolutePosition';
 import { Velocity } from './Velocity';
 import { TimeService } from '../../service';
 import { AngularVelocity } from './AngularVelocity';
 import { LinearVelocity } from './LinearVelocity';
+import { Orientation } from './Orientation';
 
 /**
  * Absolute cartesian 3D position. This class extends a [[Vector3]]. This location can be used both as
@@ -25,8 +26,15 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
     /**
      * Orientation at recorded position
      */
-    @SerializableMember()
-    public orientation: Quaternion;
+    @SerializableMember({
+        deserializer: function (json) {
+            if (!json) {
+                return undefined;
+            }
+            return new Orientation(json.x, json.y, json.z, json.w, json.accuracy);
+        },
+    })
+    public orientation: Orientation;
     /**
      * Position unit
      */

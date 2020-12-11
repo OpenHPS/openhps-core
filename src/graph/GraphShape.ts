@@ -31,11 +31,7 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame>
 
     private _onBuild(_: any): Promise<void> {
         return new Promise((resolve, reject) => {
-            const buildPromises: Array<Promise<boolean>> = [];
-            this.nodes.forEach((node) => {
-                buildPromises.push(node.emitAsync('build', _));
-            });
-            Promise.all(buildPromises)
+            Promise.all(this.nodes.map((node) => node.emitAsync('build', _)))
                 .then(() => {
                     this.emit('ready');
                     resolve();

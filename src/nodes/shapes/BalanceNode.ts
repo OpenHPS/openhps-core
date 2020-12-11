@@ -1,9 +1,9 @@
 import { DataFrame } from '../../data';
 import { Node } from '../../Node';
-import { AbstractNode } from '../../graph/interfaces';
+import { AbstractEdge } from '../../graph/interfaces';
 
 export class BalanceNode<InOut extends DataFrame> extends Node<InOut, InOut> {
-    private _busyNodes: Array<AbstractNode<any, any>> = [];
+    private _busyNodes: Array<AbstractEdge<any>> = [];
     private _queue: Array<{
         frame: InOut | InOut[];
         resolve: () => void;
@@ -19,14 +19,15 @@ export class BalanceNode<InOut extends DataFrame> extends Node<InOut, InOut> {
             });
 
             let assigned = false;
-            for (const node of this.outputNodes) {
-                if (this._busyNodes.indexOf(node) === -1) {
+            for (const outlet of this.outlets) {
+                if (this._busyNodes.indexOf(outlet) === -1) {
                     // Node is not busy - perform push
-                    this._busyNodes.push(node);
+                    this._busyNodes.push(outlet);
                     assigned = true;
-                    node.push(frame)
+                    outlet
+                        .push(frame)
                         .then(() => {
-                            this._busyNodes.splice(this._busyNodes.indexOf(node), 1);
+                            this._busyNodes.splice(this._busyNodes.indexOf(outlet), 1);
                             this._updateQueue();
                             resolve();
                         })
@@ -46,17 +47,18 @@ export class BalanceNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
     private _updateQueue() {
         if (this._queue.length !== 0) {
-            for (const node of this.outputNodes) {
-                if (this._busyNodes.indexOf(node) === -1) {
+            for (const outlet of this.outlets) {
+                if (this._busyNodes.indexOf(outlet) === -1) {
                     // Node is not busy - perform push
                     const queue: {
                         frame: InOut | InOut[];
                         resolve: () => void;
                         reject: (ex?: any) => void;
                     } = this._queue.pop();
-                    node.push(queue.frame)
+                    outlet
+                        .push(queue.frame)
                         .then(() => {
-                            this._busyNodes.splice(this._busyNodes.indexOf(node), 1);
+                            this._busyNodes.splice(this._busyNodes.indexOf(outlet), 1);
                             this._updateQueue();
                             queue.resolve();
                         })

@@ -43,11 +43,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _intervalFn(): void {
         if ((this._pushFinished && this._pullFinished) || !this.options.throttlePull) {
             this._pullFinished = true;
-            const promises: Array<Promise<void>> = [];
-            this.inputNodes.forEach((node) => {
-                promises.push(node.pull(this.options.pullOptions));
-            });
-            Promise.all(promises)
+            Promise.all(this.inlets.map((inlet) => inlet.pull(this.options.pullOptions)))
                 .then(() => {
                     this._pullFinished = true;
                 })
@@ -66,7 +62,6 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
         return new Promise((resolve) => {
             this._timer = setInterval(this._intervalFn.bind(this), this._interval);
             resolve();
-            this.emit('ready');
         });
     }
 

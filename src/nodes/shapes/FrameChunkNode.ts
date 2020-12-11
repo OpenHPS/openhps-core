@@ -68,7 +68,6 @@ export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> 
     private _start(): Promise<void> {
         return new Promise((resolve) => {
             this._timer = setInterval(this._timeoutFn.bind(this), this._interval);
-            this.emit('ready');
             resolve();
         });
     }

@@ -86,12 +86,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         return new Promise<void>((resolve, reject) => {
             if (this.options.optimizedPull) {
                 // Do not pass the pull request to the worker
-                const pullPromises: Array<Promise<void>> = [];
-                this.inputNodes.forEach((node) => {
-                    pullPromises.push(node.pull(options));
-                });
-
-                Promise.all(pullPromises)
+                Promise.all(this.inlets.map((inlet) => inlet.pull(options)))
                     .then(() => {
                         resolve();
                     })
@@ -103,9 +98,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                         const pullFn: (options?: PullOptions) => Promise<void> = worker.pull;
                         return pullFn(options);
                     })
-                    .then(() => {
-                        resolve();
-                    })
+                    .then(resolve)
                     .catch(reject);
             }
         });

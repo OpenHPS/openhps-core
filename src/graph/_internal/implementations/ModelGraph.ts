@@ -64,9 +64,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
                     this.emit('ready');
                     resolve();
                 })
-                .catch((ex) => {
-                    reject(ex);
-                });
+                .catch(reject);
         });
     }
 
@@ -119,9 +117,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
                 .then(() => {
                     resolve();
                 })
-                .catch((ex) => {
-                    reject(ex);
-                });
+                .catch(reject);
         });
     }
 

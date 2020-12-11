@@ -4,7 +4,7 @@ import { DataFrame } from './data/DataFrame';
 import { AbstractGraph } from './graph/interfaces/AbstractGraph';
 import { AbstractEdge } from './graph/interfaces/AbstractEdge';
 import { AsyncEventEmitter } from './_internal/AsyncEventEmitter';
-import { PullOptions, PushOptions } from './graph';
+import { GraphBuilder, PullOptions, PushOptions } from './graph';
 
 /**
  * The graph node has an input and output [[DataFrame]]
@@ -59,24 +59,6 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
     }
 
     /**
-     * Get the outgoing edges
-     *
-     * @returns {Array<AbstractEdge<Out>>} Outgoing edges
-     */
-    public get outlets(): Array<AbstractEdge<Out>> {
-        return this.graph.edges.filter((edge) => edge.inputNode === this);
-    }
-
-    /**
-     * Get the incoming edges
-     *
-     * @returns {Array<AbstractEdge<In>>} Incoming edges
-     */
-    public get inlets(): Array<AbstractEdge<In>> {
-        return this.graph.edges.filter((edge) => edge.outputNode === this);
-    }
-
-    /**
      * @deprecated Use outlets instead
      * @returns {Array<Node<DataFrame, DataFrame>>} Array of outgoing nodes
      */
@@ -90,6 +72,83 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
      */
     public get inputNodes(): Array<Node<DataFrame, DataFrame>> {
         return this.inlets.map((edge) => edge.inputNode) as Array<Node<DataFrame, DataFrame>>;
+    }
+
+    /**
+     * Get the outgoing edges
+     *
+     * @returns {Array<AbstractEdge<DataFrame>>} Outgoing edges
+     */
+    public get outlets(): Array<AbstractEdge<Out>> {
+        return this.graph.edges.filter((edge) => edge.inputNode === this);
+    }
+
+    /**
+     * Get the incoming edges
+     *
+     * @returns {Array<AbstractEdge<DataFrame>>} Incoming edges
+     */
+    public get inlets(): Array<AbstractEdge<In>> {
+        return this.graph.edges.filter((edge) => edge.outputNode === this);
+    }
+
+    /**
+     * Node ready
+     *
+     * @param {string} event ready
+     */
+    public emit(event: 'ready'): boolean;
+    /**
+     * Destroy the node
+     *
+     * @param {string} event destroy
+     */
+    public emit(event: 'destroy'): boolean;
+    public emit(event: string | symbol, ...args: any[]): boolean {
+        return super.emit(event, ...args);
+    }
+
+    /**
+     * Event when a data frame is pulled
+     *
+     * @param {string} event receive
+     * @param {Function} listener Event callback
+     */
+    public on(event: 'pull', listener: (options?: PullOptions) => Promise<void> | void): this;
+    /**
+     * Event when a data frame is push to the node
+     *
+     * @param {string} event receive
+     * @param {Function} listener Event callback
+     */
+    public on(event: 'push', listener: (frame: In, options?: PushOptions) => Promise<void> | void): this;
+    public on(event: string | symbol, listener: (...args: any[]) => void): this {
+        return super.on(event, listener);
+    }
+
+    /**
+     * Event called when node is destroyed
+     *
+     * @param {string} event destroy
+     * @param {Function} listener Event callback
+     */
+    public once(event: 'destroy', listener: () => void | Promise<void>): this;
+    /**
+     * Event called when node is build
+     *
+     * @param {string} event build
+     * @param {Function} listener Event callback
+     */
+    public once(event: 'build', listener: (builder: GraphBuilder<DataFrame, DataFrame>) => void | Promise<void>): this;
+    /**
+     * Event called when node is ready
+     *
+     * @param {string} event ready
+     * @param {Function} listener Event callback
+     */
+    public once(event: 'ready', listener: () => void | Promise<void>): this;
+    public once(event: string | symbol, listener: (...args: any[]) => void): this {
+        return super.once(event, listener);
     }
 
     /**

@@ -1,11 +1,12 @@
 import { AbsolutePosition } from './AbsolutePosition';
 import { SerializableMember, SerializableObject } from '../decorators';
 import { LengthUnit } from '../../utils';
-import { Vector3, Vector2, Quaternion } from '../../utils/math';
+import { Vector3, Vector2 } from '../../utils/math';
 import { Velocity } from './Velocity';
 import { TimeService } from '../../service';
 import { LinearVelocity } from './LinearVelocity';
 import { AngularVelocity } from './AngularVelocity';
+import { Orientation } from './Orientation';
 
 /**
  * Absolute cartesian 2D position. This class implements a [[Vector2]]. This location can be used both as
@@ -26,8 +27,15 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
     /**
      * Orientation at recorded position
      */
-    @SerializableMember()
-    public orientation: Quaternion;
+    @SerializableMember({
+        deserializer: function (json) {
+            if (!json) {
+                return undefined;
+            }
+            return new Orientation(json.x, json.y, json.z, json.w, json.accuracy);
+        },
+    })
+    public orientation: Orientation;
     /**
      * Position unit
      */
