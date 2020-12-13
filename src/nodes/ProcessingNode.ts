@@ -36,18 +36,6 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
                     const servicePromises: Array<Promise<unknown>> = [];
                     results.forEach((result) => {
                         if (result) {
-                            const oldFrameService = this.model.findDataService(frame);
-                            const frameService = this.model.findDataService(result);
-
-                            if (frameService !== null && frameService !== undefined) {
-                                if (frameService.name !== oldFrameService.name) {
-                                    // Delete frame from old service
-                                    servicePromises.push(oldFrameService.delete((frame as DataFrame).uid));
-                                }
-
-                                // Update the frame
-                                servicePromises.push(frameService.insert((result as DataFrame).uid, result));
-                            }
                             output.push(result);
                         }
                     });

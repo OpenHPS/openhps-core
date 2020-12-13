@@ -1,7 +1,6 @@
 import { DataFrame } from '../data/DataFrame';
 import { DataObject } from '../data';
 import { v4 as uuidv4 } from 'uuid';
-import { DataService } from '../service';
 import { Node, NodeOptions } from '../Node';
 import { PushOptions } from '../graph';
 
@@ -15,7 +14,6 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In
         super(options);
 
         this.options.persistence = this.options['persistence'] === undefined ? true : this.options.persistence;
-        this.options.removeFrames = this.options['removeFrames'] === undefined ? true : this.options.removeFrames;
     }
 
     public push(data: In | In[], options?: PushOptions): Promise<void> {
@@ -30,17 +28,11 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In
                     const persistPromise: Array<Promise<void>> = [];
                     if (data instanceof Array) {
                         data.forEach((f: In) => {
-                            if (this.options.removeFrames) {
-                                persistPromise.push(this.removeDataFrame(f));
-                            }
                             if (this.options.persistence) {
                                 persistPromise.push(this.persistDataObject(f));
                             }
                         });
                     } else {
-                        if (this.options.removeFrames) {
-                            persistPromise.push(this.removeDataFrame(data));
-                        }
                         if (this.options.persistence) {
                             persistPromise.push(this.persistDataObject(data));
                         }
@@ -63,27 +55,6 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In
                     }
                 })
                 .catch(reject);
-        });
-    }
-
-    protected removeDataFrame(frame: In): Promise<void> {
-        return new Promise<void>((resolve) => {
-            const servicePromises: Array<Promise<void>> = [];
-
-            // Remove the frame from the data frame service
-            const frameService: DataService<any, any> = this.model.findDataService(frame);
-            if (frameService !== null && frameService !== undefined) {
-                // Update the frame
-                servicePromises.push(frameService.delete(frame.uid));
-            }
-
-            Promise.all(servicePromises)
-                .then(() => {
-                    resolve();
-                })
-                .catch(() => {
-                    resolve(); // Ignore frame deleting issue
-                });
         });
     }
 
@@ -116,10 +87,4 @@ export interface SinkNodeOptions extends NodeOptions {
      * @default true
      */
     persistence?: boolean;
-    /**
-     * Remove data frames from services
-     *
-     * @default true
-     */
-    removeFrames?: boolean;
 }

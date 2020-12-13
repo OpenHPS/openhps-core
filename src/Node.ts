@@ -76,7 +76,7 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
      * @param {any} log Message
      */
     public logger(level: string, log: any): void {
-        return this.model.logger(level, log);
+        this.model.logger(level, log);
     }
 
     /**

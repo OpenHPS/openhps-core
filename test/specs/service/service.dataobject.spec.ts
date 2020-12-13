@@ -25,18 +25,50 @@ describe('data object', () => {
             const object1 = new DataObject();
             object1.setPosition(new Absolute2DPosition(5, 6));
             object1.displayName = 'Test';
+            object1.createdTimestamp = Date.parse('10 Mar 1995 00:00:00 GMT');
 
             const object2 = new DataObject();
             object2.setPosition(new Absolute3DPosition(5, 6, 2));
             object2.displayName = 'Test';
             object2.parentUID = object1.uid;
+            object2.createdTimestamp = Date.parse('10 Mar 1995 01:00:00 GMT');
+
+            const object3 = new DataObject();
+            object3.setPosition(new Absolute3DPosition(1, 1, 2));
+            object3.displayName = 'Maxim';
+            object3.createdTimestamp = Date.parse('10 Mar 1995 02:00:00 GMT');
 
             const insertPromises = [];
             insertPromises.push(objectDataService.insert(object1.uid, object1));
             insertPromises.push(objectDataService.insert(object2.uid, object2));
+            insertPromises.push(objectDataService.insert(object3.uid, object3));
 
             Promise.all(insertPromises)
                 .then(() => {
+                    done();
+                })
+                .catch((ex) => {
+                    done(ex);
+                });
+        });
+
+        it('should find data objects before a certain date', (done) => {
+            objectDataService
+                .findBefore(Date.parse('10 Mar 1995 01:30:00 GMT'))
+                .then((objects) => {
+                    expect(objects.length).to.equal(2);
+                    done();
+                })
+                .catch((ex) => {
+                    done(ex);
+                });
+        });
+
+        it('should find data objects after a certain date', (done) => {
+            objectDataService
+                .findAfter(Date.parse('10 Mar 1995 01:30:00 GMT'))
+                .then((objects) => {
+                    expect(objects.length).to.equal(1);
                     done();
                 })
                 .catch((ex) => {

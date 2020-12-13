@@ -3,7 +3,7 @@ import { Node, NodeOptions } from '../Node';
 import { Thread, Worker, spawn, Pool } from 'threads';
 import { Observable } from 'threads/observable';
 import { PoolEvent } from 'threads/dist/master/pool';
-import { DataService, DataObjectService, DataFrameService, Service, NodeDataService } from '../service';
+import { DataService, DataObjectService, Service, NodeDataService } from '../service';
 import { GraphShapeBuilder } from '../graph/builders/GraphBuilder';
 import { ModelBuilder } from '../ModelBuilder';
 import { PullOptions, PushOptions } from '../graph';
@@ -180,8 +180,6 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                         type:
                             service instanceof DataObjectService
                                 ? 'DataObjectService'
-                                : service instanceof DataFrameService
-                                ? 'DataFrameService'
                                 : service instanceof NodeDataService
                                 ? 'NodeDataService'
                                 : service instanceof DataService

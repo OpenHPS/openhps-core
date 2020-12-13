@@ -57,4 +57,31 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
         };
         return this.findAll(filter) as Promise<T[]>;
     }
+
+    /**
+     * Find data objects created before a certain timestamp
+     *
+     * @param {number} timestamp Timestamp
+     * @returns {DataObject[]} Array of data objects before the specified timestamp
+     */
+    public findBefore(timestamp: number): Promise<T[]> {
+        return this._findTimestamp({ $lte: timestamp });
+    }
+
+    /**
+     * Find data objects created after a certain timestamp
+     *
+     * @param {number} timestamp Timestamp
+     * @returns {DataObject[]} Array of data objects after the specified timestamp
+     */
+    public findAfter(timestamp: number): Promise<T[]> {
+        return this._findTimestamp({ $gte: timestamp });
+    }
+
+    private _findTimestamp(timestampFilter: any): Promise<T[]> {
+        const filter: FilterQuery<any> = {
+            createdTimestamp: timestampFilter,
+        };
+        return this.findAll(filter) as Promise<T[]>;
+    }
 }

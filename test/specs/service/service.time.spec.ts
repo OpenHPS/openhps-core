@@ -1,5 +1,5 @@
 import 'mocha';
-import { DataFrameService, Model, DataFrame, ModelBuilder, LoggingSinkNode, DataObject, TimeService } from '../../../src';
+import { TimeService } from '../../../src';
 import { expect } from 'chai';
 
 describe('time service', () => {

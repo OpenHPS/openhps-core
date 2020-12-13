@@ -6,7 +6,6 @@ import {
     TimeService,
     DataObjectService,
     MemoryDataService,
-    DataFrameService,
     NodeDataService,
 } from '../../../service';
 import { GraphShape } from '../../GraphShape';
@@ -126,8 +125,6 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
         this.addService(new DataObjectService(new MemoryDataService(DataObject)));
         // Store spaces in their own memory data object service
         this.addService(new DataObjectService(new MemoryDataService(ReferenceSpace)));
-        // Temporal storage of data frames
-        this.addService(new DataFrameService(new MemoryDataService(DataFrame)));
         // Store node data
         this.addService(new NodeDataService(new MemoryDataService(NodeData)));
         // Default time service using system time
@@ -200,7 +197,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
                 if (service !== null) {
                     return service;
                 }
-                if (parent.name === 'DataObject' || parent.name === 'DataFrame') {
+                if (parent.name === 'DataObject') {
                     return null;
                 }
                 parent = Object.getPrototypeOf(parent);

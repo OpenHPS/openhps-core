@@ -69,15 +69,15 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
 
     private _onPush(data: Out | Out[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const servicePromises: Array<Promise<void>> = [];
+            const servicePromises: Array<Promise<DataFrame>> = [];
 
             if (this.options.persistence) {
                 if (data instanceof Array) {
                     for (const f of data) {
-                        servicePromises.push(this.mergeFrame(f).then((f) => this.persistFrame(f)));
+                        servicePromises.push(this.mergeFrame(f));
                     }
                 } else {
-                    servicePromises.push(this.mergeFrame(data).then((f) => this.persistFrame(f)));
+                    servicePromises.push(this.mergeFrame(data));
                 }
             }
 
@@ -87,27 +87,6 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
                     resolve();
                 })
                 .catch(reject);
-        });
-    }
-
-    protected persistFrame(f: DataFrame): Promise<void> {
-        return new Promise((resolve, reject) => {
-            if (f !== null || f !== undefined) {
-                const frameService = this.model.findDataService(f);
-
-                if (frameService !== null && frameService !== undefined) {
-                    // Update the frame
-                    frameService
-                        .insert(f.uid, f)
-                        .then(() => {
-                            resolve();
-                        })
-                        .catch(reject);
-                }
-            } else {
-                // No frame provided in pull
-                resolve();
-            }
         });
     }
 

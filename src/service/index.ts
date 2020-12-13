@@ -1,6 +1,5 @@
 export * from './DataObjectService';
 export * from './Service';
-export * from './DataFrameService';
 export * from './DataServiceDriver';
 export * from './WorkerService';
 export * from './TrajectoryService';

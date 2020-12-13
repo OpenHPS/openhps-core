@@ -9,7 +9,6 @@ import {
     ModelBuilder,
     WorkerService,
     DataObjectService,
-    DataFrameService,
     NodeDataService,
     NodeData,
 } from '../../'; // @openhps/core
@@ -56,14 +55,6 @@ expose({
                     modelBuilder.addService(
                         new Proxy(
                             new DataObjectService(new DummyDataService(DataObject)),
-                            new WorkerService(service.name, serviceInput, serviceOutput),
-                        ),
-                    );
-                    break;
-                case 'DataFrameService':
-                    modelBuilder.addService(
-                        new Proxy(
-                            new DataFrameService(new DummyDataService(DataFrame)),
                             new WorkerService(service.name, serviceInput, serviceOutput),
                         ),
                     );
