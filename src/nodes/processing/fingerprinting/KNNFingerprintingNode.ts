@@ -9,7 +9,6 @@ import {
 } from '../../../data';
 import { CachedFingerprint, KNNFingerprintingService, KNNFingerprintingOptions } from '../../../service';
 import { ModelBuilder } from '../../../ModelBuilder';
-import { Model } from '../../../Model';
 import { Vector3 } from '../../../utils';
 
 /**
@@ -35,13 +34,12 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
 
     private _onBuild(modelBuilder: ModelBuilder<any, any>): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const model = this.graph as Model<any, any>;
-            this._service = model.findService(KNNFingerprintingService);
+            this._service = this.model.findService(KNNFingerprintingService);
             if (this._service === null) {
                 modelBuilder.addService(new KNNFingerprintingService());
-                this._service = model.findService(KNNFingerprintingService);
+                this._service = this.model.findService(KNNFingerprintingService);
             }
-            this._service.dataService = model.findDataService(Fingerprint);
+            this._service.dataService = this.model.findDataService(Fingerprint);
             this._service.options = this.options;
 
             if (!this._service.isReady()) {

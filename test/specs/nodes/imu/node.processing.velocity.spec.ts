@@ -54,7 +54,10 @@ describe('node', () => {
             object.setPosition(startPosition);
             frame.source = object;
 
-            model.push(frame).then(() => {
+            // Push frame
+            model.push(frame);
+
+            model.findDataService(DataObject).once('insert', () => {
                 currentTime += 500;
                 const object = new DataObject('robot');
                 const nextPosition = new Absolute2DPosition(1, 1);
@@ -65,19 +68,19 @@ describe('node', () => {
                     expect(position.toVector3().x).to.equal(1);
                     expect(position.linearVelocity.x).to.equal(2);
                 };
-                model.push(new DataFrame(object)).then(() => {
+
+                // Push frame
+                model.push(new DataFrame(object));
+
+                model.findDataService(DataObject).once('insert', () => {
                     currentTime += 500;
                     callbackSink.callback = (frame: DataFrame) => {
                         const position = frame.source.getPosition();
                         expect(position.toVector3().x).to.equal(2);
                         expect(position.linearVelocity.x).to.equal(2);
+                        done();
                     };
-                    return model.push(new DataFrame(object.clone()));
-                }).then(() => {
-                    done();
-                })
-                .catch((ex) => {
-                    done(ex);
+                    model.push(new DataFrame(object.clone()));
                 });
             });
         });
@@ -359,7 +362,7 @@ describe('node', () => {
             currentTime += 1000;
             const frame = new DataFrame();
             frame.source = object;
-            Promise.resolve(model.push(frame));
+            model.push(frame);
         });
 
         it('should not speed up when turning (with 1 intermediate calculation)', (done) => {
@@ -383,18 +386,15 @@ describe('node', () => {
             object.setPosition(startPosition);
             frame.source = object;
 
-            model.push(frame).then(() => {
+            model.once('completed', () => {
                 currentTime += 500;
-                model.findDataService(object).findByUID("robot").then(obj => {
-                    return model.push(new DataFrame(obj));
-                })
-                .then(() => {
+                model.push(new DataFrame(object));
+                model.once('completed', () => {
                     done();
-                })
-                .catch((ex) => {
-                    done(ex);
                 });
             });
+
+            model.push(frame);
         });
 
         it('should not slow down when turning (with 1 intermediate calculation)', (done) => {

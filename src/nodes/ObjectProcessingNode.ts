@@ -1,6 +1,5 @@
 import { DataFrame, DataObject } from '../data';
 import { ProcessingNode, ProcessingNodeOptions } from './ProcessingNode';
-import { Model } from '../Model';
 import { DataObjectService } from '../service';
 import { GraphOptions } from '../graph';
 
@@ -66,12 +65,11 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
             }
         }
 
-        const model = this.graph as Model<any, any>;
-        const defaultService = model.findDataService(DataObject);
+        const defaultService = this.model.findDataService(DataObject);
         if (type === undefined) {
             return defaultService.findByUID(uid);
         }
-        const service = model.findDataService(type) as DataObjectService<DataObject>;
+        const service = this.model.findDataService(type) as DataObjectService<DataObject>;
         if (service === undefined) {
             return defaultService.findByUID(uid);
         } else {

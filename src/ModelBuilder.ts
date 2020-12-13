@@ -136,12 +136,12 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
      * @param {Function} logger Logging function
      * @returns {ModelBuilder} Model builder instance
      */
-    public withLogger(logger: (level: string, log: any) => void): ModelBuilder<In, Out> {
+    public withLogger(logger: (level: string, log: any) => void): this {
         this.graph.logger = logger;
         return this;
     }
 
-    public withReferenceSpace(space: ReferenceSpace): ModelBuilder<In, Out> {
+    public withReferenceSpace(space: ReferenceSpace): this {
         (this.graph as ModelGraph<In, Out>).referenceSpace = space;
         return this;
     }
@@ -152,16 +152,13 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
      * @param {Service} service Service to add
      * @returns {ModelBuilder} Model builder instance
      */
-    public addService(service: Service): ModelBuilder<In, Out> {
+    public addService(service: Service): this {
         (this.graph as ModelGraph<In, Out>).addService(service);
         return this;
     }
 
     public build(): Promise<Model<In, Out>> {
         return new Promise((resolve, reject) => {
-            this.graph.nodes.forEach((node) => {
-                node.logger = this.graph.logger;
-            });
             (this.graph as ModelGraph<In, Out>).findAllServices().forEach((service) => {
                 service.logger = this.graph.logger;
             });

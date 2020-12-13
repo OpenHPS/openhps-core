@@ -4,9 +4,9 @@ import { TypedJSON } from 'typedjson';
 import { SerializableObject, SerializableMember, SerializableArrayMember } from '../decorators';
 import { v4 as uuidv4 } from 'uuid';
 import { DataSerializer } from '../DataSerializer';
-import { Space } from './space/Space';
 import { TimeService } from '../../service';
 import { Model } from '../../Model';
+import { ReferenceSpace } from './space';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -93,10 +93,10 @@ export class DataObject {
     /**
      * Get the current absolute position of the object
      *
-     * @param {Space} referenceSpace (optional) reference space
+     * @param {ReferenceSpace} [referenceSpace] Reference space
      * @returns {AbsolutePosition} Position of the data object
      */
-    public getPosition(referenceSpace?: Space): AbsolutePosition {
+    public getPosition(referenceSpace?: ReferenceSpace): AbsolutePosition {
         if (referenceSpace !== undefined && this._position !== undefined) {
             return referenceSpace.transform(this._position, {
                 inverse: true,
@@ -110,9 +110,9 @@ export class DataObject {
      * Set the current absolute position of the object
      *
      * @param {AbsolutePosition} position Position to set
-     * @param {Space} referenceSpace (optional) reference space
+     * @param {ReferenceSpace} [referenceSpace] Reference space
      */
-    public setPosition(position: AbsolutePosition, referenceSpace?: Space): void {
+    public setPosition(position: AbsolutePosition, referenceSpace?: ReferenceSpace): void {
         this._position = referenceSpace
             ? referenceSpace.transform(position, {
                   inverse: false,

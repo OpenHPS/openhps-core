@@ -1,5 +1,5 @@
 import { Suite } from 'benchmark';
-import { Absolute3DPosition, AngularVelocity, CallbackSinkNode, DataFrame, DataObject, GraphBuilder, LinearVelocity, LoggingSinkNode, Model, ModelBuilder, Quaternion, TimeService, VelocityProcessingNode, WorkerNode } from '../../src';
+import { Absolute3DPosition, AngularVelocity, CallbackSinkNode, DataFrame, DataObject, GraphBuilder, LinearVelocity, LoggingSinkNode, Model, ModelBuilder, Orientation, Quaternion, TimeService, VelocityProcessingNode, WorkerNode } from '../../src';
 import * as path from 'path';
 import { ComputingNode } from '../mock/nodes/ComputingNode';
 import Benchmark = require('benchmark');
@@ -29,7 +29,7 @@ async function init() {
         const position = new Absolute3DPosition(0, 0, 0);
         position.velocity.linear = new LinearVelocity(0.1, 0.1, 0.1);
         position.velocity.angular = new AngularVelocity(0.1, 0.1, 0.1);
-        position.orientation = new Quaternion(0, 0, 0, 1);
+        position.orientation = new Orientation(0, 0, 0, 1);
         dummyObject.setPosition(position);
         dummyFrame.source = dummyObject;
         dummyFrame.addObject(dummyObject);
@@ -149,8 +149,8 @@ init().then(() => {
     suite.on('cycle', function(event: any) {
         console.log(String(event.target));
     }).on('complete', function () {
-        for (let i = 1; i < this.length; i += 2) {
-            fs.writeFileSync("benchmark_" + Date.now() + ".json", JSON.stringify(this[i], null, 4))
+        for (let i = 0; i < this.length; i ++) {
+            fs.writeFileSync("benchmark_" + i + "_" + Date.now() + ".json", JSON.stringify(this[i], null, 4))
         }
     })
     .run();    

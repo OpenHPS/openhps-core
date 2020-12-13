@@ -1,14 +1,12 @@
 import { DataFrame } from '../data/DataFrame';
 import { DataObject } from '../data';
-import { AbstractSourceNode } from '../graph/interfaces/AbstractSourceNode';
-import { Model } from '../Model';
-import { NodeOptions } from '../Node';
+import { Node, NodeOptions } from '../Node';
 import { GraphOptions, PullOptions, PushOptions } from '../graph';
 
 /**
  * Source node
  */
-export abstract class SourceNode<Out extends DataFrame = DataFrame> extends AbstractSourceNode<Out> {
+export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node<Out, Out> {
     /**
      * Source data object responsible for generating data frames
      */
@@ -47,7 +45,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
 
     private _initRegisterService(): Promise<void> {
         return new Promise<void>((resolve) => {
-            const service = (this.graph as Model).findDataService(this.source);
+            const service = this.model.findDataService(this.source);
             // Update source when modified
             service.on('insert', (uid: string, object: DataObject) => {
                 if (uid === this.source.uid) {
@@ -72,7 +70,6 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
     private _onPush(data: Out | Out[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const servicePromises: Array<Promise<void>> = [];
-            const pushPromises: Array<Promise<void>> = [];
 
             if (this.options.persistence) {
                 if (data instanceof Array) {
@@ -86,22 +83,17 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
 
             Promise.all(servicePromises)
                 .then(() => {
-                    this.outlets.forEach((outlet) => {
-                        pushPromises.push(outlet.push(data, options));
-                    });
-                    return Promise.all(pushPromises);
+                    this.outlets.forEach((outlet) => outlet.push(data, options));
+                    resolve();
                 })
-                .then(() => resolve())
                 .catch(reject);
         });
     }
 
     protected persistFrame(f: DataFrame): Promise<void> {
         return new Promise((resolve, reject) => {
-            const model = this.graph as Model;
-
             if (f !== null || f !== undefined) {
-                const frameService = model.findDataService(f);
+                const frameService = this.model.findDataService(f);
 
                 if (frameService !== null && frameService !== undefined) {
                     // Update the frame
@@ -121,8 +113,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
 
     protected mergeFrame(frame: DataFrame): Promise<DataFrame> {
         return new Promise<DataFrame>((resolve, reject) => {
-            const model = this.graph as Model<any, any>;
-            const defaultService = model.findDataService(DataObject);
+            const defaultService = this.model.findDataService(DataObject);
             const promises: Array<Promise<void>> = [];
             const objects: DataObject[] = [];
             frame.getObjects().forEach((object) => {
@@ -131,7 +122,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
             objects.forEach((object) => {
                 promises.push(
                     new Promise((objResolve) => {
-                        let service = model.findDataService(object);
+                        let service = this.model.findDataService(object);
                         if (service === null || service === undefined) {
                             service = defaultService;
                         }
@@ -206,6 +197,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Abst
                         this.onPull()
                             .then((frame) => {
                                 if (frame !== undefined && frame !== null) {
+                                    // Resolve after push is done
                                     return this.push(frame, newOptions);
                                 } else {
                                     resolve();

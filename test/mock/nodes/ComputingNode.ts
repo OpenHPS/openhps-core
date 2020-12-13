@@ -12,13 +12,8 @@ export class ComputingNode extends Node<DataFrame, DataFrame> {
     public onPush(frame: DataFrame): Promise<void> {
         return new Promise((resolve) => {
             this.listPrimes(this._computations);
-            const pushPromises = new Array();
-            this.outputNodes.forEach(node => {
-                pushPromises.push(node.push(frame));
-            });
-            Promise.all(pushPromises).then(() => {
-                resolve();
-            });
+            this.outlets.forEach(outlet => outlet.push(frame));
+            resolve();
         });
     }
 

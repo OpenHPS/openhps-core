@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, DataFrame, WorkerNode, CallbackSinkNode, DataObject } from '../../../src';
+import { ModelBuilder, DataFrame, WorkerNode, CallbackSinkNode, DataObject, Model } from '../../../src';
 import * as path from 'path';
 
 describe('node', () => {
@@ -44,18 +44,21 @@ describe('node', () => {
                 .then(() => {
                     // Push three frames and wait for them to finish
                     start = new Date().getTime();
-                    return Promise.all([
-                        model.push(new DataFrame()),
-                        model.push(new DataFrame()),
-                        model.push(new DataFrame()),
-                    ]);
-                })
-                .then(() => {
-                    const end = new Date().getTime();
-                    const diff = end - start;
-                    expect(diff).to.be.lessThan(30 + overhead);
-                    model.emit('destroy');
-                    done();
+                    let count = 0;
+                    model.on('completed', () => {
+                        count++;
+                        if (count === 3) {
+                            const end = new Date().getTime();
+                            const diff = end - start;
+                            expect(diff).to.be.lessThan(30 + overhead);
+                            model.emit('destroy');
+                            done();
+                        }
+                    });
+
+                    for (let i = 0 ; i < 3 ; i ++){
+                        model.push(new DataFrame());
+                    }
                 })
                 .catch((ex) => {
                     done(ex);
@@ -97,18 +100,21 @@ describe('node', () => {
                 .then(() => {
                     // Push three frames and wait for them to finish
                     start = new Date().getTime();
-                    return Promise.all([
-                        model.push(new DataFrame()),
-                        model.push(new DataFrame()),
-                        model.push(new DataFrame()),
-                    ]);
-                })
-                .then(() => {
-                    const end = new Date().getTime();
-                    const diff = end - start;
-                    expect(diff).to.be.lessThan(20 + overhead);
-                    model.emit('destroy');
-                    done();
+                    let count = 0;
+                    model.on('completed', () => {
+                        count++;
+                        if (count === 3) {
+                            const end = new Date().getTime();
+                            const diff = end - start;
+                            expect(diff).to.be.lessThan(20 + overhead);
+                            model.emit('destroy');
+                            done();
+                        }
+                    });
+
+                    for (let i = 0 ; i < 3 ; i ++){
+                        model.push(new DataFrame());
+                    }
                 })
                 .catch((ex) => {
                     done(ex);
@@ -150,18 +156,21 @@ describe('node', () => {
                 .then(() => {
                     // Push three frames and wait for them to finish
                     start = new Date().getTime();
-                    return Promise.all([
-                        model.push(new DataFrame()),
-                        model.push(new DataFrame()),
-                        model.push(new DataFrame()),
-                    ]);
-                })
-                .then(() => {
-                    const end = new Date().getTime();
-                    const diff = end - start;
-                    expect(diff).to.be.lessThan(10 + overhead);
-                    model.emit('destroy');
-                    done();
+                    let count = 0;
+                    model.on('completed', () => {
+                        count++;
+                        if (count === 3) {
+                            const end = new Date().getTime();
+                            const diff = end - start;
+                            expect(diff).to.be.lessThan(10 + overhead);
+                            model.emit('destroy');
+                            done();
+                        }
+                    });
+
+                    for (let i = 0 ; i < 3 ; i ++){
+                        model.push(new DataFrame());
+                    }
                 })
                 .catch((ex) => {
                     done(ex);
@@ -200,9 +209,33 @@ describe('node', () => {
                     model = m;
                     const dataService = model.findDataService(DataObject);
                     dataService.insert('abc456', new DataObject('abc456')).then(() => {
-                        Promise.resolve(model.push(new DataFrame()));
+                        model.push(new DataFrame());
                     });
                 });
         }).timeout(50000);
+    });
+
+    describe('workergraph', () => {
+
+        it('should build a graph or node from a file', (done) => {
+            ModelBuilder.create()
+                .addNode(new WorkerNode("../../mock/ExampleGraph", {
+                    name: "output",
+                    directory: __dirname,
+                    poolSize: 4
+                }))
+                .from("output")
+                .to(new CallbackSinkNode(function(frame) {
+                    expect(frame).to.not.be.undefined;
+                    expect(frame.source).to.not.be.undefined;
+                    expect(frame.source.uid).to.be.equal("mvdewync");
+                    this.model.destroy();
+                    done();
+                }))
+                .build().then(model => {
+                    model.pull();
+                });
+        }).timeout(30000);
+
     });
 });

@@ -1,6 +1,5 @@
 import { DataFrame, DataObject, ReferenceSpace } from '../../data';
 import { Node } from '../../Node';
-import { AbstractSourceNode, AbstractEdge, AbstractGraph, AbstractSinkNode, AbstractNode } from '../interfaces';
 import { EdgeBuilder } from './EdgeBuilder';
 import { TimeUnit } from '../../utils';
 import {
@@ -16,6 +15,8 @@ import { ObjectFilterNode } from '../../nodes/shapes/ObjectFilterNode';
 import { FrameDebounceNode } from '../../nodes/shapes/FrameDebounceNode';
 import { ReferenceSpaceConversionNode } from '../../nodes/processing/ReferenceSpaceConversionNode';
 import { PlaceholderNode } from '../../nodes/_internal/PlaceholderNode';
+import { SinkNode, SourceNode } from '../../nodes';
+import { Edge } from '../Edge';
 
 /**
  * Graph builder
@@ -45,7 +46,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
                 selectedNodes.push(nodeObject);
             } else {
                 this.graph.addNode(node);
-                if (node instanceof AbstractSourceNode) {
+                if (node instanceof SourceNode) {
                     this.graph.addEdge(EdgeBuilder.create().from(this.graph.internalInput).to(node).build());
                 }
                 selectedNodes.push(node);
@@ -58,22 +59,22 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
         );
     }
 
-    public addNode(node: AbstractNode<any, any>): GraphBuilder<In, Out> {
+    public addNode(node: Node<any, any>): this {
         this.graph.addNode(node);
         return this;
     }
 
-    public addEdge(edge: AbstractEdge<any>): GraphBuilder<In, Out> {
+    public addEdge(edge: Edge<any>): this {
         this.graph.addEdge(edge);
         return this;
     }
 
-    public deleteEdge(edge: AbstractEdge<any>): GraphBuilder<In, Out> {
+    public deleteEdge(edge: Edge<any>): this {
         this.graph.deleteEdge(edge);
         return this;
     }
 
-    public deleteNode(node: AbstractNode<any, any>): GraphBuilder<In, Out> {
+    public deleteNode(node: Node<any, any>): this {
         this.graph.deleteNode(node);
         return this;
     }
@@ -81,11 +82,11 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
     /**
      * Add graph shape to graph
      *
-     * @param {GraphBuilder | AbstractGraph} shape Graph builder or abstract graph
+     * @param {GraphBuilder | GraphShape} shape Graph builder or abstract graph
      * @returns {GraphBuilder} Current graph builder instance
      */
-    public addShape(shape: GraphBuilder<any, any> | AbstractGraph<any, any>): GraphBuilder<In, Out> {
-        let graph: AbstractGraph<any, any>;
+    public addShape(shape: GraphBuilder<any, any> | GraphShape<any, any>): this {
+        let graph: GraphShape<any, any>;
         if (shape instanceof GraphBuilder) {
             graph = shape.graph;
         } else {
@@ -127,11 +128,8 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
         return this._graph;
     }
 
-    public build(): Promise<AbstractGraph<In, Out>> {
+    public build(): Promise<GraphShape<In, Out>> {
         return new Promise((resolve, reject) => {
-            this.graph.nodes.forEach((node) => {
-                node.logger = this.graph.logger;
-            });
             this.graph.validate();
             this.graph.once('ready', () => {
                 resolve(this.graph);
@@ -156,10 +154,9 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         this.graph = graph;
     }
 
-    protected viaGraphBuilder(graphBuilder: GraphBuilder<any, any>): GraphShapeBuilder<Builder> {
+    protected viaGraphBuilder(graphBuilder: GraphBuilder<any, any>): this {
         graphBuilder.graph.nodes.forEach((graphNode) => {
             (graphNode as Node<any, any>).graph = this.graph;
-            (graphNode as Node<any, any>).logger = this.graph.logger;
             this.graph.addNode(graphNode);
         });
         graphBuilder.graph.edges.forEach((graphEdge) => {
@@ -168,18 +165,15 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         return this;
     }
 
-    protected viaGraph(graph: AbstractGraph<any, any>): GraphShapeBuilder<Builder> {
+    protected viaGraph(graph: GraphShape<any, any>): this {
         // Add graph as node
         graph.nodes.forEach((graphNode) => {
             (graphNode as Node<any, any>).graph = this.graph;
-            (graphNode as Node<any, any>).logger = this.graph.logger;
         });
         return this.via((graph as unknown) as Node<any, any>);
     }
 
-    public via(
-        ...nodes: Array<Node<any, any> | string | AbstractGraph<any, any> | GraphBuilder<any, any>>
-    ): GraphShapeBuilder<Builder> {
+    public via(...nodes: Array<Node<any, any> | string | GraphShape<any, any> | GraphBuilder<any, any>>): this {
         const selectedNodes: Array<Node<any, any>> = [];
         nodes.forEach((node) => {
             if (node instanceof GraphBuilder) {
@@ -218,11 +212,11 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         });
     }
 
-    public chunk(size: number, timeout?: number, timeoutUnit?: TimeUnit): GraphShapeBuilder<Builder> {
+    public chunk(size: number, timeout?: number, timeoutUnit?: TimeUnit): this {
         return this.via(new FrameChunkNode(size, timeout, timeoutUnit));
     }
 
-    public flatten(): GraphShapeBuilder<Builder> {
+    public flatten(): this {
         return this.via(new FrameFlattenNode());
     }
 
@@ -232,9 +226,9 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      * @param {Function} filterFn Filter function (true to keep, false to remove)
      * @returns {GraphShapeBuilder} Current graph builder instance
      */
-    public filter(filterFn: (object: DataObject, frame?: DataFrame) => boolean): GraphShapeBuilder<Builder>;
-    public filter(filterFn: (frame: DataFrame) => boolean): GraphShapeBuilder<Builder>;
-    public filter(filterFn: (_?: any) => boolean): GraphShapeBuilder<Builder> {
+    public filter(filterFn: (object: DataObject, frame?: DataFrame) => boolean): this;
+    public filter(filterFn: (frame: DataFrame) => boolean): this;
+    public filter(filterFn: (_?: any) => boolean): this {
         return this.via(new FrameFilterNode(filterFn));
     }
 
@@ -244,7 +238,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      * @param {Function} filterFn Filter function (true to keep, false to remove)
      * @returns {GraphShapeBuilder} Current graph builder instance
      */
-    public filterObjects(filterFn: (object: DataObject, frame?: DataFrame) => boolean): GraphShapeBuilder<Builder> {
+    public filterObjects(filterFn: (object: DataObject, frame?: DataFrame) => boolean): this {
         return this.via(new ObjectFilterNode(filterFn));
     }
 
@@ -260,7 +254,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         by: (frame: DataFrame) => boolean = () => true,
         timeout = 100,
         timeoutUnit = TimeUnit.MILLISECOND,
-    ): GraphShapeBuilder<Builder> {
+    ): this {
         return this.via(
             new ObjectMergeNode(by, {
                 timeout,
@@ -269,7 +263,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         );
     }
 
-    public debounce(timeout = 100, timeoutUnit = TimeUnit.MILLISECOND): GraphShapeBuilder<Builder> {
+    public debounce(timeout = 100, timeoutUnit = TimeUnit.MILLISECOND): this {
         return this.via(new FrameDebounceNode(timeout, timeoutUnit));
     }
 
@@ -278,7 +272,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      *
      * @returns {GraphShapeBuilder} Current graph shape builder
      */
-    public clone(): GraphShapeBuilder<Builder> {
+    public clone(): this {
         return this.via(new FrameCloneNode());
     }
 
@@ -288,7 +282,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      * @param {ReferenceSpace | string} referenceSpace Reference space to convert to
      * @returns {GraphShapeBuilder} Current graph shape builder
      */
-    public convertToSpace(referenceSpace: ReferenceSpace | string): GraphShapeBuilder<Builder> {
+    public convertToSpace(referenceSpace: ReferenceSpace | string): this {
         return this.via(new ReferenceSpaceConversionNode(referenceSpace, false));
     }
 
@@ -298,7 +292,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      * @param {ReferenceSpace | string} referenceSpace Reference space to convert from
      * @returns {GraphShapeBuilder} Current graph shape builder
      */
-    public convertFromSpace(referenceSpace: ReferenceSpace | string): GraphShapeBuilder<Builder> {
+    public convertFromSpace(referenceSpace: ReferenceSpace | string): this {
         return this.via(new ReferenceSpaceConversionNode(referenceSpace, true));
     }
 
@@ -307,13 +301,13 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      *
      * @returns {GraphShapeBuilder} Current graph shape builder
      */
-    public buffer(): GraphShapeBuilder<Builder> {
+    public buffer(): this {
         return this.via(new MemoryBufferNode());
     }
 
-    public to(...nodes: Array<AbstractSinkNode<any> | string>): Builder {
+    public to(...nodes: Array<SinkNode<any> | string>): Builder {
         if (nodes.length !== 0) {
-            const selectedNodes: Array<AbstractSinkNode<any>> = [];
+            const selectedNodes: Array<SinkNode<any>> = [];
             nodes.forEach((node) => {
                 let nodeObject: Node<any, any>;
                 if (typeof node === 'string') {
@@ -329,7 +323,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
                 this.graph.addNode(nodeObject);
                 this._insertNode(nodeObject);
                 this.graph.addEdge(EdgeBuilder.create().from(nodeObject).to(this.graph.internalOutput).build());
-                selectedNodes.push(nodeObject as AbstractSinkNode<any>);
+                selectedNodes.push(nodeObject as SinkNode<any>);
             });
             this.previousNodes = selectedNodes;
         } else {

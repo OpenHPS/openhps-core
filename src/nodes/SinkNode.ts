@@ -1,16 +1,14 @@
 import { DataFrame } from '../data/DataFrame';
-import { Model } from '../Model';
 import { DataObject } from '../data';
 import { v4 as uuidv4 } from 'uuid';
-import { AbstractSinkNode } from '../graph/interfaces/AbstractSinkNode';
 import { DataService } from '../service';
-import { NodeOptions } from '../Node';
+import { Node, NodeOptions } from '../Node';
 import { PushOptions } from '../graph';
 
 /**
  * Sink node
  */
-export abstract class SinkNode<In extends DataFrame = DataFrame> extends AbstractSinkNode<In> {
+export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In, In> {
     protected options: SinkNodeOptions;
 
     constructor(options?: SinkNodeOptions) {
@@ -20,22 +18,18 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
         this.options.removeFrames = this.options['removeFrames'] === undefined ? true : this.options.removeFrames;
     }
 
-    public push(frame: In | In[], options?: PushOptions): Promise<void> {
+    public push(data: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            if (frame === null || frame === undefined) {
-                this.logger('warning', {
-                    node: { uid: this.uid, name: this.name },
-                    message: `Sink node received null data frame!`,
-                });
+            if (data === null || data === undefined) {
                 return reject();
             }
 
             // Push the frame to the sink node
-            this.onPush(frame, options)
+            this.onPush(data, options)
                 .then(() => {
                     const persistPromise: Array<Promise<void>> = [];
-                    if (frame instanceof Array) {
-                        frame.forEach((f: In) => {
+                    if (data instanceof Array) {
+                        data.forEach((f: In) => {
                             if (this.options.removeFrames) {
                                 persistPromise.push(this.removeDataFrame(f));
                             }
@@ -45,16 +39,28 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
                         });
                     } else {
                         if (this.options.removeFrames) {
-                            persistPromise.push(this.removeDataFrame(frame));
+                            persistPromise.push(this.removeDataFrame(data));
                         }
                         if (this.options.persistence) {
-                            persistPromise.push(this.persistDataObject(frame));
+                            persistPromise.push(this.persistDataObject(data));
                         }
                     }
                     return Promise.all(persistPromise);
                 })
                 .then(() => {
                     resolve();
+                    // Fire a completed event
+                    if (data instanceof Array) {
+                        data.forEach((f: In) => {
+                            this.emit('completed', {
+                                frameUID: f.uid,
+                            });
+                        });
+                    } else {
+                        this.emit('completed', {
+                            frameUID: data.uid,
+                        });
+                    }
                 })
                 .catch(reject);
         });
@@ -62,11 +68,10 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
 
     protected removeDataFrame(frame: In): Promise<void> {
         return new Promise<void>((resolve) => {
-            const model: Model<any, any> = this.graph as Model<any, any>;
             const servicePromises: Array<Promise<void>> = [];
 
             // Remove the frame from the data frame service
-            const frameService: DataService<any, any> = model.findDataService(frame);
+            const frameService: DataService<any, any> = this.model.findDataService(frame);
             if (frameService !== null && frameService !== undefined) {
                 // Update the frame
                 servicePromises.push(frameService.delete(frame.uid));
@@ -84,20 +89,15 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Abstrac
 
     protected persistDataObject(frame: In): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const model: Model<any, any> = this.graph as Model<any, any>;
             const servicePromises: Array<Promise<DataObject>> = [];
 
-            const objects: DataObject[] = [];
-            frame.getObjects().forEach((object) => {
-                objects.push(object);
-            });
-
+            const objects: DataObject[] = frame.getObjects();
             for (const object of objects) {
                 if (object.uid === null) {
                     object.uid = uuidv4();
                 }
                 // Queue the storage of the object in a data service
-                servicePromises.push(model.findDataService(object).insert(object.uid, object));
+                servicePromises.push(this.model.findDataService(object).insert(object.uid, object));
             }
 
             Promise.all(servicePromises)

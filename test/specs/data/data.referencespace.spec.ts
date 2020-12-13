@@ -10,15 +10,11 @@ import {
     DataFrame,
     DataObject,
     Absolute3DPosition,
-    SinkNode,
     CallbackSinkNode,
     CallbackSourceNode,
     Matrix4,
-    Vector4,
-    Absolute2DPosition,
     LinearVelocity,
     Quaternion,
-    AxisAngle,
     Euler,
 } from '../../../src';
 
@@ -190,18 +186,17 @@ describe('data', () => {
                 object.setPosition(new Absolute3DPosition(2, 2, 1));
 
                 // Insert into the system
-                model.push(new DataFrame(object)).then(() => {
-                    // Confirm that it is inserted
-                    model
-                        .findDataService(DataObject)
-                        .findByUID('test')
-                        .then((storedObject) => {
-                            const storedLocation = storedObject.getPosition() as Absolute3DPosition;
-                            expect(storedLocation.x).to.eq(2);
-                            expect(storedLocation.y).to.eq(2);
-                            expect(storedLocation.z).to.eq(1);
-                            done();
-                        });
+                model.push(new DataFrame(object));
+
+                model.once('completed', () => {
+                    model.findDataService(DataObject).findByUID("test").then(obj => {
+                        // Confirm that it is inserted
+                        const storedLocation = obj.getPosition() as Absolute3DPosition;
+                        expect(storedLocation.x).to.eq(2);
+                        expect(storedLocation.y).to.eq(2);
+                        expect(storedLocation.z).to.eq(1);
+                        done();
+                    });
                 });
             });
 

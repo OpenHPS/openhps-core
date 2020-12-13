@@ -1,5 +1,4 @@
 import { DataObject } from '../DataObject';
-import { Space, SpaceTransformationOptions } from './Space';
 import { SerializableObject, SerializableMember } from '../../decorators';
 import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder } from '../../../utils/math';
 import { AngleUnit, LengthUnit } from '../../../utils';
@@ -12,7 +11,7 @@ import { Vector3 } from '../../../utils/math/_internal';
  * @type {ReferenceSpace}
  */
 @SerializableObject()
-export class ReferenceSpace extends DataObject implements Space {
+export class ReferenceSpace extends DataObject {
     // Raw transformation matrix
     @SerializableMember()
     private _transformationMatrix: Matrix4 = new Matrix4();
@@ -171,4 +170,8 @@ export class ReferenceSpace extends DataObject implements Space {
     public get transformationMatrix(): Matrix4 {
         return this._transformationMatrix;
     }
+}
+
+export interface SpaceTransformationOptions {
+    inverse?: boolean;
 }

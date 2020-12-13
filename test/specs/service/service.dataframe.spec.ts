@@ -3,7 +3,7 @@ import { DataFrameService, Model, DataFrame, ModelBuilder, LoggingSinkNode, Data
 import { expect } from 'chai';
 
 describe('data frame service', () => {
-    describe('output layer', () => {
+    describe('sink node', () => {
         let model: Model<DataFrame, DataFrame>;
         let frameDataService: DataFrameService<DataFrame>;
 
@@ -12,7 +12,7 @@ describe('data frame service', () => {
             frameDataService = model.findDataService('DataFrame');
         });
 
-        it('should delete frame at the output layer', (done) => {
+        it('should delete frame at the sink', (done) => {
             const object = new DataObject();
             object.displayName = 'Test';
             const frame = new DataFrame();

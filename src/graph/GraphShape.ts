@@ -1,26 +1,34 @@
 import { Node } from '../Node';
-import { AbstractEdge } from './interfaces/AbstractEdge';
-import { AbstractGraph } from './interfaces/AbstractGraph';
 import { DataFrame } from '../data/DataFrame';
 import { BroadcastNode } from '../nodes/shapes/BroadcastNode';
-import { AbstractNode, PullOptions, PushOptions } from './interfaces';
+import { PullOptions, PushOptions } from './interfaces';
+import { PushCompletedEvent, PushErrorEvent } from './events';
+import { Edge } from './Edge';
 
-export class GraphShape<In extends DataFrame, Out extends DataFrame>
-    extends Node<In, Out>
-    implements AbstractGraph<In, Out> {
+export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
     private _nodes: Map<string, Node<any, any>> = new Map();
-    private _edges: Map<string, AbstractEdge<any>> = new Map();
+    private _edges: Map<string, Edge<any>> = new Map();
 
     public internalInput: Node<any, In> = new BroadcastNode<In>();
     public internalOutput: Node<Out, any> = new BroadcastNode<Out>();
 
     constructor() {
         super();
+        // Internal input and output nodes
         this.addNode(this.internalInput);
         this.addNode(this.internalOutput);
 
+        // Graph building and destroying
         this.once('build', this._onBuild.bind(this));
         this.once('destroy', this._onDestroy.bind(this));
+        // Error handling
+        this.removeAllListeners('error');
+        this.internalInput.on('error', this.onError.bind(this));
+        this.internalOutput.on('error', this.onError.bind(this));
+        // Completed event
+        this.removeAllListeners('completed');
+        this.internalInput.on('completed', this.onCompleted.bind(this));
+        this.internalOutput.on('completed', this.onCompleted.bind(this));
     }
 
     private _onDestroy(): void {
@@ -42,11 +50,11 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame>
         });
     }
 
-    public get edges(): Array<AbstractEdge<any>> {
+    public get edges(): Array<Edge<any>> {
         return this._edges ? Array.from(this._edges.values()) : [];
     }
 
-    public set edges(edges: Array<AbstractEdge<any>>) {
+    public set edges(edges: Array<Edge<any>>) {
         edges.forEach(this.addEdge);
     }
 
@@ -73,28 +81,28 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame>
         return result;
     }
 
-    public addNode(node: AbstractNode<any, any>): void {
-        (node as Node<any, any>).graph = this.graph === undefined ? this : this.graph;
+    public addNode(node: Node<any, any>): void {
+        node.graph = this.graph === undefined ? this : this.model;
         this._nodes.set(node.uid, node as Node<any, any>);
     }
 
-    public addEdge(edge: AbstractEdge<any>): void {
-        this._edges.set(edge.uid, edge);
+    public addEdge(edge: Edge<any>): void {
+        this._edges.set(edge.inputNode.uid + edge.outputNode.uid, edge);
     }
 
-    public deleteEdge(edge: AbstractEdge<any>): void {
-        this._edges.delete(edge.uid);
+    public deleteEdge(edge: Edge<any>): void {
+        this._edges.delete(edge.inputNode.uid + edge.outputNode.uid);
     }
 
-    public deleteNode(node: AbstractNode<any, any>): void {
+    public deleteNode(node: Node<any, any>): void {
         this._nodes.delete(node.uid);
     }
 
-    private _getNodeOutlets(node: Node<any, any>): Array<AbstractEdge<Out>> {
+    private _getNodeOutlets(node: Node<any, any>): Array<Edge<Out>> {
         return this.edges.filter((edge) => edge.inputNode === node);
     }
 
-    private _getNodeInlets(node: Node<any, any>): Array<AbstractEdge<In>> {
+    private _getNodeInlets(node: Node<any, any>): Array<Edge<In>> {
         return this.edges.filter((edge) => edge.outputNode === node);
     }
 
@@ -143,6 +151,17 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame>
     }
 
     /**
+     * Graph logger
+     *
+     * @param {string} level Logging level
+     * @param {any} log Message
+     */
+    // eslint-disable-next-line
+    public logger(level: string, log: any): void {
+        return;
+    }
+
+    /**
      * Send a pull request to the graph
      *
      * @param {PullOptions} [options] Pull options
@@ -161,5 +180,13 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame>
      */
     public push(frame: In | In[], options?: PushOptions): Promise<void> {
         return this.internalInput.push(frame, options);
+    }
+
+    protected onError(event: PushErrorEvent): void {
+        this.emit('error', event);
+    }
+
+    protected onCompleted(event: PushCompletedEvent): void {
+        this.emit('completed', event);
     }
 }

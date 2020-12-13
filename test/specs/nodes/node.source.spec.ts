@@ -40,14 +40,17 @@ describe('node source', () => {
             .then((model) => {
                 const object = new DataObject('test');
                 object.setPosition(new Absolute2DPosition(3, 3));
-                model.push(new DataFrame(object)).then(() => {
+
+                model.once('completed', () => {
                     callbackNode.callback = (frame: DataFrame) => {
                         expect(frame.source.getPosition().toVector3()).to.eql(new Vector3(3, 3));
-                        expect(frame.source.getPosition().velocity.linear.x).to.equal(1);
+                        expect(frame.source.getPosition().linearVelocity.x).to.equal(1);
                         done();
                     };
                     Promise.resolve(model.pull());
                 });
+
+                model.push(new DataFrame(object));
             });
     });
 });

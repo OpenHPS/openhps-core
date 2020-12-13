@@ -48,8 +48,6 @@ expose({
             importScripts(workerData.imports);
         }
         // Create model
-        // eslint-disable-next-line
-        const builderCallback = eval(workerData.builderCallback);
         const modelBuilder = ModelBuilder.create();
         // Add remote worker services if not already added
         workerData.services.forEach((service: any) => {
@@ -94,25 +92,39 @@ expose({
                     break;
             }
         });
-        // Add source node with input observable
-        const traversalBuilder = modelBuilder.from(
-            new CallbackSourceNode(() => {
-                // Send a pull request to the main thread
-                input.next();
-                return null;
-            }),
-        );
 
-        // eslint-disable-next-line
-        const path = require('path');
-        builderCallback(traversalBuilder, modelBuilder, workerData.args);
+        modelBuilder.graph.deleteNode(modelBuilder.graph.internalInput);
+        modelBuilder.graph.internalInput = new CallbackSourceNode(() => {
+            // Send a pull request to the main thread
+            input.next();
+            return null;
+        });
+        modelBuilder.graph.addNode(modelBuilder.graph.internalInput);
+        modelBuilder.graph.deleteNode(modelBuilder.graph.internalOutput);
+        modelBuilder.graph.internalOutput = new CallbackSinkNode((frame: DataFrame) => {
+            // Serialize the frame and transmit it to the main thread
+            output.next(DataSerializer.serialize(frame));
+        });
+        modelBuilder.graph.addNode(modelBuilder.graph.internalOutput);
 
-        traversalBuilder.to(
-            new CallbackSinkNode((frame: DataFrame) => {
-                // Serialize the frame and transmit it to the main thread
-                output.next(DataSerializer.serialize(frame));
-            }),
-        );
+        if (workerData.builder) {
+            const traversalBuilder = modelBuilder.from();
+            // eslint-disable-next-line
+            const path = require('path');
+            // eslint-disable-next-line
+            const builderCallback = eval(workerData.builder);
+            builderCallback(traversalBuilder, modelBuilder, workerData.args);
+            traversalBuilder.to();
+        } else {
+            // eslint-disable-next-line
+            const path = require('path');
+            // eslint-disable-next-line
+            const graph = require(path.join(__dirname, workerData.shape));
+            if (graph) {
+                modelBuilder.addShape(graph.default);
+            }
+        }
+
         model = await modelBuilder.build();
     },
     /**

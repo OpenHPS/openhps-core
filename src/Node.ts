@@ -1,10 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
-import { AbstractNode } from './graph/interfaces/AbstractNode';
 import { DataFrame } from './data/DataFrame';
-import { AbstractGraph } from './graph/interfaces/AbstractGraph';
-import { AbstractEdge } from './graph/interfaces/AbstractEdge';
 import { AsyncEventEmitter } from './_internal/AsyncEventEmitter';
-import { GraphBuilder, PullOptions, PushOptions } from './graph';
+import { Edge, GraphBuilder, GraphShape, PullOptions, PushCompletedEvent, PushErrorEvent, PushOptions } from './graph';
+import { Model } from './Model';
 
 /**
  * The graph node has an input and output [[DataFrame]]
@@ -12,9 +10,7 @@ import { GraphBuilder, PullOptions, PushOptions } from './graph';
  * ## Usage
  *
  */
-export abstract class Node<In extends DataFrame, Out extends DataFrame>
-    extends AsyncEventEmitter
-    implements AbstractNode<In, Out> {
+export abstract class Node<In extends DataFrame, Out extends DataFrame> extends AsyncEventEmitter {
     /**
      * Unique identifier of node.
      */
@@ -24,21 +20,16 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
      */
     public name: string;
     /**
-     * Graph this model is part of
+     * Graph shape
      */
-    public graph: AbstractGraph<any, any>;
+    public graph: GraphShape<any, any>;
     /**
      * Node options
      */
     protected options: NodeOptions;
-    /**
-     * Node logger
-     *
-     * @returns {Function} Logger function
-     */
-    public logger: (level: string, log: any) => void = () => true;
 
     private _ready = false;
+    private _available = true;
 
     constructor(options?: NodeOptions) {
         super();
@@ -52,6 +43,17 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
         this.prependOnceListener('ready', () => {
             this._ready = true;
         });
+        this.on('error', this._onError.bind(this));
+        this.on('completed', this._onCompleted.bind(this));
+    }
+
+    /**
+     * Graph this model is part of
+     *
+     * @returns {Model} Positioning model
+     */
+    public get model(): Model<any, any> {
+        return this.graph as Model;
     }
 
     public isReady(): boolean {
@@ -59,39 +61,54 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
     }
 
     /**
-     * @deprecated Use outlets instead
-     * @returns {Array<Node<DataFrame, DataFrame>>} Array of outgoing nodes
+     * Check if the node is available for accepting push requests
+     *
+     * @returns {boolean} Is the node available to push
      */
-    public get outputNodes(): Array<Node<DataFrame, DataFrame>> {
-        return this.outlets.map((edge) => edge.outputNode) as Array<Node<DataFrame, DataFrame>>;
+    public isAvailable(): boolean {
+        return this._available;
     }
 
     /**
-     * @deprecated Use inlets instead
-     * @returns {Array<Node<DataFrame, DataFrame>>} Array of incoming nodes
+     * Graph logger
+     *
+     * @param {string} level Logging level
+     * @param {any} log Message
      */
-    public get inputNodes(): Array<Node<DataFrame, DataFrame>> {
-        return this.inlets.map((edge) => edge.inputNode) as Array<Node<DataFrame, DataFrame>>;
+    public logger(level: string, log: any): void {
+        return this.model.logger(level, log);
     }
 
     /**
      * Get the outgoing edges
      *
-     * @returns {Array<AbstractEdge<DataFrame>>} Outgoing edges
+     * @returns {Array<Edge<DataFrame>>} Outgoing edges
      */
-    public get outlets(): Array<AbstractEdge<Out>> {
-        return this.graph.edges.filter((edge) => edge.inputNode === this);
+    public get outlets(): Array<Edge<Out>> {
+        return this.model.edges.filter((edge) => edge.inputNode === this);
     }
 
     /**
      * Get the incoming edges
      *
-     * @returns {Array<AbstractEdge<DataFrame>>} Incoming edges
+     * @returns {Array<Edge<DataFrame>>} Incoming edges
      */
-    public get inlets(): Array<AbstractEdge<In>> {
-        return this.graph.edges.filter((edge) => edge.outputNode === this);
+    public get inlets(): Array<Edge<In>> {
+        return this.model.edges.filter((edge) => edge.outputNode === this);
     }
 
+    /**
+     * Emit completed event
+     *
+     * @param {string} event completed
+     */
+    public emit(event: 'completed', e: PushCompletedEvent): boolean;
+    /**
+     * Emit error
+     *
+     * @param {string} event error
+     */
+    public emit(event: 'error', e: PushErrorEvent): boolean;
     /**
      * Node ready
      *
@@ -108,6 +125,20 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
         return super.emit(event, ...args);
     }
 
+    /**
+     * Event when a push is completed
+     *
+     * @param {string} event error
+     * @param {Function} listener Event callback
+     */
+    public on(event: 'completed', listener: (event: PushCompletedEvent) => Promise<void> | void): this;
+    /**
+     * Event when an error is triggered
+     *
+     * @param {string} event error
+     * @param {Function} listener Error event callback
+     */
+    public on(event: 'error', listener: (event: PushErrorEvent) => Promise<void> | void): this;
     /**
      * Event when a data frame is pulled
      *
@@ -126,6 +157,13 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
         return super.on(event, listener);
     }
 
+    /**
+     * Event when a push is completed
+     *
+     * @param {string} event error
+     * @param {Function} listener Event callback
+     */
+    public once(event: 'completed', listener: (event: PushCompletedEvent) => Promise<void> | void): this;
     /**
      * Event called when node is destroyed
      *
@@ -181,37 +219,39 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame>
     /**
      * Push data to the node
      *
-     * @param {DataFrame | DataFrame[]} frame Data frame to push
+     * @param {DataFrame | DataFrame[]} data Data frame to push
      * @param {PushOptions} [options] Push options
      * @returns {Promise<void>} Push promise
      */
-    public push(frame: In | In[], options: PushOptions = {}): Promise<void> {
+    public push(data: In | In[], options: PushOptions = {}): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            if (frame === null || frame === undefined) {
-                this.logger('warning', {
-                    node: { uid: this.uid, name: this.name },
-                    message: `Node received null data frame!`,
-                });
-                return reject();
+            if (data === null || data === undefined) {
+                return reject(new Error('Node received null data frame!'));
             }
 
-            const callbackPromises: Array<Promise<void>> = [];
-            this.listeners('push').forEach((callback) => {
-                callbackPromises.push(callback(frame, options));
-            });
-
-            if (callbackPromises.length === 0) {
-                this.outlets.forEach((outlet) => {
-                    callbackPromises.push(outlet.push(frame as any, options));
-                });
+            const listeners = this.listeners('push');
+            if (listeners.length === 0) {
+                // Forward push, resolve before outlets resolve
+                this.outlets.forEach((outlet) => outlet.push(data as any, options));
+                resolve();
+            } else {
+                this._available = false;
+                Promise.all(listeners.map((callback) => callback(data, options)))
+                    .then(() => {
+                        this._available = true;
+                        resolve();
+                    })
+                    .catch(reject);
             }
-
-            Promise.all(callbackPromises)
-                .then(() => {
-                    resolve();
-                })
-                .catch(reject);
         });
+    }
+
+    private _onError(event: PushErrorEvent): void {
+        this.inlets.map((inlet) => inlet.inputNode.emit('error', event));
+    }
+
+    private _onCompleted(event: PushCompletedEvent): void {
+        this.inlets.map((inlet) => inlet.inputNode.emit('completed', event));
     }
 }
 

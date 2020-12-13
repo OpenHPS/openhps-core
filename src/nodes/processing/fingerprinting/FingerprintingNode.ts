@@ -1,6 +1,5 @@
 import { Fingerprint, DataFrame, DataObject } from '../../../data';
 import { ObjectProcessingNode } from '../../ObjectProcessingNode';
-import { Model } from '../../../Model';
 import { DataObjectService } from '../../../service';
 
 /**
@@ -20,9 +19,7 @@ export class FingerprintingNode<InOut extends DataFrame> extends ObjectProcessin
     protected offlineFingerprinting(dataObject: DataObject, dataFrame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             // Fingerprinting service
-            const fingerprintService = (this.graph as Model<any, any>).findDataService(
-                Fingerprint,
-            ) as DataObjectService<Fingerprint>;
+            const fingerprintService = this.model.findDataService(Fingerprint) as DataObjectService<Fingerprint>;
 
             // Create a fingerprint at the current position
             const fingerprint = new Fingerprint();

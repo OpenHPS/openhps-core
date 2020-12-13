@@ -13,9 +13,8 @@ export class TimeConsumingNode extends Node<DataFrame, DataFrame> {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 frame.addObject(new DataObject("time object"));
-                Promise.all(this.outlets.map(outlet => outlet.push(frame))).then(() => {
-                    resolve();
-                });
+                this.outlets.forEach(outlet => outlet.push(frame));
+                resolve();
             }, this._timeout);
         });
     }

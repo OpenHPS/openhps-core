@@ -42,8 +42,7 @@ describe('node', () => {
 
         it('should convert angular velocity to relative rotation', (done) => {
             callbackSink.callback = (frame: IMUDataFrame) => {
-                const linearVelocity = frame.source.getPosition().velocity.linear;
-                console.log(linearVelocity);
+                const linearVelocity = frame.source.getPosition().linearVelocity;
                 done();
             };
 

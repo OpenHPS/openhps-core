@@ -2,7 +2,6 @@ import { DataFrame, DataObject, LinearVelocity } from '../../../data';
 import { ObjectProcessingNode } from '../../ObjectProcessingNode';
 import { TimeUnit, LengthUnit, LinearVelocityUnit } from '../../../utils';
 import { TimeService } from '../../../service';
-import { Model } from '../../../Model';
 
 /**
  * Calculate linear and angular velocity
@@ -21,7 +20,7 @@ export class VelocityCalculationNode<InOut extends DataFrame> extends ObjectProc
 
     public predictVelocity(object: DataObject): Promise<DataObject> {
         return new Promise((resolve) => {
-            const service = (this.graph as Model).findDataService(object);
+            const service = this.model.findDataService(object);
             const position = object.getPosition();
             service
                 .findByUID(object.uid)

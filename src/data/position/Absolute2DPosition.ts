@@ -34,6 +34,18 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
             }
             return new Orientation(json.x, json.y, json.z, json.w, json.accuracy);
         },
+        serializer: function (value) {
+            if (!value) {
+                return undefined;
+            }
+            return {
+                x: value.x,
+                y: value.y,
+                z: value.z,
+                w: value.w,
+                accuracy: value.accuracy,
+            };
+        },
     })
     public orientation: Orientation;
     /**

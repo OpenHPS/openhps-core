@@ -1,7 +1,6 @@
 import { DataObject } from '../../data';
 import { DataFrame } from '../../data/DataFrame';
 import { PullOptions } from '../../graph';
-import { Model } from '../../Model';
 import { SourceNode, SourceNodeOptions } from '../SourceNode';
 
 export class HistorySourceNode<Out extends DataFrame> extends SourceNode<Out> {
@@ -11,8 +10,7 @@ export class HistorySourceNode<Out extends DataFrame> extends SourceNode<Out> {
 
     public onPull(options: PullOptions = { requestedObjects: [] }): Promise<Out> {
         return new Promise<Out>((resolve, reject) => {
-            const model = this.graph as Model;
-            const service = model.findDataService(DataObject);
+            const service = this.model.findDataService(DataObject);
             const requestPromises: Array<Promise<DataObject>> = [];
             options.requestedObjects.forEach((uid) => {
                 requestPromises.push(

@@ -79,7 +79,7 @@ describe('dataset', () => {
 
                     const pullPromises = [];
                     for (let i = 0; i < 2100; i++) {
-                        pullPromises.push(model.pull());
+                        pullPromises.push(model.pull({}));
                     }
 
                     Promise.all(pullPromises).then(() => {

@@ -231,13 +231,11 @@ describe('model', () => {
                 )
                 .build()
                 .then((model) => {
-                    return model.push(new DataFrame());
-                })
-                .then(() => {
-                    done('No error thrown');
-                })
-                .catch((ex) => {
-                    done();
+                    model.push(new DataFrame());
+                    model.once('error', (ex) => {
+                        expect(ex).to.be.not.undefined;
+                        done();
+                    });
                 });
         });
 
@@ -256,17 +254,15 @@ describe('model', () => {
                 .to()
                 .build()
                 .then((model) => {
-                    return model.push(new DataFrame());
-                })
-                .then(() => {
-                    done('No error thrown');
-                })
-                .catch((ex) => {
-                    done();
+                   model.push(new DataFrame());
+                   model.once('error', (ex) => {
+                       expect(ex).to.be.not.undefined;
+                       done();
+                   });
                 });
         });
 
-        it('should only resolve a push after reaching a sink', (done) => {
+        it('should resolve a push after being processed by the first node in line', (done) => {
             const resolved = [];
             ModelBuilder.create()
                 .from(
@@ -297,15 +293,15 @@ describe('model', () => {
                 )
                 .build()
                 .then((model) => {
-                    Promise.resolve(model.push(new DataFrame()))
-                        .then(() => {
-                            expect(resolved[0]).to.equal(2);
-                            expect(resolved[1]).to.equal(3);
-                            done();
-                        })
-                        .catch((ex) => {
-                            done(ex);
-                        });
+                    model.once('completed', () => {
+                        expect(resolved[0]).to.equal(2);
+                        expect(resolved[1]).to.equal(3);
+                        done();
+                    });
+
+                    model.push(new DataFrame()).then(() => {
+                        expect(resolved.length).to.equal(0);
+                    });
                 });
         });
     });

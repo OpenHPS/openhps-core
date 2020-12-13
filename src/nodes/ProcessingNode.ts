@@ -1,7 +1,6 @@
 import { DataFrame, DataObject } from '../data';
 import { Node, NodeOptions } from '../Node';
 import { NodeDataService, NodeData } from '../service';
-import { Model } from '../Model';
 import { PushOptions } from '../graph';
 
 /**
@@ -21,7 +20,6 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
 
     private _onPush(frame: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const model = this.graph as Model;
             const processPromises: Array<Promise<Out>> = [];
 
             if (Array.isArray(frame)) {
@@ -38,8 +36,8 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
                     const servicePromises: Array<Promise<unknown>> = [];
                     results.forEach((result) => {
                         if (result) {
-                            const oldFrameService = model.findDataService(frame);
-                            const frameService = model.findDataService(result);
+                            const oldFrameService = this.model.findDataService(frame);
+                            const frameService = this.model.findDataService(result);
 
                             if (frameService !== null && frameService !== undefined) {
                                 if (frameService.name !== oldFrameService.name) {
@@ -56,15 +54,13 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
                     return Promise.all(servicePromises);
                 })
                 .then(() => {
-                    const pushPromises: Array<Promise<void>> = [];
-                    output.forEach((out) => {
-                        this.outlets.forEach((outlet) => {
-                            pushPromises.push(outlet.push(out, options));
-                        });
-                    });
-                    return Promise.all(pushPromises);
+                    if (output.length > 0) {
+                        this.outlets.forEach((outlet) =>
+                            outlet.push(output.length === 1 ? output[0] : output, options),
+                        );
+                    }
+                    resolve();
                 })
-                .then(() => resolve())
                 .catch((ex) => {
                     if (ex === undefined) {
                         this.logger('warning', {
@@ -77,7 +73,7 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
     }
 
     protected findNodeDataService(): NodeDataService<NodeData> {
-        return (this.graph as Model).findDataService(NodeData);
+        return this.model.findDataService(NodeData);
     }
 
     /**

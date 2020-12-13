@@ -1,3 +1,5 @@
 export * from './interfaces';
 export * from './builders';
 export * from './GraphShape';
+export * from './events';
+export * from './Edge';

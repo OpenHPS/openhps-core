@@ -21,22 +21,16 @@ export abstract class FilterProcessingNode<InOut extends DataFrame> extends Obje
                         .then((result) => {
                             resolve(result);
                         })
-                        .catch((ex) => {
-                            reject(ex);
-                        })
+                        .catch(reject)
                         .finally(() => {
                             this.setNodeData(object, nodeData)
                                 .then(() => {
                                     resolve(undefined);
                                 })
-                                .catch((ex) => {
-                                    reject(ex);
-                                });
+                                .catch(reject);
                         });
                 })
-                .catch((ex) => {
-                    reject(ex);
-                });
+                .catch(reject);
         });
     }
 
