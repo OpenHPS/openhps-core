@@ -37,7 +37,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
         const selectedNodes: Array<Node<any, any>> = [];
         nodes.forEach((node: Node<any, any> | string) => {
             if (typeof node === 'string') {
-                let nodeObject = this.graph.getNodeByUID(node) || this.graph.getNodeByName(node);
+                let nodeObject = this.graph.findNodeByUID(node) || this.graph.findNodeByName(node);
                 if (nodeObject === undefined) {
                     // Add a placeholder
                     nodeObject = new PlaceholderNode(node);
@@ -98,7 +98,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
             // Check if the node is a placeholder
             if (node instanceof PlaceholderNode) {
                 // Try to find a node with the same uid/name as the placeholder node
-                const existingNode = this.graph.getNodeByUID(node.name) || this.graph.getNodeByName(node.name);
+                const existingNode = this.graph.findNodeByUID(node.name) || this.graph.findNodeByName(node.name);
                 if (existingNode) {
                     // Edit the edges connected to this placeholder
                     const outputEdges = graph.edges.filter((edge) => edge.inputNode === node);
@@ -183,7 +183,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
             } else {
                 let nodeObject: Node<any, any>;
                 if (typeof node === 'string') {
-                    nodeObject = this.graph.getNodeByUID(node) || this.graph.getNodeByName(node);
+                    nodeObject = this.graph.findNodeByUID(node) || this.graph.findNodeByName(node);
                     if (nodeObject === undefined) {
                         // Add a placeholder
                         nodeObject = new PlaceholderNode(node);
@@ -311,7 +311,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
             nodes.forEach((node) => {
                 let nodeObject: Node<any, any>;
                 if (typeof node === 'string') {
-                    nodeObject = this.graph.getNodeByUID(node) || this.graph.getNodeByName(node);
+                    nodeObject = this.graph.findNodeByUID(node) || this.graph.findNodeByName(node);
                     if (nodeObject === undefined) {
                         // Add a placeholder
                         nodeObject = new PlaceholderNode(node);

@@ -11,6 +11,7 @@ import {
     AbsolutePosition,
     CallbackSinkNode,
     LinearVelocity,
+    Model,
 } from '../../../src';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 
@@ -52,8 +53,8 @@ describe('data', () => {
                     frame.source.displayName = "maxim";
                 }))
                 .to(new CallbackSinkNode())
-                .build().then(model => {
-                    dataObject.addListener(model, obj => {
+                .build().then((model: Model) => {
+                    model.findDataService(DataObject).on('insert', (uid, obj) => {
                         expect(obj.displayName).to.eq("maxim");
                         done();
                     });

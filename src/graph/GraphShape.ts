@@ -66,11 +66,11 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
         nodes.forEach(this.addNode);
     }
 
-    public getNodeByUID(uid: string): Node<any, any> {
+    public findNodeByUID(uid: string): Node<any, any> {
         return this._nodes.get(uid);
     }
 
-    public getNodeByName(name: string): Node<any, any> {
+    public findNodeByName(name: string): Node<any, any> {
         let result: Node<any, any>;
         this._nodes.forEach((node) => {
             if (node.name === name) {

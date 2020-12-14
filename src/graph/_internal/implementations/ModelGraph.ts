@@ -228,14 +228,16 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
      * Add service to model
      *
      * @param {Service} service Service to add
+     * @param {ProxyHandler} [proxy] Proxy handler
      */
-    public addService(service: Service): void {
+    public addService(service: Service, proxy?: ProxyHandler<any>): void {
+        proxy = proxy || new ServiceProxy();
         if (service instanceof DataService) {
             // Data service
-            this._dataServices.set(service.name, new Proxy(service, new ServiceProxy()));
+            this._dataServices.set(service.name, new Proxy(service, proxy));
         } else {
             // Normal service
-            this._services.set(service.name, new Proxy(service, new ServiceProxy()));
+            this._services.set(service.name, new Proxy(service, proxy));
         }
     }
 

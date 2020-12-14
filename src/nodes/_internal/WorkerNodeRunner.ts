@@ -2,15 +2,11 @@ import 'reflect-metadata';
 import {
     DataSerializer,
     DataFrame,
-    DataObject,
     Model,
     CallbackSinkNode,
     CallbackSourceNode,
     ModelBuilder,
     WorkerService,
-    DataObjectService,
-    NodeDataService,
-    NodeData,
 } from '../../'; // @openhps/core
 import { Subject, Observable } from 'threads/observable';
 import { expose } from 'threads';
@@ -50,37 +46,17 @@ expose({
         const modelBuilder = ModelBuilder.create();
         // Add remote worker services if not already added
         workerData.services.forEach((service: any) => {
-            switch (service.type) {
-                case 'DataObjectService':
-                    modelBuilder.addService(
-                        new Proxy(
-                            new DataObjectService(new DummyDataService(DataObject)),
-                            new WorkerService(service.name, serviceInput, serviceOutput),
-                        ),
-                    );
-                    break;
-                case 'NodeDataService':
-                    modelBuilder.addService(
-                        new Proxy(
-                            new NodeDataService(new DummyDataService(NodeData)),
-                            new WorkerService(service.name, serviceInput, serviceOutput),
-                        ),
-                    );
-                    break;
-                case 'DataService':
-                    modelBuilder.addService(
-                        new Proxy(
-                            new DummyDataService(null),
-                            new WorkerService(service.name, serviceInput, serviceOutput),
-                        ),
-                    );
-                    break;
-                case 'Service':
-                default:
-                    modelBuilder.addService(
-                        new Proxy(new DummyService(), new WorkerService(service.name, serviceInput, serviceOutput)),
-                    );
-                    break;
+            if (service.dataType) {
+                const DataType = DataSerializer.findTypeByName(service.dataType);
+                modelBuilder.addService(
+                    new DummyDataService(DataType),
+                    new WorkerService(service.name, serviceInput, serviceOutput),
+                );
+            } else {
+                modelBuilder.addService(
+                    new DummyService(),
+                    new WorkerService(service.name, serviceInput, serviceOutput),
+                );
             }
         });
 

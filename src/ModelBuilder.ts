@@ -150,10 +150,11 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
      * Add a service to the model
      *
      * @param {Service} service Service to add
+     * @param {ProxyHandler} [proxy] Proxy handler
      * @returns {ModelBuilder} Model builder instance
      */
-    public addService(service: Service): this {
-        (this.graph as ModelGraph<In, Out>).addService(service);
+    public addService(service: Service, proxy?: ProxyHandler<any>): this {
+        (this.graph as ModelGraph<In, Out>).addService(service, proxy);
         return this;
     }
 

@@ -3,7 +3,7 @@ import { Node, NodeOptions } from '../Node';
 import { Thread, Worker, spawn, Pool } from 'threads';
 import { Observable } from 'threads/observable';
 import { PoolEvent } from 'threads/dist/master/pool';
-import { DataService, DataObjectService, Service, NodeDataService } from '../service';
+import { DataService, Service } from '../service';
 import { GraphShapeBuilder } from '../graph/builders/GraphBuilder';
 import { ModelBuilder } from '../ModelBuilder';
 import { PullOptions, PushOptions } from '../graph';
@@ -173,20 +173,14 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                 serviceInput().subscribe(this._onWorkerService.bind(this, threadId));
 
                 // Serialize this model services to the worker
-                const services = this.options.services || this.model.findAllServices();
+                const services: Service[] = this.options.services || this.model.findAllServices();
                 const servicesArray: any[] = services.map((service) => {
+                    // Services are wrapped in a proxy. Get prototype
+                    const serviceBase = Object.getPrototypeOf(service);
                     return {
                         name: service.name,
-                        type:
-                            service instanceof DataObjectService
-                                ? 'DataObjectService'
-                                : service instanceof NodeDataService
-                                ? 'NodeDataService'
-                                : service instanceof DataService
-                                ? 'DataService'
-                                : service instanceof Service
-                                ? 'Service'
-                                : '',
+                        type: serviceBase.constructor.name,
+                        dataType: service instanceof DataService ? (service as any).driver.dataType.name : undefined,
                     };
                 });
 

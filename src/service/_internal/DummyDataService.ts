@@ -1,39 +1,9 @@
-import { DataServiceDriver } from '../DataServiceDriver';
+import { DataService } from '../DataService';
 
-export class DummyDataService<I, T> extends DataServiceDriver<I, T> {
-    public findByUID(): Promise<T> {
-        return new Promise<T>((resolve) => {
-            resolve(undefined);
-        });
-    }
-
-    public findAll(): Promise<T[]> {
-        return new Promise<T[]>((resolve) => {
-            resolve(undefined);
-        });
-    }
-
-    public findOne(): Promise<T> {
-        return new Promise<T>((resolve) => {
-            resolve(undefined);
-        });
-    }
-
-    public insert(): Promise<T> {
-        return new Promise<T>((resolve) => {
-            resolve(undefined);
-        });
-    }
-
-    public delete(): Promise<void> {
-        return new Promise<void>((resolve) => {
-            resolve(undefined);
-        });
-    }
-
-    public deleteAll(): Promise<void> {
-        return new Promise<void>((resolve) => {
-            resolve(undefined);
-        });
+export class DummyDataService<I, T> extends DataService<I, T> {
+    constructor(dataType: new () => T) {
+        super(undefined);
+        this.dataType = dataType;
+        this.name = this.dataType.name;
     }
 }

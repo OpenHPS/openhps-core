@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, DataFrame, WorkerNode, CallbackSinkNode, DataObject, Model } from '../../../src';
+import { ModelBuilder, DataFrame, WorkerNode, CallbackSinkNode, DataObject, Model, NodeDataService, NodeData } from '../../../src';
 import * as path from 'path';
 
 describe('node', () => {
@@ -177,7 +177,7 @@ describe('node', () => {
                 });
         }).timeout(30000);
 
-        it('should be able to access services', (done) => {
+        it('should be able to access data services', (done) => {
             let model;
             ModelBuilder.create()
                 .from()
@@ -212,10 +212,46 @@ describe('node', () => {
                         model.push(new DataFrame());
                     });
                 });
-        }).timeout(50000);
+        }).timeout(5000);
+
+        it('should be able to access node data services', (done) => {
+            let model;
+            ModelBuilder.create()
+                .from()
+                .via(
+                    new WorkerNode(
+                        (builder) => {
+                            const { NodeDataServiceTestNode } = require(path.join(
+                                __dirname,
+                                '../../mock/nodes/NodeDataServiceTestNode',
+                            ));
+                            builder.via(new NodeDataServiceTestNode());
+                        },
+                        {
+                            directory: __dirname,
+                            poolSize: 1,
+                        },
+                    ),
+                )
+                .to(
+                    new CallbackSinkNode((data: DataFrame) => {
+                        const dataService: NodeDataService<NodeData> = model.findDataService(NodeData);
+                        dataService.findData("x123", "mvdewync").then(data => {
+                            expect(data.test).to.equal("abc");
+                            model.emit('destroy');
+                            done();
+                        });
+                    }),
+                )
+                .build()
+                .then((m) => {
+                    model = m;
+                    model.push(new DataFrame(new DataObject("mvdewync")));
+                });
+        }).timeout(5000);
     });
 
-    describe('workergraph', () => {
+    describe('worker graph', () => {
 
         it('should build a graph or node from a file', (done) => {
             ModelBuilder.create()

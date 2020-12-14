@@ -5,7 +5,6 @@ import { SerializableObject, SerializableMember, SerializableArrayMember } from 
 import { v4 as uuidv4 } from 'uuid';
 import { DataSerializer } from '../DataSerializer';
 import { TimeService } from '../../service';
-import { Model } from '../../Model';
 import { ReferenceSpace } from './space';
 
 /**
@@ -228,23 +227,5 @@ export class DataObject {
      */
     public clone(): this {
         return DataSerializer.deserialize(DataSerializer.serialize(this));
-    }
-
-    /**
-     * Register a new listener for this data object
-     *
-     * @param {Model} model Model to fetch data services from
-     * @param {(object: DataObject) => void} callback Callback function
-     */
-    public addListener(model: Model, callback: (object: this) => void): void {
-        const service = model.findDataService(this);
-        if (!service) {
-            return;
-        }
-        service.on('insert', (uid: string, object: this) => {
-            if (uid === this.uid) {
-                callback(object);
-            }
-        });
     }
 }
