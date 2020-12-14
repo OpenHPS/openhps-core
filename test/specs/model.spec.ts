@@ -274,11 +274,12 @@ describe('model', () => {
                 .via(
                     new CallbackNode(
                         () => {
-                            let counter = 0;
-                            for (let i = 0; i < 100000; i++) {
-                                counter += i;
-                            }
-                            resolved.push(2);
+                            return new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolved.push(2);
+                                    resolve(undefined);
+                                }, 1000);
+                            });
                         },
                         () => {
                             resolved.push(2);
