@@ -249,6 +249,72 @@ describe('node', () => {
                     model.push(new DataFrame(new DataObject("mvdewync")));
                 });
         }).timeout(5000);
+
+        it('should support error events', (done) => {
+            let model;
+            ModelBuilder.create()
+                .from()
+                .via(
+                    new WorkerNode(
+                        (builder) => {
+                            const { ErrorThrowingNode } = require(path.join(
+                                __dirname,
+                                '../../mock/nodes/ErrorThrowingNode',
+                            ));
+                            builder.via(new ErrorThrowingNode());
+                        },
+                        {
+                            directory: __dirname,
+                            poolSize: 1,
+                        },
+                    ),
+                )
+                .to()
+                .build()
+                .then((m) => {
+                    model = m;
+                    model.once('error', event => {
+                        model.destroy();
+                        done();
+                    })
+                    model.push(new DataFrame(new DataObject("mvdewync")));
+                });
+        }).timeout(5000);
+
+        it('should support completed events', (done) => {
+            let model;
+            ModelBuilder.create()
+                .from()
+                .via(
+                    new WorkerNode(
+                        (builder) => {
+                            const { TimeConsumingNode } = require(path.join(
+                                __dirname,
+                                '../../mock/nodes/TimeConsumingNode',
+                            ));
+                            builder.via(new TimeConsumingNode());
+                        },
+                        {
+                            directory: __dirname,
+                            poolSize: 1,
+                        },
+                    ),
+                )
+                .to(
+                    new CallbackSinkNode((data: DataFrame) => {
+                        
+                    }),
+                )
+                .build()
+                .then((m) => {
+                    model = m;
+                    model.once('completed', event => {
+                        model.destroy();
+                        done();
+                    })
+                    model.push(new DataFrame(new DataObject("mvdewync")));
+                });
+        }).timeout(5000);
     });
 
     describe('worker graph', () => {

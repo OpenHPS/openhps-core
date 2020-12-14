@@ -45,7 +45,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
 
     private _pool: Pool<Thread>;
     private _workerData: any = {};
-    private _serviceOutput: Map<number, (id: string, success: boolean, result?: any) => Promise<void>> = new Map();
+    private _serviceInput: Map<number, (id: string, success: boolean, result?: any) => Promise<void>> = new Map();
 
     constructor(
         builderCallback: (
@@ -153,24 +153,27 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
             const worker = new Worker(this.options.worker);
 
             spawn(worker).then((thread: Thread) => {
-                const initFn: (workerData: any) => Promise<void> = (thread as any).init;
-                const outputFn: () => Observable<any> = (thread as any).output;
-                const inputFn: () => Observable<void> = (thread as any).input;
-                const serviceInput: () => Observable<{
+                const init: (workerData: any) => Promise<void> = (thread as any).init;
+                const pushOutput: () => Observable<any> = (thread as any).pushOutput;
+                const pullOutput: () => Observable<void> = (thread as any).pullOutput;
+                const serviceOutput: () => Observable<{
                     id: string;
                     serviceName: string;
                     method: string;
                     parameters: any;
-                }> = (thread as any).serviceInput;
+                }> = (thread as any).serviceOutput;
+                const eventOutput: () => Observable<any> = (thread as any).eventOutput;
+
                 const threadId = (worker as any).threadId;
-                this._serviceOutput.set(threadId, (thread as any).serviceOutput);
+                this._serviceInput.set(threadId, (thread as any).serviceInput);
 
                 this.logger('debug', { message: 'Worker thread spawned!' });
 
                 // Subscribe to the workers pull, push and service functions
-                inputFn().subscribe(this._onWorkerPull.bind(this));
-                outputFn().subscribe(this._onWorkerPush.bind(this));
-                serviceInput().subscribe(this._onWorkerService.bind(this, threadId));
+                pullOutput().subscribe(this._onWorkerPull.bind(this));
+                pushOutput().subscribe(this._onWorkerPush.bind(this));
+                serviceOutput().subscribe(this._onWorkerService.bind(this, threadId));
+                eventOutput().subscribe(this._onWorkerEvent.bind(this));
 
                 // Serialize this model services to the worker
                 const services: Service[] = this.options.services || this.model.findAllServices();
@@ -185,7 +188,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                 });
 
                 // Initialize the worker
-                initFn({
+                init({
                     dirname: this.options.directory || __dirname,
                     services: servicesArray,
                     imports: this.options.imports || [],
@@ -224,16 +227,20 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                         _.forEach((r) => {
                             result.push(DataSerializer.serialize(r));
                         });
-                        this._serviceOutput.get(threadId)(value.id, true, result);
+                        this._serviceInput.get(threadId)(value.id, true, result);
                     } else {
                         const result = DataSerializer.serialize(_);
-                        this._serviceOutput.get(threadId)(value.id, true, result);
+                        this._serviceInput.get(threadId)(value.id, true, result);
                     }
                 })
                 .catch((ex) => {
-                    this._serviceOutput.get(threadId)(value.id, false, ex);
+                    this._serviceInput.get(threadId)(value.id, false, ex);
                 });
         }
+    }
+
+    private _onWorkerEvent(value: { name: string; event: any }): void {
+        this.inlets.map((inlet) => inlet.inputNode.emit(value.name as any, value.event));
     }
 
     /**

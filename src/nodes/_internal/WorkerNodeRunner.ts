@@ -14,19 +14,59 @@ import { DummyDataService, DummyService } from '../../service/_internal/';
 import { PullOptions, PushOptions } from '../../graph';
 
 let model: Model<any, any>;
-const input: Subject<void> = new Subject();
-const output: Subject<any> = new Subject();
-const serviceInput: Subject<{
+const pullOutput: Subject<any> = new Subject();
+const pushOutput: Subject<any> = new Subject();
+const serviceOutput: Subject<{
     id: string;
     serviceName: string;
     method: string;
     parameters: any;
 }> = new Subject();
-const serviceOutput: Subject<{
+const serviceInput: Subject<{
     id: string;
     success: boolean;
     result?: any;
 }> = new Subject();
+const eventOutput: Subject<{
+    name: string;
+    event: any;
+}> = new Subject();
+
+/**
+ * Init the model internal input and internal output
+ *
+ * @param {ModelBuilder} modelBuilder Model builder
+ */
+function initModel(modelBuilder: ModelBuilder<any, any>): void {
+    const internalInput = new CallbackSourceNode((options?: PullOptions) => {
+        // Send a pull request to the main thread
+        pullOutput.next(options);
+        return null;
+    });
+    const internalOutput = new CallbackSinkNode((frame: DataFrame) => {
+        // Serialize the frame and transmit it to the main thread
+        pushOutput.next(DataSerializer.serialize(frame));
+    });
+
+    modelBuilder.graph.deleteNode(modelBuilder.graph.internalInput);
+    modelBuilder.graph.internalInput = internalInput;
+    internalInput.on('error', (event: any) => {
+        eventOutput.next({
+            name: 'error',
+            event,
+        });
+    });
+    internalInput.on('completed', (event: any) => {
+        eventOutput.next({
+            name: 'completed',
+            event,
+        });
+    });
+    modelBuilder.graph.addNode(modelBuilder.graph.internalInput);
+    modelBuilder.graph.deleteNode(modelBuilder.graph.internalOutput);
+    modelBuilder.graph.internalOutput = internalOutput;
+    modelBuilder.graph.addNode(modelBuilder.graph.internalOutput);
+}
 
 expose({
     /**
@@ -50,29 +90,17 @@ expose({
                 const DataType = DataSerializer.findTypeByName(service.dataType);
                 modelBuilder.addService(
                     new DummyDataService(DataType),
-                    new WorkerService(service.name, serviceInput, serviceOutput),
+                    new WorkerService(service.name, serviceOutput, serviceInput),
                 );
             } else {
                 modelBuilder.addService(
                     new DummyService(),
-                    new WorkerService(service.name, serviceInput, serviceOutput),
+                    new WorkerService(service.name, serviceOutput, serviceInput),
                 );
             }
         });
 
-        modelBuilder.graph.deleteNode(modelBuilder.graph.internalInput);
-        modelBuilder.graph.internalInput = new CallbackSourceNode(() => {
-            // Send a pull request to the main thread
-            input.next();
-            return null;
-        });
-        modelBuilder.graph.addNode(modelBuilder.graph.internalInput);
-        modelBuilder.graph.deleteNode(modelBuilder.graph.internalOutput);
-        modelBuilder.graph.internalOutput = new CallbackSinkNode((frame: DataFrame) => {
-            // Serialize the frame and transmit it to the main thread
-            output.next(DataSerializer.serialize(frame));
-        });
-        modelBuilder.graph.addNode(modelBuilder.graph.internalOutput);
+        initModel(modelBuilder);
 
         if (workerData.builder) {
             const traversalBuilder = modelBuilder.from();
@@ -118,26 +146,35 @@ expose({
      *
      * @returns {Observable<void>} Observable input
      */
-    input(): Observable<void> {
-        return Observable.from(input);
+    pullOutput(): Observable<void> {
+        return Observable.from(pullOutput);
     },
     /**
-     * Output observable for push requests
+     * Output observable for push events
      *
      * @returns {Observable<any>} Observable output
      */
-    output(): Observable<any> {
-        return Observable.from(output);
+    pushOutput(): Observable<any> {
+        return Observable.from(pushOutput);
     },
-    serviceInput(): Observable<{
+    eventOutput(): Observable<{
+        name: string;
+        event: any;
+    }> {
+        return Observable.from(eventOutput);
+    },
+    eventInput(name: string, event: any): void {
+        model.emit(name as any, event);
+    },
+    serviceOutput(): Observable<{
         id: string;
         serviceName: string;
         method: string;
         parameters: any;
     }> {
-        return Observable.from(serviceInput);
+        return Observable.from(serviceOutput);
     },
-    serviceOutput(id: string, success: boolean, result?: any) {
-        serviceOutput.next({ id, success, result });
+    serviceInput(id: string, success: boolean, result?: any) {
+        serviceInput.next({ id, success, result });
     },
 });
