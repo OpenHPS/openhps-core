@@ -1,7 +1,16 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DataFrame } from './data/DataFrame';
 import { AsyncEventEmitter } from './_internal/AsyncEventEmitter';
-import { Edge, GraphBuilder, GraphShape, PullOptions, PushCompletedEvent, PushErrorEvent, PushOptions } from './graph';
+import {
+    Edge,
+    GraphBuilder,
+    GraphShape,
+    PullOptions,
+    PushCompletedEvent,
+    PushErrorEvent,
+    PushEvent,
+    PushOptions,
+} from './graph';
 import { Model } from './Model';
 
 /**
@@ -98,6 +107,12 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
     }
 
     /**
+     * Emit available event
+     *
+     * @param {string} event available
+     */
+    public emit(event: 'available'): boolean;
+    /**
      * Emit completed event
      *
      * @param {string} event completed
@@ -125,6 +140,13 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
         return super.emit(event, ...args);
     }
 
+    /**
+     * Event when a node is available
+     *
+     * @param {string} event available
+     * @param {Function} listener Event callback
+     */
+    public on(event: 'available', listener: () => Promise<void> | void): this;
     /**
      * Event when a push is completed
      *
@@ -157,6 +179,13 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
         return super.on(event, listener);
     }
 
+    /**
+     * Event when a node is available
+     *
+     * @param {string} event available
+     * @param {Function} listener Event callback
+     */
+    public once(event: 'available', listener: () => Promise<void> | void): this;
     /**
      * Event when a push is completed
      *
@@ -239,10 +268,52 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
                 Promise.all(listeners.map((callback) => callback(data, options)))
                     .then(() => {
                         this._available = true;
+                        this.emit('available');
                         resolve();
                     })
                     .catch(reject);
             }
+        });
+    }
+
+    /**
+     * Promise once the node is available
+     *
+     * @returns {Promise} Promise when the node is available
+     */
+    public onceAvailable(): Promise<void> {
+        return new Promise((resolve) => {
+            if (this.isAvailable()) {
+                resolve();
+            } else {
+                this.once('available', () => {
+                    resolve();
+                });
+            }
+        });
+    }
+
+    /**
+     * Promise once the frame is completed
+     *
+     * @param {string} frameUID Frame UID
+     * @returns {Promise} Promise when the frame is completed
+     */
+    public onceCompleted(frameUID: string): Promise<PushEvent> {
+        return new Promise((resolve, reject) => {
+            const completedListener = function (event: PushEvent) {
+                if (event.frameUID === frameUID) {
+                    this.removeListener('completed', completedListener);
+                    this.removeListener('error', completedListener);
+                    if ((event as any).error) {
+                        reject(event);
+                    } else {
+                        resolve(event);
+                    }
+                }
+            };
+            this.on('completed', completedListener.bind(this));
+            this.on('error', completedListener.bind(this));
         });
     }
 

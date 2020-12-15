@@ -1,6 +1,6 @@
+import { PushEvent } from './PushEvent';
+
 /**
  * Push completed event
  */
-export interface PushCompletedEvent {
-    frameUID: string;
-}
+export type PushCompletedEvent = PushEvent;

@@ -21,9 +21,19 @@ export class Edge<InOut extends DataFrame> {
                     resolve();
                 })
                 .catch((ex) => {
-                    this.inputNode.emit('error', {
-                        error: ex,
-                    });
+                    if (Array.isArray(data)) {
+                        data.forEach((frame) => {
+                            this.inputNode.emit('error', {
+                                frameUID: frame.uid,
+                                error: ex,
+                            });
+                        });
+                    } else {
+                        this.inputNode.emit('error', {
+                            frameUID: data.uid,
+                            error: ex,
+                        });
+                    }
                 });
         });
     }

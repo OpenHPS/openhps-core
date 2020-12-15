@@ -61,14 +61,18 @@ describe('example', () => {
                     position.velocity.linear = new LinearVelocity(1, 0);
                     position.timestamp = currentTime;
                     robot.setPosition(position);
-                    return model.push(new DataFrame(robot));
+                    const frame = new DataFrame(robot);
+                    model.push(frame);
+                    return model.onceCompleted(frame.uid);
                 })
                 .then(() => {
                     currentTime++;
                     return model.findDataService(DataObject).findByUID('robot');
                 })
                 .then((robot) => {
-                    return model.push(new DataFrame(robot));
+                    const frame = new DataFrame(robot);
+                    model.push(frame);
+                    return model.onceCompleted(frame.uid);
                 })
                 .then(() => {
                     currentTime++;
@@ -78,7 +82,9 @@ describe('example', () => {
                     const position = robot.getPosition() as Absolute2DPosition;
                     expect(position.x).to.equal(1);
                     expect(position.y).to.equal(0);
-                    return model.push(new DataFrame(robot));
+                    const frame = new DataFrame(robot);
+                    model.push(frame);
+                    return model.onceCompleted(frame.uid);
                 })
                 .then(() => {
                     currentTime++;
@@ -107,14 +113,18 @@ describe('example', () => {
                     position.velocity.angular = new AngularVelocity(10, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
                     position.timestamp = currentTime;
                     robot.setPosition(position);
-                    return model.push(new DataFrame(robot));
+                    const frame = new DataFrame(robot);
+                    model.push(frame);
+                    return model.onceCompleted(frame.uid);
                 })
                 .then(() => {
                     currentTime++;
                     return model.findDataService(DataObject).findByUID('robot');
                 })
                 .then((robot) => {
-                    return model.push(new DataFrame(robot));
+                    const frame = new DataFrame(robot);
+                    model.push(frame);
+                    return model.onceCompleted(frame.uid);
                 })
                 .then(() => {
                     currentTime++;
@@ -128,7 +138,9 @@ describe('example', () => {
                     expect(Math.round(orientation.x)).to.equal(10);
                     expect(Math.round(orientation.y)).to.equal(0);
                     expect(Math.round(orientation.z)).to.equal(0);
-                    return model.push(new DataFrame(robot));
+                    const frame = new DataFrame(robot);
+                    model.push(frame);
+                    return model.onceCompleted(frame.uid);
                 })
                 .then(() => {
                     currentTime++;
@@ -162,14 +174,18 @@ describe('example', () => {
                     position.velocity.angular = new AngularVelocity(0, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
                     position.timestamp = currentTime;
                     robot.setPosition(position);
-                    return model.push(new DataFrame(robot));
+                    const frame = new DataFrame(robot);
+                    model.push(frame);
+                    return model.onceCompleted(frame.uid);
                 })
                 .then(() => {
                     currentTime++;
                     return model.findDataService(DataObject).findByUID('robot');
                 })
                 .then((robot) => {
-                    return model.push(new DataFrame(robot));
+                    const frame = new DataFrame(robot);
+                    model.push(frame);
+                    return model.onceCompleted(frame.uid);
                 })
                 .then(() => {
                     currentTime++;
@@ -186,7 +202,9 @@ describe('example', () => {
                     expect(Math.round(orientation.z)).to.equal(0);
                     position.velocity.linear = new LinearVelocity(1, 0, 0);
                     position.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
-                    return model.push(new DataFrame(robot));
+                    const frame = new DataFrame(robot);
+                    model.push(frame);
+                    return model.onceCompleted(frame.uid);
                 })
                 .then(() => {
                     currentTime++;
@@ -203,7 +221,9 @@ describe('example', () => {
                     expect(Math.round(orientation.z)).to.equal(90);
                     position.velocity.linear = new LinearVelocity(2, -2, 0);
                     position.velocity.angular = new AngularVelocity(0, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
-                    return model.push(new DataFrame(robot));
+                    const frame = new DataFrame(robot);
+                    model.push(frame);
+                    return model.onceCompleted(frame.uid);
                 })
                 .then(() => {
                     currentTime++;
@@ -220,7 +240,9 @@ describe('example', () => {
                     expect(Math.round(orientation.z)).to.equal(90);
                     position.velocity.linear = new LinearVelocity(2, 0, 0);
                     position.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
-                    return model.push(new DataFrame(robot));
+                    const frame = new DataFrame(robot);
+                    model.push(frame);
+                    return model.onceCompleted(frame.uid);
                 })
                 .then(() => {
                     currentTime++;

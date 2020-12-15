@@ -24,7 +24,6 @@ module.exports = env => [
         'typedjson': `typedjson/js/typedjson${env.prod ? ".min" : ""}.js`,
       }
     },
-    externals: ['microtime', 'typescript'],
     optimization: {
       minimize: env.prod,
       minimizer: [

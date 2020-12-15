@@ -217,12 +217,12 @@ describe('data', () => {
 
                 Promise.resolve(model.findDataService(DataObject).findByUID('test'))
                     .then(obj => {
-                        return model.push(new DataFrame(obj));
-                    })
-                    .then(() => {
+                        const frame = new DataFrame(obj);
+                        model.push(frame);
+                        return model.onceCompleted(frame.uid);
+                    }).then(() => {
                         return model.findDataService(DataObject).findByUID('test');
-                    })
-                    .then((storedObject) => {
+                    }).then((storedObject) => {
                         // This will return the current position relative to the 'calibratedReferenceSpace'
                         // Meaning the position will be (5, 5, 5)
                         const relativePosition = storedObject.getPosition(
@@ -241,8 +241,7 @@ describe('data', () => {
                         expect(transformedPosition.y).to.equal(7);
                         expect(transformedPosition.z).to.equal(6);
                         done();
-                    })
-                    .catch((ex) => {
+                    }).catch((ex) => {
                         done(ex);
                     });
             });
@@ -269,7 +268,9 @@ describe('data', () => {
 
                 Promise.resolve(model.findDataService(DataObject).findByUID('test'))
                     .then(obj => {
-                        return model.push(new DataFrame(obj));
+                        const frame = new DataFrame(obj);
+                        model.push(frame);
+                        return model.onceCompleted(frame.uid);
                     })
                     .then(() => {
                         return model.findDataService(DataObject).findByUID('test');
