@@ -17,13 +17,8 @@ export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut
         return new Promise<void>((resolve, reject) => {
             if (this._dataFrames.length !== 0) {
                 const frame = this._dataFrames.shift();
-                const pushPromises: Array<Promise<void>> = [];
-                pushPromises.push(...this.outlets.map((outlet) => outlet.push(frame, options as GraphOptions)));
-                Promise.all(pushPromises)
-                    .then(() => {
-                        resolve();
-                    })
-                    .catch(reject);
+                this.outlets.forEach((outlet) => outlet.push(frame, options as GraphOptions));
+                resolve();
             } else {
                 resolve();
             }

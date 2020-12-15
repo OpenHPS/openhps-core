@@ -33,11 +33,7 @@ export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> 
     }
 
     private _flushQueue(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            const pushPromises: Array<Promise<void>> = [];
-            this.outlets.forEach((outlet) => {
-                pushPromises.push(outlet.push(this._queue));
-            });
+        return new Promise((resolve) => {
             this._queue = [];
 
             // Restart the timeout
@@ -46,11 +42,8 @@ export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> 
                 this._timer = setInterval(this._timeoutFn.bind(this), this._interval);
             }
 
-            Promise.all(pushPromises)
-                .then(() => {
-                    resolve();
-                })
-                .catch(reject);
+            this.outlets.forEach(outlet => outlet.push(this._queue));
+            resolve();
         });
     }
 
