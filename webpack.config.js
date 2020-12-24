@@ -8,11 +8,11 @@ module.exports = env => [
   {
     name: PROJECT_NAME,
     mode: env.prod ? "production" : "development",
-    entry: './dist/cjs/index.js',
+    entry: `./dist/cjs/index.js`,
     devtool: 'source-map',
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: `web/${PROJECT_NAME}${env.prod ? ".min" : ""}.js`,
+      filename: `web/${PROJECT_NAME}${env.prod ? ".min" : ""}.${env.module ? 'mjs' : 'js'}`,
       library: LIBRARY_NAME,
       libraryTarget: 'umd',
       umdNamedDefine: true,
@@ -44,7 +44,7 @@ module.exports = env => [
   }, {
     name:`${PROJECT_NAME}-worker`,
     mode: env.prod ? "production" : "development",
-    entry: './dist/cjs/nodes/_internal/WorkerNodeRunner.js',
+    entry: `./dist/cjs/nodes/_internal/WorkerNodeRunner.js`,
     devtool: 'source-map',
     externals: {'../../': LIBRARY_NAME},
     resolve: {
@@ -64,7 +64,7 @@ module.exports = env => [
     },
     plugins: [
       new InjectPlugin(function() {
-        return "importScripts('openhps-core.min.js'); __WEBPACK_EXTERNAL_MODULE____ = self['@openhps/core'];"
+        return `importScripts('openhps-core.min.js'); __WEBPACK_EXTERNAL_MODULE____ = self['@openhps/core'];`
       })
     ],
     optimization: {

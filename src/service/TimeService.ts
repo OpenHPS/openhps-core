@@ -28,15 +28,19 @@ export class TimeService extends Service {
     }
 
     public static initialize() {
+        TimeService._defaultTimeCallback = Date.now;
+        TimeService._defaultUnit = TimeUnit.MILLISECOND;
         // Specify the default time callback used by class initializers
         try {
             // eslint-disable-next-line
             const microtime = require('microtime');
-            TimeService._defaultTimeCallback = microtime.now;
-            TimeService._defaultUnit = TimeUnit.MICROSECOND;
+            // Check if function exists, needed for webpack
+            if (microtime.now) {
+                TimeService._defaultTimeCallback = microtime.now;
+                TimeService._defaultUnit = TimeUnit.MICROSECOND;
+            }
         } catch (ex) {
-            TimeService._defaultTimeCallback = Date.now;
-            TimeService._defaultUnit = TimeUnit.MILLISECOND;
+            return;
         }
     }
 

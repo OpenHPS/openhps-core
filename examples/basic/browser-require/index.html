@@ -7,7 +7,10 @@
         <script src="https://cdn.jsdelivr.net/npm/d3-require@1"></script>
         <script>
             d3.require('../../../dist/web/openhps-core.min.js').then(core => {
-                console.log(core);
+                core.ModelBuilder.create()
+                    .from()
+                    .to()
+                    .build()
             });
         </script>
     </body>

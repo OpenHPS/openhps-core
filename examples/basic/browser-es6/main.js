@@ -1,6 +1,8 @@
-import { ModelBuilder } from 'https://cdn.jsdelivr.net/npm/@openhps/core@0.2.0-alpha.3';
+import { ModelBuilder } from '../../../dist/web/openhps-core';
 
 ModelBuilder.create()
     .from()
     .to()
-    .build();
+    .build().then(model => {
+        console.log(model);
+    });
