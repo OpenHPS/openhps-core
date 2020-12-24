@@ -14,7 +14,7 @@ export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut
     }
 
     public onPull(options?: PullOptions): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>((resolve) => {
             if (this._dataFrames.length !== 0) {
                 const frame = this._dataFrames.shift();
                 this.outlets.forEach((outlet) => outlet.push(frame, options as GraphOptions));

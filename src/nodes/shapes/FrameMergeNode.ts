@@ -199,13 +199,17 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
         }
         if (positionB.orientation) {
             if (newPosition.orientation) {
-                newPosition.orientation.slerp(positionB.orientation, 0.5);
+                const slerp = (1 / positionA.accuracy + 1 / positionB.accuracy) / positionB.accuracy / 2;
+                newPosition.orientation.slerp(positionB.orientation, slerp);
             } else {
                 newPosition.orientation = positionB.orientation;
             }
         }
         // Average timestamp
-        newPosition.timestamp = Math.round((positionA.timestamp + positionB.timestamp) / 2);
+        newPosition.timestamp = Math.round(
+            (positionA.timestamp * (1 / posAccuracyA) + positionB.timestamp * (1 / posAccuracyB)) /
+                (1 / posAccuracyA + 1 / posAccuracyB),
+        );
         return newPosition;
     }
 

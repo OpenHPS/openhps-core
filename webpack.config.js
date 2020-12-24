@@ -1,7 +1,6 @@
 const PROJECT_NAME = "openhps-core";
 const LIBRARY_NAME = "@openhps/core";
 
-const TerserPlugin = require('terser-webpack-plugin');
 const InjectPlugin = require('webpack-inject-plugin').default;
 const path = require('path');
 
@@ -22,20 +21,19 @@ module.exports = env => [
     resolve: {
       alias: {
         'typedjson': `typedjson/js/typedjson${env.prod ? ".min" : ""}.js`,
+      },
+      fallback: {
+        path: false,
+        fs: false,
+        os: false,
       }
     },
+    externals: [
+      { typescript: false }, 
+      { microtime: false }
+    ],
     optimization: {
       minimize: env.prod,
-      minimizer: [
-        new TerserPlugin({
-          cache: true,
-          parallel: true,
-          terserOptions: {
-            keep_classnames: true,
-            keep_fnames: true,
-          }
-        })
-      ],
       portableRecords: true,
       usedExports: true,
       providedExports: true
@@ -50,7 +48,14 @@ module.exports = env => [
     mode: env.prod ? "production" : "development",
     entry: './dist/cjs/nodes/_internal/WorkerNodeRunner.js',
     devtool: 'source-map',
-    externals: {'../../': LIBRARY_NAME, 'microtime': 'microtime'},
+    externals: {'../../': LIBRARY_NAME},
+    resolve: {
+      fallback: {
+        path: false,
+        fs: false,
+        os: false,
+      }
+    },
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: `web/worker.${PROJECT_NAME}${env.prod ? ".min" : ""}.js`,
@@ -66,16 +71,6 @@ module.exports = env => [
     ],
     optimization: {
       minimize: env.prod,
-      minimizer: [
-        new TerserPlugin({
-          cache: true,
-          parallel: true,
-          terserOptions: {
-            keep_classnames: true,
-            keep_fnames: true
-          }
-        })
-      ],
       portableRecords: true,
       usedExports: true,
       providedExports: true

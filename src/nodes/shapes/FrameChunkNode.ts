@@ -42,7 +42,7 @@ export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> 
                 this._timer = setInterval(this._timeoutFn.bind(this), this._interval);
             }
 
-            this.outlets.forEach(outlet => outlet.push(this._queue));
+            this.outlets.forEach((outlet) => outlet.push(this._queue));
             resolve();
         });
     }
