@@ -11,7 +11,7 @@ export class FrameCloneNode<InOut extends DataFrame> extends Node<InOut, InOut> 
     }
 
     private _onPush(frame: InOut, options?: PushOptions): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>((resolve) => {
             const newFrame: InOut = this.options.repack ? this._repack(frame) : frame.clone();
             this.outlets.forEach((outlet) => outlet.push(newFrame, options));
             resolve();
