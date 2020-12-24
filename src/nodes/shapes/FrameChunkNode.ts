@@ -1,5 +1,5 @@
 import { DataFrame } from '../../data';
-import { Node } from '../../Node';
+import { Node, NodeOptions } from '../../Node';
 import { TimeUnit } from '../../utils';
 
 export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> {
@@ -8,8 +8,8 @@ export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> 
     private _interval: number;
     private _timer: NodeJS.Timeout;
 
-    constructor(count: number, timeout?: number, timeoutUnit = TimeUnit.MILLISECOND) {
-        super();
+    constructor(count: number, timeout?: number, timeoutUnit = TimeUnit.MILLISECOND, options?: NodeOptions) {
+        super(options);
         this._count = count;
 
         if (timeout) {
@@ -34,8 +34,6 @@ export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> 
 
     private _flushQueue(): Promise<void> {
         return new Promise((resolve) => {
-            this._queue = [];
-
             // Restart the timeout
             if (this._timer !== undefined) {
                 clearInterval(this._timer);
@@ -43,6 +41,7 @@ export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> 
             }
 
             this.outlets.forEach((outlet) => outlet.push(this._queue));
+            this._queue = [];
             resolve();
         });
     }

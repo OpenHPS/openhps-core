@@ -103,7 +103,7 @@ expose({
         initModel(modelBuilder);
 
         // eslint-disable-next-line
-        const path = workerData.imports ? undefined : require('path');
+        const path = workerData.imports.lengths > 0 ? undefined : require('path');
 
         if (workerData.builder) {
             const traversalBuilder = modelBuilder.from();
