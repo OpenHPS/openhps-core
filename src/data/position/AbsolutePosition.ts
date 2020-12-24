@@ -1,8 +1,9 @@
 import { Position } from './Position';
-import { Vector, Quaternion, LengthUnit, Vector3 } from '../../utils';
+import { Vector, LengthUnit, Vector3 } from '../../utils';
 import { Velocity } from './Velocity';
 import { LinearVelocity } from './LinearVelocity';
 import { AngularVelocity } from './AngularVelocity';
+import { Orientation } from './Orientation';
 
 /**
  * Absolute position
@@ -23,7 +24,7 @@ export interface AbsolutePosition extends Position {
     /**
      * Orientation at recorded position
      */
-    orientation: Quaternion;
+    orientation: Orientation;
 
     /**
      * Position unit

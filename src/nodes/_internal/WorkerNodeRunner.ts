@@ -102,19 +102,18 @@ expose({
 
         initModel(modelBuilder);
 
+        // eslint-disable-next-line
+        const path = workerData.imports.lengths > 0 ? undefined : require('path');
+
         if (workerData.builder) {
             const traversalBuilder = modelBuilder.from();
-            // eslint-disable-next-line
-            const path = require('path');
             // eslint-disable-next-line
             const builderCallback = eval(workerData.builder);
             builderCallback(traversalBuilder, modelBuilder, workerData.args);
             traversalBuilder.to();
         } else {
             // eslint-disable-next-line
-            const path = require('path');
-            // eslint-disable-next-line
-            const graph = require(path.join(__dirname, workerData.shape));
+            const graph = require(path ? path.join(__dirname, workerData.shape) : workerData.shape);
             if (graph) {
                 modelBuilder.addShape(graph.default);
             }

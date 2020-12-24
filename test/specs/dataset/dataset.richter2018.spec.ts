@@ -28,7 +28,7 @@ function rssiToDistance(rssi: number) {
 
 describe('dataset', () => {
     describe('richter2018', function () {
-        this.timeout(5000);
+        this.timeout(10000);
 
         let calibrationModel: Model<DataFrame, DataFrame>;
         let trackingModel: Model<DataFrame, DataFrame>;
