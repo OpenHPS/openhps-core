@@ -20,7 +20,9 @@ module.exports = env => [
     },
     resolve: {
       alias: {
-        'typedjson': `typedjson/js/typedjson${env.prod ? ".min" : ""}.js`,
+        typedjson: `typedjson/js/typedjson${env.prod ? ".min" : ""}.js`,
+        typescript: false,
+        microtime: false
       },
       fallback: {
         path: false,
@@ -28,10 +30,6 @@ module.exports = env => [
         os: false,
       }
     },
-    externals: [
-      { typescript: false }, 
-      { microtime: false }
-    ],
     optimization: {
       minimize: env.prod,
       portableRecords: true,
