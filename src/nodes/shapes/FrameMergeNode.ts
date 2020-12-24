@@ -58,11 +58,11 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
 
     private _timerTick(): void {
         const currentTime = TimeService.now();
-        const mergePromises: Array<Promise<InOut>> = [];
+        const mergedFrames: Array<InOut> = [];
         this._queue.forEach((queue) => {
             if (currentTime - queue.timestamp >= this._timeout && queue.frames.size >= this.options.minCount) {
                 // Merge node
-                mergePromises.push(this.merge(Array.from(queue.frames.values()), queue.key as string));
+                mergedFrames.push(this.merge(Array.from(queue.frames.values()), queue.key as string));
                 this._queue.delete(queue.key);
                 // Resolve pending promises
                 queue.promises.forEach((fn) => {
@@ -70,17 +70,9 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
                 });
             }
         });
-        Promise.all(mergePromises)
-            .then((mergedFrames) => {
-                const pushPromises: Array<Promise<void>> = [];
-                mergedFrames.forEach((mergedFrame) => {
-                    pushPromises.push(...this.outlets.map((outlet) => outlet.push(mergedFrame)));
-                });
-                return Promise.all(pushPromises);
-            })
-            .catch((ex) => {
-                this.logger('error', ex);
-            });
+        mergedFrames.forEach((frame) => {
+            this.outlets.forEach((outlet) => outlet.push(frame));
+        });
     }
 
     private _stop(): void {
@@ -90,7 +82,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
     }
 
     public process(frame: InOut, options?: PushOptions): Promise<InOut> {
-        return new Promise<InOut>((resolve, reject) => {
+        return new Promise<InOut>((resolve) => {
             if (this.inlets.length === 1) {
                 return resolve(frame);
             }
@@ -110,18 +102,21 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
                     queue.frames.set(this._groupFn(frame, options), frame);
                     this._queue.set(key, queue);
                 } else {
-                    queue.frames.set(this._groupFn(frame, options), frame);
+                    const groupKey = this._groupFn(frame, options);
+                    if (queue.frames.has(groupKey)) {
+                        // Merge frames
+                        queue.frames.set(groupKey, this.merge([queue.frames.get(groupKey), frame]));
+                    } else {
+                        queue.frames.set(groupKey, frame);
+                    }
                     // Check if there are enough frames
                     if (queue.frames.size >= this.inlets.length) {
                         this._queue.delete(key);
-                        this.merge(Array.from(queue.frames.values()), key)
-                            .then(resolve)
-                            .catch(reject)
-                            .finally(() => {
-                                queue.promises.forEach((fn) => {
-                                    fn(undefined);
-                                });
-                            });
+                        const mergedFrame = this.merge(Array.from(queue.frames.values()), key);
+                        resolve(mergedFrame);
+                        queue.promises.forEach((fn) => {
+                            fn(undefined);
+                        });
                     } else {
                         queue.promises.push(resolve);
                     }
@@ -217,46 +212,44 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
      * @returns {Promise<DataFrame>} Promise of merged data frame
      */
     // eslint-ignore-next-line
-    public merge(frames: InOut[], key?: string): Promise<InOut> {
-        return new Promise<InOut>((resolve) => {
-            const mergedFrame = frames[0];
-            const mergedObjects: Map<string, DataObject[]> = new Map();
-            mergedFrame.getObjects().forEach((object) => {
-                if (mergedObjects.get(object.uid)) {
-                    mergedObjects.get(object.uid).push(object);
-                } else {
+    public merge(frames: InOut[], key?: string): InOut {
+        const mergedFrame = frames[0];
+        const mergedObjects: Map<string, DataObject[]> = new Map();
+        mergedFrame.getObjects().forEach((object) => {
+            if (mergedObjects.get(object.uid)) {
+                mergedObjects.get(object.uid).push(object);
+            } else {
+                mergedObjects.set(object.uid, [object]);
+            }
+        });
+
+        for (let i = 1; i < frames.length; i++) {
+            const frame = frames[i];
+            frame.getObjects().forEach((object) => {
+                if (!mergedFrame.hasObject(object)) {
+                    // Add object
+                    mergedFrame.addObject(object);
                     mergedObjects.set(object.uid, [object]);
+                } else {
+                    mergedObjects.get(object.uid).push(object);
                 }
             });
-
-            for (let i = 1; i < frames.length; i++) {
-                const frame = frames[i];
-                frame.getObjects().forEach((object) => {
-                    if (!mergedFrame.hasObject(object)) {
-                        // Add object
-                        mergedFrame.addObject(object);
-                        mergedObjects.set(object.uid, [object]);
-                    } else {
-                        mergedObjects.get(object.uid).push(object);
-                    }
-                });
-                // Merge properties
-                Object.keys(frame).forEach((propertyName) => {
-                    const value = (mergedFrame as any)[propertyName];
-                    if (value === undefined || value === null) {
-                        (mergedFrame as any)[propertyName] = (frame as any)[propertyName];
-                    }
-                });
-            }
-
-            // Merge objects using the merging function
-            mergedObjects.forEach((values) => {
-                const mergedObject = this.mergeObjects(values);
-                mergedFrame.addObject(mergedObject);
+            // Merge properties
+            Object.keys(frame).forEach((propertyName) => {
+                const value = (mergedFrame as any)[propertyName];
+                if (value === undefined || value === null) {
+                    (mergedFrame as any)[propertyName] = (frame as any)[propertyName];
+                }
             });
+        }
 
-            resolve(mergedFrame);
+        // Merge objects using the merging function
+        mergedObjects.forEach((values) => {
+            const mergedObject = this.mergeObjects(values);
+            mergedFrame.addObject(mergedObject);
         });
+
+        return mergedFrame;
     }
 }
 
