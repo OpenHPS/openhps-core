@@ -28,7 +28,7 @@ function rssiToDistance(rssi: number) {
 
 describe('dataset', () => {
     describe('richter2018', function () {
-        this.timeout(10000);
+        this.timeout(20000);
 
         let calibrationModel: Model<DataFrame, DataFrame>;
         let trackingModel: Model<DataFrame, DataFrame>;
@@ -41,7 +41,7 @@ describe('dataset', () => {
          * Initialize the data set and model
          */
         before(function (done) {
-            this.timeout(10000);
+            this.timeout(20000);
 
             // Calibration model to set-up or train the model
             for (let i = 0; i < 489; i++) aps.push(`AP${i + 1}`);

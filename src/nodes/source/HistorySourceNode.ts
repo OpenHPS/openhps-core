@@ -5,7 +5,7 @@ import { SourceNode, SourceNodeOptions } from '../SourceNode';
 
 export class HistorySourceNode<Out extends DataFrame> extends SourceNode<Out> {
     constructor(options?: SourceNodeOptions) {
-        super(undefined, options);
+        super(options);
     }
 
     public onPull(options: PullOptions = { requestedObjects: [] }): Promise<Out> {

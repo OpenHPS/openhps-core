@@ -7,21 +7,15 @@ import { GraphOptions, PullOptions, PushOptions } from '../graph';
  * Source node
  */
 export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node<Out, Out> {
-    /**
-     * Source data object responsible for generating data frames
-     */
-    private _source: DataObject;
     protected options: SourceNodeOptions;
 
     /**
      * Construct a new source node
      *
-     * @param {DataObject} [source] Source data object
-     * @param {Object} [options=undefined] Source node options
+     * @param {SourceNodeOptions} [options=undefined] Source node options
      */
-    constructor(source?: DataObject, options?: SourceNodeOptions) {
+    constructor(options?: SourceNodeOptions) {
         super(options);
-        this._source = source || this.options.source;
 
         // Default source settings
         this.options.persistence = this.options.persistence || true;
@@ -40,7 +34,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
      * @returns {DataObject} Source data object
      */
     public get source(): DataObject {
-        return this._source;
+        return this.options.source;
     }
 
     private _initRegisterService(): Promise<void> {
@@ -49,7 +43,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
             // Update source when modified
             service.on('insert', (uid: string, object: DataObject) => {
                 if (uid === this.source.uid) {
-                    this._source = object;
+                    this.options.source = object;
                 }
             });
 
@@ -57,7 +51,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
             service
                 .findByUID(this.source.uid)
                 .then((object: DataObject) => {
-                    this._source = object;
+                    this.options.source = object;
                     resolve();
                 })
                 .catch(() => {

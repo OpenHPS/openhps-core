@@ -6,8 +6,8 @@ import { SourceNode, SourceNodeOptions } from '../../SourceNode';
  * Gyroscope motion source using the HTML5 browser API for device motion and device orientation.
  */
 export class IMUBrowserSource extends SourceNode<IMUDataFrame> {
-    constructor(source?: IMUSensorObject, options?: SourceNodeOptions) {
-        super(source, options);
+    constructor(options?: SourceNodeOptions) {
+        super(options);
 
         this.once('build', this._onReady.bind(this));
     }

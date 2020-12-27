@@ -6,7 +6,7 @@ export class CallbackSourceNode<Out extends DataFrame> extends SourceNode<Out> {
     public callback: (options?: PullOptions) => Promise<Out> | Out;
 
     constructor(callback: (options?: PullOptions) => Promise<Out> | Out = () => null, options?: SourceNodeOptions) {
-        super(null, options);
+        super(options);
         this.callback = callback;
     }
 
