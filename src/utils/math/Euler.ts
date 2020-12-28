@@ -69,6 +69,33 @@ export class Euler extends THREE.Euler {
     public toRotationMatrix(): Matrix4 {
         return Matrix4.rotationFromEuler(this);
     }
+
+    /**
+     * Get pitch in degrees
+     *
+     * @returns {number} Pitch in degrees
+     */
+    public get pitch(): number {
+        return AngleUnit.RADIAN.convert(this.y, AngleUnit.DEGREE);
+    }
+
+    /**
+     * Get roll in degrees
+     *
+     * @returns {number} Roll in degrees
+     */
+    public get roll(): number {
+        return AngleUnit.RADIAN.convert(this.x, AngleUnit.DEGREE);
+    }
+
+    /**
+     * Get yaw in degrees
+     *
+     * @returns {number} Yaw in degrees
+     */
+    public get yaw(): number {
+        return AngleUnit.RADIAN.convert(this.z, AngleUnit.DEGREE);
+    }
 }
 
 export type EulerOrder = 'XYZ' | 'XZY' | 'YXZ' | 'YZX' | 'ZXY' | 'ZYX';

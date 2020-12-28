@@ -37,12 +37,26 @@ export class DataFrame {
     /**
      * Create a new data frame
      *
+     * @param {DataFrame} frame Data frame to copy
+     */
+    constructor(frame?: DataFrame);
+    /**
+     * Create a new data frame
+     *
      * @param {DataObject} source Source data object
      */
-    constructor(source?: DataObject) {
-        const timestamp = TimeService.now();
-        this.createdTimestamp = timestamp;
-        this.source = source;
+    constructor(source?: DataObject);
+    constructor(data?: any) {
+        this.createdTimestamp = TimeService.now();
+        if (data instanceof DataFrame) {
+            // Copy data frame
+            this.createdTimestamp = data.createdTimestamp;
+            this.uid = data.uid;
+            this._objects = data._objects;
+            this.source = data.source;
+        } else if (data instanceof DataObject) {
+            this.source = data;
+        }
     }
 
     /**
