@@ -70,15 +70,17 @@ export class Unit {
         config.definitions.forEach((definition) => {
             const referenceUnit = Unit.findByName(definition.unit, this.baseName);
             const unitName = referenceUnit ? referenceUnit.name : definition.unit;
-            const magnitudeOrder = Object.keys(definition).indexOf('magnitude');
-            const offsetOrder = Object.keys(definition).indexOf('offset');
+            const definitionKeys = Object.keys(definition);
+            const magnitudeOrder = definitionKeys.indexOf('magnitude');
+            const offsetOrder = definitionKeys.indexOf('offset');
             const magnitude = definition.magnitude ? definition.magnitude : 1;
             const offset = definition.offset ? definition.offset : 0;
+            const offsetPriority = magnitudeOrder === -1 ? true : offsetOrder < magnitudeOrder;
             this._definitions.set(unitName, {
                 unit: definition.unit,
                 magnitude,
                 offset,
-                offsetPriority: offsetOrder < magnitudeOrder,
+                offsetPriority,
             });
         });
 
@@ -136,35 +138,79 @@ export class Unit {
         }
     }
 
+    /**
+     * Get or create a definition from this unit to the base
+     *
+     * @returns {UnitDefinition} Definition to base
+     */
+    public createBaseDefinition(): UnitDefinition {
+        let newDefinition: UnitDefinition;
+
+        // Get base unit
+        const baseUnitName = Unit.UNIT_BASES.get(this.baseName);
+
+        if (this._definitions.has(baseUnitName)) {
+            const definition = this._definitions.get(baseUnitName);
+            newDefinition = definition;
+        } else {
+            this._definitions.forEach((definition) => {
+                const unit = Unit.findByName(definition.unit, this.baseName);
+                const baseDefinition = unit.createBaseDefinition();
+                if (baseDefinition) {
+                    newDefinition = {
+                        unit: baseDefinition.unit,
+                        magnitude: baseDefinition.magnitude * definition.magnitude,
+                        offset: baseDefinition.offset + definition.offset,
+                        offsetPriority: !(baseDefinition.offsetPriority && definition.offsetPriority),
+                    };
+                    return;
+                }
+            });
+        }
+        return newDefinition;
+    }
+
     public createDefinition(targetUnit: Unit): UnitDefinition {
-        const newDefinition: UnitDefinition = {
-            unit: targetUnit.name,
-            magnitude: 1,
-            offset: 0,
-        };
+        let newDefinition: UnitDefinition;
+
+        // Get base unit
+        const baseUnitName = Unit.UNIT_BASES.get(this.baseName);
+        const baseUnit = Unit.findByName(baseUnitName);
 
         if (this._definitions.has(targetUnit.name)) {
+            // Direct conversion
             const definition = this._definitions.get(targetUnit.name);
-            newDefinition.magnitude = definition.magnitude;
-            newDefinition.offset = definition.offset;
-            newDefinition.offsetPriority = definition.offsetPriority;
+            newDefinition = {
+                ...definition,
+            };
         } else if (targetUnit._definitions.has(this.name)) {
+            // Reverse conversion
             const definition = targetUnit._definitions.get(this.name);
-            newDefinition.magnitude = Math.pow(definition.magnitude, -1);
-            newDefinition.offset = -definition.offset;
-            newDefinition.offsetPriority = !definition.offsetPriority;
-        } else {
+            newDefinition = {
+                unit: targetUnit.name,
+                magnitude: Math.pow(definition.magnitude, -1),
+                offset: -definition.offset,
+                offsetPriority: !definition.offsetPriority,
+            };
+            this._definitions.set(targetUnit.name, newDefinition);
+        } else if (baseUnit.name !== this.name) {
             // No direct conversion found, convert to base unit
-            const baseUnitName = Unit.UNIT_BASES.get(this.baseName);
-            const baseUnit = Unit.findByName(baseUnitName);
             const toBase = this._definitions.get(baseUnitName);
             const fromBase = baseUnit.createDefinition(targetUnit);
+
             // Convert unit if definitions are found
             if (toBase && fromBase) {
-                newDefinition.magnitude = toBase.magnitude * fromBase.magnitude;
-                newDefinition.offsetPriority = false;
-                const baseOffset = toBase.offset * (toBase.offsetPriority ? toBase.magnitude : fromBase.magnitude);
-                newDefinition.offset = baseOffset + fromBase.offset;
+                const magnitude = toBase.magnitude * fromBase.magnitude;
+                const offset = toBase.offsetPriority
+                    ? toBase.offset * magnitude + fromBase.offset
+                    : toBase.offset * fromBase.magnitude + fromBase.offset;
+                newDefinition = {
+                    unit: targetUnit.name,
+                    magnitude,
+                    offset,
+                    offsetPriority: false,
+                };
+                this._definitions.set(targetUnit.name, newDefinition);
             }
         }
         return newDefinition;
@@ -206,6 +252,12 @@ export class Unit {
         return Unit.registerUnit(unit) as this;
     }
 
+    /**
+     * Find unit specifier by name or alias
+     *
+     * @param {string} name Unit name
+     * @returns {Unit} Unit if found
+     */
     protected findByName(name: string): Unit {
         // Check all aliases in those units
         for (const alias of this.aliases.concat(this.name)) {
@@ -268,8 +320,9 @@ export class Unit {
         }
 
         const definition = this.createDefinition(targetUnit);
-
-        if (definition.offsetPriority) {
+        if (!definition) {
+            throw new Error(`No conversion definition found from '${this.name}' to '${targetUnit.name}'!`);
+        } else if (definition.offsetPriority) {
             return (value + definition.offset) * definition.magnitude;
         } else {
             return value * definition.magnitude + definition.offset;
@@ -299,8 +352,18 @@ export class Unit {
         }
         // Check if the unit is a new base unit
         const baseName = unit.baseName ? unit.baseName : unit.name;
-        if (!Unit.UNIT_BASES.has(baseName)) {
+        const baseUnitName = Unit.UNIT_BASES.get(baseName);
+        if (!baseUnitName) {
             Unit.UNIT_BASES.set(baseName, unit.name);
+        } else {
+            // Confirm that the unit can be converted to a base unit
+            const baseUnit = Unit.findByName(baseUnitName, baseName);
+            const fromBase = baseUnit.createDefinition(unit);
+            const toBase = unit.createBaseDefinition();
+            if (!fromBase) {
+                // No conversion definition
+                unit._definitions.set(baseUnitName, toBase);
+            }
         }
         return unit;
     }

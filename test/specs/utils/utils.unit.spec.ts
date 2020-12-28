@@ -213,6 +213,13 @@ describe('units', () => {
             ]
         });
 
+        const RANKINE = new Unit("rankine", {
+            baseName: "temperature",
+            definitions: [
+                { unit: 'kelvin', magnitude: 1 / 1.8 },
+            ]
+        });
+
         it('should convert celcius to fahrenheit', () => {
             const result = CELCIUS.convert(100, FAHRENHEIT);
             expect(Math.round(result)).to.equal(212);
@@ -231,6 +238,31 @@ describe('units', () => {
         it('should convert fahrenheit to kelvin', () => {
             const result = FAHRENHEIT.convert(100, KELVIN);
             expect(Math.round(result)).to.equal(311);
+        });
+
+        it('should convert rankine to celcius', () => {
+            const result = RANKINE.convert(100, CELCIUS);
+            expect(Math.round(result)).to.equal(-218);
+        });
+
+        it('should convert kelvin to rankine', () => {
+            const result = KELVIN.convert(100, RANKINE);
+            expect(Math.round(result)).to.equal(180);
+        });
+
+        it('should convert celcius to rankine', () => {
+            const result = CELCIUS.convert(100, RANKINE);
+            expect(Math.round(result)).to.equal(672);
+        });
+
+        it('should convert rankine to fahrenheit', () => {
+            const result = RANKINE.convert(100, FAHRENHEIT);
+            expect(Math.round(result)).to.equal(-360);
+        });
+
+        it('should convert fahrenheit to rankine', () => {
+            const result = FAHRENHEIT.convert(100, RANKINE);
+            expect(Math.round(result)).to.equal(560);
         });
     });
 });

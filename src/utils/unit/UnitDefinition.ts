@@ -5,6 +5,7 @@ export interface UnitDefinition {
     unit: string;
     /**
      * Conversion magnitude
+     *  This is the magnitude to convert this unit to the target unit.
      */
     magnitude?: number;
     /**
