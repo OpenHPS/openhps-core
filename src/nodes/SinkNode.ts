@@ -2,7 +2,7 @@ import { DataFrame } from '../data/DataFrame';
 import { DataObject } from '../data';
 import { v4 as uuidv4 } from 'uuid';
 import { Node, NodeOptions } from '../Node';
-import { PushOptions } from '../graph';
+import { PushCompletedEvent, PushOptions } from '../graph';
 
 /**
  * Sink node
@@ -44,14 +44,10 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In
                     // Fire a completed event
                     if (data instanceof Array) {
                         data.forEach((f: In) => {
-                            this.emit('completed', {
-                                frameUID: f.uid,
-                            });
+                            this.emit('completed', new PushCompletedEvent(f.uid));
                         });
                     } else {
-                        this.emit('completed', {
-                            frameUID: data.uid,
-                        });
+                        this.emit('completed', new PushCompletedEvent(data.uid));
                     }
                 })
                 .catch(reject);

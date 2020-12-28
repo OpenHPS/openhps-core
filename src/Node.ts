@@ -7,7 +7,7 @@ import {
     GraphShape,
     PullOptions,
     PushCompletedEvent,
-    PushErrorEvent,
+    PushError,
     PushEvent,
     PushOptions,
 } from './graph';
@@ -124,7 +124,7 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
      *
      * @param {string} name error
      */
-    public emit(name: 'error', e: PushErrorEvent): boolean;
+    public emit(name: 'error', e: PushError): boolean;
     /**
      * Node ready
      *
@@ -162,7 +162,7 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
      * @param {string} name error
      * @param {Function} listener Error event callback
      */
-    public on(name: 'error', listener: (event: PushErrorEvent) => Promise<void> | void): this;
+    public on(name: 'error', listener: (event: PushError) => Promise<void> | void): this;
     /**
      * Event when a data frame is pulled
      *
@@ -320,8 +320,8 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
         });
     }
 
-    private _onError(event: PushErrorEvent): void {
-        this.inlets.map((inlet) => inlet.inputNode.emit('error', event));
+    private _onError(error: PushError): void {
+        this.inlets.map((inlet) => inlet.inputNode.emit('error', error));
     }
 
     private _onCompleted(event: PushCompletedEvent): void {

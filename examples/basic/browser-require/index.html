@@ -9,8 +9,12 @@
             d3.require('../../../dist/web/openhps-core.min.js').then(core => {
                 core.ModelBuilder.create()
                     .from()
-                    .to()
-                    .build()
+                    .to(new core.CallbackSinkNode(frame => {
+                        throw new Error(`test`);
+                    }))
+                    .build().then(model => {
+                        model.push(new core.DataFrame());
+                    });
             });
         </script>
     </body>

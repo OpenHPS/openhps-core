@@ -3,4 +3,4 @@ import { PushEvent } from './PushEvent';
 /**
  * Push completed event
  */
-export type PushCompletedEvent = PushEvent;
+export class PushCompletedEvent extends PushEvent {}

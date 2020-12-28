@@ -2,7 +2,7 @@ import { Node } from '../Node';
 import { DataFrame } from '../data/DataFrame';
 import { BroadcastNode } from '../nodes/shapes/BroadcastNode';
 import { PullOptions, PushOptions } from './interfaces';
-import { PushCompletedEvent, PushErrorEvent } from './events';
+import { PushCompletedEvent, PushError } from './events';
 import { Edge } from './Edge';
 
 export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
@@ -182,7 +182,7 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
         return this.internalInput.push(frame, options);
     }
 
-    protected onError(event: PushErrorEvent): void {
+    protected onError(event: PushError): void {
         this.emit('error', event);
     }
 

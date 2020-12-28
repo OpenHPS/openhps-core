@@ -1,6 +1,7 @@
 import { PullOptions, PushOptions } from './interfaces';
 import { DataFrame } from '../data';
 import { Node } from '../Node';
+import { PushError } from './events';
 
 export class Edge<InOut extends DataFrame> {
     public inputNode: Node<any, InOut>;
@@ -23,16 +24,10 @@ export class Edge<InOut extends DataFrame> {
                 .catch((ex) => {
                     if (Array.isArray(data)) {
                         data.forEach((frame) => {
-                            this.inputNode.emit('error', {
-                                frameUID: frame.uid,
-                                error: ex,
-                            });
+                            this.inputNode.emit('error', new PushError(frame.uid, this.outputNode.uid, ex));
                         });
                     } else {
-                        this.inputNode.emit('error', {
-                            frameUID: data.uid,
-                            error: ex,
-                        });
+                        this.inputNode.emit('error', new PushError(data.uid, this.outputNode.uid, ex));
                     }
                 });
         });

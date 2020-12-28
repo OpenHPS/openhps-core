@@ -1,3 +1,3 @@
 export * from './PushCompletedEvent';
-export * from './PushErrorEvent';
+export * from './PushError';
 export * from './PushEvent';
