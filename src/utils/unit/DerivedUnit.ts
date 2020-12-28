@@ -1,7 +1,11 @@
 import { Unit } from './Unit';
 import { SerializableObject } from '../../data/decorators';
 import { UnitOptions } from './UnitOptions';
+import { UnitDefinition } from './UnitDefinition';
 
+/**
+ * Derived Unit
+ */
 @SerializableObject()
 export class DerivedUnit extends Unit {
     private _units: Map<string, Unit> = new Map();
@@ -26,7 +30,7 @@ export class DerivedUnit extends Unit {
         unit._name = options.name;
         unit._baseName = this.baseName;
         unit._aliases = options.aliases ? options.aliases : [];
-        const definition = {
+        const definition: UnitDefinition = {
             unit: this.name,
             magnitude: 1,
             offset: 0,

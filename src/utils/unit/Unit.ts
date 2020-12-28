@@ -69,13 +69,17 @@ export class Unit {
         // Unit definitions
         config.definitions.forEach((definition) => {
             const referenceUnit = Unit.findByName(definition.unit, this.baseName);
-            if (referenceUnit) {
-                this._definitions.set(referenceUnit.name, {
-                    unit: definition.unit,
-                    magnitude: definition.magnitude ? definition.magnitude : 1,
-                    offset: definition.offset ? definition.offset : 0,
-                });
-            }
+            const unitName = referenceUnit ? referenceUnit.name : definition.unit;
+            const magnitudeOrder = Object.keys(definition).indexOf('magnitude');
+            const offsetOrder = Object.keys(definition).indexOf('offset');
+            const magnitude = definition.magnitude ? definition.magnitude : 1;
+            const offset = definition.offset ? definition.offset : 0;
+            this._definitions.set(unitName, {
+                unit: definition.unit,
+                magnitude,
+                offset,
+                offsetPriority: offsetOrder < magnitudeOrder,
+            });
         });
 
         Unit.registerUnit(this, config.override);
@@ -138,23 +142,29 @@ export class Unit {
             magnitude: 1,
             offset: 0,
         };
+
         if (this._definitions.has(targetUnit.name)) {
             const definition = this._definitions.get(targetUnit.name);
             newDefinition.magnitude = definition.magnitude;
             newDefinition.offset = definition.offset;
+            newDefinition.offsetPriority = definition.offsetPriority;
         } else if (targetUnit._definitions.has(this.name)) {
             const definition = targetUnit._definitions.get(this.name);
             newDefinition.magnitude = Math.pow(definition.magnitude, -1);
             newDefinition.offset = -definition.offset;
+            newDefinition.offsetPriority = !definition.offsetPriority;
         } else {
             // No direct conversion found, convert to base unit
             const baseUnitName = Unit.UNIT_BASES.get(this.baseName);
-            const definitionToBase = this._definitions.get(baseUnitName);
-            const definitionFromBase = targetUnit._definitions.get(baseUnitName);
+            const baseUnit = Unit.findByName(baseUnitName);
+            const toBase = this._definitions.get(baseUnitName);
+            const fromBase = baseUnit.createDefinition(targetUnit);
             // Convert unit if definitions are found
-            if (definitionToBase && definitionFromBase) {
-                newDefinition.magnitude = definitionToBase.magnitude * Math.pow(definitionFromBase.magnitude, -1);
-                newDefinition.offset = definitionToBase.offset - definitionFromBase.offset;
+            if (toBase && fromBase) {
+                newDefinition.magnitude = toBase.magnitude * fromBase.magnitude;
+                newDefinition.offsetPriority = false;
+                const baseOffset = toBase.offset * (toBase.offsetPriority ? toBase.magnitude : fromBase.magnitude);
+                newDefinition.offset = baseOffset + fromBase.offset;
             }
         }
         return newDefinition;
@@ -258,7 +268,12 @@ export class Unit {
         }
 
         const definition = this.createDefinition(targetUnit);
-        return value * definition.magnitude + definition.offset;
+
+        if (definition.offsetPriority) {
+            return (value + definition.offset) * definition.magnitude;
+        } else {
+            return value * definition.magnitude + definition.offset;
+        }
     }
 
     public static convert(value: number, from: string | Unit, to: string | Unit): number {

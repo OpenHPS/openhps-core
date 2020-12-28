@@ -193,4 +193,44 @@ describe('units', () => {
             expect(converted.unit.name).to.equal('centimeter');
         });
     });
+
+    describe('definition order', () => {
+        const CELCIUS = new Unit("celcius", {
+            baseName: "temperature"
+        });
+    
+        const FAHRENHEIT = new Unit("fahrenheit", {
+            baseName: "temperature",
+            definitions: [
+                { unit: 'celcius', offset: -32, magnitude: 5 / 9 },
+            ]
+        });
+
+        const KELVIN = new Unit("kelvin", {
+            baseName: "temperature",
+            definitions: [
+                { unit: 'celcius', offset: -273.15 },
+            ]
+        });
+
+        it('should convert celcius to fahrenheit', () => {
+            const result = CELCIUS.convert(100, FAHRENHEIT);
+            expect(Math.round(result)).to.equal(212);
+        });
+    
+        it('should convert fahrenheit to celcius', () => {
+            const result = FAHRENHEIT.convert(99, CELCIUS);
+            expect(result).to.equal(37.22222222222222);
+        });
+
+        it('should convert kelvin to fahrenheit', () => {
+            const result = KELVIN.convert(100, FAHRENHEIT);
+            expect(Math.round(result)).to.equal(-280);
+        });
+
+        it('should convert fahrenheit to kelvin', () => {
+            const result = FAHRENHEIT.convert(100, KELVIN);
+            expect(Math.round(result)).to.equal(311);
+        });
+    });
 });
