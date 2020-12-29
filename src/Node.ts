@@ -101,9 +101,9 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
     /**
      * Get the incoming edges
      *
-     * @returns {Array<Inlet>} Incoming edges
+     * @returns {Array<Inlet<DataFrame>>} Incoming edges
      */
-    public get inlets(): Array<Inlet> {
+    public get inlets(): Array<Inlet<In>> {
         return this.model.edges.filter((edge) => edge.outputNode === this);
     }
 

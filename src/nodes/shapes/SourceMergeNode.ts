@@ -1,5 +1,6 @@
 import { DataFrame } from '../../data';
-import { FrameMergeNode, FrameMergeOptions } from './FrameMergeNode';
+import { FrameMergeNode } from './FrameMergeNode';
+import { MergeShapeOptions } from './MergeShape';
 
 /**
  * Source merge node. This node merges the data frames from multiple sources into one.
@@ -13,7 +14,7 @@ import { FrameMergeNode, FrameMergeOptions } from './FrameMergeNode';
  * When frames of the same source are received they are overridden.
  */
 export class SourceMergeNode<InOut extends DataFrame> extends FrameMergeNode<InOut> {
-    constructor(options?: FrameMergeOptions) {
+    constructor(options?: MergeShapeOptions) {
         super(
             (frame: InOut) => {
                 if (frame.source === undefined) {

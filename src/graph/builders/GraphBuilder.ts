@@ -1,6 +1,5 @@
 import { DataFrame, DataObject, ReferenceSpace } from '../../data';
 import { Node } from '../../Node';
-import { EdgeBuilder } from './EdgeBuilder';
 import { TimeUnit } from '../../utils';
 import {
     FrameChunkNode,
@@ -47,7 +46,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
             } else {
                 this.graph.addNode(node);
                 if (node instanceof SourceNode) {
-                    this.graph.addEdge(EdgeBuilder.create().from(this.graph.internalInput).to(node).build());
+                    this.graph.addEdge(new Edge(this.graph.internalInput, node));
                 }
                 selectedNodes.push(node);
             }
@@ -119,8 +118,8 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
         });
 
         // Connect internal and external output to shape
-        this.graph.addEdge(EdgeBuilder.create().from(this.graph.internalInput).to(graph.internalInput).build());
-        this.graph.addEdge(EdgeBuilder.create().from(graph.internalOutput).to(this.graph.internalOutput).build());
+        this.graph.addEdge(new Edge(this.graph.internalInput, graph.internalInput));
+        this.graph.addEdge(new Edge(graph.internalOutput, this.graph.internalOutput));
         return this;
     }
 
@@ -208,7 +207,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      */
     private _insertNode(node: Node<any, any>): void {
         this.previousNodes.forEach((prevNode) => {
-            this.graph.addEdge(EdgeBuilder.create().from(prevNode).to(node).build());
+            this.graph.addEdge(new Edge(prevNode, node));
         });
     }
 
@@ -322,7 +321,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
                 this.graph.addNode(nodeObject);
                 this._insertNode(nodeObject);
-                this.graph.addEdge(EdgeBuilder.create().from(nodeObject).to(this.graph.internalOutput).build());
+                this.graph.addEdge(new Edge(nodeObject, this.graph.internalOutput));
                 selectedNodes.push(nodeObject as SinkNode<any>);
             });
             this.previousNodes = selectedNodes;

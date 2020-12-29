@@ -10,3 +10,4 @@ export * from './FrameChunkNode';
 export * from './UnitConversionNode';
 export * from './ThrottleNode';
 export * from './FrameCloneNode';
+export * from './MergeShape';

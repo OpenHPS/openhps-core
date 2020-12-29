@@ -10,12 +10,10 @@ import {
     Absolute2DPosition,
     TrilaterationNode,
     CallbackSinkNode,
-    TimeUnit,
     LengthUnit,
 } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
 import { EvaluationDataFrame } from '../../mock/data/EvaluationDataFrame';
-import * as path from 'path';
 
 describe('dataset', () => {
     describe('liwste2017 (reverse beacons)', () => {

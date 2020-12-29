@@ -5,13 +5,13 @@ import {
     DataFrame,
     Node,
     GraphBuilder,
-    EdgeBuilder,
     NamedNode,
     CallbackSourceNode,
     CallbackNode,
     CallbackSinkNode,
     ProcessingNode,
     Model,
+    Edge,
 } from '../../src';
 
 describe('model', () => {
@@ -190,7 +190,7 @@ describe('model', () => {
             GraphBuilder.create()
                 .addNode(node1)
                 .addNode(node2)
-                .addEdge(EdgeBuilder.create().from(node1).to(node2).build())
+                .addEdge(new Edge(node1, node2))
                 .build()
                 .then((graph) => {
                     done();

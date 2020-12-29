@@ -1,10 +1,11 @@
+import { DataFrame } from '../data';
 import { PushCompletedEvent, PushError } from './events';
-import { PullOptions } from './interfaces';
+import { PullOptions, PushOptions } from './interfaces';
 
 /**
  * Inlet of a node
  */
-export interface Inlet {
+export interface Inlet<In extends DataFrame> {
     /**
      * Pull data from the inlet
      *
@@ -25,4 +26,12 @@ export interface Inlet {
      * @param {string} name error
      */
     emit(name: 'error', event: PushError): boolean;
+
+    /**
+     * Event when a data frame is push to the node
+     *
+     * @param {string} name receive
+     * @param {Function} listener Event callback
+     */
+    on(name: 'push', listener: (frame: In, options?: PushOptions) => Promise<void> | void): this;
 }
