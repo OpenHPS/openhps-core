@@ -2,9 +2,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { DataFrame } from './data/DataFrame';
 import { AsyncEventEmitter } from './_internal/AsyncEventEmitter';
 import {
-    Edge,
     GraphBuilder,
     GraphShape,
+    Inlet,
+    Outlet,
     PullOptions,
     PushCompletedEvent,
     PushError,
@@ -91,18 +92,18 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
     /**
      * Get the outgoing edges
      *
-     * @returns {Array<Edge<DataFrame>>} Outgoing edges
+     * @returns {Array<Outlet<DataFrame>>} Outgoing edges
      */
-    public get outlets(): Array<Edge<Out>> {
+    public get outlets(): Array<Outlet<Out>> {
         return this.model.edges.filter((edge) => edge.inputNode === this);
     }
 
     /**
      * Get the incoming edges
      *
-     * @returns {Array<Edge<DataFrame>>} Incoming edges
+     * @returns {Array<Inlet>} Incoming edges
      */
-    public get inlets(): Array<Edge<In>> {
+    public get inlets(): Array<Inlet> {
         return this.model.edges.filter((edge) => edge.outputNode === this);
     }
 
@@ -321,11 +322,11 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
     }
 
     private _onError(error: PushError): void {
-        this.inlets.map((inlet) => inlet.inputNode.emit('error', error));
+        this.inlets.map((inlet) => inlet.emit('error', error));
     }
 
     private _onCompleted(event: PushCompletedEvent): void {
-        this.inlets.map((inlet) => inlet.inputNode.emit('completed', event));
+        this.inlets.map((inlet) => inlet.emit('completed', event));
     }
 }
 

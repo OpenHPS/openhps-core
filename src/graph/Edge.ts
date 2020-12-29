@@ -1,9 +1,11 @@
 import { PullOptions, PushOptions } from './interfaces';
 import { DataFrame } from '../data';
 import { Node } from '../Node';
-import { PushError } from './events';
+import { PushCompletedEvent, PushError } from './events';
+import { Inlet } from './Inlet';
+import { Outlet } from './Outlet';
 
-export class Edge<InOut extends DataFrame> {
+export class Edge<InOut extends DataFrame> implements Inlet, Outlet<InOut> {
     public inputNode: Node<any, InOut>;
     public outputNode: Node<InOut, any>;
 
@@ -14,10 +16,14 @@ export class Edge<InOut extends DataFrame> {
      * @param {PushOptions} [options] Push options
      * @returns {Promise<void>} Push promise
      */
-    public push(data: InOut | InOut[], options?: PushOptions): Promise<void> {
+    public push(data: InOut | InOut[], options: PushOptions = {}): Promise<void> {
         return new Promise((resolve) => {
+            const newOptions: PushOptions = {
+                ...options,
+                lastNode: this.inputNode.uid,
+            };
             this.outputNode
-                .push(data, options)
+                .push(data, newOptions)
                 .then(() => {
                     resolve();
                 })
@@ -41,5 +47,11 @@ export class Edge<InOut extends DataFrame> {
      */
     public pull(options?: PullOptions): Promise<void> {
         return this.inputNode.pull(options);
+    }
+
+    public emit(name: 'completed', event: PushCompletedEvent): boolean;
+    public emit(name: 'error', event: PushError): boolean;
+    public emit(name: string, event: any): boolean {
+        return this.inputNode.emit(name, event);
     }
 }

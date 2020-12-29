@@ -1,9 +1,9 @@
 import { DataFrame } from '../../data';
-import { Edge } from '../../graph';
+import { Outlet } from '../../graph';
 import { Node } from '../../Node';
 
 export class BalanceNode<InOut extends DataFrame> extends Node<InOut, InOut> {
-    private _busyNodes: Array<Edge<any>> = [];
+    private _busyNodes: Array<Outlet<any>> = [];
     private _queue: Array<{
         frame: InOut | InOut[];
         resolve: () => void;

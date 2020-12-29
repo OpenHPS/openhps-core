@@ -1,4 +1,4 @@
-import { AbsolutePosition, DataFrame, DataObject } from '../../data';
+import { AbsolutePosition, DataFrame, DataObject, LinearVelocity, Orientation } from '../../data';
 import { ProcessingNode } from '../ProcessingNode';
 import { TimeUnit } from '../../utils';
 import { TimeService } from '../../service';
@@ -178,34 +178,45 @@ export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOu
         newPosition.fromVector(newPosition.toVector3().divideScalar(1 / posAccuracyA + 1 / posAccuracyB));
         newPosition.accuracy = 1 / (posAccuracyA + posAccuracyB);
 
-        if (positionB.linearVelocity) {
-            if (newPosition.linearVelocity) {
-                const lvAccuracyA = newPosition.linearVelocity.accuracy || 1;
-                const lvAccuracyB = positionB.linearVelocity.accuracy || 1;
-                // Merge linear velocity
-                newPosition.linearVelocity
-                    .multiplyScalar(1 / lvAccuracyA)
-                    .add(positionB.linearVelocity.multiplyScalar(1 / lvAccuracyB));
-                newPosition.linearVelocity.divideScalar(1 / lvAccuracyA + 1 / lvAccuracyB);
-                newPosition.linearVelocity.accuracy = 1 / (lvAccuracyA + lvAccuracyB);
-            } else {
-                newPosition.linearVelocity = positionB.linearVelocity;
-            }
-        }
-        if (positionB.orientation) {
-            if (newPosition.orientation) {
-                const slerp = (1 / positionA.accuracy + 1 / positionB.accuracy) / positionB.accuracy / 2;
-                newPosition.orientation.slerp(positionB.orientation, slerp);
-            } else {
-                newPosition.orientation = positionB.orientation;
-            }
-        }
+        newPosition.linearVelocity = this._mergeVelocity(newPosition.linearVelocity, positionB.linearVelocity);
+        newPosition.orientation = this._mergeOrientation(newPosition.orientation, positionB.orientation);
+
         // Average timestamp
         newPosition.timestamp = Math.round(
             (positionA.timestamp * (1 / posAccuracyA) + positionB.timestamp * (1 / posAccuracyB)) /
                 (1 / posAccuracyA + 1 / posAccuracyB),
         );
         return newPosition;
+    }
+
+    private _mergeVelocity(velocityA: LinearVelocity, velocityB: LinearVelocity): LinearVelocity {
+        if (velocityB) {
+            if (velocityA) {
+                const lvAccuracyA = velocityA.accuracy || 1;
+                const lvAccuracyB = velocityB.accuracy || 1;
+                // Merge linear velocity
+                velocityA.multiplyScalar(1 / lvAccuracyA).add(velocityB.multiplyScalar(1 / lvAccuracyB));
+                velocityA.divideScalar(1 / lvAccuracyA + 1 / lvAccuracyB);
+                velocityA.accuracy = 1 / (lvAccuracyA + lvAccuracyB);
+            } else {
+                velocityA = velocityB;
+            }
+        }
+        return velocityA;
+    }
+
+    private _mergeOrientation(orientationA: Orientation, orientationB: Orientation): Orientation {
+        if (orientationB) {
+            if (orientationA) {
+                const accuracyA = orientationA.accuracy || 1;
+                const accuracyB = orientationB.accuracy || 1;
+                const slerp = (1 / accuracyA + 1 / accuracyB) / accuracyB / 2;
+                orientationA.slerp(orientationB, slerp);
+            } else {
+                orientationA = orientationB;
+            }
+        }
+        return orientationA;
     }
 
     /**

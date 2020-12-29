@@ -133,6 +133,7 @@ export class GeographicalPosition extends Absolute3DPosition {
         bearingUnit = AngleUnit.DEGREE,
         distanceUnit = LengthUnit.METER,
     ): GeographicalPosition {
+        distance = distanceUnit.convert(distance, LengthUnit.METER);
         const brng = bearingUnit.convert(bearing, AngleUnit.RADIAN);
         const lonRadA = bearingUnit.convert(this.longitude, AngleUnit.RADIAN);
         const latRadA = bearingUnit.convert(this.latitude, AngleUnit.RADIAN);

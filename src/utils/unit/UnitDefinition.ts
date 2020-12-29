@@ -12,5 +12,9 @@ export interface UnitDefinition {
      * Conversion offset
      */
     offset?: number;
+    /**
+     * Should offset by added first before applying the magnitude
+     *  Example: Celcius to Fahrenheit vs Fahrenheit to Celcius
+     */
     offsetPriority?: boolean;
 }

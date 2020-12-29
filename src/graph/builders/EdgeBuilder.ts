@@ -8,8 +8,8 @@ import { Edge } from '../Edge';
  * ## Usage
  * ```typescript
  * const edge = new EdgeBuilder()
- *      .withInput(...)
- *      .withOutput(...)
+ *      .from(...)
+ *      .to(...)
  *      .build();
  * ```
  */

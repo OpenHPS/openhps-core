@@ -7,7 +7,6 @@ export class AngleUnit extends Unit {
         baseName: 'angle',
         aliases: ['rad', 'rads', 'radians'],
     });
-
     public static readonly DEGREE: AngleUnit = new AngleUnit('degree', {
         baseName: 'angle',
         aliases: ['deg', 'degs', 'degrees'],

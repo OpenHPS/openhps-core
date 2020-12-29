@@ -240,7 +240,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
     }
 
     private _onWorkerEvent(value: { name: string; event: any }): void {
-        this.inlets.map((inlet) => inlet.inputNode.emit(value.name as any, value.event));
+        this.inlets.map((inlet) => inlet.emit(value.name as any, value.event));
     }
 
     /**

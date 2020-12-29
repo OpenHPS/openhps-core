@@ -11,7 +11,6 @@ export class AccelerationUnit extends DerivedUnit {
     })
         .addUnit(LengthUnit.METER, 1)
         .addUnit(TimeUnit.SECOND, -2);
-
     public static readonly GRAVITATIONAL_FORCE = new AccelerationUnit('gravitational force', {
         baseName: 'acceleration',
         aliases: ['g-force', 'G', 'GS'],

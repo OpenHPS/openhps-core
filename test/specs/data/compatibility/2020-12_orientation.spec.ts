@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
 import { DataSerializer, Absolute2DPosition, Orientation } from '../../../../src';
-import { Quaternion } from '../../../../src/utils/math/';
+import { Quaternion } from '../../../../src/utils/math';
 
 describe('data compatibility 2020-12', () => {
     describe('orientation', () => {

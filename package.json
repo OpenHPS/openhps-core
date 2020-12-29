@@ -137,7 +137,6 @@
   },
   "config": {
     "commitizen": {
-      "path": "cz-conventional-changelog"
     }
   },
   "husky": {

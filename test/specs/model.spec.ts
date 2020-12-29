@@ -246,6 +246,29 @@ describe('model', () => {
                     new (class TestNode extends ProcessingNode<any> {
                         public process(frame: DataFrame): Promise<any> {
                             return new Promise((resolve, reject) => {
+                                throw new Error('Expecting this error');
+                            });
+                        }
+                    })(),
+                )
+                .to()
+                .build()
+                .then((model) => {
+                   model.push(new DataFrame());
+                   model.once('error', (ex) => {
+                       expect(ex).to.be.not.undefined;
+                       done();
+                   });
+                });
+        });
+        
+        it('should throw an exception when a processing node rejects', (done) => {
+            ModelBuilder.create()
+                .from()
+                .via(
+                    new (class TestNode extends ProcessingNode<any> {
+                        public process(frame: DataFrame): Promise<any> {
+                            return new Promise((resolve, reject) => {
                                 reject(new Error('Expecting this error'));
                             });
                         }

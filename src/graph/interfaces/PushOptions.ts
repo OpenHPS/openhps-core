@@ -8,4 +8,8 @@ export interface PushOptions extends GraphOptions {
      * Source node that started the original push
      */
     sourceNode?: string;
+    /**
+     * Last node UID
+     */
+    lastNode?: string;
 }
