@@ -1,6 +1,6 @@
 node_modules/
 dist/
-docs/
+docs/out/
 coverage/
 artifacts/
 src/utils/math/three/

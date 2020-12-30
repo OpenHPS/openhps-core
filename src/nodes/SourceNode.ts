@@ -5,6 +5,42 @@ import { GraphOptions, PullOptions, PushOptions } from '../graph';
 
 /**
  * Source node
+ *
+ * ## Usage
+ *
+ * ### Creating a SourceNode
+ * When creating a source node, you have to implement a promise based ```onPull``` method that expects a data
+ * frame.
+ *
+ * As mentioned in the [[Node]] class, pulling normally does not require you to return
+ * a data frame. The source node implementation provides an abstraction on top of this. If your source node can generate
+ * data frames, you can resolve to a data frame. The data frame will then be pushed to outgoing nodes.
+ * If not, you can simply resolve nothing or a null object.
+ *
+ * On top of this abstraction, a source node adds an intermediate output node that merges data objects from the [data service](#dataservice).
+ * This way, the data frame pushed by the source will always be up-to-date and merged with existing processed information.
+ *
+ * ```typescript
+ * import { DataFrame, SourceNode } from '@openhps/core';
+ *
+ * export class CustomSource<Out extends DataFrame> extends SourceNode<Out> {
+ *     // ...
+ *     constructor() {
+ *         // Source nodes expect a source object to be provided
+ *         super(new DataObject("mobile_input")));
+ *     }
+ *
+ *     public onPull(options?: GraphPullOptions): Promise<Out> {
+ *         return new Promise<Out>((resolve, reject) => {
+ *             // ... pull request
+ *             // ... get data from somewhere
+ *
+ *             const dataFrame = new DataFrame(this.getSource());
+ *             resolve(dataFrame);
+ *         });
+ *     }
+ * }
+ * ```
  */
 export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node<Out, Out> {
     protected options: SourceNodeOptions;

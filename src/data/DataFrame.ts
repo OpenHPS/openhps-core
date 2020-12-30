@@ -6,7 +6,9 @@ import { TimeService } from '../service';
 import { DataSerializer } from './DataSerializer';
 
 /**
- * Data frame that is passed through each node in a model.
+ * A data frame is information that is passed through each node in a positioning model.
+ *
+ * ![DataFrame content](media://images/dataframe.svg)
  *
  * ## Usage
  *
@@ -15,6 +17,19 @@ import { DataSerializer } from './DataSerializer';
  * the object responsible for generating the frame.
  * ```typescript
  * const dataFrame = new DataFrame(new DataObject("phone"));
+ * ```
+ *
+ * ### Creating a custom DataFrame
+ * Custom data frames can be created by extending the default [[DataFrame]] class. Important when handling
+ * data frames (and objects) is to add serializable decorators.
+ * ```typescript
+ * import { DataFrame, SerializableObject, SerializableArrayMember } from '@openhps/core';
+ *
+ * @SerializableObject()
+ * export class CustomDataFrame extends DataFrame {
+ *     @SerialisableArrayMember(Number)
+ *     public customFrameAttribute: number[];
+ * }
  * ```
  */
 @SerializableObject()

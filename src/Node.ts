@@ -19,6 +19,18 @@ import { Model } from './Model';
  *
  * ## Usage
  *
+ * ### Creating a Node
+ * Default nodes require you to specify the input and output data frame type. In general, nodes have the ability
+ * to process an input data frame and output a different (processed) data frame.
+ * ```typescript
+ * import { DataFrame, Node } from '@openhps/core';
+ *
+ * export class CustomNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
+ *     // ...
+ *  * }
+ * ```
+ * Abstract implementations such as a [[SourceNode]] and [[SinkNode]] only take one input or output
+ * data frame type as they do not process or change the frame.
  */
 export abstract class Node<In extends DataFrame, Out extends DataFrame> extends AsyncEventEmitter {
     /**

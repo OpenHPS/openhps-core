@@ -12,6 +12,7 @@ import { ReferenceSpace } from './space';
  * a more abstract object such as a Wi-Fi access point or [[Space]].
  *
  * ## Usage
+ *
  * ### Creation
  * Objects can be created with an optional uid and display name.
  * ```typescript

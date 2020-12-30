@@ -1,6 +1,26 @@
 import { DataServiceDriver } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
 
+/**
+ * DataService
+ *
+ * ## Usage
+ *
+ * ### Finding a DataService
+ * ```typescript
+ * import { Node, DataFrame } from '@openhps/core';
+ *
+ * export class CustomNode extends Node<DataFrame> {
+ *     // Data services can be found in any function inside a node
+ *     // that is added to a model
+ *     public functionInsideNode(): void {
+ *         // Get a service by its type
+ *         let service = this.model.findDataService(DataObject);
+ *         let service = this.model.findDataServiceByName("DataObject");
+ *     }
+ * }
+ * ```
+ **/
 export abstract class DataService<I, T> extends DataServiceDriver<I, T> {
     protected driver: DataServiceDriver<I, T>;
 

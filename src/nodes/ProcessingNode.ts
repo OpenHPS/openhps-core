@@ -4,7 +4,28 @@ import { NodeDataService, NodeData } from '../service';
 import { PushOptions } from '../graph';
 
 /**
- * Processing node
+ * Node that processes a dataframe or the contained objects.
+ *
+ * ## Usage
+ *
+ * ### Creating a ProcessingNode
+ * Processing nodes hide the push and pull functionalities from a regular node. When a push is received, this
+ * data frame is provided to the ```process()``` method that has to be implemented. When a pull is received, this pull is
+ * forwarded to all incoming nodes.
+ * ```typescript
+ * import { DataFrame, DataObject, ProcessingNode } from '@openhps/core';
+ *
+ * export class CustomProcessingNode<In extends DataFrame, Out extends DataFrame> extends ProcessingNode<In, Out> {
+ *     // ...
+ *     public process(data: In, options?: GraphOptions): Promise<Out> {
+ *         return new Promise<Out>((resolve, reject) => {
+ *             // ... process/manipulate the data frame
+ *             data.addObject(new DataObject("custom_process_object"));
+ *             resolve(data);
+ *         });
+ *     }
+ * }
+ * ```
  */
 export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame> extends Node<
     In,

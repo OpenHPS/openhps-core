@@ -5,6 +5,25 @@ import { GraphOptions } from '../graph';
 
 /**
  * Processing node that processes each [[DataObject]] in a [[DataFrame]] individually
+ * 
+ * ## Usage
+ * 
+ * ### Creating an ObjectProcessingNode
+ * Extended on a [[ProcessingNode]] is an object processing node that processes individual objects in each frame.
+ * ```typescript
+ * import { DataFrame, DataObject, ObjectProcessingNode } from '@openhps/core';
+ *
+ * export class CustomObjectProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
+ *    // ...
+ *    public processObject(object: DataObject, frame?: DataFrame): Promise<DataObject> {
+ *        return new Promise<DataObject>((resolve, reject) => {
+ *            // Manipulate the object
+ *            object.displayName = "test";
+ *            resolve(object);
+ *        });
+ *    }
+ * }
+```
  */
 export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> extends ProcessingNode<InOut, InOut> {
     protected options: ObjectProcessingNodeOptions;

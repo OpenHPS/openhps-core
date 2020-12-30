@@ -3,9 +3,11 @@ import { Deserializer } from 'typedjson/js/typedjson/deserializer';
 import { Serializer } from 'typedjson/js/typedjson/serializer';
 
 /**
- * Data serializer allows the serialization of objects using the [[SerializableObject]] decorator.
+ * Allows the serialization and deserialization of objects using the [[SerializableObject]] decorator.
  *
  * ## Usage
+ *
+ * ### Registration
  * Objects are registered upon loading with the [[SerializableObject]] decorator.
  * Manual registration is possible using:
  * ```typescript
