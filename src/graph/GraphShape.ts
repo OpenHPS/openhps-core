@@ -5,6 +5,9 @@ import { PullOptions, PushOptions } from './interfaces';
 import { PushCompletedEvent, PushError } from './events';
 import { Edge } from './Edge';
 
+/**
+ * @category Graph
+ */
 export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
     private _nodes: Map<string, Node<any, any>> = new Map();
     private _edges: Map<string, Edge<any>> = new Map();

@@ -19,6 +19,8 @@ import { Edge } from '../Edge';
 
 /**
  * Graph builder
+ *
+ * @category Graph
  */
 export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
     private _graph: GraphShape<In, Out>;

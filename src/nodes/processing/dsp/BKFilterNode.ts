@@ -5,6 +5,8 @@ import { Vector3 } from '../../../utils';
 
 /**
  * Basic Kalman Filter processing node
+ *
+ * @category Processing node
  */
 export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
     constructor(

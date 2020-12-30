@@ -1,6 +1,9 @@
 import { DataFrame } from '../../data';
 import { ProcessingNode, ProcessingNodeOptions } from '../ProcessingNode';
 
+/**
+ * @category Flow shape
+ */
 export class FrameFilterNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
     constructor(filterFn: (frame: InOut) => boolean, options?: ProcessingNodeOptions) {
         super(options);

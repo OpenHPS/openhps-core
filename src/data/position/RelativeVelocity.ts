@@ -6,6 +6,8 @@ import { TimeService } from '../../service';
 
 /**
  * Relative velocity to another reference object
+ *
+ * @category Position
  */
 @SerializableObject()
 export class RelativeVelocity implements RelativePosition<Velocity> {

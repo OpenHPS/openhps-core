@@ -13,6 +13,8 @@ import { EventEmitter } from 'events';
  *
  * As a part of the graph that can not be modified, this object
  * has the ability to perform error handling.
+ *
+ * @category Graph
  */
 export class Edge<InOut extends DataFrame> extends EventEmitter implements Inlet<InOut>, Outlet<InOut> {
     public inputNode: Node<any, InOut>;

@@ -1,3 +1,6 @@
+/**
+ * @category Unit
+ */
 export class UnitPrefix {
     public static readonly DECA = new UnitPrefix('deca', 'da', 1e1);
     public static readonly HECTO = new UnitPrefix('hecto', 'h', 1e2);

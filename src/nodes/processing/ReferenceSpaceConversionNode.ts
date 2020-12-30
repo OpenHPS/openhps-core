@@ -4,7 +4,9 @@ import { Model } from '../../Model';
 
 /**
  * This node converts the positions of data objects inside the frame
- * to another reference space
+ * to another reference space.
+ *
+ * @category Processing node
  */
 export class ReferenceSpaceConversionNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
     private _referenceSpaceUID: string;

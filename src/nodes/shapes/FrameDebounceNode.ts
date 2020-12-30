@@ -2,6 +2,9 @@ import { DataFrame } from '../../data';
 import { ProcessingNode } from '../ProcessingNode';
 import { TimeUnit } from '../../utils';
 
+/**
+ * @category Flow shape
+ */
 export class FrameDebounceNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
     private _timeout: number;
     private _timeoutUnit: TimeUnit;

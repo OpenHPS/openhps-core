@@ -2,6 +2,9 @@ import { DataFrame } from '../../data';
 import { Node, NodeOptions } from '../../Node';
 import { TimeUnit } from '../../utils';
 
+/**
+ * @category Flow shape
+ */
 export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _count: number;
     private _queue: InOut[] = [];

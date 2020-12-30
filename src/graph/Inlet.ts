@@ -4,6 +4,8 @@ import { PullOptions, PushOptions } from './interfaces';
 
 /**
  * Inlet of a node
+ *
+ * @category Graph
  */
 export interface Inlet<In extends DataFrame> {
     /**

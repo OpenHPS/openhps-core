@@ -4,6 +4,8 @@ import * as THREE from '../../utils/math/_internal';
 
 /**
  * Orientation quaternion with accuracy
+ *
+ * @category Position
  */
 @SerializableObject()
 export class Orientation extends Quaternion {

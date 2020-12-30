@@ -14,6 +14,8 @@ import { BinaryHeap } from '../../../utils/_internal/BinaryHeap';
 
 /**
  * KNN Fingerprinting processing node
+ *
+ * @category Processing node
  */
 export class KNNFingerprintingNode<InOut extends DataFrame> extends FingerprintingNode<InOut> {
     protected options: KNNFingerprintingOptions;

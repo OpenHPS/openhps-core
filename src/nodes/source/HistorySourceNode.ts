@@ -3,6 +3,9 @@ import { DataFrame } from '../../data/DataFrame';
 import { PullOptions } from '../../graph';
 import { SourceNode, SourceNodeOptions } from '../SourceNode';
 
+/**
+ * @category Source node
+ */
 export class HistorySourceNode<Out extends DataFrame> extends SourceNode<Out> {
     constructor(options?: SourceNodeOptions) {
         super(options);

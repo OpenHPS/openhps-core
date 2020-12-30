@@ -3,6 +3,9 @@ import { DerivedUnit } from './DerivedUnit';
 import { LengthUnit } from './LengthUnit';
 import { TimeUnit } from './TimeUnit';
 
+/**
+ * @category Unit
+ */
 @SerializableObject()
 export class AccelerationUnit extends DerivedUnit {
     public static readonly METER_PER_SECOND_SQUARE = new AccelerationUnit('meter per second squared', {

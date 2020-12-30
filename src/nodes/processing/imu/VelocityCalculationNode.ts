@@ -5,6 +5,8 @@ import { TimeService } from '../../../service';
 
 /**
  * Calculate linear and angular velocity
+ *
+ * @category Processing node
  */
 export class VelocityCalculationNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
     public processObject(object: DataObject): Promise<DataObject> {

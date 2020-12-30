@@ -1,6 +1,9 @@
 import { Vector3, AccelerationUnit } from '../../utils';
 import { SerializableMember, SerializableObject } from '../decorators';
 
+/**
+ *
+ */
 @SerializableObject()
 export class Acceleration extends Vector3 {
     @SerializableMember({

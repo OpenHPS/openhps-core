@@ -1,6 +1,9 @@
 import { Unit } from './Unit';
 import { SerializableObject } from '../../data/decorators';
 
+/**
+ * @category Unit
+ */
 @SerializableObject()
 export class AngleUnit extends Unit {
     public static readonly RADIAN: AngleUnit = new AngleUnit('radian', {

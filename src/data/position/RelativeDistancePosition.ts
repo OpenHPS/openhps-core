@@ -5,6 +5,8 @@ import { DataSerializer } from '../DataSerializer';
 
 /**
  * Relative location to another reference object in distance.
+ *
+ * @category Position
  */
 @SerializableObject()
 export class RelativeDistancePosition implements RelativePosition {

@@ -2,6 +2,9 @@ import { DataFrame } from '../data/DataFrame';
 import { GraphOptions, PullOptions, PushOptions } from '../graph';
 import { Node, NodeOptions } from '../Node';
 
+/**
+ * @category Node
+ */
 export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     public pushCallback: (frame: InOut | InOut[], options?: PushOptions) => Promise<void> | void;
     public pullCallback: (options?: PullOptions) => InOut | InOut[] | Promise<InOut | InOut[]>;

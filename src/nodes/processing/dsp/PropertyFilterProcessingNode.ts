@@ -3,6 +3,9 @@ import { DataFrame, DataObject } from '../../../data';
 import { ObjectProcessingNode } from '../../ObjectProcessingNode';
 import { Vector3 } from '../../../utils';
 
+/**
+ * @category Processing node
+ */
 export abstract class PropertyFilterProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
     private _propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey];
 

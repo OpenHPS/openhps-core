@@ -1,6 +1,9 @@
 import { DataFrame } from '../../data/DataFrame';
 import { MemoryBufferNode, MemoryBufferOptions } from './MemoryBufferNode';
 
+/**
+ * @category Flow shape
+ */
 export class ThrottleNode<InOut extends DataFrame> extends MemoryBufferNode<InOut> {
     private _pushReady = true;
 

@@ -2,6 +2,9 @@ import { DataFrame } from '../../data/DataFrame';
 import { PushOptions } from '../../graph';
 import { SinkNode, SinkNodeOptions } from '../SinkNode';
 
+/**
+ * @category Sink node
+ */
 export class CallbackSinkNode<In extends DataFrame> extends SinkNode<In> {
     public callback: (frame: In | In[], options?: PushOptions) => Promise<void> | void;
 

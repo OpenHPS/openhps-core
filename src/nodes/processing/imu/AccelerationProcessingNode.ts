@@ -3,6 +3,8 @@ import { FilterProcessingNode } from '../dsp';
 
 /**
  * Acceleration processing to linear velocity
+ *
+ * @category Processing node
  */
 export class AccelerationProcessingNode extends FilterProcessingNode<IMUDataFrame> {
     public initFilter(object: DataObject, frame: IMUDataFrame): Promise<any> {

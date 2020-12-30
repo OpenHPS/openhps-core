@@ -1,6 +1,9 @@
 import { SerializableMember, SerializableObject } from '../decorators';
 import { MagnetismUnit, Vector3 } from '../../utils';
 
+/**
+ *
+ */
 @SerializableObject()
 export class Magnetism extends Vector3 {
     @SerializableMember({

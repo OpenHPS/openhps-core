@@ -6,6 +6,8 @@ import { Vector3 } from '../../utils';
 
 /**
  * Geographical position
+ *
+ * @category Position
  */
 @SerializableObject()
 export class GeographicalPosition extends Absolute3DPosition {

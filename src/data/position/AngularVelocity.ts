@@ -2,6 +2,9 @@ import { AngularVelocityUnit } from '../../utils/unit/AngularVelocityUnit';
 import { SerializableMember, SerializableObject } from '../decorators';
 import { Vector3 } from '../../utils/math';
 
+/**
+ * @category Position
+ */
 @SerializableObject()
 export class AngularVelocity extends Vector3 {
     @SerializableMember({

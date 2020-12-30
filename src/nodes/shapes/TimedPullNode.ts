@@ -3,6 +3,9 @@ import { PullOptions, PushOptions } from '../../graph';
 import { Node, NodeOptions } from '../../Node';
 import { TimeUnit } from '../../utils/unit';
 
+/**
+ * @category Flow shape
+ */
 export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _interval: number;
     private _timer: NodeJS.Timeout;

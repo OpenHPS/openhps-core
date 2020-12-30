@@ -1,6 +1,9 @@
 import { DataFrame, DataObject } from '../../../data';
 import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../../ObjectProcessingNode';
 
+/**
+ * @category Processing node
+ */
 export abstract class FilterProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
     protected options: FilterProcessingOptions;
 

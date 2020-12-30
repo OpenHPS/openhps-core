@@ -17,6 +17,8 @@ import { ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
  * - [[Absolute2DPosition]]
  * - [[Absolute3DPosition]]
  * - [[GeographicalPosition]]
+ *
+ * @category Processing node
  */
 export class TriangulationNode<InOut extends DataFrame> extends RelativePositionProcessing<
     InOut,

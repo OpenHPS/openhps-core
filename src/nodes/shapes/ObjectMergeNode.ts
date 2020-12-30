@@ -4,6 +4,9 @@ import { ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
 import { FrameMergeNode } from './FrameMergeNode';
 import { MergeShapeOptions } from './MergeShape';
 
+/**
+ * @category Flow shape
+ */
 export class ObjectMergeNode<InOut extends DataFrame> extends FrameMergeNode<InOut> {
     protected options: ObjectMergeOptions;
 

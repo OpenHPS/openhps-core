@@ -8,6 +8,8 @@ import { MergeShape } from './MergeShape';
  * ```typescript
  * new FrameMergeNode();
  * ```
+ *
+ * @category Flow shape
  */
 export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
     /**

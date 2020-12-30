@@ -14,6 +14,8 @@ import { Unit } from './Unit';
  * const value = new UnitValue(5, LengthUnit.METER);
  * const converted = value.to(LengthUnit.CENTIMETER);
  * ```
+ *
+ * @category Unit
  */
 export class UnitValue implements Number {
     private _value: number;

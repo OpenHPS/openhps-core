@@ -20,7 +20,8 @@ module.exports = {
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "import/no-cycle": "error",
         "import/no-unresolved": "off",
-        "prettier/prettier": ["error"]
+        "prettier/prettier": ["error"],
+        "jsdoc/check-tag-names": ["error", { "definedTags": ["category"] }],
     },
     "extends": [
         "eslint:recommended",

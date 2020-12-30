@@ -5,9 +5,9 @@ import { GraphOptions } from '../graph';
 
 /**
  * Processing node that processes each [[DataObject]] in a [[DataFrame]] individually
- * 
+ *
  * ## Usage
- * 
+ *
  * ### Creating an ObjectProcessingNode
  * Extended on a [[ProcessingNode]] is an object processing node that processes individual objects in each frame.
  * ```typescript
@@ -23,7 +23,9 @@ import { GraphOptions } from '../graph';
  *        });
  *    }
  * }
-```
+ * ```
+ *
+ * @category Processing node
  */
 export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> extends ProcessingNode<InOut, InOut> {
     protected options: ObjectProcessingNodeOptions;

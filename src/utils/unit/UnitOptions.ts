@@ -1,6 +1,9 @@
 import { UnitDefinition } from './UnitDefinition';
 import { UnitPrefixType } from './UnitPrefix';
 
+/**
+ * @category Unit
+ */
 export interface UnitOptions {
     /**
      * Base unit name

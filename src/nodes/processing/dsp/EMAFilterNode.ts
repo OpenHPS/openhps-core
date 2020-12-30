@@ -3,6 +3,9 @@ import { Vector } from '../../../utils';
 import { PropertyFilterProcessingNode } from './PropertyFilterProcessingNode';
 import { FilterProcessingOptions } from './FilterProcessingNode';
 
+/**
+ * @category Processing node
+ */
 export class EMAFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
     constructor(
         propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey],

@@ -31,6 +31,8 @@ import { Model } from './Model';
  * ```
  * Abstract implementations such as a [[SourceNode]] and [[SinkNode]] only take one input or output
  * data frame type as they do not process or change the frame.
+ *
+ * @category Node
  */
 export abstract class Node<In extends DataFrame, Out extends DataFrame> extends AsyncEventEmitter {
     /**

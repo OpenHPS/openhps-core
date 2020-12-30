@@ -2,6 +2,8 @@ import { Position } from './Position';
 
 /**
  * Relative position to another reference object or space.
+ *
+ * @category Position
  */
 export interface RelativePosition<T = number> extends Position {
     /**

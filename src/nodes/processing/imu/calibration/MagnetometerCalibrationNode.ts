@@ -1,6 +1,9 @@
 import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../../../ObjectProcessingNode';
 import { DataObject, IMUDataFrame } from '../../../../data';
 
+/**
+ * @category Processing node
+ */
 export class MagnetometerCalibrationNode extends ObjectProcessingNode<IMUDataFrame> {
     protected options: MagnetomerCalibrationOptions;
 

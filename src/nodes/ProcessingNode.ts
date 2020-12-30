@@ -26,6 +26,8 @@ import { PushOptions } from '../graph';
  *     }
  * }
  * ```
+ *
+ * @category Processing node
  */
 export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame> extends Node<
     In,

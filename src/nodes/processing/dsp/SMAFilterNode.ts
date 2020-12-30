@@ -3,6 +3,9 @@ import { FilterProcessingOptions } from './FilterProcessingNode';
 import { DataFrame, DataObject } from '../../../data';
 import { Vector } from '../../../utils';
 
+/**
+ * @category Processing node
+ */
 export class SMAFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
     constructor(
         propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey],

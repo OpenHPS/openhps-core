@@ -2,6 +2,9 @@ import { DataFrame } from '../../data';
 import { Outlet } from '../../graph';
 import { Node } from '../../Node';
 
+/**
+ * @category Flow shape
+ */
 export class BalanceNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _busyNodes: Array<Outlet<any>> = [];
     private _queue: Array<{

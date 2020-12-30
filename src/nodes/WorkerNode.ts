@@ -39,6 +39,8 @@ declare const __non_webpack_require__: typeof require;
  *      worker: 'worker.openhps-core.min.js'    // Worker JS file
  * });
  * ```
+ *
+ * @category Node
  */
 export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
     protected options: WorkerNodeOptions;

@@ -2,6 +2,9 @@ import { DataFrame } from '../../data';
 import { PushOptions } from '../../graph';
 import { Node, NodeOptions } from '../../Node';
 
+/**
+ * @category Flow shape
+ */
 export class FrameFlattenNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     constructor(options?: NodeOptions) {
         super(options);

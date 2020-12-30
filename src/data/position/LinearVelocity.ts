@@ -2,6 +2,9 @@ import { SerializableMember, SerializableObject } from '../decorators';
 import { LinearVelocityUnit } from '../../utils';
 import { Vector3 } from '../../utils/math';
 
+/**
+ * @category Position
+ */
 @SerializableObject()
 export class LinearVelocity extends Vector3 {
     @SerializableMember({

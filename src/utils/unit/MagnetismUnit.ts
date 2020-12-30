@@ -2,6 +2,9 @@ import { Unit } from './Unit';
 import { SerializableObject } from '../../data/decorators';
 import { UnitPrefix } from './UnitPrefix';
 
+/**
+ * @category Unit
+ */
 @SerializableObject()
 export class MagnetismUnit extends Unit {
     public static readonly TESLA: MagnetismUnit = new MagnetismUnit('tesla', {

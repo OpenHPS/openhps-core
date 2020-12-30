@@ -25,6 +25,8 @@ import { PushCompletedEvent, PushOptions } from '../graph';
  *     }
  * }
  * ```
+ *
+ * @category Sink node
  */
 export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In, In> {
     protected options: SinkNodeOptions;

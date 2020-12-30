@@ -1,6 +1,9 @@
 import { DataFrame, DataObject, RelativePosition } from '../../data';
 import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
 
+/**
+ * @category Processing node
+ */
 export abstract class RelativePositionProcessing<
     InOut extends DataFrame,
     R extends RelativePosition

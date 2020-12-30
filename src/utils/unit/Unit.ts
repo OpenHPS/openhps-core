@@ -22,6 +22,8 @@ import { UnitPrefix, UnitPrefixType } from './UnitPrefix';
  * ```typescript
  * const nanoUnit = myUnit.specifier(UnitPrefix.NANO);
  * ```
+ *
+ * @category Unit
  */
 @SerializableObject({
     initializer: <T extends Unit | Unit>(_: T, rawSourceObject: T) => {

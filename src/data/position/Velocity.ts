@@ -2,6 +2,9 @@ import { SerializableObject, SerializableMember } from '../decorators';
 import { AngularVelocity } from './AngularVelocity';
 import { LinearVelocity } from './LinearVelocity';
 
+/**
+ * @category Position
+ */
 @SerializableObject()
 export class Velocity {
     /**

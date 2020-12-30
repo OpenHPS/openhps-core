@@ -11,6 +11,8 @@ import { Orientation } from './Orientation';
 /**
  * Absolute cartesian 2D position. This class implements a [[Vector2]]. This location can be used both as
  * an absolute location or relative location.
+ *
+ * @category Position
  */
 @SerializableObject()
 export class Absolute2DPosition extends Vector2 implements AbsolutePosition {

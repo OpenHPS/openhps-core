@@ -4,6 +4,8 @@ import { DataObjectService } from '../../../service';
 
 /**
  * Fingerprinting processing node
+ *
+ * @category Processing node
  */
 export class FingerprintingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
     public processObject(dataObject: DataObject, dataFrame: InOut): Promise<DataObject> {

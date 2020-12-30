@@ -6,6 +6,8 @@ import { CallbackSinkNode } from './CallbackSinkNode';
  * This sink node will serialize the data frames pushed to this
  * output layer, and log them to the console using the logging function
  * specified in the constructor.
+ *
+ * @category Sink node
  */
 export class LoggingSinkNode<In extends DataFrame> extends CallbackSinkNode<In> {
     /**

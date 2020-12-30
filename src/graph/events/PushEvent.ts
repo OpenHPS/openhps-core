@@ -1,3 +1,6 @@
+/**
+ * @category Graph
+ */
 export class PushEvent {
     /**
      * Frame subject

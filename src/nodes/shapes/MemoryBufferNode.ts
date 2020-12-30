@@ -2,6 +2,9 @@ import { DataFrame } from '../../data/DataFrame';
 import { GraphOptions, PullOptions } from '../../graph';
 import { Node, NodeOptions } from '../../Node';
 
+/**
+ * @category Flow shape
+ */
 export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     protected _dataFrames: InOut[];
 

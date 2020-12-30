@@ -1,6 +1,9 @@
 import { RelativeDistancePosition } from './RelativeDistancePosition';
 import { SerializableObject, SerializableMember } from '../decorators';
 
+/**
+ * @category Position
+ */
 @SerializableObject()
 export class RelativeRSSIPosition extends RelativeDistancePosition {
     private _rssi: number;

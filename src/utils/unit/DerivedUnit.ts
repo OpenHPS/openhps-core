@@ -5,6 +5,8 @@ import { UnitDefinition } from './UnitDefinition';
 
 /**
  * Derived Unit
+ *
+ * @category Unit
  */
 @SerializableObject()
 export class DerivedUnit extends Unit {

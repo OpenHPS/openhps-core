@@ -1,5 +1,7 @@
 /**
  * Push error
+ *
+ * @category Graph
  */
 export class PushError extends Error {
     /**

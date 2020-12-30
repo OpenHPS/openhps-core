@@ -5,6 +5,8 @@ import { DataSerializer } from '../DataSerializer';
 
 /**
  * Relative location to another reference object measured in the angle.
+ *
+ * @category Position
  */
 @SerializableObject()
 export class RelativeAnglePosition implements RelativePosition<number> {

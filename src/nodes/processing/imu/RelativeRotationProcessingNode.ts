@@ -6,6 +6,7 @@ import { FilterProcessingNode } from '../dsp';
  * Relative rotation processing node
  *
  * @see {@link https://www.w3.org/TR/motion-sensors/#relative-orientation-sensor}
+ * @category Processing node
  */
 export class RelativeRotationProcessingNode extends FilterProcessingNode<DataFrame> {
     public initFilter(_: DataObject, frame: IMUDataFrame): Promise<any> {

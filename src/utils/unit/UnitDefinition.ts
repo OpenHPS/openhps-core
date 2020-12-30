@@ -1,3 +1,6 @@
+/**
+ * @category Unit
+ */
 export interface UnitDefinition {
     /**
      * Target unit

@@ -2,6 +2,9 @@ import { DataFrame, DataObject } from '../../data';
 import { ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
 import { ProcessingNode } from '../ProcessingNode';
 
+/**
+ * @category Flow shape
+ */
 export class ObjectFilterNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
     protected options: ObjectProcessingNodeOptions;
 

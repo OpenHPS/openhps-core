@@ -16,6 +16,8 @@ import { ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
  * - [[Absolute2DPosition]]
  * - [[Absolute3DPosition]]
  * - [[GeographicalPosition]]
+ *
+ * @category Processing node
  */
 export class TrilaterationNode<InOut extends DataFrame> extends RelativePositionProcessing<
     InOut,

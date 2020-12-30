@@ -6,6 +6,8 @@ import { Matrix4, Vector3, Quaternion, AxisAngle } from '../../../utils/math';
 
 /**
  * Linear and angular velocity processing
+ *
+ * @category Processing node
  */
 export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
     public processObject(object: DataObject, frame: InOut): Promise<DataObject> {

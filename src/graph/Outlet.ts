@@ -3,6 +3,8 @@ import { PullOptions, PushOptions } from './interfaces';
 
 /**
  * Outlet of a node
+ *
+ * @category Graph
  */
 export interface Outlet<Out extends DataFrame> {
     /**

@@ -7,6 +7,8 @@ import { Orientation } from './Orientation';
 
 /**
  * Absolute position
+ *
+ * @category Position
  */
 export interface AbsolutePosition extends Position {
     /**

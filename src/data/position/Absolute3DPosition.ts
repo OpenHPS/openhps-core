@@ -10,6 +10,8 @@ import { Orientation } from './Orientation';
 /**
  * Absolute cartesian 3D position. This class extends a [[Vector3]]. This location can be used both as
  * an absolute location or relative location.
+ *
+ * @category Position
  */
 @SerializableObject()
 export class Absolute3DPosition extends Vector3 implements AbsolutePosition {

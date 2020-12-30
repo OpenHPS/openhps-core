@@ -1,6 +1,9 @@
 import { DataObject, Acceleration, IMUDataFrame } from '../../../data';
 import { FilterProcessingOptions, FilterProcessingNode } from '../dsp';
 
+/**
+ * @category Processing node
+ */
 export class GravityProcessingNode extends FilterProcessingNode<IMUDataFrame> {
     public initFilter(object: DataObject, frame: IMUDataFrame, options?: FilterProcessingOptions): Promise<any> {
         return new Promise<any>((resolve, reject) => {

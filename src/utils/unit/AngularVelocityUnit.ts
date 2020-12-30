@@ -3,6 +3,9 @@ import { DerivedUnit } from './DerivedUnit';
 import { AngleUnit } from './AngleUnit';
 import { TimeUnit } from './TimeUnit';
 
+/**
+ * @category Unit
+ */
 @SerializableObject()
 export class AngularVelocityUnit extends DerivedUnit {
     public static readonly RADIAN_PER_SECOND = new AngularVelocityUnit('radian per second', {

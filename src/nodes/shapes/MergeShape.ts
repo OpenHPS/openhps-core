@@ -7,6 +7,8 @@ import { PushOptions } from '../../graph';
 /**
  * Merge data frames from two or more sources
  * using a certain merge key (e.g. source uid, parent uid, node uid).
+ *
+ * @category Flow shape
  */
 export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
     private _queue: Map<any, QueuedMerge<InOut>> = new Map();

@@ -4,5 +4,6 @@
     "exclude": ["**/_internal/**/*"],
     "excludePrivate": true,
     "hideGenerator": true,
+    "categorizeByGroup": true,
     "media": "docs/media"
 }

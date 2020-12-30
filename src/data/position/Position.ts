@@ -1,5 +1,7 @@
 /**
  * General abstract position class consisting of orientation, velocity, position unit and an accuracy.
+ *
+ * @category Position
  */
 export interface Position {
     /**
