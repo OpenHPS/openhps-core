@@ -27,7 +27,7 @@ import { Model } from './Model';
  *
  * export class CustomNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
  *     // ...
- *  * }
+ * }
  * ```
  * Abstract implementations such as a [[SourceNode]] and [[SinkNode]] only take one input or output
  * data frame type as they do not process or change the frame.

@@ -19,6 +19,12 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
         this.deserialize = deserializer;
     }
 
+    public createIndex(): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
     public findByUID(uid: I): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             if (this._data.has(uid)) {

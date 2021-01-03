@@ -1,4 +1,4 @@
-import { AbsolutePosition } from '../position/AbsolutePosition';
+import { AbsolutePosition, AbsolutePositionDeserializer } from '../position/AbsolutePosition';
 import { RelativePosition } from '../position/RelativePosition';
 import { TypedJSON } from 'typedjson';
 import { SerializableObject, SerializableMember, SerializableArrayMember } from '../decorators';
@@ -18,6 +18,8 @@ import { ReferenceSpace } from './space';
  * ```typescript
  * const myObject = new DataObject("mvdewync", "Maxim");
  * ```
+ *
+ * @category data
  */
 @SerializableObject()
 export class DataObject {
@@ -71,12 +73,7 @@ export class DataObject {
      * @returns {AbsolutePosition} Absolute position of data object
      */
     @SerializableMember({
-        deserializer(raw: any): AbsolutePosition {
-            if (raw === undefined) {
-                return undefined;
-            }
-            return new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw);
-        },
+        deserializer: AbsolutePositionDeserializer,
     })
     public get position(): AbsolutePosition {
         return this.getPosition();

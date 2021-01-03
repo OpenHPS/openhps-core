@@ -35,7 +35,7 @@ export class QueryEvaluator {
         return result;
     }
 
-    protected static evaluatePath<T>(object: T, path: string, query: FilterQuery<T>): boolean {
+    public static getValueFromPath<T>(object: T, path: string): [any, string] {
         // https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-and-arays-by-string-path
         let o: any = object;
         path = path.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
@@ -44,17 +44,25 @@ export class QueryEvaluator {
         for (let i = 0, n = a.length; i < n; ++i) {
             const k = a[i];
             if (!o) {
-                return false;
+                return undefined;
             } else if (k in o) {
                 if (i < n - 1) {
                     o = o[k];
                 } else {
-                    return QueryEvaluator.evaluateComponent(o, k, query);
+                    return [o, k];
                 }
             } else {
-                return false;
+                return undefined;
             }
         }
+    }
+
+    protected static evaluatePath<T>(object: T, path: string, query: FilterQuery<T>): boolean {
+        const data = QueryEvaluator.getValueFromPath(object, path);
+        if (!data) {
+            return false;
+        }
+        return QueryEvaluator.evaluateComponent(data[0], data[1], query);
     }
 
     protected static evaluateSelector<T>(value: any, subquery: QuerySelector<T>): boolean {

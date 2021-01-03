@@ -12,10 +12,6 @@ export class Magnetism extends Vector3 {
     public accuracy: number;
 
     constructor(x?: number, y?: number, z?: number, unit = MagnetismUnit.MICROTESLA) {
-        super(
-            unit.convert(x ? x : 0, MagnetismUnit.MICROTESLA),
-            unit.convert(y ? y : 0, MagnetismUnit.MICROTESLA),
-            unit.convert(z ? z : 0, MagnetismUnit.MICROTESLA),
-        );
+        super(x, y, z, unit, MagnetismUnit.MICROTESLA);
     }
 }

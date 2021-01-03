@@ -30,24 +30,8 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
      * Orientation at recorded position
      */
     @SerializableMember({
-        deserializer: function (json) {
-            if (!json) {
-                return undefined;
-            }
-            return new Orientation(json.x, json.y, json.z, json.w, json.accuracy);
-        },
-        serializer: function (value) {
-            if (!value) {
-                return undefined;
-            }
-            return {
-                x: value.x,
-                y: value.y,
-                z: value.z,
-                w: value.w,
-                accuracy: value.accuracy,
-            };
-        },
+        deserializer: Orientation.deserializer,
+        serializer: Orientation.serializer,
     })
     public orientation: Orientation;
     /**

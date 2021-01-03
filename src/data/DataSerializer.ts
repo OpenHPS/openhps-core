@@ -1,6 +1,9 @@
 import { TypedJSON } from 'typedjson';
 import { Deserializer } from 'typedjson/js/typedjson/deserializer';
+import { JsonObjectMetadata } from 'typedjson/js/typedjson/metadata';
 import { Serializer } from 'typedjson/js/typedjson/serializer';
+
+const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
 
 /**
  * Allows the serialization and deserialization of objects using the [[SerializableObject]] decorator.
@@ -24,6 +27,21 @@ export class DataSerializer {
      */
     public static registerType(type: new () => any): void {
         this._serializableTypes.set(type.name, type);
+    }
+
+    /**
+     * Find the root TypedJSON metadata
+     *
+     * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
+     * @param {any} proto Prototype of target
+     * @returns {JsonObjectMetadata} Root object metadata
+     */
+    public static findRootMetaInfo(proto: any): JsonObjectMetadata {
+        const protoProto = Object.getPrototypeOf(proto);
+        if (!protoProto || !protoProto[META_FIELD]) {
+            return proto[META_FIELD];
+        }
+        return DataSerializer.findRootMetaInfo(protoProto);
     }
 
     public static unregisterType(type: new () => any): void {

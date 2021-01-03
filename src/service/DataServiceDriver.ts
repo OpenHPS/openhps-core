@@ -17,6 +17,8 @@ export abstract class DataServiceDriver<I, T> extends Service {
         }
     }
 
+    public abstract createIndex(index: string): Promise<void>;
+
     public abstract findByUID(id: I): Promise<T>;
 
     public abstract findOne(query?: FilterQuery<T>): Promise<T>;

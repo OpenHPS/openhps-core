@@ -4,6 +4,8 @@ import { Velocity } from './Velocity';
 import { LinearVelocity } from './LinearVelocity';
 import { AngularVelocity } from './AngularVelocity';
 import { Orientation } from './Orientation';
+import { TypedJSON } from 'typedjson';
+import { DataSerializer } from '../DataSerializer';
 
 /**
  * Absolute position
@@ -47,4 +49,18 @@ export interface AbsolutePosition extends Position {
     toVector3(unit?: LengthUnit): Vector3;
 
     equals(position: AbsolutePosition): boolean;
+}
+
+/**
+ * Deserailize an absolute position
+ *  Do not use this function in external modules!
+ *
+ * @param {any} raw Json object
+ * @returns {AbsolutePosition} Deserialized position
+ */
+export function AbsolutePositionDeserializer(raw: any): AbsolutePosition {
+    if (raw === undefined) {
+        return undefined;
+    }
+    return new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw);
 }

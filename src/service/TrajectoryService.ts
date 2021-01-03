@@ -1,8 +1,31 @@
-import { AbsolutePosition, DataObject } from '../data';
+import {
+    AbsolutePosition,
+    AbsolutePositionDeserializer,
+    DataObject,
+    SerializableMember,
+    SerializableObject,
+} from '../data';
 import { DataService } from './DataService';
+import { DataServiceDriver } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
 
-export class TrajectoryService<T extends DataObject> extends DataService<PositionIdentifier, T> {
+export class TrajectoryService<T extends AbsolutePosition> extends DataService<PositionIdentifier, DataObjectPosition> {
+    constructor(dataServiceDriver: DataServiceDriver<PositionIdentifier, T>) {
+        super(dataServiceDriver as any);
+
+        this.once('build', this._onBuild.bind(this));
+    }
+
+    private _onBuild(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            Promise.all([this.createIndex('timestamp')])
+                .then(() => {
+                    resolve();
+                })
+                .catch(reject);
+        });
+    }
+
     /**
      * Find the last stored position of an object.
      *
@@ -19,7 +42,8 @@ export class TrajectoryService<T extends DataObject> extends DataService<Positio
                     if (objects.length === 0) {
                         return resolve(undefined);
                     }
-                    resolve(objects.sort((a, b) => b.createdTimestamp - a.createdTimestamp)[0].getPosition());
+                    const lastPosition = objects.sort((a, b) => b.timestamp - a.timestamp)[0];
+                    resolve(lastPosition.position);
                 })
                 .catch(reject);
         });
@@ -37,37 +61,56 @@ export class TrajectoryService<T extends DataObject> extends DataService<Positio
         return new Promise((resolve, reject) => {
             const filter: FilterQuery<any> = {
                 uid,
-                createdTimestamp: {
+                timestamp: {
                     $lt: end ? (end instanceof Date ? end.getTime() : end) : Number.MAX_VALUE,
                     $gt: start ? (start instanceof Date ? start.getTime() : start) : -1,
                 },
             };
             this.findAll(filter)
                 .then((objects) => {
-                    const positions: Array<AbsolutePosition> = [];
-                    objects.forEach((object) => {
-                        positions.push(object.getPosition());
-                    });
-                    resolve(positions);
+                    resolve(objects.map((object) => object.position));
                 })
                 .catch(reject);
         });
     }
 
-    public appendPosition(object: DataObject): Promise<T> {
-        const clone = object.clone();
-        clone.createdTimestamp = clone.getPosition().timestamp;
-        return this.driver.insert(
-            {
-                uid: clone.uid,
-                timestamp: clone.createdTimestamp,
-            },
-            clone as T,
-        );
+    public appendPosition(object: DataObject): Promise<DataObjectPosition> {
+        const position = object.getPosition();
+        if (position) {
+            return this.insert(
+                {
+                    uid: object.uid,
+                    timestamp: position.timestamp,
+                },
+                new DataObjectPosition(object.uid, position),
+            );
+        } else {
+            return Promise.reject();
+        }
     }
 }
 
 export interface PositionIdentifier {
     uid: string;
     timestamp: number;
+}
+
+@SerializableObject()
+class DataObjectPosition implements PositionIdentifier {
+    @SerializableMember()
+    uid: string;
+    @SerializableMember()
+    timestamp: number;
+    @SerializableMember({
+        deserializer: AbsolutePositionDeserializer,
+    })
+    position: AbsolutePosition;
+
+    constructor(uid?: string, position?: AbsolutePosition) {
+        if (uid && position) {
+            this.uid = uid;
+            this.position = position;
+            this.timestamp = this.position.timestamp;
+        }
+    }
 }

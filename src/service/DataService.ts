@@ -32,6 +32,10 @@ export abstract class DataService<I, T> extends DataServiceDriver<I, T> {
         this.once('destroy', () => this.driver.emitAsync('destroy'));
     }
 
+    public createIndex(index: string): Promise<void> {
+        return this.driver.createIndex(index);
+    }
+
     public findByUID(uid: I): Promise<T> {
         return this.driver.findByUID(uid);
     }

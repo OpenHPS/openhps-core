@@ -22,4 +22,24 @@ export class Orientation extends Quaternion {
     public static fromQuaternion(quat: Quaternion | THREE.Quaternion): Orientation {
         return new Orientation(quat.x, quat.y, quat.z, quat.w);
     }
+
+    public static serializer(value: Orientation) {
+        if (!value) {
+            return undefined;
+        }
+        return {
+            x: value.x,
+            y: value.y,
+            z: value.z,
+            w: value.w,
+            accuracy: value.accuracy,
+        };
+    }
+
+    public static deserializer(json: any) {
+        if (!json) {
+            return undefined;
+        }
+        return new Orientation(json.x, json.y, json.z, json.w, json.accuracy);
+    }
 }
