@@ -42,6 +42,16 @@ npm install @openhps/core --save
 
 The core idea and goals of OpenHPS are outlined in the technical paper: *OpenHPS: An Open Source Hybrid Positioning System*.
 
+## Usage
+```typescript
+import { ModelBuilder } from '@openhps/core';
+
+ModelBuilder.create()
+    .build().then(model => {
+         // ...
+    });
+```
+
 ## Contributors
 The framework is open source and is mainly developed by PhD Student Maxim Van de Wynckel as part of his research towards *Hybrid Positioning and Implicit Human-Computer Interaction* under the supervision of Prof. Dr. Beat Signer.
 

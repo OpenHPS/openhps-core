@@ -23,6 +23,8 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
     public timestamp: number = TimeService.now();
     /**
      * Velocity at recorded position
+     *
+     * @deprecated use linearVelocity and angularVelocity instead
      */
     @SerializableMember()
     public velocity: Velocity = new Velocity();
@@ -141,7 +143,8 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
         position.unit = this.unit;
         position.accuracy = this.accuracy;
         position.orientation = this.orientation ? this.orientation.clone() : undefined;
-        position.velocity = this.velocity ? this.velocity.clone() : undefined;
+        position.linearVelocity = this.linearVelocity ? this.linearVelocity.clone() : undefined;
+        position.angularVelocity = this.angularVelocity ? this.angularVelocity.clone() : undefined;
         position.timestamp = this.timestamp;
         position.referenceSpaceUID = this.referenceSpaceUID;
         return position as this;

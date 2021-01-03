@@ -3,6 +3,8 @@ import { AngularVelocity } from './AngularVelocity';
 import { LinearVelocity } from './LinearVelocity';
 
 /**
+ * Velocity of the object at the recorded position
+ *
  * @category Position
  */
 @SerializableObject()

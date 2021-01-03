@@ -75,13 +75,13 @@ describe('data', () => {
 
                 const refSpace = new ReferenceSpace(globalReferenceSpace).scale(0.5, 0.5, 0.5);
                 const position = new Absolute3DPosition(3, 3);
-                position.velocity.linear = new LinearVelocity(5, 0, 0);
+                position.linearVelocity = new LinearVelocity(5, 0, 0);
                 const result = refSpace.transform(position) as Absolute3DPosition;
                 expect(result.x).to.equal(1.5);
                 expect(result.y).to.equal(1.5);
                 expect(result.z).to.equal(0);
-                expect(result.velocity.linear.x).to.equal(2.5);
-                expect(result.velocity.linear.y).to.equal(0);
+                expect(result.linearVelocity.x).to.equal(2.5);
+                expect(result.linearVelocity.y).to.equal(0);
             });
         });
 

@@ -8,7 +8,7 @@ import { TypedJSON } from 'typedjson';
 import { DataSerializer } from '../DataSerializer';
 
 /**
- * Absolute position
+ * An absolute position of a [[DataObject]].
  *
  * @category Position
  */

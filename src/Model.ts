@@ -12,7 +12,9 @@ import { PullOptions, PushOptions } from './graph';
  * Please refer to [[ModelBuilder]] for creating a new model
  *
  * ### Pushing and Pulling
- *
+ * Pushing or pulling on a model is possible, but only recommended for prototyping.
+ * Instead, developers should use a [[SourceNode]] that automatically pushes new [[DataFrame]]s
+ * or pushes new frames when receiving a pull.
  */
 export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame>
     extends GraphShape<In, Out> {

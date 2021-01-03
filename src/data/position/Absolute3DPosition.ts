@@ -22,6 +22,8 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
     public timestamp: number = TimeService.now();
     /**
      * Velocity at recorded position
+     *
+     * @deprecated use linearVelocity and angularVelocity instead
      */
     @SerializableMember()
     public velocity: Velocity = new Velocity();

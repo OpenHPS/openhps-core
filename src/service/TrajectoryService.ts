@@ -13,10 +13,10 @@ export class TrajectoryService<T extends AbsolutePosition> extends DataService<P
     constructor(dataServiceDriver: DataServiceDriver<PositionIdentifier, T>) {
         super(dataServiceDriver as any);
 
-        this.once('build', this._onBuild.bind(this));
+        this.driver.once('ready', this._createIndexes.bind(this));
     }
 
-    private _onBuild(): Promise<void> {
+    private _createIndexes(): Promise<void> {
         return new Promise((resolve, reject) => {
             Promise.all([this.createIndex('timestamp')])
                 .then(() => {

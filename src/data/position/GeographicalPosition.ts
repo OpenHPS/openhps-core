@@ -215,7 +215,8 @@ export class GeographicalPosition extends Absolute3DPosition {
         position.unit = this.unit;
         position.accuracy = this.accuracy;
         position.orientation = this.orientation ? this.orientation.clone() : undefined;
-        position.velocity = this.velocity ? this.velocity.clone() : undefined;
+        position.linearVelocity = this.linearVelocity ? this.linearVelocity.clone() : undefined;
+        position.angularVelocity = this.angularVelocity ? this.angularVelocity.clone() : undefined;
         position.altitudeUnit = this.altitudeUnit;
         position.timestamp = this.timestamp;
         position.referenceSpaceUID = this.referenceSpaceUID;
