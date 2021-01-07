@@ -1,9 +1,9 @@
-import { FilterQuery, QuerySelector } from './FilterQuery';
+import { FilterQuery, QuerySelector } from '../FilterQuery';
 
 /**
- * Query evaluator for [[FilterQuery]]s
+ * Query evaluator for [[FilterQuery]]s with [[MemoryDataService]].
  */
-export class QueryEvaluator {
+export class MemoryQueryEvaluator {
     private static isRegexQuery(query: any): boolean {
         return Object.prototype.toString.call(query) === '[object RegExp]';
     }
@@ -12,13 +12,13 @@ export class QueryEvaluator {
         let result = true;
         const value = (object as any)[key];
         if (key.startsWith('$')) {
-            result = result && QueryEvaluator.evaluateOp(key, object, query);
+            result = result && MemoryQueryEvaluator.evaluateOp(key, object, query);
         } else if (key.includes('.')) {
-            result = result && QueryEvaluator.evaluatePath(object, key, query);
-        } else if (QueryEvaluator.isRegexQuery(query)) {
+            result = result && MemoryQueryEvaluator.evaluatePath(object, key, query);
+        } else if (MemoryQueryEvaluator.isRegexQuery(query)) {
             result = result && (value as string).match(query) ? true : false;
         } else if (typeof query === 'object') {
-            result = result && QueryEvaluator.evaluateSelector(value, query);
+            result = result && MemoryQueryEvaluator.evaluateSelector(value, query);
         } else {
             result = result && value === query;
         }
@@ -29,7 +29,7 @@ export class QueryEvaluator {
         let result = true;
         if (query) {
             for (const key of Object.keys(query)) {
-                result = result && QueryEvaluator.evaluateComponent(object, key, query[key]);
+                result = result && MemoryQueryEvaluator.evaluateComponent(object, key, query[key]);
             }
         }
         return result;
@@ -58,18 +58,18 @@ export class QueryEvaluator {
     }
 
     protected static evaluatePath<T>(object: T, path: string, query: FilterQuery<T>): boolean {
-        const data = QueryEvaluator.getValueFromPath(object, path);
+        const data = MemoryQueryEvaluator.getValueFromPath(object, path);
         if (!data) {
             return false;
         }
-        return QueryEvaluator.evaluateComponent(data[0], data[1], query);
+        return MemoryQueryEvaluator.evaluateComponent(data[0], data[1], query);
     }
 
     protected static evaluateSelector<T>(value: any, subquery: QuerySelector<T>): boolean {
         let result = true;
         for (const selector of Object.keys(subquery)) {
-            result = result && QueryEvaluator.evaluateComparisonSelector(selector, value, subquery);
-            result = result && QueryEvaluator.evaluateArraySelector(selector, value, subquery);
+            result = result && MemoryQueryEvaluator.evaluateComparisonSelector(selector, value, subquery);
+            result = result && MemoryQueryEvaluator.evaluateArraySelector(selector, value, subquery);
         }
         return result;
     }
@@ -110,14 +110,15 @@ export class QueryEvaluator {
                 if (value instanceof Array) {
                     Array.from(value).forEach((element) => {
                         if (element['key'] && element['value']) {
-                            result = result || QueryEvaluator.evaluate(element['value'], subquery[selector]);
+                            result = result || MemoryQueryEvaluator.evaluate(element['value'], subquery[selector]);
                         } else {
-                            result = result || QueryEvaluator.evaluateComponent(element, selector, subquery[selector]);
+                            result =
+                                result || MemoryQueryEvaluator.evaluateComponent(element, selector, subquery[selector]);
                         }
                     });
                 } else if (value instanceof Map) {
                     value.forEach((element) => {
-                        result = result || QueryEvaluator.evaluate(element, subquery[selector]);
+                        result = result || MemoryQueryEvaluator.evaluate(element, subquery[selector]);
                     });
                 }
                 result = result && result;
@@ -132,13 +133,13 @@ export class QueryEvaluator {
             case '$and':
                 result = true;
                 for (const query of subquery) {
-                    result = result && QueryEvaluator.evaluate(object, query);
+                    result = result && MemoryQueryEvaluator.evaluate(object, query);
                 }
                 break;
             case '$or':
                 result = false;
                 for (const query of subquery) {
-                    result = result || QueryEvaluator.evaluate(object, query);
+                    result = result || MemoryQueryEvaluator.evaluate(object, query);
                 }
                 break;
         }

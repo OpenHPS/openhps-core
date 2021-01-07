@@ -5,7 +5,6 @@ export * from './WorkerService';
 export * from './TrajectoryService';
 export * from './NodeDataService';
 export * from './TimeService';
-export * from './QueryEvaluator';
 export * from './FilterQuery';
 export * from './MemoryDataService';
 export * from './DataService';

@@ -1,7 +1,5 @@
 /* eslint-disable */
-import { jsonObject } from 'typedjson';
-import { IJsonObjectOptions } from 'typedjson/js/typedjson/json-object';
-import { ParameterlessConstructor } from 'typedjson/js/typedjson/types';
+import { jsonObject, Serializable, IJsonObjectOptions } from 'typedjson';
 import { DataSerializer } from '../DataSerializer';
 
 /**
@@ -11,7 +9,7 @@ import { DataSerializer } from '../DataSerializer';
  */
 export function SerializableObject<T>(options?: IJsonObjectOptions<T>): ClassDecorator {
     return (target: Function) => {
-        jsonObject(options)(target as ParameterlessConstructor<T>);
+        jsonObject(options)(target as Serializable<T>);
         DataSerializer.findRootMetaInfo(target.prototype).knownTypes.add(target);
         DataSerializer.registerType(target as new () => any);
     };

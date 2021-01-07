@@ -1,7 +1,8 @@
 import 'mocha';
-import { FilterQuery, DataObject, QueryEvaluator, Absolute2DPosition, DataFrame } from '../../../src';
+import { FilterQuery, DataObject, Absolute2DPosition, DataFrame } from '../../../src';
 import { expect } from 'chai';
 import { DummyDataObject } from '../../mock/data/object/DummyDataObject';
+import { MemoryQueryEvaluator } from '../../../src/service/_internal';
 
 describe('query', () => {
     describe('syntax', () => {
@@ -25,8 +26,8 @@ describe('query', () => {
             const query: FilterQuery<DataObject> = {
                 displayName: 'Maxim',
             };
-            expect(QueryEvaluator.evaluate(object1, query)).to.be.true;
-            expect(QueryEvaluator.evaluate(object2, query)).to.be.false;
+            expect(MemoryQueryEvaluator.evaluate(object1, query)).to.be.true;
+            expect(MemoryQueryEvaluator.evaluate(object2, query)).to.be.false;
         });
 
         it('should evaluate multiple keys', () => {
@@ -38,11 +39,11 @@ describe('query', () => {
                 displayName: 'Maxim',
                 parentUID: 'abc',
             };
-            expect(QueryEvaluator.evaluate(object1, query)).to.be.true;
-            expect(QueryEvaluator.evaluate(object2, query)).to.be.false;
+            expect(MemoryQueryEvaluator.evaluate(object1, query)).to.be.true;
+            expect(MemoryQueryEvaluator.evaluate(object2, query)).to.be.false;
 
             object1.parentUID = 'cba';
-            expect(QueryEvaluator.evaluate(object1, query)).to.be.false;
+            expect(MemoryQueryEvaluator.evaluate(object1, query)).to.be.false;
         });
 
         it('should evaluate $and', () => {
@@ -52,9 +53,9 @@ describe('query', () => {
             const query: FilterQuery<DataObject> = {
                 $and: [{ displayName: 'Maxim' }, { uid: 'mvdewync' }],
             };
-            expect(QueryEvaluator.evaluate(object1, query)).to.be.true;
-            expect(QueryEvaluator.evaluate(object2, query)).to.be.false;
-            expect(QueryEvaluator.evaluate(object3, query)).to.be.false;
+            expect(MemoryQueryEvaluator.evaluate(object1, query)).to.be.true;
+            expect(MemoryQueryEvaluator.evaluate(object2, query)).to.be.false;
+            expect(MemoryQueryEvaluator.evaluate(object3, query)).to.be.false;
         });
 
         it('should evaluate $or', () => {
@@ -64,9 +65,9 @@ describe('query', () => {
             const query: FilterQuery<DataObject> = {
                 $or: [{ uid: 'mvdewync2' }, { uid: 'bsigner' }],
             };
-            expect(QueryEvaluator.evaluate(object1, query)).to.be.false;
-            expect(QueryEvaluator.evaluate(object2, query)).to.be.true;
-            expect(QueryEvaluator.evaluate(object3, query)).to.be.true;
+            expect(MemoryQueryEvaluator.evaluate(object1, query)).to.be.false;
+            expect(MemoryQueryEvaluator.evaluate(object2, query)).to.be.true;
+            expect(MemoryQueryEvaluator.evaluate(object3, query)).to.be.true;
         });
 
         it('should evaluate nested keys', () => {
@@ -76,8 +77,8 @@ describe('query', () => {
             const query: FilterQuery<DataObject> = {
                 'position.x': 3,
             };
-            expect(QueryEvaluator.evaluate(object1, query)).to.be.true;
-            expect(QueryEvaluator.evaluate(object2, query)).to.be.false;
+            expect(MemoryQueryEvaluator.evaluate(object1, query)).to.be.true;
+            expect(MemoryQueryEvaluator.evaluate(object2, query)).to.be.false;
         });
 
         it('should evaluate regular expressions', () => {
@@ -86,8 +87,8 @@ describe('query', () => {
             const query: FilterQuery<DataObject> = {
                 uid: /wync/g,
             };
-            expect(QueryEvaluator.evaluate(object1, query)).to.be.true;
-            expect(QueryEvaluator.evaluate(object2, query)).to.be.false;
+            expect(MemoryQueryEvaluator.evaluate(object1, query)).to.be.true;
+            expect(MemoryQueryEvaluator.evaluate(object2, query)).to.be.false;
         });
 
         describe('comparison', () => {
@@ -103,9 +104,9 @@ describe('query', () => {
                         $gt: 10,
                     },
                 };
-                expect(QueryEvaluator.evaluate(object1, query)).to.be.false;
-                expect(QueryEvaluator.evaluate(object2, query)).to.be.false;
-                expect(QueryEvaluator.evaluate(object3, query)).to.be.true;
+                expect(MemoryQueryEvaluator.evaluate(object1, query)).to.be.false;
+                expect(MemoryQueryEvaluator.evaluate(object2, query)).to.be.false;
+                expect(MemoryQueryEvaluator.evaluate(object3, query)).to.be.true;
             });
 
             it('should evaluate $gte', () => {
@@ -120,9 +121,9 @@ describe('query', () => {
                         $gte: 10,
                     },
                 };
-                expect(QueryEvaluator.evaluate(object1, query)).to.be.false;
-                expect(QueryEvaluator.evaluate(object2, query)).to.be.true;
-                expect(QueryEvaluator.evaluate(object3, query)).to.be.true;
+                expect(MemoryQueryEvaluator.evaluate(object1, query)).to.be.false;
+                expect(MemoryQueryEvaluator.evaluate(object2, query)).to.be.true;
+                expect(MemoryQueryEvaluator.evaluate(object3, query)).to.be.true;
             });
 
             it('should evaluate $lt', () => {
@@ -137,9 +138,9 @@ describe('query', () => {
                         $lt: 10,
                     },
                 };
-                expect(QueryEvaluator.evaluate(object1, query)).to.be.true;
-                expect(QueryEvaluator.evaluate(object2, query)).to.be.false;
-                expect(QueryEvaluator.evaluate(object3, query)).to.be.false;
+                expect(MemoryQueryEvaluator.evaluate(object1, query)).to.be.true;
+                expect(MemoryQueryEvaluator.evaluate(object2, query)).to.be.false;
+                expect(MemoryQueryEvaluator.evaluate(object3, query)).to.be.false;
             });
 
             it('should evaluate $lte', () => {
@@ -154,9 +155,9 @@ describe('query', () => {
                         $lte: 10,
                     },
                 };
-                expect(QueryEvaluator.evaluate(object1, query)).to.be.true;
-                expect(QueryEvaluator.evaluate(object2, query)).to.be.true;
-                expect(QueryEvaluator.evaluate(object3, query)).to.be.false;
+                expect(MemoryQueryEvaluator.evaluate(object1, query)).to.be.true;
+                expect(MemoryQueryEvaluator.evaluate(object2, query)).to.be.true;
+                expect(MemoryQueryEvaluator.evaluate(object3, query)).to.be.false;
             });
         });
 
@@ -181,9 +182,9 @@ describe('query', () => {
                         },
                     },
                 };
-                expect(QueryEvaluator.evaluate(frame1, query)).to.be.true;
-                expect(QueryEvaluator.evaluate(frame2, query)).to.be.false;
-                expect(QueryEvaluator.evaluate(frame3, query)).to.be.true;
+                expect(MemoryQueryEvaluator.evaluate(frame1, query)).to.be.true;
+                expect(MemoryQueryEvaluator.evaluate(frame2, query)).to.be.false;
+                expect(MemoryQueryEvaluator.evaluate(frame3, query)).to.be.true;
             });
         });
     });

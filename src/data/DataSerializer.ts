@@ -1,7 +1,6 @@
-import { TypedJSON } from 'typedjson';
-import { Deserializer } from 'typedjson/js/typedjson/deserializer';
-import { JsonObjectMetadata } from 'typedjson/js/typedjson/metadata';
-import { Serializer } from 'typedjson/js/typedjson/serializer';
+import { TypedJSON, JsonObjectMetadata } from 'typedjson';
+import { Deserializer } from 'typedjson/src/deserializer';
+import { Serializer } from 'typedjson/src/serializer';
 
 const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
 

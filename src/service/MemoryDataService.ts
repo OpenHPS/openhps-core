@@ -1,7 +1,7 @@
 import { DataSerializer } from '../data';
 import { DataServiceDriver } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
-import { QueryEvaluator } from './QueryEvaluator';
+import { MemoryQueryEvaluator } from './_internal/MemoryQueryEvaluator';
 
 export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     protected _data: Map<I, any> = new Map();
@@ -19,7 +19,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
         this.deserialize = deserializer;
     }
 
-    public createIndex(): Promise<void> {
+    public createIndex(_: string): Promise<void> {
         return new Promise((resolve) => {
             resolve();
         });
@@ -38,7 +38,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     public findOne(query?: FilterQuery<T>): Promise<T> {
         return new Promise<T>((resolve) => {
             for (const [, object] of this._data) {
-                if (QueryEvaluator.evaluate(object, query)) {
+                if (MemoryQueryEvaluator.evaluate(object, query)) {
                     return resolve(this.deserialize(object));
                 }
             }
@@ -50,7 +50,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
         return new Promise<T[]>((resolve) => {
             const data: T[] = [];
             this._data.forEach((object) => {
-                if (QueryEvaluator.evaluate(object, query)) {
+                if (MemoryQueryEvaluator.evaluate(object, query)) {
                     data.push(this.deserialize(object));
                 }
             });
@@ -86,7 +86,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
                 this._data = new Map();
             } else {
                 for (const [key, value] of this._data) {
-                    if (QueryEvaluator.evaluate(value, filter)) {
+                    if (MemoryQueryEvaluator.evaluate(value, filter)) {
                         this.delete(key);
                     }
                 }

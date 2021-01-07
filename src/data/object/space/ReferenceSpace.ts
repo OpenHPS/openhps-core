@@ -139,10 +139,10 @@ export class ReferenceSpace extends DataObject {
         }
 
         const transformationMatrix = config.inverse
-            ? new Matrix4().getInverse(this._transformationMatrix)
+            ? this._transformationMatrix.clone().invert()
             : this._transformationMatrix;
-        const rotation = config.inverse ? this._rotation.clone().inverse() : this._rotation;
-        const scale = config.inverse ? new Matrix4().getInverse(this._scaleMatrix) : this._scaleMatrix;
+        const rotation = config.inverse ? this._rotation.clone().invert() : this._rotation;
+        const scale = config.inverse ? this._scaleMatrix.clone().invert() : this._scaleMatrix;
 
         // Transform the point using the transformation matrix
         newPosition.fromVector(newPosition.toVector3().applyMatrix4(transformationMatrix));

@@ -72,10 +72,17 @@ pipeline {
                 reportFiles: '*.*',
                 reportName: "Documentation"
             ])
+
+            archiveArtifacts artifacts: 'dist/web/openhps-core.es.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-core.es.js.map', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-core.es.min.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-core.es.min.js.map', fingerprint: true
+
             archiveArtifacts artifacts: 'dist/web/openhps-core.js', fingerprint: true
             archiveArtifacts artifacts: 'dist/web/openhps-core.js.map', fingerprint: true
             archiveArtifacts artifacts: 'dist/web/openhps-core.min.js', fingerprint: true
             archiveArtifacts artifacts: 'dist/web/openhps-core.min.js.map', fingerprint: true
+
             archiveArtifacts artifacts: 'dist/web/worker.openhps-core.js', fingerprint: true
             archiveArtifacts artifacts: 'dist/web/worker.openhps-core.js.map', fingerprint: true
             archiveArtifacts artifacts: 'dist/web/worker.openhps-core.min.js', fingerprint: true

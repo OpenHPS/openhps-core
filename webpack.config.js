@@ -1,59 +1,61 @@
-const PROJECT_NAME = "openhps-core";
-const LIBRARY_NAME = "@openhps/core";
-
+const TerserPlugin = require('terser-webpack-plugin');
 const InjectPlugin = require('webpack-inject-plugin').default;
+const EsmWebpackPlugin = require("@purtuga/esm-webpack-plugin");
 const path = require('path');
+const pkg = require("./package.json");
+
+const LIBRARY_NAME = pkg.name;
+const PROJECT_NAME = pkg.name.replace("@", "").replace("/", "-");
+
+const defaultConfig = env => ({
+  mode: env.prod ? "production" : "development",
+  devtool: 'source-map',
+  optimization: {
+    minimize: env.prod,
+    minimizer: [
+      new TerserPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true,
+        terserOptions: {
+          keep_classnames: true,
+        }
+      })
+    ],
+    portableRecords: true,
+    usedExports: true,
+    providedExports: true
+  },
+  performance: {
+    hints: false,
+    maxEntrypointSize: 300000,
+    maxAssetSize: 300000
+  },
+});
+
+const bundle = (env, module) => ({
+  name: PROJECT_NAME,
+  entry: `./dist/${module ? "esm" : "cjs"}/index.js`,
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: `web/${PROJECT_NAME}${module ? ".es" : ""}${env.prod ? ".min" : ""}.js`,
+    library: module ? "LIB" : LIBRARY_NAME,
+    libraryTarget: module ? "var" : "umd",
+    umdNamedDefine: !module,
+    globalObject: `(typeof self !== 'undefined' ? self : this)`,
+  },
+  externals: [],
+  plugins: module ? [new EsmWebpackPlugin()] : [],
+  ...defaultConfig(env)
+});
 
 module.exports = env => [
+  bundle(env, true),
+  bundle(env, false),
   {
-    name: PROJECT_NAME,
-    mode: env.prod ? "production" : "development",
-    entry: `./dist/cjs/index.js`,
-    devtool: 'source-map',
-    output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename: `web/${PROJECT_NAME}${env.prod ? ".min" : ""}.${env.module ? 'mjs' : 'js'}`,
-      library: LIBRARY_NAME,
-      libraryTarget: 'umd',
-      umdNamedDefine: true,
-      globalObject: `(typeof self !== 'undefined' ? self : this)`,
-    },
-    resolve: {
-      alias: {
-        typedjson: `typedjson/js/typedjson${env.prod ? ".min" : ""}.js`,
-        typescript: false,
-        microtime: false
-      },
-      fallback: {
-        path: false,
-        fs: false,
-        os: false,
-      }
-    },
-    optimization: {
-      minimize: env.prod,
-      portableRecords: true,
-      usedExports: true,
-      providedExports: true
-    },
-    performance: {
-      hints: false,
-      maxEntrypointSize: 512000,
-      maxAssetSize: 512000
-    }
-  }, {
     name:`${PROJECT_NAME}-worker`,
-    mode: env.prod ? "production" : "development",
     entry: `./dist/cjs/nodes/_internal/WorkerNodeRunner.js`,
-    devtool: 'source-map',
     externals: {'../../': LIBRARY_NAME},
-    resolve: {
-      fallback: {
-        path: false,
-        fs: false,
-        os: false,
-      }
-    },
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: `web/worker.${PROJECT_NAME}${env.prod ? ".min" : ""}.js`,
@@ -67,11 +69,6 @@ module.exports = env => [
         return `importScripts('openhps-core.min.js'); __WEBPACK_EXTERNAL_MODULE____ = self['@openhps/core'];`
       })
     ],
-    optimization: {
-      minimize: env.prod,
-      portableRecords: true,
-      usedExports: true,
-      providedExports: true
-    }
+    ...defaultConfig(env)
   }
 ];
