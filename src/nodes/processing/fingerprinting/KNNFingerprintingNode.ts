@@ -171,6 +171,11 @@ class KDTree {
     public right: KDTree;
 
     constructor(fingerprints: CachedFingerprint[], depth = 0) {
+        // No fingerprints in cache
+        if (fingerprints.length === 0) {
+            return;
+        }
+
         const dimensions = fingerprints[0].vector.length;
         this.axis = depth % dimensions;
         fingerprints.sort((a, b) => a.vector[this.axis] - b.vector[this.axis]);
