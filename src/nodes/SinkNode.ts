@@ -34,6 +34,7 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In
     constructor(options?: SinkNodeOptions) {
         super(options);
 
+        this.options.completedEvent = this.options['completedEvent'] === undefined ? true : this.options.completedEvent;
         this.options.persistence = this.options['persistence'] === undefined ? true : this.options.persistence;
     }
 
@@ -63,12 +64,14 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In
                 .then(() => {
                     resolve();
                     // Fire a completed event
-                    if (data instanceof Array) {
-                        data.forEach((f: In) => {
-                            this.emit('completed', new PushCompletedEvent(f.uid));
-                        });
-                    } else {
-                        this.emit('completed', new PushCompletedEvent(data.uid));
+                    if (this.options.completedEvent) {
+                        if (data instanceof Array) {
+                            data.forEach((f: In) => {
+                                this.emit('completed', new PushCompletedEvent(f.uid));
+                            });
+                        } else {
+                            this.emit('completed', new PushCompletedEvent(data.uid));
+                        }
                     }
                 })
                 .catch(reject);
@@ -104,4 +107,10 @@ export interface SinkNodeOptions extends NodeOptions {
      * @default true
      */
     persistence?: boolean;
+    /**
+     * Emit a completed event for this sink
+     *
+     * @default true
+     */
+    completedEvent?: boolean;
 }

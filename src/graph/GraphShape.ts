@@ -186,7 +186,9 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
     }
 
     protected onError(event: PushError): void {
-        this.emit('error', event);
+        // Do not emit if no listeners attached
+        // Event emitter will throw an uncaught exception
+        if (this.listenerCount('error') > 0) this.emit('error', event);
     }
 
     protected onCompleted(event: PushCompletedEvent): void {

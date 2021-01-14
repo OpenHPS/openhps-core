@@ -238,7 +238,7 @@ describe('model', () => {
                     });
                 });
         });
-
+        
         it('should throw an exception when a processing node throws an error', (done) => {
             ModelBuilder.create()
                 .from()

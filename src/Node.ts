@@ -336,11 +336,11 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
     }
 
     private _onError(error: PushError): void {
-        this.inlets.map((inlet) => inlet.emit('error', error));
+        this.inlets.forEach((inlet) => inlet.emit('error', error));
     }
 
     private _onCompleted(event: PushCompletedEvent): void {
-        this.inlets.map((inlet) => inlet.emit('completed', event));
+        this.inlets.forEach((inlet) => inlet.emit('completed', event));
     }
 }
 
