@@ -63,7 +63,7 @@ describe('node', () => {
                 .catch((ex) => {
                     done(ex);
                 });
-        }).timeout(30000);
+        }).slow(5000);
 
         it('should take 20ms with 2 workers', (done) => {
             let model;
@@ -119,7 +119,7 @@ describe('node', () => {
                 .catch((ex) => {
                     done(ex);
                 });
-        }).timeout(30000);
+        }).slow(5000);
 
         it('should take 10ms with 3 workers', (done) => {
             let model;
@@ -175,7 +175,7 @@ describe('node', () => {
                 .catch((ex) => {
                     done(ex);
                 });
-        }).timeout(30000);
+        }).slow(5000);
 
         it('should be able to access data services', (done) => {
             let model;
@@ -212,7 +212,7 @@ describe('node', () => {
                         model.push(new DataFrame());
                     });
                 });
-        }).timeout(5000);
+        }).slow(5000);
 
         it('should be able to access node data services', (done) => {
             let model;
@@ -248,7 +248,7 @@ describe('node', () => {
                     model = m;
                     model.push(new DataFrame(new DataObject("mvdewync")));
                 });
-        }).timeout(5000);
+        }).slow(5000);
 
         it('should support error events', (done) => {
             let model;
@@ -279,7 +279,7 @@ describe('node', () => {
                     })
                     model.push(new DataFrame(new DataObject("mvdewync")));
                 });
-        }).timeout(5000);
+        }).slow(5000);
 
         it('should support completed events', (done) => {
             let model;
@@ -314,7 +314,7 @@ describe('node', () => {
                     })
                     model.push(new DataFrame(new DataObject("mvdewync")));
                 });
-        }).timeout(5000);
+        }).slow(5000);
     });
 
     describe('worker graph', () => {
@@ -337,7 +337,7 @@ describe('node', () => {
                 .build().then(model => {
                     model.pull();
                 });
-        }).timeout(30000);
+        }).slow(8000).timeout(30000);
 
     });
 });
