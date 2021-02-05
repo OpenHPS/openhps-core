@@ -7,11 +7,6 @@ import { Position } from './Position';
  */
 export interface RelativePosition<T = number> extends Position {
     /**
-     * Position accuracy
-     */
-    accuracy: number;
-
-    /**
      * Get the reference object UID that this location is relative to
      */
     referenceObjectUID: string;

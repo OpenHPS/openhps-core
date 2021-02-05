@@ -1,4 +1,4 @@
-import { Fingerprint, RelativePosition, AbsolutePosition } from '../../data';
+import { Fingerprint, RelativePosition, AbsolutePosition, DataObject } from '../../data';
 import { DataObjectService } from '../DataObjectService';
 import { Service } from '../Service';
 import { ObjectProcessingNodeOptions } from '../../nodes';
@@ -73,6 +73,12 @@ export interface FingerprintingOptions extends ObjectProcessingNodeOptions {
      * @default RelativeDistancePosition
      */
     type?: new () => RelativePosition;
+    /**
+     * Relative reference type
+     *
+     * @default DataObject
+     */
+    referenceType?: new () => DataObject;
 }
 
 export class CachedFingerprint {

@@ -95,7 +95,13 @@ export class KNNFingerprintingService extends FingerprintingService {
 
 export interface KNNFingerprintingOptions extends FingerprintingOptions {
     k: number;
+    /**
+     * Use weighted KNN
+     */
     weighted?: boolean;
+    /**
+     * Naive algorithm (no KD-tree)
+     */
     naive?: boolean;
     interpolate?: boolean;
 }
