@@ -17,6 +17,12 @@ import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 
 describe('data', () => {
     describe('object', () => {
+        it('should have a uuidv4 uid', (done) => {
+            const obj = new DataObject();
+            expect(obj.uid).to.include("-");
+            done();
+        });
+
         it('should be serializable and deserializable', (done) => {
             const dataObject = new DataObject('123');
             dataObject.displayName = 'abc';

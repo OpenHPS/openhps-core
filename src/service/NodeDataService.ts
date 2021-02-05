@@ -1,6 +1,6 @@
 import { DataObject, SerializableMember, SerializableObject } from '../data';
 import { DataService } from './DataService';
-import { HashUtils } from '../utils/_internal/HashUtils';
+import { v5 as uuidv5 } from 'uuid';
 
 export class NodeDataService<T extends NodeData | NodeData> extends DataService<string, T> {
     public findData(nodeUID: string, dataObject: DataObject | string): Promise<any> {
@@ -21,7 +21,7 @@ export class NodeDataService<T extends NodeData | NodeData> extends DataService<
     }
 
     protected getUID(nodeUID: string, dataObjectUID: string): string {
-        return HashUtils.hash(nodeUID + dataObjectUID);
+        return uuidv5(dataObjectUID + nodeUID, '97b9cc7e-19ca-4f20-8190-161d7b39e93a');
     }
 }
 

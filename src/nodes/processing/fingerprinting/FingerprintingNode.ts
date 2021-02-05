@@ -24,7 +24,7 @@ export class FingerprintingNode<InOut extends DataFrame> extends ObjectProcessin
             const fingerprintService = this.model.findDataService(Fingerprint) as DataObjectService<Fingerprint>;
 
             // Create a fingerprint at the current position
-            const fingerprint = new Fingerprint();
+            const fingerprint = new Fingerprint(this.uid);
             fingerprint.createdTimestamp = dataFrame.createdTimestamp;
             fingerprint.position = dataObject.position;
 
@@ -36,13 +36,17 @@ export class FingerprintingNode<InOut extends DataFrame> extends ObjectProcessin
                 }
             });
 
-            // Store the fingerprint
-            fingerprintService
-                .insert(fingerprint.uid, fingerprint)
-                .then(() => {
-                    resolve(dataObject);
-                })
-                .catch(reject);
+            if (fingerprint.relativePositions.length > 0) {
+                // Store the fingerprint
+                fingerprintService
+                    .insert(fingerprint.uid, fingerprint)
+                    .then(() => {
+                        resolve(dataObject);
+                    })
+                    .catch(reject);
+            } else {
+                resolve(dataObject);
+            }
         });
     }
 }

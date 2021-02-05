@@ -1,24 +1,10 @@
-import { SerializableObject, SerializableMember } from '../decorators';
+import { SerializableObject } from '../decorators';
 import { DataObject } from '.';
-import { HashUtils } from '../../utils/_internal/HashUtils';
+import { v4 as uuidv4 } from 'uuid';
 
 @SerializableObject()
 export class Fingerprint extends DataObject {
     constructor(displayName?: string) {
-        super(null, displayName);
-    }
-
-    @SerializableMember()
-    public get uid(): string {
-        return HashUtils.hash(
-            JSON.stringify({
-                position: this.position,
-                relativePositions: this.relativePositions,
-            }),
-        );
-    }
-
-    public set uid(_: string) {
-        // Ignore. Do not throw error as this will break deserialization
+        super(uuidv4(), displayName);
     }
 }
