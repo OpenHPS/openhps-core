@@ -5,10 +5,10 @@ import { v4 as uuidv4 } from 'uuid';
 @SerializableObject()
 export class Fingerprint extends DataObject {
     @SerializableMember()
-    public namespace: string;
+    public nodeUID: string;
 
-    constructor(namespace?: string, displayName?: string) {
+    constructor(nodeUID?: string, displayName?: string) {
         super(uuidv4(), displayName);
-        this.namespace = namespace;
+        this.nodeUID = nodeUID;
     }
 }

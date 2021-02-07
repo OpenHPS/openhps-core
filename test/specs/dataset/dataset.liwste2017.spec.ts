@@ -107,13 +107,6 @@ describe('dataset', () => {
                     // Use the data from the calibration model
                     .addService(calibrationModel.findDataService(DataObject))
                     .from(scanSourceNode)
-                    // .via(new WorkerNode((builder) => {
-                    //     const { TrilaterationNode } = require(path.join(__dirname, '../../../dist'));
-                    //     const { EvaluationDataFrame } = require(path.join(__dirname, '../../mock/data/EvaluationDataFrame'));
-                    //     builder.via(new TrilaterationNode())
-                    // }, {
-                    //     directory: __dirname
-                    // }))
                     .via(new TrilaterationNode<EvaluationDataFrame>())
                     .to(callbackNode)
                     .build()

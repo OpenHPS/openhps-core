@@ -8,4 +8,3 @@ export * from './TimeService';
 export * from './FilterQuery';
 export * from './MemoryDataService';
 export * from './DataService';
-export * from './fingerprinting';

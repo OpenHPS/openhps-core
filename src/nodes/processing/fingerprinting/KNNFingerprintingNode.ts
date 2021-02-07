@@ -1,4 +1,4 @@
-import { FingerprintingNode } from './FingerprintingNode';
+import { CachedFingerprint, FingerprintingNode, FingerprintingOptions } from './FingerprintingNode';
 import {
     Fingerprint,
     DataFrame,
@@ -7,8 +7,6 @@ import {
     AbsolutePosition,
     RelativeDistancePosition,
 } from '../../../data';
-import { CachedFingerprint, KNNFingerprintingService, KNNFingerprintingOptions } from '../../../service';
-import { ModelBuilder } from '../../../ModelBuilder';
 import { Vector3 } from '../../../utils';
 import { BinaryHeap } from '../../../utils/_internal/BinaryHeap';
 
@@ -19,11 +17,7 @@ import { BinaryHeap } from '../../../utils/_internal/BinaryHeap';
  */
 export class KNNFingerprintingNode<InOut extends DataFrame> extends FingerprintingNode<InOut> {
     protected options: KNNFingerprintingOptions;
-
-    private _service: KNNFingerprintingService;
-    private _kdtree: KDTree;
-    private _cacheObjects: Set<string> = new Set();
-    protected cache: CachedFingerprint[] = [];
+    protected kdtree: KDTree;
 
     constructor(options: KNNFingerprintingOptions) {
         super(options);
@@ -31,69 +25,14 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
         // Default options
         this.options.defaultValue = this.options.defaultValue ? this.options.defaultValue : 0;
         this.options.type = RelativeDistancePosition;
-
-        this.once('build', this._onBuild.bind(this));
-    }
-
-    private _onBuild(modelBuilder: ModelBuilder<any, any>): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            this._service = this.model.findService(KNNFingerprintingService);
-            if (this._service === null) {
-                modelBuilder.addService(new KNNFingerprintingService());
-                this._service = this.model.findService(KNNFingerprintingService);
-            }
-            this._service.dataService = this.model.findDataService(Fingerprint);
-            this._service.options = this.options;
-
-            if (!this._service.isReady()) {
-                this._service
-                    .emitAsync('build')
-                    .then(() => {
-                        this._updateCache();
-                        resolve();
-                    })
-                    .catch(reject);
-            } else {
-                this._updateCache();
-                resolve();
-            }
-
-            this._service.on('refresh', this._updateCache.bind(this));
-        });
-    }
-
-    private _updateCache(): void {
-        this.cache = this._service.cache;
-        this._cacheObjects = this._service.cachedReferences;
-
-        /* Create k-d tree */
-        if (!this.options.naive) {
-            this._kdtree = new KDTree(this.cache);
-        }
-    }
-
-    protected get kdtree(): KDTree {
-        return this._kdtree;
-    }
-
-    public processObject(dataObject: DataObject, dataFrame: InOut): Promise<DataObject> {
-        return new Promise((resolve, reject) => {
-            if (dataObject.position !== undefined) {
-                // Perform the fingerprinting offline stage
-                super.offlineFingerprinting(dataObject, dataFrame).then(resolve).catch(reject);
-            } else if (dataObject.relativePositions.length !== 0) {
-                this.onlineFingerprinting(dataObject).then(resolve).catch(reject);
-            } else {
-                resolve(dataObject);
-            }
-        });
+        this.options.k = this.options.k || 1;
     }
 
     protected onlineFingerprinting(dataObject: DataObject): Promise<DataObject> {
         return new Promise((resolve) => {
             // Make sure the object has a relative position to all reference objects
             // used for the fingerprinting
-            this._cacheObjects.forEach((relativeObject) => {
+            this.cachedReferences.forEach((relativeObject) => {
                 if (!dataObject.hasRelativePosition(relativeObject)) {
                     const relativePosition = new this.options.type();
                     relativePosition.referenceObjectUID = relativeObject;
@@ -105,7 +44,7 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
             const dataObjectPoint: number[] = [];
             dataObject.relativePositions
                 // Filter out unneeded relative positions
-                .filter((relativePosition) => this._cacheObjects.has(relativePosition.referenceObjectUID))
+                .filter((relativePosition) => this.cachedReferences.has(relativePosition.referenceObjectUID))
                 // Sort alphabetically
                 .sort((a: RelativePosition, b: RelativePosition) =>
                     a.referenceObjectUID.localeCompare(b.referenceObjectUID),
@@ -161,6 +100,95 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
 
             resolve(dataObject);
         });
+    }
+
+    public updateFingerprints(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            // Load all fingerprints from the data service
+            this.dataService
+                .findAll({
+                    nodeUID: this.name,
+                })
+                .then((fingerprints) => {
+                    const mergedFingerprints = new Map<string, Fingerprint>();
+                    const elevations = new Map<number, [Array<number>, Array<number>]>();
+
+                    fingerprints.forEach((fingerprint) => {
+                        /* Add missing reference positions (objects not in range) */
+                        fingerprint.relativePositions.forEach((relativePosition) => {
+                            if (!this.cachedReferences.has(relativePosition.referenceObjectUID))
+                                this.cachedReferences.add(relativePosition.referenceObjectUID);
+                        });
+
+                        /* Merge fingerprint value */
+                        const point = fingerprint.position.toVector3();
+                        const serializedPoint = JSON.stringify(fingerprint.position.toVector3());
+                        if (mergedFingerprints.has(serializedPoint)) {
+                            const existingFingerprint = mergedFingerprints.get(serializedPoint);
+                            existingFingerprint.relativePositions.forEach((relativePosition) => {
+                                const existingRelativeLocations = fingerprint.getRelativePositions(
+                                    relativePosition.referenceObjectUID,
+                                );
+                                if (existingRelativeLocations.length !== 0) {
+                                    existingRelativeLocations[0].referenceValue += relativePosition.referenceValue;
+                                    existingRelativeLocations[0].referenceValue /= 2;
+                                }
+                            });
+                            fingerprint.relativePositions.forEach((relativePosition) => {
+                                if (!existingFingerprint.getRelativePosition(relativePosition.referenceObjectUID)) {
+                                    existingFingerprint.addRelativePosition(relativePosition);
+                                }
+                            });
+                            mergedFingerprints.set(serializedPoint, existingFingerprint);
+                        } else {
+                            mergedFingerprints.set(serializedPoint, fingerprint);
+                        }
+
+                        // Store X,Y points per elevation
+                        if (this.options.interpolate) {
+                            const elevation = point.z;
+                            let points: [Array<number>, Array<number>];
+                            if (elevations.has(elevation)) {
+                                points = elevations.get(elevation);
+                            } else {
+                                points = [[], []];
+                                elevations.set(elevation, points);
+                            }
+                            points[0].push(point.x);
+                            points[1].push(point.y);
+                        }
+                    });
+                    const filteredFingerprints = Array.from(mergedFingerprints.values());
+
+                    /* Cache fingerprints to simple vectors */
+                    this._cacheFingerprints(filteredFingerprints);
+
+                    /* Create k-d tree */
+                    if (!this.options.naive) {
+                        this.kdtree = new KDTree(this.cache);
+                    }
+                    resolve();
+                })
+                .catch(reject);
+        });
+    }
+
+    private _cacheFingerprints(filteredFingerprints: Fingerprint[]): void {
+        if (filteredFingerprints.length > 0) {
+            this.cache = [];
+            filteredFingerprints.forEach((fingerprint) => {
+                // Complete missing references
+                this.cachedReferences.forEach((relativeObject) => {
+                    if (!fingerprint.hasRelativePosition(relativeObject)) {
+                        const relativePosition = new this.options.type();
+                        relativePosition.referenceObjectUID = relativeObject;
+                        relativePosition.referenceValue = this.options.defaultValue;
+                        fingerprint.addRelativePosition(relativePosition);
+                    }
+                });
+                this.cache.push(new CachedFingerprint(fingerprint));
+            });
+        }
     }
 }
 
@@ -303,4 +331,17 @@ class KDTree {
 
         return height(this) / (Math.log(count(this)) / Math.log(2));
     }
+}
+
+export interface KNNFingerprintingOptions extends FingerprintingOptions {
+    k?: number;
+    /**
+     * Use weighted KNN
+     */
+    weighted?: boolean;
+    /**
+     * Naive algorithm (no KD-tree)
+     */
+    naive?: boolean;
+    interpolate?: boolean;
 }

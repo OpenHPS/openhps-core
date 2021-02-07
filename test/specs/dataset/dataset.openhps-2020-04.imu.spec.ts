@@ -62,7 +62,8 @@ describe('dataset', () => {
                     }),
                 )
                 .via(
-                    new FingerprintingNode({
+                    new KNNFingerprintingNode({
+                        k: 5,
                         objectFilter: (object: DataObject) => object.uid === 'phone',
                     }),
                 )

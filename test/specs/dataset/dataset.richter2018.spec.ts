@@ -4,7 +4,6 @@ import { EvaluationDataFrame } from '../../mock/data/EvaluationDataFrame';
 import {
     Fingerprint,
     KNNFingerprintingNode,
-    FingerprintingNode,
     Model,
     DataFrame,
     CallbackSinkNode,
@@ -100,7 +99,8 @@ describe('dataset', () => {
                     ),
                 )
                 .via(
-                    new FingerprintingNode({
+                    new KNNFingerprintingNode({
+                        k: 5,
                         objectFilter: (object: DataObject) => object.uid === 'phone',
                     }),
                 )
