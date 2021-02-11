@@ -37,7 +37,7 @@ describe('position', () => {
         });
 
         it('should calculate the distance between two points', () => {
-            const distance = new GeographicalPosition(1, 1).distance(new GeographicalPosition(4, 9));
+            const distance = new GeographicalPosition(1, 1).distanceTo(new GeographicalPosition(4, 9));
         });
 
         it('should calculate the bearing between two points', () => {

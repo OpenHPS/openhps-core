@@ -14,4 +14,11 @@ export interface PullOptions extends GraphOptions {
      * Requested objects UIDs
      */
     requestedObjects?: string[];
+    /**
+     * Sequential pulling. If set to true, the pulling will be done sequentially where
+     * the next pull is only performed after the push is completed.
+     *
+     * @default true
+     */
+    sequentialPull?: boolean;
 }

@@ -77,12 +77,10 @@ describe('dataset', () => {
                     calibrationModel = model;
                     callbackNode = new CallbackSinkNode<EvaluationDataFrame>();
 
-                    const pullPromises = [];
-                    for (let i = 0; i < 2100; i++) {
-                        pullPromises.push(model.pull({}));
-                    }
-
-                    Promise.all(pullPromises).then(() => {
+                    model.pull({
+                        count: 2100,
+                        sequentialPull: false
+                    }).then(() => {
                         done();
                     });
                 });
@@ -317,7 +315,6 @@ describe('dataset', () => {
                 }
                 Promise.all(promises)
                     .then(() => {
-                        console.log(totalError / totalValues)
                         expect(totalError / totalValues).to.be.lessThan(5);
                         done();
                     })

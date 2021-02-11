@@ -1,5 +1,4 @@
 import { Service } from '../Service';
-import { AnyNaptrRecord } from 'dns';
 
 export class ServiceProxy<S extends Service> extends Service implements ProxyHandler<S> {
     public get?(target: S, p: PropertyKey): any {
@@ -9,7 +8,7 @@ export class ServiceProxy<S extends Service> extends Service implements ProxyHan
         return (target as any)[p];
     }
 
-    public set?(target: S, p: PropertyKey, value: AnyNaptrRecord): boolean {
+    public set?(target: S, p: PropertyKey, value: any): boolean {
         (target as any)[p] = value;
         return true;
     }

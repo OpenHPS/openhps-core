@@ -6,15 +6,19 @@ import { AbsolutePosition } from '../../position/AbsolutePosition';
 import { Vector3 } from '../../../utils/math/_internal';
 
 /**
- * Reference space
- *
- * @type {ReferenceSpace}
+ * A reference space transforms absolute positions to another (global) reference space.
+ * The following data can be transformed:
+ * - Position coordinates
+ * - Linear velocity
+ * - Angular velocity
+ * - Orientation
+ * - Position accuracy
  */
 @SerializableObject()
 export class ReferenceSpace extends DataObject {
     // Raw transformation matrix
     @SerializableMember()
-    private _transformationMatrix: Matrix4 = new Matrix4();
+    private _transformationMatrix: Matrix4 = new Matrix4().identity();
     // Scale matrix (needed for scaling linear velocity)
     @SerializableMember()
     private _scaleMatrix: Matrix4 = new Matrix4();
@@ -22,27 +26,35 @@ export class ReferenceSpace extends DataObject {
     @SerializableMember()
     private _rotation: Quaternion = new Quaternion();
     @SerializableMember()
-    private _baseSpaceUID: string;
-    @SerializableMember()
     private _unit: LengthUnit;
 
-    constructor(baseSpace?: ReferenceSpace, transformationMatrix?: Matrix4) {
+    constructor(parent?: ReferenceSpace, transformationMatrix?: Matrix4) {
         super();
-        if (baseSpace) {
-            this._baseSpaceUID = baseSpace.uid;
+        if (parent) {
+            this.parent = parent;
         }
 
-        if (transformationMatrix === undefined) {
-            this._transformationMatrix.identity();
-        } else {
-            this._transformationMatrix = transformationMatrix;
+        if (transformationMatrix !== undefined) {
+            this._transformationMatrix.multiply(transformationMatrix);
         }
     }
 
-    public get baseSpaceUID(): string {
-        return this._baseSpaceUID;
+    /**
+     * Set the parent space
+     *
+     * @param {ReferenceSpace} space Parent space
+     */
+    public set parent(space: ReferenceSpace) {
+        this.parentUID = space.uid;
+        this._transformationMatrix = space._transformationMatrix.clone();
+        this._scaleMatrix = space._scaleMatrix.clone();
     }
 
+    /**
+     * Get the transformation matrix for scaling
+     *
+     * @returns {Matrix4} Transformation matrix
+     */
     public get scaleMatrix(): Matrix4 {
         return this._scaleMatrix;
     }
@@ -82,7 +94,14 @@ export class ReferenceSpace extends DataObject {
         return this;
     }
 
-    public unit(unit: LengthUnit): ReferenceSpace {
+    public reset(): ReferenceSpace {
+        this._transformationMatrix.identity();
+        this._scaleMatrix = new Matrix4();
+        this._rotation = new Quaternion();
+        return this;
+    }
+
+    public referenceUnit(unit: LengthUnit): ReferenceSpace {
         this._unit = unit;
         return this;
     }
@@ -128,12 +147,12 @@ export class ReferenceSpace extends DataObject {
      * @param {SpaceTransformationOptions} [options] Transformation options
      * @returns {AbsolutePosition} Transformed position
      */
-    public transform(position: AbsolutePosition, options?: SpaceTransformationOptions): AbsolutePosition {
+    public transform<T extends AbsolutePosition>(position: T, options?: SpaceTransformationOptions): T {
         const config = options || {};
         // Clone the position
         const newPosition = position.clone();
         // Transform the position to the length unit
-        if (this.unit) {
+        if (this.referenceUnit) {
             newPosition.fromVector(newPosition.toVector3(this._unit));
             newPosition.accuracy = newPosition.unit.convert(newPosition.accuracy, this._unit);
         }
@@ -173,5 +192,8 @@ export class ReferenceSpace extends DataObject {
 }
 
 export interface SpaceTransformationOptions {
+    /**
+     * Perform an inverse transformation
+     */
     inverse?: boolean;
 }

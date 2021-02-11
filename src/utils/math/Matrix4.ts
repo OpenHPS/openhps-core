@@ -63,4 +63,8 @@ export class Matrix4 extends THREE.Matrix4 {
         matrix.makeRotationFromQuaternion(new THREE.Quaternion().setFromAxisAngle(vector, angle));
         return matrix;
     }
+
+    public clone(): this {
+        return new Matrix4().fromArray(this.elements) as this;
+    }
 }

@@ -56,7 +56,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
         super(options);
 
         // Default source settings
-        this.options.persistence = this.options.persistence || true;
+        this.options.persistence = this.options['persistence'] === undefined ? true : this.options.persistence;
 
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
@@ -193,6 +193,15 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
     }
 
     private _onPull(options: PullOptions = {}): Promise<void> {
+        const sequential = options['sequentialPull'] === undefined ? true : options.sequentialPull;
+        if (sequential) {
+            return this._onSequentialPull(options);
+        } else {
+            return this._onParallelPull(options);
+        }
+    }
+
+    private _onSequentialPull(options: PullOptions): Promise<void> {
         const newOptions: PushOptions = {
             sourceNode: this.uid,
             // Expand options after setting source node
@@ -200,6 +209,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
             ...(options as GraphOptions),
         };
         const count = options.count || 1;
+
         let promise = Promise.resolve();
         for (let i = 0; i < count; i++) {
             promise = promise.then(
@@ -220,6 +230,34 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
             );
         }
         return promise;
+    }
+
+    private _onParallelPull(options: PullOptions): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const newOptions: PushOptions = {
+                sourceNode: this.uid,
+                // Expand options after setting source node
+                // original source node should not be overridden
+                ...(options as GraphOptions),
+            };
+            const count = options.count || 1;
+
+            Promise.all([...Array(count).keys()].map(() => this.onPull()))
+                .then((results) => {
+                    const pushPromises: Array<Promise<void>> = [];
+                    results.forEach((frame) => {
+                        if (frame !== undefined && frame !== null) {
+                            // Push without waiting
+                            pushPromises.push(this.push(frame, newOptions));
+                        }
+                    });
+                    return Promise.all(pushPromises);
+                })
+                .then(() => {
+                    resolve();
+                })
+                .catch(reject);
+        });
     }
 
     public abstract onPull(): Promise<Out>;

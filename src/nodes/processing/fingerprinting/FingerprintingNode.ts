@@ -3,7 +3,7 @@ import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../../ObjectP
 import { DataObjectService } from '../../../service';
 
 /**
- * Fingerprinting processing node
+ * Fingerprinting processing node. Stores and computes fingerprints.
  *
  * @category Processing node
  */
@@ -24,10 +24,12 @@ export abstract class FingerprintingNode<InOut extends DataFrame> extends Object
         // Retrieve the data service used for fingerprints
         this.dataService = this.model.findDataService(Fingerprint);
         if (this.dataService.isReady()) {
+            // Initialize previously stored fingerprints
             return this.updateFingerprints();
         } else {
             return new Promise((resolve, reject) => {
                 this.dataService.once('ready', () => {
+                    // Initialize previously stored fingerprints
                     this.updateFingerprints()
                         .then(() => {
                             resolve();
@@ -91,6 +93,7 @@ export abstract class FingerprintingNode<InOut extends DataFrame> extends Object
      *
      * @param {DataObject} dataObject Data object to treat as fingerprinting source
      * @param {DataFrame} dataFrame Data frame this data object was included in
+     * @returns {Promise<DataObject>} Data object promise
      */
     protected offlineFingerprinting(dataObject: DataObject, dataFrame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {

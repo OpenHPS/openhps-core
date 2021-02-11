@@ -100,7 +100,7 @@ export class GeographicalPosition extends Absolute3DPosition {
      * @param {GeographicalPosition} destination Destination location
      * @returns {number} Distance between this point and destination
      */
-    public distance(destination: GeographicalPosition): number {
+    public distanceTo(destination: GeographicalPosition): number {
         const latRadA = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
         const latRadB = AngleUnit.DEGREE.convert(destination.latitude, AngleUnit.RADIAN);
         const deltaLat = AngleUnit.DEGREE.convert(destination.latitude - this.latitude, AngleUnit.RADIAN);
@@ -192,12 +192,12 @@ export class GeographicalPosition extends Absolute3DPosition {
             const D = otherPosition.destination(bearingBA, distanceOther);
             // Calculate the middle of C and D
             const midpoint = C.midpoint(D);
-            midpoint.accuracy = Math.round((C.distance(D) / 2) * 100) / 100;
+            midpoint.accuracy = Math.round((C.distanceTo(D) / 2) * 100) / 100;
             return midpoint;
         }
     }
 
-    public fromVector(vector: Vector3, unit?: LengthUnit): void {
+    public fromVector(vector: Vector3, unit: LengthUnit = LengthUnit.METER): void {
         const x = unit.convert(vector.x, LengthUnit.METER);
         const y = unit.convert(vector.y, LengthUnit.METER);
         const z = unit.convert(vector.z, LengthUnit.METER);

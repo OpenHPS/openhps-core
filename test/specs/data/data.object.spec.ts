@@ -8,7 +8,6 @@ import {
     CallbackNode,
     DataFrame,
     Absolute2DPosition,
-    AbsolutePosition,
     CallbackSinkNode,
     LinearVelocity,
     Model,
@@ -68,6 +67,37 @@ describe('data', () => {
                 });
         });
 
+    });
+
+    describe('binding', () => {
+        it('should support saving', (done) => {
+            ModelBuilder.create()
+                .from()
+                .to()
+                .build().then((model: Model) => {
+                    const object = new DataObject("mvdewync", "Maxim");
+                    object.bind(model).save().then(() => {
+                        done();
+                    }).catch(done);
+                });
+        }); 
+
+        it('should support saving with changes', (done) => {
+            ModelBuilder.create()
+                .from()
+                .to()
+                .build().then((model: Model) => {
+                    const object = new DataObject("mvdewync", "Maxim");
+                    const binding = object.bind(model);
+                    object.uid += "1";
+                    binding.on('update', (newObj, oldObj) => {
+                        console.log(newObj);
+                    });
+                    binding.save().then(() => {
+                        done();
+                    }).catch(done);
+                });
+        }); 
     });
 
     describe('sensor object', () => {

@@ -34,6 +34,27 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
     }
 
     /**
+     * Insert a new data object
+     *
+     * @param {DataObject} object Data object to insert
+     * @returns {DataObject} Inserted object
+     */
+    public insertObject(object: T): Promise<T> {
+        return this.insert(object.uid, object);
+    }
+
+    public insert(id: string, object: T): Promise<T> {
+        return new Promise((resolve, reject) => {
+            this.driver
+                .insert(id, object)
+                .then((obj) => {
+                    resolve(obj);
+                })
+                .catch(reject);
+        });
+    }
+
+    /**
      * Find a data object by its display name
      *
      * @param {string} displayName Name to search for

@@ -16,7 +16,11 @@ import {
     LinearVelocity,
     Quaternion,
     Euler,
+    DataObjectService,
+    MemoryDataService,
+    Absolute2DPosition,
 } from '../../../src';
+import { Vector3 } from '../../../src/utils/math/_internal';
 
 describe('data', () => {
     describe('reference space', () => {
@@ -268,6 +272,7 @@ describe('data', () => {
 
                 Promise.resolve(model.findDataService(DataObject).findByUID('test'))
                     .then(obj => {
+                        expect(obj.getPosition(calibratedReferenceSpace).toVector3()).to.deep.equal(new Vector3(0, 0, 0));
                         const frame = new DataFrame(obj);
                         model.push(frame);
                         return model.onceCompleted(frame.uid);
@@ -300,5 +305,45 @@ describe('data', () => {
                     });
             });
         });
+
+        describe('conversion', () => {
+
+            it('should convert translation to the first parent', async () => {
+                const service = new DataObjectService(new MemoryDataService(ReferenceSpace));
+                let ref1 = new ReferenceSpace();
+                ref1 = await service.insertObject(ref1);
+                let ref2 = new ReferenceSpace(ref1);
+                ref2.translation(5, 5);
+                ref2 = await service.insertObject(ref2);
+                let ref3 = new ReferenceSpace(ref2);
+                ref3.translation(2, 2);
+                ref3 = await service.insertObject(ref3);
+                const position = ref3.transform(new Absolute3DPosition(0, 0, 0));
+                expect(position.x).to.equal(7);
+                expect(position.y).to.equal(7);
+                expect(position.z).to.equal(0);
+            });
+
+            it('should support changes to the parent reference space', async () => {
+                const service = new DataObjectService(new MemoryDataService(ReferenceSpace));
+                let ref1 = new ReferenceSpace();
+                ref1 = await service.insertObject(ref1);
+                let ref2 = new ReferenceSpace(ref1);
+                ref2.translation(5, 5);
+                ref2 = await service.insertObject(ref2);
+                let ref3 = new ReferenceSpace(ref2);
+                ref3.translation(2, 2);
+                ref3 = await service.insertObject(ref3);
+                const position = ref3.transform(new Absolute3DPosition(0, 0, 0));
+                expect(position.x).to.equal(7);
+                expect(position.y).to.equal(7);
+                expect(position.z).to.equal(0);
+                ref1.translation(3, 3);
+                ref1 = await service.insertObject(ref1);
+                
+            });
+
+        });
+
     });
 });

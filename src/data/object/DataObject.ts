@@ -4,8 +4,10 @@ import { TypedJSON } from 'typedjson';
 import { SerializableObject, SerializableMember, SerializableArrayMember } from '../decorators';
 import { v4 as uuidv4 } from 'uuid';
 import { DataSerializer } from '../DataSerializer';
-import { TimeService } from '../../service';
+import { DataObjectService, TimeService } from '../../service';
 import { ReferenceSpace } from './space';
+import { Model } from '../../Model';
+import { EventEmitter } from 'events';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -17,6 +19,13 @@ import { ReferenceSpace } from './space';
  * Objects can be created with an optional uid and display name.
  * ```typescript
  * const myObject = new DataObject("mvdewync", "Maxim");
+ * ```
+ *
+ * ### Service binding
+ * Data objects can be bounded to a service. Persistence is handled in [[DataObjectService]]s
+ * that store and load data objects.
+ * ```typescript
+ * myObject.bind(myModel).save();
  * ```
  *
  * @category data
@@ -90,7 +99,7 @@ export class DataObject {
     /**
      * Get the current absolute position of the object
      *
-     * @param {ReferenceSpace} [referenceSpace] Reference space
+     * @param {ReferenceSpace} [referenceSpace] Reference space to transform it to
      * @returns {AbsolutePosition} Position of the data object
      */
     public getPosition(referenceSpace?: ReferenceSpace): AbsolutePosition {
@@ -190,7 +199,7 @@ export class DataObject {
         } else if (this._relativePositions.has(referenceObjectUID)) {
             return Array.from(this._relativePositions.get(referenceObjectUID).values());
         } else {
-            return undefined;
+            return [];
         }
     }
 
@@ -219,11 +228,102 @@ export class DataObject {
     }
 
     /**
+     * Bind the data object to a service
+     *
+     * @param {DataObjectService<this>} service Service to bind it to
+     */
+    public bind(service: DataObjectService<this>): DataObjectBinding<this>;
+    /**
+     * Bind the data object to a model
+     *
+     * @param {Model} model Model to bind it to
+     */
+    public bind(model: Model<any, any>): DataObjectBinding<this>;
+    /**
+     * Bind the data object to a model or service
+     *
+     * @param {Model | DataObjectService} modelOrService Model or service to bind it to
+     */
+    public bind(modelOrService: Model<any, any> | DataObjectService<this>): DataObjectBinding<this> {
+        if (modelOrService instanceof DataObjectService) {
+            return new DataObjectBinding(this, modelOrService as DataObjectService<any>);
+        } else {
+            const service = modelOrService.findDataService(this.constructor) as DataObjectService<any>;
+            return new DataObjectBinding(this, service);
+        }
+    }
+
+    /**
      * Clone the data object
      *
      * @returns {DataObject} Cloned data object
      */
     public clone(): this {
         return DataSerializer.deserialize(DataSerializer.serialize(this));
+    }
+}
+
+class DataObjectBinding<T extends DataObject> extends EventEmitter {
+    protected service: DataObjectService<T>;
+    protected target: T;
+
+    constructor(target: T, service: DataObjectService<T>) {
+        super();
+        this.target = target;
+        this.service = service;
+        this.service.on('insert', this._onInsert.bind(this));
+    }
+
+    private _onInsert(uid: string, object: T): void {
+        if (this.target.uid === uid) {
+            this.emit('update', this.target, object);
+            this.target = object;
+        }
+    }
+
+    public on(name: string | symbol, listener: (...args: any[]) => void): this;
+    /**
+     * Event when a data object is updated
+     *
+     * @param {string} name update
+     * @param {Function} listener Event callback
+     */
+    public on(name: 'update', listener: (newObject: T, oldObject: T) => Promise<void> | void): this;
+    public on(name: string | symbol, listener: (...args: any[]) => void): this {
+        return super.on(name, listener);
+    }
+
+    /**
+     * Save the data object
+     *
+     * @returns {Promise<DataObject>} Promise of stored data object
+     */
+    public save(): Promise<T> {
+        return this.service.insertObject(this.target);
+    }
+
+    /**
+     * Destroy the data object
+     *
+     * @returns {Promise<void>} Destroy promise
+     */
+    public delete(): Promise<void> {
+        return this.service.delete(this.target.uid);
+    }
+
+    /**
+     * Find all siblings of the data object
+     *
+     * @returns {Promise<DataObject[]>} Promise of sibling data objects
+     */
+    public findSiblings(): Promise<DataObject[]> {
+        return this.service.findByParentUID(this.target.uid);
+    }
+
+    /**
+     * Dispose of the binding
+     */
+    public dispose(): void {
+        this.service.removeListener('update', this._onInsert.bind(this));
     }
 }

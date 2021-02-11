@@ -9,6 +9,8 @@ import {
 } from '../../../data';
 import { Vector3 } from '../../../utils';
 import { BinaryHeap } from '../../../utils/_internal/BinaryHeap';
+import { DistanceFunction } from '../../../utils/algorithms/DistanceFunction';
+import { KNNWeightFunction } from './KNNWeightFunction';
 
 /**
  * KNN Fingerprinting processing node
@@ -26,6 +28,8 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
         this.options.defaultValue = this.options.defaultValue ? this.options.defaultValue : 0;
         this.options.type = RelativeDistancePosition;
         this.options.k = this.options.k || 1;
+        this.options.similarityFunction = this.options.similarityFunction || DistanceFunction.EUCLIDEAN;
+        this.options.weightFunction = this.options.weightFunction || KNNWeightFunction.DEFAULT;
     }
 
     protected onlineFingerprinting(dataObject: DataObject): Promise<DataObject> {
@@ -57,15 +61,11 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
             let results = new Array<[AbsolutePosition, number]>();
             if (this.options.naive) {
                 this.cache.forEach((cachedFingerprint) => {
-                    let ed = 0; // Euclidean distance
-                    for (let i = 0; i < dataObjectPoint.length; i++) {
-                        ed += Math.pow(dataObjectPoint[i] - cachedFingerprint.vector[i], 2);
+                    let distance = this.options.similarityFunction(dataObjectPoint, cachedFingerprint.vector);
+                    if (distance === 0) {
+                        distance = 0.001;
                     }
-                    ed = Math.sqrt(ed);
-                    if (ed === 0) {
-                        ed = 0.001;
-                    }
-                    results.push([cachedFingerprint.position, ed]);
+                    results.push([cachedFingerprint.position, distance]);
                 });
                 results = results
                     // Sort by euclidean distance
@@ -80,12 +80,11 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
             if (this.options.weighted) {
                 let scale = 0;
                 results.forEach((sortedFingerprint) => {
-                    scale += 1 / sortedFingerprint[1];
-                });
-                results.forEach((sortedFingerprint) => {
-                    const weight = 1 / sortedFingerprint[1] / scale;
+                    const weight = this.options.weightFunction(sortedFingerprint[1]);
+                    scale += this.options.weightFunction(sortedFingerprint[1]);
                     point.add(sortedFingerprint[0].toVector3().multiplyScalar(weight));
                 });
+                point.divideScalar(scale);
             } else {
                 results.forEach((sortedFingerprint) => {
                     point.add(sortedFingerprint[0].toVector3());
@@ -97,7 +96,6 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
             const newPosition = results[0][0].clone();
             newPosition.fromVector(point);
             dataObject.setPosition(newPosition);
-
             resolve(dataObject);
         });
     }
@@ -107,7 +105,7 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
             // Load all fingerprints from the data service
             this.dataService
                 .findAll({
-                    nodeUID: this.name,
+                    classifier: this.name,
                 })
                 .then((fingerprints) => {
                     const mergedFingerprints = new Map<string, Fingerprint>();
@@ -122,7 +120,7 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
 
                         /* Merge fingerprint value */
                         const point = fingerprint.position.toVector3();
-                        const serializedPoint = JSON.stringify(fingerprint.position.toVector3());
+                        const serializedPoint = JSON.stringify(point);
                         if (mergedFingerprints.has(serializedPoint)) {
                             const existingFingerprint = mergedFingerprints.get(serializedPoint);
                             existingFingerprint.relativePositions.forEach((relativePosition) => {
@@ -134,6 +132,7 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
                                     existingRelativeLocations[0].referenceValue /= 2;
                                 }
                             });
+
                             fingerprint.relativePositions.forEach((relativePosition) => {
                                 if (!existingFingerprint.getRelativePosition(relativePosition.referenceObjectUID)) {
                                     existingFingerprint.addRelativePosition(relativePosition);
@@ -165,7 +164,7 @@ export class KNNFingerprintingNode<InOut extends DataFrame> extends Fingerprinti
 
                     /* Create k-d tree */
                     if (!this.options.naive) {
-                        this.kdtree = new KDTree(this.cache);
+                        this.kdtree = new KDTree(this.cache, 0, this.options.similarityFunction);
                     }
                     resolve();
                 })
@@ -197,8 +196,14 @@ class KDTree {
     public fingerprint: CachedFingerprint;
     public left: KDTree;
     public right: KDTree;
+    private _distanceFn: (pointA: number[], pointB: number[]) => number;
 
-    constructor(fingerprints: CachedFingerprint[], depth = 0) {
+    constructor(
+        fingerprints: CachedFingerprint[],
+        depth = 0,
+        distanceFn: (pointA: number[], pointB: number[]) => number,
+    ) {
+        this._distanceFn = distanceFn;
         // No fingerprints in cache
         if (fingerprints.length === 0) {
             return;
@@ -214,36 +219,17 @@ class KDTree {
 
         const leftFingerprints = fingerprints.slice(0, medianIndex);
         if (leftFingerprints.length) {
-            this.left = new KDTree(leftFingerprints, depth + 1);
+            this.left = new KDTree(leftFingerprints, depth + 1, this._distanceFn);
         }
 
         const rightFingerprints = fingerprints.slice(medianIndex + 1);
         if (rightFingerprints.length) {
-            this.right = new KDTree(rightFingerprints, depth + 1);
+            this.right = new KDTree(rightFingerprints, depth + 1, this._distanceFn);
         }
-    }
-
-    /**
-     * Euclidean distance function
-     *
-     * @param {number[]} fingerprint Fingerprint position
-     * @param {number[]} point Point to get euclidean distance for
-     * @returns {number} Euclidean distance
-     */
-    private _distance(fingerprint: number[], point: number[]): number {
-        let ed = 0;
-        for (let i = 0; i < point.length; i++) {
-            ed += Math.pow(point[i] - fingerprint[i], 2);
-        }
-        ed = Math.sqrt(ed);
-        if (ed === 0) {
-            ed = 0.001;
-        }
-        return ed;
     }
 
     private _nearestSearch(point: number[], bestNodes: BinaryHeap<[KDTree, number]>, count: number, node: KDTree) {
-        const ownDistance = this._distance(node.fingerprint.vector, point);
+        const ownDistance = this._distanceFn(point, node.fingerprint.vector);
         const vector = [...node.fingerprint.vector];
 
         vector[this.axis] = point[this.axis];
@@ -272,7 +258,7 @@ class KDTree {
             }
         }
 
-        if (bestNodes.size() < count || this._distance(vector, node.fingerprint.vector) < bestNodes.peek()[1]) {
+        if (bestNodes.size() < count || this._distanceFn(vector, node.fingerprint.vector) < bestNodes.peek()[1]) {
             if (otherSubtree !== undefined) {
                 this._nearestSearch(point, bestNodes, count, otherSubtree);
             }
@@ -344,4 +330,16 @@ export interface KNNFingerprintingOptions extends FingerprintingOptions {
      */
     naive?: boolean;
     interpolate?: boolean;
+    /**
+     * Similarity function (distance function)
+     *
+     * @default DistanceFunction.EUCLIDEAN
+     */
+    similarityFunction?: (point: number[], fingerprint: number[]) => number;
+    /**
+     * Weight function
+     *
+     * @default KNNWeightFunction.DEFAULT
+     */
+    weightFunction?: (distance: number) => number;
 }
