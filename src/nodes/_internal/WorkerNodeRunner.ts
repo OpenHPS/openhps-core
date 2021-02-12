@@ -6,7 +6,9 @@ import {
     CallbackSinkNode,
     CallbackSourceNode,
     ModelBuilder,
-    WorkerService,
+    WorkerServiceProxy,
+    WorkerServiceCall,
+    WorkerServiceResponse,
 } from '../../'; // @openhps/core
 import { Subject, Observable } from 'threads/observable';
 import { expose } from 'threads';
@@ -16,17 +18,10 @@ import { PullOptions, PushOptions } from '../../graph';
 let model: Model<any, any>;
 const pullOutput: Subject<any> = new Subject();
 const pushOutput: Subject<any> = new Subject();
-const serviceOutput: Subject<{
-    id: string;
-    serviceName: string;
-    method: string;
-    parameters: any;
-}> = new Subject();
-const serviceInput: Subject<{
-    id: string;
-    success: boolean;
-    result?: any;
-}> = new Subject();
+const serviceOutputCall: Subject<WorkerServiceCall> = new Subject();
+const serviceOutputResponse: Subject<WorkerServiceResponse> = new Subject();
+const serviceInputCall: Subject<WorkerServiceCall> = new Subject();
+const serviceInputResponse: Subject<WorkerServiceResponse> = new Subject();
 const eventOutput: Subject<{
     name: string;
     event: any;
@@ -90,12 +85,20 @@ expose({
                 const DataType = DataSerializer.findTypeByName(service.dataType);
                 modelBuilder.addService(
                     new DummyDataService(DataType),
-                    new WorkerService(service.name, serviceOutput, serviceInput),
+                    new WorkerServiceProxy({
+                        name: service.name,
+                        callObservable: serviceOutputCall,
+                        responseObservable: serviceOutputResponse,
+                    }),
                 );
             } else {
                 modelBuilder.addService(
                     new DummyService(),
-                    new WorkerService(service.name, serviceOutput, serviceInput),
+                    new WorkerServiceProxy({
+                        name: service.name,
+                        callObservable: serviceOutputCall,
+                        responseObservable: serviceOutputResponse,
+                    }),
                 );
             }
         });
@@ -165,15 +168,16 @@ expose({
     eventInput(name: string, event: any): void {
         model.emit(name as any, event);
     },
-    serviceOutput(): Observable<{
-        id: string;
-        serviceName: string;
-        method: string;
-        parameters: any;
-    }> {
-        return Observable.from(serviceOutput);
+    serviceOutputCall(): Observable<WorkerServiceCall> {
+        return Observable.from(serviceOutputCall);
     },
-    serviceInput(id: string, success: boolean, result?: any) {
-        serviceInput.next({ id, success, result });
+    serviceOutputResponse(input: WorkerServiceResponse) {
+        serviceOutputResponse.next(input);
+    },
+    serviceInputCall(): Observable<WorkerServiceCall> {
+        return Observable.from(serviceInputCall);
+    },
+    serviceInputResponse(input: WorkerServiceResponse) {
+        serviceInputResponse.next(input);
     },
 });

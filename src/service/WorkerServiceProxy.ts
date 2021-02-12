@@ -4,35 +4,20 @@ import { v4 as uuidv4 } from 'uuid';
 import { ServiceProxy } from './_internal';
 import { Service } from './Service';
 
-export class WorkerService extends ServiceProxy<Service> {
-    private _inputObservable: Subject<{
-        id: string;
-        serviceName: string;
-        method: string;
-        parameters: any;
-    }>;
-    private _outputObservable: Subject<{
-        id: string;
-        success: boolean;
-        result?: any;
-    }>;
+/**
+ * A worker service proxy will forward function calls to an observable.
+ * This observable can be a remote process or worker. It is mainly used
+ * to proxy function calls from a worker thread to the main thread.
+ */
+export class WorkerServiceProxy extends ServiceProxy<Service> {
+    protected options: WorkerProxyOptions;
     private _promises: Map<string, { resolve: (data?: any) => void; reject: (ex?: any) => void }> = new Map();
 
-    constructor(
-        name: string,
-        inputObservable: Subject<{
-            id: string;
-            serviceName: string;
-            method: string;
-            parameters: any;
-        }>,
-        outputObservable: Subject<{ id: string; success: boolean; result?: any }>,
-    ) {
+    constructor(options: WorkerProxyOptions) {
         super();
-        this.name = name;
-        this._inputObservable = inputObservable;
-        this._outputObservable = outputObservable;
-        this._outputObservable.subscribe(this._onOutput.bind(this));
+        this.options = options;
+        this.name = options.name;
+        this.options.responseObservable.subscribe(this._onOutput.bind(this));
     }
 
     private _onOutput(next: { id: string; success: boolean; result?: any }): void {
@@ -93,7 +78,7 @@ export class WorkerService extends ServiceProxy<Service> {
                         serializedArgs.push(arg);
                     }
                 });
-                this._inputObservable.next({
+                this.options.callObservable.next({
                     id: uuid,
                     serviceName: this.name,
                     method: p as string,
@@ -101,4 +86,23 @@ export class WorkerService extends ServiceProxy<Service> {
                 });
             });
     }
+}
+
+interface WorkerProxyOptions {
+    name: string;
+    callObservable: Subject<WorkerServiceCall>;
+    responseObservable: Subject<WorkerServiceResponse>;
+}
+
+export interface WorkerServiceCall {
+    id: string;
+    serviceName: string;
+    method: string;
+    parameters: any;
+}
+
+export interface WorkerServiceResponse {
+    id: string;
+    success: boolean;
+    result?: any;
 }

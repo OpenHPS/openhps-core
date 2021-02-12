@@ -3,7 +3,7 @@ import { Node, NodeOptions } from '../Node';
 import { Thread, Worker, spawn, Pool } from 'threads';
 import { Observable } from 'threads/observable';
 import { PoolEvent } from 'threads/dist/master/pool';
-import { DataService, Service } from '../service';
+import { DataService, Service, WorkerServiceCall, WorkerServiceResponse } from '../service';
 import { GraphShapeBuilder } from '../graph/builders/GraphBuilder';
 import { ModelBuilder } from '../ModelBuilder';
 import { PullOptions, PushOptions } from '../graph';
@@ -47,7 +47,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
 
     private _pool: Pool<Thread>;
     private _workerData: any = {};
-    private _serviceInput: Map<number, (id: string, success: boolean, result?: any) => Promise<void>> = new Map();
+    private _serviceOutputResponse: Map<number, (response: WorkerServiceResponse) => Promise<void>> = new Map();
 
     constructor(
         builderCallback: (
@@ -158,23 +158,18 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                 const init: (workerData: any) => Promise<void> = (thread as any).init;
                 const pushOutput: () => Observable<any> = (thread as any).pushOutput;
                 const pullOutput: () => Observable<void> = (thread as any).pullOutput;
-                const serviceOutput: () => Observable<{
-                    id: string;
-                    serviceName: string;
-                    method: string;
-                    parameters: any;
-                }> = (thread as any).serviceOutput;
+                const serviceOutputCall: () => Observable<WorkerServiceCall> = (thread as any).serviceOutputCall;
                 const eventOutput: () => Observable<any> = (thread as any).eventOutput;
 
                 const threadId = (worker as any).threadId;
-                this._serviceInput.set(threadId, (thread as any).serviceInput);
+                this._serviceOutputResponse.set(threadId, (thread as any).serviceOutputResponse);
 
                 this.logger('debug', { message: 'Worker thread spawned!' });
 
                 // Subscribe to the workers pull, push and service functions
                 pullOutput().subscribe(this._onWorkerPull.bind(this));
                 pushOutput().subscribe(this._onWorkerPush.bind(this));
-                serviceOutput().subscribe(this._onWorkerService.bind(this, threadId));
+                serviceOutputCall().subscribe(this._onWorkerService.bind(this, threadId));
                 eventOutput().subscribe(this._onWorkerEvent.bind(this));
 
                 // Serialize this model services to the worker
@@ -205,10 +200,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         });
     }
 
-    private _onWorkerService(
-        threadId: number,
-        value: { id: string; serviceName: string; method: string; parameters: any },
-    ): void {
+    private _onWorkerService(threadId: number, value: WorkerServiceCall): void {
         const service: Service =
             this.model.findDataService(value.serviceName) || this.model.findService(value.serviceName);
         if ((service as any)[value.method]) {
@@ -229,14 +221,14 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                         _.forEach((r) => {
                             result.push(DataSerializer.serialize(r));
                         });
-                        this._serviceInput.get(threadId)(value.id, true, result);
+                        this._serviceOutputResponse.get(threadId)({ id: value.id, success: true, result });
                     } else {
                         const result = DataSerializer.serialize(_);
-                        this._serviceInput.get(threadId)(value.id, true, result);
+                        this._serviceOutputResponse.get(threadId)({ id: value.id, success: true, result });
                     }
                 })
                 .catch((ex) => {
-                    this._serviceInput.get(threadId)(value.id, false, ex);
+                    this._serviceOutputResponse.get(threadId)({ id: value.id, success: false, result: ex });
                 });
         }
     }
