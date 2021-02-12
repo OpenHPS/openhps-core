@@ -6,6 +6,7 @@ import {
     DistanceFunction,
     Fingerprint,
     KNNFingerprintingNode,
+    MemoryDataService,
     Model,
     ModelBuilder, 
     OfflineFingerprintingNode, 
@@ -17,6 +18,7 @@ import {
 import { expect } from 'chai';
 import { EvaluationDataFrame } from "../../mock/data/EvaluationDataFrame";
 import { KNNWeightFunction } from "../../../src/nodes/processing/fingerprinting/KNNWeightFunction";
+import { FingerprintService } from "../../../src/service/FingerprintService";
 
 describe('dataset', () => {
     describe('ujiindoorloc', function () {
@@ -28,6 +30,7 @@ describe('dataset', () => {
             this.timeout(600000);
 
             ModelBuilder.create()
+                .addService(new FingerprintService(new MemoryDataService(Fingerprint)))
                 // Pull request will use training data
                 .from(new CSVDataSource("test/data/UJIIndoorLoc/trainingData.csv", (row) => {
                     const phone = new DataObject(row['PHONEID']);
@@ -47,9 +50,7 @@ describe('dataset', () => {
                     }
                     return new DataFrame(phone);
                 }))
-                .via(new OfflineFingerprintingNode({
-                    name: "UJIIndoorLoc",
-                }))
+                .via(new OfflineFingerprintingNode())
                 .to(new CallbackSinkNode())
                 .build().then(m => {
                     offlineModel = m;
@@ -79,7 +80,6 @@ describe('dataset', () => {
                             persistence: false
                         }))
                         .via(new KNNFingerprintingNode({
-                            name: "UJIIndoorLoc",
                             k: 3,
                             weighted: true,
                             defaultValue: -95,
@@ -95,8 +95,8 @@ describe('dataset', () => {
                         sequentialPull: false
                     });
                 }).then(() => {
-                    const node = onlineModel.findNodeByName("UJIIndoorLoc") as KNNFingerprintingNode<any>;
-                    return node.updateFingerprints();
+                    const service = onlineModel.findDataService(Fingerprint) as FingerprintService;
+                    return service.update();
                 }).then(() => {
                     done();
                 }).catch(done);
@@ -108,12 +108,12 @@ describe('dataset', () => {
         });
 
         it('should process fingerprints', (done) => {
-            const node = onlineModel.findNodeByName("UJIIndoorLoc") as KNNFingerprintingNode<any>;
-            expect(node.cache.length).to.equal(933);
+            const service = onlineModel.findDataService(Fingerprint) as FingerprintService;
+            expect(service.cache.length).to.equal(933);
             done();
         });
 
-        it('should work', (done) => {
+        it('should have an accuracy of less than 15meters without optimizations', (done) => {
             let totalError = 0;
             let totalValues = 0;
             onlineSink.callback = (data: EvaluationDataFrame) => {

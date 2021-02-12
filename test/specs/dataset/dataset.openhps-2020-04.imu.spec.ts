@@ -16,6 +16,7 @@ import {
     Absolute3DPosition,
 } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
+import { FingerprintService } from '../../../src/service/FingerprintService';
 
 describe('dataset', () => {
     describe('openhps-2020-04 (imu only)', function () {
@@ -32,7 +33,7 @@ describe('dataset', () => {
         before(function (done) {
             this.timeout(5000);
 
-            const fingerprintService = new DataObjectService(new MemoryDataService(Fingerprint));
+            const fingerprintService = new FingerprintService(new MemoryDataService(Fingerprint));
 
             // Calibration model to set-up or train the model
             ModelBuilder.create()
@@ -65,6 +66,7 @@ describe('dataset', () => {
                     new KNNFingerprintingNode({
                         k: 5,
                         objectFilter: (object: DataObject) => object.uid === 'phone',
+                        autoUpdate: true
                     }),
                 )
                 .to(new CallbackSinkNode())
@@ -73,12 +75,10 @@ describe('dataset', () => {
                     calibrationModel = model;
                     callbackNode = new CallbackSinkNode<EvaluationDataFrame>();
 
-                    const pullPromises = [];
-                    for (let i = 0; i < 60; i++) {
-                        pullPromises.push(model.pull());
-                    }
-
-                    Promise.all(pullPromises).then(() => {
+                    model.pull({
+                        count: 60,
+                        sequentialPull: false
+                    }).then(() => {
                         done();
                     });
                 });
@@ -139,7 +139,7 @@ describe('dataset', () => {
                 trackingModel.emit('destroy');
             });
 
-            it('should have an average error of less than 150 cm', (done) => {
+            it('should have an average error of less than 120 cm', (done) => {
                 let totalError = 0;
                 let totalValues = 0;
                 callbackNode.callback = (data: EvaluationDataFrame) => {
@@ -154,18 +154,15 @@ describe('dataset', () => {
                 };
 
                 // Perform a pull
-                const promises = [];
-                for (let i = 0; i < 120; i++) {
-                    promises.push(trackingModel.pull());
-                }
-                Promise.all(promises)
-                    .then(() => {
-                        expect(totalError / totalValues).to.be.lessThan(150);
-                        done();
-                    })
-                    .catch((ex) => {
-                        done(ex);
-                    });
+                trackingModel.pull({
+                    count: 120,
+                    sequentialPull: false
+                }).then(() => {
+                    expect(totalError / totalValues).to.be.lessThan(120);
+                    done();
+                }).catch((ex) => {
+                    done(ex);
+                });
             }).timeout(50000);
         });
     });

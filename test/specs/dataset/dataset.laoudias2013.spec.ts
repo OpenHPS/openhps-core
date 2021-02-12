@@ -7,7 +7,6 @@ import {
     Model,
     DataFrame,
     CallbackSinkNode,
-    DataObjectService,
     MemoryDataService,
     ModelBuilder,
     DataObject,
@@ -15,6 +14,7 @@ import {
     RelativeDistancePosition,
 } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
+import { FingerprintService } from '../../../src/service/FingerprintService';
 
 /**
  * @param rssi
@@ -40,7 +40,7 @@ describe('dataset', () => {
 
             // Calibration model to set-up or train the model
 
-            const fingerprintService = new DataObjectService(new MemoryDataService(Fingerprint));
+            const fingerprintService = new FingerprintService(new MemoryDataService(Fingerprint));
 
             ModelBuilder.create()
                 .addService(fingerprintService)
@@ -80,6 +80,8 @@ describe('dataset', () => {
                     model.pull({
                         count: 2100,
                         sequentialPull: false
+                    }).then(() => {
+                        return (model.findDataService(Fingerprint) as FingerprintService).update();
                     }).then(() => {
                         done();
                     });
@@ -155,16 +157,13 @@ describe('dataset', () => {
                 };
 
                 // Perform a pull
-                const promises = [];
-                for (let i = 0; i < 500; i++) {
-                    promises.push(trackingModel.pull());
-                }
-                Promise.all(promises)
-                    .then(() => {
-                        expect(totalError / totalValues).to.be.lessThan(5);
-                        done();
-                    })
-                    .catch(done);
+                trackingModel.pull({
+                    count: 500,
+                    sequentialPull: false
+                }).then(() => {
+                    expect(totalError / totalValues).to.be.lessThan(5);
+                    done();
+                }).catch(done);
             }).timeout(50000);
         });
 
@@ -232,16 +231,13 @@ describe('dataset', () => {
                 };
 
                 // Perform a pull
-                const promises = [];
-                for (let i = 0; i < 500; i++) {
-                    promises.push(trackingModel.pull());
-                }
-                Promise.all(promises)
-                    .then(() => {
-                        expect(totalError / totalValues).to.be.lessThan(5);
-                        done();
-                    })
-                    .catch(done);
+                trackingModel.pull({
+                    count: 500,
+                    sequentialPull: false
+                }).then(() => {
+                    expect(totalError / totalValues).to.be.lessThan(5);
+                    done();
+                }).catch(done);
             }).timeout(50000);
         });
 
@@ -294,6 +290,11 @@ describe('dataset', () => {
                 trackingModel.emit('destroy');
             });
 
+            it('should be able to reuse the calibration service', () => {
+                const service = calibrationModel.findDataService(Fingerprint) as FingerprintService;
+                expect(service.cache.length).to.equal(105);
+            });
+
             it('should have an average error of less than 5 meters', (done) => {
                 let totalError = 0;
                 let totalValues = 0;
@@ -309,16 +310,13 @@ describe('dataset', () => {
                 };
 
                 // Perform a pull
-                const promises = [];
-                for (let i = 0; i < 500; i++) {
-                    promises.push(trackingModel.pull());
-                }
-                Promise.all(promises)
-                    .then(() => {
-                        expect(totalError / totalValues).to.be.lessThan(5);
-                        done();
-                    })
-                    .catch(done);
+                trackingModel.pull({
+                    count: 500,
+                    sequentialPull: false
+                }).then(() => {
+                    expect(totalError / totalValues).to.be.lessThan(5);
+                    done();
+                }).catch(done);
             }).timeout(50000);
         });
     });

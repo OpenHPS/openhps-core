@@ -1,11 +1,13 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Absolute2DPosition, CallbackSinkNode, DataFrame, DataObject, Fingerprint, IMUSensorObject, KNNFingerprintingNode, ModelBuilder, RelativeRSSIPosition, RelativeValue, RFTransmitterObject } from '../../../../src';
+import { Absolute2DPosition, CallbackSinkNode, DataFrame, DataObject, Fingerprint, IMUSensorObject, KNNFingerprintingNode, MemoryDataService, ModelBuilder, RelativeRSSIPosition, RelativeValue, RFTransmitterObject } from '../../../../src';
+import { FingerprintService } from '../../../../src/service/FingerprintService';
 
 describe('node knn fingerprinting', () => {
 
     it('should initialize without fingerprints', (done) => {
         ModelBuilder.create()
+            .addService(new FingerprintService(new MemoryDataService(Fingerprint)))
             .from()
             .via(new KNNFingerprintingNode({
                 weighted: false,
@@ -17,19 +19,27 @@ describe('node knn fingerprinting', () => {
             }).catch(done);
     });
 
-    it('should support multiple types of fingerprints', (done) => {
+    it('should support multiple types of ffingerprints', (done) => {
         ModelBuilder.create()
+            .addService(new FingerprintService(new MemoryDataService(Fingerprint), {
+                classifier: "geo"
+            }))
+            .addService(new FingerprintService(new MemoryDataService(Fingerprint), {
+                classifier: "wlan"
+            }))
             .from()
             .via(new KNNFingerprintingNode({
                 weighted: false,
                 k: 5,
-                fingerprintFilter: (pos) => pos.referenceObjectUID.startsWith("MAG_"),
+                valueFilter: (pos) => pos.referenceObjectUID.startsWith("MAG_"),
+                classifier: "geo",
                 name: "geomagnetic-fingerprinting",
                 autoUpdate: true
             }), new KNNFingerprintingNode({
                 weighted: false,
                 k: 5,
-                fingerprintFilter: (pos) => pos.referenceObjectType === RFTransmitterObject.name,
+                valueFilter: (pos) => pos.referenceObjectType === RFTransmitterObject.name,
+                classifier: "wlan",
                 name: "wlan-fingerprinting",
                 autoUpdate: true
             }))
@@ -49,6 +59,8 @@ describe('node knn fingerprinting', () => {
                     const node2 = m.findNodeByName("wlan-fingerprinting") as KNNFingerprintingNode<any>;
                     expect(node1.cache.length).to.be.equal(1);
                     expect(node2.cache.length).to.be.equal(1);
+                    expect(node1.cache[0].vector.length).to.equal(3);
+                    expect(node2.cache[0].vector.length).to.equal(3);
                     done();
                 }).catch(done);
                 m.push(frame);

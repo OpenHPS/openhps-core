@@ -14,9 +14,9 @@ import {
     RelativeDistancePosition,
     Absolute3DPosition,
     ObjectMergeNode,
-    TimeUnit,
 } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
+import { FingerprintService } from '../../../src/service/FingerprintService';
 
 /**
  * @param rssi
@@ -45,7 +45,7 @@ describe('dataset', () => {
             // Calibration model to set-up or train the model
             for (let i = 0; i < 489; i++) aps.push(`AP${i + 1}`);
 
-            const fingerprintService = new DataObjectService(new MemoryDataService(Fingerprint));
+            const fingerprintService = new FingerprintService(new MemoryDataService(Fingerprint));
 
             const rssSource = new CSVDataSource(
                 'test/data/richter2018/Training_rss.csv',
@@ -116,6 +116,8 @@ describe('dataset', () => {
                     }
 
                     Promise.all(pullPromises).then(() => {
+                        return (model.findDataService(Fingerprint) as FingerprintService).update();
+                    }).then(() => {
                         done();
                     });
                 });

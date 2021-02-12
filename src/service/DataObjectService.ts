@@ -11,7 +11,6 @@ import { DataServiceDriver } from './DataServiceDriver';
 export class DataObjectService<T extends DataObject> extends DataService<string, T> {
     constructor(dataServiceDriver: DataServiceDriver<string, T>) {
         super(dataServiceDriver);
-
         this.driver.once('ready', this._createIndexes.bind(this));
     }
 

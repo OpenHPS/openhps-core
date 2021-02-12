@@ -1,70 +1,54 @@
-import { Fingerprint, DataFrame, DataObject, RelativePosition, AbsolutePosition } from '../../../data';
+import { Fingerprint, DataFrame, DataObject, RelativePosition } from '../../../data';
 import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../../ObjectProcessingNode';
-import { DataObjectService } from '../../../service';
+import { FingerprintService } from '../../../service/FingerprintService';
 
 /**
  * Fingerprinting processing node. Stores and computes fingerprints.
  *
  * @category Processing node
  */
-export abstract class FingerprintingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
+export abstract class FingerprintingNode<
+    InOut extends DataFrame,
+    F extends Fingerprint = Fingerprint
+> extends ObjectProcessingNode<InOut> {
     protected options: FingerprintingOptions;
-    public cache: CachedFingerprint[] = [];
-
-    private _dataService: DataObjectService<Fingerprint>;
-    public cachedReferences: Set<string> = new Set();
+    protected service: FingerprintService<F>;
 
     constructor(options?: FingerprintingOptions) {
         super(options);
-        this.options.fingerprintFilter = this.options.fingerprintFilter || (() => true);
         this.once('build', this._onBuild.bind(this));
     }
 
-    private _onBuild(): Promise<void> {
-        // Retrieve the data service used for fingerprints
-        this.dataService = this.model.findDataService(Fingerprint);
-        if (this.dataService.isReady()) {
-            // Initialize previously stored fingerprints
-            return this.updateFingerprints();
+    private _onBuild(): void {
+        if (this.options.classifier && this.options.classifier.length > 0) {
+            this.service = this.model.findDataService(this.options.classifier);
+            if (!this.service || !(this.service instanceof FingerprintService)) {
+                throw new Error(
+                    `Fingerprinting node requires a fingerprint data service with classifier '${this.options.classifier}'!`,
+                );
+            }
         } else {
-            return new Promise((resolve, reject) => {
-                this.dataService.once('ready', () => {
-                    // Initialize previously stored fingerprints
-                    this.updateFingerprints()
-                        .then(() => {
-                            resolve();
-                        })
-                        .catch(reject);
-                });
-            });
+            this.service = this.model.findDataService(Fingerprint);
+            if (!this.service || !(this.service instanceof FingerprintService)) {
+                throw new Error('Fingerprinting node requires a fingerprint data service!');
+            }
         }
+        // Set options
+        this.service.options = this.options;
+        this.service.on('update', () => this.emit('update'));
     }
 
-    /**
-     * Data object service responsible for storing fingerprints
-     *
-     * @returns {DataObjectService<Fingerprint>} Data object service for fingerprints
-     */
-    public get dataService(): DataObjectService<Fingerprint> {
-        return this._dataService;
+    public get serviceOptions(): FingerprintingOptions {
+        return this.service.options;
     }
 
-    public set dataService(dataService: DataObjectService<Fingerprint>) {
-        this._dataService = dataService;
-        // Bind to data service if auto update is on
-        if (this.options.autoUpdate) {
-            this._dataService.on('insert', this.updateFingerprints.bind(this));
-            this._dataService.on('delete', this.updateFingerprints.bind(this));
-            this._dataService.on('deleteAll', this.updateFingerprints.bind(this));
-        }
+    public get cache(): Fingerprint[] {
+        return this.service.cache;
     }
 
-    /**
-     * Trigger an update of all fingerprints
-     *
-     * @returns {Promise<void>} Promise of update
-     */
-    public abstract updateFingerprints(): Promise<void>;
+    public get cachedReferences(): Set<string> {
+        return this.service.cachedReferences;
+    }
 
     public processObject(dataObject: DataObject, dataFrame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
@@ -97,16 +81,15 @@ export abstract class FingerprintingNode<InOut extends DataFrame> extends Object
      */
     protected offlineFingerprinting(dataObject: DataObject, dataFrame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
-            // Fingerprinting service
-            const fingerprintService = this.model.findDataService(Fingerprint) as DataObjectService<Fingerprint>;
-
             // Create a fingerprint at the current position
-            const fingerprint = new Fingerprint(this.name);
+            const fingerprint = new Fingerprint();
+            fingerprint.source = dataObject;
             fingerprint.createdTimestamp = dataFrame.createdTimestamp;
             fingerprint.position = dataObject.position;
+            fingerprint.classifier = this.serviceOptions.classifier;
 
             // Add relative positions that will define the fingerprint
-            dataObject.relativePositions.filter(this.options.fingerprintFilter).forEach((relativePosition) => {
+            dataObject.relativePositions.filter(this.serviceOptions.valueFilter).forEach((relativePosition) => {
                 // Do not add relative position if reference value is unusable
                 if (relativePosition.referenceValue !== undefined && !isNaN(relativePosition.referenceValue)) {
                     fingerprint.addRelativePosition(relativePosition);
@@ -115,8 +98,8 @@ export abstract class FingerprintingNode<InOut extends DataFrame> extends Object
 
             if (fingerprint.relativePositions.length > 0) {
                 // Store the fingerprint
-                fingerprintService
-                    .insert(fingerprint.uid, fingerprint)
+                this.service
+                    .insertObject(fingerprint as any)
                     .then(() => {
                         resolve(dataObject);
                     })
@@ -126,41 +109,49 @@ export abstract class FingerprintingNode<InOut extends DataFrame> extends Object
             }
         });
     }
+
+    public on(name: string | symbol, listener: (...args: any[]) => void): this;
+    /**
+    /**
+     * Event when fingerprints are being updated
+     *
+     * @param {string} event update
+     * @param {Function} listener Event callback
+     * @returns {FingerprintingNode} Instance of node
+     */
+    public on(event: 'update', listener: () => Promise<void> | void): this {
+        return super.on(event, listener);
+    }
 }
 
 export interface FingerprintingOptions extends ObjectProcessingNodeOptions {
+    /**
+     * Default value of missing fingerprint values
+     */
     defaultValue?: number;
     /**
      * Relative position type
      *
-     * @default RelativeDistancePosition
+     * @default RelativeValue
      */
-    type?: new () => RelativePosition;
-    fingerprintFilter?: (pos: RelativePosition) => boolean;
+    defaultType?: new () => RelativePosition;
     /**
-     * Auto update newly added fingerprints
+     * Fingerprint classifier
+     *
+     * @default ""
+     */
+    classifier?: string;
+    /**
+     * Filter on relative positions
+     */
+    valueFilter?: (pos: RelativePosition) => boolean;
+    /**
+     * Auto update the fingerprints for each newly recorded
+     * fingerprint.
+     *
+     * Enabling this can cause performance issues
      *
      * @default false
      */
     autoUpdate?: boolean;
-}
-
-export class CachedFingerprint {
-    public uid: string;
-    public vector: number[] = [];
-    public position: AbsolutePosition;
-    public additionalData: any;
-
-    constructor(fingerprint: Fingerprint) {
-        this.uid = fingerprint.uid;
-        this.position = fingerprint.position.clone();
-        fingerprint.relativePositions
-            // Sort alphabetically
-            .sort((a: RelativePosition, b: RelativePosition) =>
-                a.referenceObjectUID.localeCompare(b.referenceObjectUID),
-            )
-            .forEach((relativePosition) => {
-                this.vector.push(relativePosition.referenceValue);
-            });
-    }
 }

@@ -230,19 +230,22 @@ export class DataObject {
     /**
      * Bind the data object to a service
      *
-     * @param {DataObjectService<this>} service Service to bind it to
+     * @param {DataObjectService<DataObject>} service Service to bind it to
+     * @returns {DataObjectBinding<DataObject>} Data object binding with a service
      */
     public bind(service: DataObjectService<this>): DataObjectBinding<this>;
     /**
      * Bind the data object to a model
      *
      * @param {Model} model Model to bind it to
+     * @returns {DataObjectBinding<DataObject>} Data object binding with a service
      */
     public bind(model: Model<any, any>): DataObjectBinding<this>;
     /**
      * Bind the data object to a model or service
      *
      * @param {Model | DataObjectService} modelOrService Model or service to bind it to
+     * @returns {DataObjectBinding<DataObject>} Data object binding with a service
      */
     public bind(modelOrService: Model<any, any> | DataObjectService<this>): DataObjectBinding<this> {
         if (modelOrService instanceof DataObjectService) {
