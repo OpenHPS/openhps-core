@@ -12,30 +12,16 @@ import {
     Absolute3DPosition,
     CallbackSinkNode,
     CallbackSourceNode,
-    Matrix4,
     LinearVelocity,
     Quaternion,
     Euler,
     DataObjectService,
     MemoryDataService,
-    Absolute2DPosition,
 } from '../../../src';
 import { Vector3 } from '../../../src/utils/math/_internal';
 
 describe('data', () => {
     describe('reference space', () => {
-        it('should initialize with a given transformation matrix', () => {
-            const referenceSpace = new ReferenceSpace(
-                undefined,
-                Matrix4.fromArray([
-                    [1, 0, 0, 0],
-                    [0, 1, 0, 0],
-                    [0, 0, 1, 0],
-                    [0, 0, 0, 1],
-                ]),
-            );
-        });
-
         it('should be able to retrieve a transformation matrix', () => {
             const space = new ReferenceSpace();
             expect(space.transformationMatrix).to.not.be.undefined;
@@ -315,6 +301,8 @@ describe('data', () => {
                 let ref2 = new ReferenceSpace(ref1);
                 ref2.translation(5, 5);
                 ref2 = await service.insertObject(ref2);
+                const storedRef2 = await service.findByUID(ref2.uid);
+                expect(storedRef2.transformationMatrix).to.deep.equal(ref2.transformationMatrix);
                 let ref3 = new ReferenceSpace(ref2);
                 ref3.translation(2, 2);
                 ref3 = await service.insertObject(ref3);
@@ -334,13 +322,40 @@ describe('data', () => {
                 let ref3 = new ReferenceSpace(ref2);
                 ref3.translation(2, 2);
                 ref3 = await service.insertObject(ref3);
-                const position = ref3.transform(new Absolute3DPosition(0, 0, 0));
+                let position = ref3.transform(new Absolute3DPosition(0, 0, 0));
                 expect(position.x).to.equal(7);
                 expect(position.y).to.equal(7);
                 expect(position.z).to.equal(0);
                 ref1.translation(3, 3);
                 ref1 = await service.insertObject(ref1);
-                
+                position = ref3.transform(new Absolute3DPosition(0, 0, 0));
+                expect(position.x).to.equal(10);
+                expect(position.y).to.equal(10);
+                expect(position.z).to.equal(0);
+            });
+
+            it('should support changes to the parent reference space with pass by reference', async () => {
+                const service = new DataObjectService(new MemoryDataService(ReferenceSpace));
+                let ref1 = new ReferenceSpace();
+                ref1 = await service.insertObject(ref1);
+                let ref2 = new ReferenceSpace(ref1);
+                ref2.translation(5, 5);
+                ref2 = await service.insertObject(ref2);
+                let ref3 = new ReferenceSpace(ref2);
+                ref3.translation(2, 2);
+                ref3 = await service.insertObject(ref3);
+                let position = ref3.transform(new Absolute3DPosition(0, 0, 0));
+                expect(position.x).to.equal(7);
+                expect(position.y).to.equal(7);
+                expect(position.z).to.equal(0);
+                let loadedRef = await service.findByUID(ref1.uid) as ReferenceSpace;
+                loadedRef.translation(3, 3);
+                loadedRef = await service.insertObject(loadedRef);
+                await ref3.update(service);
+                position = ref3.transform(new Absolute3DPosition(0, 0, 0));
+                expect(position.x).to.equal(10);
+                expect(position.y).to.equal(10);
+                expect(position.z).to.equal(0);
             });
 
         });

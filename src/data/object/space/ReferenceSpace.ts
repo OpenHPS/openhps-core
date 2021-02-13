@@ -4,6 +4,7 @@ import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder } from '../../../util
 import { AngleUnit, LengthUnit } from '../../../utils';
 import { AbsolutePosition } from '../../position/AbsolutePosition';
 import { Vector3 } from '../../../utils/math/_internal';
+import { DataObjectService } from '../../../service';
 
 /**
  * A reference space transforms absolute positions to another (global) reference space.
@@ -18,25 +19,24 @@ import { Vector3 } from '../../../utils/math/_internal';
 export class ReferenceSpace extends DataObject {
     // Raw transformation matrix
     @SerializableMember()
-    private _transformationMatrix: Matrix4 = new Matrix4().identity();
+    private _transformationMatrix: Matrix4;
     // Scale matrix (needed for scaling linear velocity)
     @SerializableMember()
-    private _scaleMatrix: Matrix4 = new Matrix4();
+    private _scaleMatrix: Matrix4;
     // Rotation matrix (needed for orientation, angular velocity and linear velocity)
     @SerializableMember()
-    private _rotation: Quaternion = new Quaternion();
+    private _rotation: Quaternion;
     @SerializableMember()
     private _unit: LengthUnit;
+    private _parent: ReferenceSpace;
 
-    constructor(parent?: ReferenceSpace, transformationMatrix?: Matrix4) {
+    constructor(parent?: ReferenceSpace) {
         super();
-        if (parent) {
-            this.parent = parent;
-        }
+        this.parent = parent;
 
-        if (transformationMatrix !== undefined) {
-            this._transformationMatrix.multiply(transformationMatrix);
-        }
+        this._scaleMatrix = new Matrix4();
+        this._transformationMatrix = new Matrix4().identity();
+        this._rotation = new Quaternion();
     }
 
     /**
@@ -45,18 +45,40 @@ export class ReferenceSpace extends DataObject {
      * @param {ReferenceSpace} space Parent space
      */
     public set parent(space: ReferenceSpace) {
-        this.parentUID = space.uid;
-        this._transformationMatrix = space._transformationMatrix.clone();
-        this._scaleMatrix = space._scaleMatrix.clone();
+        if (!space) {
+            return;
+        } else {
+            this.parentUID = space.uid;
+            this._parent = space;
+        }
     }
 
     /**
-     * Get the transformation matrix for scaling
+     * Update parent reference spaces
      *
-     * @returns {Matrix4} Transformation matrix
+     * @param {DataObjectService} service Service to use for updating
+     * @returns {Promise<void>} Update promise
      */
-    public get scaleMatrix(): Matrix4 {
-        return this._scaleMatrix;
+    public update(service: DataObjectService<this>): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (this.parentUID) {
+                // Update parent
+                service
+                    .findByUID(this.parentUID)
+                    .then((parent) => {
+                        this._parent = parent;
+                        if (!parent) {
+                            throw new Error(`Unable to find reference space with uid: ${this.parentUID}!`);
+                        }
+                        console.log(parent._transformationMatrix);
+                        return this._parent.update(service);
+                    })
+                    .then(resolve)
+                    .catch(reject);
+            } else {
+                resolve();
+            }
+        });
     }
 
     public orthographic(
@@ -158,10 +180,10 @@ export class ReferenceSpace extends DataObject {
         }
 
         const transformationMatrix = config.inverse
-            ? this._transformationMatrix.clone().invert()
-            : this._transformationMatrix;
-        const rotation = config.inverse ? this._rotation.clone().invert() : this._rotation;
-        const scale = config.inverse ? this._scaleMatrix.clone().invert() : this._scaleMatrix;
+            ? this.transformationMatrix.clone().invert()
+            : this.transformationMatrix;
+        const rotation = config.inverse ? this.rotationQuaternion.clone().invert() : this.rotationQuaternion;
+        const scale = config.inverse ? this._scaleMatrix.clone().invert() : this.scaleMatrix;
 
         // Transform the point using the transformation matrix
         newPosition.fromVector(newPosition.toVector3().applyMatrix4(transformationMatrix));
@@ -187,7 +209,27 @@ export class ReferenceSpace extends DataObject {
     }
 
     public get transformationMatrix(): Matrix4 {
-        return this._transformationMatrix;
+        return this._parent
+            ? this._parent.transformationMatrix.clone().multiply(this._transformationMatrix)
+            : this._transformationMatrix;
+    }
+
+    /**
+     * Get the transformation matrix for scaling
+     *
+     * @returns {Matrix4} Transformation matrix
+     */
+    public get scaleMatrix(): Matrix4 {
+        return this._parent ? this._parent.scaleMatrix.clone().multiply(this._scaleMatrix) : this._scaleMatrix;
+    }
+
+    public get rotationQuaternion(): Quaternion {
+        if (this._parent) {
+            const threeQuat = this._parent.rotationQuaternion.multiply(this._rotation).normalize();
+            return new Quaternion(threeQuat.x, threeQuat.y, threeQuat.z, threeQuat.w);
+        } else {
+            return this._rotation;
+        }
     }
 }
 

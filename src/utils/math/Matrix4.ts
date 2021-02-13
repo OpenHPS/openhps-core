@@ -1,4 +1,4 @@
-import { SerializableObject } from '../../data/decorators';
+import { SerializableArrayMember, SerializableObject } from '../../data/decorators';
 import * as THREE from './_internal';
 
 /**
@@ -6,6 +6,9 @@ import * as THREE from './_internal';
  */
 @SerializableObject()
 export class Matrix4 extends THREE.Matrix4 {
+    @SerializableArrayMember(Number)
+    public elements: number[];
+
     public static round(value: Matrix4, decimals = 0): Matrix4 {
         const pow = Math.pow(10, decimals);
         value.elements.forEach((e, i) => {
