@@ -36,7 +36,7 @@ describe('dataset', () => {
          * Initialize the data set and model
          */
         before(function (done) {
-            this.timeout(5000);
+            this.timeout(10000);
 
             // Calibration model to set-up or train the model
 

@@ -11,6 +11,8 @@ import { PullOptions, PushOptions } from '../graph';
 declare const __non_webpack_require__: typeof require;
 
 /**
+ * Worker nodes are normal nodes that initialize multiple web workers.
+ * Push and pull requests are forwarded to these web workers.
  *
  * ## Usage
  *
