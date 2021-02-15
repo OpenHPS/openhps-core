@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, DataFrame, WorkerNode, CallbackSinkNode, DataObject, Model, NodeDataService, NodeData } from '../../../src';
+import { ModelBuilder, DataFrame, WorkerNode, CallbackSinkNode, DataObject, NodeDataService, NodeData, KeyValueDataService } from '../../../src';
 import * as path from 'path';
 
 describe('node', () => {
@@ -341,6 +341,7 @@ describe('node', () => {
 
         it('should build a model from a file', (done) => {
             ModelBuilder.create()
+                .addService(new KeyValueDataService("abc123"))
                 .addNode(new WorkerNode("../../mock/ExampleModel", {
                     name: "output",
                     directory: __dirname,
@@ -351,11 +352,14 @@ describe('node', () => {
                     expect(frame).to.not.be.undefined;
                     expect(frame.source).to.not.be.undefined;
                     expect(frame.source.uid).to.be.equal("mvdewync");
+                    expect(frame.source.displayName).to.equal("abc");
                     this.model.destroy();
                     done();
                 }))
                 .build().then(model => {
-                    model.pull();
+                    model.findDataService("abc123").set("displayName", "abc").then(() => {
+                        model.pull();
+                    });
                 });
         }).slow(8000).timeout(30000);
 

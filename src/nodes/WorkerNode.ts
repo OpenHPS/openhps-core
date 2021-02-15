@@ -50,7 +50,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
     private _pool: Pool<Thread>;
     private _workerData: any = {};
     private _serviceOutputResponse: Map<number, (response: WorkerServiceResponse) => Promise<void>> = new Map();
-
+    
     constructor(
         builderCallback: (
             builder: GraphShapeBuilder<ModelBuilder<any, any>>,
@@ -302,6 +302,8 @@ export interface WorkerNodeOptions extends NodeOptions {
     imports?: string[];
     /**
      * Services to clone from main thread. When not specified it will clone all services
+     *
+     * @default model.findAllServices()
      */
     services?: Service[];
     /**

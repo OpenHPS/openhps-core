@@ -9,19 +9,20 @@ import {
     WorkerServiceProxy,
     WorkerServiceCall,
     WorkerServiceResponse,
+    Service,
+    PullOptions, 
+    PushOptions,
+    DataService
 } from '../../'; // @openhps/core
 import { Subject, Observable } from 'threads/observable';
 import { expose } from 'threads';
 import { DummyDataService, DummyService } from '../../service/_internal/';
-import { PullOptions, PushOptions } from '../../graph';
 
 let model: Model<any, any>;
 const pullOutput: Subject<any> = new Subject();
 const pushOutput: Subject<any> = new Subject();
 const serviceOutputCall: Subject<WorkerServiceCall> = new Subject();
 const serviceOutputResponse: Subject<WorkerServiceResponse> = new Subject();
-const serviceInputCall: Subject<WorkerServiceCall> = new Subject();
-const serviceInputResponse: Subject<WorkerServiceResponse> = new Subject();
 const eventOutput: Subject<{
     name: string;
     event: any;
@@ -168,16 +169,35 @@ expose({
     eventInput(name: string, event: any): void {
         model.emit(name as any, event);
     },
+    /**
+     * Outgoing call to a service on the main thread
+     */
     serviceOutputCall(): Observable<WorkerServiceCall> {
         return Observable.from(serviceOutputCall);
     },
+    /**
+     * Response to an outgoing service call from the main thread
+     *
+     * @param {WorkerServiceResponse} input Service response 
+     */
     serviceOutputResponse(input: WorkerServiceResponse) {
         serviceOutputResponse.next(input);
     },
-    serviceInputCall(): Observable<WorkerServiceCall> {
-        return Observable.from(serviceInputCall);
-    },
-    serviceInputResponse(input: WorkerServiceResponse) {
-        serviceInputResponse.next(input);
-    },
+    services(): Promise<any[]> {
+        return new Promise((resolve) => {
+            const services: Service[] = model.findAllServices();
+            const servicesArray: any[] = services
+                .filter(service => !(service instanceof DummyDataService || service instanceof DummyService))
+                .map(service => {
+                // Services are wrapped in a proxy. Get prototype
+                const serviceBase = Object.getPrototypeOf(service);
+                return {
+                    name: service.name,
+                    type: serviceBase.constructor.name,
+                    dataType: service instanceof DataService ? (service as any).driver.dataType.name : undefined,
+                };
+            });
+            resolve(servicesArray);
+        });
+    } 
 });
