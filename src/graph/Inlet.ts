@@ -3,7 +3,7 @@ import { PushCompletedEvent, PushError } from './events';
 import { PullOptions, PushOptions } from './interfaces';
 
 /**
- * Inlet of a node
+ * Inlet of a node that supports pulling and events.
  *
  * @category Graph
  */

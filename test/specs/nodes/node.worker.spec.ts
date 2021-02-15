@@ -339,5 +339,25 @@ describe('node', () => {
                 });
         }).slow(8000).timeout(30000);
 
+        it('should build a model from a file', (done) => {
+            ModelBuilder.create()
+                .addNode(new WorkerNode("../../mock/ExampleModel", {
+                    name: "output",
+                    directory: __dirname,
+                    poolSize: 4
+                }))
+                .from("output")
+                .to(new CallbackSinkNode(function(frame) {
+                    expect(frame).to.not.be.undefined;
+                    expect(frame.source).to.not.be.undefined;
+                    expect(frame.source.uid).to.be.equal("mvdewync");
+                    this.model.destroy();
+                    done();
+                }))
+                .build().then(model => {
+                    model.pull();
+                });
+        }).slow(8000).timeout(30000);
+
     });
 });

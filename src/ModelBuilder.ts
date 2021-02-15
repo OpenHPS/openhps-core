@@ -4,6 +4,7 @@ import { DataFrame, ReferenceSpace } from './data';
 import { ModelGraph } from './graph/_internal/implementations';
 import { Model } from './Model';
 import { GraphBuilder } from './graph/builders/GraphBuilder';
+import { GraphShape } from './graph';
 
 /**
  * Model builder to construct and build a [[Model]] consisting of graph shapes and services.
@@ -156,6 +157,26 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
     public addService(service: Service, proxy?: ProxyHandler<any>): this {
         (this.graph as ModelGraph<In, Out>).addService(service, proxy);
         return this;
+    }
+
+    /**
+     * Add graph shape to graph
+     *
+     * @param {GraphBuilder | GraphShape} shape Graph builder or abstract graph
+     * @returns {GraphBuilder} Current graph builder instance
+     */
+    public addShape(shape: GraphBuilder<any, any> | GraphShape<any, any>): this {
+        if (shape instanceof ModelGraph) {
+            // Add services
+            (shape as Model).findAllServices().forEach((service) => {
+                this.addService(service);
+            });
+        } else if (shape instanceof ModelBuilder) {
+            (shape.graph as Model).findAllServices().forEach((service) => {
+                this.addService(service);
+            });
+        }
+        return super.addShape(shape);
     }
 
     public build(): Promise<Model<In, Out>> {

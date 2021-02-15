@@ -15,7 +15,7 @@ export class DataServiceTestNode extends Node<DataFrame, DataFrame> {
                 frame.addObject(dataObject);
                 this.outlets.forEach(outlet => outlet.push(frame));
                 resolve();
-            });
+            }).catch(reject);
         });
     }
 

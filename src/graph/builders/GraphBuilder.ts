@@ -171,7 +171,10 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         graph.nodes.forEach((graphNode) => {
             (graphNode as Node<any, any>).graph = this.graph;
         });
-        return this.via((graph as unknown) as Node<any, any>);
+        this.graph.addNode(graph);
+        this._insertNode(graph);
+        this.previousNodes = [graph];
+        return this;
     }
 
     public via(...nodes: Array<Node<any, any> | string | GraphShape<any, any> | GraphBuilder<any, any>>): this {
