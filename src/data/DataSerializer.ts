@@ -107,8 +107,10 @@ export class DataSerializer {
         const serialized = typedJSON.toPlainJson(data) as any;
         if (error) {
             throw error;
-        } else {
+        } else if (serialized instanceof Object) {
             serialized['__type'] = dataType.name;
+            return serialized;
+        } else {
             return serialized;
         }
     }

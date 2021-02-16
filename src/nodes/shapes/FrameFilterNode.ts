@@ -7,7 +7,7 @@ import { ProcessingNode, ProcessingNodeOptions } from '../ProcessingNode';
 export class FrameFilterNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
     constructor(filterFn: (frame: InOut) => boolean, options?: ProcessingNodeOptions) {
         super(options);
-        this.options.frameFilter = filterFn;
+        this.options.frameFilter = filterFn.bind(this);
     }
 
     public process(frame: InOut): Promise<InOut> {

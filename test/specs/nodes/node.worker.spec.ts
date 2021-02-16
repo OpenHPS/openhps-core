@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, DataFrame, WorkerNode, CallbackSinkNode, DataObject, NodeDataService, NodeData, KeyValueDataService } from '../../../src';
+import { ModelBuilder, DataFrame, WorkerNode, CallbackSinkNode, DataObject, NodeDataService, NodeData } from '../../../src';
 import * as path from 'path';
+import { KeyValueDataService } from '../../../src/service/KeyValueDataService';
 
 describe('node', () => {
     describe('worker node', () => {
@@ -339,13 +340,13 @@ describe('node', () => {
                 });
         }).slow(8000).timeout(30000);
 
-        it('should build a model from a file', (done) => {
+        it('should build a model from a file using a main service', (done) => {
             ModelBuilder.create()
                 .addService(new KeyValueDataService("abc123"))
                 .addNode(new WorkerNode("../../mock/ExampleModel", {
                     name: "output",
                     directory: __dirname,
-                    poolSize: 4
+                    poolSize: 2
                 }))
                 .from("output")
                 .to(new CallbackSinkNode(function(frame) {
@@ -357,9 +358,34 @@ describe('node', () => {
                     done();
                 }))
                 .build().then(model => {
-                    model.findDataService("abc123").set("displayName", "abc").then(() => {
+                    const service = model.findDataService("abc123");
+                    service.setValue("displayName", "abc").then(() => {
                         model.pull();
-                    });
+                    }).catch(done);
+                });
+        }).slow(8000).timeout(30000);
+
+        it('should build a model from a file using a worker service', (done) => {
+            ModelBuilder.create()
+                .addNode(new WorkerNode("../../mock/ExampleModel2", {
+                    name: "output",
+                    directory: __dirname,
+                    poolSize: 1
+                }))
+                .from("output")
+                .to(new CallbackSinkNode(function(frame) {
+                    expect(frame).to.not.be.undefined;
+                    expect(frame.source).to.not.be.undefined;
+                    expect(frame.source.uid).to.be.equal("mvdewync");
+                    expect(frame.source.displayName).to.equal("maxim");
+                    this.model.destroy();
+                    done();
+                }))
+                .build().then(model => {
+                    const service = model.findDataService("test123");
+                    service.setValue("displayName", "maxim").then(() => {
+                        model.pull();
+                    }).catch(done);
                 });
         }).slow(8000).timeout(30000);
 

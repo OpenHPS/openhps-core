@@ -17,7 +17,9 @@ export class WorkerServiceProxy extends ServiceProxy<Service> {
         super();
         this.options = options;
         this.name = options.name;
-        this.options.responseObservable.subscribe(this._onOutput.bind(this));
+        if (this.options.responseObservable) {
+            this.options.responseObservable.subscribe(this._onOutput.bind(this));
+        }
     }
 
     private _onOutput(next: { id: string; success: boolean; result?: any }): void {
@@ -78,20 +80,36 @@ export class WorkerServiceProxy extends ServiceProxy<Service> {
                         serializedArgs.push(arg);
                     }
                 });
-                this.options.callObservable.next({
+                // Service call
+                const call = {
                     id: uuid,
                     serviceName: this.name,
                     method: p as string,
                     parameters: serializedArgs,
-                });
+                };
+                if (this.options.callObservable) {
+                    // Forward call to observable
+                    this.options.callObservable.next(call);
+                } else {
+                    // Forward call to promise
+                    this.options
+                        .callFunction(call)
+                        .then((response) => {
+                            this._onOutput(response);
+                        })
+                        .catch((response) => {
+                            this._onOutput(response);
+                        });
+                }
             });
     }
 }
 
 interface WorkerProxyOptions {
     name: string;
-    callObservable: Subject<WorkerServiceCall>;
-    responseObservable: Subject<WorkerServiceResponse>;
+    callFunction?: (call: WorkerServiceCall) => Promise<WorkerServiceResponse>;
+    callObservable?: Subject<WorkerServiceCall>;
+    responseObservable?: Subject<WorkerServiceResponse>;
 }
 
 export interface WorkerServiceCall {

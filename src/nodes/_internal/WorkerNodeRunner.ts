@@ -10,9 +10,9 @@ import {
     WorkerServiceCall,
     WorkerServiceResponse,
     Service,
-    PullOptions, 
+    PullOptions,
     PushOptions,
-    DataService
+    DataService,
 } from '../../'; // @openhps/core
 import { Subject, Observable } from 'threads/observable';
 import { expose } from 'threads';
@@ -69,61 +69,70 @@ expose({
      * Worker intiailize
      *
      * @param {any} workerData Worker data containing model information
+     * @returns {Promise<void>} Initialize promise
      */
-    async init(workerData: any) {
-        // Set global dir name
-        // eslint-disable-next-line no-global-assign
-        __dirname = workerData.dirname;
-        // Load external scripts
-        if (workerData.imports && workerData.imports.length > 0) {
-            importScripts(workerData.imports);
-        }
-        // Create model
-        const modelBuilder = ModelBuilder.create();
-        // Add remote worker services if not already added
-        workerData.services.forEach((service: any) => {
-            if (service.dataType) {
-                const DataType = DataSerializer.findTypeByName(service.dataType);
-                modelBuilder.addService(
-                    new DummyDataService(DataType),
-                    new WorkerServiceProxy({
-                        name: service.name,
-                        callObservable: serviceOutputCall,
-                        responseObservable: serviceOutputResponse,
-                    }),
-                );
+    init(workerData: any): Promise<void> {
+        return new Promise((resolve, reject) => {
+            // Set global dir name
+            // eslint-disable-next-line no-global-assign
+            __dirname = workerData.dirname;
+            // Load external scripts
+            if (workerData.imports && workerData.imports.length > 0) {
+                importScripts(workerData.imports);
+            }
+            // Create model
+            const modelBuilder = ModelBuilder.create();
+            // Add remote worker services if not already added
+            workerData.services.forEach((service: any) => {
+                if (service.dataType) {
+                    const DataType = DataSerializer.findTypeByName(service.dataType);
+                    modelBuilder.addService(
+                        new DummyDataService(service.name, DataType),
+                        new WorkerServiceProxy({
+                            name: service.name,
+                            callObservable: serviceOutputCall,
+                            responseObservable: serviceOutputResponse,
+                        }),
+                    );
+                } else {
+                    modelBuilder.addService(
+                        new DummyService(service.name),
+                        new WorkerServiceProxy({
+                            name: service.name,
+                            callObservable: serviceOutputCall,
+                            responseObservable: serviceOutputResponse,
+                        }),
+                    );
+                }
+            });
+
+            initModel(modelBuilder);
+
+            // eslint-disable-next-line
+            const path = workerData.imports.lengths > 0 ? undefined : require('path');
+
+            if (workerData.builder) {
+                const traversalBuilder = modelBuilder.from();
+                // eslint-disable-next-line
+                const builderCallback = eval(workerData.builder);
+                builderCallback(traversalBuilder, modelBuilder, workerData.args);
+                traversalBuilder.to();
             } else {
-                modelBuilder.addService(
-                    new DummyService(),
-                    new WorkerServiceProxy({
-                        name: service.name,
-                        callObservable: serviceOutputCall,
-                        responseObservable: serviceOutputResponse,
-                    }),
-                );
+                // eslint-disable-next-line
+                const graph = require(path ? path.join(__dirname, workerData.shape) : workerData.shape);
+                if (graph) {
+                    modelBuilder.addShape(graph.default);
+                }
             }
+
+            modelBuilder
+                .build()
+                .then((m) => {
+                    model = m;
+                    resolve();
+                })
+                .catch(reject);
         });
-
-        initModel(modelBuilder);
-
-        // eslint-disable-next-line
-        const path = workerData.imports.lengths > 0 ? undefined : require('path');
-
-        if (workerData.builder) {
-            const traversalBuilder = modelBuilder.from();
-            // eslint-disable-next-line
-            const builderCallback = eval(workerData.builder);
-            builderCallback(traversalBuilder, modelBuilder, workerData.args);
-            traversalBuilder.to();
-        } else {
-            // eslint-disable-next-line
-            const graph = require(path ? path.join(__dirname, workerData.shape) : workerData.shape);
-            if (graph) {
-                modelBuilder.addShape(graph.default);
-            }
-        }
-
-        model = await modelBuilder.build();
     },
     /**
      * Pull from this work
@@ -171,6 +180,8 @@ expose({
     },
     /**
      * Outgoing call to a service on the main thread
+     *
+     * @returns {Observable<WorkerServiceCall>} Observable of outgoing service calls
      */
     serviceOutputCall(): Observable<WorkerServiceCall> {
         return Observable.from(serviceOutputCall);
@@ -178,26 +189,59 @@ expose({
     /**
      * Response to an outgoing service call from the main thread
      *
-     * @param {WorkerServiceResponse} input Service response 
+     * @param {WorkerServiceResponse} input Service response
      */
     serviceOutputResponse(input: WorkerServiceResponse) {
         serviceOutputResponse.next(input);
     },
-    services(): Promise<any[]> {
+    serviceInputCall(call: WorkerServiceCall): Promise<WorkerServiceResponse> {
+        return new Promise((resolve, reject) => {
+            const service: Service = model.findDataService(call.serviceName) || model.findService(call.serviceName);
+            if ((service as any)[call.method]) {
+                const serializedParams = call.parameters;
+                const params: any[] = [];
+                serializedParams.forEach((param: any) => {
+                    if (param['__type']) {
+                        params.push(DataSerializer.deserialize(param));
+                    } else {
+                        params.push(param);
+                    }
+                });
+                const promise = (service as any)[call.method](...params) as Promise<any>;
+                Promise.resolve(promise)
+                    .then((_) => {
+                        if (Array.isArray(_)) {
+                            const result: any[] = [];
+                            _.forEach((r) => {
+                                result.push(DataSerializer.serialize(r));
+                            });
+                            resolve({ id: call.id, success: true, result });
+                        } else {
+                            const result = DataSerializer.serialize(_);
+                            resolve({ id: call.id, success: true, result });
+                        }
+                    })
+                    .catch((ex) => {
+                        reject({ id: call.id, success: false, result: ex });
+                    });
+            }
+        });
+    },
+    findAllServices(): Promise<any[]> {
         return new Promise((resolve) => {
             const services: Service[] = model.findAllServices();
             const servicesArray: any[] = services
-                .filter(service => !(service instanceof DummyDataService || service instanceof DummyService))
-                .map(service => {
-                // Services are wrapped in a proxy. Get prototype
-                const serviceBase = Object.getPrototypeOf(service);
-                return {
-                    name: service.name,
-                    type: serviceBase.constructor.name,
-                    dataType: service instanceof DataService ? (service as any).driver.dataType.name : undefined,
-                };
-            });
+                .filter((service) => !(service instanceof DummyDataService || service instanceof DummyService))
+                .map((service) => {
+                    // Services are wrapped in a proxy. Get prototype
+                    const serviceBase = Object.getPrototypeOf(service);
+                    return {
+                        name: service.name,
+                        type: serviceBase.constructor.name,
+                        dataType: service instanceof DataService ? (service as any).driver.dataType.name : undefined,
+                    };
+                });
             resolve(servicesArray);
         });
-    } 
+    },
 });

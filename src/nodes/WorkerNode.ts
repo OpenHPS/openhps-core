@@ -3,10 +3,12 @@ import { Node, NodeOptions } from '../Node';
 import { Thread, Worker, spawn, Pool } from 'threads';
 import { Observable } from 'threads/observable';
 import { PoolEvent } from 'threads/dist/master/pool';
-import { DataService, Service, WorkerServiceCall, WorkerServiceResponse } from '../service';
+import { DataService, Service, WorkerServiceCall, WorkerServiceProxy, WorkerServiceResponse } from '../service';
 import { GraphShapeBuilder } from '../graph/builders/GraphBuilder';
 import { ModelBuilder } from '../ModelBuilder';
 import { PullOptions, PushOptions } from '../graph';
+import { ModelGraph } from '../graph/_internal/implementations';
+import { DummyDataService, DummyService } from '../service/_internal';
 
 declare const __non_webpack_require__: typeof require;
 
@@ -50,7 +52,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
     private _pool: Pool<Thread>;
     private _workerData: any = {};
     private _serviceOutputResponse: Map<number, (response: WorkerServiceResponse) => Promise<void>> = new Map();
-    
+
     constructor(
         builderCallback: (
             builder: GraphShapeBuilder<ModelBuilder<any, any>>,
@@ -155,13 +157,15 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         return new Promise((resolve, reject) => {
             // NOTE: We can not use a conditional expression as this breaks the webpack threads plugin
             const worker = new Worker(this.options.worker);
-
             spawn(worker).then((thread: Thread) => {
                 const init: (workerData: any) => Promise<void> = (thread as any).init;
                 const pushOutput: () => Observable<any> = (thread as any).pushOutput;
                 const pullOutput: () => Observable<void> = (thread as any).pullOutput;
                 const serviceOutputCall: () => Observable<WorkerServiceCall> = (thread as any).serviceOutputCall;
+                const serviceInputCall: (call: WorkerServiceCall) => Promise<WorkerServiceResponse> = (thread as any)
+                    .serviceInputCall;
                 const eventOutput: () => Observable<any> = (thread as any).eventOutput;
+                const findAllServices: () => Promise<any[]> = (thread as any).findAllServices;
 
                 const threadId = (worker as any).threadId;
                 this._serviceOutputResponse.set(threadId, (thread as any).serviceOutputResponse);
@@ -174,32 +178,79 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                 serviceOutputCall().subscribe(this._onWorkerService.bind(this, threadId));
                 eventOutput().subscribe(this._onWorkerEvent.bind(this));
 
-                // Serialize this model services to the worker
-                const services: Service[] = this.options.services || this.model.findAllServices();
-                const servicesArray: any[] = services.map((service) => {
-                    // Services are wrapped in a proxy. Get prototype
-                    const serviceBase = Object.getPrototypeOf(service);
-                    return {
-                        name: service.name,
-                        type: serviceBase.constructor.name,
-                        dataType: service instanceof DataService ? (service as any).driver.dataType.name : undefined,
-                    };
-                });
-
                 // Initialize the worker
                 init({
                     dirname: this.options.directory || __dirname,
-                    services: servicesArray,
+                    services: this._getServices(),
                     imports: this.options.imports || [],
                     args: this.options.args || {},
                     ...this._workerData,
                 })
                     .then(() => {
+                        return findAllServices();
+                    })
+                    .then((services: any[]) => {
+                        this._addServices(services, serviceInputCall);
                         resolve(thread);
                     })
                     .catch(reject);
             });
         });
+    }
+
+    /**
+     * Serialize the services of this model
+     *
+     * @returns {any[]} Services array
+     */
+    private _getServices(): any[] {
+        // Serialize this model services to the worker
+        const services: Service[] = this.options.services || this.model.findAllServices();
+        const servicesArray: any[] = services.map((service) => {
+            // Services are wrapped in a proxy. Get prototype
+            const serviceBase = Object.getPrototypeOf(service);
+            return {
+                name: service.name,
+                type: serviceBase.constructor.name,
+                dataType:
+                    service instanceof DataService
+                        ? (service as any).driver.dataType
+                            ? (service as any).driver.dataType.name
+                            : undefined
+                        : undefined,
+            };
+        });
+        return servicesArray;
+    }
+
+    private _addServices(services: any[], call: (call: WorkerServiceCall) => Promise<WorkerServiceResponse>): void {
+        const model = this.model as ModelGraph<any, any>;
+        services
+            .filter((service) => {
+                const internalService =
+                    this.model.findService(service.name) || this.model.findDataService(service.name);
+                return internalService === null;
+            })
+            .forEach((service) => {
+                if (service.dataType) {
+                    const DataType = DataSerializer.findTypeByName(service.dataType);
+                    model.addService(
+                        new DummyDataService(service.name, DataType),
+                        new WorkerServiceProxy({
+                            name: service.name,
+                            callFunction: call,
+                        }),
+                    );
+                } else {
+                    model.addService(
+                        new DummyService(service.name),
+                        new WorkerServiceProxy({
+                            name: service.name,
+                            callFunction: call,
+                        }),
+                    );
+                }
+            });
     }
 
     private _onWorkerService(threadId: number, value: WorkerServiceCall): void {
