@@ -4,11 +4,9 @@ import { EvaluationDataFrame } from '../../mock/data/EvaluationDataFrame';
 import {
     Fingerprint,
     KNNFingerprintingNode,
-    FingerprintingNode,
     Model,
     DataFrame,
     CallbackSinkNode,
-    DataObjectService,
     MemoryDataService,
     ModelBuilder,
     DataObject,
@@ -32,7 +30,7 @@ describe('dataset', () => {
          * Initialize the data set and model
          */
         before(function (done) {
-            this.timeout(5000);
+            this.timeout(10000);
 
             const fingerprintService = new FingerprintService(new MemoryDataService(Fingerprint));
 
