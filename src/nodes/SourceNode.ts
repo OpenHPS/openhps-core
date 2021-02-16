@@ -275,3 +275,14 @@ export interface SourceNodeOptions extends NodeOptions {
      */
     source?: DataObject;
 }
+
+export interface SensorSourceOptions extends SourceNodeOptions {
+    /**
+     * Push interval
+     */
+    interval?: number;
+    /**
+     * Auto start the sensor
+     */
+    autoStart?: boolean;
+}
