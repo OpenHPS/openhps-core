@@ -43,6 +43,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
 
     private _onModelBuild(_: any): Promise<void> {
         return new Promise((resolve, reject) => {
+            this.emit('prebuild', _);
             // First resolve the building of services
             this._buildServices()
                 .then(() => {
@@ -61,6 +62,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
                         }
                     }
                     this.emit('ready');
+                    this.emit('postbuild', this);
                     resolve();
                 })
                 .catch(reject);

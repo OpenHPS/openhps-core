@@ -351,4 +351,22 @@ describe('model', () => {
         });
     });
 
+    describe('model builder events', () => {
+        it('should support a "postbuild" event', (done) => {
+            ModelBuilder.create()
+                .on('postbuild', (model: Model) => {
+                    expect(model).to.not.be.undefined;
+                    done();
+                })
+                .build();
+        });
+
+        it('should support a "prebuild" event', (done) => {
+            ModelBuilder.create()
+                .on('prebuild', () => {
+                    done();
+                })
+                .build();
+        });
+    });
 });
