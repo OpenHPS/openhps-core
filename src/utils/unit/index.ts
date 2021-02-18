@@ -12,3 +12,4 @@ export * from './LengthUnit';
 export * from './LinearVelocityUnit';
 export * from './AccelerationUnit';
 export * from './MagnetismUnit';
+export * from './GCS';

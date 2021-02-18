@@ -1,6 +1,7 @@
-import { DataSerializer, LengthUnit, AngleUnit, Unit, UnitPrefix, AngularVelocityUnit, UnitValue } from '../../../src';
+import { DataSerializer, LengthUnit, AngleUnit, Unit, UnitPrefix, AngularVelocityUnit, UnitValue, GCS } from '../../../src';
 import { expect } from 'chai';
 import 'mocha';
+import { Vector2, Vector3 } from '../../../src/utils/math/_internal';
 
 describe('units', () => {
     describe('registration', () => {
@@ -145,6 +146,11 @@ describe('units', () => {
             expect(result).to.equal(1.2500000000000002e-7); // TODO: Round instead
         });
 
+        it('should convert from miles to m', () => {
+            const result = LengthUnit.METER.convert(152, LengthUnit.MILE);
+            expect(result).to.equal(0.09444842122007475);
+        });
+
         it('should handle small numbers', () => {
             const result = LengthUnit.MILLIMETER.convert(1e-6, LengthUnit.KILOMETER);
             expect(result).to.equal(1e-12);
@@ -263,6 +269,14 @@ describe('units', () => {
         it('should convert fahrenheit to rankine', () => {
             const result = FAHRENHEIT.convert(100, RANKINE);
             expect(Math.round(result)).to.equal(560);
+        });
+    });
+
+    describe('gcs', () => {
+        it('should convert WGS84 to ECEF', () => {
+            const input = new Vector3(50, 4, 0);
+            const output = GCS.WGS84.convertVector(input, GCS.ECEF);
+            
         });
     });
 });

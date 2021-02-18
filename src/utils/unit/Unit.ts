@@ -1,8 +1,9 @@
 import 'reflect-metadata';
 import { SerializableObject, SerializableMember } from '../../data/decorators';
 import { UnitOptions } from './UnitOptions';
-import { UnitDefinition } from './UnitDefinition';
+import { UnitBasicDefinition, UnitDefinition, UnitFunctionDefinition } from './UnitDefinition';
 import { UnitPrefix, UnitPrefixType } from './UnitPrefix';
+import { Vector3 } from '../math/_internal';
 
 /**
  * Unit
@@ -41,7 +42,7 @@ import { UnitPrefix, UnitPrefixType } from './UnitPrefix';
 export class Unit {
     private _name: string;
     private _baseName: string;
-    private _definitions: Map<string, UnitDefinition> = new Map();
+    private _definitions: Map<string, UnitBasicDefinition | UnitFunctionDefinition> = new Map();
     private _prefixType: UnitPrefixType = 'none';
     private _aliases: string[] = [];
 
@@ -69,21 +70,29 @@ export class Unit {
         this._prefixType = config.prefixes;
 
         // Unit definitions
-        config.definitions.forEach((definition) => {
-            const referenceUnit = Unit.findByName(definition.unit, this.baseName);
-            const unitName = referenceUnit ? referenceUnit.name : definition.unit;
-            const definitionKeys = Object.keys(definition);
-            const magnitudeOrder = definitionKeys.indexOf('magnitude');
-            const offsetOrder = definitionKeys.indexOf('offset');
-            const magnitude = definition.magnitude ? definition.magnitude : 1;
-            const offset = definition.offset ? definition.offset : 0;
-            const offsetPriority = magnitudeOrder === -1 ? true : offsetOrder < magnitudeOrder;
-            this._definitions.set(unitName, {
-                unit: definition.unit,
-                magnitude,
-                offset,
-                offsetPriority,
-            });
+        config.definitions.forEach((definition: UnitDefinition) => {
+            if ("magnitude" in definition) {
+                // UnitBasicDefinition
+                const basicDefinition: UnitBasicDefinition = definition;
+                const referenceUnit = Unit.findByName(basicDefinition.unit, this.baseName);
+                const unitName = referenceUnit ? referenceUnit.name : basicDefinition.unit;
+                const definitionKeys = Object.keys(basicDefinition);
+                const magnitudeOrder = definitionKeys.indexOf('magnitude');
+                const offsetOrder = definitionKeys.indexOf('offset');
+                const magnitude = basicDefinition.magnitude ? basicDefinition.magnitude : 1;
+                const offset = basicDefinition.offset ? basicDefinition.offset : 0;
+                const offsetPriority = magnitudeOrder === -1 ? true : offsetOrder < magnitudeOrder;
+                this._definitions.set(unitName, {
+                    unit: basicDefinition.unit,
+                    magnitude,
+                    offset,
+                    offsetPriority,
+                });
+            } else if ("toUnit" in definition) {
+                // UnitFunctionDefinition
+                const functionDefinition: UnitFunctionDefinition = definition;
+
+            }
         });
 
         Unit.registerUnit(this, config.override);
@@ -331,9 +340,47 @@ export class Unit {
         }
     }
 
-    public static convert(value: number, from: string | Unit, to: string | Unit): number {
+    /**
+     * Convert a value in the current unit to a target unit
+     *
+     * @param {Vector3} value Value to convert
+     * @param {string | Unit} target Target unit
+     * @returns {Vector3} Converted unit
+     */
+    public convertVector(value: Vector3, target: string | Unit): Vector3 {
+        const targetUnit: Unit = target instanceof Unit ? target : Unit.findByName(target, this.baseName);
+
+        // Do not convert if target unit is the same or undefined
+        if (!targetUnit || targetUnit.name === this.name) {
+            return value;
+        }
+
+        const definition = this.createDefinition(targetUnit);
+        if (!definition) {
+            throw new Error(`No conversion definition found from '${this.name}' to '${targetUnit.name}'!`);
+        } else if (definition.offsetPriority) {
+            return value.clone().addScalar(definition.offset).multiplyScalar(definition.magnitude);
+        } else {
+            return value.clone().multiplyScalar(definition.magnitude).addScalar(definition.offset);
+        }
+    }
+
+    /**
+     * Convert a value from a specific unit to a target unit
+     *
+     * @param {Vector3 | number} value Value to convert
+     * @param {string | Unit} from Source unit
+     * @param {string | Unit} target Target unit
+     * @param to
+     * @returns {Vector3 | number} Converted unit
+     */
+    public static convert(value: Vector3 | number, from: string | Unit, to: string | Unit): Vector3 | number {
         const fromUnit: Unit = typeof from === 'string' ? Unit.findByName(from) : from;
-        return fromUnit.convert(value, to);
+        if (value instanceof Vector3) {
+            return fromUnit.convertVector(value, to);
+        } else {
+            return fromUnit.convert(value, to);
+        }
     }
 
     /**

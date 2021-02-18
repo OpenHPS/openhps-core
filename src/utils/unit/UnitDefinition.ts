@@ -1,7 +1,14 @@
+import { Vector3 } from '../math/_internal';
+
 /**
  * @category Unit
  */
-export interface UnitDefinition {
+export type UnitDefinition = UnitBasicDefinition | UnitFunctionDefinition;
+
+/**
+ * @category Unit
+ */
+export interface UnitBasicDefinition {
     /**
      * Target unit
      */
@@ -20,4 +27,15 @@ export interface UnitDefinition {
      *  Example: Celcius to Fahrenheit vs Fahrenheit to Celcius
      */
     offsetPriority?: boolean;
+}
+/**
+ * @category Unit
+ */
+export interface UnitFunctionDefinition {
+    /**
+     * Target unit
+     */
+    unit: string;
+    toUnit: (x: number | Vector3) => number | Vector3;
+    fromUnit: (x: number | Vector3) => number | Vector3;
 }

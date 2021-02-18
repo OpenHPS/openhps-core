@@ -15,4 +15,9 @@ export class LengthUnit extends Unit {
     public static readonly CENTIMETER = LengthUnit.METER.specifier(UnitPrefix.CENTI);
     public static readonly MILLIMETER = LengthUnit.METER.specifier(UnitPrefix.MILLI);
     public static readonly KILOMETER = LengthUnit.METER.specifier(UnitPrefix.KILO);
+    public static readonly MILE = new LengthUnit('mile', {
+        baseName: 'length',
+        aliases: ['mil', 'miles'],
+        definitions: [{ unit: 'meter', magnitude: 1609.344 }],
+    });
 }
