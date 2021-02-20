@@ -275,7 +275,7 @@ describe('units', () => {
     describe('gcs', () => {
         it('should convert WGS84 to ECEF', () => {
             const input = new Vector3(50, 4, 0);
-            const output = GCS.WGS84.convertVector(input, GCS.ECEF);
+            const output = GCS.WGS84.convert(input, GCS.ECEF);
             
         });
     });

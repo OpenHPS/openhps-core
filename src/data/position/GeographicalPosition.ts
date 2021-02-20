@@ -1,8 +1,8 @@
-import { AngleUnit } from '../../utils/unit';
+import { AngleUnit } from '../../utils/unit/AngleUnit';
 import { LengthUnit } from '../../utils/unit/LengthUnit';
 import { SerializableObject, SerializableMember } from '../decorators';
 import { Absolute3DPosition } from './Absolute3DPosition';
-import { Vector3 } from '../../utils';
+import { GCS, Vector3 } from '../../utils';
 
 /**
  * Geographical position
@@ -11,21 +11,13 @@ import { Vector3 } from '../../utils';
  */
 @SerializableObject()
 export class GeographicalPosition extends Absolute3DPosition {
-    private _lat: number;
-    private _lng: number;
-    private _amsl: number;
-    private _amslUnit: LengthUnit;
-    // Internal
-    private _phi: number;
-    private _lambda: number;
-
     public static EARTH_RADIUS = 6371008;
 
     constructor(lat?: number, lng?: number, amsl?: number) {
         super();
         this.latitude = lat;
         this.longitude = lng;
-        this._amsl = amsl;
+        this.z = amsl;
     }
 
     /**
@@ -35,12 +27,11 @@ export class GeographicalPosition extends Absolute3DPosition {
      */
     @SerializableMember()
     public get latitude(): number {
-        return this._lat;
+        return this.x;
     }
 
     public set latitude(lat: number) {
-        this._lat = lat;
-        this._calculateECR();
+        this.x = lat;
     }
 
     /**
@@ -50,20 +41,11 @@ export class GeographicalPosition extends Absolute3DPosition {
      */
     @SerializableMember()
     public get longitude(): number {
-        return this._lng;
+        return this.y;
     }
 
     public set longitude(lng: number) {
-        this._lng = lng;
-        this._calculateECR();
-    }
-
-    private _calculateECR(): void {
-        this._phi = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
-        this._lambda = AngleUnit.DEGREE.convert(this.longitude, AngleUnit.RADIAN);
-        this.x = GeographicalPosition.EARTH_RADIUS * Math.cos(this._phi) * Math.cos(this._lambda);
-        this.y = GeographicalPosition.EARTH_RADIUS * Math.cos(this._phi) * Math.sin(this._lambda);
-        this.z = GeographicalPosition.EARTH_RADIUS * Math.sin(this._phi);
+        this.y = lng;
     }
 
     /**
@@ -73,25 +55,11 @@ export class GeographicalPosition extends Absolute3DPosition {
      */
     @SerializableMember()
     public get altitude(): number {
-        return this._amsl;
+        return this.z;
     }
 
     public set altitude(amsl: number) {
-        this._amsl = amsl;
-    }
-
-    /**
-     * Altitude unit
-     *
-     * @returns {LengthUnit} Altitude unit
-     */
-    @SerializableMember()
-    public get altitudeUnit(): LengthUnit {
-        return this._amslUnit;
-    }
-
-    public set altitudeUnit(altitudeUnit: LengthUnit) {
-        this._amslUnit = altitudeUnit;
+        this.z = amsl;
     }
 
     /**
@@ -197,12 +165,15 @@ export class GeographicalPosition extends Absolute3DPosition {
         }
     }
 
-    public fromVector(vector: Vector3, unit: LengthUnit = LengthUnit.METER): void {
-        const x = unit.convert(vector.x, LengthUnit.METER);
-        const y = unit.convert(vector.y, LengthUnit.METER);
-        const z = unit.convert(vector.z, LengthUnit.METER);
-        this.latitude = AngleUnit.RADIAN.convert(Math.asin(z / GeographicalPosition.EARTH_RADIUS), AngleUnit.DEGREE);
-        this.longitude = AngleUnit.RADIAN.convert(Math.atan2(y, x), AngleUnit.DEGREE);
+    public fromVector(vector: Vector3, unit: GCS = GCS.WGS84): void {
+        const converted = unit.convert(vector, GCS.WGS84);
+        this.x = converted.x;
+        this.y = converted.y;
+        this.z = converted.z;
+    }
+
+    public toVector3(unit: GCS = GCS.ECEF): Vector3 {
+        return GCS.WGS84.convert(this, unit);
     }
 
     /**
@@ -217,7 +188,6 @@ export class GeographicalPosition extends Absolute3DPosition {
         position.orientation = this.orientation ? this.orientation.clone() : undefined;
         position.linearVelocity = this.linearVelocity ? this.linearVelocity.clone() : undefined;
         position.angularVelocity = this.angularVelocity ? this.angularVelocity.clone() : undefined;
-        position.altitudeUnit = this.altitudeUnit;
         position.timestamp = this.timestamp;
         position.referenceSpaceUID = this.referenceSpaceUID;
         return position as this;

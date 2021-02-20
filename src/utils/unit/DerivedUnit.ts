@@ -1,7 +1,7 @@
 import { Unit } from './Unit';
 import { SerializableObject } from '../../data/decorators';
 import { UnitOptions } from './UnitOptions';
-import { UnitDefinition } from './UnitDefinition';
+import { UnitFunctionDefinition } from './UnitDefinition';
 
 /**
  * Derived Unit
@@ -32,20 +32,30 @@ export class DerivedUnit extends Unit {
         unit._name = options.name;
         unit._baseName = this.baseName;
         unit._aliases = options.aliases ? options.aliases : [];
-        const definition: UnitDefinition = {
+        const definition: UnitFunctionDefinition<any, any> = {
             unit: this.name,
-            magnitude: 1,
-            offset: 0,
+            toUnit: undefined,
+            fromUnit: undefined,
         };
 
         subunits.forEach((subunit) => {
             const currentUnit: Unit = this._units.get(subunit.baseName);
             const unitPower: number = this._unitPower.get(subunit.baseName);
             const newDefinition = subunit.createDefinition(currentUnit);
-            const newMagnitude = Math.pow(newDefinition.magnitude, unitPower);
-            const newOffset = Math.pow(newDefinition.offset, unitPower);
-            definition.magnitude *= isFinite(newMagnitude) ? newMagnitude : 0;
-            definition.offset += isFinite(newOffset) ? newOffset : 0;
+
+            const newToFn = (value: number) => Math.pow(newDefinition.toUnit(value) as number, unitPower);
+            const newFromFn = (value: number) => Math.pow(newDefinition.fromUnit(value) as number, unitPower);
+
+            const existingToFn = definition.toUnit;
+            const existingFromFn = definition.fromUnit;
+
+            if (existingToFn && existingFromFn) {
+                definition.toUnit = (value: number) => existingToFn(newToFn(value));
+                definition.fromUnit = (value: number) => existingFromFn(newFromFn(value));
+            } else {
+                definition.toUnit = newToFn;
+                definition.fromUnit = newFromFn;
+            }
         });
 
         unit._definitions.set(this.name, definition);

@@ -1,14 +1,12 @@
-import { Vector3 } from '../math/_internal';
+/**
+ * @category Unit
+ */
+export type UnitDefinition = UnitBasicDefinition | UnitFunctionDefinition<any, any>;
 
 /**
  * @category Unit
  */
-export type UnitDefinition = UnitBasicDefinition | UnitFunctionDefinition;
-
-/**
- * @category Unit
- */
-export interface UnitBasicDefinition {
+export type UnitBasicDefinition = {
     /**
      * Target unit
      */
@@ -22,20 +20,16 @@ export interface UnitBasicDefinition {
      * Conversion offset
      */
     offset?: number;
-    /**
-     * Should offset by added first before applying the magnitude
-     *  Example: Celcius to Fahrenheit vs Fahrenheit to Celcius
-     */
-    offsetPriority?: boolean;
-}
+};
+
 /**
  * @category Unit
  */
-export interface UnitFunctionDefinition {
+export type UnitFunctionDefinition<In, Out> = {
     /**
      * Target unit
      */
     unit: string;
-    toUnit: (x: number | Vector3) => number | Vector3;
-    fromUnit: (x: number | Vector3) => number | Vector3;
-}
+    toUnit: (x: In) => Out;
+    fromUnit: (x: Out) => In;
+};

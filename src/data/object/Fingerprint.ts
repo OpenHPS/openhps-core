@@ -1,5 +1,5 @@
 import { SerializableMember, SerializableObject } from '../decorators';
-import { DataObject } from '.';
+import { DataObject } from './DataObject';
 import { v4 as uuidv4 } from 'uuid';
 import { RelativePosition } from '../position';
 

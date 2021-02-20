@@ -8,4 +8,6 @@ export class WLANObject extends RFTransmitterObject {
      */
     @SerializableMember()
     public channel: number;
+    @SerializableMember()
+    public capabilities: string;
 }

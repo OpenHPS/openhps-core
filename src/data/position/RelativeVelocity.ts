@@ -2,7 +2,7 @@ import { RelativePosition } from './RelativePosition';
 import { SerializableObject, SerializableMember } from '../decorators';
 import { Velocity } from './Velocity';
 import { DataSerializer } from '../DataSerializer';
-import { TimeService } from '../../service';
+import { TimeService } from '../../service/TimeService';
 
 /**
  * Relative velocity to another reference object

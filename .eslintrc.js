@@ -18,7 +18,8 @@ module.exports = {
     "rules": {
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
-        "import/no-cycle": "error",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "import/no-cycle": ["error", { "maxDepth": 1 }],
         "import/no-unresolved": "off",
         "prettier/prettier": ["error"],
         "jsdoc/check-tag-names": ["error", { "definedTags": ["category"] }],
@@ -29,6 +30,7 @@ module.exports = {
         "plugin:@typescript-eslint/recommended",
         "plugin:eslint-plugin-jsdoc/recommended",
         "plugin:eslint-plugin-import/recommended",
+        "plugin:import/typescript",
         "prettier"
     ]
 };

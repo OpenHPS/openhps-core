@@ -1,4 +1,4 @@
-import { DataSerializer } from '../data';
+import { DataSerializer } from '../data/DataSerializer';
 import { DataServiceDriver } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
 import { MemoryQueryEvaluator } from './_internal/MemoryQueryEvaluator';

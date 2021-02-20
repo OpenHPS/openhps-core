@@ -3,7 +3,7 @@ import { SerializableObject, SerializableMember } from '../../data/decorators';
 import { UnitOptions } from './UnitOptions';
 import { UnitBasicDefinition, UnitDefinition, UnitFunctionDefinition } from './UnitDefinition';
 import { UnitPrefix, UnitPrefixType } from './UnitPrefix';
-import { Vector3 } from '../math/_internal';
+import { Vector3 } from '../math/';
 
 /**
  * Unit
@@ -42,7 +42,7 @@ import { Vector3 } from '../math/_internal';
 export class Unit {
     private _name: string;
     private _baseName: string;
-    private _definitions: Map<string, UnitBasicDefinition | UnitFunctionDefinition> = new Map();
+    private _definitions: Map<string, UnitFunctionDefinition<any, any>> = new Map();
     private _prefixType: UnitPrefixType = 'none';
     private _aliases: string[] = [];
 
@@ -71,31 +71,39 @@ export class Unit {
 
         // Unit definitions
         config.definitions.forEach((definition: UnitDefinition) => {
-            if ("magnitude" in definition) {
+            const referenceUnit = Unit.findByName(definition.unit, this.baseName);
+            const unitName = referenceUnit ? referenceUnit.name : definition.unit;
+            const definitionKeys = Object.keys(definition);
+
+            if ('toUnit' in definition) {
+                // UnitFunctionDefinition
+                const functionDefinition: UnitFunctionDefinition<any, any> = definition;
+                this._definitions.set(unitName, functionDefinition);
+            } else {
                 // UnitBasicDefinition
                 const basicDefinition: UnitBasicDefinition = definition;
-                const referenceUnit = Unit.findByName(basicDefinition.unit, this.baseName);
-                const unitName = referenceUnit ? referenceUnit.name : basicDefinition.unit;
-                const definitionKeys = Object.keys(basicDefinition);
                 const magnitudeOrder = definitionKeys.indexOf('magnitude');
                 const offsetOrder = definitionKeys.indexOf('offset');
                 const magnitude = basicDefinition.magnitude ? basicDefinition.magnitude : 1;
                 const offset = basicDefinition.offset ? basicDefinition.offset : 0;
                 const offsetPriority = magnitudeOrder === -1 ? true : offsetOrder < magnitudeOrder;
+                const toUnitFn = offsetPriority
+                    ? (value: number) => (value + offset) * magnitude
+                    : (value: number) => value * magnitude + offset;
+                const fromUnitFn = offsetPriority
+                    ? (value: number) => value / magnitude - offset
+                    : (value: number) => (value - offset) / magnitude;
                 this._definitions.set(unitName, {
                     unit: basicDefinition.unit,
-                    magnitude,
-                    offset,
-                    offsetPriority,
+                    toUnit: toUnitFn,
+                    fromUnit: fromUnitFn,
                 });
-            } else if ("toUnit" in definition) {
-                // UnitFunctionDefinition
-                const functionDefinition: UnitFunctionDefinition = definition;
-
             }
         });
 
-        Unit.registerUnit(this, config.override);
+        if (this.name !== undefined) {
+            Unit.registerUnit(this, config.override);
+        }
     }
 
     /**
@@ -152,10 +160,10 @@ export class Unit {
     /**
      * Get or create a definition from this unit to the base
      *
-     * @returns {UnitDefinition} Definition to base
+     * @returns {UnitFunctionDefinition} Definition to base
      */
-    public createBaseDefinition(): UnitDefinition {
-        let newDefinition: UnitDefinition;
+    public createBaseDefinition(): UnitFunctionDefinition<any, any> {
+        let newDefinition: UnitFunctionDefinition<any, any>;
 
         // Get base unit
         const baseUnitName = Unit.UNIT_BASES.get(this.baseName);
@@ -167,12 +175,12 @@ export class Unit {
             this._definitions.forEach((definition) => {
                 const unit = Unit.findByName(definition.unit, this.baseName);
                 const baseDefinition = unit.createBaseDefinition();
+
                 if (baseDefinition) {
                     newDefinition = {
                         unit: baseDefinition.unit,
-                        magnitude: baseDefinition.magnitude * definition.magnitude,
-                        offset: baseDefinition.offset + definition.offset,
-                        offsetPriority: !(baseDefinition.offsetPriority && definition.offsetPriority),
+                        toUnit: (value: any) => baseDefinition.toUnit(definition.toUnit(value)),
+                        fromUnit: (value: any) => definition.fromUnit(baseDefinition.fromUnit(value)),
                     };
                     return;
                 }
@@ -181,8 +189,8 @@ export class Unit {
         return newDefinition;
     }
 
-    public createDefinition(targetUnit: Unit): UnitDefinition {
-        let newDefinition: UnitDefinition;
+    public createDefinition(targetUnit: Unit): UnitFunctionDefinition<any, any> {
+        let newDefinition: UnitFunctionDefinition<any, any>;
 
         // Get base unit
         const baseUnitName = Unit.UNIT_BASES.get(this.baseName);
@@ -191,35 +199,27 @@ export class Unit {
         if (this._definitions.has(targetUnit.name)) {
             // Direct conversion
             const definition = this._definitions.get(targetUnit.name);
-            newDefinition = {
-                ...definition,
-            };
+            newDefinition = definition;
         } else if (targetUnit._definitions.has(this.name)) {
             // Reverse conversion
             const definition = targetUnit._definitions.get(this.name);
             newDefinition = {
                 unit: targetUnit.name,
-                magnitude: Math.pow(definition.magnitude, -1),
-                offset: -definition.offset,
-                offsetPriority: !definition.offsetPriority,
+                toUnit: definition.fromUnit,
+                fromUnit: definition.toUnit,
             };
             this._definitions.set(targetUnit.name, newDefinition);
         } else if (baseUnit.name !== this.name) {
             // No direct conversion found, convert to base unit
-            const toBase = this._definitions.get(baseUnitName);
-            const fromBase = baseUnit.createDefinition(targetUnit);
+            const currentToBase = this._definitions.get(baseUnitName);
+            const baseToTarget = baseUnit.createDefinition(targetUnit);
 
             // Convert unit if definitions are found
-            if (toBase && fromBase) {
-                const magnitude = toBase.magnitude * fromBase.magnitude;
-                const offset = toBase.offsetPriority
-                    ? toBase.offset * magnitude + fromBase.offset
-                    : toBase.offset * fromBase.magnitude + fromBase.offset;
+            if (currentToBase && baseToTarget) {
                 newDefinition = {
                     unit: targetUnit.name,
-                    magnitude,
-                    offset,
-                    offsetPriority: false,
+                    toUnit: (value: any) => baseToTarget.toUnit(currentToBase.toUnit(value)),
+                    fromUnit: (value: any) => currentToBase.fromUnit(baseToTarget.fromUnit(value)),
                 };
                 this._definitions.set(targetUnit.name, newDefinition);
             }
@@ -246,7 +246,7 @@ export class Unit {
         // Get the unit constructor of the extended class. This allows
         // serializing of units that are extended (e.g. LengthUnit)
         const UnitConstructor = Object.getPrototypeOf(this).constructor;
-        const unit = new UnitConstructor();
+        const unit: Unit = new UnitConstructor();
         unit._name = unitName;
         unit._baseName = this.baseName;
         const aliases: Array<string> = [];
@@ -257,8 +257,8 @@ export class Unit {
         unit._aliases = aliases;
         unit._definitions.set(this.name, {
             unit: this.name,
-            magnitude: prefix.magnitude,
-            offset: 0,
+            toUnit: (value: number) => value * prefix.magnitude,
+            fromUnit: (value: number) => value / prefix.magnitude,
         });
         return Unit.registerUnit(unit) as this;
     }
@@ -322,7 +322,7 @@ export class Unit {
      * @param {string | Unit} target Target unit
      * @returns {number} Converted unit
      */
-    public convert(value: number, target: string | Unit): number {
+    public convert<T extends number | Vector3>(value: T, target: string | Unit): T {
         const targetUnit: Unit = target instanceof Unit ? target : Unit.findByName(target, this.baseName);
 
         // Do not convert if target unit is the same or undefined
@@ -333,35 +333,8 @@ export class Unit {
         const definition = this.createDefinition(targetUnit);
         if (!definition) {
             throw new Error(`No conversion definition found from '${this.name}' to '${targetUnit.name}'!`);
-        } else if (definition.offsetPriority) {
-            return (value + definition.offset) * definition.magnitude;
         } else {
-            return value * definition.magnitude + definition.offset;
-        }
-    }
-
-    /**
-     * Convert a value in the current unit to a target unit
-     *
-     * @param {Vector3} value Value to convert
-     * @param {string | Unit} target Target unit
-     * @returns {Vector3} Converted unit
-     */
-    public convertVector(value: Vector3, target: string | Unit): Vector3 {
-        const targetUnit: Unit = target instanceof Unit ? target : Unit.findByName(target, this.baseName);
-
-        // Do not convert if target unit is the same or undefined
-        if (!targetUnit || targetUnit.name === this.name) {
-            return value;
-        }
-
-        const definition = this.createDefinition(targetUnit);
-        if (!definition) {
-            throw new Error(`No conversion definition found from '${this.name}' to '${targetUnit.name}'!`);
-        } else if (definition.offsetPriority) {
-            return value.clone().addScalar(definition.offset).multiplyScalar(definition.magnitude);
-        } else {
-            return value.clone().multiplyScalar(definition.magnitude).addScalar(definition.offset);
+            return definition.toUnit(value) as T;
         }
     }
 
@@ -370,17 +343,12 @@ export class Unit {
      *
      * @param {Vector3 | number} value Value to convert
      * @param {string | Unit} from Source unit
-     * @param {string | Unit} target Target unit
-     * @param to
+     * @param {string | Unit} to Target unit
      * @returns {Vector3 | number} Converted unit
      */
     public static convert(value: Vector3 | number, from: string | Unit, to: string | Unit): Vector3 | number {
         const fromUnit: Unit = typeof from === 'string' ? Unit.findByName(from) : from;
-        if (value instanceof Vector3) {
-            return fromUnit.convertVector(value, to);
-        } else {
-            return fromUnit.convert(value, to);
-        }
+        return fromUnit.convert(value, to);
     }
 
     /**
