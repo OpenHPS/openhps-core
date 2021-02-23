@@ -17,11 +17,11 @@ import { Unit } from './Unit';
  *
  * @category Unit
  */
-export class UnitValue implements Number {
+export class UnitValue<U extends Unit = Unit> implements Number {
     private _value: number;
-    private _unit: Unit;
+    private _unit: U;
 
-    constructor(value: number, unit: Unit) {
+    constructor(value: number, unit: U) {
         this._value = value;
         this._unit = unit;
     }
@@ -32,7 +32,7 @@ export class UnitValue implements Number {
      * @param {Unit} unit Target unit
      * @returns {UnitValue} Converted value
      */
-    public to(unit: Unit): UnitValue {
+    public to<T extends Unit>(unit: T): UnitValue<T> {
         const result = this.unit.convert(this.valueOf(), unit);
         return new UnitValue(result, unit);
     }
@@ -42,7 +42,7 @@ export class UnitValue implements Number {
      *
      * @returns {Unit} Unit this value is in
      */
-    public get unit(): Unit {
+    public get unit(): U {
         return this._unit;
     }
 

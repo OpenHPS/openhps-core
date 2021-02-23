@@ -184,7 +184,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
             if (newPosition && newPosition.timestamp < relativePosition.timestamp) {
                 // New object contains older relative position
                 newObject.addRelativePosition(relativePosition);
-            } else {
+            } else if (!newPosition) {
                 // New object does not contain stored relative position
                 newObject.addRelativePosition(relativePosition);
             }
@@ -193,6 +193,11 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
     }
 
     private _onPull(options: PullOptions = {}): Promise<void> {
+        if (options.sourceNode && options.sourceNode !== this.uid) {
+            // Pull options indicate the pull on a specific source node
+            return Promise.resolve();
+        }
+
         const sequential = options['sequentialPull'] === undefined ? true : options.sequentialPull;
         if (sequential) {
             return this._onSequentialPull(options);

@@ -21,4 +21,8 @@ export interface PullOptions extends GraphOptions {
      * @default true
      */
     sequentialPull?: boolean;
+    /**
+     * Pull from a specific source node UID
+     */
+    sourceNode?: string;
 }
