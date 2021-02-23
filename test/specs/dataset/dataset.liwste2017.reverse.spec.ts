@@ -159,7 +159,9 @@ describe('dataset', () => {
                             }
                         ),
                     )
-                    .via(new TrilaterationNode<EvaluationDataFrame>())
+                    .via(new TrilaterationNode({
+                        incrementStep: 0.5
+                    }))
                     .to(callbackNode)
                     .build()
                     .then((model) => {
@@ -211,9 +213,7 @@ describe('dataset', () => {
                                 expect(calculatedLocation).to.not.be.undefined;
 
                                 // Accuracy
-                                // TODO: Previous test had this lessthan 70, what happened with THREE.JS math conversion?
-                                expect(Math.abs(calculatedLocation.x - expectedLocation.x)).to.be.lessThan(75);
-                                expect(Math.abs(calculatedLocation.y - expectedLocation.y)).to.be.lessThan(75);
+                                expect(calculatedLocation.distanceTo(expectedLocation)).to.be.lessThan(65);
 
                                 done();
                             }

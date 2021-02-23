@@ -31,9 +31,6 @@ describe('dataset', () => {
         before((done) => {
             // Calibration model to set-up or train the model
             ModelBuilder.create()
-                .withLogger((level: string, log: any) => {
-                    // Todo, add logger
-                })
                 .from(
                     new CSVDataSource('test/data/liwste2017/beacons.csv', (row: any) => {
                         const dataFrame = new DataFrame();
@@ -107,7 +104,9 @@ describe('dataset', () => {
                     // Use the data from the calibration model
                     .addService(calibrationModel.findDataService(DataObject))
                     .from(scanSourceNode)
-                    .via(new TrilaterationNode<EvaluationDataFrame>())
+                    .via(new TrilaterationNode({
+                        incrementStep: 0.5
+                    }))
                     .to(callbackNode)
                     .build()
                     .then((model) => {
@@ -194,9 +193,7 @@ describe('dataset', () => {
                                 expect(calculatedPosition).to.not.be.undefined;
 
                                 // Accuracy
-                                // TODO: Previous test had this lessthan 70, what happened with THREE.JS math conversion?
-                                expect(Math.abs(calculatedPosition.x - expectedPosition.x)).to.be.lessThan(75);
-                                expect(Math.abs(calculatedPosition.y - expectedPosition.y)).to.be.lessThan(75);
+                                expect(calculatedPosition.distanceTo(expectedPosition)).to.be.lessThan(65);
 
                                 done();
                             }

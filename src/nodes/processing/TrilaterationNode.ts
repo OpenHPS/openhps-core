@@ -23,8 +23,11 @@ export class TrilaterationNode<InOut extends DataFrame> extends RelativePosition
     InOut,
     RelativeDistancePosition
 > {
-    constructor(options?: ObjectProcessingNodeOptions) {
+    protected options: TrilaterationOptions;
+
+    constructor(options?: TrilaterationOptions) {
         super(RelativeDistancePosition, options);
+        this.options.incrementStep = this.options.incrementStep || 1;
     }
 
     public processRelativePositions<P extends Absolute2DPosition | Absolute3DPosition | GeographicalPosition>(
@@ -53,6 +56,7 @@ export class TrilaterationNode<InOut extends DataFrame> extends RelativePosition
                     if (position !== null) dataObject.setPosition(position);
                     return resolve(dataObject);
                 case 3:
+                default:
                     this.trilaterate(points, distances)
                         .then((position) => {
                             if (position !== null) dataObject.setPosition(position);
@@ -60,22 +64,20 @@ export class TrilaterationNode<InOut extends DataFrame> extends RelativePosition
                         })
                         .catch(reject);
                     break;
-                default:
-                    return resolve(dataObject);
             }
         });
     }
 
     public trilaterate<P extends AbsolutePosition>(points: P[], distances: number[]): Promise<P> {
         return new Promise<P>((resolve) => {
-            const vectors = [points[0].toVector3(), points[1].toVector3(), points[2].toVector3()];
-            const eX = vectors[1].clone().sub(vectors[0]).divideScalar(vectors[1].clone().sub(vectors[0]).length());
-            const i = eX.dot(vectors[2].clone().sub(vectors[0]));
-            const a = vectors[2].clone().sub(vectors[0]).sub(eX.clone().multiplyScalar(i));
-            const eY = a.clone().divideScalar(a.length());
-            const j = eY.dot(vectors[2].clone().sub(vectors[0]));
-            const eZ = eX.clone().multiply(eY);
-            const d = vectors[1].clone().sub(vectors[0]).length();
+            const v = points.map((p) => p.toVector3());
+            const ex = v[1].sub(v[0]).clone().divideScalar(v[1].length());
+            const i = ex.dot(v[2].clone().sub(v[0]));
+            const a = v[2].clone().sub(v[0]).sub(ex.clone().multiplyScalar(i));
+            const ey = a.clone().divideScalar(a.length());
+            const ez = ex.clone().cross(ey);
+            const d = v[1].clone().sub(v[0]).length();
+            const j = ey.clone().dot(v[2].clone().sub(v[0]));
 
             // Calculate coordinates
             let AX = distances[0];
@@ -91,9 +93,9 @@ export class TrilaterationNode<InOut extends DataFrame> extends RelativePosition
                 b = Math.pow(AX, 2) - Math.pow(x, 2) - Math.pow(y, 2);
 
                 // Increase distances
-                AX += 0.1;
-                BX += 0.1;
-                CX += 0.1;
+                AX += this.options.incrementStep;
+                BX += this.options.incrementStep;
+                CX += this.options.incrementStep;
             } while (b < 0);
             const z = Math.sqrt(b);
             if (isNaN(z)) {
@@ -103,9 +105,21 @@ export class TrilaterationNode<InOut extends DataFrame> extends RelativePosition
             const point = points[0].clone();
             point.unit = points[0].unit;
             point.fromVector(
-                vectors[0].clone().add(eX.multiplyScalar(x)).add(eY.multiplyScalar(y)).add(eZ.multiplyScalar(z)),
+                v[0].clone().add(ex.multiplyScalar(x)).add(ey.multiplyScalar(y)).add(ez.multiplyScalar(z)),
             );
             return resolve((point as unknown) as P);
         });
     }
+}
+
+export interface TrilaterationOptions extends ObjectProcessingNodeOptions {
+    /**
+     * Maximum number of iterations
+     */
+    maxIterations?: number;
+    tolerance?: number;
+    /**
+     * Incrementation step
+     */
+    incrementStep?: number;
 }
