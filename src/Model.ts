@@ -1,62 +1,61 @@
-import { DataFrame, DataObject, ReferenceSpace } from "./data";
-import { DataService, Service } from "./service";
-import { GraphImpl } from "./graph/_internal/implementations/GraphImpl";
+import { DataFrame, ReferenceSpace } from './data';
+import { DataService, Service } from './service';
+import { GraphShape } from './graph/GraphShape';
+import { PullOptions, PushOptions } from './graph';
 
 /**
  * This model contains multiple [[Node]]s, [[Service]]s to sample
  * [[DataFrame]]s that are pushed or pulled from this model.
- * 
+ *
  * ## Usage
+ * ### Creation
  * Please refer to [[ModelBuilder]] for creating a new model
+ *
+ * ### Pushing and Pulling
+ * Pushing or pulling on a model is possible, but only recommended for prototyping.
+ * Instead, developers should use a [[SourceNode]] that automatically pushes new [[DataFrame]]s
+ * or pushes new frames when receiving a pull.
  */
-export interface Model<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame> extends GraphImpl<In, Out> {
-
+export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame>
+    extends GraphShape<In, Out> {
     /**
      * Push data to the model
-     * 
+     *
      * @param frame Input frame
+     * @param {PushOptions} [options] Push options
      */
-    push(frame: In): Promise<void>;
+    push(frame: In | In[], options?: PushOptions): Promise<void>;
 
     /**
      * Pull data from the model
+     *
+     * @param {PullOptions} [options] Pull options
      */
-    pull(): Promise<void>;
+    pull(options?: PullOptions): Promise<void>;
 
     /**
-     * Find service by name
-     * @param name Service name
+     * Find service
      */
-    findServiceByName<F extends Service>(name: string): F;
+    findService<F extends Service>(name: string): F;
+    findService<F extends Service>(serviceClass: new () => F): F;
 
     /**
-     * Find service by name
-     * @param name Service name
+     * Find data service
      */
-    findServiceByClass<F extends Service>(serviceClass: new () => F): F;
+    findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(name: string): F;
+    findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(dataType: new () => D): F;
+    findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(object: D): F;
 
     /**
-     * Find data service by name
-     * @param name Name of the data service
-     */
-    findDataServiceByName<F extends DataService<any, any>>(name: string): F;
-    
-    /**
-     * Find data service by data type
-     * @param dataType Data type
-     */
-    findDataService<D extends DataObject | DataFrame | Object, F extends DataService<any, D>>(dataType: new () => D): F;
-
-    /**
-     * Find data service by data object
-     * @param dataObject Data object instance
-     */
-    findDataServiceByObject<D extends DataObject, F extends DataService<any, D>>(dataObject: D): F;
-
-    /**
-     * Find all services
+     * Find all services and data services
      */
     findAllServices(): Service[];
+
+    /**
+     * Destroy the model, added nodes and services
+     *  Equivalent of model.emitAsync('destroy');
+     */
+    destroy(): Promise<boolean>;
 
     /**
      * Model reference space

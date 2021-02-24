@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 export * from './graph';
 export * from './Model';
 export * from './utils';

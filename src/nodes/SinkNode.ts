@@ -1,115 +1,116 @@
-import { DataFrame } from "../data/DataFrame";
-import { Model } from "../Model";
-import { DataObject } from "../data";
-import * as uuidv4 from 'uuid/v4';
-import { AbstractSinkNode } from "../graph/interfaces/AbstractSinkNode";
-import { DataFrameService } from "../service";
+import { DataFrame } from '../data/DataFrame';
+import { DataObject } from '../data';
+import { v4 as uuidv4 } from 'uuid';
+import { Node, NodeOptions } from '../Node';
+import { PushCompletedEvent, PushOptions } from '../graph';
 
 /**
  * Sink node
+ *
+ * ## Usage
+ *
+ * ### Creating a SinkNode
+ * When creating a sink node, you have to implement an ```onPush``` method that provides you with the pushed data frame.
+ * Sink nodes are the final nodes in the model and have no outlets. Once the onPush is resolved, data objects in that frame
+ * are stored in a [[DataObjectService]].
+ * ```typescript
+ * import { DataFrame, SinkNode } from '@openhps/core';
+ *
+ * export class CustomSink<In extends DataFrame> extends SinkNode<In> {
+ *     // ...
+ *     public onPush(data: In, options?: GraphOptions): Promise<void> {
+ *         return new Promise<void>((resolve, reject) => {
+ *
+ *         });
+ *     }
+ * }
+ * ```
+ *
+ * @category Sink node
  */
-export abstract class SinkNode<In extends DataFrame | DataFrame[] = DataFrame> extends AbstractSinkNode<In> {
+export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In, In> {
+    protected options: SinkNodeOptions;
 
-    constructor() {
-        super();
+    constructor(options?: SinkNodeOptions) {
+        super(options);
+
+        this.options.completedEvent = this.options['completedEvent'] === undefined ? true : this.options.completedEvent;
+        this.options.persistence = this.options['persistence'] === undefined ? true : this.options.persistence;
     }
 
-    public push(frame: In): Promise<void> {
+    public push(data: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            if (frame === null || frame === undefined) {
-                this.logger("warning", {
-                    node: {
-                        uid: this.uid,
-                        name: this.name
-                    },
-                    message: `Sink node received null data frame!`,
-                });
+            if (data === null || data === undefined) {
                 return reject();
             }
 
-            this.logger("debug", {
-                node: {
-                    uid: this.uid,
-                    name: this.name
-                },
-                message: `Sink node received push`
-            });
+            // Push the frame to the sink node
+            this.onPush(data, options)
+                .then(() => {
+                    const persistPromise: Array<Promise<void>> = [];
+                    if (data instanceof Array) {
+                        data.forEach((f: In) => {
+                            if (this.options.persistence) {
+                                persistPromise.push(this.persistDataObject(f));
+                            }
+                        });
+                    } else {
+                        if (this.options.persistence) {
+                            persistPromise.push(this.persistDataObject(data));
+                        }
+                    }
+                    return Promise.all(persistPromise);
+                })
+                .then(() => {
+                    resolve();
+                    // Fire a completed event
+                    if (this.options.completedEvent) {
+                        if (data instanceof Array) {
+                            data.forEach((f: In) => {
+                                this.emit('completed', new PushCompletedEvent(f.uid));
+                            });
+                        } else {
+                            this.emit('completed', new PushCompletedEvent(data.uid));
+                        }
+                    }
+                })
+                .catch(reject);
+        });
+    }
 
-            const model: Model<any, any> = (this.graph as Model<any, any>);
-            const defaultService = model.findDataService(DataObject);
-            const servicePromises = new Array();
+    protected persistDataObject(frame: In): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            const servicePromises: Array<Promise<DataObject>> = [];
 
-            const objects = new Array<DataObject>();
-            if (frame instanceof Array) {
-                frame.forEach((f: DataFrame) => {
-                    f.getObjects().forEach(object => {
-                        objects.push(object);
-                    });
-                });
-            } else {
-                (frame as DataFrame).getObjects().forEach(object => {
-                    objects.push(object);
-                });
-            }
-
+            const objects: DataObject[] = frame.getObjects();
             for (const object of objects) {
                 if (object.uid === null) {
                     object.uid = uuidv4();
                 }
-
                 // Queue the storage of the object in a data service
-                let service = model.findDataServiceByObject(object);
-                if (service === null || service === undefined) { 
-                    service = defaultService;
-                }
-                if (object.uid === null) {
-                    object.uid = uuidv4();
-                }
-                servicePromises.push(service.insert(object));
+                servicePromises.push(this.model.findDataService(object).insert(object.uid, object));
             }
 
-            // Push the frame to the sink node
-            this.onPush(frame).then(() => {
-                // Remove the frame from the data frame service
-                let frameService: DataFrameService<any>;
-                const framePromises: Array<PromiseLike<void>> = new Array();
-                if (frame instanceof Array) {
-                    frame.forEach((f: DataFrame) => {
-                        // Check if there are frame services
-                        frameService = this.findDataFrameService(f);
-                        if (frameService !== null && frameService !== undefined) { 
-                            // Update the frame
-                            framePromises.push(frameService.delete(f.uid));
-                        }
-                    });
-                } else if (frame instanceof DataFrame) {
-                    // Check if there are frame services
-                    frameService = this.findDataFrameService(frame);
-                    if (frameService !== null && frameService !== undefined) { 
-                        // Update the frame
-                        framePromises.push(frameService.delete(frame.uid));
-                    }
-                }
-
-                Promise.all(servicePromises).then(() => {
-                    if (framePromises.length !== 0) {
-                        Promise.all(framePromises).then(() => {
-                            resolve();
-                        }).catch(() => {
-                            resolve(); // Ignore frame deleting issue
-                        });
-                    } else {
-                        resolve();
-                    }
-                }).catch(ex => {
-                    reject(ex);
-                });
-            }).catch(ex => {
-                reject(ex);
-            });
+            Promise.all(servicePromises)
+                .then(() => resolve())
+                .catch(reject);
         });
     }
 
-    public abstract onPush(frame: In): Promise<void>;
+    public abstract onPush(frame: In | In[], options?: PushOptions): Promise<void>;
+}
 
+export interface SinkNodeOptions extends NodeOptions {
+    /**
+     * Store objects in data services
+     *
+     * @default true
+     */
+    persistence?: boolean;
+    /**
+     * Emit a completed event for this sink
+     *
+     * @default true
+     */
+    completedEvent?: boolean;
 }

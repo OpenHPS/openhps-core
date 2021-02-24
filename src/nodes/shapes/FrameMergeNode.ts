@@ -1,150 +1,154 @@
-import { DataFrame } from "../../data";
-import { ProcessingNode } from "../ProcessingNode";
-import { TimeUnit } from "../../utils";
+import { AbsolutePosition, DataFrame, DataObject, LinearVelocity, Orientation } from '../../data';
+import { MergeShape } from './MergeShape';
 
-export class FrameMergeNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
-    private _queue: Map<Object, QueuedMerge<InOut>> = new Map();
-    private _timeout: number;
-    private _timeoutUnit: TimeUnit;
-    private _timer: NodeJS.Timeout;
-    private _mergeFn: (frame: InOut) => Object;
-    private _groupFn: (frame: InOut) => Object;
+/**
+ * Merges two or more frames together based on a merge key.
+ *
+ * ## Usage
+ * ```typescript
+ * new FrameMergeNode();
+ * ```
+ *
+ * @category Flow shape
+ */
+export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
+    /**
+     * Merge multiple data objects together
+     *
+     * @param {DataObject[]} objects Data objects
+     * @returns {DataObject} Merged data object
+     */
+    public mergeObjects(objects: DataObject[]): DataObject {
+        const baseObject = objects[0];
 
-    constructor(mergeFn: (frame: InOut) => Object, groupFn: (frame: InOut) => Object, timeout: number, timeoutUnit: TimeUnit) {
-        super();
-        this._mergeFn = mergeFn;
-        this._timeout = timeout;
-        this._timeoutUnit = timeoutUnit;
-        this._groupFn = groupFn;
+        // Relative positions
+        for (let i = 1; i < objects.length; i++) {
+            objects[i].getRelativePositions().forEach((relativePos) => {
+                baseObject.addRelativePosition(relativePos);
+            });
+        }
 
-        this.once('build', this._start.bind(this));
-        this.once('destroy', this._stop.bind(this));
+        // Weighted position merging
+        const positions = objects.map((object) => object.getPosition()).filter((position) => position !== undefined);
+        if (positions.length === 0) {
+            return baseObject;
+        }
+        let newPosition: AbsolutePosition = positions[0].clone();
+        for (let i = 1; i < positions.length; i++) {
+            newPosition = this.mergePositions(newPosition, positions[i].clone());
+        }
+        newPosition.accuracy = newPosition.accuracy / positions.length;
+        if (newPosition.linearVelocity) {
+            newPosition.linearVelocity.accuracy = newPosition.linearVelocity.accuracy / positions.length;
+        }
+        baseObject.setPosition(newPosition);
+        return baseObject;
+    }
+
+    public mergePositions(positionA: AbsolutePosition, positionB: AbsolutePosition): AbsolutePosition {
+        const newPosition = positionA;
+        if (!positionB) {
+            return newPosition;
+        }
+
+        // Accuracy of the two positions
+        const posAccuracyA = positionA.accuracy || 1;
+        const posAccuracyB = positionB.unit.convert(positionB.accuracy, positionA.unit) || 1;
+
+        // Apply position merging
+        newPosition.fromVector(
+            newPosition
+                .toVector3()
+                .multiplyScalar(1 / posAccuracyA)
+                .add(positionB.toVector3(newPosition.unit).multiplyScalar(1 / posAccuracyB)),
+        );
+        newPosition.fromVector(newPosition.toVector3().divideScalar(1 / posAccuracyA + 1 / posAccuracyB));
+        newPosition.accuracy = 1 / (posAccuracyA + posAccuracyB);
+
+        newPosition.linearVelocity = this._mergeVelocity(newPosition.linearVelocity, positionB.linearVelocity);
+        newPosition.orientation = this._mergeOrientation(newPosition.orientation, positionB.orientation);
+
+        // Average timestamp
+        newPosition.timestamp = Math.round(
+            (positionA.timestamp * (1 / posAccuracyA) + positionB.timestamp * (1 / posAccuracyB)) /
+                (1 / posAccuracyA + 1 / posAccuracyB),
+        );
+        return newPosition;
+    }
+
+    private _mergeVelocity(velocityA: LinearVelocity, velocityB: LinearVelocity): LinearVelocity {
+        if (velocityB) {
+            if (velocityA) {
+                const lvAccuracyA = velocityA.accuracy || 1;
+                const lvAccuracyB = velocityB.accuracy || 1;
+                // Merge linear velocity
+                velocityA.multiplyScalar(1 / lvAccuracyA).add(velocityB.multiplyScalar(1 / lvAccuracyB));
+                velocityA.divideScalar(1 / lvAccuracyA + 1 / lvAccuracyB);
+                velocityA.accuracy = 1 / (lvAccuracyA + lvAccuracyB);
+            } else {
+                velocityA = velocityB;
+            }
+        }
+        return velocityA;
+    }
+
+    private _mergeOrientation(orientationA: Orientation, orientationB: Orientation): Orientation {
+        if (orientationB) {
+            if (orientationA) {
+                const accuracyA = orientationA.accuracy || 1;
+                const accuracyB = orientationB.accuracy || 1;
+                const slerp = (1 / accuracyA + 1 / accuracyB) / accuracyB / 2;
+                orientationA.slerp(orientationB, slerp);
+            } else {
+                orientationA = orientationB;
+            }
+        }
+        return orientationA;
     }
 
     /**
-     * Start the timeout timer
+     * Merge the data frames
+     *
+     * @param {DataFrame[]} frames Data frames to merge
+     * @returns {Promise<DataFrame>} Promise of merged data frame
      */
-    private _start(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this._timer = setInterval(() => {
-                const currentTime = new Date().getTime();
-                const mergePromises = new Array();
-                const removed = new Array();
-                this._queue.forEach(queue => {
-                    if (currentTime - queue.timestamp >= this._timeoutUnit.convert(this._timeout, TimeUnit.MILLI)) {
-                        // Merge node
-                        mergePromises.push(this.merge(Array.from(queue.frames.values())));
-                        removed.push(queue.key);
-                    }
-                });
-                removed.forEach(remove => {
-                    this._queue.delete(remove);
-                });
-                Promise.all(mergePromises).then(mergedFrames => {
-                    const pushPromises = new Array();
-                    mergedFrames.forEach(mergedFrame => {
-                        this.outputNodes.forEach(outputNode => {
-                            pushPromises.push(outputNode.push(mergedFrame));
-                        });
-                    });
-                    Promise.all(pushPromises).then(() => {
-                        
-                    }).catch(ex => {
-                        this.logger('error', ex);
-                    });
-                }).catch(ex => {
-                    this.logger('error', ex);
-                });
-            }, this._timeoutUnit.convert(this._timeout, TimeUnit.MILLI));
-            resolve();
-            this.emit('ready');
-        });
-    }
-
-    private _stop(): void {
-        if (this._timer !== undefined) {
-            clearInterval(this._timer);
-        }
-    }
-
-    public process(frame: InOut): Promise<InOut> {
-        return new Promise<InOut>((resolve, reject) => {
-            const key = this._mergeFn(frame);
-            if (key === undefined) {
-                return resolve();
-            }
-            
-            let queue = this._queue.get(key);
-            if (queue === undefined) {
-                queue = new QueuedMerge(key);
-                queue.frames.set(this._groupFn(frame), frame);
-                this._queue.set(key, queue);
-                resolve();
+    public merge(frames: InOut[]): InOut {
+        const mergedFrame = frames[0];
+        const mergedObjects: Map<string, DataObject[]> = new Map();
+        mergedFrame.getObjects().forEach((object) => {
+            if (mergedObjects.get(object.uid)) {
+                mergedObjects.get(object.uid).push(object);
             } else {
-                queue.frames.set(this._groupFn(frame), frame);
-                // Check if there are enough frames
-                if (queue.frames.size >= this.inputNodes.length) {
-                    this._queue.delete(key);
-                    this.merge(Array.from(queue.frames.values())).then(mergedFrame => {
-                        resolve(mergedFrame);
-                    }).catch(ex => {
-                        reject(ex);
-                    });
+                mergedObjects.set(object.uid, [object]);
+            }
+        });
+
+        for (let i = 1; i < frames.length; i++) {
+            const frame = frames[i];
+            frame.getObjects().forEach((object) => {
+                if (!mergedFrame.hasObject(object)) {
+                    // Add object
+                    mergedFrame.addObject(object);
+                    mergedObjects.set(object.uid, [object]);
                 } else {
-                    resolve();
+                    mergedObjects.get(object.uid).push(object);
                 }
-            }
+            });
+            // Merge properties
+            Object.keys(frame).forEach((propertyName) => {
+                const value = (mergedFrame as any)[propertyName];
+                if (value === undefined || value === null) {
+                    (mergedFrame as any)[propertyName] = (frame as any)[propertyName];
+                }
+            });
+        }
+
+        // Merge objects using the merging function
+        mergedObjects.forEach((values) => {
+            const mergedObject = this.mergeObjects(values);
+            mergedFrame.addObject(mergedObject);
         });
+
+        return mergedFrame;
     }
-
-    public merge(frames: InOut[]): Promise<InOut> {
-        return new Promise<InOut>((resolve, reject) => {
-            const mergedFrame = frames[0];
-            for (let i = 1; i < frames.length; i++) {
-                const frame = frames[i];
-                frame.getObjects().forEach(object => {
-                    if (mergedFrame.hasObject(object)) {
-                        // Merge object
-                        const existingObject = mergedFrame.getObjectByUID(object.uid);
-                        object.relativePositions.forEach(value => {
-                            existingObject.addRelativePosition(value);
-                        });
-                        if (existingObject.getPosition() === undefined) {
-                            existingObject.setPosition(object.getPosition());
-                        } else if (existingObject.getPosition().accuracy < object.getPosition().accuracy) {
-                            // TODO: Merge location using different tactic + check accuracy unit
-                            existingObject.setPosition(object.getPosition());
-                        }
-                    } else {
-                        // Add object
-                        mergedFrame.addObject(object);
-                    }
-                });
-                // Merge properties
-                Object.keys(frame).forEach(propertyName => {
-                    const value = (mergedFrame as any)[propertyName];
-                    if (value === undefined || value === null) {
-                        (mergedFrame as any)[propertyName] = (frame as any)[propertyName];
-                    }
-                });
-            }
-            resolve(mergedFrame);
-        });
-    }
-
-}
-
-/**
- * Queued merge
- */
-class QueuedMerge<InOut extends DataFrame> {
-    public key: Object;
-    public frames: Map<Object, InOut> = new Map();
-    public timestamp: number;
-
-    constructor(key: Object) {
-        this.key = key;
-        this.timestamp = new Date().getTime();
-    }
-
 }

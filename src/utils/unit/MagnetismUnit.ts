@@ -1,5 +1,16 @@
-import { Unit } from "./Unit";
+import { Unit } from './Unit';
+import { SerializableObject } from '../../data/decorators';
+import { UnitPrefix } from './UnitPrefix';
 
+/**
+ * @category Unit
+ */
+@SerializableObject()
 export class MagnetismUnit extends Unit {
-    public static readonly MICRO_TESLA: MagnetismUnit = new MagnetismUnit((x) => x, (x) => x);
+    public static readonly TESLA: MagnetismUnit = new MagnetismUnit('tesla', {
+        baseName: 'magnetism',
+        aliases: ['T'],
+        prefixes: 'decimal',
+    });
+    public static readonly MICROTESLA: MagnetismUnit = MagnetismUnit.TESLA.specifier(UnitPrefix.MICRO);
 }

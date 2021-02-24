@@ -1,5 +1,4 @@
-import { Node, Model } from "../../../src";
-import { DataFrame, DataObject } from "../../../src/data";
+import { DataFrame, DataObject, Node, Model } from "../../../src";
 
 export class DataServiceTestNode extends Node<DataFrame, DataFrame> {
 
@@ -14,16 +13,9 @@ export class DataServiceTestNode extends Node<DataFrame, DataFrame> {
             dataService.findByUID("abc456").then(dataObject => {
                 dataObject.displayName = "hello world";
                 frame.addObject(dataObject);
-                const pushPromises = new Array();
-                this.outputNodes.forEach(node => {
-                    pushPromises.push(node.push(frame));
-                });
-                Promise.all(pushPromises).then(() => {
-                    resolve();
-                }).catch(ex => {
-                    reject(ex);
-                });
-            });
+                this.outlets.forEach(outlet => outlet.push(frame));
+                resolve();
+            }).catch(reject);
         });
     }
 

@@ -1,30 +1,62 @@
-import { Service } from "./Service";
+import { DataServiceDriver } from './DataServiceDriver';
+import { FilterQuery } from './FilterQuery';
 
-export abstract class DataService<I, T> extends Service {
-    private _dataType: new () => T;
+/**
+ * DataService
+ *
+ * ## Usage
+ *
+ * ### Finding a DataService
+ * ```typescript
+ * import { Node, DataFrame } from '@openhps/core';
+ *
+ * export class CustomNode extends Node<DataFrame> {
+ *     // Data services can be found in any function inside a node
+ *     // that is added to a model
+ *     public functionInsideNode(): void {
+ *         // Get a service by its type
+ *         let service = this.model.findDataService(DataObject);
+ *         let service = this.model.findDataServiceByName("DataObject");
+ *     }
+ * }
+ * ```
+ **/
+export abstract class DataService<I, T> extends DataServiceDriver<I, T> {
+    protected driver: DataServiceDriver<I, T>;
 
-    constructor(dataType: new () => T, options?: any) {
-        super();
-        this.name = dataType.name;
-        this._dataType = dataType;
+    constructor(dataServiceDriver: DataServiceDriver<I, T>) {
+        super(dataServiceDriver ? dataServiceDriver.dataType : undefined);
+        this.driver = dataServiceDriver;
+
+        this.once('build', () => this.driver.emitAsync('build'));
+        this.once('destroy', () => this.driver.emitAsync('destroy'));
     }
 
-    public get dataType(): new () => T {
-        return this._dataType;
+    public createIndex(index: string): Promise<void> {
+        return this.driver.createIndex(index);
     }
 
-    public set dataType(dataType: new () => T) {
-        this._dataType = dataType;
+    public findByUID(uid: I): Promise<T> {
+        return this.driver.findByUID(uid);
     }
-    
-    public abstract findByUID(uid: I): Promise<T>;
 
-    public abstract findAll(): Promise<T[]>;
+    public findOne(query?: FilterQuery<T>): Promise<T> {
+        return this.driver.findOne(query);
+    }
 
-    public abstract insert(object: T): Promise<T>;
+    public findAll(query?: FilterQuery<T>): Promise<T[]> {
+        return this.driver.findAll(query);
+    }
 
-    public abstract delete(id: I): Promise<void>;
+    public insert(id: I, object: T): Promise<T> {
+        return this.driver.insert(id, object);
+    }
 
-    public abstract deleteAll(): Promise<void>;
+    public delete(id: I): Promise<void> {
+        return this.driver.delete(id);
+    }
 
+    public deleteAll(): Promise<void> {
+        return this.driver.deleteAll();
+    }
 }

@@ -1,40 +1,39 @@
-import { DataFrame } from "../../data/DataFrame";
-import { Node } from "../../Node";
+import { DataFrame } from '../../data/DataFrame';
+import { GraphOptions, PullOptions } from '../../graph';
+import { Node, NodeOptions } from '../../Node';
 
+/**
+ * @category Flow shape
+ */
 export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut> {
-    private _dataFrames: InOut[] = new Array();
+    protected _dataFrames: InOut[];
 
-    constructor(maxSize?: number) {
-        super();
+    constructor(options?: MemoryBufferOptions) {
+        super(options);
+        this._dataFrames = [];
 
         this.on('pull', this.onPull.bind(this));
         this.on('push', this.onPush.bind(this));
     }
 
-    public onPull(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+    public onPull(options?: PullOptions): Promise<void> {
+        return new Promise<void>((resolve) => {
             if (this._dataFrames.length !== 0) {
-                const frame = this._dataFrames.pop();
-                const pushPromises = new Array();
-                this.outputNodes.forEach(node => {
-                    pushPromises.push(node.push(frame));
-                });
-                Promise.all(pushPromises).then(() => {
-                    resolve();
-                }).catch(ex => {
-                    reject(ex);
-                });
+                const frame = this._dataFrames.shift();
+                this.outlets.forEach((outlet) => outlet.push(frame, options as GraphOptions));
+                resolve();
             } else {
                 resolve();
             }
         });
-    } 
+    }
 
     public onPush(frame: InOut): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>((resolve) => {
             this._dataFrames.push(frame);
             resolve();
         });
     }
-
 }
+
+export type MemoryBufferOptions = NodeOptions;

@@ -7,3 +7,7 @@ export * from './ObjectMergeNode';
 export * from './FrameFilterNode';
 export * from './FrameFlattenNode';
 export * from './FrameChunkNode';
+export * from './UnitConversionNode';
+export * from './ThrottleNode';
+export * from './FrameCloneNode';
+export * from './MergeShape';

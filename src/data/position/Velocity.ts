@@ -1,31 +1,40 @@
-import { SerializableObject, SerializableMember } from "../decorators";
-import { AngularVelocity } from "./AngularVelocity";
-import { LinearVelocity } from "./LinearVelocity";
-import * as math from 'mathjs';
+import { SerializableObject, SerializableMember } from '../decorators';
+import { AngularVelocity } from './AngularVelocity';
+import { LinearVelocity } from './LinearVelocity';
 
+/**
+ * Velocity of the object at the recorded position
+ *
+ * @category Position
+ */
 @SerializableObject()
 export class Velocity {
     /**
      * Linear velocity
      */
     @SerializableMember()
-    public linear: LinearVelocity = new LinearVelocity();
+    public linear: LinearVelocity;
 
     /**
      * Angular velocity
      */
     @SerializableMember()
-    public angular: AngularVelocity = new AngularVelocity();
+    public angular: AngularVelocity;
 
-    constructor(linear: LinearVelocity = new LinearVelocity(), angular: AngularVelocity = new AngularVelocity()) {
+    constructor(linear?: LinearVelocity, angular?: AngularVelocity) {
         this.linear = linear;
         this.angular = angular;
     }
 
     /**
-     * Convert the linear and angular velocity to a transformation matrix
+     * Clone the velocity
+     *
+     * @returns {Velocity} Cloned velocity object
      */
-    public toTransformationMatrix(): number[][] {
-        return math.multiply(this.angular.toRotationMatrix(), this.linear.toTranslationMatrix());
+    public clone(): this {
+        return new Velocity(
+            this.linear ? this.linear.clone() : undefined,
+            this.angular ? this.angular.clone() : undefined,
+        ) as this;
     }
 }

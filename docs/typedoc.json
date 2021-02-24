@@ -1,0 +1,9 @@
+{
+    "entryPoints": ["./src/index.ts"],
+    "out": "docs/out",
+    "exclude": ["**/_internal/**/*"],
+    "excludePrivate": true,
+    "hideGenerator": true,
+    "categorizeByGroup": true,
+    "media": "docs/media"
+}

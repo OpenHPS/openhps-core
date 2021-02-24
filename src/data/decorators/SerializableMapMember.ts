@@ -1,5 +1,5 @@
-import { jsonMapMember } from "typedjson";
-import { IJsonMapMemberOptions } from "typedjson/js/typedjson/json-map-member";
+/* eslint-disable */
+import { jsonMapMember, IJsonMapMemberOptions } from "typedjson";
 
 export function SerializableMapMember(keyConstructor: Function, valueConstructor: Function, options?: IJsonMapMemberOptions): PropertyDecorator {
     return (target: Object, propertyKey: string) => {

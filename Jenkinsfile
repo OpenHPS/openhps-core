@@ -6,7 +6,9 @@ pipeline {
                 echo 'Building ...'
                 sh 'npm install'
                 sh 'npm run clean'
-                sh 'npm run build:typescript'
+                sh 'npm run build:three'
+                sh 'npm run build:cjs'
+                sh 'npm run build:esm'
                 sh 'npm run build:webpack'
             }
         }
@@ -17,9 +19,6 @@ pipeline {
             }
         }
         stage('Documentation') {
-            when {
-                branch "master"
-            }
             steps {
                 echo 'Building Documentation..'
                 sh 'npm run build:typedoc'
@@ -40,7 +39,9 @@ pipeline {
                     steps {
                         echo 'Publishing Development ...'
                         sh 'npm run publish:development'
-                        sh 'git push origin HEAD:dev'
+                        sshagent(['git-openhps-ssh']) {
+                            sh 'git push origin HEAD:dev'
+                        }
                     }
                 }
                 stage('Publish Release') {
@@ -51,6 +52,9 @@ pipeline {
                         echo 'Publishing Release ...'
                         sh 'npm run publish:release'
                         sh 'git push origin HEAD:master'
+                        sshagent(['git-openhps-ssh']) {
+                            sh "git push origin master"
+                        }
                     }
                 }
             }
@@ -60,6 +64,30 @@ pipeline {
         always {
             junit 'artifacts/test/xunit.xml'
             cobertura coberturaReportFile: 'artifacts/coverage/cobertura-coverage.xml'
+            publishHTML (target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'docs/out',
+                reportFiles: '*.*',
+                reportName: "Documentation"
+            ])
+
+            archiveArtifacts artifacts: 'dist/web/openhps-core.es.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-core.es.js.map', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-core.es.min.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-core.es.min.js.map', fingerprint: true
+
+            archiveArtifacts artifacts: 'dist/web/openhps-core.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-core.js.map', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-core.min.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-core.min.js.map', fingerprint: true
+
+            archiveArtifacts artifacts: 'dist/web/worker.openhps-core.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/worker.openhps-core.js.map', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/worker.openhps-core.min.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/worker.openhps-core.min.js.map', fingerprint: true
+            deleteDir()
         }
     }
 }

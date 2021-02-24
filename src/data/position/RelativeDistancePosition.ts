@@ -1,59 +1,86 @@
-import { RelativePosition } from "./RelativePosition";
-import { LengthUnit, Unit } from "../../utils";
+import { RelativePosition } from './RelativePosition';
+import { LengthUnit } from '../../utils';
 import { SerializableObject, SerializableMember } from '../decorators';
+import { DataSerializer } from '../DataSerializer';
 
 /**
  * Relative location to another reference object in distance.
+ *
+ * @category Position
  */
 @SerializableObject()
-export class RelativeDistancePosition extends RelativePosition {
-    private _distance: number;
-    private _distanceUnit: LengthUnit;
-
-    constructor(referenceObject?: any, distance?: number, distanceUnit?: LengthUnit) {
-        super(referenceObject);
-        this.distance = distance;
-        this._distanceUnit = distanceUnit;
-    }
-
+export class RelativeDistancePosition implements RelativePosition {
     /**
-     * Get accuracy unit
+     * Position recording timestamp
      */
     @SerializableMember()
-    public get accuracyUnit(): LengthUnit {
-        return super.accuracyUnit;
-    }
+    public timestamp: number = Date.now();
+    /**
+     * Reference object UID that this location is relative to
+     */
+    @SerializableMember()
+    public referenceObjectUID: string;
+    @SerializableMember()
+    public referenceObjectType: string;
+    /**
+     * Position accuracy
+     */
+    @SerializableMember()
+    public accuracy: number;
+    private _distance: number;
+    /**
+     * Distance unit
+     */
+    @SerializableMember()
+    public distanceUnit: LengthUnit;
 
-    public set accuracyUnit(unit: LengthUnit) {
-        super.accuracyUnit = unit;
+    constructor(referenceObject?: any, distance?: number, distanceUnit?: LengthUnit) {
+        if (referenceObject !== undefined) {
+            if (referenceObject instanceof String || typeof referenceObject === 'string') {
+                this.referenceObjectUID = referenceObject as string;
+            } else {
+                this.referenceObjectType = referenceObject.constructor.name;
+                this.referenceObjectUID = referenceObject.uid;
+            }
+        }
+        this.distance = distance;
+        this.distanceUnit = distanceUnit;
     }
 
     /**
-     * Get distance to reference object
+     * Distance to reference object
+     *
+     * @returns {number} Distance
      */
     @SerializableMember()
     public get distance(): number {
         return this._distance;
     }
 
-    /**
-     * Set distance to reference object
-     * @param distance Distance to reference object
-     */
-    public set distance(distance: number) {
-        this._distance = distance;
+    public set distance(value: number) {
+        this._distance = value;
+    }
+
+    public get referenceValue(): number {
+        return this.distance;
+    }
+
+    public set referenceValue(value: number) {
+        this.distance = value;
+    }
+
+    public equals(position: this): boolean {
+        return this.timestamp === position.timestamp;
     }
 
     /**
-     * Get distance unit
+     * Clone the position
+     *
+     * @returns {RelativeDistancePosition} Cloned relative distance
      */
-    @SerializableMember()
-    public get distanceUnit(): LengthUnit {
-        return this._distanceUnit;
+    public clone(): this {
+        const serialized = DataSerializer.serialize(this);
+        const clone = DataSerializer.deserialize(serialized) as this;
+        return clone;
     }
-
-    public set distanceUnit(distanceUnit: LengthUnit) {
-        this._distanceUnit = distanceUnit;
-    }
-
 }

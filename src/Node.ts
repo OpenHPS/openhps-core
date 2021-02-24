@@ -1,228 +1,357 @@
-import * as uuidv4 from 'uuid/v4';
-import { AbstractNode } from "./graph/interfaces/AbstractNode";
-import { DataFrame } from "./data/DataFrame";
-import { AbstractGraph } from "./graph/interfaces/AbstractGraph";
-import { AbstractEdge } from './graph/interfaces/AbstractEdge';
-import { DataFrameService } from './service/DataFrameService';
+import { v4 as uuidv4 } from 'uuid';
+import { DataFrame } from './data/DataFrame';
 import { AsyncEventEmitter } from './_internal/AsyncEventEmitter';
-import { DataObject } from './data';
-import { DataObjectService } from './service';
+import {
+    GraphBuilder,
+    GraphShape,
+    Inlet,
+    Outlet,
+    PullOptions,
+    PushCompletedEvent,
+    PushError,
+    PushEvent,
+    PushOptions,
+} from './graph';
+import { Model } from './Model';
 
 /**
  * The graph node has an input and output [[DataFrame]]
- * 
+ *
  * ## Usage
- * 
+ *
+ * ### Creating a Node
+ * Default nodes require you to specify the input and output data frame type. In general, nodes have the ability
+ * to process an input data frame and output a different (processed) data frame.
+ * ```typescript
+ * import { DataFrame, Node } from '@openhps/core';
+ *
+ * export class CustomNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
+ *     // ...
+ * }
+ * ```
+ * Abstract implementations such as a [[SourceNode]] and [[SinkNode]] only take one input or output
+ * data frame type as they do not process or change the frame.
+ *
+ * @category Node
  */
-export abstract class Node<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame> extends AsyncEventEmitter implements AbstractNode<In, Out> {
-    private _uid: string = uuidv4();
-    private _name: string;
-    private _graph: AbstractGraph<any, any>;
-    private _ready: boolean = false;
-    public logger: (level: string, log: any) => void = () => {};
+export abstract class Node<In extends DataFrame, Out extends DataFrame> extends AsyncEventEmitter {
+    /**
+     * Unique identifier of node.
+     */
+    public uid: string = uuidv4();
+    /**
+     * Name of the node. Does not have to be unique.
+     */
+    public name: string;
+    /**
+     * Graph shape
+     */
+    public graph: GraphShape<any, any>;
+    /**
+     * Node options
+     */
+    protected options: NodeOptions;
 
-    constructor() {
+    private _ready = false;
+    private _available = true;
+
+    constructor(options?: NodeOptions) {
         super();
-        // Set the display name of the node to the type name
-        this._name = this.constructor.name;
+        this.options = options || {};
 
-        this.logger("debug", {
-            node: {
-                uid: this.uid,
-                name: this.name
-            },
-            message: `Node has been constructed.`,
-        });
+        // Set the display name of the node to the type name
+        this.name = this.options.name || this.constructor.name;
+        // Set the uid of the node if manually set
+        this.uid = this.options.uid || this.uid;
 
         this.prependOnceListener('ready', () => {
             this._ready = true;
         });
+        this.on('error', this._onError.bind(this));
+        this.on('completed', this._onCompleted.bind(this));
+    }
+
+    /**
+     * Graph this model is part of
+     *
+     * @returns {Model} Positioning model
+     */
+    public get model(): Model<any, any> {
+        return this.graph as Model;
     }
 
     public isReady(): boolean {
         return this._ready;
     }
 
-    public get name(): string {
-        return this._name;
-    }
-
-    public set name(name: string) {
-        this._name = name;
-    }
-
-    public get graph(): AbstractGraph<any, any> {
-        return this._graph;
-    }
-
-    public set graph(graph: AbstractGraph<any, any>) {
-        this._graph = graph;
-    }
-
-    protected get outlets(): Array<AbstractEdge<Out>> {
-        const edges = new Array();
-        this.graph.edges.forEach(edge => {
-            if (edge.inputNode === this) {
-                edges.push(edge);
-            }
-        });
-        return edges;
-    }
-
-    protected get inlets(): Array<AbstractEdge<In>> {
-        const edges = new Array();
-        this.graph.edges.forEach(edge => {
-            if (edge.outputNode === this) {
-                edges.push(edge);
-            }
-        });
-        return edges;
-    }
-
-    public get outputNodes(): Array<Node<any, any>> {
-        const edges = this.outlets;
-        const nodes = new Array();
-        edges.forEach(edge => {
-            nodes.push(edge.outputNode);
-        });
-        return nodes;
-    }
-
-    public get inputNodes(): Array<Node<any, any>> {
-        const edges = this.inlets;
-        const nodes = new Array();
-        edges.forEach(edge => {
-            nodes.push(edge.inputNode);
-        });
-        return nodes;
-    }
-    
     /**
-     * Get unique identifier of node
+     * Check if the node is available for accepting push requests
+     *
+     * @returns {boolean} Is the node available to push
      */
-    public get uid(): string {
-        return this._uid;
+    public isAvailable(): boolean {
+        return this._available;
     }
 
     /**
-     * Set unique identifier of node
-     * @param uid Unique identifier
+     * Graph logger
+     *
+     * @param {string} level Logging level
+     * @param {any} log Message
      */
-    public set uid(uid: string) {
-        this._uid = uid;
+    public logger(level: string, log: any): void {
+        this.model.logger(level, log);
+    }
+
+    /**
+     * Get the outgoing edges
+     *
+     * @returns {Array<Outlet<DataFrame>>} Outgoing edges
+     */
+    public get outlets(): Array<Outlet<Out>> {
+        return this.model.edges.filter((edge) => edge.inputNode === this);
+    }
+
+    /**
+     * Get the incoming edges
+     *
+     * @returns {Array<Inlet<DataFrame>>} Incoming edges
+     */
+    public get inlets(): Array<Inlet<In>> {
+        return this.model.edges.filter((edge) => edge.outputNode === this);
+    }
+
+    public emit(name: string | symbol, ...args: any[]): boolean;
+    /**
+     * Emit available event
+     *
+     * @param {string} event available
+     */
+    public emit(event: 'available'): boolean;
+    /**
+     * Emit completed event
+     *
+     * @param {string} name completed
+     */
+    public emit(name: 'completed', e: PushCompletedEvent): boolean;
+    /**
+     * Emit error
+     *
+     * @param {string} name error
+     */
+    public emit(name: 'error', e: PushError): boolean;
+    /**
+     * Node ready
+     *
+     * @param {string} name ready
+     */
+    public emit(name: 'ready'): boolean;
+    /**
+     * Destroy the node
+     *
+     * @param {string} name destroy
+     */
+    public emit(name: 'destroy'): boolean;
+    public emit(name: string | symbol, ...args: any[]): boolean {
+        return super.emit(name, ...args);
+    }
+
+    public on(name: string | symbol, listener: (...args: any[]) => void): this;
+    /**
+     * Event when a node is available
+     *
+     * @param {string} event available
+     * @param {Function} listener Event callback
+     */
+    public on(event: 'available', listener: () => Promise<void> | void): this;
+    /**
+     * Event when a push is completed
+     *
+     * @param {string} name error
+     * @param {Function} listener Event callback
+     */
+    public on(name: 'completed', listener: (event: PushCompletedEvent) => Promise<void> | void): this;
+    /**
+     * Event when an error is triggered
+     *
+     * @param {string} name error
+     * @param {Function} listener Error event callback
+     */
+    public on(name: 'error', listener: (event: PushError) => Promise<void> | void): this;
+    /**
+     * Event when a data frame is pulled
+     *
+     * @param {string} name receive
+     * @param {Function} listener Event callback
+     */
+    public on(name: 'pull', listener: (options?: PullOptions) => Promise<void> | void): this;
+    /**
+     * Event when a data frame is push to the node
+     *
+     * @param {string} name receive
+     * @param {Function} listener Event callback
+     */
+    public on(name: 'push', listener: (frame: In, options?: PushOptions) => Promise<void> | void): this;
+    public on(name: string | symbol, listener: (...args: any[]) => void): this {
+        return super.on(name, listener);
+    }
+
+    public once(name: string | symbol, listener: (...args: any[]) => void): this;
+    /**
+     * Event when a node is available
+     *
+     * @param {string} event available
+     * @param {Function} listener Event callback
+     */
+    public once(event: 'available', listener: () => Promise<void> | void): this;
+    /**
+     * Event when a push is completed
+     *
+     * @param {string} name error
+     * @param {Function} listener Event callback
+     */
+    public once(name: 'completed', listener: (event: PushCompletedEvent) => Promise<void> | void): this;
+    /**
+     * Event called when node is destroyed
+     *
+     * @param {string} name destroy
+     * @param {Function} listener Event callback
+     */
+    public once(name: 'destroy', listener: () => void | Promise<void>): this;
+    /**
+     * Event called when node is build
+     *
+     * @param {string} name build
+     * @param {Function} listener Event callback
+     */
+    public once(name: 'build', listener: (builder: GraphBuilder<DataFrame, DataFrame>) => void | Promise<void>): this;
+    /**
+     * Event called when node is ready
+     *
+     * @param {string} name ready
+     * @param {Function} listener Event callback
+     */
+    public once(name: 'ready', listener: () => void | Promise<void>): this;
+    public once(name: string | symbol, listener: (...args: any[]) => void): this {
+        return super.once(name, listener);
     }
 
     /**
      * Send a pull request to the node
-     * 
-     * @param options Pull options
+     *
+     * @param {PullOptions} [options] Pull options
+     * @returns {Promise<void>} Pull promise
      */
-    public pull(): Promise<void> {
+    public pull(options?: PullOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const callbackPromises = new Array();
-            this.listeners('pull').forEach(callback => {
-                callbackPromises.push(callback());
+            const callbackPromises: Array<Promise<void>> = [];
+            this.listeners('pull').forEach((callback) => {
+                callbackPromises.push(callback(options));
             });
 
             if (callbackPromises.length === 0) {
-                const pullPromises = new Array();
-                this.inputNodes.forEach(node => {
-                    pullPromises.push(node.pull());
-                });
-
-                Promise.all(pullPromises).then(() => {
-                    resolve();
-                }).catch(ex => {
-                    reject(ex);
-                });
-            } else {
-                Promise.all(callbackPromises).then(() => {
-                    resolve();
-                }).catch(ex => {
-                    reject(ex);
+                this.inlets.forEach((inlet) => {
+                    callbackPromises.push(inlet.pull(options));
                 });
             }
+
+            Promise.all(callbackPromises)
+                .then(() => {
+                    resolve();
+                })
+                .catch(reject);
         });
     }
 
     /**
      * Push data to the node
-     * 
-     * @param frame Data frame to push
+     *
+     * @param {DataFrame | DataFrame[]} data Data frame to push
+     * @param {PushOptions} [options] Push options
+     * @returns {Promise<void>} Push promise
      */
-    public push(frame: In): Promise<void> {
+    public push(data: In | In[], options: PushOptions = {}): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            if (frame === null || frame === undefined) {
-                this.logger("warning", {
-                    node: {
-                        uid: this.uid,
-                        name: this.name
-                    },
-                    message: `Node received null data frame!`,
-                });
-                return reject();
+            if (data === null || data === undefined) {
+                return reject(new Error('Node received null data frame!'));
             }
 
-            this.logger("debug", {
-                node: {
-                    uid: this.uid,
-                    name: this.name
-                },
-                message: `Node received push`
-            });
-
-            const callbackPromises = new Array();
-            this.listeners('push').forEach(callback => {
-                callbackPromises.push(callback(frame));
-            });
-
-            if (callbackPromises.length === 0) {
-                const pushPromises = new Array();
-                this.outputNodes.forEach(node => {
-                    pushPromises.push(node.push(frame));
-                });
-
-                Promise.all(pushPromises).then(() => {
-                    resolve();
-                }).catch(ex => {
-                    reject(ex);
-                });
+            const listeners = this.listeners('push');
+            if (listeners.length === 0) {
+                // Forward push, resolve before outlets resolve
+                this.outlets.forEach((outlet) => outlet.push(data as any, options));
+                resolve();
             } else {
-                Promise.all(callbackPromises).then(() => {
+                this._available = false;
+                Promise.all(listeners.map((callback) => callback(data, options)))
+                    .then(() => {
+                        this._available = true;
+                        this.emit('available');
+                        resolve();
+                    })
+                    .catch(reject);
+            }
+        });
+    }
+
+    /**
+     * Promise once the node is available
+     *
+     * @returns {Promise} Promise when the node is available
+     */
+    public onceAvailable(): Promise<void> {
+        return new Promise((resolve) => {
+            if (this.isAvailable()) {
+                resolve();
+            } else {
+                this.once('available', () => {
                     resolve();
-                }).catch(ex => {
-                    reject(ex);
                 });
             }
         });
     }
 
     /**
-     * Get data frame service for a specific frame
-     * @param frame Frame to get data frame service for
+     * Promise once the frame is completed
+     *
+     * @param {string} frameUID Frame UID
+     * @returns {Promise} Promise when the frame is completed
      */
-    protected findDataFrameService<T extends DataFrame | DataFrame>(frame: T): DataFrameService<T> {
-        const model = (this.graph as any);
-        // Merge the changes in the frame service
-        let frameService = model.findDataServiceByName(frame.constructor.name) as DataFrameService<T>;
-        if (frameService === null || frameService === undefined) { 
-            frameService = model.findDataServiceByName("DataFrame"); 
-        }
-        return frameService;
+    public onceCompleted(frameUID: string): Promise<PushEvent> {
+        return new Promise((resolve, reject) => {
+            const completedListener = function (event: PushEvent) {
+                if (event.frameUID === frameUID) {
+                    this.removeListener('completed', completedListener);
+                    this.removeListener('error', completedListener);
+                    if ((event as any).error) {
+                        reject(event);
+                    } else {
+                        resolve(event);
+                    }
+                }
+            };
+            this.on('completed', completedListener.bind(this));
+            this.on('error', completedListener.bind(this));
+        });
     }
 
+    private _onError(error: PushError): void {
+        this.inlets.forEach((inlet) => inlet.emit('error', error));
+    }
+
+    private _onCompleted(event: PushCompletedEvent): void {
+        this.inlets.forEach((inlet) => inlet.emit('completed', event));
+    }
+}
+
+export interface NodeOptions {
     /**
-     * Get data frame service for a specific frame
-     * @param frame Frame to get data frame service for
+     * Manually set the unique identifier of the node
      */
-    protected findDataObjectService<T extends DataObject | DataObject>(object: T): DataObjectService<T> {
-        const model = (this.graph as any);
-        // Merge the changes in the object service
-        let objectService = model.findDataServiceByName(object.constructor.name) as DataObjectService<T>;
-        if (objectService === null || objectService === undefined) { 
-            objectService = model.findDataServiceByName("DataObject"); 
-        }
-        return objectService;
-    }
-
+    uid?: string;
+    /**
+     * User friendly name of the node
+     *  Used for querying a node by its name.
+     */
+    name?: string;
 }

@@ -1,89 +1,129 @@
 {
   "name": "@openhps/core",
-  "version": "0.1.1",
+  "version": "0.2.0-alpha.34",
   "description": "Open Hybrid Positioning System - Core component",
   "author": "Maxim Van de Wynckel",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://git.mvdw-software.com/Maximvdw/openhps-core.git"
+    "url": "https://github.com/OpenHPS/openhps-core.git"
   },
   "publishConfig": {
-    "registry": "https://repo.mvdw-software.com/repository/npm-openhps/"
+    "access": "public"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "type": "commonjs",
+  "types": "./dist/cjs/index.d.ts",
+  "unpkg": "./dist/web/openhps-core.min.js",
+  "jsdelivr": "./dist/web/openhps-core.min.js",
+  "browser": {
+    "typescript": false,
+    "microtime": false
+  },
+  "module": "./dist/esm/index.js",
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js"
+  },
+  "files": [
+    "dist/**/*",
+    "src/**/*"
+  ],
   "scripts": {
-    "test": "mocha --experimental-worker",
-    "test:jenkins": "jenkins-mocha --cobertura",
+    "test": "mocha --config test/.mocharc.json",
+    "test:jenkins": "jenkins-mocha --cobertura --config test/.mocharc.json",
+    "benchmark": "ts-node test/bench/worker.bench.ts",
     "cover": "nyc mocha && nyc report --reporter=cobertura",
-    "lint": "tslint -c tslint.json --project tsconfig.json",
-    "clean": "shx rm -rf ./dist && shx rm -rf ./docs",
-    "build": "npm run clean && npm-run-all --parallel build:typescript build:typedoc && npm run build:webpack",
-    "build:typescript": "tsc",
-    "build:typedoc": "typedoc --exclude **/_internal/**/* --excludePrivate --hideGenerator --out docs src",
-    "build:webpack": "webpack",
+    "lint": "eslint src/** --ignore-pattern three",
+    "clean": "shx rm -rf ./dist && shx rm -rf ./docs/out",
+    "build": "npm run clean && npm run build:three && npm-run-all --parallel build:esm build:cjs && npm run build:webpack",
+    "build:quick": "npm-run-all --parallel build:cjs build:esm && npm run build:webpack",
+    "build:typedoc": "typedoc --options docs/typedoc.json",
+    "build:esm": "tsc --module es2015 --outDir dist/esm && shx cp -r ./node_modules/three/src/ ./dist/esm/utils/math/three",
+    "build:cjs": "tsc --module commonjs  --outDir dist/cjs && shx cp -r ./src/utils/math/three/ ./dist/cjs/utils/math/three",
+    "build:webpack": "npm-run-all --parallel build:webpack:*",
+    "build:webpack:prod": "webpack --env prod --",
+    "build:webpack:dev": "webpack --env dev --",
+    "build:three": "shx mkdir -p ./src/utils/math/three/ && shx cp -r node_modules/three/src/* ./src/utils/math/three/ && babel ./src/utils/math/three/* --out-dir . --verbose --presets @babel/preset-env  --relative",
     "publish:development": "standard-version --prerelease alpha -m 'chore(alpha): %s' --author='ci <ci@openhps.org>' && npm publish --tag dev",
     "publish:beta": "standard-version --prerelease beta -m 'chore(beta): %s' --author='ci <ci@openhps.org>' && npm publish --tag beta",
     "publish:release": "standard-version -m 'chore(release): %s' --author='ci <ci@openhps.org>' && npm publish --tag latest"
   },
   "keywords": [
+    "vrije universiteit brussel",
+    "wise",
     "openhps",
-    "ips",
-    "slam",
     "hybrid",
     "positioning",
-    "system"
+    "system",
+    "indoor",
+    "outdoor",
+    "trilateration",
+    "triangulation",
+    "fingerprinting",
+    "dead reckoning"
   ],
   "dependencies": {
-    "jsonpath-plus": "^3.0.0",
-    "mathjs": "^7.0.0",
-    "reflect-metadata": "^0.1.13",
-    "threads": "^1.0.0",
-    "tiny-worker": "^2.3.0",
-    "typedjson": "^1.5.1",
-    "uuid": "^3.4.0",
-    "worker-thread": "^1.1.0"
+    "reflect-metadata": ">=0.1.13",
+    "threads": "^1.6.3",
+    "three": "^0.124.0",
+    "tslib": "^2.1.0",
+    "typedjson": ">=1.6.0",
+    "uuid": ">=8.3.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^8.3.5",
-    "@commitlint/config-conventional": "^8.3.4",
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.1",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@purtuga/esm-webpack-plugin": "^1.5.0",
     "@types/benchmark": "^1.0.33",
-    "@types/chai": "^4.2.12",
-    "@types/mathjs": "^6.0.5",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^12.12.53",
-    "@types/uuid": "^7.0.4",
+    "@types/chai": "^4.2.14",
+    "@types/mocha": "^8.2.0",
+    "@types/node": "^12.19.6",
+    "@types/uuid": "^8.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.8.1",
+    "@typescript-eslint/parser": "^4.8.1",
     "benchmark": "^2.1.4",
     "chai": "^4.2.0",
     "csv-parser": "^2.3.2",
-    "husky": "^4.0.10",
+    "eslint": "^7.13.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsdoc": "^30.7.8",
+    "eslint-plugin-prettier": ">=3.1.4",
+    "husky": "^4.3.0",
     "jenkins-mocha": "^8.0.0",
-    "mocha": "^6.1.2",
+    "microtime": "^3.0.0",
+    "mocha": "^8.2.1",
     "npm-run-all": "^4.1.5",
     "nyc": "^14.1.1",
-    "shx": "^0.3.2",
+    "prettier": "^2.2.0",
+    "shx": "^0.3.3",
     "standard-version": "^8.0.2",
-    "terser-webpack-plugin": "^3.0.8",
+    "terser-webpack-plugin": "^4.2.3",
     "ts-node": "^8.10.1",
-    "tslint": "^5.20.1",
-    "tslint-no-circular-imports": "^0.7.0",
-    "typedoc": "^0.17.8",
-    "typescript": "^3.9.7",
-    "webpack": "^4.44.0",
-    "webpack-auto-inject-version": "^1.2.2",
-    "webpack-cli": "^3.3.11"
+    "typedoc": "^0.20.4",
+    "typescript": "^4.1.2",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^4.3.1",
+    "webpack-inject-plugin": "^1.5.5"
   },
   "nyc": {
-    "branches": 20,
-    "lines": 20,
-    "functions": 20,
-    "statements": 20,
+    "branches": 50,
+    "lines": 50,
+    "functions": 50,
+    "statements": 50,
     "include": [
       "src"
     ],
     "exclude": [
-      "test"
+      "test",
+      "src/**/_internal/Worker*.ts",
+      "src/**/WorkerService.ts",
+      "src/service/_internal/DummyDataService.ts",
+      "src/utils/math/three/**"
     ],
     "extension": [
       ".ts"
@@ -100,16 +140,11 @@
   "engines": {
     "node": ">=12.0.0"
   },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
-  },
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint",
       "pre-push": "npm run test",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS --no-verify"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   }
 }

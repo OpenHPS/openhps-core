@@ -1,27 +1,24 @@
-import { DataService, DataObject, MemoryDataObjectService } from "../../../src";
-import { DataServiceProxy } from '../../../src/service/_internal';
+import { DataService, DataObject, DataObjectService, MemoryDataService } from '../../../src';
 import { expect } from 'chai';
+import { DataServiceProxy } from '../../../src/service/_internal';
 
 describe('proxy', () => {
-
     describe('data object service', () => {
-        var proxy: DataService<string, DataObject>;
+        let proxy: DataService<string, DataObject>;
 
         before(() => {
-            const service = new MemoryDataObjectService(DataObject);
+            const service = new DataObjectService(new MemoryDataService(DataObject));
             proxy = new Proxy(service, new DataServiceProxy());
         });
 
         it('should be able to proxy name requests', () => {
-            expect(proxy.name).to.equal("DataObject");
+            expect(proxy.name).to.equal('DataObject');
         });
 
         it('should be able to proxy function calls', (done) => {
-            proxy.insert(new DataObject("123")).then(() => {
+            proxy.insert('123', new DataObject('123')).then(() => {
                 done();
             });
         });
-
     });
-    
 });

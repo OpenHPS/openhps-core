@@ -1,33 +1,35 @@
-import { Service } from "./service";
-import { DataFrame, ReferenceSpace } from "./data";
-import { ModelImpl } from "./graph/_internal/implementations";
-import { Model } from "./Model";
-import { GraphBuilder } from "./graph/builders/GraphBuilder";
+import 'reflect-metadata';
+import { Service } from './service';
+import { DataFrame, ReferenceSpace } from './data';
+import { ModelGraph } from './graph/_internal/implementations';
+import { Model } from './Model';
+import { GraphBuilder } from './graph/builders/GraphBuilder';
+import { GraphShape } from './graph';
 
 /**
  * Model builder to construct and build a [[Model]] consisting of graph shapes and services.
- * 
+ *
  * ## Usage
  * Models can be created using the [[ModelBuilder]]. Once you have added all services and constructed the graph, you can build the model using the ```build()``` function. A promise will be returned with the created model.
- * 
+ *
  * ```typescript
  * import { ModelBuilder } from '@openhps/core';
- * 
+ *
  * ModelBuilder.create()
  *     .build().then(model => {
  *         // ...
  *     });
  * ```
  * The graph shape of a model is immutable and can not be altered after building.
- * 
+ *
  * ### Shape Builder
  * Shapes can be created by starting with the ```from()``` function. This function takes an optional
  * parameter of one or multiple [source nodes](#sourcenode).
- * 
+ *
  * In order to end a shape, the ```to()``` function needs to be called with one or more optional [sink nodes](#sinknode).
  * ```typescript
  * import { ModelBuilder } from '@openhps/core';
- * 
+ *
  * ModelBuilder.create()
  *     .from()
  *     .to()
@@ -35,11 +37,11 @@ import { GraphBuilder } from "./graph/builders/GraphBuilder";
  *         // ...
  *     });
  * ```
- * 
+ *
  * Alternatively for readability with multiple shapes, the shapes can individually be created using the ```addShape()``` function as shown below.
  * ```typescript
  * import { ModelBuilder, GraphBuilder } from '@openhps/core';
- * 
+ *
  * ModelBuilder.create()
  *     .addShape(
  *       GraphBuilder.create()
@@ -49,13 +51,13 @@ import { GraphBuilder } from "./graph/builders/GraphBuilder";
  *         // ...
  *     });
  * ```
- * 
+ *
  * #### Building Source Processors
  * It is possible to have multiple processing nodes between the source and sink. These processing nodes can manipulate the data frame
  * when it traverses from node to node.
  * ```typescript
  * import { ModelBuilder } from '@openhps/core';
- * 
+ *
  * ModelBuilder.create()
  *     .from(...)
  *     .via(new ComputingNode())
@@ -65,14 +67,14 @@ import { GraphBuilder } from "./graph/builders/GraphBuilder";
  *         // ...
  *     });
  * ```
- * 
+ *
  * #### Helper Functions
  * Helper functions can replace the ```via()``` function. Commonly used nodes such as frame filters, merging of data frames from
  * multiple sources, ... can be replaced with simple functions as ```filter()``` or ```merge()``` respectively.
  * ```typescript
  * import { ModelBuilder } from '@openhps/core';
  * import { CSVSourceNode, CSVSinkNode } from '@openhps/csv';
- * 
+ *
  * ModelBuilder.create()
  *     .from(
  *         new CSVSourceNode('scanner1.csv', ...),
@@ -88,89 +90,135 @@ import { GraphBuilder } from "./graph/builders/GraphBuilder";
  *         // ...
  *     });
  * ```
- * 
+ *
  * ### Debug Logging
  * When building the model, you can provide a logger callback that has two arguments. An error level complying
  * with normal log levels and a log object that represents an object.
  * ```typescript
  * import { ModelBuilder } from '@openhps/core';
- * 
+ *
  * ModelBuilder.create()
  *     // Set the logger that will be used by all nodes and services
- *     .withLogger((level: string, log: any) => { 
- *         console.log(log); 
+ *     .withLogger((level: string, log: any) => {
+ *         console.log(log);
  *     })
  *     // ...
  *     .build().then(model => {
  *      // ...
  *     });
  * ```
- * 
+ *
  * ### Adding Services
  * Adding services can be done using the ```addService()``` function in the model builder.
  * ```typescript
  * import { ModelBuilder } from '@openhps/core';
- * 
+ *
  * ModelBuilder.create()
  *     .addService(...)
  *     // ...
  *     .build().then(model => {
- * 
+ *
  *     });
  * ```
  */
-export class ModelBuilder<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame> extends GraphBuilder<In, Out> {
-
+export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends GraphBuilder<In, Out> {
     protected constructor() {
-        super(new ModelImpl<In, Out>());
-        this.graph.name = "model";
+        super(new ModelGraph<In, Out>());
+        this.graph.name = 'model';
     }
 
-    public static create<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame>(): ModelBuilder<In, Out> {
+    public static create<In extends DataFrame, Out extends DataFrame>(): ModelBuilder<In, Out> {
         return new ModelBuilder();
     }
 
     /**
      * Model logger
-     * @param logger Logging function 
+     *
+     * @param {Function} logger Logging function
+     * @returns {ModelBuilder} Model builder instance
      */
-    public withLogger(logger: (level: string, log: any) => void): ModelBuilder<In, Out> {
+    public withLogger(logger: (level: string, log: any) => void): this {
         this.graph.logger = logger;
         return this;
     }
 
-    public withReferenceSpace(space: ReferenceSpace): ModelBuilder<In, Out> {
-        (this.graph as ModelImpl<In, Out>).referenceSpace = space;
+    public withReferenceSpace(space: ReferenceSpace): this {
+        (this.graph as ModelGraph<In, Out>).referenceSpace = space;
+        return this;
+    }
+
+    /**
+     * Event when model is ready
+     *
+     * @param {string} name ready
+     * @param {Function} listener Event callback
+     */
+    public on(name: 'ready', listener: () => Promise<void> | void): this;
+    /**
+     * Event before building the model
+     *
+     * @param {string} name prebuild
+     * @param {Function} listener Event callback
+     */
+    public on(name: 'prebuild', listener: () => Promise<void> | void): this;
+    /**
+     * Event after building the model
+     *
+     * @param {string} name postbuild
+     * @param {Function} listener Event callback
+     */
+    public on(name: 'postbuild', listener: (model: Model) => Promise<void> | void): this;
+    public on(name: string | symbol, listener: (...args: any[]) => void): this {
+        this.graph.once(name, listener);
         return this;
     }
 
     /**
      * Add a service to the model
-     * @param service Service to add
+     *
+     * @param {Service} service Service to add
+     * @param {ProxyHandler} [proxy] Proxy handler
+     * @returns {ModelBuilder} Model builder instance
      */
-    public addService(service: Service): ModelBuilder<In, Out> {
-        (this.graph as ModelImpl<In, Out>).addService(service);
+    public addService(service: Service, proxy?: ProxyHandler<any>): this {
+        (this.graph as ModelGraph<In, Out>).addService(service, proxy);
         return this;
+    }
+
+    /**
+     * Add graph shape to graph
+     *
+     * @param {GraphBuilder | GraphShape} shape Graph builder or abstract graph
+     * @returns {GraphBuilder} Current graph builder instance
+     */
+    public addShape(shape: GraphBuilder<any, any> | GraphShape<any, any>): this {
+        if (shape instanceof ModelGraph) {
+            // Add services
+            (shape as Model).findAllServices().forEach((service) => {
+                this.addService(service);
+            });
+        } else if (shape instanceof ModelBuilder) {
+            (shape.graph as Model).findAllServices().forEach((service) => {
+                this.addService(service);
+            });
+        }
+        return super.addShape(shape);
     }
 
     public build(): Promise<Model<In, Out>> {
         return new Promise((resolve, reject) => {
-            this.graph.nodes.forEach(node => {
-                node.logger = this.graph.logger;
-            });
-            (this.graph as ModelImpl<In, Out>).findAllServices().forEach(service => {
+            (this.graph as ModelGraph<In, Out>).findAllServices().forEach((service) => {
                 service.logger = this.graph.logger;
             });
             this.graph.validate();
             this.graph.once('ready', () => {
                 resolve(this.graph as Model<In, Out>);
             });
-            this.graph.emitAsync('build', this).catch(ex => {
+            this.graph.emitAsync('build', this).catch((ex) => {
                 // Destroy model
                 this.graph.emit('destroy');
                 reject(ex);
             });
         });
     }
-    
 }

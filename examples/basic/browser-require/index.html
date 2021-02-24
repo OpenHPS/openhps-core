@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Example - OpenHPS Browser</title>
+    </head>
+    <body>
+        <script src="https://cdn.jsdelivr.net/npm/d3-require@1"></script>
+        <script>
+            d3.require('../../../dist/web/openhps-core.min.js').then(core => {
+                console.log(core);
+                core.ModelBuilder.create()
+                    .from()
+                    .to(new core.CallbackSinkNode(frame => {
+                        throw new Error(`test`);
+                    }))
+                    .build().then(model => {
+                        model.push(new core.DataFrame());
+                    });
+            }).catch(console.error);
+        </script>
+    </body>
+</html>

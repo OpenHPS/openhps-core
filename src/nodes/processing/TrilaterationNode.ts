@@ -1,14 +1,14 @@
-import { ObjectProcessingNode } from "../ObjectProcessingNode";
-import { 
-    DataFrame, 
-    DataObject, 
-    RelativeDistancePosition, 
-    SensorObject, 
-    Absolute3DPosition, 
-    Absolute2DPosition, 
-    GeographicalPosition 
-} from "../../data";
-import { Model } from "../../Model";
+import {
+    DataFrame,
+    DataObject,
+    RelativeDistancePosition,
+    AbsolutePosition,
+    Absolute2DPosition,
+    Absolute3DPosition,
+    GeographicalPosition,
+} from '../../data';
+import { RelativePositionProcessing } from './RelativePositionProcessing';
+import { ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
 
 /**
  * Trillateration processing node
@@ -16,113 +16,110 @@ import { Model } from "../../Model";
  * - [[Absolute2DPosition]]
  * - [[Absolute3DPosition]]
  * - [[GeographicalPosition]]
+ *
+ * @category Processing node
  */
-export class TrilaterationNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
+export class TrilaterationNode<InOut extends DataFrame> extends RelativePositionProcessing<
+    InOut,
+    RelativeDistancePosition
+> {
+    protected options: TrilaterationOptions;
 
-    public processObject(dataObject: SensorObject, dataFrame: InOut): Promise<DataObject> {
+    constructor(options?: TrilaterationOptions) {
+        super(RelativeDistancePosition, options);
+        this.options.incrementStep = this.options.incrementStep || 1;
+    }
+
+    public processRelativePositions<P extends Absolute2DPosition | Absolute3DPosition | GeographicalPosition>(
+        dataObject: DataObject,
+        relativePositions: Map<RelativeDistancePosition, DataObject>,
+    ): Promise<DataObject> {
         return new Promise((resolve, reject) => {
-            const referencePromises = new Array();
-            const index = new Map<string, RelativeDistancePosition[]>();
-            for (const relativePosition of dataObject.relativePositions) {
-                // Only use relative distance locations
-                if (relativePosition instanceof RelativeDistancePosition) {
-                    if (index.has(relativePosition.referenceObjectUID)) {
-                        index.get(relativePosition.referenceObjectUID).push(relativePosition);
-                    } else {
-                        index.set(relativePosition.referenceObjectUID, [relativePosition]);
-                    }
-                    referencePromises.push(this._findObjectByName(relativePosition.referenceObjectUID, relativePosition.referenceObjectType, dataFrame));
-                }
-            }
-
-            Promise.all(referencePromises).then(referenceObjects => {
-                // Filter relative locations that have an absolute location
-                const filteredRelativePositions = new Array<RelativeDistancePosition>();
-                const objectCache = new Map<string, DataObject>();
-                referenceObjects.forEach((referenceObject: DataObject) => {
-                    if (referenceObject.getPosition() !== undefined) {
-                        objectCache.set(referenceObject.uid, referenceObject);
-                        index.get(referenceObject.uid).forEach(relativePosition => {
-                            filteredRelativePositions.push(relativePosition);
-                        });
-                    }
-                });
-
-                const objects = new Array<DataObject>();
-                const points = new Array();
-                const distances = new Array();
-                filteredRelativePositions.forEach(filteredRelativePosition => {
-                    const object = objectCache.get(filteredRelativePosition.referenceObjectUID);
+            const objects: DataObject[] = [];
+            const points: P[] = [];
+            const distances: number[] = [];
+            relativePositions.forEach((object, relativePosition) => {
+                if (object.getPosition()) {
                     objects.push(object);
-                    points.push(object.getPosition());
-                    distances.push(filteredRelativePosition.distance);
-                });
-
-                switch (filteredRelativePositions.length) {
-                    case 0: // Unable to calculate absolute location
-                        resolve(dataObject);
-                        break;
-                    case 1: // Use relative location + accuracy
-                    case 2: // Midpoint of two locations
-                    case 3: // Trilateration
-                    default:
-                        switch (true) {
-                            case objects[0].getPosition() instanceof Absolute3DPosition:
-                                Absolute3DPosition.trilaterate(points, distances).then(location => {
-                                    if (location !== null)
-                                        dataObject.setPosition(location);
-                                    resolve(dataObject);
-                                }).catch(ex => {
-                                    reject(ex);
-                                });
-                                break;
-                            case objects[0].getPosition() instanceof Absolute2DPosition:
-                                Absolute2DPosition.trilaterate(points, distances).then(location => {
-                                    if (location !== null)
-                                        dataObject.setPosition(location);
-                                    resolve(dataObject);
-                                }).catch(ex => {
-                                    reject(ex);
-                                });
-                                break;
-                            case objects[0].getPosition() instanceof GeographicalPosition:
-                                GeographicalPosition.trilaterate(points, distances).then(location => {
-                                    if (location !== null)
-                                        dataObject.setPosition(location);
-                                    resolve(dataObject);
-                                }).catch(ex => {
-                                    reject(ex);
-                                });
-                                break;
-                            default:
-                                resolve(dataObject);
-                        }
-                        break;
+                    points.push(object.getPosition() as P);
+                    distances.push(relativePosition.distance);
                 }
-            }).catch(ex => {
-                reject(ex);
             });
+
+            let position: P;
+            switch (objects.length) {
+                case 0:
+                case 1:
+                    return resolve(dataObject);
+                case 2:
+                    position = points[0].midpoint(points[1] as any, distances[0], distances[1]) as P;
+                    if (position !== null) dataObject.setPosition(position);
+                    return resolve(dataObject);
+                case 3:
+                default:
+                    this.trilaterate(points, distances)
+                        .then((position) => {
+                            if (position !== null) dataObject.setPosition(position);
+                            resolve(dataObject);
+                        })
+                        .catch(reject);
+                    break;
+            }
         });
     }
 
-    private _findObjectByName(uid: string, type: string, dataFrame: InOut): Promise<DataObject> {
-        if (dataFrame.hasObject(new DataObject(uid))) {
-            return new Promise<DataObject>((resolve, reject) => {
-                resolve(dataFrame.getObjectByUID(uid));
-            });
-        }
+    public trilaterate<P extends AbsolutePosition>(points: P[], distances: number[]): Promise<P> {
+        return new Promise<P>((resolve) => {
+            const v = points.map((p) => p.toVector3());
+            const ex = v[1].sub(v[0]).clone().divideScalar(v[1].length());
+            const i = ex.dot(v[2].clone().sub(v[0]));
+            const a = v[2].clone().sub(v[0]).sub(ex.clone().multiplyScalar(i));
+            const ey = a.clone().divideScalar(a.length());
+            const ez = ex.clone().cross(ey);
+            const d = v[1].clone().sub(v[0]).length();
+            const j = ey.clone().dot(v[2].clone().sub(v[0]));
 
-        const model = (this.graph as Model<any, any>);
-        const defaultService = model.findDataService(DataObject);
-        if (type === undefined) {
-            return defaultService.findByUID(uid);
-        }
-        const service = model.findDataServiceByName(type);
-        if (service === undefined) {
-            return defaultService.findByUID(uid);
-        } else {
-            return service.findByUID(uid);
-        }
+            // Calculate coordinates
+            let AX = distances[0];
+            let BX = distances[1];
+            let CX = distances[2];
+
+            let b = -1;
+            let x = 0;
+            let y = 0;
+            do {
+                x = (Math.pow(AX, 2) - Math.pow(BX, 2) + Math.pow(d, 2)) / (2 * d);
+                y = (Math.pow(AX, 2) - Math.pow(CX, 2) + Math.pow(i, 2) + Math.pow(j, 2)) / (2 * j) - (i / j) * x;
+                b = Math.pow(AX, 2) - Math.pow(x, 2) - Math.pow(y, 2);
+
+                // Increase distances
+                AX += this.options.incrementStep;
+                BX += this.options.incrementStep;
+                CX += this.options.incrementStep;
+            } while (b < 0);
+            const z = Math.sqrt(b);
+            if (isNaN(z)) {
+                return resolve(null);
+            }
+
+            const point = points[0].clone();
+            point.unit = points[0].unit;
+            point.fromVector(
+                v[0].clone().add(ex.multiplyScalar(x)).add(ey.multiplyScalar(y)).add(ez.multiplyScalar(z)),
+            );
+            return resolve((point as unknown) as P);
+        });
     }
+}
 
+export interface TrilaterationOptions extends ObjectProcessingNodeOptions {
+    /**
+     * Maximum number of iterations
+     */
+    maxIterations?: number;
+    tolerance?: number;
+    /**
+     * Incrementation step
+     */
+    incrementStep?: number;
 }

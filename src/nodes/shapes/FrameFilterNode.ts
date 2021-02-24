@@ -1,22 +1,22 @@
-import { DataFrame } from "../../data";
-import { ProcessingNode } from "../ProcessingNode";
+import { DataFrame } from '../../data';
+import { ProcessingNode, ProcessingNodeOptions } from '../ProcessingNode';
 
+/**
+ * @category Flow shape
+ */
 export class FrameFilterNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
-    private _filterFn: (frame: InOut) => boolean;
-
-    constructor(filterFn: (frame: InOut) => boolean) {
-        super();
-        this._filterFn = filterFn;
+    constructor(filterFn: (frame: InOut) => boolean, options?: ProcessingNodeOptions) {
+        super(options);
+        this.options.frameFilter = filterFn.bind(this);
     }
 
     public process(frame: InOut): Promise<InOut> {
-        return new Promise<InOut>((resolve, reject) => {
-           if (this._filterFn(frame)) {
-               resolve(frame);
-           } else {
-               resolve();
-           }
+        return new Promise<InOut>((resolve) => {
+            if (this.options.frameFilter(frame)) {
+                resolve(frame);
+            } else {
+                resolve(undefined);
+            }
         });
     }
-
 }

@@ -1,90 +1,123 @@
-import { DataFrame, DataObject } from "../data";
-import { Node } from "../Node";
-import { NodeDataService, NodeData } from "../service";
-import { Model } from "../Model";
+import { DataFrame, DataObject } from '../data';
+import { Node, NodeOptions } from '../Node';
+import { NodeDataService, NodeData } from '../service';
+import { PushOptions } from '../graph';
 
 /**
- * Processing node
+ * Node that processes a dataframe or the contained objects.
+ *
+ * ## Usage
+ *
+ * ### Creating a ProcessingNode
+ * Processing nodes hide the push and pull functionalities from a regular node. When a push is received, this
+ * data frame is provided to the ```process()``` method that has to be implemented. When a pull is received, this pull is
+ * forwarded to all incoming nodes.
+ * ```typescript
+ * import { DataFrame, DataObject, ProcessingNode } from '@openhps/core';
+ *
+ * export class CustomProcessingNode<In extends DataFrame, Out extends DataFrame> extends ProcessingNode<In, Out> {
+ *     // ...
+ *     public process(data: In, options?: GraphOptions): Promise<Out> {
+ *         return new Promise<Out>((resolve, reject) => {
+ *             // ... process/manipulate the data frame
+ *             data.addObject(new DataObject("custom_process_object"));
+ *             resolve(data);
+ *         });
+ *     }
+ * }
+ * ```
+ *
+ * @category Processing node
  */
-export abstract class ProcessingNode<In extends DataFrame | DataFrame[] = DataFrame, Out extends DataFrame | DataFrame[] = DataFrame> extends Node<In, Out> {
+export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame> extends Node<
+    In,
+    Out
+> {
+    protected options: ProcessingNodeOptions;
 
-    constructor() {
-        super();
-
+    constructor(options?: ProcessingNodeOptions) {
+        super(options);
+        this.options.frameFilter = this.options.frameFilter || (() => true);
         this.on('push', this._onPush.bind(this));
     }
 
-    private _onPush(frame: In): Promise<void> {
+    private _onPush(frame: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const servicePromises = new Array();
-            const pushPromises = new Array();
-            
-            this.process(frame).then(result => {
-                if (result === null || result === undefined) {
-                    return resolve();
-                } else if (result instanceof Array) {
-                    
-                } else {
-                    const oldFrameService = this.findDataFrameService(frame as DataFrame);
-                    const frameService = this.findDataFrameService(result as DataFrame);
-                    
-                    if (frameService !== null && frameService !== undefined) { 
-                        if (frameService.name !== oldFrameService.name) {
-                            // Delete frame from old service
-                            servicePromises.push(oldFrameService.delete((frame as DataFrame).uid));
-                        }
-                        
-                        // Update the frame
-                        servicePromises.push(frameService.insert(result as DataFrame));
-                    }
-                }
-                
-                this.outputNodes.forEach(node => {
-                    pushPromises.push(node.push(result));
+            const processPromises: Array<Promise<Out>> = [];
+
+            if (Array.isArray(frame)) {
+                frame.filter(this.options.frameFilter).forEach((f) => {
+                    processPromises.push(this.process(f, options));
                 });
-            }).catch(ex => {
-                if (ex === undefined) {
-                    this.logger("warning", {
-                        message: `Exception thrown in processing node ${this.uid} but no exception given!`
+            } else if (this.options.frameFilter(frame)) {
+                processPromises.push(this.process(frame, options));
+            }
+
+            const output: Out[] = [];
+            Promise.all(processPromises)
+                .then((results) => {
+                    const servicePromises: Array<Promise<unknown>> = [];
+                    results.forEach((result) => {
+                        if (result) {
+                            output.push(result);
+                        }
                     });
-                }
-                reject(ex);
-            });
-
-            // Push processed result to the next node
-            Promise.all(servicePromises).then(() => {
-                return Promise.all(pushPromises);
-            }).then(() => {
-                resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+                    return Promise.all(servicePromises);
+                })
+                .then(() => {
+                    if (output.length > 0) {
+                        this.outlets.forEach((outlet) =>
+                            outlet.push(output.length === 1 ? output[0] : output, options),
+                        );
+                    }
+                    resolve();
+                })
+                .catch((ex) => {
+                    if (ex === undefined) {
+                        this.logger('warning', {
+                            message: `Exception thrown in processing node ${this.uid} but no exception given!`,
+                        });
+                    }
+                    reject(ex);
+                });
         });
     }
 
-    public findNodeDataService(): NodeDataService<NodeData> {
-        return (this.graph as Model).findDataService(NodeData);
+    protected findNodeDataService(): NodeDataService<NodeData> {
+        return this.model.findDataService(NodeData);
     }
 
-    public getNodeData(dataObject: DataObject): Promise<any> {
+    /**
+     * Get node data
+     *
+     * @param {DataObject} dataObject Data object to get node data from
+     * @returns {Promise<any>} Promise with node data
+     */
+    protected getNodeData(dataObject: DataObject): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.findNodeDataService().findData(this.uid, dataObject).then(data => {
-                resolve(data);
-            }).catch(ex => {
-                reject(ex);
-            });
+            this.findNodeDataService().findData(this.uid, dataObject).then(resolve).catch(reject);
         });
     }
 
-    public setNodeData(dataObject: DataObject, data: any): Promise<void> {
+    /**
+     * Set node data
+     *
+     * @param {DataObject} dataObject Data object to store data for
+     * @param {any} data Data to store
+     * @returns {Promise<any>} Promise with stored node data
+     */
+    protected setNodeData(dataObject: DataObject, data: any): Promise<NodeData> {
         return new Promise((resolve, reject) => {
-            this.findNodeDataService().insertData(this.uid, dataObject, data).then(() => {
-                resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            this.findNodeDataService().insertData(this.uid, dataObject, data).then(resolve).catch(reject);
         });
     }
 
-    public abstract process(frame: In): Promise<Out>;
+    public abstract process(frame: In, options?: PushOptions): Promise<Out>;
+}
+
+export interface ProcessingNodeOptions extends NodeOptions {
+    /**
+     * Frame filter to specify what frames are processed by this node
+     */
+    frameFilter?: (frame: DataFrame) => boolean;
 }

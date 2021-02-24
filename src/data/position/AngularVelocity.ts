@@ -1,77 +1,25 @@
-import { AngularVelocityUnit } from "../../utils/unit/AngularVelocityUnit";
-import { SerializableObject, SerializableMember } from "../decorators";
-import * as math from 'mathjs';
+import { AngularVelocityUnit } from '../../utils/unit/AngularVelocityUnit';
+import { SerializableMember, SerializableObject } from '../decorators';
+import { Vector3 } from '../../utils/math';
 
+/**
+ * @category Position
+ */
 @SerializableObject()
-export class AngularVelocity extends Array<number> {
+export class AngularVelocity extends Vector3 {
+    @SerializableMember({
+        isRequired: false,
+    })
+    public accuracy: number;
 
-    constructor(x: number = 0, y: number = 0, z: number = 0, unit: AngularVelocityUnit<any, any> = AngularVelocityUnit.RADIANS_PER_SECOND) {
-        super();
-        this.x = unit.convert(x, AngularVelocityUnit.RADIANS_PER_SECOND);
-        this.y = unit.convert(y, AngularVelocityUnit.RADIANS_PER_SECOND);
-        this.z = unit.convert(z, AngularVelocityUnit.RADIANS_PER_SECOND);
+    constructor(x?: number, y?: number, z?: number, unit = AngularVelocityUnit.RADIAN_PER_SECOND) {
+        super(x, y, z, unit, AngularVelocityUnit.RADIAN_PER_SECOND);
     }
 
-    @SerializableMember()
-    public get x(): number {
-        return this[0];
+    public static fromArray(
+        array: number[],
+        unit: AngularVelocityUnit = AngularVelocityUnit.RADIAN_PER_SECOND,
+    ): AngularVelocity {
+        return new AngularVelocity(array[0], array[1], array[2], unit);
     }
-
-    public set x(value: number) {
-        this[0] = value;
-    }
-
-    @SerializableMember()
-    public get y(): number {
-        return this[1];
-    }
-
-    public set y(value: number) {
-        this[1] = value;
-    }
-
-    public get z(): number {
-        return this[2];
-    }
-
-    @SerializableMember()
-    public set z(value: number) {
-        this[2] = value;
-    }
-
-    public static fromVector(vector: number[], unit: AngularVelocityUnit<any, any> = AngularVelocityUnit.RADIANS_PER_SECOND): AngularVelocity {
-        return new AngularVelocity(vector[0], vector[1], vector[2], unit);
-    }
-
-    public toVector(unit?: AngularVelocityUnit<any, any>): number [] {
-        if (unit === undefined || unit === AngularVelocityUnit.RADIANS_PER_SECOND) {
-            return [this.x, this.y, this.z];
-        } else {
-            return [AngularVelocityUnit.RADIANS_PER_SECOND.convert(this.x, unit), 
-                AngularVelocityUnit.RADIANS_PER_SECOND.convert(this.y, unit), 
-                AngularVelocityUnit.RADIANS_PER_SECOND.convert(this.z, unit)];
-        }
-    }
-
-    public toRotationMatrix(): number[][] {
-        const rotMatrixZ = [
-            [1, 0, 0, 0],
-            [0, Math.cos(this[2]), -Math.sin(this[2]), 0],
-            [0, Math.sin(this[2]), Math.cos(this[2]), 0],
-            [0, 0, 0, 1]
-        ];
-        const rotMatrixY = [
-            [Math.cos(this[1]), 0, Math.sin(this[1]), 0],
-            [0, 1, 0, 0],
-            [-Math.sin(this[1]), 0, Math.cos(this[1]), 0],
-            [0, 0, 0, 1]
-        ];
-        const rotMatrixX = [
-            [Math.cos(this[0]), -Math.sin(this[0]), 0, 0],
-            [Math.sin(this[0]), Math.cos(this[0]), 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1]
-        ];
-        return math.multiply(math.multiply(rotMatrixX, rotMatrixY), rotMatrixZ);
-    }    
 }

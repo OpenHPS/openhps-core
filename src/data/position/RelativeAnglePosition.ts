@@ -1,59 +1,84 @@
-import { RelativePosition } from "./RelativePosition";
-import { AngleUnit } from '../../utils';
+import { RelativePosition } from './RelativePosition';
+import { AngleUnit, Quaternion } from '../../utils';
 import { SerializableObject, SerializableMember } from '../decorators';
+import { DataSerializer } from '../DataSerializer';
 
 /**
  * Relative location to another reference object measured in the angle.
+ *
+ * @category Position
  */
 @SerializableObject()
-export class RelativeAnglePosition extends RelativePosition {
-    private _angle: number;
-    private _angleUnit: AngleUnit;
+export class RelativeAnglePosition implements RelativePosition<number> {
+    /**
+     * Position recording timestamp
+     */
+    @SerializableMember()
+    public timestamp: number = Date.now();
+    /**
+     * Reference object UID that this location is relative to
+     */
+    @SerializableMember()
+    public referenceObjectUID: string;
+    @SerializableMember()
+    public referenceObjectType: string;
+    /**
+     * Position accuracy
+     */
+    @SerializableMember()
+    public accuracy: number;
+    /**
+     * Orientation at recorded position
+     */
+    @SerializableMember()
+    public orientation: Quaternion = new Quaternion();
+    /**
+     * Angle to reference object
+     */
+    @SerializableMember()
+    public angle: number;
+    /**
+     * Angle unit
+     */
+    @SerializableMember()
+    public angleUnit: AngleUnit;
 
-    constructor(referenceObject?: any, angle?: number, angleUnit?: AngleUnit) {
-        super(referenceObject);
+    constructor(referenceObject?: any, angle?: number, angleUnit?: AngleUnit, orientation?: Quaternion) {
+        if (referenceObject !== undefined) {
+            if (referenceObject instanceof String || typeof referenceObject === 'string') {
+                this.referenceObjectUID = referenceObject as string;
+            } else {
+                this.referenceObjectType = referenceObject.constructor.name;
+                this.referenceObjectUID = referenceObject.uid;
+            }
+        }
         this.angle = angle;
-        this._angleUnit = angleUnit;
+        this.angleUnit = angleUnit;
+        if (orientation) {
+            this.orientation = orientation;
+        }
+    }
+
+    public get referenceValue(): number {
+        return this.angle;
+    }
+
+    public set referenceValue(value: number) {
+        this.angle = value;
+    }
+
+    public equals(position: this): boolean {
+        return this.timestamp === position.timestamp;
     }
 
     /**
-     * Get accuracy unit
+     * Clone the position
+     *
+     * @returns {RelativeAnglePosition} Cloned relative angle
      */
-    @SerializableMember()
-    public get accuracyUnit(): AngleUnit {
-        return super.accuracyUnit;
+    public clone(): this {
+        const serialized = DataSerializer.serialize(this);
+        const clone = DataSerializer.deserialize(serialized) as this;
+        return clone;
     }
-
-    public set accuracyUnit(unit: AngleUnit) {
-        super.accuracyUnit = unit;
-    }
-
-    /**
-     * Get angle to reference object
-     */
-    @SerializableMember()
-    public get angle(): number {
-        return this._angle;
-    }
-
-    /**
-     * Set angle to reference object
-     * @param angle Angle to reference object
-     */
-    public set angle(angle: number) {
-        this._angle = angle;
-    }
-
-    /**
-     * Get angle unit
-     */
-    @SerializableMember()
-    public get angleUnit(): AngleUnit {
-        return this._angleUnit;
-    }
-
-    public set angleUnit(angleUnit: AngleUnit) {
-        this._angleUnit = angleUnit;
-    }
-
 }

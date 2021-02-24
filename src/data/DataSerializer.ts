@@ -1,9 +1,15 @@
-import { TypedJSON } from "typedjson";
+import { TypedJSON, JsonObjectMetadata } from 'typedjson';
+import { Deserializer } from 'typedjson/src/deserializer';
+import { Serializer } from 'typedjson/src/serializer';
+
+const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
 
 /**
- * Data serializer allows the serialization of objects using the [[SerializableObject]] decorator.
- * 
+ * Allows the serialization and deserialization of objects using the [[SerializableObject]] decorator.
+ *
  * ## Usage
+ *
+ * ### Registration
  * Objects are registered upon loading with the [[SerializableObject]] decorator.
  * Manual registration is possible using:
  * ```typescript
@@ -13,8 +19,34 @@ import { TypedJSON } from "typedjson";
 export class DataSerializer {
     private static _serializableTypes: Map<string, new () => any> = new Map();
 
+    /**
+     * Manually register a new type
+     *
+     * @param {new () => any} type Type to register
+     */
     public static registerType(type: new () => any): void {
         this._serializableTypes.set(type.name, type);
+    }
+
+    /**
+     * Find the root TypedJSON metadata
+     *
+     * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
+     * @param {any} proto Prototype of target
+     * @returns {JsonObjectMetadata} Root object metadata
+     */
+    public static findRootMetaInfo(proto: any): JsonObjectMetadata {
+        const protoProto = Object.getPrototypeOf(proto);
+        if (!protoProto || !protoProto[META_FIELD]) {
+            return proto[META_FIELD];
+        }
+        return DataSerializer.findRootMetaInfo(protoProto);
+    }
+
+    public static unregisterType(type: new () => any): void {
+        if (this._serializableTypes.has(type.name)) {
+            this._serializableTypes.delete(type.name);
+        }
     }
 
     public static get serializableTypes(): Array<new () => any> {
@@ -24,38 +56,71 @@ export class DataSerializer {
     public static findTypeByName(name: string): new () => any {
         return this._serializableTypes.get(name);
     }
-    
-    public static serialize<T>(data: T): any {
+
+    /**
+     * Serialize data
+     *
+     * @param {any} data Data to serialize
+     * @returns {any} Serialized data
+     */
+    public static serialize<T extends any>(data: T): any {
         if (data === null || data === undefined) {
             return undefined;
         }
 
         const globalDataType = data.constructor;
 
+        // First check if it is a registered type
+        // this is important as some serializable classes
+        // may extend an array
         if (this.findTypeByName(data.constructor.name)) {
-            const serialized = new TypedJSON(globalDataType as any).toPlainJson(data) as any;
-            serialized['__type'] = globalDataType.name;
-            return serialized;
+            return DataSerializer.serializeObject(data, globalDataType as new () => T);
         } else if (Array.isArray(data)) {
-            const serializedResult = new Array();
-            data.forEach(d => {
-                if (d === null || d === undefined || d !== Object(d)) {
-                    serializedResult.push(d);
-                } else {
-                    const dataType = d.constructor;
-                    const serialized = new TypedJSON(dataType).toPlainJson(d) as any;
-                    serialized['__type'] = dataType.name;
-                    serializedResult.push(serialized);
-                }
-            });
-            return serializedResult;
+            return DataSerializer.serializeArray(data);
         } else {
-            const serialized = new TypedJSON(globalDataType as any).toPlainJson(data) as any;
-            serialized['__type'] = globalDataType.name;
+            return DataSerializer.serializeObject(data, globalDataType as new () => T);
+        }
+    }
+
+    protected static serializeArray<T>(data: T[]): any[] {
+        const serializedResult: any[] = [];
+        data.forEach((d) => {
+            if (d === null || d === undefined || d !== Object(d)) {
+                serializedResult.push(d);
+            } else {
+                const dataType = d.constructor;
+                serializedResult.push(DataSerializer.serializeObject(d, dataType as new () => T));
+            }
+        });
+        return serializedResult;
+    }
+
+    protected static serializeObject<T>(data: T, dataType: new () => T): any {
+        const typedJSON = new TypedJSON(dataType as new () => T);
+        const serializer: Serializer = (typedJSON as any).serializer;
+        // Error callback throwing does not work, capture error and put in 'error' variable
+        // TODO: Fix this, this is ugly
+        let error = undefined;
+        serializer.setErrorHandler((ex) => {
+            error = ex;
+        });
+        const serialized = typedJSON.toPlainJson(data) as any;
+        if (error) {
+            throw error;
+        } else if (serialized instanceof Object) {
+            serialized['__type'] = dataType.name;
+            return serialized;
+        } else {
             return serialized;
         }
     }
 
+    /**
+     * Deserialize data
+     *
+     * @param serializedData Data to deserialze
+     * @param dataType Optional data type to specify deserialization type
+     */
     public static deserialize<T>(serializedData: any, dataType?: new () => T): T;
     public static deserialize<T>(serializedData: any[], dataType?: new () => T): T[];
     public static deserialize<T>(serializedData: any, dataType?: new () => T): T | T[] {
@@ -64,28 +129,45 @@ export class DataSerializer {
         }
 
         if (Array.isArray(serializedData)) {
-            const deserializedResult = new Array();
-            serializedData.forEach(d => {
-                if (d === null || d === undefined) {
-                    deserializedResult.push(d);
-                } else {
-                    const detectedType = d['__type'] !== undefined ? this.findTypeByName(d['__type']) : Object;
-                    const finalType = dataType === undefined ? detectedType : dataType;
-                    if (finalType === undefined) {
-                        deserializedResult.push(d);
-                    }
-                    deserializedResult.push(new TypedJSON(finalType).parse(d));   
-                }
-            });
-            return deserializedResult;
+            return DataSerializer.deserializeArray(serializedData, dataType);
         } else {
-            const detectedType = serializedData['__type'] !== undefined ? this.findTypeByName(serializedData['__type']) : Object;
+            const detectedType =
+                serializedData['__type'] !== undefined ? this.findTypeByName(serializedData['__type']) : Object;
             const finalType = dataType === undefined ? detectedType : dataType;
             if (finalType === undefined) {
                 return serializedData;
             }
-            return new TypedJSON(finalType).parse(serializedData);
+            const typedJSON = new TypedJSON(finalType);
+            const deserializer: Deserializer<any> = (typedJSON as any).deserializer;
+            // Error callback throwing does not work, capture error and put in 'error' variable
+            // TODO: Fix this, this is ugly
+            let error = undefined;
+            deserializer.setErrorHandler((ex) => {
+                error = ex;
+            });
+            const result = typedJSON.parse(serializedData);
+            if (!result && error) {
+                throw error;
+            } else {
+                return result;
+            }
         }
     }
 
+    protected static deserializeArray<T>(serializedData: any[], dataType?: new () => T): T[] {
+        const deserializedResult: T[] = [];
+        serializedData.forEach((d) => {
+            if (d === null || d === undefined) {
+                deserializedResult.push(d);
+            } else {
+                const detectedType = d['__type'] !== undefined ? this.findTypeByName(d['__type']) : Object;
+                const finalType = dataType === undefined ? detectedType : dataType;
+                if (finalType === undefined) {
+                    deserializedResult.push(d);
+                }
+                deserializedResult.push(new TypedJSON(finalType).parse(d));
+            }
+        });
+        return deserializedResult;
+    }
 }

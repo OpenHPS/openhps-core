@@ -1,11 +1,15 @@
-import { DataFrame } from "../../data";
-import { ProcessingNode } from "../ProcessingNode";
-import { TimeUnit } from "../../utils";
+import { DataFrame } from '../../data';
+import { ProcessingNode } from '../ProcessingNode';
+import { TimeUnit } from '../../utils';
 
+/**
+ * @category Flow shape
+ */
 export class FrameDebounceNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
     private _timeout: number;
     private _timeoutUnit: TimeUnit;
     private _timer: NodeJS.Timeout;
+    private _accept = true;
 
     constructor(timeout: number, timeoutUnit: TimeUnit) {
         super();
@@ -18,13 +22,14 @@ export class FrameDebounceNode<InOut extends DataFrame> extends ProcessingNode<I
 
     /**
      * Start the timeout timer
+     *
+     * @returns {Promise<void>} Timer promise
      */
     private _start(): Promise<void> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this._timer = setInterval(() => {
-                const currentTime = new Date().getTime();
-                
-            }, this._timeoutUnit.convert(this._timeout, TimeUnit.MILLI));
+                this._accept = true;
+            }, this._timeoutUnit.convert(this._timeout, TimeUnit.MILLISECOND));
             resolve();
             this.emit('ready');
         });
@@ -37,9 +42,13 @@ export class FrameDebounceNode<InOut extends DataFrame> extends ProcessingNode<I
     }
 
     public process(frame: InOut): Promise<InOut> {
-        return new Promise<InOut>((resolve, reject) => {
-           
+        return new Promise<InOut>((resolve) => {
+            if (this._accept) {
+                this._accept = false;
+                resolve(frame);
+            } else {
+                resolve(undefined);
+            }
         });
     }
-
 }

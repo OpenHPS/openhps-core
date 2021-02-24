@@ -1,11 +1,14 @@
-import { DataFrame } from "../data";
-import { Node } from "../Node";
+import { DataFrame } from '../data';
+import { Node, NodeOptions } from '../Node';
 
-export class NamedNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
-
-    constructor(name: string) {
-        super();
-        this.name = name;
+/**
+ * @category Node
+ */
+export class NamedNode<InOut extends DataFrame> extends Node<InOut, InOut> {
+    constructor(name: string, options?: NodeOptions) {
+        super({
+            name,
+            ...options,
+        });
     }
-
 }

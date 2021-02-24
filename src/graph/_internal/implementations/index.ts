@@ -1,3 +1,1 @@
-export * from "./EdgeImpl";
-export * from "./GraphImpl";
-export * from './ModelImpl';
+export * from './ModelGraph';

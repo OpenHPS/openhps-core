@@ -1,60 +1,81 @@
-import * as math from 'mathjs';
-import { PropertyFilterNode } from "./PropertyFilterNode";
-import { FilterOptions } from "./FilterNode";
+import { PropertyFilterProcessingNode } from './PropertyFilterProcessingNode';
+import { FilterProcessingOptions } from './FilterProcessingNode';
 import { DataObject, DataFrame } from '../../../data';
+import { Vector3 } from '../../../utils';
 
 /**
  * Basic Kalman Filter processing node
+ *
+ * @category Processing node
  */
-export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterNode<InOut> {
-
-    constructor(objectFilter: (object: DataObject, frame?: DataFrame) => boolean,
-                propertySelector: (object: DataObject, frame?: InOut) => PropertyKey,
-                options: KalmanFilterOptions) {
-        super(objectFilter, propertySelector, options);
+export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
+    constructor(
+        propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey],
+        options: KalmanFilterOptions,
+    ) {
+        super(propertySelector, options);
     }
 
-    public initFilter<T extends number | number[]>(object: DataObject, value: T, options: KalmanFilterOptions): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
+    public initFilter<T extends number | Vector3>(
+        object: DataObject,
+        value: T,
+        options: KalmanFilterOptions,
+    ): Promise<any> {
+        return new Promise<any>((resolve) => {
+            Object.keys(options).forEach((key) => {
+                if (typeof (options as any)[key] === 'number') {
+                    (options as any)[key] = new Vector3((options as any)[key], 0, 0);
+                }
+            });
             resolve({ x: undefined, cov: NaN, ...options });
         });
     }
-    
-    public filter<T extends number | number[]>(object: DataObject, value: T, filter: any, options?: KalmanFilterOptions): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
+
+    public filter<T extends number | Vector3>(object: DataObject, value: T, filter: any): Promise<T> {
+        return new Promise<T>((resolve) => {
             const kf = new KalmanFilter(filter.R, filter.Q, filter.A, filter.B, filter.C, filter.x, filter.cov);
-            kf.filter(value);
+            const numeric = typeof value === 'number';
+            if (numeric) {
+                kf.filter(new Vector3(value as number, 0, 0));
+            } else {
+                kf.filter(value as Vector3);
+            }
 
             // Save the node data
             filter.x = kf.measurement;
             filter.cov = kf.covariance;
-            resolve(kf.measurement);
+
+            if (numeric) {
+                resolve(kf.measurement.x);
+            } else {
+                resolve(kf.measurement);
+            }
         });
     }
-
 }
 
-export class KalmanFilterOptions extends FilterOptions {
+export interface KalmanFilterOptions extends FilterProcessingOptions {
     /** Process noise */
-    public R: number | number[];
+    R: number | Vector3;
     /** Measurement noise */
-    public Q: number | number[];
+    Q: number | Vector3;
     /** State vector */
-    public A: number | number[];
+    A: number | Vector3;
     /** Control vector */
-    public B: number | number[];
+    B: number | Vector3;
     /** Measurement vector */
-    public C: number | number[];
+    C: number | Vector3;
 }
 
 /**
  * Basic Kalman Filter
+ *
  * @author Wouter Bulten
  * @see {@link http://github.com/wouterbulten/kalmanjs}
  * @copyright Copyright 2015-2018 Wouter Bulten
- * @license MIT License
+ * @license MIT
  */
-class KalmanFilter<T extends number | number[]> {
+class KalmanFilter<T extends Vector3> {
     /** Process noise */
     private _R: T;
     /** Measurement noise */
@@ -84,26 +105,32 @@ class KalmanFilter<T extends number | number[]> {
 
     /**
      * Filter a new value
-     * @param  {Number} z Measurement
-     * @param  {Number} u Control
-     * @return {Number}
+     *
+     * @param  {number} z Measurement
+     * @param  {number} u Control
+     * @returns {number} Filtered value
      */
-    public filter(z: T, u?: T): T {
+    public filter(z: Vector3, u?: Vector3): Vector3 {
         if (this._x === undefined) {
-            const ct = math.divide(1, this._C);
-            this._x = math.multiply(ct, z) as T;
-            this._cov = math.multiply(math.multiply(ct, this._Q), ct)  as T;
+            const ct = new Vector3(1, 1, 1).divide(this._C);
+            this._x = ct.clone().multiply(z) as T;
+            this._cov = ct.clone().multiply(this._Q).multiply(ct) as T;
         } else {
             // Compute prediction
             const predX = this.predict(u);
             const predCov = this.uncertainty();
 
             // Kalman gain
-            const K = math.multiply(math.multiply(predCov, this._C), math.divide(1, math.add(math.multiply(math.multiply(this._C, predCov), this._C), this._Q)));
+            const K = predCov
+                .clone()
+                .multiply(this._C)
+                .multiply(
+                    new Vector3(1, 1, 1).divide(this._C.clone().multiply(predCov).multiply(this._C).add(this._Q)),
+                );
 
             // Correction
-            this._x = math.add(predX, math.multiply(K, math.subtract(z, math.multiply(this._C, predX)))) as T;
-            this._cov = math.subtract(predCov, math.multiply(math.multiply(K, this._C), predCov)) as T;
+            this._x = predX.clone().add(K.clone().multiply(z.clone().sub(this._C.clone().multiply(predX)))) as T;
+            this._cov = predCov.clone().sub(K.clone().multiply(this._C).multiply(predCov));
         }
 
         return this._x;
@@ -111,24 +138,30 @@ class KalmanFilter<T extends number | number[]> {
 
     /**
      * Predict next value
-     * @param  {Number} [u] Control
-     * @return {Number}
+     *
+     * @param  {number} [u] Control
+     * @returns {number} Predicted value
      */
-    public predict(u?: T): T {
-        return math.add(math.multiply(this._A, this._x), u === undefined ? 0 : math.multiply(this._B, u)) as T;
+    public predict(u?: Vector3): Vector3 {
+        return this._A
+            .clone()
+            .multiply(this._x)
+            .add(u === undefined ? new Vector3() : this._B.clone().multiply(u));
     }
-    
+
     /**
      * Return uncertainty of filter
-     * @return {Number}
+     *
+     * @returns {number} Uncertainty
      */
     public uncertainty(): T {
-        return math.add(math.multiply(math.multiply(this._A, this._cov), this._A), this._R) as T;
+        return this._A.clone().multiply(this._cov).multiply(this._A).add(this._R);
     }
-    
+
     /**
      * Return the last filtered measurement
-     * @return {Number}
+     *
+     * @returns {number} Last measurement
      */
     public get measurement(): T {
         return this._x;

@@ -1,128 +1,156 @@
-import { SerializableObject, SerializableMember } from "../decorators";
-import * as math from 'mathjs';
-import { Absolute2DPosition } from "./Absolute2DPosition";
-import { LengthUnit } from "../../utils";
+import { SerializableObject, SerializableMember } from '../decorators';
+import { LengthUnit, Vector3 } from '../../utils';
+import { AbsolutePosition } from './AbsolutePosition';
+import { Velocity } from './Velocity';
+import { TimeService } from '../../service';
+import { AngularVelocity } from './AngularVelocity';
+import { LinearVelocity } from './LinearVelocity';
+import { Orientation } from './Orientation';
 
 /**
- * Absolute cartesian 3D position. This class extends a [[AbsolutePosition2D]]. This location can be used both as
+ * Absolute cartesian 3D position. This class extends a [[Vector3]]. This location can be used both as
  * an absolute location or relative location.
+ *
+ * @category Position
  */
 @SerializableObject()
-export class Absolute3DPosition extends Absolute2DPosition {
-    private _z: number = 0;
-
-    constructor(x?: number, y?: number, z?: number) {
-        super(x, y);
-        this.z = z;
-    }
-
+export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
     /**
-     * Get Z coordinate
+     * Position recording timestamp
      */
     @SerializableMember()
-    public get z(): number {
-        return this._z;
-    }
-
+    public timestamp: number = TimeService.now();
     /**
-     * Set Z coordinate
-     * @param z Z coordinate
+     * Velocity at recorded position
+     *
+     * @deprecated use linearVelocity and angularVelocity instead
      */
-    public set z(z: number) {
-        this._z = z;
-    }
+    @SerializableMember()
+    public velocity: Velocity = new Velocity();
+    /**
+     * Orientation at recorded position
+     */
+    @SerializableMember({
+        deserializer: Orientation.deserializer,
+        serializer: Orientation.serializer,
+    })
+    public orientation: Orientation;
+    /**
+     * Position unit
+     */
+    @SerializableMember()
+    public unit: LengthUnit = LengthUnit.METER;
+    /**
+     * Position reference space UID
+     */
+    @SerializableMember()
+    public referenceSpaceUID: string;
+    /**
+     * Position accuracy
+     */
+    @SerializableMember()
+    public accuracy: number;
 
     /**
      * Midpoint to another location
-     * @param otherPosition Other location
+     *
+     * @param {Absolute3DPosition} otherPosition Other location
+     * @param {number} distanceSelf Distance to itself
+     * @param {number} distanceOther Distance to other position
+     * @returns {Absolute3DPosition} Calculated midpoint
      */
-    public midpoint(otherPosition: Absolute3DPosition, distanceSelf: number = 1, distanceOther: number = 1): Promise<Absolute3DPosition> {
-        return new Promise<Absolute3DPosition>((resolve, reject) => {
-            const newPoint = new Absolute3DPosition();
-            newPoint.accuracy = this.accuracy + otherPosition.accuracy / 2;
-            newPoint.x = (this.x + otherPosition.x) / 2;
-            newPoint.y = (this.y + otherPosition.y) / 2;
-            newPoint.z = (this.z + otherPosition.z) / 2;
-            resolve(newPoint);
-        });
+    public midpoint(otherPosition: Absolute3DPosition, distanceSelf = 1, distanceOther = 1): Absolute3DPosition {
+        const newPoint = new Absolute3DPosition();
+        newPoint.accuracy = this.accuracy + otherPosition.accuracy / 2;
+        newPoint.set((this.x + otherPosition.x) / 2, (this.y + otherPosition.y) / 2, (this.z + otherPosition.z) / 2);
+        return newPoint;
     }
 
-    public static trilaterate(points: Absolute3DPosition[], distances: number[]): Promise<Absolute3DPosition> {
-        return new Promise<Absolute3DPosition>((resolve, reject) => {
-            switch (points.length) {
-                case 0:
-                    resolve(null);
-                    break;
-                case 1:
-                    resolve(points[0]);
-                    break;
-                case 2:
-                    resolve(points[0].midpoint(points[1], distances[0], distances[1]));
-                    break;
-                case 3:
-                default:
-                    const vectors = [
-                        points[0].toVector(),
-                        points[1].toVector(),
-                        points[2].toVector()
-                    ];
-                    const eX = math.divide(math.subtract(vectors[1], vectors[0]), math.norm(math.subtract(vectors[1], vectors[0]) as number[]));
-                    const i = math.multiply(eX, math.subtract(vectors[2], vectors[0])) as number;
-                    const eY = math.divide((math.subtract(math.subtract(vectors[2], vectors[0]), math.multiply(i, eX))), math.norm(math.subtract(math.subtract(vectors[2], vectors[0]) as number[], math.multiply(i, eX) as number[]) as number[]));
-                    const j = math.multiply(eY, math.subtract(vectors[2], vectors[0])) as number;
-                    const eZ = math.multiply(eX, eY) as number;
-                    const d = math.norm(math.subtract(vectors[1], vectors[0]) as number[]) as number;
-                
-                    // Calculate coordinates
-                    let AX = distances[0];
-                    let BX = distances[1];
-                    let CX = distances[2];
-                    
-                    let incr = -1;
-                    let x = 0;
-                    let y = 0;
-                    // TODO: Itteration guard
-                    do {
-                        x = (Math.pow(AX, 2) - Math.pow(BX, 2) + Math.pow(d, 2)) / (2 * d);
-                        y = ((Math.pow(AX, 2) - Math.pow(CX, 2) + Math.pow(i, 2) + Math.pow(j, 2)) / (2 * j)) - ((i / j) * x);
-                        incr = Math.pow(AX, 2) - Math.pow(x, 2) - Math.pow(y, 2);
-                        // Increase distances
-                        AX += 0.10;
-                        BX += 0.10;
-                        CX += 0.10;
-                    } while (incr < 0);
-                    const z = Math.sqrt(incr);
-            
-                    const point = new Absolute3DPosition();
-                    point.unit = points[0].unit;
-                    point.fromVector(math.add(vectors[0], math.add(math.add(math.multiply(eX, x), math.multiply(eY, y)), math.multiply(eZ, z))) as number[]);
-                    resolve(point);
-                    break;
-            }
-        });
+    /**
+     * Get the linear velocity
+     *
+     * @returns {LinearVelocity} Linear velocity
+     */
+    public get linearVelocity(): LinearVelocity {
+        if (!this.velocity) {
+            return undefined;
+        }
+        return this.velocity.linear;
     }
 
-    public distance(other: Absolute3DPosition): number {
-        return Math.pow(Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2) + Math.pow((other.z - this.z), 2), 1 / 2.);
+    /**
+     * Set the linear velocity
+     */
+    public set linearVelocity(value: LinearVelocity) {
+        if (!this.velocity) {
+            this.velocity = new Velocity();
+        }
+        this.velocity.linear = value;
     }
 
-    public fromVector(vector: number[], unit?: LengthUnit): void {
-        if (vector.length < 3) throw new Error(`Vector needs to be a 3D coordinate!`);
-        this.x = vector[0];
-        this.y = vector[1];
-        this.z = vector[2];
-        if (unit !== undefined)
-            this.unit = unit;
+    /**
+     * Get the angular velocity
+     *
+     * @returns {AngularVelocity} Angular velocity
+     */
+    public get angularVelocity(): AngularVelocity {
+        if (!this.velocity) {
+            return undefined;
+        }
+        return this.velocity.angular;
     }
 
-    public toVector(unit?: LengthUnit): number [] {
-        if (unit === undefined) {
-            return [this.x, this.y, this.z];
+    /**
+     * Set the angular velocity
+     */
+    public set angularVelocity(value: AngularVelocity) {
+        if (!this.velocity) {
+            this.velocity = new Velocity();
+        }
+        this.velocity.angular = value;
+    }
+
+    public fromVector(vector: Vector3, unit?: LengthUnit): void {
+        if (unit) {
+            this.x = unit.convert(vector.x, this.unit);
+            this.y = unit.convert(vector.y, this.unit);
+            this.z = unit.convert(vector.z, this.unit);
         } else {
-            return [this.unit.convert(this.x, unit), 
-                this.unit.convert(this.y, unit),
-                this.unit.convert(this.z, unit)];
+            this.x = vector.x;
+            this.y = vector.y;
+            this.z = vector.z;
         }
     }
 
+    public toVector3(unit?: LengthUnit): Vector3 {
+        if (unit) {
+            return new Vector3(
+                this.unit.convert(this.x, unit),
+                this.unit.convert(this.y, unit),
+                this.unit.convert(this.z, unit),
+            );
+        } else {
+            return new Vector3(this.x, this.y, this.z);
+        }
+    }
+
+    public equals(position: Absolute3DPosition): boolean {
+        return this.toVector3(this.unit).equals(position.toVector3(this.unit));
+    }
+
+    /**
+     * Clone the position
+     *
+     * @returns {Absolute3DPosition} Cloned position
+     */
+    public clone(): this {
+        const position = new Absolute3DPosition(this.x, this.y, this.z);
+        position.unit = this.unit;
+        position.accuracy = this.accuracy;
+        position.orientation = this.orientation ? this.orientation.clone() : undefined;
+        position.velocity = this.velocity ? this.velocity.clone() : undefined;
+        position.timestamp = this.timestamp;
+        position.referenceSpaceUID = this.referenceSpaceUID;
+        return position as this;
+    }
 }

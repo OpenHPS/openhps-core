@@ -1,6 +1,7 @@
-import { DataFrame } from "../../data";
-import { Node } from "../../Node";
+import { DataFrame } from '../../data';
+import { Node } from '../../Node';
 
-export class BroadcastNode<InOut extends DataFrame | DataFrame[]> extends Node<InOut, InOut> {
-
-}
+/**
+ * @category Flow shape
+ */
+export class BroadcastNode<InOut extends DataFrame> extends Node<InOut, InOut> {}
