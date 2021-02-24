@@ -70,7 +70,6 @@ export class ReferenceSpace extends DataObject {
                         if (!parent) {
                             throw new Error(`Unable to find reference space with uid: ${this.parentUID}!`);
                         }
-                        console.log(parent._transformationMatrix);
                         return this._parent.update(service);
                     })
                     .then(resolve)
