@@ -99,6 +99,9 @@ export class PedometerProcessingNode<InOut extends IMUDataFrame> extends Process
 
             // Extract verical component from input signals
             const verticalComponent = this._extractVerticalComponents(data.accelerometerData, data.attitudeData);
+            if (verticalComponent.length < windowSize) {
+                return resolve([]);
+            }
             let smoothedVerticalComponent = verticalComponent;
             if (this.options.meanFilterSize > 1) {
                 smoothedVerticalComponent = this._meanFilter(verticalComponent, this.options.meanFilterSize);

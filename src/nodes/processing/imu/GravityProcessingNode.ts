@@ -1,4 +1,5 @@
 import { DataObject, Acceleration, IMUDataFrame } from '../../../data';
+import { AccelerationUnit } from '../../../utils';
 import { FilterProcessingOptions, FilterProcessingNode } from '../dsp';
 
 /**
@@ -7,12 +8,11 @@ import { FilterProcessingOptions, FilterProcessingNode } from '../dsp';
 export class GravityProcessingNode extends FilterProcessingNode<IMUDataFrame> {
     public initFilter(object: DataObject, frame: IMUDataFrame, options?: FilterProcessingOptions): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            if (!frame.relativeOrientation && !frame.acceleration) {
+            if (!frame.absoluteOrientation && !frame.acceleration) {
                 return reject(
-                    new Error(`Gravity processing requires accelerometer and relative orientation readings!`),
+                    new Error(`Gravity processing requires accelerometer and absolute orientation readings!`),
                 );
             }
-
             resolve(options);
         });
     }
@@ -21,17 +21,17 @@ export class GravityProcessingNode extends FilterProcessingNode<IMUDataFrame> {
         return new Promise<DataObject>((resolve) => {
             if (frame.acceleration && frame.linearAcceleration) {
                 // Simply subtract the acceleration (with gravity) from the linear acceleration
-                frame.gravity = new Acceleration(
-                    frame.acceleration.x - frame.linearAcceleration.x,
-                    frame.acceleration.y - frame.linearAcceleration.y,
-                    frame.acceleration.z - frame.linearAcceleration.z,
-                );
+                frame.gravity = frame.acceleration.clone().sub(frame.linearAcceleration);
             } else {
                 // Use gyroscope data to filter out gravity
-                frame.linearAcceleration = frame.acceleration
-                    .clone()
-                    .multiply(frame.relativeOrientation.toEuler().toVector3());
-                frame.gravity = frame.acceleration.clone().sub(frame.linearAcceleration);
+                const rotationMatrix = frame.absoluteOrientation.toRotationMatrix();
+                frame.gravity = new Acceleration(
+                    rotationMatrix.elements[8],
+                    rotationMatrix.elements[9],
+                    rotationMatrix.elements[10],
+                    AccelerationUnit.GRAVITATIONAL_FORCE,
+                );
+                frame.linearAcceleration = frame.acceleration.clone().sub(frame.gravity);
             }
             resolve(object);
         });
