@@ -50,7 +50,7 @@ export class Matrix4 extends THREE.Matrix4 {
      */
     public static rotationFromEuler(euler: THREE.Euler): Matrix4 {
         const matrix = new Matrix4();
-        matrix.makeRotationFromQuaternion(new THREE.Quaternion().setFromEuler(euler));
+        matrix.makeRotationFromEuler(euler);
         return matrix;
     }
 
@@ -63,7 +63,7 @@ export class Matrix4 extends THREE.Matrix4 {
      */
     public static rotationFromAxisAngle(vector: THREE.Vector3, angle: number): Matrix4 {
         const matrix = new Matrix4();
-        matrix.makeRotationFromQuaternion(new THREE.Quaternion().setFromAxisAngle(vector, angle));
+        matrix.makeRotationAxis(vector, angle);
         return matrix;
     }
 

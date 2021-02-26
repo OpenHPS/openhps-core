@@ -18,11 +18,6 @@ export class IMUBrowserSource extends SourceNode<IMUDataFrame> {
         window.addEventListener(
             'devicemotion',
             (event) => {
-                if (!event.acceleration.x) {
-                    // Not supported
-                    return;
-                }
-
                 // Create a new data frame for the orientation change
                 const dataFrame = new IMUDataFrame();
                 dataFrame.acceleration = new Acceleration(
@@ -46,6 +41,7 @@ export class IMUBrowserSource extends SourceNode<IMUDataFrame> {
                 source.getPosition().angularVelocity = dataFrame.angularVelocity;
 
                 dataFrame.geomagneticOrientation = source.getPosition().orientation;
+                dataFrame.absoluteOrientation = dataFrame.geomagneticOrientation;
                 dataFrame.source = source;
                 dataFrame.frequency = source.frequency;
 

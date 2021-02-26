@@ -36,6 +36,9 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
                     stream.destroy();
                 })
                 .on('close', function (err: any) {
+                    if (err) {
+                        reject(err);
+                    }
                     resolve();
                 });
         });

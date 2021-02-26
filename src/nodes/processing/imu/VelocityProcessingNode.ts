@@ -82,9 +82,7 @@ export class VelocityProcessingNode<InOut extends DataFrame> extends ObjectProce
             }
             newPosition.timestamp = frame.createdTimestamp;
             newPosition.fromVector(
-                newPosition
-                    .toVector3(LengthUnit.METER)
-                    .add(relativePosition.applyMatrix4(newPosition.orientation.toRotationMatrix())),
+                newPosition.toVector3(LengthUnit.METER).add(relativePosition.applyQuaternion(newPosition.orientation)),
                 LengthUnit.METER,
             );
 

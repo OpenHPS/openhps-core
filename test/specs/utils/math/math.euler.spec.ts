@@ -9,12 +9,7 @@ describe('math', () => {
                 const euler = new Euler(45, 0, 0, 'XYZ', AngleUnit.DEGREE);
                 const rotationMatrix = euler.toRotationMatrix();
                 expect(rotationMatrix).to.eql(
-                    Matrix4.fromArray([
-                        [1, 0, 0, 0],
-                        [0, 0.7071067811865475, -0.7071067811865476, 0],
-                        [0, 0.7071067811865476, 0.7071067811865475, 0],
-                        [0, 0, 0, 1],
-                    ]),
+                    new Matrix4().fromArray([1,0,0,0,-0,0.7071067811865476,0.7071067811865475,0,0,-0.7071067811865475,0.7071067811865476,0,0,0,0,1])
                 );
             });
 
@@ -22,12 +17,7 @@ describe('math', () => {
                 const euler = new Euler(0, 45, 0, 'XYZ', AngleUnit.DEGREE);
                 const rotationMatrix = euler.toRotationMatrix();
                 expect(rotationMatrix).to.eql(
-                    Matrix4.fromArray([
-                        [0.7071067811865475, 0, 0.7071067811865476, 0],
-                        [0, 1, 0, 0],
-                        [-0.7071067811865476, 0, 0.7071067811865475, 0],
-                        [0, 0, 0, 1],
-                    ]),
+                    new Matrix4().fromArray([0.7071067811865476,0,-0.7071067811865475,0,-0,1,0,0,0.7071067811865475,-0,0.7071067811865476,0,0,0,0,1])
                 );
             });
 
@@ -35,12 +25,16 @@ describe('math', () => {
                 const euler = new Euler(0, 0, 45, 'XYZ', AngleUnit.DEGREE);
                 const rotationMatrix = euler.toRotationMatrix();
                 expect(rotationMatrix).to.eql(
-                    Matrix4.fromArray([
-                        [0.7071067811865475, -0.7071067811865476, 0, 0],
-                        [0.7071067811865476, 0.7071067811865475, 0, 0],
-                        [0, 0, 1, 0],
-                        [0, 0, 0, 1],
-                    ]),
+                    new Matrix4().fromArray([
+                        0.7071067811865476, 0.7071067811865475,
+                                         0,                  0,
+                       -0.7071067811865475, 0.7071067811865476,
+                                         0,                  0,
+                                         0,                 -0,
+                                         1,                  0,
+                                         0,                  0,
+                                         0,                  1
+                     ])
                 );
             });
         });

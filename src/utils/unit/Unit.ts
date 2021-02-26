@@ -70,39 +70,41 @@ export class Unit {
         this._prefixType = config.prefixes;
 
         // Unit definitions
-        config.definitions.forEach((definition: UnitDefinition) => {
-            const referenceUnit = Unit.findByName(definition.unit, this.baseName);
-            const unitName = referenceUnit ? referenceUnit.name : definition.unit;
-            const definitionKeys = Object.keys(definition);
-
-            if ('toUnit' in definition) {
-                // UnitFunctionDefinition
-                const functionDefinition: UnitFunctionDefinition<any, any> = definition;
-                this._definitions.set(unitName, functionDefinition);
-            } else {
-                // UnitBasicDefinition
-                const basicDefinition: UnitBasicDefinition = definition;
-                const magnitudeOrder = definitionKeys.indexOf('magnitude');
-                const offsetOrder = definitionKeys.indexOf('offset');
-                const magnitude = basicDefinition.magnitude ? basicDefinition.magnitude : 1;
-                const offset = basicDefinition.offset ? basicDefinition.offset : 0;
-                const offsetPriority = magnitudeOrder === -1 ? true : offsetOrder < magnitudeOrder;
-                const toUnitFn = offsetPriority
-                    ? (value: number) => (value + offset) * magnitude
-                    : (value: number) => value * magnitude + offset;
-                const fromUnitFn = offsetPriority
-                    ? (value: number) => value / magnitude - offset
-                    : (value: number) => (value - offset) / magnitude;
-                this._definitions.set(unitName, {
-                    unit: basicDefinition.unit,
-                    toUnit: toUnitFn,
-                    fromUnit: fromUnitFn,
-                });
-            }
-        });
+        config.definitions.forEach(this._initDefinition.bind(this));
 
         if (this.name !== undefined) {
             Unit.registerUnit(this, config.override);
+        }
+    }
+
+    private _initDefinition(definition: UnitDefinition): void {
+        const referenceUnit = Unit.findByName(definition.unit, this.baseName);
+        const unitName = referenceUnit ? referenceUnit.name : definition.unit;
+        const definitionKeys = Object.keys(definition);
+
+        if ('toUnit' in definition) {
+            // UnitFunctionDefinition
+            const functionDefinition: UnitFunctionDefinition<any, any> = definition;
+            this._definitions.set(unitName, functionDefinition);
+        } else {
+            // UnitBasicDefinition
+            const basicDefinition: UnitBasicDefinition = definition;
+            const magnitudeOrder = definitionKeys.indexOf('magnitude');
+            const offsetOrder = definitionKeys.indexOf('offset');
+            const magnitude = basicDefinition.magnitude ? basicDefinition.magnitude : 1;
+            const offset = basicDefinition.offset ? basicDefinition.offset : 0;
+            const offsetPriority = magnitudeOrder === -1 ? true : offsetOrder < magnitudeOrder;
+            const toUnitFn = offsetPriority
+                ? (value: number) => (value + offset) * magnitude
+                : (value: number) => value * magnitude + offset;
+            const fromUnitFn = offsetPriority
+                ? (value: number) => value / magnitude - offset
+                : (value: number) => (value - offset) / magnitude;
+            this._definitions.set(unitName, {
+                unit: basicDefinition.unit,
+                toUnit: toUnitFn,
+                fromUnit: fromUnitFn,
+            });
         }
     }
 
