@@ -8,8 +8,8 @@ export class RFTransmitterObject extends DataObject implements RFObject {
      * RF transmission power
      */
     @SerializableMember()
-    public txPower = -1;
-    private _calibratedRSSI = -69;
+    public txPower: number;
+    private _calibratedRSSI: number;
     private _environmenFactor: number;
 
     constructor(uid?: string, calibratedRSSI?: number, txPower?: number) {
