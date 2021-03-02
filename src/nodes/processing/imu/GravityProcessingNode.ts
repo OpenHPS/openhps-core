@@ -41,7 +41,6 @@ export class GravityProcessingNode extends FilterProcessingNode<IMUDataFrame> {
                 frame.linearAcceleration = frame.acceleration.clone().sub(frame.gravity);
             } else if (this.options.method === GravityProcessingMethod.LOW_PASS) {
                 // Use low pass filter to filter out gravity
-                const alpha = frame.frequency;
                 frame.gravity = new Acceleration();
                 frame.linearAcceleration = frame.acceleration.clone().sub(frame.gravity);
             }

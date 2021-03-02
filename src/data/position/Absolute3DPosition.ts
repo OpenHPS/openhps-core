@@ -52,21 +52,6 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
     public accuracy: number;
 
     /**
-     * Midpoint to another location
-     *
-     * @param {Absolute3DPosition} otherPosition Other location
-     * @param {number} distanceSelf Distance to itself
-     * @param {number} distanceOther Distance to other position
-     * @returns {Absolute3DPosition} Calculated midpoint
-     */
-    public midpoint(otherPosition: Absolute3DPosition, distanceSelf = 1, distanceOther = 1): Absolute3DPosition {
-        const newPoint = new Absolute3DPosition();
-        newPoint.accuracy = this.accuracy + otherPosition.accuracy / 2;
-        newPoint.set((this.x + otherPosition.x) / 2, (this.y + otherPosition.y) / 2, (this.z + otherPosition.z) / 2);
-        return newPoint;
-    }
-
-    /**
      * Get the linear velocity
      *
      * @returns {LinearVelocity} Linear velocity

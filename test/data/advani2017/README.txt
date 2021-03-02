@@ -1,1 +1,0 @@
-Advani, Madhu; Weile, Daniel S. (2017): Position and orientation inference via on-board triangulation. PLOS ONE. Dataset. https://doi.org/10.1371/journal.pone.0180089

@@ -53,21 +53,6 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
     public accuracy: number;
 
     /**
-     * Midpoint to another location
-     *
-     * @param {Absolute2DPosition} otherPosition Other location
-     * @param {number} [distanceSelf=1] Distance from midpoint to itself
-     * @param {number} [distanceOther=1] Distance from midpoint to other point
-     * @returns {Absolute2DPosition} Midpoint position
-     */
-    public midpoint(otherPosition: Absolute2DPosition, distanceSelf = 1, distanceOther = 1): Absolute2DPosition {
-        const newPoint = new Absolute2DPosition();
-        newPoint.accuracy = this.accuracy + otherPosition.accuracy / 2;
-        newPoint.set((this.x + otherPosition.x) / 2, (this.y + otherPosition.y) / 2);
-        return newPoint;
-    }
-
-    /**
      * Get the linear velocity
      *
      * @returns {LinearVelocity} Linear velocity

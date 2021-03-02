@@ -37,6 +37,7 @@ OpenHPS is a data processing positioning framework. It is designed to support ma
 
 ## Add-ons
 ### Positioning Algorithms
+- **[@openhps/trigonometry](https://github.com/OpenHPS/openhps-trigonometry)** - Adds trigonometry algorithms such as multilateration, trilateration and triangulation.
 - **[@openhps/fingerprinting](https://github.com/OpenHPS/openhps-fingerprinting)** - Adds various fingerprinting nodes and services for offline and offline positioning models.
 - **[@openhps/opencv](https://github.com/OpenHPS/openhps-opencv)** - Provides linkage with opencv4nodejs and OpenCV.js for computer vision algorithms on the server or browser.
 

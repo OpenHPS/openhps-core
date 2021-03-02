@@ -11,8 +11,6 @@ import { GCS, Vector3 } from '../../utils';
  */
 @SerializableObject()
 export class GeographicalPosition extends Absolute3DPosition {
-    public static EARTH_RADIUS = 6371008;
-
     constructor(lat?: number, lng?: number, amsl?: number) {
         super();
         this.latitude = lat;
@@ -77,7 +75,7 @@ export class GeographicalPosition extends Absolute3DPosition {
             Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
             Math.cos(latRadA) * Math.cos(latRadB) * Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return GeographicalPosition.EARTH_RADIUS * c;
+        return GCS.EARTH_RADIUS * c;
     }
 
     /**
@@ -108,61 +106,20 @@ export class GeographicalPosition extends Absolute3DPosition {
         const lonRadA = bearingUnit.convert(this.longitude, AngleUnit.RADIAN);
         const latRadA = bearingUnit.convert(this.latitude, AngleUnit.RADIAN);
         const latX = Math.asin(
-            Math.sin(latRadA) * Math.cos(distance / GeographicalPosition.EARTH_RADIUS) +
-                Math.cos(latRadA) * Math.sin(distance / GeographicalPosition.EARTH_RADIUS) * Math.cos(brng),
+            Math.sin(latRadA) * Math.cos(distance / GCS.EARTH_RADIUS) +
+                Math.cos(latRadA) * Math.sin(distance / GCS.EARTH_RADIUS) * Math.cos(brng),
         );
         const lonX =
             lonRadA +
             Math.atan2(
-                Math.sin(brng) * Math.sin(distance / GeographicalPosition.EARTH_RADIUS) * Math.cos(latRadA),
-                Math.cos(distance / GeographicalPosition.EARTH_RADIUS) - Math.sin(latRadA) * Math.sin(latX),
+                Math.sin(brng) * Math.sin(distance / GCS.EARTH_RADIUS) * Math.cos(latRadA),
+                Math.cos(distance / GCS.EARTH_RADIUS) - Math.sin(latRadA) * Math.sin(latX),
             );
 
         const location = new GeographicalPosition();
         location.latitude = AngleUnit.RADIAN.convert(latX, AngleUnit.DEGREE);
         location.longitude = AngleUnit.RADIAN.convert(lonX, AngleUnit.DEGREE);
         return location;
-    }
-
-    /**
-     * Get the midpoint of two geographical locations
-     *
-     * @param {GeographicalPosition} otherPosition Other position to get midpoint from
-     * @param {number} [distanceSelf=1] Distance to itself and midpoint
-     * @param {number} [distanceOther=1] Distance from other position to midpoint
-     * @returns {GeographicalPosition} Calculated midpoint
-     */
-    public midpoint(otherPosition: GeographicalPosition, distanceSelf = 1, distanceOther = 1): GeographicalPosition {
-        if (distanceOther === distanceSelf) {
-            const lonRadA = AngleUnit.DEGREE.convert(this.longitude, AngleUnit.RADIAN);
-            const latRadA = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
-            const lonRadB = AngleUnit.DEGREE.convert(otherPosition.longitude, AngleUnit.RADIAN);
-            const latRadB = AngleUnit.DEGREE.convert(otherPosition.latitude, AngleUnit.RADIAN);
-
-            const Bx = Math.cos(latRadB) * Math.cos(lonRadB - lonRadA);
-            const By = Math.cos(latRadB) * Math.sin(lonRadB - lonRadA);
-            const latX = Math.atan2(
-                Math.sin(latRadA) + Math.sin(latRadB),
-                Math.sqrt((Math.cos(latRadA) + Bx) * (Math.cos(latRadA) + Bx) + By * By),
-            );
-            const lonX = lonRadA + Math.atan2(By, Math.cos(latRadA) + Bx);
-
-            const location = new GeographicalPosition();
-            location.latitude = AngleUnit.RADIAN.convert(latX, AngleUnit.DEGREE);
-            location.longitude = AngleUnit.RADIAN.convert(lonX, AngleUnit.DEGREE);
-            return location;
-        } else {
-            // Calculate bearings
-            const bearingAB = this.bearing(otherPosition);
-            const bearingBA = otherPosition.bearing(this);
-            // Calculate two reference points
-            const C = this.destination(bearingAB, distanceSelf);
-            const D = otherPosition.destination(bearingBA, distanceOther);
-            // Calculate the middle of C and D
-            const midpoint = C.midpoint(D);
-            midpoint.accuracy = Math.round((C.distanceTo(D) / 2) * 100) / 100;
-            return midpoint;
-        }
     }
 
     public fromVector(vector: Vector3, unit: GCS = GCS.WGS84): void {
