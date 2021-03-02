@@ -13,6 +13,10 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "rootDir": "src",
+        "typeRoots": [
+            "node_modules/@types",
+            "types"
+        ]
     },
     "include": [
         "src/**/*",

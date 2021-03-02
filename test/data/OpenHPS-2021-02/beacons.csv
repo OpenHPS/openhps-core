@@ -1,0 +1,12 @@
+x,y,name,mac
+12.59,31.16,BEACON_01,ff:ff:c3:12:cb:a9
+21.94,29.66,BEACON_02,ff:ff:c3:12:91:b3
+31.29,31.16,BEACON_03,ff:ff:c3:12:a8:56
+12.59,6.26,BEACON_04,ff:ff:c3:12:d8:f1
+21.94,7.62,BEACON_05,ff:ff:c3:12:c7:6d
+32.14,6.26,BEACON_06,ff:ff:c1:3c:3b:c0
+19.34,13.66,BEACON_07,ff:ff:c0:38:fd:88
+17.44,23.86,BEACON_08,ff:ff:c3:12:aa:15
+17.64,33.36,BEACON_09,ff:ff:c0:38:ea:98
+34.34,25.36,BEACON_10,ff:ff:c0:38:ea:86
+4.64,35.56,BEACON_11,ff:ff:c2:1c:da:8d

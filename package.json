@@ -64,6 +64,7 @@
     "dead reckoning"
   ],
   "dependencies": {
+    "fmin": "0.0.2",
     "reflect-metadata": ">=0.1.13",
     "threads": "^1.6.3",
     "three": "^0.124.0",

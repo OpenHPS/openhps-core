@@ -1,0 +1,1 @@
+https://www.kaggle.com/liwste/indoor-positioning/metadata
