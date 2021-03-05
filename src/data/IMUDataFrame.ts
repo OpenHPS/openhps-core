@@ -20,8 +20,6 @@ export class IMUDataFrame extends DataFrame {
     @SerializableMember()
     public absoluteOrientation: Quaternion;
     @SerializableMember()
-    public geomagneticOrientation: Quaternion;
-    @SerializableMember()
     public linearVelocity: LinearVelocity;
     @SerializableMember()
     public angularVelocity: AngularVelocity;

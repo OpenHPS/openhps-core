@@ -41,10 +41,6 @@ OpenHPS is a data processing positioning framework. It is designed to support ma
 - **[@openhps/fingerprinting](https://github.com/OpenHPS/openhps-fingerprinting)** - Adds various fingerprinting nodes and services for offline and offline positioning models.
 - **[@openhps/opencv](https://github.com/OpenHPS/openhps-opencv)** - Provides linkage with opencv4nodejs and OpenCV.js for computer vision algorithms on the server or browser.
 
-### Sensor Processing
-- **[@openhps/dsp](https://github.com/OpenHPS/openhps-dsp)** - Adds digital signal processing nodes
-for filtering raw sensor data.
-
 ### Abstractions
 - **[@openhps/spaces](https://github.com/OpenHPS/openhps-spaces)** - Enables the concept of symbolic spaces (e.g. building, room) on top of reference spaces.
 
