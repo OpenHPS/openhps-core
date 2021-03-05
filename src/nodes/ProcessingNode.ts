@@ -46,25 +46,25 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
             const processPromises: Array<Promise<Out>> = [];
 
             if (Array.isArray(frame)) {
-                frame.filter(this.options.frameFilter).forEach((f) => {
-                    processPromises.push(this.process(f, options));
-                });
+                frame
+                    .filter((frame) => this.options.frameFilter(frame))
+                    .forEach((f) => {
+                        processPromises.push(this.process(f, options));
+                    });
+                frame
+                    .filter((frame) => !this.options.frameFilter(frame))
+                    .forEach((f) => {
+                        processPromises.push(Promise.resolve(f as any));
+                    });
             } else if (this.options.frameFilter(frame)) {
                 processPromises.push(this.process(frame, options));
+            } else {
+                processPromises.push(Promise.resolve(frame as any));
             }
 
-            const output: Out[] = [];
             Promise.all(processPromises)
                 .then((results) => {
-                    const servicePromises: Array<Promise<unknown>> = [];
-                    results.forEach((result) => {
-                        if (result) {
-                            output.push(result);
-                        }
-                    });
-                    return Promise.all(servicePromises);
-                })
-                .then(() => {
+                    const output = results.filter((res) => res !== undefined);
                     if (output.length > 0) {
                         this.outlets.forEach((outlet) =>
                             outlet.push(output.length === 1 ? output[0] : output, options),

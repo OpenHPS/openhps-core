@@ -22,22 +22,11 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
         });
     }
 
-    public insert(id: string, object: T): Promise<T> {
-        return new Promise((resolve, reject) => {
-            this.driver
-                .insert(id, object)
-                .then((obj) => {
-                    resolve(obj);
-                })
-                .catch(reject);
-        });
-    }
-
     /**
      * Find data frames created before a certain timestamp
      *
      * @param {number} timestamp Timestamp
-     * @returns {DataFrame[]} Array of data objects before the specified timestamp
+     * @returns {DataFrame[]} Array of data frames before the specified timestamp
      */
     public findBefore(timestamp: number): Promise<T[]> {
         return this._findTimestamp({ $lte: timestamp });
@@ -47,7 +36,7 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
      * Find data frames created after a certain timestamp
      *
      * @param {number} timestamp Timestamp
-     * @returns {DataFrame[]} Array of data objects after the specified timestamp
+     * @returns {DataFrame[]} Array of data frames after the specified timestamp
      */
     public findAfter(timestamp: number): Promise<T[]> {
         return this._findTimestamp({ $gte: timestamp });
