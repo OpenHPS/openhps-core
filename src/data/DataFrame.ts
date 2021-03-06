@@ -79,7 +79,7 @@ export class DataFrame {
     }
 
     /**
-     * Source object that captured the data frame
+     * Source object clone that captured the data frame
      *
      * @returns {DataObject} Source data object
      */
@@ -87,9 +87,14 @@ export class DataFrame {
         return this.getObjectByUID(this._source);
     }
 
+    /**
+     * Set the source object clone that captured the data frame
+     *
+     * @param {DataObject} object Source data object
+     */
     public set source(object: DataObject) {
         if (object === undefined) return;
-        this.addObject(object);
+        this.addObject(object.clone());
         this._source = object.uid;
     }
 
@@ -131,13 +136,12 @@ export class DataFrame {
 
     /**
      * Add a new object relevant to this data frame
-     *  The object will be cloned.
      *
      * @param {DataObject} object Relevant object
      */
     public addObject(object: DataObject): void {
         if (object === undefined) return;
-        this._objects.set(object.uid, object.clone());
+        this._objects.set(object.uid, object);
     }
 
     /**
