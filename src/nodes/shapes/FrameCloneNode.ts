@@ -32,9 +32,9 @@ export class FrameCloneNode<InOut extends DataFrame> extends Node<InOut, InOut> 
 }
 
 export interface FrameCloneOptions extends NodeOptions {
-    repack?: boolean;
     /**
-     * Remove the frame that is cloned from the data service
+     * Create a new data frame with the added objects
+     * any data other than data objects is not cloned.
      */
-    removeFrame?: boolean;
+    repack?: boolean;
 }
