@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataObject, IMUDataFrame, DataSerializer } from '../../../src';
+import { DataObject, IMUDataFrame, DataSerializer, DataFrame } from '../../../src';
 import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
 import { DummyDataObject } from '../../mock/data/object/DummyDataObject';
 
@@ -23,6 +23,16 @@ describe('data', () => {
             dataFrame.addObject(new DataObject('123'));
             dataFrame.addObject(new DummyDataObject());
             expect(dataFrame.getObjects(DummyDataObject).length).to.equal(1);
+        });
+
+        it('should clone added data objects', () => {
+            const object = new DataObject("123");
+            object.displayName = "abc";
+            const dataFrame = new DataFrame(object);
+            object.uid = "234";
+            object.displayName = "cde";
+            expect(dataFrame.source.uid).to.equal("123");
+            expect(dataFrame.source.displayName).to.equal("abc");
         });
     });
 

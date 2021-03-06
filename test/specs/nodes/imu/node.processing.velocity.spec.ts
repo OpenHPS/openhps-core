@@ -72,7 +72,7 @@ describe('node', () => {
                 // Push frame
                 model.push(new DataFrame(object));
 
-                model.findDataService(DataObject).once('insert', () => {
+                model.findDataService(DataObject).once('insert', (id, object) => {
                     currentTime += 500;
                     callbackSink.callback = (frame: DataFrame) => {
                         const position = frame.source.getPosition();
@@ -80,7 +80,7 @@ describe('node', () => {
                         expect(position.linearVelocity.x).to.equal(2);
                         done();
                     };
-                    model.push(new DataFrame(object.clone()));
+                    model.push(new DataFrame(object));
                 });
             });
         });

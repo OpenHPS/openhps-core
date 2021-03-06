@@ -67,12 +67,12 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
     }
 
     /**
-     * Get a clone of the source data object
+     * Get the source data object
      *
      * @returns {DataObject} Source data object
      */
-    public get source(): DataObject {
-        return this.options.source ? this.options.source.clone() : undefined;
+    protected get source(): DataObject {
+        return this.options.source;
     }
 
     private _initRegisterService(): Promise<void> {

@@ -31,6 +31,10 @@ import { DataSerializer } from './DataSerializer';
  *     public customFrameAttribute: number[];
  * }
  * ```
+ *
+ * ### Adding [[DataObject]]s
+ * Adding data object will clone the data objects to the data frame. Any changes made to the object after cloning will not
+ * be applied to the data frame.
  */
 @SerializableObject()
 export class DataFrame {
@@ -115,23 +119,31 @@ export class DataFrame {
         return this._objects.get(uid) as T;
     }
 
+    /**
+     * Check if the data frame has an object
+     *
+     * @param {DataObject} object Data object to find
+     * @returns {boolean} Object exist
+     */
     public hasObject(object: DataObject): boolean {
         return this._objects.has(object.uid);
     }
 
     /**
      * Add a new object relevant to this data frame
+     *  The object will be cloned.
      *
      * @param {DataObject} object Relevant object
      */
     public addObject(object: DataObject): void {
         if (object === undefined) return;
-        this._objects.set(object.uid, object);
+        this._objects.set(object.uid, object.clone());
     }
 
     /**
-     * Add a new reference space relevant to this data frame
+     * Add a new reference space relevant to this data frame.
      *
+     * @alias addObject Alias for addObject
      * @param {ReferenceSpace} referenceSpace Relevant reference space
      */
     public addReferenceSpace(referenceSpace: ReferenceSpace): void {
