@@ -44,7 +44,7 @@ export interface AbsolutePosition extends Position {
 
     angularVelocity: AngularVelocity;
 
-    fromVector(vector: Vector, unit?: LengthUnit): void;
+    fromVector(vector: Vector, unit?: LengthUnit): this;
 
     toVector3(unit?: LengthUnit): Vector3;
 

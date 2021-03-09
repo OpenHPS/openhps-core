@@ -386,7 +386,7 @@ describe('node', () => {
                     service.setValue("displayName", "maxim").then(() => {
                         model.pull();
                     }).catch(done);
-                });
+                }).catch(done);
         }).slow(8000).timeout(30000);
 
     });

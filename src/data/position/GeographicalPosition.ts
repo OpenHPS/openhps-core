@@ -122,11 +122,12 @@ export class GeographicalPosition extends Absolute3DPosition {
         return location;
     }
 
-    public fromVector(vector: Vector3, unit: GCS = GCS.WGS84): void {
+    public fromVector(vector: Vector3, unit: GCS = GCS.WGS84): this {
         const converted = unit.convert(vector, GCS.WGS84);
         this.x = converted.x;
         this.y = converted.y;
         this.z = converted.z;
+        return this;
     }
 
     public toVector3(unit: GCS = GCS.ECEF): Vector3 {

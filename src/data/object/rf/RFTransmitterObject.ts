@@ -11,6 +11,11 @@ export class RFTransmitterObject extends DataObject implements RFObject {
     public txPower: number;
     private _calibratedRSSI: number;
     private _environmenFactor: number;
+    /**
+     * RF transmission frequency
+     */
+    @SerializableMember()
+    public frequency: number;
 
     constructor(uid?: string, calibratedRSSI?: number, txPower?: number) {
         super(uid);
@@ -23,6 +28,7 @@ export class RFTransmitterObject extends DataObject implements RFObject {
      *
      * @returns {number} Calibrated RSSI
      */
+    @SerializableMember()
     public get calibratedRSSI(): number {
         return this._calibratedRSSI;
     }

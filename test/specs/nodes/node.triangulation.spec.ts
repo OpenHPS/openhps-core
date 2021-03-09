@@ -7,7 +7,7 @@ import {
     DataFrame,
     DataObject,
     Absolute2DPosition,
-    RelativeAnglePosition,
+    RelativeAngle,
     AngleUnit,
     TriangulationNode 
 } from '../../../src';
@@ -33,9 +33,9 @@ describe('node', () => {
                     frame.addObject(beacon3);
 
                     frame.source = new DataObject('phone');
-                    frame.source.addRelativePosition(new RelativeAnglePosition(beacon1, 270, AngleUnit.DEGREE));
-                    frame.source.addRelativePosition(new RelativeAnglePosition(beacon2, 90, AngleUnit.DEGREE));
-                    frame.source.addRelativePosition(new RelativeAnglePosition(beacon3, 330, AngleUnit.DEGREE));
+                    frame.source.addRelativePosition(new RelativeAngle(beacon1, 270, AngleUnit.DEGREE));
+                    frame.source.addRelativePosition(new RelativeAngle(beacon2, 90, AngleUnit.DEGREE));
+                    frame.source.addRelativePosition(new RelativeAngle(beacon3, 330, AngleUnit.DEGREE));
 
                     return frame;
                 })(),

@@ -115,7 +115,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
 
             Promise.all(servicePromises)
                 .then(() => {
-                    this.outlets.forEach((outlet) => outlet.push(data, options));
+                    this.outlets.map((outlet) => outlet.push(data, options));
                     resolve();
                 })
                 .catch(reject);

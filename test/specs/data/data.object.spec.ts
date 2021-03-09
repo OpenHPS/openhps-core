@@ -3,7 +3,7 @@ import 'mocha';
 import {
     DataSerializer,
     DataObject,
-    RelativeDistancePosition,
+    RelativeDistance,
     ModelBuilder,
     CallbackNode,
     DataFrame,
@@ -27,9 +27,9 @@ describe('data', () => {
             const dataObject = new DataObject('123');
             dataObject.displayName = 'abc';
             dataObject.setPosition(new Absolute2DPosition(2, 2));
-            dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject('ref_a'), 1));
-            dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject('ref_b'), 2));
-            dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject('ref_c'), 3));
+            dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_a'), 1));
+            dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_b'), 2));
+            dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_c'), 3));
             const serialized = DataSerializer.serialize(dataObject);
             const deserialized = DataSerializer.deserialize(serialized, DataObject);
             expect(dataObject.uid).to.equal(deserialized.uid);
@@ -41,9 +41,9 @@ describe('data', () => {
             const dataObject = new DataObject('123');
             dataObject.displayName = 'abc';
             dataObject.setPosition(new Absolute2DPosition(2, 2));
-            dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject('ref_a'), 1));
-            dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject('ref_b'), 2));
-            dataObject.addRelativePosition(new RelativeDistancePosition(new DataObject('ref_c'), 3));
+            dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_a'), 1));
+            dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_b'), 2));
+            dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_c'), 3));
             const clone = dataObject.clone();
             dataObject.displayName = '123';
             dataObject.getPosition().linearVelocity = new LinearVelocity(10, 0);

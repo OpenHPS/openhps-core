@@ -96,7 +96,7 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
         this.velocity.angular = value;
     }
 
-    public fromVector(vector: Vector2 | Vector3, unit?: LengthUnit): void {
+    public fromVector(vector: Vector2 | Vector3, unit?: LengthUnit): this {
         if (unit) {
             this.x = unit.convert(vector.x, this.unit);
             this.y = unit.convert(vector.y, this.unit);
@@ -104,6 +104,7 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
             this.x = vector.x;
             this.y = vector.y;
         }
+        return this;
     }
 
     public toVector3(unit?: LengthUnit): Vector3 {

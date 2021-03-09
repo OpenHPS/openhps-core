@@ -7,7 +7,7 @@ import {
     DataObject,
     Absolute2DPosition,
     CallbackSinkNode,
-    RelativeDistancePosition,
+    RelativeDistance,
     LengthUnit,
 } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
@@ -52,21 +52,21 @@ describe('dataset liwste2017', () => {
                             const trackedObject = new DataObject('tracked');
                             // The tracked object has three relative locations
                             trackedObject.addRelativePosition(
-                                new RelativeDistancePosition(
+                                new RelativeDistance(
                                     new DataObject('beacon_A'),
                                     parseFloat(row['Distance A']),
                                     LengthUnit.METER,
                                 ),
                             );
                             trackedObject.addRelativePosition(
-                                new RelativeDistancePosition(
+                                new RelativeDistance(
                                     new DataObject('beacon_B'),
                                     parseFloat(row['Distance B']),
                                     LengthUnit.METER,
                                 ),
                             );
                             trackedObject.addRelativePosition(
-                                new RelativeDistancePosition(
+                                new RelativeDistance(
                                     new DataObject('beacon_C'),
                                     parseFloat(row['Distance C']),
                                     LengthUnit.METER,

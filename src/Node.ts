@@ -72,6 +72,20 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
     }
 
     /**
+     * Set the node options
+     *
+     * @param {NodeOptions} options Node options to set
+     * @returns {Node} Node instance
+     */
+    public setOptions(options: NodeOptions): this {
+        this.options = {
+            ...options,
+            ...(this.options || []),
+        };
+        return this;
+    }
+
+    /**
      * Graph this model is part of
      *
      * @returns {Model} Positioning model

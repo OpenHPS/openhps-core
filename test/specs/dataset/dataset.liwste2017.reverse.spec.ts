@@ -6,7 +6,7 @@ import {
     Model,
     DataFrame,
     DataObject,
-    RelativeDistancePosition,
+    RelativeDistance,
     Absolute2DPosition,
     CallbackSinkNode,
     LengthUnit,
@@ -54,7 +54,7 @@ describe('dataset liwste2017 (reverse beacons)', () => {
                             const trackedObject = new DataObject('tracked');
                             // The tracked object has three relative locations
                             trackedObject.addRelativePosition(
-                                new RelativeDistancePosition(
+                                new RelativeDistance(
                                     new DataObject('beacon_A'),
                                     parseFloat(row['Distance A']),
                                     LengthUnit.METER,
@@ -82,7 +82,7 @@ describe('dataset liwste2017 (reverse beacons)', () => {
                             const trackedObject = new DataObject('tracked');
                             // The tracked object has three relative locations
                             trackedObject.addRelativePosition(
-                                new RelativeDistancePosition(
+                                new RelativeDistance(
                                     new DataObject('beacon_B'),
                                     parseFloat(row['Distance B']),
                                     LengthUnit.METER,
@@ -110,7 +110,7 @@ describe('dataset liwste2017 (reverse beacons)', () => {
                             const trackedObject = new DataObject('tracked');
                             // The tracked object has three relative locations
                             trackedObject.addRelativePosition(
-                                new RelativeDistancePosition(
+                                new RelativeDistance(
                                     new DataObject('beacon_C'),
                                     parseFloat(row['Distance C']),
                                     LengthUnit.METER,

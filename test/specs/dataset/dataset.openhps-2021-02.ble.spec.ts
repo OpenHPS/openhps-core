@@ -8,9 +8,11 @@ import {
     Model, 
     ModelBuilder, 
     Orientation, 
-    RelativeRSSIPosition, 
+    RelativeRSSI, 
     RFTransmitterObject,
-    MultilaterationNode
+    MultilaterationNode,
+    RelativeRSSIProcessing,
+    PropagationModel
 } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
 import { expect } from "chai";
@@ -41,12 +43,7 @@ describe('dataset ipin2021', () => {
                         if (prop.includes("BEACON_")) {
                             const rssi = parseInt(row[prop]);
                             if (!Number.isNaN(rssi)) {
-                                const relativePosition = new RelativeRSSIPosition(
-                                    prop, 
-                                    rssi);
-                                relativePosition.calibratedRSSI = -68;
-                                relativePosition.environmenFactor = 2.2;
-                                object.addRelativePosition(relativePosition);
+                                object.addRelativePosition(new RelativeRSSI(prop, rssi));
                             }
                         }
                     }
@@ -81,6 +78,9 @@ describe('dataset ipin2021', () => {
                     .to(new CallbackSinkNode()))
                 .addShape(GraphBuilder.create()
                     .from(testDataMean)
+                    .via(new RelativeRSSIProcessing(RelativeRSSI, {
+                        propagationModel: PropagationModel.LOG_DISTANCE
+                    }))
                     .via(new MultilaterationNode({
                         maxIterations: 1000,
                         incrementStep: 1
@@ -89,7 +89,7 @@ describe('dataset ipin2021', () => {
                 .build().then(m => {
                     model = m;
                     return model.pull({
-                        count: 11
+                        count: 11,
                     });
                 }).then(() => {
                     done();
@@ -111,12 +111,12 @@ describe('dataset ipin2021', () => {
                 // Perform a pull
                 testSink.pull({
                     count: testDataMean.size,
-                    sequentialPull: false,
-                    sourceNode: "test-data-mean"
+                    sourceNode: "test-data-mean",
                 }).then(() => {
                     console.log(Math.max(...errors))
                     console.log(Math.min(...errors))
-                    expect(errors.reduce((a, b) => a + b) / errors.length).to.be.lessThan(9);
+                    console.log(errors.reduce((a, b) => a + b) / errors.length)
+                    expect(errors.reduce((a, b) => a + b) / errors.length).to.be.lessThan(8);
                     done();
                 }).catch(done);
             }).timeout(5000);

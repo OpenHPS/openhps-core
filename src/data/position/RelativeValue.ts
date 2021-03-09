@@ -24,8 +24,15 @@ export class RelativeValue implements RelativePosition<number> {
     @SerializableMember()
     public referenceValue: number;
 
-    constructor(referenceObject?: string, value?: number) {
-        this.referenceObjectUID = referenceObject;
+    constructor(referenceObject?: any, value?: number) {
+        if (referenceObject !== undefined) {
+            if (referenceObject instanceof String || typeof referenceObject === 'string') {
+                this.referenceObjectUID = referenceObject as string;
+            } else {
+                this.referenceObjectType = referenceObject.constructor.name;
+                this.referenceObjectUID = referenceObject.uid;
+            }
+        }
         this.referenceValue = value;
     }
 

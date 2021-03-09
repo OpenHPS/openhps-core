@@ -37,7 +37,7 @@ function initModel(modelBuilder: ModelBuilder<any, any>): void {
     const internalInput = new CallbackSourceNode((options?: PullOptions) => {
         // Send a pull request to the main thread
         pullOutput.next(options);
-        return null;
+        return undefined;
     });
     const internalOutput = new CallbackSinkNode((frame: DataFrame) => {
         // Serialize the frame and transmit it to the main thread

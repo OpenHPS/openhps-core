@@ -1,4 +1,4 @@
-import { AbsolutePosition, DataObject, GeographicalPosition, RelativeDistancePosition } from '../../data';
+import { AbsolutePosition, DataObject, GeographicalPosition, RelativeDistance } from '../../data';
 import { DataFrame } from '../../data/DataFrame';
 import { AngleUnit } from '../../utils';
 import { Vector3 } from '../../utils/math';
@@ -11,20 +11,17 @@ import { nelderMead } from 'fmin';
  *
  * @category Processing node
  */
-export class MultilaterationNode<InOut extends DataFrame> extends RelativePositionProcessing<
-    InOut,
-    RelativeDistancePosition
-> {
+export class MultilaterationNode<InOut extends DataFrame> extends RelativePositionProcessing<InOut, RelativeDistance> {
     protected options: MultilaterationOptions;
 
     constructor(options?: MultilaterationOptions) {
-        super(RelativeDistancePosition, options);
+        super(RelativeDistance, options);
         this.options.incrementStep = this.options.incrementStep || 1;
     }
 
     public processRelativePositions<P extends AbsolutePosition>(
         dataObject: DataObject,
-        relativePositions: Map<RelativeDistancePosition, DataObject>,
+        relativePositions: Map<RelativeDistance, DataObject>,
     ): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             let spheres: Array<Sphere<P>> = [];
@@ -36,7 +33,6 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
 
             // Order points and distances by distances
             spheres = spheres.sort((a, b) => a.radius - b.radius);
-
             let position: P;
             switch (spheres.length) {
                 case 0:

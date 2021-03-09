@@ -2,6 +2,8 @@ import { DataFrame, DataObject, RelativePosition } from '../../data';
 import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
 
 /**
+ * Relative position processing node.
+ *
  * @category Processing node
  */
 export abstract class RelativePositionProcessing<
@@ -18,15 +20,11 @@ export abstract class RelativePositionProcessing<
     public processObject(dataObject: DataObject, dataFrame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             const referencePromises: Array<Promise<DataObject>> = [];
-            const index = new Map<string, R[]>();
+            const index = new Map<string, R>();
             for (const relativePosition of dataObject.relativePositions) {
-                // Only use relative distance locations
+                // Only use relative positions that are instance of relativePositionType
                 if (relativePosition instanceof this._relativePositionType) {
-                    if (index.has(relativePosition.referenceObjectUID)) {
-                        index.get(relativePosition.referenceObjectUID).push(relativePosition);
-                    } else {
-                        index.set(relativePosition.referenceObjectUID, [relativePosition]);
-                    }
+                    index.set(relativePosition.referenceObjectUID, relativePosition);
                     referencePromises.push(
                         this.findObjectByUID(
                             relativePosition.referenceObjectUID,
@@ -41,11 +39,8 @@ export abstract class RelativePositionProcessing<
                 .then((referenceObjects) => {
                     const relativePositions: Map<R, DataObject> = new Map();
                     referenceObjects.forEach((referenceObject: DataObject) => {
-                        index.get(referenceObject.uid).forEach((relativePosition) => {
-                            relativePositions.set(relativePosition, referenceObject);
-                        });
+                        relativePositions.set(index.get(referenceObject.uid), referenceObject);
                     });
-
                     return this.processRelativePositions(dataObject, relativePositions, dataFrame);
                 })
                 .then((modifiedObject) => {

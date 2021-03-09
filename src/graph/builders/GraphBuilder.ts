@@ -14,7 +14,7 @@ import { ObjectFilterNode } from '../../nodes/shapes/ObjectFilterNode';
 import { FrameDebounceNode } from '../../nodes/shapes/FrameDebounceNode';
 import { ReferenceSpaceConversionNode } from '../../nodes/processing/ReferenceSpaceConversionNode';
 import { PlaceholderNode } from '../../nodes/_internal/PlaceholderNode';
-import { SinkNode, SourceNode } from '../../nodes';
+import { CallbackSinkNode, SinkNode, SourceNode } from '../../nodes';
 import { Edge } from '../Edge';
 
 /**
@@ -307,6 +307,15 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      */
     public buffer(): this {
         return this.via(new MemoryBufferNode());
+    }
+
+    /**
+     * Storage as sink node
+     *
+     * @returns {GraphBuilder} Graph builder
+     */
+    public store(): Builder {
+        return this.to(new CallbackSinkNode());
     }
 
     public to(...nodes: Array<SinkNode<any> | string>): Builder {

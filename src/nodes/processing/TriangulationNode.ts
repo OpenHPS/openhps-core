@@ -1,7 +1,7 @@
 import {
     DataObject,
     DataFrame,
-    RelativeAnglePosition,
+    RelativeAngle,
     AbsolutePosition,
     Absolute2DPosition,
     Absolute3DPosition,
@@ -20,17 +20,14 @@ import { ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
  *
  * @category Processing node
  */
-export class TriangulationNode<InOut extends DataFrame> extends RelativePositionProcessing<
-    InOut,
-    RelativeAnglePosition
-> {
+export class TriangulationNode<InOut extends DataFrame> extends RelativePositionProcessing<InOut, RelativeAngle> {
     constructor(options?: ObjectProcessingNodeOptions) {
-        super(RelativeAnglePosition, options);
+        super(RelativeAngle, options);
     }
 
     public processRelativePositions<P extends Absolute2DPosition | Absolute3DPosition | GeographicalPosition>(
         dataObject: DataObject,
-        relativePositions: Map<RelativeAnglePosition, DataObject>,
+        relativePositions: Map<RelativeAngle, DataObject>,
     ): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             const objects: DataObject[] = [];

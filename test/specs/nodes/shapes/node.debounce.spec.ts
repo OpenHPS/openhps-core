@@ -1,17 +1,11 @@
 import { expect } from 'chai';
 import 'mocha';
 import {
-    LoggingSinkNode,
     CallbackSinkNode,
     DataFrame,
     DataObject,
-    Absolute2DPosition,
-    RelativeDistancePosition,
     ModelBuilder,
-    ListSourceNode,
-    SourceMergeNode,
     TimeUnit,
-    FrameChunkNode,
 } from '../../../../src';
 
 describe('node', () => {

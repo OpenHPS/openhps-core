@@ -5,11 +5,10 @@ import {
     DataFrame,
     DataObject,
     Absolute2DPosition,
-    RelativeDistancePosition,
     ModelBuilder,
     ListSourceNode,
     SourceMergeNode,
-    TimeUnit,
+    RelativeDistance,
 } from '../../../../src';
 
 describe('node', () => {
@@ -19,7 +18,7 @@ describe('node', () => {
 
             const frameA = new DataFrame();
             frameA.source = new DataObject('abc');
-            frameA.source.addRelativePosition(new RelativeDistancePosition(beacon, 10));
+            frameA.source.addRelativePosition(new RelativeDistance(beacon, 10));
 
             const frameB = new DataFrame();
             frameB.source = new DataObject('abc');

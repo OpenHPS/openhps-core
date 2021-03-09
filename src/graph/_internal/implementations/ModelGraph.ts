@@ -141,8 +141,8 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
     public findService<F extends Service>(name: string): F;
     public findService<F extends Service>(serviceClass: new () => F): F;
     public findService<F extends Service>(q: any): F {
-        if (q === undefined || q === null) {
-            return null;
+        if (!q) {
+            return undefined;
         } else if (typeof q === 'string') {
             // Find by name
             return this._findServiceByName(q);
@@ -155,7 +155,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
         if (this._services.has(name)) {
             return this._services.get(name) as F;
         } else {
-            return null;
+            return undefined;
         }
     }
 
@@ -171,8 +171,8 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
     public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(object: D): F;
     public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(q: any): F {
         let result: F;
-        if (q === undefined || q === null) {
-            result = null;
+        if (q === undefined) {
+            result = undefined;
         } else if (typeof q === 'string') {
             // Find by name
             result = this._findDataServiceByName(q);
@@ -191,16 +191,16 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
     ): F {
         // Find by constructor
         let service: F = this._findDataServiceByName(dataType.name);
-        if (service === null) {
+        if (!service) {
             // Find the parent class
             let parent = Object.getPrototypeOf(dataType);
             while (!service) {
                 service = this._findDataServiceByName(parent.name);
-                if (service !== null) {
+                if (service) {
                     return service;
                 }
                 if (parent.name === 'DataObject') {
-                    return null;
+                    return undefined;
                 }
                 parent = Object.getPrototypeOf(parent);
             }
@@ -213,7 +213,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
         if (this._dataServices.has(name)) {
             return this._dataServices.get(name) as F;
         } else {
-            return null;
+            return undefined;
         }
     }
 
@@ -258,7 +258,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
             // Merge the changes in the frame service
             const frameService = this.findDataService(frame.constructor.name);
 
-            if (frameService !== null && frameService !== undefined) {
+            if (frameService) {
                 if (Array.isArray(frame)) {
                     frame.forEach((f) => {
                         // Update the frame

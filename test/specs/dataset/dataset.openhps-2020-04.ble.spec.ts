@@ -7,8 +7,10 @@ import {
     ModelBuilder,
     DataObject,
     Absolute3DPosition,
-    RelativeRSSIPosition,
+    RelativeRSSI,
     RFTransmitterObject,
+    RelativeRSSIProcessing,
+    PropagationModel,
 } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
 import { EvaluationDataFrame } from '../../mock/data/EvaluationDataFrame';
@@ -50,7 +52,6 @@ describe('dataset openhps-2020-04 (ble only)', function () {
                 model.pull({
                     count: 4,
                     sourceNode: "beacons",
-                    sequentialPull: false
                 }).then(() => {
                     done();
                 });
@@ -73,10 +74,7 @@ describe('dataset openhps-2020-04 (ble only)', function () {
                             if (prop.indexOf('BEACON_') !== -1) {
                                 const value = parseFloat(row[prop]);
                                 if (value !== 100) {
-                                    const relativeLocation = new RelativeRSSIPosition(prop, value);
-                                    relativeLocation.calibratedRSSI = -68;
-                                    relativeLocation.environmenFactor = 2.2;
-                                    phoneObject.addRelativePosition(relativeLocation);
+                                    phoneObject.addRelativePosition(new RelativeRSSI(prop, value));
                                 }
                             }
                         }
@@ -91,6 +89,9 @@ describe('dataset openhps-2020-04 (ble only)', function () {
                         return dataFrame;
                     }),
                 )
+                .via(new RelativeRSSIProcessing(RelativeRSSI, {
+                    propagationModel: PropagationModel.LOG_DISTANCE
+                }))
                 .via(
                     new MultilaterationNode({
                         incrementStep: 0.1,
@@ -125,7 +126,6 @@ describe('dataset openhps-2020-04 (ble only)', function () {
             // Perform a pull
             trackingModel.pull({
                 count: 120,
-                sequentialPull: false
             }).then(() => {
                 expect(totalError / totalValues).to.be.lessThan(161);
                 done();

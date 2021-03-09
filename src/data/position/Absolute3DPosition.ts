@@ -95,7 +95,7 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
         this.velocity.angular = value;
     }
 
-    public fromVector(vector: Vector3, unit?: LengthUnit): void {
+    public fromVector(vector: Vector3, unit?: LengthUnit): this {
         if (unit) {
             this.x = unit.convert(vector.x, this.unit);
             this.y = unit.convert(vector.y, this.unit);
@@ -105,6 +105,7 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
             this.y = vector.y;
             this.z = vector.z;
         }
+        return this;
     }
 
     public toVector3(unit?: LengthUnit): Vector3 {

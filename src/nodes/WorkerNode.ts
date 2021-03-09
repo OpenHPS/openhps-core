@@ -229,7 +229,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
             .filter((service) => {
                 const internalService =
                     this.model.findService(service.name) || this.model.findDataService(service.name);
-                return internalService === null;
+                return internalService === undefined;
             })
             .forEach((service) => {
                 if (service.dataType) {
