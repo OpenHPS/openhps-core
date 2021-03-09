@@ -12,6 +12,8 @@ import {
     ProcessingNode,
     Model,
     Edge,
+    FrameMergeNode,
+    DataObject,
 } from '../../src';
 
 describe('model', () => {
@@ -199,6 +201,44 @@ describe('model', () => {
     });
 
     describe('pushing', () => {
+
+        it('should support targetted pushing', (done) => {
+            let frames = 0;
+            ModelBuilder.create()
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .clone()
+                    .to("a"))
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .clone()
+                    .to("b"))
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .clone()
+                    .to("c"))
+                .from("a", "b", "c")
+                .via(new FrameMergeNode(
+                    frame => frame.source.uid,
+                    (frame, options) => options.lastNode,
+                    {
+                        timeout: 100,
+                        minCount: 1
+                    }
+                ))
+                .to(new CallbackSinkNode(frame => {
+                    frames++;
+                })).build().then(model => {
+                    const frame = new DataFrame(new DataObject("test"));
+                    model.onceCompleted(frame.uid).then(() => {
+                        model.destroy();
+                        expect(frames).to.equal(1);
+                        done();
+                    });
+                    model.push(frame);
+                });
+        });
+
         it('should store the source in the options', (done) => {
             ModelBuilder.create()
                 .from(new CallbackSourceNode(() => {

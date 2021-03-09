@@ -22,6 +22,7 @@ describe('node', () => {
                 )
                 .build()
                 .then((model) => {
+                    model.on('error', done);
                     Promise.all([
                         model.push(new DataFrame(new DataObject('a'))),
                         model.push(new DataFrame()),
@@ -30,7 +31,7 @@ describe('node', () => {
                         model.push(new DataFrame(new DataObject('e'))),
                     ]).then(() => {
                         done();
-                    });
+                    }).catch(done);
                 });
         }).timeout(10000);
     });

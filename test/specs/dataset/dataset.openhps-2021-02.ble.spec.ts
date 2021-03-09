@@ -78,7 +78,7 @@ describe('dataset ipin2021', () => {
                     .to(new CallbackSinkNode()))
                 .addShape(GraphBuilder.create()
                     .from(testDataMean)
-                    .via(new RelativeRSSIProcessing(RelativeRSSI, {
+                    .via(new RelativeRSSIProcessing({
                         propagationModel: PropagationModel.LOG_DISTANCE
                     }))
                     .via(new MultilaterationNode({

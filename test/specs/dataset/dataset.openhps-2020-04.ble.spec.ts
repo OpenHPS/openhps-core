@@ -89,7 +89,7 @@ describe('dataset openhps-2020-04 (ble only)', function () {
                         return dataFrame;
                     }),
                 )
-                .via(new RelativeRSSIProcessing(RelativeRSSI, {
+                .via(new RelativeRSSIProcessing({
                     propagationModel: PropagationModel.LOG_DISTANCE
                 }))
                 .via(

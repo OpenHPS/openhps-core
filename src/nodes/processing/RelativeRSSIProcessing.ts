@@ -9,8 +9,8 @@ import { RelativePositionProcessing } from './RelativePositionProcessing';
 export class RelativeRSSIProcessing<InOut extends DataFrame> extends RelativePositionProcessing<InOut, RelativeRSSI> {
     protected options: RelativeRSSIOptions;
 
-    constructor(relativePositionType: new () => RelativeRSSI, options?: RelativeRSSIOptions) {
-        super(relativePositionType, options);
+    constructor(options?: RelativeRSSIOptions) {
+        super(RelativeRSSI, options);
     }
 
     public processRelativePositions(
@@ -27,16 +27,17 @@ export class RelativeRSSIProcessing<InOut extends DataFrame> extends RelativePos
     }
 
     protected convertToDistance(rel: RelativeRSSI, transmitter: RFTransmitterObject): RelativeDistance {
-        const relativeDistance = new RelativeDistance(transmitter);
         switch (this.options.propagationModel) {
             case PropagationModel.LOG_DISTANCE:
-                relativeDistance.distance = Math.pow(
-                    10,
-                    (transmitter.calibratedRSSI - rel.rssi) / (10 * transmitter.environmenFactor),
-                );
-                break;
+                if (transmitter.calibratedRSSI && rel.rssi && transmitter.environmenFactor) {
+                    return new RelativeDistance(
+                        transmitter,
+                        Math.pow(10, (transmitter.calibratedRSSI - rel.rssi) / (10 * transmitter.environmenFactor)),
+                    );
+                } else {
+                    return undefined;
+                }
         }
-        return relativeDistance;
     }
 }
 
