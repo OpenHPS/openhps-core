@@ -5,3 +5,4 @@ export * from './RelativePositionProcessing';
 export * from './MultilaterationNode';
 export * from './TriangulationNode';
 export * from './RelativeRSSIProcessing';
+export * from './AccuracyModifierNode';
