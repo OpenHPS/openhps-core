@@ -57,10 +57,8 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
 
     constructor(options?: NodeOptions) {
         super();
-        this.options = options || {};
+        this.setOptions(options || {});
 
-        // Set the display name of the node to the type name
-        this.name = this.options.name || this.constructor.name;
         // Set the uid of the node if manually set
         this.uid = this.options.uid || this.uid;
 
@@ -82,6 +80,8 @@ export abstract class Node<In extends DataFrame, Out extends DataFrame> extends 
             ...options,
             ...(this.options || []),
         };
+        // Set the display name of the node to the type name
+        this.name = this.options.name || this.constructor.name;
         return this;
     }
 

@@ -1,6 +1,9 @@
 import { Service } from './Service';
 import { TimeUnit } from '../utils';
 
+/**
+ * Time service for retrieving the current time.
+ */
 export class TimeService extends Service {
     private _timeCallback: () => number;
     private _timeUnit: TimeUnit;

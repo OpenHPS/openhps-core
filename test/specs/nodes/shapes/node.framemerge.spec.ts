@@ -1,22 +1,104 @@
 import { expect } from 'chai';
 import 'mocha';
 import {
-    LoggingSinkNode,
     CallbackSinkNode,
     ModelBuilder,
     CallbackSourceNode,
     DataFrame,
     DataObject,
     FrameMergeNode,
-    TimeUnit,
     PushOptions,
     Absolute2DPosition,
-    AbsolutePosition,
     LinearVelocity,
+    GraphBuilder,
+    CallbackNode,
 } from '../../../../src';
+import { Quaternion } from '../../../../src/utils/math/';
 
 describe('node', () => {
     describe('frame merge node', () => {
+        
+        it('should support merging from same source', (done) => {
+            let frames = 0;
+            ModelBuilder.create()
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .clone()
+                    .to("a"))
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .clone()
+                    .to("b"))
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .clone()
+                    .to("c"))
+                .from("a", "b", "c")
+                .via(new FrameMergeNode(
+                    frame => frame.source.uid,
+                    (frame, options) => options.lastNode,
+                    {
+                        timeout: 100,
+                        minCount: 1
+                    }
+                ))
+                .to(new CallbackSinkNode(frame => {
+                    frames++;
+                })).build().then(model => {
+                    const object = new DataObject("test");
+                    //object.setPosition(new Absolute2DPosition(0, 0));
+                    const frame = new DataFrame(object);
+                    model.onceCompleted(frame.uid).then(() => {
+                        model.destroy();
+                        expect(frames).to.equal(1);
+                        done();
+                    });
+                    return model.push(frame);
+                }).catch(done);
+        });
+
+        it('should support merging of a position', (done) => {
+            let frames = 0;
+            ModelBuilder.create()
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .clone()
+                    .to("a"))
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .clone()
+                    .to("b"))
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .clone()
+                    .via(new CallbackNode(frame => {
+                        frame.source.position.orientation = new Quaternion();
+                    }))
+                    .to("c"))
+                .from("a", "b", "c")
+                .via(new FrameMergeNode(
+                    frame => frame.source.uid,
+                    (frame, options) => options.lastNode,
+                    {
+                        timeout: 100,
+                        minCount: 1
+                    }
+                ))
+                .to(new CallbackSinkNode(frame => {
+                    frames++;
+                })).build().then(model => {
+                    const object = new DataObject("test");
+                    object.setPosition(new Absolute2DPosition(0, 0));
+                    const frame = new DataFrame(object);
+                    model.onceCompleted(frame.uid).then(() => {
+                        model.destroy();
+                        expect(frames).to.equal(1);
+                        done();
+                    });
+                    model.push(frame);
+                });
+        });
+
         it('should merge from multiple sources with same parent', (done) => {
             ModelBuilder.create()
                 .from(

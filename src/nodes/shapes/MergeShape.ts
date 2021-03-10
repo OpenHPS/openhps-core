@@ -2,7 +2,7 @@ import { DataFrame } from '../../data';
 import { ProcessingNode, ProcessingNodeOptions } from '../ProcessingNode';
 import { TimeUnit } from '../../utils';
 import { TimeService } from '../../service';
-import { PushOptions } from '../../graph';
+import { PushError, PushOptions } from '../../graph';
 
 /**
  * Merge data frames from two or more sources
@@ -58,13 +58,18 @@ export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode
         const mergedFrames: Array<InOut> = [];
         this._queue.forEach((queue) => {
             if (currentTime - queue.timestamp >= this._timeout && queue.frames.size >= this.options.minCount) {
-                // Merge node
-                mergedFrames.push(this.merge(Array.from(queue.frames.values()), queue.key as string));
-                this._queue.delete(queue.key);
-                // Resolve pending promises
-                queue.promises.forEach((fn) => {
-                    fn(undefined);
-                });
+                const frames = Array.from(queue.frames.values());
+                try {
+                    // Merge node
+                    mergedFrames.push(this.merge(frames, queue.key as string));
+                    this._queue.delete(queue.key);
+                    // Resolve pending promises
+                    queue.promises.forEach((fn) => {
+                        fn(undefined);
+                    });
+                } catch (ex) {
+                    this.emit('error', new PushError(frames[0].uid, this.uid, ex));
+                }
             }
         });
         mergedFrames.forEach((frame) => {

@@ -52,5 +52,28 @@ describe('node', () => {
                     done();
                 });
         });
+
+        it('should be available when not busy', () => {
+            const node = new CallbackNode(
+                (frame: DataFrame) => {
+                },
+                () => {
+                    return null;
+                },
+            ); 
+            expect(node.isAvailable()).to.equal(true);
+        });
+    });
+
+    describe('updating', () => {
+        it('should support updating options', () => {
+            const node = new LoggingSinkNode(() => undefined, {
+                uid: "test"
+            });
+            node.setOptions({
+                name: "abc"
+            });
+            expect(node.name).to.equal("abc");
+        });
     });
 });

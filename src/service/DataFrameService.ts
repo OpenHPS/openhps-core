@@ -1,5 +1,4 @@
 import { DataFrame } from '../data';
-import { FilterQuery } from './FilterQuery';
 import { DataService } from './DataService';
 import { DataServiceDriver } from './DataServiceDriver';
 
@@ -43,9 +42,8 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
     }
 
     private _findTimestamp(timestampFilter: any): Promise<T[]> {
-        const filter: FilterQuery<any> = {
+        return this.findAll({
             createdTimestamp: timestampFilter,
-        };
-        return this.findAll(filter) as Promise<T[]>;
+        }) as Promise<T[]>;
     }
 }

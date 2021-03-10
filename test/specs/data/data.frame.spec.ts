@@ -34,6 +34,12 @@ describe('data', () => {
             expect(dataFrame.source.uid).to.equal("123");
             expect(dataFrame.source.displayName).to.equal("abc");
         });
+
+        it('should copy a data frame in the constructor', () => {
+            const imuFrame = new IMUDataFrame();
+            const frame = new DataFrame(imuFrame);
+            expect(frame.createdTimestamp).to.equal(imuFrame.createdTimestamp);
+        });
     });
 
     describe('motion data frame', () => {

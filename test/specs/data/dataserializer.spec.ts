@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
 import { DataSerializer, DataObject } from '../../../src';
+import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
 
 describe('dataserializer', () => {
     it('should register and unregister serializable objects', () => {
@@ -11,6 +12,15 @@ describe('dataserializer', () => {
     });
 
     describe('serializing', () => {
+        it('should serialize map members', () => {
+            const frame = new DummyDataFrame();
+            frame.testMap.set("1", { name: "one" });
+            frame.testMap.set("2", { name: "two" });
+            const serialized = DataSerializer.serialize(frame);
+            const deserialized: DummyDataFrame = DataSerializer.deserialize(serialized);
+            expect(deserialized.testMap.size).to.equal(2);
+        });
+
         it('should return undefined when serialized data is null', () => {
             expect(DataSerializer.serialize(undefined)).to.equal(undefined);
         });

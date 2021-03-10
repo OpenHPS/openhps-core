@@ -7,4 +7,3 @@ export * from './Vector4';
 export * from './AxisAngle';
 export * from './Vector';
 export * from './Matrix3';
-export * from './Matrix';

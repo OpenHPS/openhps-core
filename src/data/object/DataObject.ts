@@ -45,7 +45,7 @@ export class DataObject {
     @SerializableMember()
     public createdTimestamp: number;
 
-    private _uid: string;
+    private _uid!: string;
     private _position: AbsolutePosition;
     private _relativePositions: Map<string, Map<string, RelativePosition<any>>> = new Map();
 

@@ -124,9 +124,8 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
     }
 
     private _findTimestamp(timestampFilter: any): Promise<T[]> {
-        const filter: FilterQuery<any> = {
+        return this.findAll({
             createdTimestamp: timestampFilter,
-        };
-        return this.findAll(filter) as Promise<T[]>;
+        }) as Promise<T[]>;
     }
 }

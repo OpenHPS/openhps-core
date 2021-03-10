@@ -20,7 +20,6 @@ export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
      */
     public mergeObjects(objects: DataObject[]): DataObject {
         const baseObject = objects[0];
-
         // Relative positions
         for (let i = 1; i < objects.length; i++) {
             objects[i].getRelativePositions().forEach((relativePos) => {
@@ -37,7 +36,9 @@ export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
         for (let i = 1; i < positions.length; i++) {
             newPosition = this.mergePositions(newPosition, positions[i].clone());
         }
-        newPosition.accuracy = newPosition.accuracy / positions.length;
+        if (newPosition.accuracy) {
+            newPosition.accuracy = newPosition.accuracy / positions.length;
+        }
         if (newPosition.linearVelocity) {
             newPosition.linearVelocity.accuracy = newPosition.linearVelocity.accuracy / positions.length;
         }
@@ -53,7 +54,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
 
         // Accuracy of the two positions
         const posAccuracyA = positionA.accuracy || 1;
-        const posAccuracyB = positionB.unit.convert(positionB.accuracy, positionA.unit) || 1;
+        const posAccuracyB = positionB.unit.convert(positionB.accuracy || 1, positionA.unit);
 
         // Apply position merging
         newPosition.fromVector(

@@ -14,10 +14,25 @@ import {
     Edge,
     FrameMergeNode,
     DataObject,
+    TimeService,
 } from '../../src';
 
 describe('model', () => {
     describe('builder', () => {
+
+        it('should support loggers', (done) => {
+            ModelBuilder.create()
+            .withLogger((level, log) => {
+                expect(level).to.equal('debug');
+                expect(log).to.equal('test');
+                done();
+            })
+            .build()
+            .then((model) => {
+                model.logger('debug', 'test');
+            });
+        });
+
         it('should have an input and output by default', (done) => {
             ModelBuilder.create()
                 .build()
@@ -183,6 +198,41 @@ describe('model', () => {
                     done(ex);
                 });
         });
+
+        it('should be able to take unbuild model shapes', (done) => {
+            ModelBuilder.create()
+                .addShape(ModelBuilder.create()
+                    .addService(new TimeService())
+                    .from()
+                    .via(new NamedNode('1'), new NamedNode('2'))
+                    .to())
+                .build()
+                .then((model) => {
+                    done();
+                })
+                .catch((ex) => {
+                    done(ex);
+                });
+        });
+
+        it('should be able to take build model shapes', (done) => {
+            ModelBuilder.create()
+                .addService(new TimeService())
+                .from()
+                .via(new NamedNode('1'), new NamedNode('2'))
+                .to()
+                .build().then(m1 => {
+                    ModelBuilder.create()
+                        .addShape(m1)
+                        .build()
+                        .then((model) => {
+                            done();
+                        })
+                        .catch((ex) => {
+                            done(ex);
+                        });
+                });
+        });
     });
 
     describe('graph builder', () => {
@@ -202,7 +252,7 @@ describe('model', () => {
 
     describe('pushing', () => {
 
-        it('should support targetted pushing', (done) => {
+        it('should support multiple shape pushing', (done) => {
             let frames = 0;
             ModelBuilder.create()
                 .addShape(GraphBuilder.create()
@@ -269,6 +319,26 @@ describe('model', () => {
                         throw new Error('Excepting this error');
                     }),
                 )
+                .build()
+                .then((model) => {
+                    model.push(new DataFrame());
+                    model.once('error', (ex) => {
+                        expect(ex).to.be.not.undefined;
+                        done();
+                    });
+                });
+        });
+
+        it('should throw an exception when a graph shape node throws an error', (done) => {
+            ModelBuilder.create()
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .via(new CallbackSinkNode((data: DataFrame) => {
+                        throw new Error('Excepting this error');
+                    }))
+                    .to("a"))
+                .from("a")
+                .to()
                 .build()
                 .then((model) => {
                     model.push(new DataFrame());
