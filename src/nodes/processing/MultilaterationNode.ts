@@ -17,6 +17,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
     constructor(options?: MultilaterationOptions) {
         super(RelativeDistance, options);
         this.options.incrementStep = this.options.incrementStep || 1;
+        this.options.minReferences = this.options.minReferences || 1;
     }
 
     public processRelativePositions<P extends AbsolutePosition>(
@@ -33,6 +34,12 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
 
             // Order points and distances by distances
             spheres = spheres.sort((a, b) => a.radius - b.radius);
+
+            // Check if amount of references surpasses the threshold
+            if (spheres.length < this.options.minReferences) {
+                return resolve(dataObject);
+            }
+
             let position: P;
             switch (spheres.length) {
                 case 0:
@@ -241,4 +248,10 @@ export interface MultilaterationOptions extends ObjectProcessingNodeOptions {
      * Incrementation step
      */
     incrementStep?: number;
+    /**
+     * Minimum amount of references
+     *
+     * @default 1
+     */
+    minReferences?: number;
 }

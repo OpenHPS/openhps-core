@@ -99,6 +99,44 @@ describe('node', () => {
                 });
         });
 
+        it('should support merging one frame from multiple inlets', (done) => {
+            ModelBuilder.create()
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .clone()
+                    .to("a"))
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .clone()
+                    .filter(() => false)
+                    .to("b"))
+                .addShape(GraphBuilder.create()
+                    .from()
+                    .clone()
+                    .filter(() => false)
+                    .to("c"))
+                .from("a", "b", "c")
+                .via(new FrameMergeNode(
+                    frame => frame.source.uid,
+                    (frame, options) => options.lastNode,
+                    {
+                        timeout: 100,
+                        minCount: 1
+                    }
+                ))
+                .to(new CallbackSinkNode(frame => {
+                })).build().then(model => {
+                    const object = new DataObject("test");
+                    object.setPosition(new Absolute2DPosition(0, 0));
+                    const frame = new DataFrame(object);
+                    model.onceCompleted(frame.uid).then(() => {
+                        model.destroy();
+                        done();
+                    });
+                    model.push(frame);
+                });
+        });
+
         it('should merge from multiple sources with same parent', (done) => {
             ModelBuilder.create()
                 .from(

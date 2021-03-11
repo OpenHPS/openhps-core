@@ -45,6 +45,12 @@ export class RFTransmitterObject extends DataObject implements RFObject {
         this._calibratedRSSI = calibratedRSSI;
     }
 
+    /**
+     * Set the enviornment factor of the beacon.
+     * Nodes such as [[RelativeRSSIProcessing]] can override this.
+     *
+     * @returns {number} environment factor
+     */
     @SerializableMember()
     public get environmenFactor(): number {
         return this._environmenFactor;
