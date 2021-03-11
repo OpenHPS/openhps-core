@@ -132,7 +132,7 @@ describe('node', () => {
                     model.onceCompleted(frame.uid).then(() => {
                         model.destroy();
                         done();
-                    });
+                    }).catch(done);
                     model.push(frame);
                 });
         });
