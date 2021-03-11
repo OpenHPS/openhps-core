@@ -20,7 +20,9 @@ export class RelativeRSSIProcessing<InOut extends DataFrame> extends RelativePos
         return new Promise((resolve) => {
             relativePositions.forEach((relativeObj, relValue) => {
                 const distance = this.convertToDistance(relValue, relativeObj);
-                dataObject.addRelativePosition(distance);
+                if (distance) {
+                    dataObject.addRelativePosition(distance);
+                }
             });
             resolve(dataObject);
         });
