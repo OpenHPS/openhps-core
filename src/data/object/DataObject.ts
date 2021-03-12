@@ -176,7 +176,7 @@ export class DataObject {
      * @param {RelativePosition} relativePosition Relative position to add
      */
     public addRelativePosition(relativePosition: RelativePosition<any>): void {
-        if (relativePosition.referenceObjectUID === undefined) {
+        if (!relativePosition || relativePosition.referenceObjectUID === undefined) {
             return;
         }
 
