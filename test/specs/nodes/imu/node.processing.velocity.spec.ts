@@ -41,6 +41,10 @@ describe('node', () => {
                 });
         });
 
+        after(() => {
+            TimeService.initialize();
+        });
+
         it('should calculate linear velocity when not provided', (done) => {
             callbackSink.callback = (frame: DataFrame) => {
             };
@@ -106,6 +110,10 @@ describe('node', () => {
                 });
         });
 
+        after(() => {
+            TimeService.initialize();
+        });
+        
         it('should process linear velocity', (done) => {
             callbackSink.callback = (frame: DataFrame) => {
                 const position = frame.source.getPosition() as Absolute2DPosition;

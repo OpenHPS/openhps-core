@@ -45,6 +45,7 @@ export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode
     private _start(): Promise<void> {
         return new Promise((resolve) => {
             this.options.minCount = this.options.minCount || this.inlets.length;
+            this.options.maxCount = this.options.maxCount || this.inlets.length;
 
             if (this._timeout > 0) {
                 this._timer = setInterval(this._timerTick.bind(this), this._timeout);
@@ -85,7 +86,7 @@ export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode
 
     public process(frame: InOut, options?: PushOptions): Promise<InOut> {
         return new Promise<InOut>((resolve) => {
-            if (this.inlets.length === 1) {
+            if (this.options.maxCount === 1) {
                 return resolve(frame);
             }
 
@@ -112,7 +113,7 @@ export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode
                         queue.frames.set(groupKey, frame);
                     }
                     // Check if there are enough frames
-                    if (queue.frames.size >= this.inlets.length) {
+                    if (queue.frames.size >= this.options.maxCount) {
                         this._queue.delete(key);
                         const mergedFrame = this.merge(Array.from(queue.frames.values()), key);
                         resolve(mergedFrame);
@@ -156,4 +157,10 @@ export interface MergeShapeOptions extends ProcessingNodeOptions {
     timeout?: number;
     timeoutUnit?: TimeUnit;
     minCount?: number;
+    /**
+     * Maximum number of frames to merge
+     *
+     * @default inlets.length Based on the amount of inlets
+     */
+    maxCount?: number;
 }

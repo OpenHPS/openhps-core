@@ -1,4 +1,5 @@
 import { DataFrame, DataObject } from '../../data';
+import { LengthUnit } from '../../utils';
 import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
 
 /**
@@ -11,12 +12,19 @@ export class AccuracyModifierNode<InOut extends DataFrame> extends ObjectProcess
 
     constructor(options?: AccuracyModifierOptions) {
         super(options);
+        this.options.offsetUnit = this.options.offsetUnit || LengthUnit.METER;
+        this.options.offset = this.options.offset || 0;
+        this.options.magnitude = this.options.magnitude || 1;
     }
 
     public processObject(object: DataObject): Promise<DataObject> {
         return new Promise((resolve) => {
             if (object.position) {
-                object.position.accuracy = object.position.accuracy * this.options.magnitude + this.options.offset;
+                const accuracy = object.position.accuracy || this.options.defaultValue;
+                if (accuracy) {
+                    const offset = this.options.offsetUnit.convert(this.options.offset, object.position.unit);
+                    object.position.accuracy = accuracy * this.options.magnitude + offset;
+                }
             }
             resolve(object);
         });
@@ -24,6 +32,22 @@ export class AccuracyModifierNode<InOut extends DataFrame> extends ObjectProcess
 }
 
 export interface AccuracyModifierOptions extends ObjectProcessingNodeOptions {
+    /**
+     * Offset to add to the accuracy
+     */
     offset?: number;
+    /**
+     * Offset unit to use for the offset
+     *
+     * @default LengthUnit.METER
+     */
+    offsetUnit?: LengthUnit;
+    /**
+     * Magnitude of the accuracy
+     */
     magnitude?: number;
+    /**
+     * Default value when no accuracy on position.
+     */
+    defaultValue?: number;
 }
