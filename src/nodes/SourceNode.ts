@@ -220,7 +220,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
             promise = promise.then(
                 () =>
                     new Promise((resolve, reject) => {
-                        this.onPull()
+                        this.onPull(options)
                             .then((frame) => {
                                 if (frame !== undefined && frame !== null) {
                                     // Resolve after push is done
@@ -247,7 +247,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
             };
             const count = options.count || 1;
 
-            Promise.all([...Array(count).keys()].map(() => this.onPull()))
+            Promise.all([...Array(count).keys()].map(() => this.onPull(options)))
                 .then((results) => {
                     const pushPromises: Array<Promise<void>> = [];
                     results.forEach((frame) => {
@@ -265,7 +265,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
         });
     }
 
-    public abstract onPull(): Promise<Out>;
+    public abstract onPull(options?: PullOptions): Promise<Out>;
 }
 
 export interface SourceNodeOptions extends NodeOptions {

@@ -220,10 +220,15 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
     /**
      * Find all services and data services
      *
+     * @param {new () => Service} [q] Service class
      * @returns {Service[]} Array of all services
      */
-    public findAllServices(): Service[] {
-        return Array.from(this._services.values()).concat(Array.from(this._dataServices.values()));
+    public findAllServices<S extends Service>(q?: new () => S): S[] {
+        if (q !== undefined) {
+            return this.findAllServices().filter((s) => s instanceof q) as S[];
+        } else {
+            return Array.from(this._services.values()).concat(Array.from(this._dataServices.values())) as S[];
+        }
     }
 
     /**

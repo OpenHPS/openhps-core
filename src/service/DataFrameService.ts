@@ -6,7 +6,7 @@ import { DataServiceDriver } from './DataServiceDriver';
  * The data frame service manages storage of complete data frames.
  */
 export class DataFrameService<T extends DataFrame> extends DataService<string, T> {
-    constructor(dataServiceDriver: DataServiceDriver<string, T>) {
+    constructor(dataServiceDriver?: DataServiceDriver<string, T>) {
         super(dataServiceDriver);
         this.driver.once('ready', this._createIndexes.bind(this));
     }

@@ -35,6 +35,24 @@ describe('node', () => {
     });
 
     describe('push', () => {
+        it('should not accept null frames', (done) => {
+            const node = new CallbackNode(
+                (frame: DataFrame) => {
+
+                },
+                () => {
+                    return null;
+                },
+            );
+            Promise.resolve(node.push(null))
+                .then(() => {
+                    done('No error triggered!');
+                })
+                .catch((_) => {
+                    done();
+                });
+        });
+
         it('should trigger exception', (done) => {
             const node = new CallbackNode(
                 (frame: DataFrame) => {

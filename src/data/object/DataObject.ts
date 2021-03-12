@@ -140,7 +140,7 @@ export class DataObject {
             }
             const output: RelativePosition<any>[] = [];
             rawArray.forEach((raw) => {
-                if (raw.__type !== undefined) {
+                if (raw && raw.__type !== undefined) {
                     output.push(new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw));
                 }
             });

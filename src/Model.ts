@@ -48,8 +48,11 @@ export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame =
 
     /**
      * Find all services and data services
+     *
+     * @param {new () => Service} [q] Service class
+     * @returns {Service[]} Array of all services
      */
-    findAllServices(): Service[];
+    findAllServices<S extends Service>(q?: new () => S): S[];
 
     /**
      * Destroy the model, added nodes and services

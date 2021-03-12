@@ -9,7 +9,7 @@ import { DataServiceDriver } from './DataServiceDriver';
  * processed in the model and objects that need to be tracked.
  */
 export class DataObjectService<T extends DataObject> extends DataService<string, T> {
-    constructor(dataServiceDriver: DataServiceDriver<string, T>) {
+    constructor(dataServiceDriver?: DataServiceDriver<string, T>) {
         super(dataServiceDriver);
         this.driver.once('ready', this._createIndexes.bind(this));
     }

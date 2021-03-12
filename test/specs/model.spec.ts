@@ -15,9 +15,27 @@ import {
     FrameMergeNode,
     DataObject,
     TimeService,
+    DataObjectService,
+    MemoryDataService,
+    IMUSensorObject,
 } from '../../src';
 
 describe('model', () => {
+    describe('service', () => {
+        it('should be able to find services by class', async () => {
+            const model: Model = await ModelBuilder.create()
+                .addService(new DataObjectService(new MemoryDataService(DataObject)))
+                .addService(new DataObjectService(new MemoryDataService(IMUSensorObject)))
+                .from()
+                .to()
+                .build();
+            const services1 = model.findAllServices();
+            const services2 = model.findAllServices(DataObjectService);
+            expect(services1.length).to.equal(5);
+            expect(services2.length).to.equal(3);
+        });
+    });
+
     describe('builder', () => {
 
         it('should support loggers', (done) => {

@@ -10,7 +10,7 @@ import { DataServiceDriver } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
 
 export class TrajectoryService<T extends AbsolutePosition> extends DataService<PositionIdentifier, DataObjectPosition> {
-    constructor(dataServiceDriver: DataServiceDriver<PositionIdentifier, T>) {
+    constructor(dataServiceDriver?: DataServiceDriver<PositionIdentifier, T>) {
         super(dataServiceDriver as any);
 
         this.driver.once('ready', this._createIndexes.bind(this));

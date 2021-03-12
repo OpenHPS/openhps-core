@@ -24,7 +24,7 @@ import { FilterQuery } from './FilterQuery';
 export abstract class DataService<I, T> extends DataServiceDriver<I, T> {
     protected driver: DataServiceDriver<I, T>;
 
-    constructor(dataServiceDriver: DataServiceDriver<I, T>) {
+    constructor(dataServiceDriver?: DataServiceDriver<I, T>) {
         super(dataServiceDriver ? dataServiceDriver.dataType : undefined);
         this.driver = dataServiceDriver;
 

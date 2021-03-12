@@ -13,7 +13,7 @@ export class WorkerServiceProxy extends ServiceProxy<Service> {
     protected options: WorkerProxyOptions;
     private _promises: Map<string, { resolve: (data?: any) => void; reject: (ex?: any) => void }> = new Map();
 
-    constructor(options: WorkerProxyOptions) {
+    constructor(options?: WorkerProxyOptions) {
         super();
         this.options = options;
         this.name = options.name;

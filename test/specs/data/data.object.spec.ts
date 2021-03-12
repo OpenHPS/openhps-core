@@ -37,6 +37,40 @@ describe('data', () => {
             done();
         });
 
+        it('should deserialize undefined relative positions', (done) => {
+            const dataObject = new DataObject('123');
+            dataObject.displayName = 'abc';
+            dataObject.setPosition(new Absolute2DPosition(2, 2));
+            dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_a'), 1));
+            dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_b'), 2));
+            dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_c'), 3));
+            const serialized = DataSerializer.serialize(dataObject);
+            serialized.relativePositions = undefined;
+            const deserialized = DataSerializer.deserialize(serialized, DataObject);
+            expect(dataObject.uid).to.equal(deserialized.uid);
+            expect(dataObject.displayName).to.equal(deserialized.displayName);
+            expect(deserialized.relativePositions.length).to.equal(0);
+            done();
+        });
+
+        it('should deserialize relative positions wihout a type', (done) => {
+            const dataObject = new DataObject('123');
+            dataObject.displayName = 'abc';
+            dataObject.setPosition(new Absolute2DPosition(2, 2));
+            dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_a'), 1));
+            dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_b'), 2));
+            dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_c'), 3));
+            const serialized = DataSerializer.serialize(dataObject);
+            serialized.relativePositions = serialized.relativePositions.map(r => {
+                r.__type = undefined;
+            });
+            const deserialized = DataSerializer.deserialize(serialized, DataObject);
+            expect(dataObject.uid).to.equal(deserialized.uid);
+            expect(dataObject.displayName).to.equal(deserialized.displayName);
+            expect(deserialized.relativePositions.length).to.equal(0);
+            done();
+        });
+
         it('should clone', () => {
             const dataObject = new DataObject('123');
             dataObject.displayName = 'abc';

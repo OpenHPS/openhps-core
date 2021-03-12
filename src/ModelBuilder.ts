@@ -186,6 +186,17 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
     }
 
     /**
+     * Add multiple services to the model
+     *
+     * @param {Service[]} services Services to add
+     * @returns {ModelBuilder} Model builder instance
+     */
+    public addServices(...services: Service[]): this {
+        services.forEach((service) => this.addService(service));
+        return this;
+    }
+
+    /**
      * Add graph shape to graph
      *
      * @param {GraphBuilder | GraphShape} shape Graph builder or abstract graph
