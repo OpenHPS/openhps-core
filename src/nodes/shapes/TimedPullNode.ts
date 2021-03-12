@@ -16,10 +16,13 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     constructor(interval: number, intervalUnit = TimeUnit.MILLISECOND, options?: TimedPullOptions) {
         super(options);
         this._interval = intervalUnit.convert(interval, TimeUnit.MILLISECOND);
+        this.options.autoStart = this.options.autoStart || true;
 
         this.on('push', this._onPush.bind(this));
-        this.once('build', this._start.bind(this));
-        this.once('destroy', this._stop.bind(this));
+        if (this.options.autoStart) {
+            this.once('build', this.start.bind(this));
+        }
+        this.once('destroy', this.stop.bind(this));
     }
 
     private _onPush(frame: InOut, options?: PushOptions): Promise<void> {
@@ -61,16 +64,20 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
      *
      * @returns {Promise<void>} Start promise
      */
-    private _start(): Promise<void> {
+    public start(): Promise<void> {
         return new Promise((resolve) => {
+            if (this._timer) {
+                this.stop();
+            }
             this._timer = setInterval(this._intervalFn.bind(this), this._interval);
             resolve();
         });
     }
 
-    private _stop(): void {
+    public stop(): void {
         if (this._timer !== undefined) {
             clearInterval(this._timer);
+            this._timer = undefined;
         }
     }
 }
@@ -81,4 +88,10 @@ export interface TimedPullOptions extends NodeOptions {
      */
     throttlePull?: boolean;
     pullOptions?: PullOptions;
+    /**
+     * Auto start timed pull
+     *
+     * @default true
+     */
+    autoStart?: boolean;
 }

@@ -91,7 +91,7 @@ describe('data', () => {
                 expect(result.z).to.equal(0);
             });
 
-            it('should rotate the orientation (yaw)', () => {
+            it('should rotate the orientation from 0 (yaw)', () => {
                 const globalReferenceSpace = new ReferenceSpace(undefined);
 
                 const refSpace = new ReferenceSpace(globalReferenceSpace).rotation({
@@ -104,6 +104,21 @@ describe('data', () => {
                 position.orientation = Quaternion.fromEuler({ yaw: 0, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
                 const result = refSpace.transform(position) as Absolute3DPosition;
                 expect(result.orientation.toEuler().toVector(AngleUnit.DEGREE).z).to.equal(180);
+            });
+
+            it('should rotate the orientation from 90 (yaw)', () => {
+                const globalReferenceSpace = new ReferenceSpace(undefined);
+
+                const refSpace = new ReferenceSpace(globalReferenceSpace).rotation({
+                    yaw: 180,
+                    pitch: 0,
+                    roll: 0,
+                    unit: AngleUnit.DEGREE,
+                });
+                const position = new Absolute3DPosition(0, 0);
+                position.orientation = Quaternion.fromEuler({ yaw: 90, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
+                const result = refSpace.transform(position) as Absolute3DPosition;
+                expect(Math.round(result.orientation.toEuler().toVector(AngleUnit.DEGREE).z)).to.equal(-90);
             });
 
             it('should rotate the orientation (roll)', () => {

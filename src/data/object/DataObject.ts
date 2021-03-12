@@ -117,13 +117,15 @@ export class DataObject {
      *
      * @param {AbsolutePosition} position Position to set
      * @param {ReferenceSpace} [referenceSpace] Reference space
+     * @returns {DataObject} Data object instance
      */
-    public setPosition(position: AbsolutePosition, referenceSpace?: ReferenceSpace): void {
+    public setPosition(position: AbsolutePosition, referenceSpace?: ReferenceSpace): this {
         this._position = referenceSpace
             ? referenceSpace.transform(position, {
                   inverse: false,
               })
             : position;
+        return this;
     }
 
     /**

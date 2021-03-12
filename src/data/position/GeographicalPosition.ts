@@ -130,8 +130,14 @@ export class GeographicalPosition extends Absolute3DPosition {
         return this;
     }
 
-    public toVector3(unit: GCS = GCS.ECEF): Vector3 {
-        return GCS.WGS84.convert(this, unit);
+    /**
+     * Convert the geographical position to a vector
+     *
+     * @param {GCS} [unit=GCS.EPSG3857] coordinate system
+     * @returns {Vector3} Vector of the position
+     */
+    public toVector3(unit: GCS = GCS.EPSG3857): Vector3 {
+        return GCS.WGS84.convert(new Vector3(this.x, this.y, this.z), unit);
     }
 
     /**

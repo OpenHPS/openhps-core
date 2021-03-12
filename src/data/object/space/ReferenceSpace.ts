@@ -188,12 +188,8 @@ export class ReferenceSpace extends DataObject {
         newPosition.fromVector(newPosition.toVector3().applyMatrix4(transformationMatrix));
         // Transform the orientation (rotation)
         if (newPosition.orientation) {
-            // TODO: This is just ugly
-            const newEulerOrientation = newPosition.orientation
-                .toEuler()
-                .toVector3()
-                .add(Euler.fromQuaternion(rotation as Quaternion).toVector3());
-            newPosition.orientation = Quaternion.fromEuler(newEulerOrientation);
+            // Rotate the quaterion
+            newPosition.orientation.multiply(rotation);
         }
         if (newPosition.linearVelocity) {
             // Transform the linear velocity (rotation and scale)
