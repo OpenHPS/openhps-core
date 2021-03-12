@@ -1,9 +1,9 @@
 import { DataObject } from '../DataObject';
 import { SerializableObject, SerializableMember } from '../../decorators';
-import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder } from '../../../utils/math';
+import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder, Vector3 } from '../../../utils/math';
 import { AngleUnit, LengthUnit } from '../../../utils';
 import { AbsolutePosition } from '../../position/AbsolutePosition';
-import { Vector3 } from '../../../utils/math';
+
 import { DataObjectService } from '../../../service';
 
 /**
