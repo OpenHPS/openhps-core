@@ -45,14 +45,14 @@ export class GCS extends Unit {
         definitions: [
             {
                 unit: 'EPSG:4326',
-                toUnit: (input: Vector3) => {
+                fromUnit: (input: Vector3) => {
                     return new Vector3(
                         (input.y * 20037508.34) / 180,
                         ((Math.log(Math.tan(((90 + input.x) * Math.PI) / 360)) / (Math.PI / 180)) * 20037508.34) / 180,
                         0,
                     );
                 },
-                fromUnit: (input: Vector3) => {
+                toUnit: (input: Vector3) => {
                     return new Vector3(
                         (Math.atan(Math.exp((input.y * Math.PI) / 20037508.34)) * 360) / Math.PI - 90,
                         (input.x * 180) / 20037508.34,

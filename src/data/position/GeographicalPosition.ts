@@ -2,7 +2,7 @@ import { AngleUnit } from '../../utils/unit/AngleUnit';
 import { LengthUnit } from '../../utils/unit/LengthUnit';
 import { SerializableObject, SerializableMember } from '../decorators';
 import { Absolute3DPosition } from './Absolute3DPosition';
-import { GCS, Vector3 } from '../../utils';
+import { GCS, Unit, Vector3 } from '../../utils';
 
 /**
  * Geographical position
@@ -122,8 +122,22 @@ export class GeographicalPosition extends Absolute3DPosition {
         return location;
     }
 
-    public fromVector(vector: Vector3, unit: GCS = GCS.WGS84): this {
-        const converted = unit.convert(vector, GCS.WGS84);
+    public fromVector(vector: Vector3, unit?: LengthUnit): this;
+    public fromVector(vector: Vector3, unit?: GCS): this;
+    public fromVector(vector: Vector3, unit: Unit = GCS.WGS84): this {
+        let converted: Vector3;
+        if (unit instanceof LengthUnit) {
+            converted = GCS.EPSG3857.convert(
+                new Vector3(
+                    unit.convert(vector.x, LengthUnit.METER),
+                    unit.convert(vector.y, LengthUnit.METER),
+                    unit.convert(vector.z, LengthUnit.METER),
+                ),
+                GCS.WGS84,
+            );
+        } else if (unit instanceof GCS) {
+            converted = unit.convert(vector, GCS.WGS84);
+        }
         this.x = converted.x;
         this.y = converted.y;
         this.z = converted.z;
@@ -132,12 +146,32 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Convert the geographical position to a vector
+     * with geographical coordinate system GCS EPSG3857.
      *
-     * @param {GCS} [unit=GCS.EPSG3857] coordinate system
+     * @param {LengthUnit} [unit] Metric length unit
      * @returns {Vector3} Vector of the position
      */
-    public toVector3(unit: GCS = GCS.WGS84): Vector3 {
-        return GCS.WGS84.convert(new Vector3(this.x, this.y, this.z), unit);
+    public toVector3(unit?: LengthUnit): Vector3;
+    /**
+     * Convert the geographical position to a vector
+     *
+     * @param {GCS} [unit=GCS.WGS84] coordinate system
+     * @returns {Vector3} Vector of the position
+     */
+    public toVector3(unit?: GCS): Vector3;
+    public toVector3(unit: Unit = GCS.WGS84): Vector3 {
+        if (unit instanceof GCS) {
+            return GCS.WGS84.convert(new Vector3(this.x, this.y, this.z), unit);
+        } else if (unit instanceof LengthUnit) {
+            return GCS.WGS84.convert(
+                new Vector3(
+                    LengthUnit.METER.convert(this.x, unit),
+                    LengthUnit.METER.convert(this.y, unit),
+                    LengthUnit.METER.convert(this.z, unit),
+                ),
+                GCS.EPSG3857,
+            );
+        }
     }
 
     /**

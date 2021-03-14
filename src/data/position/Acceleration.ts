@@ -2,7 +2,7 @@ import { Vector3, AccelerationUnit } from '../../utils';
 import { SerializableMember, SerializableObject } from '../decorators';
 
 /**
- *
+ * @category Position
  */
 @SerializableObject()
 export class Acceleration extends Vector3 {
