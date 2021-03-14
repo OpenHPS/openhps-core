@@ -85,6 +85,16 @@ export class GeographicalPosition extends Absolute3DPosition {
      * @returns {number} Bearing in degrees from this position to destination
      */
     public bearing(destination: GeographicalPosition): number {
+        return AngleUnit.RADIAN.convert(this.angleTo(destination), AngleUnit.DEGREE);
+    }
+
+    /**
+     * Get the bearing in radians from this location to a destination
+     *
+     * @param {GeographicalPosition} destination Destination location
+     * @returns {number} Bearing in radians from this position to destination
+     */
+    public angleTo(destination: GeographicalPosition): number {
         const lonRadA = AngleUnit.DEGREE.convert(this.longitude, AngleUnit.RADIAN);
         const latRadA = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
         const lonRadB = AngleUnit.DEGREE.convert(destination.longitude, AngleUnit.RADIAN);
@@ -92,7 +102,7 @@ export class GeographicalPosition extends Absolute3DPosition {
         const y = Math.sin(lonRadB - lonRadA) * Math.cos(latRadB);
         const x =
             Math.cos(latRadA) * Math.sin(latRadB) - Math.sin(latRadA) * Math.cos(latRadB) * Math.cos(lonRadB - lonRadA);
-        return AngleUnit.RADIAN.convert(Math.atan2(y, x), AngleUnit.DEGREE);
+        return Math.atan2(y, x);
     }
 
     public destination(
