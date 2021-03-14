@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
-import { LoggingSinkNode, ListSourceNode, Model, ModelBuilder, DataFrame, NamedNode } from '../../../src';
+import { LoggingSinkNode, ListSourceNode, Model, ModelBuilder, DataFrame } from '../../../src';
+import { PlaceholderNode } from '../../../src/nodes/_internal/PlaceholderNode';
 
 describe('list source', () => {
     describe('layer', () => {
@@ -21,7 +22,7 @@ describe('list source', () => {
         it('should add a merge node internally', (done) => {
             ModelBuilder.create()
                 .from(new ListSourceNode([new DataFrame()]))
-                .via(new NamedNode('output'))
+                .via(new PlaceholderNode('output'))
                 .to(
                     new LoggingSinkNode((log) => {
                         done();

@@ -127,7 +127,7 @@ export class GeographicalPosition extends Absolute3DPosition {
     public fromVector(vector: Vector3, unit: Unit = GCS.WGS84): this {
         let converted: Vector3;
         if (unit instanceof LengthUnit) {
-            converted = GCS.EPSG3857.convert(
+            converted = GCS.ECEF.convert(
                 new Vector3(
                     unit.convert(vector.x, LengthUnit.METER),
                     unit.convert(vector.y, LengthUnit.METER),
@@ -146,7 +146,7 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Convert the geographical position to a vector
-     * with geographical coordinate system GCS EPSG3857.
+     * with geographical coordinate system ECEF.
      *
      * @param {LengthUnit} [unit] Metric length unit
      * @returns {Vector3} Vector of the position
@@ -169,7 +169,7 @@ export class GeographicalPosition extends Absolute3DPosition {
                     LengthUnit.METER.convert(this.y, unit),
                     LengthUnit.METER.convert(this.z, unit),
                 ),
-                GCS.EPSG3857,
+                GCS.ECEF,
             );
         }
     }

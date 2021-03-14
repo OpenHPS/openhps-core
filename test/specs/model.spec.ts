@@ -5,7 +5,6 @@ import {
     DataFrame,
     Node,
     GraphBuilder,
-    NamedNode,
     CallbackSourceNode,
     CallbackNode,
     CallbackSinkNode,
@@ -19,6 +18,7 @@ import {
     MemoryDataService,
     IMUSensorObject,
 } from '../../src';
+import { PlaceholderNode } from '../../src/nodes/_internal/PlaceholderNode';
 
 describe('model', () => {
     describe('service', () => {
@@ -73,9 +73,9 @@ describe('model', () => {
         it('should be able to broadcast to multiple nodes', (done) => {
             ModelBuilder.create()
                 .from()
-                .via(new NamedNode('1'))
-                .via(new NamedNode('2.1'), new NamedNode('2.2'), new NamedNode('2.3'))
-                .via(new NamedNode('3'))
+                .via(new PlaceholderNode('1'))
+                .via(new PlaceholderNode('2.1'), new PlaceholderNode('2.2'), new PlaceholderNode('2.3'))
+                .via(new PlaceholderNode('3'))
                 .to()
                 .build()
                 .then((model) => {
@@ -86,7 +86,7 @@ describe('model', () => {
         it('should reject building when node rejects build', (done) => {
             ModelBuilder.create()
                 .from()
-                .via(new NamedNode('1'))
+                .via(new PlaceholderNode('1'))
                 .via(
                     new (class TestNode extends Node<any, any> {
                         constructor() {
@@ -101,7 +101,7 @@ describe('model', () => {
                         }
                     })(),
                 )
-                .via(new NamedNode('3'))
+                .via(new PlaceholderNode('3'))
                 .to()
                 .build()
                 .then((model) => {
@@ -115,10 +115,10 @@ describe('model', () => {
 
         it('should be able to take names in from, via and to', (done) => {
             ModelBuilder.create()
-                .addNode(new NamedNode('1'))
-                .addNode(new NamedNode('2'))
-                .addNode(new NamedNode('3'))
-                .addNode(new NamedNode('4'))
+                .addNode(new PlaceholderNode('1'))
+                .addNode(new PlaceholderNode('2'))
+                .addNode(new PlaceholderNode('3'))
+                .addNode(new PlaceholderNode('4'))
                 .from()
                 .via('1')
                 .via('2', '3')
@@ -138,10 +138,10 @@ describe('model', () => {
         it('should be able to take names from other shapes', (done) => {
             ModelBuilder.create()
                 .addShape(GraphBuilder.create()
-                    .addNode(new NamedNode('1'))
-                    .addNode(new NamedNode('2'))
-                    .addNode(new NamedNode('3'))
-                    .addNode(new NamedNode('4'))
+                    .addNode(new PlaceholderNode('1'))
+                    .addNode(new PlaceholderNode('2'))
+                    .addNode(new PlaceholderNode('3'))
+                    .addNode(new PlaceholderNode('4'))
                 )
                 .from()
                 .via('1')
@@ -162,10 +162,10 @@ describe('model', () => {
         it('should be able to take names in other shapes', (done) => {
             ModelBuilder.create()
                 .addShape(GraphBuilder.create()
-                    .addNode(new NamedNode('1'))
-                    .addNode(new NamedNode('2'))
-                    .addNode(new NamedNode('3'))
-                    .addNode(new NamedNode('4'))
+                    .addNode(new PlaceholderNode('1'))
+                    .addNode(new PlaceholderNode('2'))
+                    .addNode(new PlaceholderNode('3'))
+                    .addNode(new PlaceholderNode('4'))
                 )
                 .addShape(GraphBuilder.create()
                     .from()
@@ -207,7 +207,7 @@ describe('model', () => {
 
         it('should be able to take graph shapes', (done) => {
             ModelBuilder.create()
-                .addShape(GraphBuilder.create().from().via(new NamedNode('1'), new NamedNode('2')).to())
+                .addShape(GraphBuilder.create().from().via(new PlaceholderNode('1'), new PlaceholderNode('2')).to())
                 .build()
                 .then((model) => {
                     done();
@@ -222,7 +222,7 @@ describe('model', () => {
                 .addShape(ModelBuilder.create()
                     .addService(new TimeService())
                     .from()
-                    .via(new NamedNode('1'), new NamedNode('2'))
+                    .via(new PlaceholderNode('1'), new PlaceholderNode('2'))
                     .to())
                 .build()
                 .then((model) => {
@@ -237,7 +237,7 @@ describe('model', () => {
             ModelBuilder.create()
                 .addService(new TimeService())
                 .from()
-                .via(new NamedNode('1'), new NamedNode('2'))
+                .via(new PlaceholderNode('1'), new PlaceholderNode('2'))
                 .to()
                 .build().then(m1 => {
                     ModelBuilder.create()
@@ -255,8 +255,8 @@ describe('model', () => {
 
     describe('graph builder', () => {
         it('should support adding nodes and edges manually', (done) => {
-            const node1 = new NamedNode('1');
-            const node2 = new NamedNode('2');
+            const node1 = new PlaceholderNode('1');
+            const node2 = new PlaceholderNode('2');
             GraphBuilder.create()
                 .addNode(node1)
                 .addNode(node2)

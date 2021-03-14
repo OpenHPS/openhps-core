@@ -48,10 +48,11 @@ describe('GeographicalPosition', () => {
         expect(pos2.longitude).to.equal(4.392123);
     });
 
-    it('should convert the geographic position to EPSG3857 when requesting in meters', () => {
+    it('should convert the geographic position to ECER when requesting in meters', () => {
         const pos = new GeographicalPosition(50.820548, 4.392123, 1);
         const vector = pos.toVector3(LengthUnit.METER);
-        expect(Math.round(vector.x)).to.equal(488929);
-        expect(Math.round(vector.y)).to.equal(6589612);
+        expect(Math.round(vector.x)).to.equal(4013073);
+        expect(Math.round(vector.y)).to.equal(308234);
+        expect(Math.round(vector.z)).to.equal(4938621);
     });
 });
