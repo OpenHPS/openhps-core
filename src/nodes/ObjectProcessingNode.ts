@@ -86,16 +86,18 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
             }
         }
 
-        const defaultService = this.model.findDataService(DataObject);
-        if (type === undefined) {
-            return defaultService.findByUID(uid);
-        }
-        const service = this.model.findDataService(type) as DataObjectService<DataObject>;
-        if (service === undefined) {
-            return defaultService.findByUID(uid);
+        let service: DataObjectService<DataObject>;
+        if (type === undefined || service === undefined) {
+            service = this.model.findDataService(DataObject);
         } else {
-            return service.findByUID(uid);
+            service = this.model.findDataService(type) as DataObjectService<DataObject>;
         }
+        return new Promise((resolve) => {
+            service
+                .findByUID(uid)
+                .then(resolve)
+                .catch(() => resolve(undefined));
+        });
     }
 }
 

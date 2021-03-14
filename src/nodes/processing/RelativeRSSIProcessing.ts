@@ -11,6 +11,7 @@ export class RelativeRSSIProcessing<InOut extends DataFrame> extends RelativePos
 
     constructor(options?: RelativeRSSIOptions) {
         super(RelativeRSSI, options);
+        this.options.propagationModel = this.options.propagationModel || PropagationModel.LOG_DISTANCE;
     }
 
     public processRelativePositions(
@@ -29,7 +30,8 @@ export class RelativeRSSIProcessing<InOut extends DataFrame> extends RelativePos
     }
 
     protected convertToDistance(rel: RelativeRSSI, transmitter: RFTransmitterObject): RelativeDistance {
-        const enviornmentFactor = this.options.environmentFactor || transmitter.environmenFactor;
+        const enviornmentFactor =
+            this.options.environmentFactor || transmitter.environmenFactor || this.options.defaultEnvironmentFactor;
         switch (this.options.propagationModel) {
             case PropagationModel.LOG_DISTANCE:
                 if (transmitter.calibratedRSSI && rel.rssi && enviornmentFactor) {
@@ -55,6 +57,12 @@ export interface RelativeRSSIOptions extends ObjectProcessingNodeOptions {
      * Enviornment factor to override transmitter enviornment factor
      */
     environmentFactor?: number;
+    /**
+     * Default environment factor
+     *
+     * @default undefined
+     */
+    defaultEnvironmentFactor?: number;
 }
 
 export enum PropagationModel {

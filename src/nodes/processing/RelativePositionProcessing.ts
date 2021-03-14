@@ -38,9 +38,11 @@ export abstract class RelativePositionProcessing<
             Promise.all(referencePromises)
                 .then((referenceObjects) => {
                     const relativePositions: Map<R, DataObject> = new Map();
-                    referenceObjects.forEach((referenceObject: DataObject) => {
-                        relativePositions.set(index.get(referenceObject.uid), referenceObject);
-                    });
+                    referenceObjects
+                        .filter((obj) => obj !== undefined)
+                        .forEach((referenceObject: DataObject) => {
+                            relativePositions.set(index.get(referenceObject.uid), referenceObject);
+                        });
                     return this.processRelativePositions(dataObject, relativePositions, dataFrame);
                 })
                 .then((modifiedObject) => {

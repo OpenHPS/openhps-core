@@ -38,6 +38,8 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
             // Check if amount of references surpasses the threshold
             if (spheres.length < this.options.minReferences) {
                 return resolve(dataObject);
+            } else if (spheres.length > this.options.maxReferences) {
+                spheres = spheres.splice(0, this.options.maxReferences);
             }
 
             let position: P;
@@ -254,4 +256,10 @@ export interface MultilaterationOptions extends ObjectProcessingNodeOptions {
      * @default 1
      */
     minReferences?: number;
+    /**
+     * Maximum amount of references
+     *
+     * @default undefined
+     */
+    maxReferences?: number;
 }
