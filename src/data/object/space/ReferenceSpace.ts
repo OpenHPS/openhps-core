@@ -2,9 +2,8 @@ import { DataObject } from '../DataObject';
 import { SerializableObject, SerializableMember } from '../../decorators';
 import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder, Vector3 } from '../../../utils/math';
 import { AngleUnit, LengthUnit } from '../../../utils';
-import { AbsolutePosition } from '../../position/AbsolutePosition';
-
 import { DataObjectService } from '../../../service';
+import { AbsolutePosition } from '../../position';
 
 /**
  * A reference space transforms absolute positions to another (global) reference space.
@@ -168,10 +167,13 @@ export class ReferenceSpace extends DataObject {
      * @param {SpaceTransformationOptions} [options] Transformation options
      * @returns {AbsolutePosition} Transformed position
      */
-    public transform<T extends AbsolutePosition>(position: T, options?: SpaceTransformationOptions): T {
+    public transform<In extends AbsolutePosition, Out extends AbsolutePosition = In>(
+        position: In,
+        options?: SpaceTransformationOptions,
+    ): Out {
         const config = options || {};
         // Clone the position
-        const newPosition = position.clone();
+        const newPosition = this._parent ? this._parent.transform(position, options) : position.clone();
         // Transform the position to the length unit
         if (this.referenceUnit) {
             newPosition.fromVector(newPosition.toVector3(this._unit));
@@ -200,13 +202,11 @@ export class ReferenceSpace extends DataObject {
         }
 
         newPosition.referenceSpaceUID = this.uid;
-        return newPosition;
+        return (newPosition as unknown) as Out;
     }
 
     public get transformationMatrix(): Matrix4 {
-        return this._parent
-            ? this._parent.transformationMatrix.clone().multiply(this._transformationMatrix)
-            : this._transformationMatrix;
+        return this._transformationMatrix;
     }
 
     /**
@@ -215,16 +215,11 @@ export class ReferenceSpace extends DataObject {
      * @returns {Matrix4} Transformation matrix
      */
     public get scaleMatrix(): Matrix4 {
-        return this._parent ? this._parent.scaleMatrix.clone().multiply(this._scaleMatrix) : this._scaleMatrix;
+        return this._scaleMatrix;
     }
 
     public get rotationQuaternion(): Quaternion {
-        if (this._parent) {
-            const threeQuat = this._parent.rotationQuaternion.multiply(this._rotation).normalize();
-            return new Quaternion(threeQuat.x, threeQuat.y, threeQuat.z, threeQuat.w);
-        } else {
-            return this._rotation;
-        }
+        return this._rotation;
     }
 }
 
