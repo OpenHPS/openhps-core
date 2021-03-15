@@ -5,7 +5,6 @@ pipeline {
             steps {
                 echo 'Building ...'
                 sh 'npm install'
-                sh 'npm update'
                 sh 'npm run clean'
                 sh 'npm run build:three'
                 sh 'npm run build:cjs'
@@ -62,7 +61,7 @@ pipeline {
         }
     }
     post {
-        always {
+        success {
             junit 'artifacts/test/xunit.xml'
             cobertura coberturaReportFile: 'artifacts/coverage/cobertura-coverage.xml'
             publishHTML (target: [
@@ -88,6 +87,8 @@ pipeline {
             archiveArtifacts artifacts: 'dist/web/worker.openhps-core.js.map', fingerprint: true
             archiveArtifacts artifacts: 'dist/web/worker.openhps-core.min.js', fingerprint: true
             archiveArtifacts artifacts: 'dist/web/worker.openhps-core.min.js.map', fingerprint: true
+        }
+        always {
             deleteDir()
         }
     }
