@@ -32,6 +32,33 @@ pipeline {
         }
         stage('Publish') {
             parallel {
+                stage('Publish Artifacts') {
+                    junit 'artifacts/test/xunit.xml'
+                    cobertura coberturaReportFile: 'artifacts/coverage/cobertura-coverage.xml'
+                    publishHTML (target: [
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'docs/out',
+                        reportFiles: '*.*',
+                        reportName: "Documentation"
+                    ])
+
+                    archiveArtifacts artifacts: 'dist/web/openhps-core.es.js', fingerprint: true
+                    archiveArtifacts artifacts: 'dist/web/openhps-core.es.js.map', fingerprint: true
+                    archiveArtifacts artifacts: 'dist/web/openhps-core.es.min.js', fingerprint: true
+                    archiveArtifacts artifacts: 'dist/web/openhps-core.es.min.js.map', fingerprint: true
+
+                    archiveArtifacts artifacts: 'dist/web/openhps-core.js', fingerprint: true
+                    archiveArtifacts artifacts: 'dist/web/openhps-core.js.map', fingerprint: true
+                    archiveArtifacts artifacts: 'dist/web/openhps-core.min.js', fingerprint: true
+                    archiveArtifacts artifacts: 'dist/web/openhps-core.min.js.map', fingerprint: true
+
+                    archiveArtifacts artifacts: 'dist/web/worker.openhps-core.js', fingerprint: true
+                    archiveArtifacts artifacts: 'dist/web/worker.openhps-core.js.map', fingerprint: true
+                    archiveArtifacts artifacts: 'dist/web/worker.openhps-core.min.js', fingerprint: true
+                    archiveArtifacts artifacts: 'dist/web/worker.openhps-core.min.js.map', fingerprint: true
+                }
                 stage('Publish Development') {
                     when {
                         branch "dev"
@@ -61,33 +88,6 @@ pipeline {
         }
     }
     post {
-        success {
-            junit 'artifacts/test/xunit.xml'
-            cobertura coberturaReportFile: 'artifacts/coverage/cobertura-coverage.xml'
-            publishHTML (target: [
-                allowMissing: false,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: 'docs/out',
-                reportFiles: '*.*',
-                reportName: "Documentation"
-            ])
-
-            archiveArtifacts artifacts: 'dist/web/openhps-core.es.js', fingerprint: true
-            archiveArtifacts artifacts: 'dist/web/openhps-core.es.js.map', fingerprint: true
-            archiveArtifacts artifacts: 'dist/web/openhps-core.es.min.js', fingerprint: true
-            archiveArtifacts artifacts: 'dist/web/openhps-core.es.min.js.map', fingerprint: true
-
-            archiveArtifacts artifacts: 'dist/web/openhps-core.js', fingerprint: true
-            archiveArtifacts artifacts: 'dist/web/openhps-core.js.map', fingerprint: true
-            archiveArtifacts artifacts: 'dist/web/openhps-core.min.js', fingerprint: true
-            archiveArtifacts artifacts: 'dist/web/openhps-core.min.js.map', fingerprint: true
-
-            archiveArtifacts artifacts: 'dist/web/worker.openhps-core.js', fingerprint: true
-            archiveArtifacts artifacts: 'dist/web/worker.openhps-core.js.map', fingerprint: true
-            archiveArtifacts artifacts: 'dist/web/worker.openhps-core.min.js', fingerprint: true
-            archiveArtifacts artifacts: 'dist/web/worker.openhps-core.min.js.map', fingerprint: true
-        }
         always {
             deleteDir()
         }
