@@ -96,6 +96,26 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
         this.velocity.angular = value;
     }
 
+    /**
+     * Get the angle in radians from this position to a destination
+     *
+     * @param {Absolute2DPosition} destination Destination position
+     * @returns {number} Bearing in radians from this position to destination
+     */
+    public angleTo(destination: Absolute2DPosition): number {
+        return this.toVector3().angleTo(destination.toVector3());
+    }
+
+    /**
+     * Get the distance from this location to a destination
+     *
+     * @param {Absolute2DPosition} destination Destination location
+     * @returns {number} Distance between this point and destination
+     */
+    public distanceTo(destination: Absolute2DPosition): number {
+        return super.distanceTo(destination);
+    }
+
     public fromVector(vector: Vector2 | Vector3, unit?: LengthUnit): this {
         if (unit) {
             this.x = unit.convert(vector.x, this.unit);

@@ -1,17 +1,12 @@
-import { SerializableMember, SerializableObject } from '../decorators';
+import { SerializableObject } from '../decorators';
 import { LinearVelocityUnit } from '../../utils';
-import { Vector3 } from '../../utils/math';
+import { SensorValue } from './SensorValue';
 
 /**
  * @category Position
  */
 @SerializableObject()
-export class LinearVelocity extends Vector3 {
-    @SerializableMember({
-        isRequired: false,
-    })
-    public accuracy: number;
-
+export class LinearVelocity extends SensorValue {
     constructor(x?: number, y?: number, z?: number, unit = LinearVelocityUnit.METER_PER_SECOND) {
         super(x, y, z, unit, LinearVelocityUnit.METER_PER_SECOND);
     }
@@ -21,11 +16,5 @@ export class LinearVelocity extends Vector3 {
         unit: LinearVelocityUnit = LinearVelocityUnit.METER_PER_SECOND,
     ): LinearVelocity {
         return new LinearVelocity(array[0], array[1], array[2], unit);
-    }
-
-    public clone(): this {
-        const vector: this = super.clone();
-        vector.accuracy = this.accuracy;
-        return vector;
     }
 }

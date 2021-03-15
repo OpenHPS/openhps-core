@@ -96,6 +96,10 @@ export class Euler extends THREE.Euler {
     public get yaw(): number {
         return AngleUnit.RADIAN.convert(this.z, AngleUnit.DEGREE);
     }
+
+    public clone(): this {
+        return new Euler().copy(this) as this;
+    }
 }
 
 export type EulerOrder = 'XYZ' | 'XZY' | 'YXZ' | 'YZX' | 'ZXY' | 'ZYX';

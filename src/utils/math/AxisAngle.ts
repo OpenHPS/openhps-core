@@ -9,7 +9,8 @@ import * as THREE from './_internal';
  */
 @SerializableObject()
 export class AxisAngle extends Vector3 {
-    private _angle: number;
+    @SerializableMember()
+    public angle: number;
 
     constructor(x?: number, y?: number, z?: number, angle: number = null, unit: AngleUnit = AngleUnit.RADIAN) {
         super(
@@ -24,15 +25,6 @@ export class AxisAngle extends Vector3 {
             this.angle = Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
             this.normalize();
         }
-    }
-
-    @SerializableMember()
-    public get angle(): number {
-        return this._angle;
-    }
-
-    public set angle(value: number) {
-        this._angle = value;
     }
 
     /**
@@ -65,5 +57,11 @@ export class AxisAngle extends Vector3 {
      */
     public toRotationMatrix(): Matrix4 {
         return Matrix4.rotationFromAxisAngle(this, this.angle);
+    }
+
+    public clone(): this {
+        const vector = new AxisAngle().copy(this) as this;
+        vector.angle = this.angle;
+        return vector;
     }
 }

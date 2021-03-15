@@ -40,9 +40,31 @@ export interface AbsolutePosition extends Position {
      */
     accuracy: number;
 
+    /**
+     * Linear velocity
+     */
     linearVelocity: LinearVelocity;
 
+    /**
+     * Angular elocity
+     */
     angularVelocity: AngularVelocity;
+
+    /**
+     * Get the angle in radians from this position to a destination
+     *
+     * @param {AbsolutePosition} destination Destination position
+     * @returns {number} Bearing in radians from this position to destination
+     */
+    angleTo(position: AbsolutePosition): number;
+
+    /**
+     * Get the distance from this location to a destination
+     *
+     * @param {AbsolutePosition} destination Destination location
+     * @returns {number} Distance between this point and destination
+     */
+    distanceTo(position: AbsolutePosition): number;
 
     fromVector(vector: Vector, unit?: LengthUnit): this;
 

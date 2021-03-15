@@ -58,7 +58,7 @@ describe('example', () => {
                     const position = robot.getPosition() as Absolute2DPosition;
                     position.x = 0;
                     position.y = 0;
-                    position.velocity.linear = new LinearVelocity(1, 0);
+                    position.linearVelocity = new LinearVelocity(1, 0);
                     position.timestamp = currentTime;
                     robot.setPosition(position);
                     const frame = new DataFrame(robot);
@@ -109,8 +109,8 @@ describe('example', () => {
                     const position = robot.getPosition() as Absolute2DPosition;
                     position.x = 0;
                     position.y = 0;
-                    position.velocity.linear = new LinearVelocity(0, 0, 0);
-                    position.velocity.angular = new AngularVelocity(10, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
+                    position.linearVelocity = new LinearVelocity(0, 0, 0);
+                    position.angularVelocity = new AngularVelocity(10, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
                     position.timestamp = currentTime;
                     robot.setPosition(position);
                     const frame = new DataFrame(robot);

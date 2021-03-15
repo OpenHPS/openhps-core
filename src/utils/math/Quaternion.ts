@@ -56,7 +56,7 @@ export class Quaternion extends THREE.Quaternion {
     }): Quaternion;
     public static fromEuler(euler: number[]): Quaternion;
     public static fromEuler(euler: any): Quaternion {
-        const quaternion = new Quaternion();
+        const quaternion = new this();
         if (euler instanceof Euler) {
             quaternion.setFromEuler(euler);
         } else if (euler instanceof Vector3) {
@@ -87,7 +87,7 @@ export class Quaternion extends THREE.Quaternion {
     public static fromAxisAngle(axis: number[]): Quaternion;
     public static fromAxisAngle(axis: AxisAngle): Quaternion;
     public static fromAxisAngle(axis: any): Quaternion {
-        const quaternion = new Quaternion();
+        const quaternion = new this();
         if (axis instanceof AxisAngle) {
             quaternion.setFromAxisAngle(new Vector3(axis.x, axis.y, axis.z), axis.angle);
         } else if (axis instanceof Array) {
@@ -107,7 +107,7 @@ export class Quaternion extends THREE.Quaternion {
      * @returns {Quaternion} Serializable quaternion
      */
     public static fromRotationMatrix(matrix: Matrix4): Quaternion {
-        const quaternion = new Quaternion();
+        const quaternion = new this();
         quaternion.setFromRotationMatrix(matrix);
         return quaternion;
     }
@@ -138,5 +138,9 @@ export class Quaternion extends THREE.Quaternion {
      */
     public toRotationMatrix(): Matrix4 {
         return Matrix4.rotationFromQuaternion(this);
+    }
+
+    public clone(): this {
+        return new Quaternion().copy(this) as this;
     }
 }

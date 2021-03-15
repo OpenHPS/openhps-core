@@ -10,6 +10,7 @@ import {
     Absolute2DPosition,
     CallbackSinkNode,
     LengthUnit,
+    CallbackNode,
 } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
 import { EvaluationDataFrame } from '../../mock/data/EvaluationDataFrame';
@@ -212,9 +213,7 @@ describe('dataset liwste2017 (reverse beacons)', () => {
                             expect(calculatedLocation).to.not.be.undefined;
 
                             // Accuracy
-                            console.log(calculatedLocation.distanceTo(expectedLocation))
                             expect(calculatedLocation.distanceTo(expectedLocation)).to.be.lessThan(65);
-
                             done();
                         }
                     });

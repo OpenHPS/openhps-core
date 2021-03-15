@@ -120,6 +120,26 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
         }
     }
 
+    /**
+     * Get the angle in radians from this position to a destination
+     *
+     * @param {Absolute3DPosition} destination Destination position
+     * @returns {number} Bearing in radians from this position to destination
+     */
+    public angleTo(destination: Absolute3DPosition): number {
+        return super.angleTo(destination);
+    }
+
+    /**
+     * Get the distance from this location to a destination
+     *
+     * @param {Absolute3DPosition} destination Destination location
+     * @returns {number} Distance between this point and destination
+     */
+    public distanceTo(destination: Absolute3DPosition): number {
+        return super.distanceTo(destination);
+    }
+
     public equals(position: Absolute3DPosition): boolean {
         return this.toVector3(this.unit).equals(position.toVector3(this.unit));
     }

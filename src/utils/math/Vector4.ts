@@ -19,8 +19,10 @@ export class Vector4 extends THREE.Vector4 {
     public w: number;
 
     public static fromArray(array: number[]): Vector4 {
-        const vector = new Vector4();
-        vector.fromArray(array);
-        return vector;
+        return new this().fromArray(array);
+    }
+
+    public clone(): this {
+        return new (this.constructor as new () => this)().copy(this) as this;
     }
 }

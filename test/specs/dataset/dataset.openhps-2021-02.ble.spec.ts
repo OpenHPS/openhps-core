@@ -119,7 +119,7 @@ describe('dataset ipin2021', () => {
                     expect(errors.reduce((a, b) => a + b) / errors.length).to.be.lessThan(8);
                     done();
                 }).catch(done);
-            }).timeout(15000);
+            }).timeout(5000);
 
         });
 

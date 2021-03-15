@@ -12,6 +12,10 @@ export class Orientation extends Quaternion {
     @SerializableMember({
         isRequired: false,
     })
+    public timestamp?: number;
+    @SerializableMember({
+        isRequired: false,
+    })
     public accuracy?: number;
 
     constructor(x?: number, y?: number, z?: number, w?: number, accuracy?: number) {
@@ -33,6 +37,7 @@ export class Orientation extends Quaternion {
             z: value.z,
             w: value.w,
             accuracy: value.accuracy,
+            timestamp: value.timestamp,
         };
     }
 
@@ -40,6 +45,15 @@ export class Orientation extends Quaternion {
         if (!json) {
             return undefined;
         }
-        return new Orientation(json.x, json.y, json.z, json.w, json.accuracy);
+        const orientation = new Orientation(json.x, json.y, json.z, json.w, json.accuracy);
+        orientation.timestamp = json.timestamp;
+        return orientation;
+    }
+
+    public clone(): this {
+        const vector = super.clone();
+        vector.accuracy = this.accuracy;
+        vector.timestamp = this.timestamp;
+        return vector as this;
     }
 }

@@ -1,5 +1,6 @@
-import { AngleUnit, Quaternion } from '../../utils';
+import { AngleUnit } from '../../utils';
 import { SerializableObject, SerializableMember } from '../decorators';
+import { Orientation } from './Orientation';
 import { RelativeValue } from './RelativeValue';
 
 /**
@@ -18,14 +19,14 @@ export class RelativeAngle extends RelativeValue {
      * Orientation at recorded position
      */
     @SerializableMember()
-    public orientation: Quaternion = new Quaternion();
+    public orientation: Orientation = new Orientation();
     /**
      * Angle unit
      */
     @SerializableMember()
     public angleUnit: AngleUnit;
 
-    constructor(referenceObject?: any, angle?: number, angleUnit?: AngleUnit, orientation?: Quaternion) {
+    constructor(referenceObject?: any, angle?: number, angleUnit?: AngleUnit, orientation?: Orientation) {
         super(referenceObject, angle);
         this.angleUnit = angleUnit;
         if (orientation) {

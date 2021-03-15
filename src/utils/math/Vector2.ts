@@ -22,8 +22,10 @@ export class Vector2 extends THREE.Vector2 {
     }
 
     public static fromArray(array: number[]): Vector2 {
-        const vector = new Vector2();
-        vector.fromArray(array);
-        return vector;
+        return new this().fromArray(array);
+    }
+
+    public clone(): this {
+        return new (this.constructor as new () => this)().copy(this) as this;
     }
 }
