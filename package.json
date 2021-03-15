@@ -44,7 +44,10 @@
     "build:webpack": "npm-run-all --parallel build:webpack:*",
     "build:webpack:prod": "webpack --env prod --",
     "build:webpack:dev": "webpack --env dev --",
-    "build:three": "shx mkdir -p ./src/utils/math/three/ && shx cp -r node_modules/three/src/* ./src/utils/math/three/ && babel ./src/utils/math/three/* --out-dir . --verbose --presets @babel/preset-env  --relative",
+    "build:three": "npm-run-all build:three:mkdir build:three:cp build:three:cjs",
+    "build:three:mkdir": "shx mkdir -p ./src/utils/math/three/",
+    "build:three:cp": "shx cp -r node_modules/three/src/* ./src/utils/math/three/ && shx cp -r node_modules/@types/three/src/* ./src/utils/math/three/",
+    "build:three:cjs": "babel ./src/utils/math/three/* --out-dir . --verbose --presets @babel/preset-env  --relative",
     "publish:development": "standard-version --prerelease alpha -m 'chore(alpha): %s' --author='ci <ci@openhps.org>' && npm publish --tag dev",
     "publish:beta": "standard-version --prerelease beta -m 'chore(beta): %s' --author='ci <ci@openhps.org>' && npm publish --tag beta",
     "publish:release": "standard-version -m 'chore(release): %s' --author='ci <ci@openhps.org>' && npm publish --tag latest"
@@ -58,7 +61,7 @@
     "system",
     "indoor",
     "outdoor",
-    "trilateration",
+    "multilateration",
     "triangulation",
     "fingerprinting",
     "dead reckoning"
@@ -83,6 +86,7 @@
     "@types/chai": "^4.2.15",
     "@types/mocha": "^8.2.1",
     "@types/node": "^12.20.5",
+    "@types/three": "^0.126.0",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.17.0",
     "@typescript-eslint/parser": "^4.17.0",
