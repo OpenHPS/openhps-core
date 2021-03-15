@@ -5,6 +5,7 @@ pipeline {
             steps {
                 echo 'Building ...'
                 sh 'npm install'
+                sh 'npm update'
                 sh 'npm run clean'
                 sh 'npm run build:three'
                 sh 'npm run build:cjs'
