@@ -35,10 +35,12 @@ export class RelativeRSSIProcessing<InOut extends DataFrame> extends RelativePos
         switch (this.options.propagationModel) {
             case PropagationModel.LOG_DISTANCE:
                 if (transmitter.calibratedRSSI && rel.rssi && enviornmentFactor) {
-                    return new RelativeDistance(
+                    const relDistance = new RelativeDistance(
                         transmitter,
                         Math.pow(10, (transmitter.calibratedRSSI - rel.rssi) / (10 * enviornmentFactor)),
                     );
+                    relDistance.timestamp = rel.timestamp;
+                    return relDistance;
                 } else {
                     return undefined;
                 }

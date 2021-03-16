@@ -1,9 +1,22 @@
+import { DataSerializer } from '../data';
 import { DataServiceDriver } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
 import { MemoryQueryEvaluator } from './_internal/MemoryQueryEvaluator';
 
 export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     protected _data: Map<I, any> = new Map();
+    protected serialize: (obj: T) => any;
+    protected deserialize: (obj: any) => T;
+
+    constructor(
+        dataType: new () => T,
+        serializer: (obj: T) => any = (obj) => DataSerializer.serialize(obj),
+        deserializer: (obj: any) => T = (obj) => DataSerializer.deserialize(obj),
+    ) {
+        super(dataType);
+        this.serialize = serializer;
+        this.deserialize = deserializer;
+    }
 
     public createIndex(_: string): Promise<void> {
         return new Promise((resolve) => {

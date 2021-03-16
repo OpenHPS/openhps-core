@@ -23,6 +23,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
     public processRelativePositions<P extends AbsolutePosition>(
         dataObject: DataObject,
         relativePositions: Map<RelativeDistance, DataObject>,
+        dataFrame: DataFrame,
     ): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             let spheres: Array<Sphere<P>> = [];
@@ -48,6 +49,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                     return resolve(dataObject);
                 case 1:
                     position = spheres[0].position.clone() as P;
+                    position.timestamp = dataFrame.createdTimestamp;
                     position.accuracy = spheres[0].radius;
                     dataObject.setPosition(position);
                     return resolve(dataObject);
@@ -60,18 +62,23 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                     } else {
                         position = this.midpoint(spheres[0], spheres[1]) as P;
                     }
+                    position.timestamp = dataFrame.createdTimestamp;
                     dataObject.setPosition(position);
                     return resolve(dataObject);
                 case 3:
                     this.trilaterate(spheres)
                         .then((position) => {
-                            if (position) dataObject.setPosition(position);
+                            if (position) {
+                                position.timestamp = dataFrame.createdTimestamp;
+                                dataObject.setPosition(position);
+                            }
                             resolve(dataObject);
                         })
                         .catch(reject);
                     break;
                 default:
                     position = this.nls(spheres) as P;
+                    position.timestamp = dataFrame.createdTimestamp;
                     dataObject.setPosition(position);
                     resolve(dataObject);
             }

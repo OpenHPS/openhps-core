@@ -28,6 +28,7 @@ export class TriangulationNode<InOut extends DataFrame> extends RelativePosition
     public processRelativePositions<P extends Absolute2DPosition | Absolute3DPosition | GeographicalPosition>(
         dataObject: DataObject,
         relativePositions: Map<RelativeAngle, DataObject>,
+        dataFrame: DataFrame,
     ): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             const objects: DataObject[] = [];
@@ -51,7 +52,10 @@ export class TriangulationNode<InOut extends DataFrame> extends RelativePosition
                     // TODO: Currently only for 2d
                     this.triangulate(points, angles)
                         .then((position) => {
-                            if (position !== null) dataObject.setPosition(position);
+                            if (position !== null) {
+                                position.timestamp = dataFrame.createdTimestamp;
+                                dataObject.setPosition(position);
+                            }
                             resolve(dataObject);
                         })
                         .catch(reject);
