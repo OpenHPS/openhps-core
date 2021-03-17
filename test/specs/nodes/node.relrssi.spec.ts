@@ -1,22 +1,16 @@
 import { expect } from 'chai';
 import 'mocha';
 import {
-    LoggingSinkNode,
     ModelBuilder,
-    ListSourceNode,
     DataFrame,
     DataObject,
-    Absolute2DPosition,
-    RelativeAngle,
-    AngleUnit,
-    TriangulationNode, 
     RelativeRSSIProcessing,
     CallbackSinkNode,
     RelativeRSSI,
     RFTransmitterObject
 } from '../../../src';
 
-describe('node multilateration', () => {
+describe('node relative rssi processing', () => {
     it('should convert relative rssi to relative distance', (done) => {
         ModelBuilder.create()
             .from()

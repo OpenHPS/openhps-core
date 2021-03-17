@@ -6,3 +6,4 @@ export * from './MultilaterationNode';
 export * from './TriangulationNode';
 export * from './RelativeRSSIProcessing';
 export * from './AccuracyModifierNode';
+export * from './CellIdentificationNode';
