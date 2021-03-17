@@ -2,7 +2,7 @@ import { DataFrame } from './data/DataFrame';
 import { TransformationSpace } from './data/object/space/TransformationSpace';
 import { DataService } from './service/DataService';
 import { Service } from './service/Service';
-import { ImmutableGraph } from './graph/ImmutableGraph';
+import { Graph } from './graph/Graph';
 
 /**
  * This model contains multiple [[Node]]s, [[Service]]s to sample
@@ -17,8 +17,7 @@ import { ImmutableGraph } from './graph/ImmutableGraph';
  * Instead, developers should use a [[SourceNode]] that automatically pushes new [[DataFrame]]s
  * or pushes new frames when receiving a pull.
  */
-export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame>
-    extends ImmutableGraph<In, Out> {
+export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame> extends Graph<In, Out> {
     /**
      * Find service
      *

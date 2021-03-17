@@ -38,6 +38,24 @@ describe('model', () => {
 
     describe('builder', () => {
 
+        it('should support graphs as nodes', (done) => {
+            GraphBuilder.create()
+                .from()
+                .to().build().then(graph => {
+                    ModelBuilder.create()
+                    .from()
+                    // .via(GraphBuilder.create()
+                    //     .from()
+                    //     .to())
+                    .via(graph)
+                    .to()
+                    .build()
+                    .then((model) => {
+                        done();
+                    }).catch(done);
+                });
+        });
+
         it('should support loggers', (done) => {
             ModelBuilder.create()
             .withLogger((level, log) => {
@@ -250,6 +268,21 @@ describe('model', () => {
                             done(ex);
                         });
                 });
+        });
+
+        it('should support multiple services', async () => {
+            const model: Model = await ModelBuilder.create()
+                .addServices(
+                    new DataObjectService(new MemoryDataService(DataObject)), 
+                    new DataObjectService(new MemoryDataService(IMUSensorObject))
+                )
+                .from()
+                .to()
+                .build();
+            const services1 = model.findAllServices();
+            const services2 = model.findAllServices(DataObjectService);
+            expect(services1.length).to.equal(5);
+            expect(services2.length).to.equal(3);
         });
     });
 

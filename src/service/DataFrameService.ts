@@ -1,6 +1,7 @@
 import { DataFrame } from '../data/DataFrame';
 import { DataService } from './DataService';
 import { DataServiceDriver } from './DataServiceDriver';
+import { FindOptions } from './FindOptions';
 
 /**
  * The data frame service manages storage of complete data frames.
@@ -35,25 +36,30 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
      * Find data frames created before a certain timestamp
      *
      * @param {number} timestamp Timestamp
+     * @param {FindOptions} [options] Find options
      * @returns {DataFrame[]} Array of data frames before the specified timestamp
      */
-    public findBefore(timestamp: number): Promise<T[]> {
-        return this._findTimestamp({ $lte: timestamp });
+    public findBefore(timestamp: number, options?: FindOptions): Promise<T[]> {
+        return this._findTimestamp({ $lte: timestamp }, options);
     }
 
     /**
      * Find data frames created after a certain timestamp
      *
      * @param {number} timestamp Timestamp
+     * @param {FindOptions} [options] Find options
      * @returns {DataFrame[]} Array of data frames after the specified timestamp
      */
-    public findAfter(timestamp: number): Promise<T[]> {
-        return this._findTimestamp({ $gte: timestamp });
+    public findAfter(timestamp: number, options?: FindOptions): Promise<T[]> {
+        return this._findTimestamp({ $gte: timestamp }, options);
     }
 
-    private _findTimestamp(timestampFilter: any): Promise<T[]> {
-        return this.findAll({
-            createdTimestamp: timestampFilter,
-        }) as Promise<T[]>;
+    private _findTimestamp(timestampFilter: any, options?: FindOptions): Promise<T[]> {
+        return this.findAll(
+            {
+                createdTimestamp: timestampFilter,
+            },
+            options,
+        ) as Promise<T[]>;
     }
 }

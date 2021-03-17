@@ -91,6 +91,7 @@ describe('node', () => {
             node.setOptions({
                 name: "abc"
             });
+            expect(node.getOptions().name).to.equal("abc");
             expect(node.name).to.equal("abc");
         });
     });

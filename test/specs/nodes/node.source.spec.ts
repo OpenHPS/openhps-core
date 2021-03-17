@@ -14,6 +14,53 @@ import {
 } from '../../../src';
 
 describe('node source', () => {
+    it('should support pulling a specific source node', (done) => {
+        ModelBuilder.create()
+            .from(
+                new CallbackSourceNode(() => {
+                    return new DataFrame(new DataObject("1"));
+                }, {
+                    uid: "1"
+                }),
+                new CallbackSourceNode(() => {
+                    return new DataFrame(new DataObject("2"));
+                }, {
+                    uid: "2"
+                }),
+                new CallbackSourceNode(() => {
+                    return new DataFrame(new DataObject("3"));
+                }, {
+                    uid: "3"
+                }),
+            )
+            .to(new CallbackSinkNode(frame => {
+                expect(frame.source.uid).to.equal("2");
+                done();
+            }))
+            .build()
+            .then(model => {
+                model.on('error', done);
+                return model.pull({
+                    sourceNode: "2"
+                });
+            }).catch(done);
+    });
+
+    it('should initialize with a source object', (done) => {
+        const callbackNode = new CallbackSinkNode();
+        ModelBuilder.create()
+            .from(
+                new CallbackSourceNode(() => undefined, {
+                    source: new DataObject("123")
+                }),
+            )
+            .to(callbackNode)
+            .build()
+            .then(() => {
+                done();
+            });
+    });
+
     it('should be able to update velocity without resetting the position', (done) => {
         const callbackNode = new CallbackSinkNode();
         ModelBuilder.create()
@@ -47,7 +94,9 @@ describe('node source', () => {
                         expect(frame.source.getPosition().linearVelocity.x).to.equal(1);
                         done();
                     };
-                    Promise.resolve(model.pull());
+                    Promise.resolve(model.pull({
+                        sequential: false
+                    }));
                 });
 
                 model.push(new DataFrame(object));

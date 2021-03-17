@@ -35,7 +35,7 @@ export class MemoryQueryEvaluator {
         return result;
     }
 
-    public static getValueFromPath<T>(object: T, path: string): [any, string] {
+    public static getValueFromPath<T>(object: T, path: string): [any, any, string] {
         // https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-and-arays-by-string-path
         let o: any = object;
         path = path.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
@@ -49,7 +49,7 @@ export class MemoryQueryEvaluator {
                 if (i < n - 1) {
                     o = o[k];
                 } else {
-                    return [o, k];
+                    return [o, o[k], k];
                 }
             } else {
                 return undefined;
@@ -62,7 +62,7 @@ export class MemoryQueryEvaluator {
         if (!data) {
             return false;
         }
-        return MemoryQueryEvaluator.evaluateComponent(data[0], data[1], query);
+        return MemoryQueryEvaluator.evaluateComponent(data[0], data[2], query);
     }
 
     protected static evaluateSelector<T>(value: any, subquery: QuerySelector<T>): boolean {

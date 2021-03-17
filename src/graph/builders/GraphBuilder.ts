@@ -6,7 +6,7 @@ import { PlaceholderNode } from '../../nodes/_internal/PlaceholderNode';
 import { SinkNode } from '../../nodes/SinkNode';
 import { SourceNode } from '../../nodes/SourceNode';
 import { Edge } from '../Edge';
-import { ImmutableGraph } from '../ImmutableGraph';
+import { Graph } from '../Graph';
 
 /**
  * Graph builder
@@ -116,7 +116,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
         return this;
     }
 
-    public build(): Promise<ImmutableGraph<In, Out>> {
+    public build(): Promise<Graph<In, Out>> {
         return new Promise((resolve, reject) => {
             this.graph.validate();
             this.graph.once('ready', () => {
@@ -144,20 +144,13 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     }
 
     protected viaGraphBuilder(graphBuilder: GraphBuilder<any, any>): this {
-        graphBuilder.graph.nodes.forEach((graphNode) => {
-            (graphNode as GraphNode<any, any>).graph = this.graph;
-            this.graph.addNode(graphNode);
-        });
-        graphBuilder.graph.edges.forEach((graphEdge) => {
-            this.graph.addEdge(graphEdge);
-        });
-        return this;
+        return this.viaGraph(graphBuilder.graph);
     }
 
     protected viaGraph(graph: GraphShape<any, any>): this {
         // Add graph as node
         graph.nodes.forEach((graphNode) => {
-            (graphNode as GraphNode<any, any>).graph = this.graph;
+            graphNode.graph = this.graph;
         });
         this.graph.addNode(graph);
         this._insertNode(graph);

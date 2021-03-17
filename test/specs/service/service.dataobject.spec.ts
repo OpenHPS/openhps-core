@@ -52,6 +52,38 @@ describe('data object', () => {
                 });
         });
 
+        it('should support sorting in descending order', (done) => {
+            objectDataService
+                .findAll({}, {
+                    sort: [['createdTimestamp', -1]]
+                })
+                .then((objects) => {
+                    expect(objects.length).to.equal(3);
+                    expect(objects[0].createdTimestamp).to.equal(794793600000);
+                    expect(objects[objects.length - 1].createdTimestamp).to.equal(794800800000);
+                    done();
+                })
+                .catch((ex) => {
+                    done(ex);
+            });
+        });
+
+        it('should support sorting in ascending order', (done) => {
+            objectDataService
+                .findAll({}, {
+                    sort: [['createdTimestamp', 1]]
+                })
+                .then((objects) => {
+                    expect(objects.length).to.equal(3);
+                    expect(objects[0].createdTimestamp).to.equal(794800800000);
+                    expect(objects[objects.length - 1].createdTimestamp).to.equal(794793600000);
+                    done();
+                })
+                .catch((ex) => {
+                    done(ex);
+            });
+        });
+
         it('should find data objects before a certain date', (done) => {
             objectDataService
                 .findBefore(Date.parse('10 Mar 1995 01:30:00 GMT'))

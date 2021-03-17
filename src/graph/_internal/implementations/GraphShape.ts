@@ -4,15 +4,13 @@ import { BroadcastNode } from '../../../nodes/shapes/BroadcastNode';
 import { PullOptions, PushOptions } from '../../options';
 import { PushCompletedEvent, PushError } from '../../events';
 import { Edge } from '../../Edge';
-import { MutableGraph } from '../../MutableGraph';
+import { Graph } from '../../Graph';
 import { Node } from '../../../Node';
 
 /**
  * @category Graph
  */
-export class GraphShape<In extends DataFrame, Out extends DataFrame>
-    extends Node<In, Out>
-    implements MutableGraph<In, Out> {
+export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> implements Graph<In, Out> {
     private _nodes: Map<string, GraphNode<any, any>> = new Map();
     private _edges: Map<string, Edge<any>> = new Map();
 

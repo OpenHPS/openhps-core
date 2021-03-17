@@ -30,20 +30,13 @@ export class BufferNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
     public onPull(options?: PullOptions): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.service
-                .findOne(
-                    {},
-                    {
-                        sort: [['createdTimestamp', 1]],
-                    },
-                )
-                .then((frame: InOut) => {
+            this.shift()
+                .then((frame) => {
                     if (frame) {
                         this.outlets.forEach((outlet) => outlet.push(frame, options as GraphOptions));
                     }
-                    return this.service.delete(frame.uid);
+                    resolve();
                 })
-                .then(resolve)
                 .catch(reject);
         });
     }
@@ -55,6 +48,37 @@ export class BufferNode<InOut extends DataFrame> extends Node<InOut, InOut> {
                 .then(() => {
                     resolve();
                 })
+                .catch(reject);
+        });
+    }
+
+    protected next(): Promise<InOut> {
+        return new Promise((resolve, reject) => {
+            this.service
+                .findOne(
+                    {},
+                    {
+                        sort: [['createdTimestamp', 1]],
+                    },
+                )
+                .then(resolve)
+                .catch(reject);
+        });
+    }
+
+    protected shift(): Promise<InOut> {
+        return new Promise((resolve, reject) => {
+            let result: InOut;
+            this.next()
+                .then((frame: InOut) => {
+                    if (frame) {
+                        result = frame;
+                        return this.service.delete(frame.uid);
+                    } else {
+                        resolve(undefined);
+                    }
+                })
+                .then(() => resolve(result))
                 .catch(reject);
         });
     }

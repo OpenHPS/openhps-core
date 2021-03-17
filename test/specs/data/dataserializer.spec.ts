@@ -3,10 +3,12 @@ import 'mocha';
 import { DataSerializer, DataObject } from '../../../src';
 import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
 
-describe('dataserializer', () => {
+describe('DataSerializer', () => {
     it('should register and unregister serializable objects', () => {
         DataSerializer.unregisterType(DataObject);
         expect(DataSerializer.findTypeByName('DataObject')).to.equal(undefined);
+        DataSerializer.unregisterType(DataObject); // Should not crash
+        expect(DataSerializer.serializableTypes.length).to.be.greaterThan(40);
         DataSerializer.registerType(DataObject);
         expect(DataSerializer.findTypeByName('DataObject')).to.equal(DataObject);
     });

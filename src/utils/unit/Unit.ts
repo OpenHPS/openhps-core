@@ -59,9 +59,9 @@ export class Unit {
      */
     constructor(name?: string, options?: UnitOptions) {
         const config: UnitOptions = options || { baseName: undefined };
-        config.aliases = config.aliases ? config.aliases : [];
-        config.prefixes = config.prefixes ? config.prefixes : 'none';
-        config.definitions = config.definitions ? config.definitions : [];
+        config.aliases = config.aliases || [];
+        config.prefixes = config.prefixes || 'none';
+        config.definitions = config.definitions || [];
 
         // Unit config
         this._name = name || config.name;
@@ -72,7 +72,7 @@ export class Unit {
         // Unit definitions
         config.definitions.forEach(this._initDefinition.bind(this));
 
-        if (this.name !== undefined) {
+        if (this.name) {
             Unit.registerUnit(this, config.override);
         }
     }
@@ -80,32 +80,46 @@ export class Unit {
     private _initDefinition(definition: UnitDefinition): void {
         const referenceUnit = Unit.findByName(definition.unit, this.baseName);
         const unitName = referenceUnit ? referenceUnit.name : definition.unit;
-        const definitionKeys = Object.keys(definition);
 
         if ('toUnit' in definition) {
             // UnitFunctionDefinition
-            const functionDefinition: UnitFunctionDefinition<any, any> = definition;
-            this._definitions.set(unitName, functionDefinition);
+            this._initFunctionDefinition(definition, unitName);
         } else {
             // UnitBasicDefinition
-            const basicDefinition: UnitBasicDefinition = definition;
-            const magnitudeOrder = definitionKeys.indexOf('magnitude');
-            const offsetOrder = definitionKeys.indexOf('offset');
-            const magnitude = basicDefinition.magnitude ? basicDefinition.magnitude : 1;
-            const offset = basicDefinition.offset ? basicDefinition.offset : 0;
-            const offsetPriority = magnitudeOrder === -1 ? true : offsetOrder < magnitudeOrder;
-            const toUnitFn = offsetPriority
-                ? (value: number) => (value + offset) * magnitude
-                : (value: number) => value * magnitude + offset;
-            const fromUnitFn = offsetPriority
-                ? (value: number) => value / magnitude - offset
-                : (value: number) => (value - offset) / magnitude;
-            this._definitions.set(unitName, {
-                unit: basicDefinition.unit,
-                toUnit: toUnitFn,
-                fromUnit: fromUnitFn,
-            });
+            this._initBasicDefinition(definition, unitName);
         }
+    }
+
+    private _initFunctionDefinition(definition: UnitDefinition, unitName: string): void {
+        const functionDefinition = definition as UnitFunctionDefinition<any, any>;
+        this._definitions.set(unitName, functionDefinition);
+    }
+
+    private _initBasicDefinition(definition: UnitDefinition, unitName: string): void {
+        const definitionKeys = Object.keys(definition);
+        const basicDefinition: UnitBasicDefinition = definition;
+        const magnitudeOrder = definitionKeys.indexOf('magnitude');
+        const offsetOrder = definitionKeys.indexOf('offset');
+        const magnitude = basicDefinition.magnitude || 1;
+        const offset = basicDefinition.offset !== undefined ? basicDefinition.offset : 0;
+        const offsetPriority = magnitudeOrder === -1 ? true : offsetOrder < magnitudeOrder;
+
+        let toUnitFn: (value: number) => number;
+        let fromUnitFn: (value: number) => number;
+
+        if (offsetPriority) {
+            toUnitFn = (value: number) => (value + offset) * magnitude;
+            fromUnitFn = (value: number) => value / magnitude - offset;
+        } else {
+            toUnitFn = (value: number) => value * magnitude + offset;
+            fromUnitFn = (value: number) => (value - offset) / magnitude;
+        }
+
+        this._definitions.set(unitName, {
+            unit: basicDefinition.unit,
+            toUnit: toUnitFn,
+            fromUnit: fromUnitFn,
+        });
     }
 
     /**

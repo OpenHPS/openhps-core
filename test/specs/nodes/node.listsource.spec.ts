@@ -21,7 +21,7 @@ describe('list source', () => {
 
         it('should add a merge node internally', (done) => {
             ModelBuilder.create()
-                .from(new ListSourceNode([new DataFrame()]))
+                .from(new ListSourceNode([new DataFrame()], { uid: "123" }))
                 .via(new PlaceholderNode('output'))
                 .to(
                     new LoggingSinkNode((log) => {
@@ -30,6 +30,7 @@ describe('list source', () => {
                 )
                 .build()
                 .then((model) => {
+                    expect(model.findNodeByUID("123").inputData.length).to.equal(1);
                     Promise.resolve(model.pull());
                 });
         });
