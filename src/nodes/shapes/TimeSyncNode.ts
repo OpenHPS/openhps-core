@@ -1,4 +1,5 @@
 import { DataFrame } from '../../data/DataFrame';
+import { PushOptions } from '../../graph/options';
 import { TimeService } from '../../service';
 import { BufferOptions } from './BufferNode';
 import { MemoryBufferNode } from './MemoryBufferNode';
@@ -25,6 +26,26 @@ export class TimeSyncNode<InOut extends DataFrame> extends MemoryBufferNode<InOu
 
     private _stopTimer(): void {
         clearInterval(this._timer);
+    }
+
+    public onPush(frame: InOut, options?: PushOptions): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (frame.createdTimestamp <= TimeService.now()) {
+                this.triggerUpdate()
+                    .then(() => {
+                        this.outlets.forEach((outlet) => outlet.push(frame, options));
+                        resolve();
+                    })
+                    .catch(reject);
+            } else {
+                super
+                    .onPush(frame)
+                    .then(() => {
+                        resolve();
+                    })
+                    .catch(reject);
+            }
+        });
     }
 
     protected triggerUpdate(): Promise<void> {
