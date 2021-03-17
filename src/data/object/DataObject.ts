@@ -174,8 +174,9 @@ export class DataObject {
      * Add a relative position to this data object
      *
      * @param {RelativePosition} relativePosition Relative position to add
+     * @returns {DataObject} Data object instance
      */
-    public addRelativePosition(relativePosition: RelativePosition<any>): void {
+    public addRelativePosition(relativePosition: RelativePosition<any>): this {
         if (!relativePosition || relativePosition.referenceObjectUID === undefined) {
             return;
         }
@@ -187,6 +188,7 @@ export class DataObject {
         this._relativePositions
             .get(relativePosition.referenceObjectUID)
             .set(relativePosition.constructor.name, relativePosition);
+        return this;
     }
 
     /**
