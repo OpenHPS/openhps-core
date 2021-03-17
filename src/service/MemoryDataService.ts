@@ -69,8 +69,8 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
                     .sort((a, b) =>
                         options.sort
                             .map((s) => {
-                                const res1 = MemoryQueryEvaluator.getValueFromPath(s[1] > 0 ? b : a, s[0])[1];
-                                const res2 = MemoryQueryEvaluator.getValueFromPath(s[1] > 0 ? a : b, s[0])[1];
+                                const res1 = MemoryQueryEvaluator.getValueFromPath(s[1] > 0 ? a : b, s[0])[1];
+                                const res2 = MemoryQueryEvaluator.getValueFromPath(s[1] > 0 ? b : a, s[0])[1];
                                 if (typeof res1 === 'number') {
                                     return res1 - res2;
                                 } else if (typeof res1 === 'string') {

@@ -59,8 +59,8 @@ describe('data object', () => {
                 })
                 .then((objects) => {
                     expect(objects.length).to.equal(3);
-                    expect(objects[0].createdTimestamp).to.equal(794793600000);
-                    expect(objects[objects.length - 1].createdTimestamp).to.equal(794800800000);
+                    expect(objects[0].createdTimestamp).to.equal(794800800000);
+                    expect(objects[objects.length - 1].createdTimestamp).to.equal(794793600000);
                     done();
                 })
                 .catch((ex) => {
@@ -75,8 +75,8 @@ describe('data object', () => {
                 })
                 .then((objects) => {
                     expect(objects.length).to.equal(3);
-                    expect(objects[0].createdTimestamp).to.equal(794800800000);
-                    expect(objects[objects.length - 1].createdTimestamp).to.equal(794793600000);
+                    expect(objects[0].createdTimestamp).to.equal(794793600000);
+                    expect(objects[objects.length - 1].createdTimestamp).to.equal(794800800000);
                     done();
                 })
                 .catch((ex) => {
