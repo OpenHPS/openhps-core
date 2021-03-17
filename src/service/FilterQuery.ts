@@ -23,7 +23,7 @@ export interface RootQuerySelector<T> {
     [key: string]: any;
 }
 
-export type FilterQuery<T> = {
-    [P in keyof T]?: QuerySelector<T[P]> | T[P] | RegExp;
+export type FilterQuery<T = any> = {
+    [P in keyof T]?: QuerySelector<T[P]> | T[P] | RegExp | T | any;
 } &
     RootQuerySelector<T>;

@@ -1,6 +1,5 @@
-export * from './interfaces';
+export * from './options';
 export * from './builders';
-export * from './GraphShape';
 export * from './events';
 export * from './Edge';
 export * from './Inlet';

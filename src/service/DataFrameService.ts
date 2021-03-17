@@ -1,4 +1,4 @@
-import { DataFrame } from '../data';
+import { DataFrame } from '../data/DataFrame';
 import { DataService } from './DataService';
 import { DataServiceDriver } from './DataServiceDriver';
 
@@ -19,6 +19,16 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
                 })
                 .catch(reject);
         });
+    }
+
+    /**
+     * Insert a new data frame
+     *
+     * @param {DataFrame} frame Data frame to insert
+     * @returns {DataFrame} Inserted frame
+     */
+    public insertFrame(frame: T): Promise<T> {
+        return this.insert(frame.uid, frame);
     }
 
     /**

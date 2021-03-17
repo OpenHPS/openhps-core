@@ -1,5 +1,6 @@
 import { DataFrame } from '../../data/DataFrame';
-import { MemoryBufferNode, MemoryBufferOptions } from './MemoryBufferNode';
+import { BufferOptions } from './BufferNode';
+import { MemoryBufferNode } from './MemoryBufferNode';
 
 /**
  * @category Flow shape
@@ -7,7 +8,7 @@ import { MemoryBufferNode, MemoryBufferOptions } from './MemoryBufferNode';
 export class ThrottleNode<InOut extends DataFrame> extends MemoryBufferNode<InOut> {
     private _pushReady = true;
 
-    constructor(options?: MemoryBufferOptions) {
+    constructor(options?: BufferOptions) {
         super(options);
         this.on('push', this.onThrottlePush.bind(this));
     }
@@ -24,7 +25,10 @@ export class ThrottleNode<InOut extends DataFrame> extends MemoryBufferNode<InOu
                     .then(() => {
                         // Ready
                         this._pushReady = true;
-                        if (this._dataFrames.length > 0) {
+                        return this.service.count();
+                    })
+                    .then((count) => {
+                        if (count > 0) {
                             setTimeout(this._handlePush.bind(this), 10);
                         }
                         resolve();

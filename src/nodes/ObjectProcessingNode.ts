@@ -1,7 +1,7 @@
 import { DataFrame, DataObject } from '../data';
 import { ProcessingNode, ProcessingNodeOptions } from './ProcessingNode';
 import { DataObjectService } from '../service';
-import { GraphOptions } from '../graph';
+import { GraphOptions } from '../graph/options';
 
 /**
  * Processing node that processes each [[DataObject]] in a [[DataFrame]] individually

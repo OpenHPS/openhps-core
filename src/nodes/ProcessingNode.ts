@@ -1,7 +1,7 @@
 import { DataFrame, DataObject } from '../data';
 import { Node, NodeOptions } from '../Node';
 import { NodeDataService, NodeData } from '../service';
-import { PushOptions } from '../graph';
+import { PushOptions } from '../graph/options';
 
 /**
  * Node that processes a dataframe or the contained objects.

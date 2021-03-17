@@ -1,7 +1,8 @@
 import { SerializableObject, SerializableMember } from '../decorators';
 import { DataObject } from './DataObject';
 import { Matrix4 } from '../../utils';
-import { Absolute3DPosition, Absolute2DPosition } from '../position';
+import { Absolute2DPosition } from '../position/Absolute2DPosition';
+import { Absolute3DPosition } from '../position/Absolute3DPosition';
 
 /**
  * Camera source object

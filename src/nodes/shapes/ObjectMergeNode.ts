@@ -1,5 +1,5 @@
 import { DataFrame, DataObject } from '../../data';
-import { PushOptions } from '../../graph';
+import { PushOptions } from '../../graph/options';
 import { ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
 import { FrameMergeNode } from './FrameMergeNode';
 import { MergeShapeOptions } from './MergeShape';

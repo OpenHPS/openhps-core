@@ -1,5 +1,5 @@
 import { DataFrame } from '../../data/DataFrame';
-import { PullOptions } from '../../graph';
+import { PullOptions } from '../../graph/options';
 import { SourceNode, SourceNodeOptions } from '../SourceNode';
 
 /**

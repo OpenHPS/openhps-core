@@ -4,10 +4,10 @@ import { TypedJSON } from 'typedjson';
 import { SerializableObject, SerializableMember, SerializableArrayMember } from '../decorators';
 import { v4 as uuidv4 } from 'uuid';
 import { DataSerializer } from '../DataSerializer';
-import { DataObjectService, TimeService } from '../../service';
-import { ReferenceSpace } from './space';
-import { Model } from '../../Model';
+import { TimeService } from '../../service/TimeService';
+import { TransformationSpace } from './space/TransformationSpace';
 import { EventEmitter } from 'events';
+import { DataService } from '../../service/DataService';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
@@ -99,10 +99,10 @@ export class DataObject {
     /**
      * Get the current absolute position of the object
      *
-     * @param {ReferenceSpace} [referenceSpace] Reference space to transform it to
+     * @param {TransformationSpace} [referenceSpace] Reference space to transform it to
      * @returns {AbsolutePosition} Position of the data object
      */
-    public getPosition(referenceSpace?: ReferenceSpace): AbsolutePosition {
+    public getPosition(referenceSpace?: TransformationSpace): AbsolutePosition {
         if (referenceSpace !== undefined && this._position !== undefined) {
             return referenceSpace.transform(this._position, {
                 inverse: true,
@@ -116,10 +116,10 @@ export class DataObject {
      * Set the current absolute position of the object
      *
      * @param {AbsolutePosition} position Position to set
-     * @param {ReferenceSpace} [referenceSpace] Reference space
+     * @param {TransformationSpace} [referenceSpace] Reference space
      * @returns {DataObject} Data object instance
      */
-    public setPosition(position: AbsolutePosition, referenceSpace?: ReferenceSpace): this {
+    public setPosition(position: AbsolutePosition, referenceSpace?: TransformationSpace): this {
         this._position = referenceSpace
             ? referenceSpace.transform(position, {
                   inverse: false,
@@ -232,30 +232,11 @@ export class DataObject {
     /**
      * Bind the data object to a service
      *
-     * @param {DataObjectService<DataObject>} service Service to bind it to
+     * @param {DataService<string, DataObject>} service Service to bind it to
      * @returns {DataObjectBinding<DataObject>} Data object binding with a service
      */
-    public bind(service: DataObjectService<this>): DataObjectBinding<this>;
-    /**
-     * Bind the data object to a model
-     *
-     * @param {Model} model Model to bind it to
-     * @returns {DataObjectBinding<DataObject>} Data object binding with a service
-     */
-    public bind(model: Model<any, any>): DataObjectBinding<this>;
-    /**
-     * Bind the data object to a model or service
-     *
-     * @param {Model | DataObjectService} modelOrService Model or service to bind it to
-     * @returns {DataObjectBinding<DataObject>} Data object binding with a service
-     */
-    public bind(modelOrService: Model<any, any> | DataObjectService<this>): DataObjectBinding<this> {
-        if (modelOrService instanceof DataObjectService) {
-            return new DataObjectBinding(this, modelOrService as DataObjectService<any>);
-        } else {
-            const service = modelOrService.findDataService(this.constructor) as DataObjectService<any>;
-            return new DataObjectBinding(this, service);
-        }
+    public bind(service: DataService<string, this>): DataObjectBinding<this> {
+        return new DataObjectBinding(this, service as DataService<string, this>);
     }
 
     /**
@@ -269,10 +250,10 @@ export class DataObject {
 }
 
 class DataObjectBinding<T extends DataObject> extends EventEmitter {
-    protected service: DataObjectService<T>;
+    protected service: DataService<string, T>;
     protected target: T;
 
-    constructor(target: T, service: DataObjectService<T>) {
+    constructor(target: T, service: any) {
         super();
         this.target = target;
         this.service = service;
@@ -304,7 +285,7 @@ class DataObjectBinding<T extends DataObject> extends EventEmitter {
      * @returns {Promise<DataObject>} Promise of stored data object
      */
     public save(): Promise<T> {
-        return this.service.insertObject(this.target);
+        return this.service.insert(this.target.uid, this.target);
     }
 
     /**
@@ -314,15 +295,6 @@ class DataObjectBinding<T extends DataObject> extends EventEmitter {
      */
     public delete(): Promise<void> {
         return this.service.delete(this.target.uid);
-    }
-
-    /**
-     * Find all siblings of the data object
-     *
-     * @returns {Promise<DataObject[]>} Promise of sibling data objects
-     */
-    public findSiblings(): Promise<DataObject[]> {
-        return this.service.findByParentUID(this.target.uid);
     }
 
     /**

@@ -1,6 +1,6 @@
-import { DataFrame, ReferenceSpace, DataObject } from '../../data';
 import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
 import { Model } from '../../Model';
+import { ReferenceSpace, DataFrame, DataObject, SpaceTransformationOptions } from '../../data';
 
 /**
  * This node converts the positions of data objects inside the frame
@@ -11,9 +11,9 @@ import { Model } from '../../Model';
 export class ReferenceSpaceConversionNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
     private _referenceSpaceUID: string;
     private _referenceSpace: ReferenceSpace;
-    private _inverse = false;
+    protected options: SpaceConversionOptions;
 
-    constructor(referenceSpace: ReferenceSpace | string, inverse = false, options?: ObjectProcessingNodeOptions) {
+    constructor(referenceSpace: ReferenceSpace | string, options?: SpaceConversionOptions) {
         super(options);
         if (referenceSpace instanceof ReferenceSpace) {
             this._referenceSpace = referenceSpace;
@@ -21,7 +21,6 @@ export class ReferenceSpaceConversionNode<InOut extends DataFrame> extends Objec
         } else {
             this._referenceSpaceUID = referenceSpace;
         }
-        this._inverse = inverse;
 
         this.once('build', this._onRegisterService.bind(this));
     }
@@ -60,7 +59,7 @@ export class ReferenceSpaceConversionNode<InOut extends DataFrame> extends Objec
             }
 
             if (object.getPosition() && object.uid !== referenceSpace.uid) {
-                if (this._inverse) {
+                if (this.options.inverse) {
                     // Convert from reference space to global
                     object.setPosition(object.getPosition(), referenceSpace);
                 } else {
@@ -72,3 +71,5 @@ export class ReferenceSpaceConversionNode<InOut extends DataFrame> extends Objec
         });
     }
 }
+
+export interface SpaceConversionOptions extends ObjectProcessingNodeOptions, SpaceTransformationOptions {}

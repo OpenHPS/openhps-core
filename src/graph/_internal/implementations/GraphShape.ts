@@ -1,19 +1,23 @@
-import { Node } from '../Node';
-import { DataFrame } from '../data/DataFrame';
-import { BroadcastNode } from '../nodes/shapes/BroadcastNode';
-import { PullOptions, PushOptions } from './interfaces';
-import { PushCompletedEvent, PushError } from './events';
-import { Edge } from './Edge';
+import { GraphNode } from '../GraphNode';
+import { DataFrame } from '../../../data/DataFrame';
+import { BroadcastNode } from '../../../nodes/shapes/BroadcastNode';
+import { PullOptions, PushOptions } from '../../options';
+import { PushCompletedEvent, PushError } from '../../events';
+import { Edge } from '../../Edge';
+import { MutableGraph } from '../../MutableGraph';
+import { Node } from '../../../Node';
 
 /**
  * @category Graph
  */
-export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
-    private _nodes: Map<string, Node<any, any>> = new Map();
+export class GraphShape<In extends DataFrame, Out extends DataFrame>
+    extends Node<In, Out>
+    implements MutableGraph<In, Out> {
+    private _nodes: Map<string, GraphNode<any, any>> = new Map();
     private _edges: Map<string, Edge<any>> = new Map();
 
-    public internalInput: Node<any, In> = new BroadcastNode<In>();
-    public internalOutput: Node<Out, any> = new BroadcastNode<Out>();
+    public internalInput: GraphNode<any, In> = new BroadcastNode<In>();
+    public internalOutput: GraphNode<Out, any> = new BroadcastNode<Out>();
 
     constructor() {
         super();
@@ -61,20 +65,20 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
         edges.forEach(this.addEdge);
     }
 
-    public get nodes(): Array<Node<any, any>> {
+    public get nodes(): Array<GraphNode<any, any>> {
         return this._nodes ? Array.from(this._nodes.values()) : [];
     }
 
-    public set nodes(nodes: Array<Node<any, any>>) {
+    public set nodes(nodes: Array<GraphNode<any, any>>) {
         nodes.forEach(this.addNode);
     }
 
-    public findNodeByUID(uid: string): Node<any, any> {
+    public findNodeByUID(uid: string): GraphNode<any, any> {
         return this._nodes.get(uid);
     }
 
-    public findNodeByName(name: string): Node<any, any> {
-        let result: Node<any, any>;
+    public findNodeByName(name: string): GraphNode<any, any> {
+        let result: GraphNode<any, any>;
         this._nodes.forEach((node) => {
             if (node.name === name) {
                 result = node;
@@ -84,7 +88,7 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
         return result;
     }
 
-    public addNode(node: Node<any, any>): void {
+    public addNode(node: GraphNode<any, any>): void {
         node.graph = this.graph === undefined ? this : this.model;
         this._nodes.set(node.uid, node as Node<any, any>);
     }
@@ -97,15 +101,15 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
         this._edges.delete(edge.inputNode.uid + edge.outputNode.uid);
     }
 
-    public deleteNode(node: Node<any, any>): void {
+    public deleteNode(node: GraphNode<any, any>): void {
         this._nodes.delete(node.uid);
     }
 
-    private _getNodeOutlets(node: Node<any, any>): Array<Edge<Out>> {
+    private _getNodeOutlets(node: GraphNode<any, any>): Array<Edge<Out>> {
         return this.edges.filter((edge) => edge.inputNode === node);
     }
 
-    private _getNodeInlets(node: Node<any, any>): Array<Edge<In>> {
+    private _getNodeInlets(node: GraphNode<any, any>): Array<Edge<In>> {
         return this.edges.filter((edge) => edge.outputNode === node);
     }
 
@@ -117,7 +121,7 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
         this._validateEdges();
     }
 
-    private _validateInternalNode(node: Node<any, any>): void {
+    private _validateInternalNode(node: GraphNode<any, any>): void {
         if (node.outlets.length === 0 && node.inlets.length === 0) {
             this.deleteNode(node);
         } else if (!this._nodes.has(node.uid)) {

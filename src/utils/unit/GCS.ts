@@ -1,5 +1,5 @@
 import { SerializableObject } from '../../data/decorators';
-import { Vector3 } from '../math';
+import { Vector3 } from '../math/Vector3';
 import { AngleUnit } from './AngleUnit';
 import { Unit } from './Unit';
 

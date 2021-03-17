@@ -2,7 +2,7 @@ import { SerializableObject, SerializableMember } from '../decorators';
 import { LengthUnit, Vector3 } from '../../utils';
 import { AbsolutePosition } from './AbsolutePosition';
 import { Velocity } from './Velocity';
-import { TimeService } from '../../service';
+import { TimeService } from '../../service/TimeService';
 import { AngularVelocity } from './AngularVelocity';
 import { LinearVelocity } from './LinearVelocity';
 import { Orientation } from './Orientation';

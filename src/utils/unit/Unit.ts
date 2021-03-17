@@ -3,7 +3,7 @@ import { SerializableObject, SerializableMember } from '../../data/decorators';
 import { UnitOptions } from './UnitOptions';
 import { UnitBasicDefinition, UnitDefinition, UnitFunctionDefinition } from './UnitDefinition';
 import { UnitPrefix, UnitPrefixType } from './UnitPrefix';
-import { Vector3 } from '../math/';
+import { Vector3 } from '../math/Vector3';
 
 /**
  * Unit

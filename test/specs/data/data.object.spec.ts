@@ -111,7 +111,7 @@ describe('data', () => {
                 .to()
                 .build().then((model: Model) => {
                     const object = new DataObject("mvdewync", "Maxim");
-                    object.bind(model).save().then(() => {
+                    object.bind(model.findDataService(object)).save().then(() => {
                         done();
                     }).catch(done);
                 });
@@ -123,7 +123,7 @@ describe('data', () => {
                 .to()
                 .build().then((model: Model) => {
                     const object = new DataObject("mvdewync", "Maxim");
-                    const binding = object.bind(model);
+                    const binding = object.bind(model.findDataService(object));
                     object.uid += "1";
                     binding.on('update', (newObj, oldObj) => {
                         console.log(newObj);

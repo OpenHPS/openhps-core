@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DataObject } from './object/DataObject';
 import { SerializableObject, SerializableMember, SerializableMapMember } from './decorators';
-import { ReferenceSpace } from './object';
-import { TimeService } from '../service';
+import { ReferenceSpace } from './object/space';
+import { TimeService } from '../service/TimeService';
 import { DataSerializer } from './DataSerializer';
 
 /**

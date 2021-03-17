@@ -1,5 +1,6 @@
 import { DataServiceDriver } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
+import { FindOptions } from './FindOptions';
 
 /**
  * DataService
@@ -40,16 +41,20 @@ export abstract class DataService<I, T> extends DataServiceDriver<I, T> {
         return this.driver.findByUID(uid);
     }
 
-    public findOne(query?: FilterQuery<T>): Promise<T> {
-        return this.driver.findOne(query);
+    public findOne(query?: FilterQuery<T>, options?: FindOptions): Promise<T> {
+        return this.driver.findOne(query, options);
     }
 
-    public findAll(query?: FilterQuery<T>): Promise<T[]> {
-        return this.driver.findAll(query);
+    public findAll(query?: FilterQuery<T>, options?: FindOptions): Promise<T[]> {
+        return this.driver.findAll(query, options);
     }
 
     public insert(id: I, object: T): Promise<T> {
         return this.driver.insert(id, object);
+    }
+
+    public count(query?: FilterQuery<T>): Promise<number> {
+        return this.driver.count(query);
     }
 
     public delete(id: I): Promise<void> {

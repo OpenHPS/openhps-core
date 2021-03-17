@@ -1,5 +1,5 @@
 import { DataFrame } from '../../data/DataFrame';
-import { PushOptions } from '../../graph';
+import { PushOptions } from '../../graph/options';
 import { SinkNode, SinkNodeOptions } from '../SinkNode';
 
 /**

@@ -1,7 +1,8 @@
-import { DataFrame, ReferenceSpace } from './data';
-import { DataService, Service } from './service';
-import { GraphShape } from './graph/GraphShape';
-import { PullOptions, PushOptions } from './graph';
+import { DataFrame } from './data/DataFrame';
+import { TransformationSpace } from './data/object/space/TransformationSpace';
+import { DataService } from './service/DataService';
+import { Service } from './service/Service';
+import { ImmutableGraph } from './graph/ImmutableGraph';
 
 /**
  * This model contains multiple [[Node]]s, [[Service]]s to sample
@@ -17,30 +18,19 @@ import { PullOptions, PushOptions } from './graph';
  * or pushes new frames when receiving a pull.
  */
 export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame>
-    extends GraphShape<In, Out> {
-    /**
-     * Push data to the model
-     *
-     * @param frame Input frame
-     * @param {PushOptions} [options] Push options
-     */
-    push(frame: In | In[], options?: PushOptions): Promise<void>;
-
-    /**
-     * Pull data from the model
-     *
-     * @param {PullOptions} [options] Pull options
-     */
-    pull(options?: PullOptions): Promise<void>;
-
+    extends ImmutableGraph<In, Out> {
     /**
      * Find service
+     *
+     * @returns {Service} Found service
      */
     findService<F extends Service>(name: string): F;
     findService<F extends Service>(serviceClass: new () => F): F;
 
     /**
      * Find data service
+     *
+     * @returns {DataService} Found data service
      */
     findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(name: string): F;
     findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(dataType: new () => D): F;
@@ -63,5 +53,5 @@ export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame =
     /**
      * Model reference space
      */
-    referenceSpace: ReferenceSpace;
+    referenceSpace: TransformationSpace;
 }

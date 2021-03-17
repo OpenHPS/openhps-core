@@ -1,5 +1,5 @@
 import { DataFrame } from '../../data';
-import { PushOptions } from '../../graph';
+import { PushOptions } from '../../graph/options';
 import { Node, NodeOptions } from '../../Node';
 
 /**

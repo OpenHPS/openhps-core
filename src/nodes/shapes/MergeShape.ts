@@ -2,7 +2,8 @@ import { DataFrame } from '../../data';
 import { ProcessingNode, ProcessingNodeOptions } from '../ProcessingNode';
 import { TimeUnit } from '../../utils';
 import { TimeService } from '../../service';
-import { PushError, PushOptions } from '../../graph';
+import { PushOptions } from '../../graph/options';
+import { PushError } from '../../graph/events';
 
 /**
  * Merge data frames from two or more sources

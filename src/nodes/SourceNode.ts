@@ -1,7 +1,7 @@
 import { DataFrame } from '../data/DataFrame';
-import { DataObject } from '../data';
+import { DataObject } from '../data/object/DataObject';
 import { Node, NodeOptions } from '../Node';
-import { GraphOptions, PullOptions, PushOptions } from '../graph';
+import { GraphOptions, PullOptions, PushOptions } from '../graph/options';
 
 /**
  * Source node

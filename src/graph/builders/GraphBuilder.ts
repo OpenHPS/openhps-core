@@ -1,21 +1,12 @@
 import { DataFrame, DataObject, ReferenceSpace } from '../../data';
-import { Node } from '../../Node';
+import { GraphNode } from '../_internal/GraphNode';
 import { TimeUnit } from '../../utils';
-import {
-    FrameChunkNode,
-    FrameFlattenNode,
-    FrameFilterNode,
-    ObjectMergeNode,
-    MemoryBufferNode,
-    FrameCloneNode,
-} from '../../nodes/shapes';
-import { GraphShape } from '../GraphShape';
-import { ObjectFilterNode } from '../../nodes/shapes/ObjectFilterNode';
-import { FrameDebounceNode } from '../../nodes/shapes/FrameDebounceNode';
-import { ReferenceSpaceConversionNode } from '../../nodes/processing/ReferenceSpaceConversionNode';
+import { GraphShape } from '../_internal/implementations/GraphShape';
 import { PlaceholderNode } from '../../nodes/_internal/PlaceholderNode';
-import { CallbackSinkNode, SinkNode, SourceNode } from '../../nodes';
+import { SinkNode } from '../../nodes/SinkNode';
+import { SourceNode } from '../../nodes/SourceNode';
 import { Edge } from '../Edge';
+import { ImmutableGraph } from '../ImmutableGraph';
 
 /**
  * Graph builder
@@ -23,10 +14,10 @@ import { Edge } from '../Edge';
  * @category Graph
  */
 export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
-    private _graph: GraphShape<In, Out>;
+    public graph: GraphShape<In, Out>;
 
     protected constructor(graph: GraphShape<In, Out> = new GraphShape()) {
-        this._graph = graph;
+        this.graph = graph;
         this.graph.name = 'graph';
     }
 
@@ -34,9 +25,9 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
         return new GraphBuilder();
     }
 
-    public from(...nodes: Array<Node<any, any> | string>): GraphShapeBuilder<any> {
-        const selectedNodes: Array<Node<any, any>> = [];
-        nodes.forEach((node: Node<any, any> | string) => {
+    public from(...nodes: Array<GraphNode<any, any> | string>): GraphShapeBuilder<any> {
+        const selectedNodes: Array<GraphNode<any, any>> = [];
+        nodes.forEach((node: GraphNode<any, any> | string) => {
             if (typeof node === 'string') {
                 let nodeObject = this.graph.findNodeByUID(node) || this.graph.findNodeByName(node);
                 if (nodeObject === undefined) {
@@ -60,7 +51,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
         );
     }
 
-    public addNode(node: Node<any, any>): this {
+    public addNode(node: GraphNode<any, any>): this {
         this.graph.addNode(node);
         return this;
     }
@@ -75,7 +66,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
         return this;
     }
 
-    public deleteNode(node: Node<any, any>): this {
+    public deleteNode(node: GraphNode<any, any>): this {
         this.graph.deleteNode(node);
         return this;
     }
@@ -125,11 +116,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
         return this;
     }
 
-    public get graph(): GraphShape<In, Out> {
-        return this._graph;
-    }
-
-    public build(): Promise<GraphShape<In, Out>> {
+    public build(): Promise<ImmutableGraph<In, Out>> {
         return new Promise((resolve, reject) => {
             this.graph.validate();
             this.graph.once('ready', () => {
@@ -146,10 +133,11 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
 
 export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     protected graphBuilder: Builder;
-    protected previousNodes: Array<Node<any, any>>;
+    protected previousNodes: Array<GraphNode<any, any>>;
     protected graph: GraphShape<any, any>;
+    protected static shapes: Map<string, (...args: any[]) => GraphNode<any, any>> = new Map();
 
-    constructor(graphBuilder: Builder, graph: GraphShape<any, any>, nodes: Array<Node<any, any>>) {
+    constructor(graphBuilder: Builder, graph: GraphShape<any, any>, nodes: Array<GraphNode<any, any>>) {
         this.graphBuilder = graphBuilder;
         this.previousNodes = nodes;
         this.graph = graph;
@@ -157,7 +145,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     protected viaGraphBuilder(graphBuilder: GraphBuilder<any, any>): this {
         graphBuilder.graph.nodes.forEach((graphNode) => {
-            (graphNode as Node<any, any>).graph = this.graph;
+            (graphNode as GraphNode<any, any>).graph = this.graph;
             this.graph.addNode(graphNode);
         });
         graphBuilder.graph.edges.forEach((graphEdge) => {
@@ -169,7 +157,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     protected viaGraph(graph: GraphShape<any, any>): this {
         // Add graph as node
         graph.nodes.forEach((graphNode) => {
-            (graphNode as Node<any, any>).graph = this.graph;
+            (graphNode as GraphNode<any, any>).graph = this.graph;
         });
         this.graph.addNode(graph);
         this._insertNode(graph);
@@ -177,15 +165,15 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         return this;
     }
 
-    public via(...nodes: Array<Node<any, any> | string | GraphShape<any, any> | GraphBuilder<any, any>>): this {
-        const selectedNodes: Array<Node<any, any>> = [];
+    public via(...nodes: Array<GraphNode<any, any> | string | GraphShape<any, any> | GraphBuilder<any, any>>): this {
+        const selectedNodes: Array<GraphNode<any, any>> = [];
         nodes.forEach((node) => {
             if (node instanceof GraphBuilder) {
                 return this.viaGraphBuilder(node);
             } else if (node instanceof GraphShape) {
                 return this.viaGraph(node);
             } else {
-                let nodeObject: Node<any, any>;
+                let nodeObject: GraphNode<any, any>;
                 if (typeof node === 'string') {
                     nodeObject = this.graph.findNodeByUID(node) || this.graph.findNodeByName(node);
                     if (nodeObject === undefined) {
@@ -193,7 +181,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
                         nodeObject = new PlaceholderNode(node);
                     }
                 } else {
-                    nodeObject = node as Node<any, any>;
+                    nodeObject = node as GraphNode<any, any>;
                 }
 
                 this.graph.addNode(nodeObject);
@@ -210,18 +198,22 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      *
      * @param {Node} node Node to insert
      */
-    private _insertNode(node: Node<any, any>): void {
+    private _insertNode(node: GraphNode<any, any>): void {
         this.previousNodes.forEach((prevNode) => {
             this.graph.addEdge(new Edge(prevNode, node));
         });
     }
 
+    public static registerShape(key: string, fn: (...args: any[]) => GraphNode<any, any>): void {
+        GraphShapeBuilder.shapes.set(key, fn);
+    }
+
     public chunk(size: number, timeout?: number, timeoutUnit?: TimeUnit): this {
-        return this.via(new FrameChunkNode(size, timeout, timeoutUnit));
+        return this.via(GraphShapeBuilder.shapes.get('chunk')(size, timeout, timeoutUnit));
     }
 
     public flatten(): this {
-        return this.via(new FrameFlattenNode());
+        return this.via(GraphShapeBuilder.shapes.get('flatten')());
     }
 
     /**
@@ -233,7 +225,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     public filter(filterFn: (object: DataObject, frame?: DataFrame) => boolean): this;
     public filter(filterFn: (frame: DataFrame) => boolean): this;
     public filter(filterFn: (_?: any) => boolean): this {
-        return this.via(new FrameFilterNode(filterFn));
+        return this.via(GraphShapeBuilder.shapes.get('filter')(filterFn));
     }
 
     /**
@@ -243,7 +235,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      * @returns {GraphShapeBuilder} Current graph builder instance
      */
     public filterObjects(filterFn: (object: DataObject, frame?: DataFrame) => boolean): this {
-        return this.via(new ObjectFilterNode(filterFn));
+        return this.via(GraphShapeBuilder.shapes.get('filterObjects')(filterFn));
     }
 
     /**
@@ -259,16 +251,11 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         timeout = 100,
         timeoutUnit = TimeUnit.MILLISECOND,
     ): this {
-        return this.via(
-            new ObjectMergeNode(by, {
-                timeout,
-                timeoutUnit,
-            }),
-        );
+        return this.via(GraphShapeBuilder.shapes.get('merge')(by, timeout, timeoutUnit));
     }
 
     public debounce(timeout = 100, timeoutUnit = TimeUnit.MILLISECOND): this {
-        return this.via(new FrameDebounceNode(timeout, timeoutUnit));
+        return this.via(GraphShapeBuilder.shapes.get('debounce')(timeout, timeoutUnit));
     }
 
     /**
@@ -277,7 +264,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      * @returns {GraphShapeBuilder} Current graph shape builder
      */
     public clone(): this {
-        return this.via(new FrameCloneNode());
+        return this.via(GraphShapeBuilder.shapes.get('clone')());
     }
 
     /**
@@ -287,7 +274,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      * @returns {GraphShapeBuilder} Current graph shape builder
      */
     public convertToSpace(referenceSpace: ReferenceSpace | string): this {
-        return this.via(new ReferenceSpaceConversionNode(referenceSpace, false));
+        return this.via(GraphShapeBuilder.shapes.get('convertToSpace')(referenceSpace));
     }
 
     /**
@@ -297,7 +284,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      * @returns {GraphShapeBuilder} Current graph shape builder
      */
     public convertFromSpace(referenceSpace: ReferenceSpace | string): this {
-        return this.via(new ReferenceSpaceConversionNode(referenceSpace, true));
+        return this.via(GraphShapeBuilder.shapes.get('convertFromSpace')(referenceSpace));
     }
 
     /**
@@ -306,7 +293,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      * @returns {GraphShapeBuilder} Current graph shape builder
      */
     public buffer(): this {
-        return this.via(new MemoryBufferNode());
+        return this.via(GraphShapeBuilder.shapes.get('buffer')());
     }
 
     /**
@@ -315,14 +302,14 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      * @returns {GraphBuilder} Graph builder
      */
     public store(): Builder {
-        return this.to(new CallbackSinkNode());
+        return this.to(GraphShapeBuilder.shapes.get('store')() as SinkNode);
     }
 
     public to(...nodes: Array<SinkNode<any> | string>): Builder {
         if (nodes.length !== 0) {
             const selectedNodes: Array<SinkNode<any>> = [];
             nodes.forEach((node) => {
-                let nodeObject: Node<any, any>;
+                let nodeObject: GraphNode<any, any>;
                 if (typeof node === 'string') {
                     nodeObject = this.graph.findNodeByUID(node) || this.graph.findNodeByName(node);
                     if (nodeObject === undefined) {

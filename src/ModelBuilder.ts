@@ -1,10 +1,10 @@
 import 'reflect-metadata';
-import { Service } from './service';
-import { DataFrame, ReferenceSpace } from './data';
+import { DataFrame, DataObject, ReferenceSpace } from './data';
 import { ModelGraph } from './graph/_internal/implementations';
 import { Model } from './Model';
 import { GraphBuilder } from './graph/builders/GraphBuilder';
-import { GraphShape } from './graph';
+import { GraphShape } from './graph/_internal/implementations/GraphShape';
+import { Service, NodeData, TimeService, DataObjectService, MemoryDataService, NodeDataService } from './service';
 
 /**
  * Model builder to construct and build a [[Model]] consisting of graph shapes and services.
@@ -122,9 +122,19 @@ import { GraphShape } from './graph';
  * ```
  */
 export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends GraphBuilder<In, Out> {
+    public graph: ModelGraph<any, any>;
+
     protected constructor() {
         super(new ModelGraph<In, Out>());
         this.graph.name = 'model';
+        // Store data objects
+        this.graph.addService(new DataObjectService(new MemoryDataService(DataObject)));
+        // Store spaces in their own memory data object service
+        this.graph.addService(new DataObjectService(new MemoryDataService(ReferenceSpace)));
+        // Store node data
+        this.graph.addService(new NodeDataService(new MemoryDataService(NodeData)));
+        // Default time service using system time
+        this.graph.addService(new TimeService());
     }
 
     public static create<In extends DataFrame, Out extends DataFrame>(): ModelBuilder<In, Out> {

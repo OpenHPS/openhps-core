@@ -34,7 +34,7 @@ describe('example', () => {
                     .to())
                 .build().then((createdModel: Model) => {
                     model = createdModel;
-                    defaultSpace = model.referenceSpace;
+                    defaultSpace = model.referenceSpace as ReferenceSpace;
                     done();
                 });
         });

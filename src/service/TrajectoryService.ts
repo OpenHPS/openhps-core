@@ -1,13 +1,8 @@
-import {
-    AbsolutePosition,
-    AbsolutePositionDeserializer,
-    DataObject,
-    SerializableMember,
-    SerializableObject,
-} from '../data';
+import { SerializableMember, SerializableObject } from '../data/decorators';
+import { AbsolutePosition, AbsolutePositionDeserializer } from '../data/position';
+import { DataObject } from '../data/object/DataObject';
 import { DataService } from './DataService';
 import { DataServiceDriver } from './DataServiceDriver';
-import { FilterQuery } from './FilterQuery';
 
 export class TrajectoryService<T extends AbsolutePosition> extends DataService<PositionIdentifier, DataObjectPosition> {
     constructor(dataServiceDriver?: DataServiceDriver<PositionIdentifier, T>) {
@@ -34,10 +29,9 @@ export class TrajectoryService<T extends AbsolutePosition> extends DataService<P
      */
     public findPosition(uid: string): Promise<AbsolutePosition> {
         return new Promise((resolve, reject) => {
-            const filter: FilterQuery<any> = {
+            this.findAll({
                 uid,
-            };
-            this.findAll(filter)
+            })
                 .then((objects) => {
                     if (objects.length === 0) {
                         return resolve(undefined);
@@ -59,14 +53,13 @@ export class TrajectoryService<T extends AbsolutePosition> extends DataService<P
      */
     public findTrajectory(uid: string, start?: Date | number, end?: Date | number): Promise<AbsolutePosition[]> {
         return new Promise((resolve, reject) => {
-            const filter: FilterQuery<any> = {
+            this.findAll({
                 uid,
                 timestamp: {
                     $lt: end ? (end instanceof Date ? end.getTime() : end) : Number.MAX_VALUE,
                     $gt: start ? (start instanceof Date ? start.getTime() : start) : -1,
                 },
-            };
-            this.findAll(filter)
+            })
                 .then((objects) => {
                     resolve(objects.map((object) => object.position));
                 })

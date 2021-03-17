@@ -6,7 +6,7 @@ import { PoolEvent } from 'threads/dist/master/pool';
 import { DataService, Service, WorkerServiceCall, WorkerServiceProxy, WorkerServiceResponse } from '../service';
 import { GraphShapeBuilder } from '../graph/builders/GraphBuilder';
 import { ModelBuilder } from '../ModelBuilder';
-import { PullOptions, PushOptions } from '../graph';
+import { PullOptions, PushOptions } from '../graph/options';
 import { ModelGraph } from '../graph/_internal/implementations';
 import { DummyDataService, DummyService } from '../service/_internal';
 

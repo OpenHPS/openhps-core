@@ -11,3 +11,5 @@ export * from './UnitConversionNode';
 export * from './ThrottleNode';
 export * from './FrameCloneNode';
 export * from './MergeShape';
+export * from './TimeSyncNode';
+export * from './BufferNode';

@@ -1,6 +1,6 @@
 import { DataFrame } from '../data';
 import { PushCompletedEvent, PushError } from './events';
-import { PullOptions, PushOptions } from './interfaces';
+import { PullOptions, PushOptions } from './options';
 
 /**
  * Inlet of a node that supports pulling and events.

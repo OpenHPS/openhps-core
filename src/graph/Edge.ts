@@ -1,6 +1,6 @@
-import { PullOptions, PushOptions } from './interfaces';
+import { PullOptions, PushOptions } from './options';
 import { DataFrame } from '../data';
-import { Node } from '../Node';
+import { GraphNode } from './_internal/GraphNode';
 import { PushCompletedEvent, PushError } from './events';
 import { Inlet } from './Inlet';
 import { Outlet } from './Outlet';
@@ -17,10 +17,10 @@ import { EventEmitter } from 'events';
  * @category Graph
  */
 export class Edge<InOut extends DataFrame> extends EventEmitter implements Inlet<InOut>, Outlet<InOut> {
-    public inputNode: Node<any, InOut>;
-    public outputNode: Node<InOut, any>;
+    public inputNode: GraphNode<any, InOut>;
+    public outputNode: GraphNode<InOut, any>;
 
-    constructor(inputNode: Node<any, InOut>, outputNode: Node<any, InOut>) {
+    constructor(inputNode: GraphNode<any, InOut>, outputNode: GraphNode<any, InOut>) {
         super();
         this.inputNode = inputNode;
         this.outputNode = outputNode;

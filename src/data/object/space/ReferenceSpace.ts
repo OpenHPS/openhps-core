@@ -2,8 +2,9 @@ import { DataObject } from '../DataObject';
 import { SerializableObject, SerializableMember } from '../../decorators';
 import { Matrix4, Euler, Quaternion, AxisAngle, EulerOrder, Vector3 } from '../../../utils/math';
 import { AngleUnit, LengthUnit } from '../../../utils';
-import { DataObjectService } from '../../../service';
-import { AbsolutePosition } from '../../position';
+import { AbsolutePosition } from '../../position/AbsolutePosition';
+import { TransformationSpace, SpaceTransformationOptions } from './TransformationSpace';
+import { DataService } from '../../../service/DataService';
 
 /**
  * A reference space transforms absolute positions to another (global) reference space.
@@ -15,7 +16,7 @@ import { AbsolutePosition } from '../../position';
  * - Position accuracy
  */
 @SerializableObject()
-export class ReferenceSpace extends DataObject {
+export class ReferenceSpace extends DataObject implements TransformationSpace {
     // Raw transformation matrix
     @SerializableMember()
     private _transformationMatrix: Matrix4;
@@ -27,9 +28,9 @@ export class ReferenceSpace extends DataObject {
     private _rotation: Quaternion;
     @SerializableMember()
     private _unit: LengthUnit;
-    private _parent: ReferenceSpace;
+    private _parent: TransformationSpace;
 
-    constructor(parent?: ReferenceSpace) {
+    constructor(parent?: TransformationSpace) {
         super();
         this.parent = parent;
 
@@ -41,9 +42,9 @@ export class ReferenceSpace extends DataObject {
     /**
      * Set the parent space
      *
-     * @param {ReferenceSpace} space Parent space
+     * @param {TransformationSpace} space Parent space
      */
-    public set parent(space: ReferenceSpace) {
+    public set parent(space: TransformationSpace) {
         if (!space) {
             return;
         } else {
@@ -55,10 +56,10 @@ export class ReferenceSpace extends DataObject {
     /**
      * Update parent reference spaces
      *
-     * @param {DataObjectService} service Service to use for updating
+     * @param {DataService} service Service to use for updating
      * @returns {Promise<void>} Update promise
      */
-    public update(service: DataObjectService<this>): Promise<void> {
+    public update(service: DataService<string, this>): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this.parentUID) {
                 // Update parent
@@ -221,11 +222,4 @@ export class ReferenceSpace extends DataObject {
     public get rotationQuaternion(): Quaternion {
         return this._rotation;
     }
-}
-
-export interface SpaceTransformationOptions {
-    /**
-     * Perform an inverse transformation
-     */
-    inverse?: boolean;
 }

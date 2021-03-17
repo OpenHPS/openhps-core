@@ -60,10 +60,9 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
      * @returns {DataObject[]} Array of data objects that match the display name
      */
     public findByDisplayName(displayName: string): Promise<T[]> {
-        const filter: FilterQuery<any> = {
+        return this.findAll({
             displayName,
-        };
-        return this.findAll(filter) as Promise<T[]>;
+        }) as Promise<T[]>;
     }
 
     /**
@@ -97,10 +96,9 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
      * @returns {DataObject[]} Array of data objects that match the parent UID
      */
     public findByParentUID(parentUID: string): Promise<T[]> {
-        const filter: FilterQuery<any> = {
+        return this.findAll({
             parentUID,
-        };
-        return this.findAll(filter) as Promise<T[]>;
+        }) as Promise<T[]>;
     }
 
     /**

@@ -2,7 +2,8 @@ import { DataFrame } from '../data/DataFrame';
 import { DataObject } from '../data';
 import { v4 as uuidv4 } from 'uuid';
 import { Node, NodeOptions } from '../Node';
-import { PushCompletedEvent, PushOptions } from '../graph';
+import { PushCompletedEvent } from '../graph/events';
+import { PushOptions } from '../graph/options';
 
 /**
  * Sink node

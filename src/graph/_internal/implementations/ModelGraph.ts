@@ -1,17 +1,11 @@
-import { DataFrame, DataObject, ReferenceSpace } from '../../../data';
-import {
-    Service,
-    DataService,
-    NodeData,
-    TimeService,
-    DataObjectService,
-    MemoryDataService,
-    NodeDataService,
-} from '../../../service';
-import { GraphShape } from '../../GraphShape';
+import { DataFrame } from '../../../data/DataFrame';
+import { ReferenceSpace } from '../../../data/object';
+import { Service } from '../../../service/Service';
+import { DataService } from '../../../service/DataService';
+import { GraphShape } from './GraphShape';
 import { Model } from '../../../Model';
 import { ServiceProxy } from '../../../service/_internal';
-import { PushOptions } from '../../interfaces';
+import { PushOptions } from '../../options';
 
 /**
  * [[Model]] implementation
@@ -32,8 +26,6 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
         super();
         this.name = name;
         this.referenceSpace = new ReferenceSpace(undefined);
-
-        this._addDefaultServices();
 
         this.removeAllListeners('build');
         this.removeAllListeners('destroy');
@@ -120,17 +112,6 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
                 })
                 .catch(reject);
         });
-    }
-
-    private _addDefaultServices(): void {
-        // Store data objects
-        this.addService(new DataObjectService(new MemoryDataService(DataObject)));
-        // Store spaces in their own memory data object service
-        this.addService(new DataObjectService(new MemoryDataService(ReferenceSpace)));
-        // Store node data
-        this.addService(new NodeDataService(new MemoryDataService(NodeData)));
-        // Default time service using system time
-        this.addService(new TimeService());
     }
 
     /**

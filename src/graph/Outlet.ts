@@ -1,5 +1,5 @@
 import { DataFrame } from '../data';
-import { PullOptions, PushOptions } from './interfaces';
+import { PullOptions, PushOptions } from './options';
 
 /**
  * Outlet of a node that supports push events and pull listening.

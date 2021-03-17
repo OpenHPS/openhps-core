@@ -1,5 +1,5 @@
 import { DataFrame } from '../../data';
-import { Outlet } from '../../graph';
+import { Outlet } from '../../graph/Outlet';
 import { Node } from '../../Node';
 
 /**

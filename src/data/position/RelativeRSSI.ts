@@ -1,5 +1,5 @@
 import { SerializableObject } from '../decorators';
-import { RFTransmitterObject } from '../object';
+import { RFTransmitterObject } from '../object/rf';
 import { RelativeValue } from './RelativeValue';
 
 /**

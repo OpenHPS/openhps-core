@@ -1,39 +1,19 @@
 import { DataFrame } from '../../data/DataFrame';
-import { GraphOptions, PullOptions } from '../../graph';
-import { Node, NodeOptions } from '../../Node';
+import { DataFrameService, MemoryDataService } from '../../service';
+import { BufferNode, BufferOptions } from './BufferNode';
 
 /**
  * @category Flow shape
  */
-export class MemoryBufferNode<InOut extends DataFrame> extends Node<InOut, InOut> {
-    protected _dataFrames: InOut[];
-
-    constructor(options?: MemoryBufferOptions) {
+export class MemoryBufferNode<InOut extends DataFrame> extends BufferNode<InOut> {
+    constructor(options?: BufferOptions) {
         super(options);
-        this._dataFrames = [];
-
-        this.on('pull', this.onPull.bind(this));
-        this.on('push', this.onPush.bind(this));
-    }
-
-    public onPull(options?: PullOptions): Promise<void> {
-        return new Promise<void>((resolve) => {
-            if (this._dataFrames.length !== 0) {
-                const frame = this._dataFrames.shift();
-                this.outlets.forEach((outlet) => outlet.push(frame, options as GraphOptions));
-                resolve();
-            } else {
-                resolve();
-            }
-        });
-    }
-
-    public onPush(frame: InOut): Promise<void> {
-        return new Promise<void>((resolve) => {
-            this._dataFrames.push(frame);
-            resolve();
-        });
+        this.service = new DataFrameService(
+            new MemoryDataService(
+                DataFrame,
+                (d) => d,
+                (d) => d,
+            ),
+        ) as DataFrameService<InOut>;
     }
 }
-
-export type MemoryBufferOptions = NodeOptions;

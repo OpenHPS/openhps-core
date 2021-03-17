@@ -1,6 +1,7 @@
 import { DataSerializer } from '../data';
 import { DataServiceDriver } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
+import { FindOptions } from './FindOptions';
 import { MemoryQueryEvaluator } from './_internal/MemoryQueryEvaluator';
 
 export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
@@ -18,7 +19,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
         this.deserialize = deserializer;
     }
 
-    public createIndex(_: string): Promise<void> {
+    public createIndex(): Promise<void> {
         return new Promise((resolve) => {
             resolve();
         });
@@ -34,25 +35,54 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
         });
     }
 
-    public findOne(query?: FilterQuery<T>): Promise<T> {
-        return new Promise<T>((resolve) => {
-            for (const [, object] of this._data) {
-                if (MemoryQueryEvaluator.evaluate(object, query)) {
-                    return resolve(this.deserialize(object));
-                }
-            }
-            return resolve(undefined);
+    public findOne(query?: FilterQuery<T>, options?: FindOptions): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
+            this.findAll(query, {
+                limit: 1,
+                sort: options.sort,
+            })
+                .then((results) => {
+                    if (results.length > 0) {
+                        return resolve(results[0]);
+                    } else {
+                        resolve(undefined);
+                    }
+                })
+                .catch(reject);
         });
     }
 
-    public findAll(query?: FilterQuery<T>): Promise<T[]> {
+    public findAll(query?: FilterQuery<T>, options: FindOptions = {}): Promise<T[]> {
         return new Promise<T[]>((resolve) => {
-            const data: T[] = [];
+            options.limit = options.limit || this._data.size;
+            let data: T[] = [];
             this._data.forEach((object) => {
                 if (MemoryQueryEvaluator.evaluate(object, query)) {
-                    data.push(this.deserialize(object));
+                    data.push(object);
+                    if (!options.sort && data.length >= options.limit) {
+                        return;
+                    }
                 }
             });
+            if (options.sort) {
+                data = data
+                    .sort((a, b) =>
+                        options.sort
+                            .map((s) => {
+                                const res1 = MemoryQueryEvaluator.getValueFromPath(a, s[0]) as any;
+                                const res2 = MemoryQueryEvaluator.getValueFromPath(b, s[0]) as any;
+                                if (typeof res1 === 'number') {
+                                    return res1 - res2;
+                                } else if (typeof res1 === 'string') {
+                                    return res1.localeCompare(res2);
+                                }
+                            })
+                            .reduce((a, b) => a + b),
+                    )
+
+                    .slice(0, options.limit);
+            }
+            data = data.map(this.deserialize);
             resolve(data);
         });
     }
@@ -79,8 +109,24 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
         });
     }
 
+    public count(filter?: FilterQuery<T>): Promise<number> {
+        return new Promise((resolve) => {
+            if (filter === undefined) {
+                resolve(this._data.size);
+            } else {
+                let count = 0;
+                for (const [, value] of this._data) {
+                    if (MemoryQueryEvaluator.evaluate(value, filter)) {
+                        count++;
+                    }
+                }
+                resolve(count);
+            }
+        });
+    }
+
     public deleteAll(filter?: FilterQuery<T>): Promise<void> {
-        return new Promise<void>((resolve) => {
+        return new Promise((resolve) => {
             if (filter === undefined) {
                 this._data = new Map();
             } else {

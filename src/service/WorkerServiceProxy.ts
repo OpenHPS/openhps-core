@@ -1,4 +1,4 @@
-import { DataSerializer } from '../data';
+import { DataSerializer } from '../data/DataSerializer';
 import { Subject } from 'threads/observable';
 import { v4 as uuidv4 } from 'uuid';
 import { ServiceProxy } from './_internal';

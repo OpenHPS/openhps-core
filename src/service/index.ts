@@ -10,3 +10,4 @@ export * from './MemoryDataService';
 export * from './DataService';
 export * from './KeyValueDataService';
 export * from './DataFrameService';
+export * from './FindOptions';

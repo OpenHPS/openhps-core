@@ -40,7 +40,7 @@ export class RFTransmitterObject extends DataObject implements RFObject {
      */
     public set calibratedRSSI(calibratedRSSI: number) {
         if (calibratedRSSI > 0) {
-            throw new RangeError('');
+            throw new RangeError('Calibrated RSSI should be a number below 0');
         }
         this._calibratedRSSI = calibratedRSSI;
     }

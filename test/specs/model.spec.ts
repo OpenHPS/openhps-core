@@ -270,6 +270,44 @@ describe('model', () => {
 
     describe('pushing', () => {
 
+        it('should support pushing to placeholders', (done) => {
+            ModelBuilder.create()
+            .addShape(GraphBuilder.create()
+                .from("in-a")
+                .clone()
+                .via(new CallbackNode(frame => {
+                    frame.uid = "a"
+                }))
+                .to("a"))
+            .addShape(GraphBuilder.create()
+                .from("in-b")
+                .clone()
+                .via(new CallbackNode(frame => {
+                    frame.uid = "b"
+                }))
+                .to("b"))
+            .addShape(GraphBuilder.create()
+                .from("in-c")
+                .clone()
+                .via(new CallbackNode(frame => {
+                    frame.uid = "c"
+                }))
+                .to("c"))
+            .from("a", "b", "c")
+            .to(new CallbackSinkNode(frame => {
+                expect(frame.uid).to.equal("b");
+                done();
+            })).build().then(model => {
+                const frame = new DataFrame(new DataObject("test"));
+                model.onceCompleted(frame.uid).then(() => {
+                    model.destroy();
+                    expect(frames).to.equal(1);
+                    done();
+                });
+                model.findNodeByName("in-b").push(frame);
+            });
+        });
+
         it('should support multiple shape pushing', (done) => {
             let frames = 0;
             ModelBuilder.create()
