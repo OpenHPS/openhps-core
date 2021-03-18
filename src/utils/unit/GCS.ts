@@ -23,13 +23,13 @@ export class GCS extends Unit {
                 unit: 'EPSG:4326',
                 toUnit: (input: Vector3) => {
                     return new Vector3(
-                        AngleUnit.RADIAN.convert(Math.asin(input.z / GCS.EARTH_RADIUS), AngleUnit.DEGREE),
                         AngleUnit.RADIAN.convert(Math.atan2(input.y, input.x), AngleUnit.DEGREE),
+                        AngleUnit.RADIAN.convert(Math.asin(input.z / GCS.EARTH_RADIUS), AngleUnit.DEGREE),
                     );
                 },
                 fromUnit: (input: Vector3) => {
-                    const phi = AngleUnit.DEGREE.convert(input.x, AngleUnit.RADIAN);
-                    const lambda = AngleUnit.DEGREE.convert(input.y, AngleUnit.RADIAN);
+                    const phi = AngleUnit.DEGREE.convert(input.y, AngleUnit.RADIAN);
+                    const lambda = AngleUnit.DEGREE.convert(input.x, AngleUnit.RADIAN);
                     return new Vector3(
                         GCS.EARTH_RADIUS * Math.cos(phi) * Math.cos(lambda),
                         GCS.EARTH_RADIUS * Math.cos(phi) * Math.sin(lambda),
@@ -47,15 +47,15 @@ export class GCS extends Unit {
                 unit: 'EPSG:4326',
                 fromUnit: (input: Vector3) => {
                     return new Vector3(
-                        (input.y * 20037508.34) / 180,
-                        ((Math.log(Math.tan(((90 + input.x) * Math.PI) / 360)) / (Math.PI / 180)) * 20037508.34) / 180,
+                        (input.x * 20037508.34) / 180,
+                        ((Math.log(Math.tan(((90 + input.y) * Math.PI) / 360)) / (Math.PI / 180)) * 20037508.34) / 180,
                         0,
                     );
                 },
                 toUnit: (input: Vector3) => {
                     return new Vector3(
-                        (Math.atan(Math.exp((input.y * Math.PI) / 20037508.34)) * 360) / Math.PI - 90,
                         (input.x * 180) / 20037508.34,
+                        (Math.atan(Math.exp((input.y * Math.PI) / 20037508.34)) * 360) / Math.PI - 90,
                         input.z,
                     );
                 },

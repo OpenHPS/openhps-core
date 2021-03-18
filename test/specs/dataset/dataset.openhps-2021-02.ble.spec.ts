@@ -113,9 +113,9 @@ describe('dataset ipin2021', () => {
                     count: testDataMean.size,
                     sourceNode: "test-data-mean",
                 }).then(() => {
-                    console.log(Math.max(...errors))
-                    console.log(Math.min(...errors))
-                    console.log(errors.reduce((a, b) => a + b) / errors.length)
+                    // console.log(Math.max(...errors))
+                    // console.log(Math.min(...errors))
+                    // console.log(errors.reduce((a, b) => a + b) / errors.length)
                     expect(errors.reduce((a, b) => a + b) / errors.length).to.be.lessThan(8);
                     done();
                 }).catch(done);

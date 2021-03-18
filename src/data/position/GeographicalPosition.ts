@@ -5,7 +5,7 @@ import { Absolute3DPosition } from './Absolute3DPosition';
 import { GCS, Unit, Vector3 } from '../../utils';
 
 /**
- * Geographical position
+ * Geographical WGS84 position stored as an 3D vector in ISO 6709.
  *
  * @category Position
  */
@@ -25,11 +25,11 @@ export class GeographicalPosition extends Absolute3DPosition {
      */
     @SerializableMember()
     public get latitude(): number {
-        return this.x;
+        return this.y;
     }
 
     public set latitude(lat: number) {
-        this.x = lat;
+        this.y = lat;
     }
 
     /**
@@ -39,11 +39,11 @@ export class GeographicalPosition extends Absolute3DPosition {
      */
     @SerializableMember()
     public get longitude(): number {
-        return this.y;
+        return this.x;
     }
 
     public set longitude(lng: number) {
-        this.y = lng;
+        this.x = lng;
     }
 
     /**

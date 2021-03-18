@@ -126,7 +126,6 @@ describe('data', () => {
                     const binding = object.bind(model.findDataService(object));
                     object.uid += "1";
                     binding.on('update', (newObj, oldObj) => {
-                        console.log(newObj);
                     });
                     binding.save().then(() => {
                         done();
