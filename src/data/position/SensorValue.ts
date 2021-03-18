@@ -1,3 +1,4 @@
+import { TimeService } from '../../service/TimeService';
 import { Unit } from '../../utils';
 import { Vector3 } from '../../utils/math/';
 import { SerializableMember, SerializableObject } from '../decorators';
@@ -26,6 +27,7 @@ export class SensorValue extends Vector3 {
         } else {
             super(x, y, z);
         }
+        this.timestamp = TimeService.now();
     }
 
     public clone(): this {

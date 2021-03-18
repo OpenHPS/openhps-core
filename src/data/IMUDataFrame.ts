@@ -1,7 +1,6 @@
 import { DataFrame } from './DataFrame';
 import { SerializableObject, SerializableMember } from './decorators';
-import { Magnetism, Acceleration, LinearVelocity, AngularVelocity } from './position';
-import { Quaternion } from '../utils';
+import { Magnetism, Acceleration, LinearVelocity, AngularVelocity, Orientation } from './position';
 
 @SerializableObject()
 export class IMUDataFrame extends DataFrame {
@@ -16,9 +15,9 @@ export class IMUDataFrame extends DataFrame {
     @SerializableMember()
     public gravity: Acceleration;
     @SerializableMember()
-    public relativeOrientation: Quaternion;
+    public relativeOrientation: Orientation;
     @SerializableMember()
-    public absoluteOrientation: Quaternion;
+    public absoluteOrientation: Orientation;
     @SerializableMember()
     public linearVelocity: LinearVelocity;
     @SerializableMember()

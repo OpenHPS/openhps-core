@@ -1,3 +1,4 @@
+import { DataObject } from '../data';
 import { DataFrame } from '../data/DataFrame';
 import { DataService } from './DataService';
 import { DataServiceDriver } from './DataServiceDriver';
@@ -52,6 +53,28 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
      */
     public findAfter(timestamp: number, options?: FindOptions): Promise<T[]> {
         return this._findTimestamp({ $gte: timestamp }, options);
+    }
+
+    /**
+     * Find data frames by data object
+     *
+     * @param {DataObject | string} dataObject Data object to get frames for
+     * @param {FindOptions} [options] Find options. By default sorted by createdTimestamp in descending order
+     * @returns {DataFrame[]} Array of data frames that contain the specified object
+     */
+    public findByDataObject(dataObject: DataObject | string, options?: FindOptions): Promise<T[]> {
+        return this.findAll(
+            {
+                _objects: {
+                    $elemMatch: {
+                        uid: dataObject instanceof DataObject ? dataObject.uid : dataObject,
+                    },
+                },
+            },
+            options || {
+                sort: [['createdTimestamp', -1]],
+            },
+        );
     }
 
     private _findTimestamp(timestampFilter: any, options?: FindOptions): Promise<T[]> {

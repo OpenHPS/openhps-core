@@ -52,6 +52,10 @@ export class Absolute2DPosition extends Vector2 implements AbsolutePosition {
     @SerializableMember()
     public accuracy: number;
 
+    constructor(x?: number, y?: number, unit: LengthUnit = LengthUnit.METER) {
+        super(unit.convert(x ? x : 0, LengthUnit.METER), unit.convert(y ? y : 0, LengthUnit.METER));
+    }
+
     /**
      * Get the linear velocity
      *
