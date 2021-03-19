@@ -43,6 +43,7 @@ OpenHPS is a data processing positioning framework. It is designed to support ma
 
 ### Abstractions
 - **[@openhps/spaces](https://github.com/OpenHPS/openhps-spaces)** - Enables the concept of symbolic spaces (e.g. building, room) on top of reference spaces.
+- **[@openhps/lbs](https://github.com/OpenHPS/openhps-lbs)** - Adds a location based service to a model. This service allows for a similar endpoints to get or watch the current position of a data object.
 
 ### Data Services
 - **[@openhps/mongodb](https://github.com/OpenHPS/openhps-mongodb)** - Adds MongoDB support for the storage of data objects.

@@ -34,34 +34,34 @@ const eventOutput: Subject<{
  * @param {ModelBuilder} modelBuilder Model builder
  */
 function initModel(modelBuilder: ModelBuilder<any, any>): void {
-    const internalInput = new CallbackSourceNode((options?: PullOptions) => {
+    const internalSource = new CallbackSourceNode((options?: PullOptions) => {
         // Send a pull request to the main thread
         pullOutput.next(options);
         return undefined;
     });
-    const internalOutput = new CallbackSinkNode((frame: DataFrame) => {
+    const internalSink = new CallbackSinkNode((frame: DataFrame) => {
         // Serialize the frame and transmit it to the main thread
         pushOutput.next(DataSerializer.serialize(frame));
     });
 
-    modelBuilder.graph.deleteNode(modelBuilder.graph.internalInput);
-    modelBuilder.graph.internalInput = internalInput;
-    internalInput.on('error', (event: any) => {
+    modelBuilder.graph.deleteNode(modelBuilder.graph.internalSource);
+    modelBuilder.graph.internalSource = internalSource;
+    internalSource.on('error', (event: any) => {
         eventOutput.next({
             name: 'error',
             event,
         });
     });
-    internalInput.on('completed', (event: any) => {
+    internalSource.on('completed', (event: any) => {
         eventOutput.next({
             name: 'completed',
             event,
         });
     });
-    modelBuilder.graph.addNode(modelBuilder.graph.internalInput);
-    modelBuilder.graph.deleteNode(modelBuilder.graph.internalOutput);
-    modelBuilder.graph.internalOutput = internalOutput;
-    modelBuilder.graph.addNode(modelBuilder.graph.internalOutput);
+    modelBuilder.graph.addNode(modelBuilder.graph.internalSource);
+    modelBuilder.graph.deleteNode(modelBuilder.graph.internalSink);
+    modelBuilder.graph.internalSink = internalSink;
+    modelBuilder.graph.addNode(modelBuilder.graph.internalSink);
 }
 
 expose({

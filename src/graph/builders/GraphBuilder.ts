@@ -39,7 +39,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
             } else {
                 this.graph.addNode(node);
                 if (node instanceof SourceNode) {
-                    this.graph.addEdge(new Edge(this.graph.internalInput, node));
+                    this.graph.addEdge(new Edge(this.graph.internalSource, node));
                 }
                 selectedNodes.push(node);
             }
@@ -47,7 +47,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
         return new GraphShapeBuilder(
             this,
             this.graph,
-            selectedNodes.length === 0 ? [this.graph.internalInput] : selectedNodes,
+            selectedNodes.length === 0 ? [this.graph.internalSource] : selectedNodes,
         );
     }
 
@@ -111,8 +111,8 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
         });
 
         // Connect internal and external output to shape
-        this.graph.addEdge(new Edge(this.graph.internalInput, graph.internalInput));
-        this.graph.addEdge(new Edge(graph.internalOutput, this.graph.internalOutput));
+        this.graph.addEdge(new Edge(this.graph.internalSource, graph.internalSource));
+        this.graph.addEdge(new Edge(graph.internalSink, this.graph.internalSink));
         return this;
     }
 
@@ -315,12 +315,12 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
                 this.graph.addNode(nodeObject);
                 this._insertNode(nodeObject);
-                this.graph.addEdge(new Edge(nodeObject, this.graph.internalOutput));
+                this.graph.addEdge(new Edge(nodeObject, this.graph.internalSink));
                 selectedNodes.push(nodeObject as SinkNode<any>);
             });
             this.previousNodes = selectedNodes;
         } else {
-            this._insertNode(this.graph.internalOutput);
+            this._insertNode(this.graph.internalSink);
         }
         return this.graphBuilder;
     }

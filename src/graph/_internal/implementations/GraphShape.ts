@@ -14,26 +14,26 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
     private _nodes: Map<string, GraphNode<any, any>> = new Map();
     private _edges: Map<string, Edge<any>> = new Map();
 
-    public internalInput: GraphNode<any, In> = new BroadcastNode<In>();
-    public internalOutput: GraphNode<Out, any> = new BroadcastNode<Out>();
+    public internalSource: GraphNode<any, In> = new BroadcastNode<In>();
+    public internalSink: GraphNode<Out, any> = new BroadcastNode<Out>();
 
     constructor() {
         super();
         // Internal input and output nodes
-        this.addNode(this.internalInput);
-        this.addNode(this.internalOutput);
+        this.addNode(this.internalSource);
+        this.addNode(this.internalSink);
 
         // Graph building and destroying
         this.once('build', this._onBuild.bind(this));
         this.once('destroy', this._onDestroy.bind(this));
         // Error handling
         this.removeAllListeners('error');
-        this.internalInput.on('error', this.onError.bind(this));
-        this.internalOutput.on('error', this.onError.bind(this));
+        this.internalSource.on('error', this.onError.bind(this));
+        this.internalSink.on('error', this.onError.bind(this));
         // Completed event
         this.removeAllListeners('completed');
-        this.internalInput.on('completed', this.onCompleted.bind(this));
-        this.internalOutput.on('completed', this.onCompleted.bind(this));
+        this.internalSource.on('completed', this.onCompleted.bind(this));
+        this.internalSink.on('completed', this.onCompleted.bind(this));
     }
 
     private _onDestroy(): void {
@@ -128,8 +128,8 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
     }
 
     private _validateNodes(): void {
-        this._validateInternalNode(this.internalInput);
-        this._validateInternalNode(this.internalOutput);
+        this._validateInternalNode(this.internalSource);
+        this._validateInternalNode(this.internalSink);
 
         this._nodes.forEach((node) => {
             if (node.graph === undefined) {
@@ -173,7 +173,7 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
      * @returns {Promise<void>} Pull promise
      */
     public pull(options?: PullOptions): Promise<void> {
-        return this.internalOutput.pull(options);
+        return this.internalSink.pull(options);
     }
 
     /**
@@ -184,7 +184,7 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
      * @returns {Promise<void>} Push promise
      */
     public push(frame: In | In[], options?: PushOptions): Promise<void> {
-        return this.internalInput.push(frame, options);
+        return this.internalSource.push(frame, options);
     }
 
     protected onError(event: PushError): void {

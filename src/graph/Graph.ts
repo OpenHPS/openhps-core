@@ -3,6 +3,8 @@ import { Edge } from './Edge';
 import { GraphNode } from './_internal/GraphNode';
 
 export interface Graph<In extends DataFrame, Out extends DataFrame> extends GraphNode<In, Out> {
+    internalSink: GraphNode<any, any>;
+    internalSource: GraphNode<any, any>;
     edges: Array<Edge<any>>;
     nodes: Array<GraphNode<any, any>>;
     /**

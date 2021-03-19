@@ -258,7 +258,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
             }
 
             Promise.all(servicePromises)
-                .then(() => this.internalInput.push(frame, options))
+                .then(() => this.internalSource.push(frame, options))
                 .then(() => {
                     resolve();
                 })
