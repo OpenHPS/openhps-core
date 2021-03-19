@@ -220,6 +220,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
      */
     public addService(service: Service, proxy?: ProxyHandler<any>): void {
         proxy = proxy || new ServiceProxy();
+        service.model = this.graph === undefined ? this : this.model;
         if (service instanceof DataService) {
             // Data service
             this._dataServices.set(service.name, new Proxy(service, proxy));

@@ -10,6 +10,10 @@ export abstract class Service extends AsyncEventEmitter {
     public name: string;
     public logger: (level: string, log: any) => void = () => true;
     private _ready = false;
+    /**
+     * Model shape
+     */
+    public model: any;
 
     constructor() {
         super();
