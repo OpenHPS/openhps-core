@@ -11,3 +11,4 @@ export * from './DataService';
 export * from './KeyValueDataService';
 export * from './DataFrameService';
 export * from './FindOptions';
+export * from './LocationBasedService';

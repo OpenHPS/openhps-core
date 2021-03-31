@@ -43,17 +43,32 @@ describe('model', () => {
                 .from()
                 .to().build().then(graph => {
                     ModelBuilder.create()
-                    .from()
-                    // .via(GraphBuilder.create()
-                    //     .from()
-                    //     .to())
-                    .via(graph)
-                    .to()
-                    .build()
-                    .then((model) => {
-                        done();
-                    }).catch(done);
+                        .from()
+                        .via(graph)
+                        .to()
+                        .build()
+                        .then((model) => {
+                            done();
+                        }).catch(done);
                 });
+        });
+
+        it('should support graphbuilders as nodes', (done) => {
+            ModelBuilder.create()
+                .from()
+                .via(
+                    GraphBuilder.create()
+                        .from()
+                        .to(),
+                    GraphBuilder.create()
+                        .from()
+                        .to()
+                )
+                .to()
+                .build()
+                .then((model) => {
+                    done();
+                }).catch(done);
         });
 
         it('should support loggers', (done) => {
