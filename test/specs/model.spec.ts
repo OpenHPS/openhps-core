@@ -38,6 +38,16 @@ describe('model', () => {
 
     describe('builder', () => {
 
+        it('should support pushing without building', (done) => {
+            const builder = GraphBuilder.create()
+                .from()
+                .via(new CallbackNode(() => {
+                    done();
+                }))
+                .to()
+            builder.graph.push(new DataFrame());
+        });
+
         it('should support graphs as nodes', (done) => {
             GraphBuilder.create()
                 .from()
@@ -59,15 +69,15 @@ describe('model', () => {
                 .via(
                     GraphBuilder.create()
                         .from()
-                        .to(),
-                    GraphBuilder.create()
-                        .from()
+                        .via(new CallbackNode(() => {
+                            done();
+                        }))
                         .to()
                 )
                 .to()
                 .build()
                 .then((model) => {
-                    done();
+                    model.push(new DataFrame());
                 }).catch(done);
         });
 
@@ -568,7 +578,7 @@ describe('model', () => {
     describe('model builder events', () => {
         it('should support a "postbuild" event', (done) => {
             ModelBuilder.create()
-                .on('postbuild', (model: Model) => {
+                .on('postbuild', (model: any) => {
                     expect(model).to.not.be.undefined;
                     done();
                 })

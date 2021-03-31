@@ -25,6 +25,32 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
         return new GraphBuilder();
     }
 
+    /**
+     * Event when graph is ready
+     *
+     * @param {string} name ready
+     * @param {Function} listener Event callback
+     */
+    public on(name: 'ready', listener: () => Promise<void> | void): this;
+    /**
+     * Event before building the graph
+     *
+     * @param {string} name prebuild
+     * @param {Function} listener Event callback
+     */
+    public on(name: 'prebuild', listener: () => Promise<void> | void): this;
+    /**
+     * Event after building the graph
+     *
+     * @param {string} name postbuild
+     * @param {Function} listener Event callback
+     */
+    public on(name: 'postbuild', listener: (model: GraphShape<any, any>) => Promise<void> | void): this;
+    public on(name: string | symbol, listener: (...args: any[]) => void): this {
+        this.graph.once(name, listener);
+        return this;
+    }
+
     public from(...nodes: Array<GraphNode<any, any> | string>): GraphShapeBuilder<any> {
         const selectedNodes: Array<GraphNode<any, any>> = [];
         nodes.forEach((node: GraphNode<any, any> | string) => {
@@ -143,26 +169,26 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         this.graph = graph;
     }
 
-    protected viaGraphBuilder(graphBuilder: GraphBuilder<any, any>): this {
-        return this.viaGraph(graphBuilder.graph);
-    }
-
     protected viaGraph(graph: GraphShape<any, any>): this {
         // Add graph as node
-        graph.nodes.forEach((graphNode) => {
-            graphNode.graph = this.graph;
+        graph.nodes.forEach((node) => {
+            node.graph = this.graph;
+            this.graph.addNode(node);
         });
-        this.graph.addNode(graph);
-        this._insertNode(graph);
-        this.previousNodes = [graph];
+        graph.edges.forEach((edge) => {
+            this.graph.addEdge(edge);
+        });
+        this._insertNode(graph.internalSource);
+        this.previousNodes = [graph.internalSink];
         return this;
     }
 
     public via(...nodes: Array<GraphNode<any, any> | string | GraphShape<any, any> | GraphBuilder<any, any>>): this {
         const selectedNodes: Array<GraphNode<any, any>> = [];
-        nodes.forEach((node) => {
+        for (let i = 0; i < nodes.length; i++) {
+            const node = nodes[i];
             if (node instanceof GraphBuilder) {
-                return this.viaGraphBuilder(node);
+                return this.viaGraph(node.graph);
             } else if (node instanceof GraphShape) {
                 return this.viaGraph(node);
             } else {
@@ -181,7 +207,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
                 this._insertNode(nodeObject);
                 selectedNodes.push(nodeObject);
             }
-        });
+        }
         this.previousNodes = selectedNodes;
         return this;
     }

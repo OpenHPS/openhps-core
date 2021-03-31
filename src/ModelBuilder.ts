@@ -158,32 +158,6 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
     }
 
     /**
-     * Event when model is ready
-     *
-     * @param {string} name ready
-     * @param {Function} listener Event callback
-     */
-    public on(name: 'ready', listener: () => Promise<void> | void): this;
-    /**
-     * Event before building the model
-     *
-     * @param {string} name prebuild
-     * @param {Function} listener Event callback
-     */
-    public on(name: 'prebuild', listener: () => Promise<void> | void): this;
-    /**
-     * Event after building the model
-     *
-     * @param {string} name postbuild
-     * @param {Function} listener Event callback
-     */
-    public on(name: 'postbuild', listener: (model: Model) => Promise<void> | void): this;
-    public on(name: string | symbol, listener: (...args: any[]) => void): this {
-        this.graph.once(name, listener);
-        return this;
-    }
-
-    /**
      * Add a service to the model
      *
      * @param {Service} service Service to add
