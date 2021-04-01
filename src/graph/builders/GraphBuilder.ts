@@ -169,7 +169,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         this.graph = graph;
     }
 
-    protected viaGraph(graph: GraphShape<any, any>): this {
+    protected viaGraph(graph: GraphShape<any, any>): GraphNode<any, any> {
         // Add graph as node
         graph.nodes.forEach((node) => {
             node.graph = this.graph;
@@ -179,18 +179,16 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
             this.graph.addEdge(edge);
         });
         this._insertNode(graph.internalSource);
-        this.previousNodes = [graph.internalSink];
-        return this;
+        return graph.internalSink;
     }
 
     public via(...nodes: Array<GraphNode<any, any> | string | GraphShape<any, any> | GraphBuilder<any, any>>): this {
         const selectedNodes: Array<GraphNode<any, any>> = [];
-        for (let i = 0; i < nodes.length; i++) {
-            const node = nodes[i];
+        nodes.forEach((node) => {
             if (node instanceof GraphBuilder) {
-                return this.viaGraph(node.graph);
+                selectedNodes.push(this.viaGraph(node.graph));
             } else if (node instanceof GraphShape) {
-                return this.viaGraph(node);
+                selectedNodes.push(this.viaGraph(node));
             } else {
                 let nodeObject: GraphNode<any, any>;
                 if (typeof node === 'string') {
@@ -207,7 +205,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
                 this._insertNode(nodeObject);
                 selectedNodes.push(nodeObject);
             }
-        }
+        });
         this.previousNodes = selectedNodes;
         return this;
     }
