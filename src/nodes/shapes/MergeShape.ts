@@ -56,27 +56,33 @@ export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode
     }
 
     private _timerTick(): void {
-        const currentTime = TimeService.now();
-        const mergedFrames: Array<InOut> = [];
         this._queue.forEach((queue) => {
-            if (currentTime - queue.timestamp >= this._timeout && queue.frames.size >= this.options.minCount) {
-                const frames = Array.from(queue.frames.values());
-                try {
-                    // Merge node
-                    mergedFrames.push(this.merge(frames, queue.key as string));
-                    this._queue.delete(queue.key);
-                    // Resolve pending promises
-                    queue.promises.forEach((fn) => {
-                        fn(undefined);
-                    });
-                } catch (ex) {
-                    this.emit('error', new PushError(frames[0].uid, this.uid, ex));
-                }
+            this._purgeQueue(queue);
+        });
+    }
+
+    private _purgeQueue(queue: QueuedMerge<InOut>): QueuedMerge<InOut> {
+        const currentTime = TimeService.now();
+        if (
+            this._queue.has(queue.key) &&
+            currentTime - queue.timestamp >= this._timeout &&
+            queue.frames.size >= this.options.minCount
+        ) {
+            const frames = Array.from(queue.frames.values());
+            try {
+                // Merge node
+                this.outlets.forEach((outlet) => outlet.push(this.merge(frames, queue.key as string)));
+                this._queue.delete(queue.key);
+                // Resolve pending promises
+                queue.promises.forEach((fn) => {
+                    fn(undefined);
+                });
+                return undefined;
+            } catch (ex) {
+                this.emit('error', new PushError(frames[0].uid, this.uid, ex));
             }
-        });
-        mergedFrames.forEach((frame) => {
-            this.outlets.forEach((outlet) => outlet.push(frame));
-        });
+        }
+        return queue;
     }
 
     private _stop(): void {
@@ -123,6 +129,7 @@ export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode
                         });
                     } else {
                         queue.promises.push(resolve);
+                        this._purgeQueue(queue);
                     }
                 }
             });

@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Node, NodeOptions } from '../Node';
 import { PushCompletedEvent } from '../graph/events';
 import { PushOptions } from '../graph/options';
+import { DataObjectService } from '../service';
 
 /**
  * Sink node
@@ -88,8 +89,10 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In
                 if (object.uid === null) {
                     object.uid = uuidv4();
                 }
+
                 // Queue the storage of the object in a data service
-                servicePromises.push(this.model.findDataService(object).insert(object.uid, object));
+                const service = this.model.findDataService(object) as DataObjectService<DataObject>;
+                servicePromises.push(service.insert(object.uid, object));
             }
 
             Promise.all(servicePromises)
