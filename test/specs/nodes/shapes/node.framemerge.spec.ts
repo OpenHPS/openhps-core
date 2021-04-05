@@ -18,7 +18,7 @@ import { Quaternion } from '../../../../src/utils/math/';
 
 describe('FrameMergeNode', () => {
         
-    it('should support merging from same source', (done) => {
+    it('should support mergingggg from same source', (done) => {
         let frames = 0;
         ModelBuilder.create()
             .addShape(GraphBuilder.create()

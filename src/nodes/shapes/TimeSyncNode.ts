@@ -11,6 +11,7 @@ import { MemoryBufferNode } from './MemoryBufferNode';
  */
 export class TimeSyncNode<InOut extends DataFrame> extends MemoryBufferNode<InOut> {
     private _timer: NodeJS.Timer;
+    protected options: TimeSyncOptions;
 
     constructor(options?: TimeSyncOptions) {
         super(options);
@@ -21,7 +22,7 @@ export class TimeSyncNode<InOut extends DataFrame> extends MemoryBufferNode<InOu
     private _initTimer(): void {
         this._timer = setInterval(() => {
             this.triggerUpdate();
-        }, 10);
+        }, this.options.checkInterval || 100);
     }
 
     private _stopTimer(): void {
@@ -79,4 +80,6 @@ export class TimeSyncNode<InOut extends DataFrame> extends MemoryBufferNode<InOu
     }
 }
 
-export type TimeSyncOptions = BufferOptions;
+export interface TimeSyncOptions extends BufferOptions {
+    checkInterval?: number;
+}

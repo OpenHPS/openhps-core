@@ -32,7 +32,7 @@ export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode
         this.options.timeout = this.options.timeout || 100;
         this.options.timeoutUnit = this.options.timeoutUnit || TimeUnit.MILLISECOND;
 
-        this._timeout = this.options.timeoutUnit.convert(this.options.timeout, TimeUnit.MILLISECOND);
+        this._timeout = this.options.timeoutUnit.convert(this.options.timeout, TimeService.getUnit());
 
         this.once('build', this._start.bind(this));
         this.once('destroy', this._stop.bind(this));
@@ -48,8 +48,10 @@ export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode
             this.options.minCount = this.options.minCount || this.inlets.length;
             this.options.maxCount = this.options.maxCount || this.inlets.length;
 
+            const interval =
+                this.options.checkInterval || TimeService.getUnit().convert(this._timeout, TimeUnit.MILLISECOND);
             if (this._timeout > 0) {
-                this._timer = setInterval(this._timerTick.bind(this), this._timeout);
+                this._timer = setInterval(this._timerTick.bind(this), interval);
             }
             resolve();
         });
@@ -64,6 +66,7 @@ export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode
     private _purgeQueue(queue: QueuedMerge<InOut>): QueuedMerge<InOut> {
         const currentTime = TimeService.now();
         if (
+            queue !== undefined &&
             this._queue.has(queue.key) &&
             currentTime - queue.timestamp >= this._timeout &&
             queue.frames.size >= this.options.minCount
@@ -77,12 +80,13 @@ export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode
                 queue.promises.forEach((fn) => {
                     fn(undefined);
                 });
-                return undefined;
             } catch (ex) {
                 this.emit('error', new PushError(frames[0].uid, this.uid, ex));
             }
+            return undefined;
+        } else {
+            return queue;
         }
-        return queue;
     }
 
     private _stop(): void {
@@ -103,7 +107,7 @@ export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode
                 return resolve(undefined);
             }
             (Array.isArray(merge) ? merge : [merge]).forEach((key) => {
-                let queue = this._queue.get(key);
+                let queue = this._purgeQueue(this._queue.get(key));
                 if (queue === undefined) {
                     // Create a new queued data frame based on the key
                     queue = new QueuedMerge(key);
@@ -129,7 +133,6 @@ export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode
                         });
                     } else {
                         queue.promises.push(resolve);
-                        this._purgeQueue(queue);
                     }
                 }
             });
@@ -164,6 +167,12 @@ class QueuedMerge<InOut extends DataFrame> {
 export interface MergeShapeOptions extends ProcessingNodeOptions {
     timeout?: number;
     timeoutUnit?: TimeUnit;
+    /**
+     * Check interval for timeout
+     *
+     * @default timeout Same as timeout
+     */
+    checkInterval?: number;
     minCount?: number;
     /**
      * Maximum number of frames to merge
