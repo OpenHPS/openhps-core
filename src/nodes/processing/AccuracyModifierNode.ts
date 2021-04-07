@@ -20,10 +20,14 @@ export class AccuracyModifierNode<InOut extends DataFrame> extends ObjectProcess
     public processObject(object: DataObject): Promise<DataObject> {
         return new Promise((resolve) => {
             if (object.position) {
-                const accuracy = object.position.accuracy || this.options.defaultValue;
-                if (accuracy) {
-                    const offset = this.options.offsetUnit.convert(this.options.offset, object.position.unit);
-                    object.position.accuracy = accuracy * this.options.magnitude + offset;
+                if (this.options.value) {
+                    object.position.accuracy = LengthUnit.METER.convert(this.options.value, object.position.unit);
+                } else {
+                    const accuracy = object.position.accuracy || this.options.defaultValue;
+                    if (accuracy) {
+                        const offset = this.options.offsetUnit.convert(this.options.offset, object.position.unit);
+                        object.position.accuracy = accuracy * this.options.magnitude + offset;
+                    }
                 }
             }
             resolve(object);
@@ -50,4 +54,8 @@ export interface AccuracyModifierOptions extends ObjectProcessingNodeOptions {
      * Default value when no accuracy on position.
      */
     defaultValue?: number;
+    /**
+     * Fixed value
+     */
+    value?: number;
 }
