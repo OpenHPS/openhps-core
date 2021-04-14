@@ -13,12 +13,16 @@ import {
     GraphBuilder,
     CallbackNode,
     RelativeDistance,
+    TimeService,
 } from '../../../../src';
 import { Quaternion } from '../../../../src/utils/math/';
 
 describe('FrameMergeNode', () => {
-        
-    it('should support mergingggg from same source', (done) => {
+    before(() => {
+        TimeService.initialize();
+    });
+
+    it('should support merging from same source', (done) => {
         let frames = 0;
         ModelBuilder.create()
             .addShape(GraphBuilder.create()
@@ -274,7 +278,7 @@ describe('FrameMergeNode', () => {
                     const object = new DataObject('abc');
                     const position = new Absolute2DPosition(1, 1);
                     position.accuracy = 1;
-                    position.velocity.linear = new LinearVelocity(2, 2);
+                    position.linearVelocity = new LinearVelocity(2, 2);
                     object.setPosition(position);
                     frame.source = object;
                     return frame;
@@ -284,7 +288,7 @@ describe('FrameMergeNode', () => {
                     const object = new DataObject('abc');
                     const position = new Absolute2DPosition(0, 0);
                     position.accuracy = 1;
-                    position.velocity.linear = new LinearVelocity(1, 1);
+                    position.linearVelocity = new LinearVelocity(1, 1);
                     object.setPosition(position);
                     frame.source = object;
                     return frame;
@@ -293,7 +297,7 @@ describe('FrameMergeNode', () => {
                     const frame = new DataFrame();
                     const object = new DataObject('abc');
                     const position = new Absolute2DPosition(5, 5);
-                    position.velocity.linear = new LinearVelocity(6, 6);
+                    position.linearVelocity = new LinearVelocity(6, 6);
                     position.accuracy = 1;
                     object.setPosition(position);
                     frame.source = object;
@@ -308,8 +312,76 @@ describe('FrameMergeNode', () => {
             )
             .to(
                 new CallbackSinkNode((frame: DataFrame) => {
-                    expect(frame.source.getPosition().velocity.linear.x).to.equal(3);
+                    expect(frame.source.getPosition().linearVelocity.x).to.equal(3);
                     expect(frame.source.getPosition().toVector3().x).to.equal(2);
+                    expect(frame.getObjects().length).to.equal(1);
+                    done();
+                }),
+            )
+            .build()
+            .then((model) => {
+                Promise.resolve(model.pull()).finally(() => {
+                    model.emit('destroy');
+                });
+            })
+            .catch((ex) => {
+                done(ex);
+            });
+    });
+
+    it('should merge from many multiple sources with same uid', (done) => {
+        ModelBuilder.create()
+            .from(
+                new CallbackSourceNode(() => {
+                    const frame = new DataFrame();
+                    const object = new DataObject('abc');
+                    const position = new Absolute2DPosition(1, 1);
+                    position.accuracy = 1;
+                    position.linearVelocity = new LinearVelocity(2, 2);
+                    object.setPosition(position);
+                    frame.source = object;
+                    return frame;
+                }),
+                new CallbackSourceNode(() => {
+                    const frame = new DataFrame();
+                    const object = new DataObject('abc');
+                    const position = new Absolute2DPosition(0, 0);
+                    position.accuracy = 1;
+                    position.linearVelocity = new LinearVelocity(1, 1);
+                    object.setPosition(position);
+                    frame.source = object;
+                    return frame;
+                }),
+                new CallbackSourceNode(() => {
+                    const frame = new DataFrame();
+                    const object = new DataObject('abc');
+                    const position = new Absolute2DPosition(5, 5);
+                    position.linearVelocity = new LinearVelocity(6, 6);
+                    position.accuracy = 1;
+                    object.setPosition(position);
+                    frame.source = object;
+                    return frame;
+                }),
+                new CallbackSourceNode(() => {
+                    const frame = new DataFrame();
+                    const object = new DataObject('abc');
+                    const position = new Absolute2DPosition(3, 3);
+                    position.linearVelocity = new LinearVelocity(1, 1);
+                    position.accuracy = 1;
+                    object.setPosition(position);
+                    frame.source = object;
+                    return frame;
+                }),
+            )
+            .via(
+                new FrameMergeNode(
+                    (frame: DataFrame, options: PushOptions) => frame.source.uid,
+                    (frame: DataFrame, options: PushOptions) => options.sourceNode,
+                )
+            )
+            .to(
+                new CallbackSinkNode((frame: DataFrame) => {
+                    expect(frame.source.getPosition().linearVelocity.x).to.equal(2.2);
                     expect(frame.getObjects().length).to.equal(1);
                     done();
                 }),
