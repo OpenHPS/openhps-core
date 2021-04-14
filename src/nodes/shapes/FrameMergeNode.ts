@@ -37,7 +37,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
             newPosition = this.mergePositions(newPosition, positions[i].clone());
         }
         if (newPosition.accuracy) {
-            newPosition.accuracy = newPosition.accuracy / positions.length;
+            newPosition.accuracy = 1 / newPosition.accuracy / positions.length;
         }
         if (newPosition.linearVelocity) {
             newPosition.linearVelocity.accuracy = newPosition.linearVelocity.accuracy / positions.length;
@@ -64,7 +64,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
                 .add(positionB.toVector3(newPosition.unit).multiplyScalar(1 / posAccuracyB)),
         );
         newPosition.fromVector(newPosition.toVector3().divideScalar(1 / posAccuracyA + 1 / posAccuracyB));
-        newPosition.accuracy = 1 / (posAccuracyA + posAccuracyB);
+        newPosition.accuracy = posAccuracyA + posAccuracyB;
 
         newPosition.linearVelocity = this._mergeVelocity(newPosition.linearVelocity, positionB.linearVelocity);
         newPosition.orientation = this._mergeOrientation(newPosition.orientation, positionB.orientation);

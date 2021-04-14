@@ -40,7 +40,7 @@ export class HPFilterNode<InOut extends DataFrame> extends PropertyFilterProcess
                 filter.y = value;
                 resolve(filter.x);
             } else {
-                filter.x = filter.x.add(value).sub(filter.y).multiplyScalar(filter.alpha);
+                filter.x = filter.x.clone().add(value).sub(filter.y).multiplyScalar(filter.alpha);
                 filter.y = value;
                 resolve(filter.x);
             }
