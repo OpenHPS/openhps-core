@@ -13,3 +13,4 @@ export * from './FrameCloneNode';
 export * from './MergeShape';
 export * from './TimeSyncNode';
 export * from './BufferNode';
+export * from './FrameDelayNode';

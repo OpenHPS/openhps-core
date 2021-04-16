@@ -3,6 +3,7 @@ import {
     CallbackSinkNode,
     FrameChunkNode,
     FrameCloneNode,
+    FrameDelayNode,
     FrameFilterNode,
     FrameFlattenNode,
     MemoryBufferNode,
@@ -36,6 +37,10 @@ GraphShapeBuilder.registerShape('clone', () => new FrameCloneNode());
 GraphShapeBuilder.registerShape(
     'debounce',
     (timeout: number, timeoutUnit: TimeUnit) => new FrameDebounceNode(timeout, timeoutUnit),
+);
+GraphShapeBuilder.registerShape(
+    'delay',
+    (timeout: number, timeoutUnit: TimeUnit) => new FrameDelayNode(timeout, timeoutUnit),
 );
 GraphShapeBuilder.registerShape('filter', (filterFn: any) => new FrameFilterNode(filterFn));
 GraphShapeBuilder.registerShape('flatten', () => new FrameFlattenNode());

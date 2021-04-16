@@ -275,6 +275,10 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
         return this.via(GraphShapeBuilder.shapes.get('debounce')(timeout, timeoutUnit));
     }
 
+    public delay(timeout = 100, timeoutUnit = TimeUnit.MILLISECOND): this {
+        return this.via(GraphShapeBuilder.shapes.get('delay')(timeout, timeoutUnit));
+    }
+
     /**
      * Clone frames
      *

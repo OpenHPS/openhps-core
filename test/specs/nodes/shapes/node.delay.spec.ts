@@ -9,12 +9,12 @@ import {
 } from '../../../../src';
 
 describe('node', () => {
-    describe('frame delay', () => {
-        it('should delay data frames', (done) => {
+    describe('frame debounce', () => {
+        it('should debounce data frames', (done) => {
             let count = 0;
             ModelBuilder.create()
                 .from()
-                .delay(50, TimeUnit.MILLISECOND)
+                .debounce(50, TimeUnit.MILLISECOND)
                 .to(
                     new CallbackSinkNode((_) => {
                         count++;
@@ -37,11 +37,11 @@ describe('node', () => {
                                 model.push(new DataFrame(new DataObject('d'))),
                                 model.push(new DataFrame(new DataObject('e'))),
                             ]).then(() => {
-                                expect(count).to.equal(5);
+                                expect(count).to.equal(2);
                                 model.emit('destroy');
                                 done();
                             });
-                        }, 320);
+                        }, 100);
                     });
                 });
         });
