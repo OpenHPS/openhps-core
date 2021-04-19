@@ -23,7 +23,7 @@ export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterProcess
     ): Promise<any> {
         return new Promise<any>((resolve) => {
             Object.keys(options).forEach((key) => {
-                if (typeof (options as any)[key] === 'number') {
+                if (typeof (options as any)[key] === 'number' && key in ['R', 'Q', 'A', 'B', 'C']) {
                     (options as any)[key] = new Vector3((options as any)[key], 0, 0);
                 }
             });

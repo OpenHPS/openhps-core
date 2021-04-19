@@ -1,6 +1,7 @@
 import { RelativePosition } from './RelativePosition';
 import { SerializableObject, SerializableMember } from '../decorators';
 import { DataSerializer } from '../DataSerializer';
+import { TimeService } from '../../service/TimeService';
 
 /**
  * Relative value to another reference object.
@@ -13,7 +14,7 @@ export class RelativeValue implements RelativePosition<number> {
      * Position recording timestamp
      */
     @SerializableMember()
-    public timestamp: number = Date.now();
+    public timestamp: number = TimeService.now();
     /**
      * Reference object UID that this location is relative to
      */

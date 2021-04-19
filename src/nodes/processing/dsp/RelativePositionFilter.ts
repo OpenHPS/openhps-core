@@ -1,4 +1,5 @@
 import { DataFrame, DataObject, RelativePosition, RelativeRSSI } from '../../../data';
+import { TimeService } from '../../../service/TimeService';
 import { BKFilterNode, KalmanFilterOptions } from './BKFilterNode';
 
 export class RelativePositionFilter<InOut extends DataFrame, R extends RelativePosition> extends BKFilterNode<InOut> {
@@ -10,6 +11,7 @@ export class RelativePositionFilter<InOut extends DataFrame, R extends RelativeP
         this._relativePositionType = relativePositionType;
         this.options.minValue = this.options.minValue || 0;
         this.options.maxValue = this.options.maxValue || 100;
+        this.options.maxTimeDifference = this.options.maxTimeDifference || Infinity;
     }
 
     public processObject(object: DataObject): Promise<DataObject> {
@@ -29,10 +31,15 @@ export class RelativePositionFilter<InOut extends DataFrame, R extends RelativeP
                 .then((results: Array<[any, number]>) => {
                     results.forEach((result) => {
                         const value = result[1];
-                        if (value <= this.options.maxValue) {
-                            result[0]['referenceValue'] = Math.max(value, this.options.minValue);
+                        const relativePosition = result[0];
+                        if (
+                            value <= this.options.maxValue &&
+                            value >= this.options.minValue &&
+                            TimeService.now() - this.options.maxTimeDifference <= relativePosition.timestamp
+                        ) {
+                            relativePosition.referenceValue = value;
                         } else {
-                            object.removeRelativePositions(result[0].referenceObjectUID);
+                            object.removeRelativePositions(relativePosition.referenceObjectUID);
                         }
                     });
                     resolve(object);
@@ -45,4 +52,5 @@ export class RelativePositionFilter<InOut extends DataFrame, R extends RelativeP
 export interface RelativePositionFilterOptions extends KalmanFilterOptions {
     minValue?: number;
     maxValue?: number;
+    maxTimeDifference?: number;
 }
