@@ -5,3 +5,4 @@ export * from './LPFilterNode';
 export * from './HPFilterNode';
 export * from './SMAFilterNode';
 export * from './EMAFilterNode';
+export * from './RelativeDistanceFilter';

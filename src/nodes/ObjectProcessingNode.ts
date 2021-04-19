@@ -87,7 +87,7 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
         }
 
         let service: DataObjectService<DataObject>;
-        if (type === undefined || service === undefined) {
+        if (type === undefined && service === undefined) {
             service = this.model.findDataService(DataObject);
         } else {
             service = this.model.findDataService(type) as DataObjectService<DataObject>;
