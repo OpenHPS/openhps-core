@@ -87,11 +87,11 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
         }
 
         let service: DataObjectService<DataObject>;
-        if (type === undefined && service === undefined) {
-            service = this.model.findDataService(DataObject);
-        } else {
+        if (type !== undefined) {
             service = this.model.findDataService(type) as DataObjectService<DataObject>;
         }
+        service = service || this.model.findDataService(DataObject);
+
         return new Promise((resolve) => {
             service
                 .findByUID(uid)

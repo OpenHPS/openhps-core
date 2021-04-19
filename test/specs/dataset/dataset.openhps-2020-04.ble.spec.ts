@@ -74,7 +74,7 @@ describe('dataset openhps-2020-04 (ble only)', function () {
                             if (prop.indexOf('BEACON_') !== -1) {
                                 const value = parseFloat(row[prop]);
                                 if (value !== 100) {
-                                    phoneObject.addRelativePosition(new RelativeRSSI(prop, value));
+                                    phoneObject.addRelativePosition(new RelativeRSSI(new RFTransmitterObject(prop), value));
                                 }
                             }
                         }

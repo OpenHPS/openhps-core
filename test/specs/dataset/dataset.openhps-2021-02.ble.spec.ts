@@ -12,7 +12,8 @@ import {
     RFTransmitterObject,
     MultilaterationNode,
     RelativeRSSIProcessing,
-    PropagationModel
+    PropagationModel,
+    CallbackNode
 } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
 import { expect } from "chai";
@@ -43,7 +44,7 @@ describe('dataset ipin2021', () => {
                         if (prop.includes("BEACON_")) {
                             const rssi = parseInt(row[prop]);
                             if (!Number.isNaN(rssi)) {
-                                object.addRelativePosition(new RelativeRSSI(prop, rssi));
+                                object.addRelativePosition(new RelativeRSSI(new RFTransmitterObject(prop), rssi));
                             }
                         }
                     }
