@@ -3,17 +3,20 @@ const path = require('path');
 const babel = require('@babel/core');
 const fs = require('fs');
 
-const build_dir = "node_modules/three-cjs/";
+const three_dir = path.join(path.dirname(require.resolve('three')), "../");
+const build_dir = path.join(three_dir, "../three-cjs");
+console.log("Three dir: ", three_dir);
+console.log("Build dir: ", build_dir);
 
 // Delete the three directory
-shell.rm("-rf", build_dir)
+shell.rm("-rf", build_dir);
 
 // Create three directory
 shell.mkdir(build_dir);
 
 // Copy three javascript files
 shell.cp("-r",
-    "node_modules/three/src/*",
+    path.join(three_dir, "src/*"),
     build_dir
 );
 
