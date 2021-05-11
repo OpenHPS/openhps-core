@@ -14,10 +14,12 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
     In,
     Out
 > {
-    private _service: S;
+    protected service: S;
+    protected options: RemoteNodeOptions;
 
     constructor(options?: RemoteNodeOptions) {
         super(options);
+        this.options.service = this.options.service || 'RemoteNodeService';
 
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
@@ -32,11 +34,11 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
 
     private _onBuild(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this._service = (this.graph as Model<any, any>).findService<S>('MQTTServer');
-            if (this._service === undefined || this._service === null) {
-                return reject(new Error(`Socket server service was not added to model!`));
+            this.service = (this.graph as Model<any, any>).findService<S>(this.options.service);
+            if (this.service === undefined || this.service === null) {
+                return reject(new Error(`Remote node service was not added to model!`));
             }
-            this._service.registerNode(this);
+            this.service.registerNode(this);
             resolve();
         });
     }
@@ -44,7 +46,7 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
     private _onPush(frame: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve) => {
             // Send push to clients
-            this._service.push(this.uid, frame, options);
+            this.service.push(this.uid, frame, options);
             resolve();
         });
     }
@@ -52,7 +54,7 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
     private _onPull(options?: PullOptions): Promise<void> {
         return new Promise<void>((resolve) => {
             // Send pull to clients
-            this._service.pull(this.uid, options);
+            this.service.pull(this.uid, options);
             resolve();
         });
     }
@@ -84,13 +86,15 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
 
     private _onDownstreamCompleted(event: PushCompletedEvent): void {
         // Send completed event to client
-        this._service.sendEvent(this.uid, 'completed', event);
+        this.service.sendEvent(this.uid, 'completed', event);
     }
 
     private _onDownstreamError(error: PushError): void {
         // Send error to clients
-        this._service.sendEvent(this.uid, 'error', error);
+        this.service.sendEvent(this.uid, 'error', error);
     }
 }
 
-export type RemoteNodeOptions = NodeOptions;
+export interface RemoteNodeOptions extends NodeOptions {
+    service?: string;
+}

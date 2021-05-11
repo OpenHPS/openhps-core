@@ -60,7 +60,7 @@ export abstract class RemoteNodeService extends Service {
      * @param {string} event Event to send
      * @param {any} arg Event argument
      */
-    public abstract sendEvent(uid: string, event: string, arg: any): void;
+    public abstract sendEvent(uid: string, event: string, arg: any): Promise<void>;
 
     /**
      * Register a node as a remotely available node
