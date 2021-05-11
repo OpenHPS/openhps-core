@@ -27,7 +27,8 @@
   },
   "files": [
     "dist/**/*",
-    "src/**/*"
+    "src/**/*",
+    "scripts/**/*"
   ],
   "scripts": {
     "test": "mocha --config test/.mocharc.json",
