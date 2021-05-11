@@ -4,7 +4,7 @@ const babel = require('@babel/core');
 const fs = require('fs');
 
 const three_dir = path.join(path.dirname(require.resolve('three')), "../");
-const build_dir = path.join(three_dir, "../three-cjs");
+const build_dir = path.join(__dirname, "../src/utils/math/three");
 console.log("Three dir: ", three_dir);
 console.log("Build dir: ", build_dir);
 
