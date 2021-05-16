@@ -20,9 +20,9 @@ export class BufferNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     private _initService(): Promise<void> {
         return new Promise((resolve) => {
             if (!this.service) {
-                this.service = (this.model.findDataService(
+                this.service = this.model.findDataService(
                     this.options.service || DataFrame,
-                ) as unknown) as DataFrameService<InOut>;
+                ) as unknown as DataFrameService<InOut>;
             }
             resolve();
         });

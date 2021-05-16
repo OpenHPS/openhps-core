@@ -8,7 +8,7 @@ import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../ObjectProc
  */
 export abstract class RelativePositionProcessing<
     InOut extends DataFrame,
-    R extends RelativePosition
+    R extends RelativePosition,
 > extends ObjectProcessingNode<InOut> {
     private _relativePositionType: new () => R;
 

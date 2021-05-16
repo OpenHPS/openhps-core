@@ -8,7 +8,8 @@ import { Outlet } from '../Outlet';
 
 export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
     extends AsyncEventEmitter
-    implements Inlet<Out>, Outlet<In> {
+    implements Inlet<Out>, Outlet<In>
+{
     /**
      * Name of the node. Does not have to be unique.
      */

@@ -21,7 +21,7 @@ import { FindOptions } from './FindOptions';
  *     }
  * }
  * ```
- **/
+ */
 export abstract class DataService<I, T> extends DataServiceDriver<I, T> {
     protected driver: DataServiceDriver<I, T>;
 

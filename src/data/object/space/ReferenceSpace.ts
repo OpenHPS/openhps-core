@@ -203,7 +203,7 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
         }
 
         newPosition.referenceSpaceUID = this.uid;
-        return (newPosition as unknown) as Out;
+        return newPosition as unknown as Out;
     }
 
     public get transformationMatrix(): Matrix4 {

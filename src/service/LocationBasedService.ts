@@ -30,7 +30,7 @@ import { TimeService } from './TimeService';
  */
 export class LocationBasedService<
     T extends DataObject = DataObject,
-    P extends AbsolutePosition = AbsolutePosition
+    P extends AbsolutePosition = AbsolutePosition,
 > extends Service {
     protected options: LBSOptions;
     public model: Model;
@@ -114,13 +114,13 @@ export class LocationBasedService<
         const uid = object instanceof DataObject ? object.uid : object;
         const watchId = this.watchIndex++;
         const timer = options.interval
-            ? ((setInterval(() => {
+            ? (setInterval(() => {
                   this.getCurrentPosition(object, options)
                       .then(callback)
                       .catch((ex) => {
                           callback(undefined, ex);
                       });
-              }, options.interval) as unknown) as number)
+              }, options.interval) as unknown as number)
             : undefined;
         this.watchers.set(watchId, {
             timer,
