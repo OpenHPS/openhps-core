@@ -35,7 +35,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
         });
     }
 
-    public findOne(query?: FilterQuery<T>, options?: FindOptions): Promise<T> {
+    public findOne(query?: FilterQuery<T>, options: FindOptions = {}): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             this.findAll(query, {
                 limit: 1,
