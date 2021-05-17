@@ -1,4 +1,4 @@
-import { AbsolutePosition, Trajectory } from '../data/position';
+import { Trajectory } from '../data/position';
 import { DataObject } from '../data/object/DataObject';
 import { DataService } from './DataService';
 import { DataServiceDriver } from './DataServiceDriver';
@@ -7,7 +7,7 @@ import { DataServiceDriver } from './DataServiceDriver';
  * A trajectory service stores the position of a data object
  * in a continuous trajectory.
  */
-export class TrajectoryService<T extends AbsolutePosition> extends DataService<string, Trajectory> {
+export class TrajectoryService<T extends Trajectory = Trajectory> extends DataService<string, T> {
     constructor(dataServiceDriver?: DataServiceDriver<string, T>) {
         super(dataServiceDriver as any);
 
@@ -30,7 +30,7 @@ export class TrajectoryService<T extends AbsolutePosition> extends DataService<s
      * @param {DataObject | string} object Data object to get trajectories for
      * @returns {Promise<Trajectory>} Trajectory promise if found
      */
-    public findCurrentTrajectory(object: DataObject | string): Promise<Trajectory> {
+    public findCurrentTrajectory(object: DataObject | string): Promise<T> {
         return new Promise((resolve, reject) => {
             this.findOne({
                 objectUID: object instanceof DataObject ? object.uid : object,
@@ -46,7 +46,7 @@ export class TrajectoryService<T extends AbsolutePosition> extends DataService<s
      * @param {DataObject | string} object Data object to get trajectory for
      * @param {Date | number} start Start time or date
      * @param {Date | number} end End time or date
-     * @returns {AbsolutePosition[]} Array of positions sorted by time
+     * @returns {Trajectory} Trajectory match
      */
     public findTrajectoryByRange(
         object: DataObject | string,
@@ -93,14 +93,15 @@ export class TrajectoryService<T extends AbsolutePosition> extends DataService<s
      * @param {string} uid Trajectory uid
      * @returns {Promise<Trajectory>} Stored trajectory
      */
-    public appendPosition(object: DataObject, uid?: string): Promise<Trajectory> {
+    public appendPosition(object: DataObject, uid?: string): Promise<T> {
         return new Promise((resolve, reject) => {
             const position = object.getPosition();
             if (position) {
                 Promise.resolve(uid ? this.findByUID(uid) : this.findCurrentTrajectory(object))
                     .then((trajectory) => {
                         if (!trajectory) {
-                            trajectory = new Trajectory(object.uid);
+                            trajectory = new this.driver.dataType();
+                            trajectory.objectUID = object.uid;
                         }
                         trajectory.positions.push(object.position);
                         return this.insert(trajectory.uid, trajectory);

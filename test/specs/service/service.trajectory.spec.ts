@@ -1,12 +1,12 @@
-import { DataObject, Absolute2DPosition, MemoryDataService, TrajectoryService, Absolute3DPosition } from '../../../src';
+import { DataObject, Absolute2DPosition, MemoryDataService, TrajectoryService, Trajectory } from '../../../src';
 import { expect } from 'chai';
 import 'mocha';
 
 describe('TrajectoryService', () => {
-    let trajectoryService: TrajectoryService<Absolute3DPosition>;
+    let trajectoryService: TrajectoryService<Trajectory>;
 
     it('should store multiple positions of the same object', (done) => {
-        trajectoryService = new TrajectoryService(new MemoryDataService(Absolute3DPosition));
+        trajectoryService = new TrajectoryService(new MemoryDataService(Trajectory));
         let insertPromise = Promise.resolve();
 
         for (let i = 0; i < 10; i++) {
@@ -34,7 +34,7 @@ describe('TrajectoryService', () => {
     });
 
     it('should find the last known trajectory', (done) => {
-        trajectoryService = new TrajectoryService(new MemoryDataService(Absolute3DPosition));
+        trajectoryService = new TrajectoryService(new MemoryDataService(Trajectory));
         let insertPromise = Promise.resolve();
 
         for (let i = 0; i < 10; i++) {
@@ -62,7 +62,7 @@ describe('TrajectoryService', () => {
     });
 
     it('should find a trajectory', (done) => {
-        trajectoryService = new TrajectoryService(new MemoryDataService(Absolute3DPosition));
+        trajectoryService = new TrajectoryService(new MemoryDataService(Trajectory));
         let insertPromise = Promise.resolve();
 
         for (let i = 0; i < 10; i++) {
@@ -90,7 +90,7 @@ describe('TrajectoryService', () => {
     });
 
     it('should find a trajectory from start to end date or time', (done) => {
-        trajectoryService = new TrajectoryService(new MemoryDataService(Absolute3DPosition));
+        trajectoryService = new TrajectoryService(new MemoryDataService(Trajectory));
         let insertPromise = Promise.resolve();
 
         for (let i = 0; i < 10; i++) {

@@ -25,7 +25,7 @@ export class Trajectory {
         return this.positions[this.positions.length - 1].timestamp;
     }
 
-    constructor(objectUID: string) {
+    constructor(objectUID?: string) {
         this.objectUID = objectUID;
     }
 }
