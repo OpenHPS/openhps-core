@@ -4,7 +4,7 @@ import { DataObject } from '../data/object/DataObject';
 import { DataService } from './DataService';
 import { DataServiceDriver } from './DataServiceDriver';
 
-export class TrajectoryService<T extends AbsolutePosition> extends DataService<PositionIdentifier, DataObjectPosition> {
+export class TrajectoryService<T extends AbsolutePosition> extends DataService<PositionIdentifier, TrajectoryPoint> {
     constructor(dataServiceDriver?: DataServiceDriver<PositionIdentifier, T>) {
         super(dataServiceDriver as any);
 
@@ -67,15 +67,23 @@ export class TrajectoryService<T extends AbsolutePosition> extends DataService<P
         });
     }
 
-    public appendPosition(object: DataObject): Promise<DataObjectPosition> {
+    /**
+     * Append a position to the trajectory service
+     *
+     * @param {DataObject} object Data object to store
+     * @param {TrajectoryPoint} previous Previous trajectory point
+     * @returns {Promise<TrajectoryPoint>} Stored data object position
+     */
+    public appendPosition(object: DataObject, previous?: TrajectoryPoint): Promise<TrajectoryPoint> {
         const position = object.getPosition();
         if (position) {
             return this.insert(
                 {
                     uid: object.uid,
                     timestamp: position.timestamp,
+                    previous,
                 },
-                new DataObjectPosition(object.uid, position),
+                new TrajectoryPoint(object.uid, position, previous),
             );
         } else {
             return Promise.reject();
@@ -86,10 +94,11 @@ export class TrajectoryService<T extends AbsolutePosition> extends DataService<P
 export interface PositionIdentifier {
     uid: string;
     timestamp: number;
+    previous?: PositionIdentifier;
 }
 
 @SerializableObject()
-class DataObjectPosition implements PositionIdentifier {
+export class TrajectoryPoint implements PositionIdentifier {
     @SerializableMember()
     uid: string;
     @SerializableMember()
@@ -98,12 +107,15 @@ class DataObjectPosition implements PositionIdentifier {
         deserializer: AbsolutePositionDeserializer,
     })
     position: AbsolutePosition;
+    @SerializableMember()
+    previous: PositionIdentifier = undefined;
 
-    constructor(uid?: string, position?: AbsolutePosition) {
+    constructor(uid?: string, position?: AbsolutePosition, previous?: PositionIdentifier) {
         if (uid && position) {
             this.uid = uid;
             this.position = position;
             this.timestamp = this.position.timestamp;
+            this.previous = previous;
         }
     }
 }
