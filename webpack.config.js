@@ -1,6 +1,5 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const InjectPlugin = require('webpack-inject-plugin').default;
-const EsmWebpackPlugin = require("@purtuga/esm-webpack-plugin");
 const path = require('path');
 const pkg = require("./package.json");
 
@@ -10,15 +9,24 @@ const PROJECT_NAME = pkg.name.replace("@", "").replace("/", "-");
 const defaultConfig = env => ({
   mode: env.prod ? "production" : "development",
   devtool: 'source-map',
+  resolve: {
+    alias: {
+      typescript: false,
+    },
+    fallback: {
+      path: false,
+      fs: false,
+      os: false,
+    }
+  },
   optimization: {
     minimize: env.prod,
     minimizer: [
       new TerserPlugin({
-        cache: true,
         parallel: true,
-        sourceMap: true,
         terserOptions: {
           keep_classnames: true,
+          sourceMap: true,
         }
       })
     ],
@@ -39,13 +47,16 @@ const bundle = (env, module) => ({
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: `web/${PROJECT_NAME}${module ? ".es" : ""}${env.prod ? ".min" : ""}.js`,
-    library: module ? "LIB" : LIBRARY_NAME,
-    libraryTarget: module ? "var" : "umd",
+    library: module ? undefined : LIBRARY_NAME,
+    libraryTarget: module ? "module" : "umd",
     umdNamedDefine: !module,
-    globalObject: `(typeof self !== 'undefined' ? self : this)`,
+    globalObject: module ? undefined : `(typeof self !== 'undefined' ? self : this)`,
+  },
+  experiments: {
+    outputModule: module,
   },
   externals: [],
-  plugins: module ? [new EsmWebpackPlugin()] : [],
+  plugins: [],
   ...defaultConfig(env)
 });
 
