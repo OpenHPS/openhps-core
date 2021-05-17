@@ -1,6 +1,7 @@
 import { DataServiceDriver } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
 import { FindOptions } from './FindOptions';
+import { IndexType } from './IndexType';
 
 /**
  * DataService
@@ -33,8 +34,8 @@ export abstract class DataService<I, T> extends DataServiceDriver<I, T> {
         this.once('destroy', () => this.driver.emitAsync('destroy'));
     }
 
-    public createIndex(index: string): Promise<void> {
-        return this.driver.createIndex(index);
+    public createIndex(key: string, type?: IndexType): Promise<void> {
+        return this.driver.createIndex(key, type);
     }
 
     public findByUID(uid: I): Promise<T> {

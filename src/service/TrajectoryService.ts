@@ -2,21 +2,30 @@ import { Trajectory } from '../data/position';
 import { DataObject } from '../data/object/DataObject';
 import { DataService } from './DataService';
 import { DataServiceDriver } from './DataServiceDriver';
+import { Model } from '../Model';
+import { IndexType } from './IndexType';
 
 /**
  * A trajectory service stores the position of a data object
  * in a continuous trajectory.
  */
 export class TrajectoryService<T extends Trajectory = Trajectory> extends DataService<string, T> {
-    constructor(dataServiceDriver?: DataServiceDriver<string, T>) {
-        super(dataServiceDriver as any);
+    public model: Model;
+    protected options: TrajectoryServiceOptions;
 
+    constructor(dataServiceDriver?: DataServiceDriver<string, T>, options?: TrajectoryServiceOptions) {
+        super(dataServiceDriver as any);
+        this.options = options || {};
+        this.options.dataService = this.options.dataService || DataObject.name;
         this.driver.once('ready', this._createIndexes.bind(this));
     }
 
     private _createIndexes(): Promise<void> {
         return new Promise((resolve, reject) => {
-            Promise.all([this.createIndex('timestamp'), this.createIndex('objectUID'), this.createIndex('uid')])
+            this.model.findDataService(this.options.dataService).on('insert', (_, object) => {
+                this.appendPosition(object);
+            });
+            Promise.all([this.createIndex('objectUID', IndexType.PRIMARY), this.createIndex('uid', IndexType.PRIMARY)])
                 .then(() => {
                     resolve();
                 })
@@ -48,11 +57,7 @@ export class TrajectoryService<T extends Trajectory = Trajectory> extends DataSe
      * @param {Date | number} end End time or date
      * @returns {Trajectory} Trajectory match
      */
-    public findTrajectoryByRange(
-        object: DataObject | string,
-        start?: Date | number,
-        end?: Date | number,
-    ): Promise<Trajectory> {
+    public findTrajectoryByRange(object: DataObject | string, start?: Date | number, end?: Date | number): Promise<T> {
         return new Promise((resolve, reject) => {
             this.findOne({
                 objectUID: object instanceof DataObject ? object.uid : object,
@@ -113,4 +118,11 @@ export class TrajectoryService<T extends Trajectory = Trajectory> extends DataSe
             }
         });
     }
+}
+
+export interface TrajectoryServiceOptions {
+    /**
+     * Dataservice to fetch stored data objects
+     */
+    dataService?: string;
 }

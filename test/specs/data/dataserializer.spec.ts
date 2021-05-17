@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataSerializer, DataObject } from '../../../src';
+import { DataSerializer, DataObject, DataFrame } from '../../../src';
 import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
 
 describe('DataSerializer', () => {
@@ -14,6 +14,10 @@ describe('DataSerializer', () => {
     });
 
     describe('serializing', () => {
+        it('should support extracting meta info', () => {
+            console.log(DataFrame.prototype['__typedJsonJsonObjectMetadataInformation__']);
+        });
+
         it('should serialize map members', () => {
             const frame = new DummyDataFrame();
             frame.testMap.set("1", { name: "one" });

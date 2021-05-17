@@ -3,6 +3,7 @@ import { DataFrame } from '../data/DataFrame';
 import { DataService } from './DataService';
 import { DataServiceDriver } from './DataServiceDriver';
 import { FindOptions } from './FindOptions';
+import { IndexType } from './IndexType';
 
 /**
  * The data frame service manages storage of complete data frames.
@@ -15,7 +16,10 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
 
     private _createIndexes(): Promise<void> {
         return new Promise((resolve, reject) => {
-            Promise.all([this.createIndex('uid'), this.createIndex('createdTimestamp')])
+            Promise.all([
+                this.createIndex('uid', IndexType.PRIMARY),
+                this.createIndex('createdTimestamp', IndexType.INDEX),
+            ])
                 .then(() => {
                     resolve();
                 })

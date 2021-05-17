@@ -36,7 +36,7 @@ export class DataSerializer {
      * @returns {JsonObjectMetadata} Root object metadata
      */
     public static findRootMetaInfo(proto: any): JsonObjectMetadata {
-        const protoProto = Object.getPrototypeOf(proto);
+        const protoProto = proto instanceof Function ? proto.prototype : Object.getPrototypeOf(proto);
         if (!protoProto || !protoProto[META_FIELD]) {
             return proto[META_FIELD];
         }

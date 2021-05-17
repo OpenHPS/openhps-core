@@ -3,6 +3,7 @@ import { FilterQuery } from './FilterQuery';
 import { Vector3 } from '../utils';
 import { DataService } from './DataService';
 import { DataServiceDriver } from './DataServiceDriver';
+import { IndexType } from './IndexType';
 
 /**
  * The object service manages the data of objects that are currently being
@@ -17,13 +18,13 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
     private _createIndexes(): Promise<void> {
         return new Promise((resolve, reject) => {
             Promise.all([
-                this.createIndex('uid'),
-                this.createIndex('displayName'),
-                this.createIndex('parentUID'),
-                this.createIndex('position.x'),
-                this.createIndex('position.y'),
-                this.createIndex('position.z'),
-                this.createIndex('createdTimestamp'),
+                this.createIndex('uid', IndexType.PRIMARY),
+                this.createIndex('displayName', IndexType.INDEX),
+                this.createIndex('parentUID', IndexType.INDEX),
+                this.createIndex('position.x', IndexType.INDEX),
+                this.createIndex('position.y', IndexType.INDEX),
+                this.createIndex('position.z', IndexType.INDEX),
+                this.createIndex('createdTimestamp', IndexType.INDEX),
             ])
                 .then(() => {
                     resolve();

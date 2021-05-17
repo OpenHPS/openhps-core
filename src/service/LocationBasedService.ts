@@ -42,7 +42,6 @@ export class LocationBasedService<
     constructor(options?: LBSOptions) {
         super();
         this.options = options || {};
-
         this.on('build', this._initLBS.bind(this));
     }
 
