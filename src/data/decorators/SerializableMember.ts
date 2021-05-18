@@ -11,6 +11,7 @@ export function SerializableMember(options?: SerializableMemberOptions): Propert
         // Inject additional options if available
         if (options) {
             const meta = JsonObjectMetadata.ensurePresentInPrototype(target);
+            options.index = options.index || options.primaryKey;
             meta.dataMembers.set(propertyKey, {
                 ...options,
                 ...meta.dataMembers.get(propertyKey),
