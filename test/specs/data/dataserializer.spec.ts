@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataSerializer, DataObject, DataFrame } from '../../../src';
+import { DataSerializer, DataObject, DataFrame, AbsolutePosition } from '../../../src';
 import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
 
 describe('DataSerializer', () => {
@@ -15,7 +15,8 @@ describe('DataSerializer', () => {
 
     describe('serializing', () => {
         it('should support extracting meta info', () => {
-            console.log(DataFrame.prototype['__typedJsonJsonObjectMetadataInformation__']);
+            const meta = DataSerializer.findRootMetaInfo(AbsolutePosition);
+            expect(meta.dataMembers).to.not.be.undefined;
         });
 
         it('should serialize map members', () => {

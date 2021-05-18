@@ -1,7 +1,6 @@
 import { Service } from './Service';
 import { FilterQuery } from './FilterQuery';
 import { FindOptions } from './FindOptions';
-import { IndexType } from './IndexType';
 
 /**
  * DataService driver for storing and querying data objects
@@ -18,8 +17,6 @@ export abstract class DataServiceDriver<I, T> extends Service {
             this.dataType = dataType;
         }
     }
-
-    public abstract createIndex(key: string, type?: IndexType): Promise<void>;
 
     public abstract findByUID(id: I): Promise<T>;
 

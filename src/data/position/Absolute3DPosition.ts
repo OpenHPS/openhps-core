@@ -1,101 +1,37 @@
-import { SerializableObject, SerializableMember } from '../decorators';
+import { DataType, SerializableMember, SerializableObject } from '../decorators';
 import { LengthUnit, Vector3 } from '../../utils';
-import { AbsolutePosition } from './AbsolutePosition';
-import { Velocity } from './Velocity';
-import { TimeService } from '../../service/TimeService';
-import { AngularVelocity } from './AngularVelocity';
-import { LinearVelocity } from './LinearVelocity';
-import { Orientation } from './Orientation';
-
+import { Absolute2DPosition } from './Absolute2DPosition';
 /**
- * Absolute cartesian 3D position. This class extends a [[Vector3]]. This location can be used both as
+ * Absolute cartesian 3D position. This class uses a [[Vector3]]. This location can be used both as
  * an absolute location or relative location.
  *
  * @category Position
  */
 @SerializableObject()
-export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
-    /**
-     * Position recording timestamp
-     */
-    @SerializableMember()
-    public timestamp: number = TimeService.now();
-    /**
-     * Velocity at recorded position
-     *
-     * @deprecated use linearVelocity and angularVelocity instead
-     */
-    @SerializableMember()
-    public velocity: Velocity = new Velocity();
-    /**
-     * Orientation at recorded position
-     */
+export class Absolute3DPosition extends Absolute2DPosition {
+    constructor(x?: number, y?: number, z?: number, unit: LengthUnit = LengthUnit.METER) {
+        super(x, y, unit);
+        this.vector.z = unit.convert(z ? z : 0, LengthUnit.METER);
+    }
+
     @SerializableMember({
-        deserializer: Orientation.deserializer,
-        serializer: Orientation.serializer,
+        type: DataType.DECIMAL,
     })
-    public orientation: Orientation;
-    /**
-     * Position unit
-     */
-    @SerializableMember()
-    public unit: LengthUnit = LengthUnit.METER;
-    /**
-     * Position reference space UID
-     */
-    @SerializableMember()
-    public referenceSpaceUID: string;
-    /**
-     * Position accuracy
-     */
-    @SerializableMember()
-    public accuracy: number;
-
-    /**
-     * Get the linear velocity
-     *
-     * @returns {LinearVelocity} Linear velocity
-     */
-    public get linearVelocity(): LinearVelocity {
-        if (!this.velocity) {
+    get z(): number {
+        if (!this.vector) {
             return undefined;
         }
-        return this.velocity.linear;
+        return this.vector.z;
     }
 
-    /**
-     * Set the linear velocity
-     */
-    public set linearVelocity(value: LinearVelocity) {
-        if (!this.velocity) {
-            this.velocity = new Velocity();
+    set z(value: number) {
+        if (!this.vector) {
+            return;
         }
-        this.velocity.linear = value;
+        this.vector.z = value;
     }
 
-    /**
-     * Get the angular velocity
-     *
-     * @returns {AngularVelocity} Angular velocity
-     */
-    public get angularVelocity(): AngularVelocity {
-        if (!this.velocity) {
-            return undefined;
-        }
-        return this.velocity.angular;
-    }
-
-    /**
-     * Set the angular velocity
-     */
-    public set angularVelocity(value: AngularVelocity) {
-        if (!this.velocity) {
-            this.velocity = new Velocity();
-        }
-        this.velocity.angular = value;
-    }
-
-    public fromVector(vector: Vector3, unit?: LengthUnit): this {
+    fromVector(vector: Vector3, unit?: LengthUnit): this {
         if (unit) {
             this.x = unit.convert(vector.x, this.unit);
             this.y = unit.convert(vector.y, this.unit);
@@ -108,7 +44,7 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
         return this;
     }
 
-    public toVector3(unit?: LengthUnit): Vector3 {
+    toVector3(unit?: LengthUnit): Vector3 {
         if (unit) {
             return new Vector3(
                 this.unit.convert(this.x, unit),
@@ -118,30 +54,6 @@ export class Absolute3DPosition extends Vector3 implements AbsolutePosition {
         } else {
             return new Vector3(this.x, this.y, this.z);
         }
-    }
-
-    /**
-     * Get the angle in radians from this position to a destination
-     *
-     * @param {Absolute3DPosition} destination Destination position
-     * @returns {number} Bearing in radians from this position to destination
-     */
-    public angleTo(destination: Absolute3DPosition): number {
-        return super.angleTo(destination);
-    }
-
-    /**
-     * Get the distance from this location to a destination
-     *
-     * @param {Absolute3DPosition} destination Destination location
-     * @returns {number} Distance between this point and destination
-     */
-    public distanceTo(destination: Absolute3DPosition): number {
-        return super.distanceTo(destination);
-    }
-
-    public equals(position: Absolute3DPosition): boolean {
-        return this.toVector3(this.unit).equals(position.toVector3(this.unit));
     }
 
     /**

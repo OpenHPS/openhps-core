@@ -1,4 +1,4 @@
-import { Absolute3DPosition, CallbackSourceNode, DataFrame, DataObject, LocationBasedService, Model, ModelBuilder, TimeService } from '../../../src';
+import { Absolute3DPosition, CallbackNode, CallbackSourceNode, DataFrame, DataObject, LocationBasedService, Model, ModelBuilder, TimeService } from '../../../src';
 import { expect } from 'chai';
 import 'mocha';
 

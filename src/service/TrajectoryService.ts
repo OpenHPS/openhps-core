@@ -3,7 +3,6 @@ import { DataObject } from '../data/object/DataObject';
 import { DataService } from './DataService';
 import { DataServiceDriver } from './DataServiceDriver';
 import { Model } from '../Model';
-import { IndexType } from './IndexType';
 
 /**
  * A trajectory service stores the position of a data object
@@ -17,19 +16,15 @@ export class TrajectoryService<T extends Trajectory = Trajectory> extends DataSe
         super(dataServiceDriver as any);
         this.options = options || {};
         this.options.dataService = this.options.dataService || DataObject.name;
-        this.driver.once('ready', this._createIndexes.bind(this));
+        this.driver.once('ready', this._bindService.bind(this));
     }
 
-    private _createIndexes(): Promise<void> {
-        return new Promise((resolve, reject) => {
+    private _bindService(): Promise<void> {
+        return new Promise((resolve) => {
             this.model.findDataService(this.options.dataService).on('insert', (_, object) => {
                 this.appendPosition(object);
             });
-            Promise.all([this.createIndex('objectUID', IndexType.PRIMARY), this.createIndex('uid', IndexType.PRIMARY)])
-                .then(() => {
-                    resolve();
-                })
-                .catch(reject);
+            resolve();
         });
     }
 

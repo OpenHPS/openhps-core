@@ -1,9 +1,8 @@
-import { DataObject, AbsolutePosition, Absolute2DPosition } from '../data';
+import { DataObject, AbsolutePosition, Absolute3DPosition } from '../data';
 import { FilterQuery } from './FilterQuery';
 import { Vector3 } from '../utils';
 import { DataService } from './DataService';
 import { DataServiceDriver } from './DataServiceDriver';
-import { IndexType } from './IndexType';
 
 /**
  * The object service manages the data of objects that are currently being
@@ -12,25 +11,6 @@ import { IndexType } from './IndexType';
 export class DataObjectService<T extends DataObject> extends DataService<string, T> {
     constructor(dataServiceDriver?: DataServiceDriver<string, T>) {
         super(dataServiceDriver);
-        this.driver.once('ready', this._createIndexes.bind(this));
-    }
-
-    private _createIndexes(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            Promise.all([
-                this.createIndex('uid', IndexType.PRIMARY),
-                this.createIndex('displayName', IndexType.INDEX),
-                this.createIndex('parentUID', IndexType.INDEX),
-                this.createIndex('position.x', IndexType.INDEX),
-                this.createIndex('position.y', IndexType.INDEX),
-                this.createIndex('position.z', IndexType.INDEX),
-                this.createIndex('createdTimestamp', IndexType.INDEX),
-            ])
-                .then(() => {
-                    resolve();
-                })
-                .catch(reject);
-        });
     }
 
     /**
@@ -75,16 +55,16 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
     public findByPosition(position: AbsolutePosition): Promise<T[]> {
         const vector: Vector3 = position.toVector3();
         let filter: FilterQuery<any>;
-        if (position instanceof Absolute2DPosition) {
+        if (position instanceof Absolute3DPosition) {
             filter = {
                 'position.x': vector.x,
                 'position.y': vector.y,
+                'position.z': vector.z,
             };
         } else {
             filter = {
                 'position.x': vector.x,
                 'position.y': vector.y,
-                'position.z': vector.z,
             };
         }
         return this.findAll(filter) as Promise<T[]>;

@@ -1,7 +1,7 @@
 import { AngleUnit } from '../../utils';
 import { SerializableObject, SerializableMember } from '../decorators';
 import { Orientation } from './Orientation';
-import { RelativeValue } from './RelativeValue';
+import { RelativePosition } from './RelativePosition';
 
 /**
  * Relative location to another reference object measured in the angle.
@@ -9,7 +9,7 @@ import { RelativeValue } from './RelativeValue';
  * @category Position
  */
 @SerializableObject()
-export class RelativeAngle extends RelativeValue {
+export class RelativeAngle extends RelativePosition<number> {
     /**
      * Position accuracy
      */
@@ -39,6 +39,7 @@ export class RelativeAngle extends RelativeValue {
      *
      * @returns {number} Angle
      */
+    @SerializableMember()
     public get angle(): number {
         return this.referenceValue;
     }

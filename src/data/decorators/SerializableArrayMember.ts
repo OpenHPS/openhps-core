@@ -1,9 +1,19 @@
-/* eslint-disable */
-import { jsonArrayMember, IJsonArrayMemberOptions } from 'typedjson';
+import { jsonArrayMember, IJsonArrayMemberOptions, Serializable } from 'typedjson';
 
-export function SerializableArrayMember(elementConstructor: Function, options?: IJsonArrayMemberOptions): (target: Object, propKey: string | symbol) => void;
-export function SerializableArrayMember(elementConstructor: Function, options?: IJsonArrayMemberOptions): PropertyDecorator {
-    return (target: Object, propertyKey: string) => {
+export function SerializableArrayMember<T>(
+    elementConstructor: Serializable<T>,
+    options?: IJsonArrayMemberOptions,
+): (target: unknown, propKey: string | symbol) => void;
+/**
+ * @param {Serializable<any>} elementConstructor Element constructor
+ * @param {IJsonArrayMemberOptions} [options] Member options
+ * @returns {PropertyDecorator} Property decorator
+ */
+export function SerializableArrayMember<T>(
+    elementConstructor: Serializable<T>,
+    options?: IJsonArrayMemberOptions,
+): PropertyDecorator {
+    return (target: unknown, propertyKey: string) => {
         jsonArrayMember(elementConstructor, options)(target, propertyKey);
     };
 }

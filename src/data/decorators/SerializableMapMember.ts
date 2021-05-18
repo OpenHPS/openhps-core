@@ -1,8 +1,17 @@
-/* eslint-disable */
-import { jsonMapMember, IJsonMapMemberOptions } from "typedjson";
+import { jsonMapMember, IJsonMapMemberOptions, Serializable } from 'typedjson';
 
-export function SerializableMapMember(keyConstructor: Function, valueConstructor: Function, options?: IJsonMapMemberOptions): PropertyDecorator {
-    return (target: Object, propertyKey: string) => {
+/**
+ * @param {Serializable<any>} keyConstructor Map key constructor
+ * @param {Serializable<any>} valueConstructor Map value constructor
+ * @param {IJsonMapMemberOptions} [options] Member options
+ * @returns {PropertyDecorator} Property decorator
+ */
+export function SerializableMapMember(
+    keyConstructor: Serializable<any>,
+    valueConstructor: Serializable<any>,
+    options?: IJsonMapMemberOptions,
+): PropertyDecorator {
+    return (target: unknown, propertyKey: string) => {
         if (valueConstructor === Object && options === undefined) {
             options = {};
             options.deserializer = (json: any) => {
@@ -12,15 +21,15 @@ export function SerializableMapMember(keyConstructor: Function, valueConstructor
                 });
                 return map;
             };
-            options.serializer = (map: Map<string, Object>) => {
+            options.serializer = (map: Map<string, unknown>) => {
                 const json = {};
-                map.forEach((value: Object, key: string) => {
+                map.forEach((value: unknown, key: string) => {
                     (json as any)[key] = JSON.stringify(value);
                 });
                 return json;
             };
         }
-        
+
         jsonMapMember(keyConstructor, valueConstructor, options)(target, propertyKey);
     };
 }

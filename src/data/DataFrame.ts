@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DataObject } from './object/DataObject';
-import { SerializableObject, SerializableMember, SerializableMapMember } from './decorators';
+import { SerializableObject, SerializableMember, SerializableMapMember, DataType } from './decorators';
 import { ReferenceSpace } from './object/space';
 import { TimeService } from '../service/TimeService';
 import { DataSerializer } from './DataSerializer';
@@ -41,12 +41,17 @@ export class DataFrame {
     /**
      * Data frame unique identifier
      */
-    @SerializableMember()
+    @SerializableMember({
+        primaryKey: true,
+    })
     public uid: string = uuidv4();
     /**
      * Data frame created timestamp (ISO 8601)
      */
-    @SerializableMember()
+    @SerializableMember({
+        index: true,
+        type: DataType.BIGINT,
+    })
     public createdTimestamp: number;
     @SerializableMember()
     private _source: string;

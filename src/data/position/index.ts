@@ -14,6 +14,5 @@ export * from './Acceleration';
 export * from './Magnetism';
 export * from './RelativeRSSI';
 export * from './Orientation';
-export * from './RelativeValue';
 export * from './SensorValue';
 export * from './Trajectory';

@@ -1,18 +1,18 @@
 import { SerializableArrayMember, SerializableMember, SerializableObject } from '../decorators';
 import { v4 as uuidv4 } from 'uuid';
-import { AbsolutePosition, AbsolutePositionDeserializer } from './AbsolutePosition';
+import { AbsolutePosition } from './AbsolutePosition';
 
 @SerializableObject()
 export class Trajectory {
-    @SerializableMember()
-    uid: string = uuidv4();
-    @SerializableMember()
-    objectUID: string;
-    @SerializableArrayMember(() => Object, {
-        deserializer: (json: any[]) => {
-            return json.map(AbsolutePositionDeserializer);
-        },
+    @SerializableMember({
+        primaryKey: true,
     })
+    uid: string = uuidv4();
+    @SerializableMember({
+        index: true,
+    })
+    objectUID: string;
+    @SerializableArrayMember(AbsolutePosition)
     positions: AbsolutePosition[] = [];
 
     get trajectoryStart(): number {

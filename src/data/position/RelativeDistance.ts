@@ -1,6 +1,6 @@
 import { LengthUnit } from '../../utils';
 import { SerializableObject, SerializableMember } from '../decorators';
-import { RelativeValue } from './RelativeValue';
+import { RelativePosition } from './RelativePosition';
 
 /**
  * Relative location to another reference object in distance.
@@ -8,7 +8,7 @@ import { RelativeValue } from './RelativeValue';
  * @category Position
  */
 @SerializableObject()
-export class RelativeDistance extends RelativeValue {
+export class RelativeDistance extends RelativePosition<number> {
     /**
      * Position accuracy
      */

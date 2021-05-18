@@ -13,4 +13,3 @@ export * from './DataFrameService';
 export * from './FindOptions';
 export * from './LocationBasedService';
 export * from './RemoteNodeService';
-export * from './IndexType';

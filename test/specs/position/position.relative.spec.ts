@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Absolute2DPosition, DataSerializer, LinearVelocity, RelativeRSSI, RelativeValue, Velocity } from '../../../src';
+import { DataSerializer, RelativeRSSI, RelativeVelocity, Velocity } from '../../../src';
 
 describe('position', () => {
     describe('relative rssi', () => {
@@ -12,12 +12,12 @@ describe('position', () => {
         });
     });
 
-    describe('relative value', () => {
-        it('should support number values', () => {
-            const position = new RelativeValue("abc", -110);
+    describe('relative velocity', () => {
+        it('should be serializable', () => {
+            const position = new RelativeVelocity("abc", new Velocity());
             const serialized = DataSerializer.serialize(position);
-            const deserialized: RelativeValue = DataSerializer.deserialize(serialized);
-            expect(deserialized.referenceValue).to.equal(-110);
+            const deserialized: RelativeVelocity = DataSerializer.deserialize(serialized);
+            expect(deserialized.referenceValue).to.be.instanceOf(Velocity);
         });
     });
 });

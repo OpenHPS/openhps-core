@@ -1,8 +1,15 @@
-/* eslint-disable */
-import { jsonSetMember, IJsonSetMemberOptions } from "typedjson";
+import { jsonSetMember, IJsonSetMemberOptions, Constructor } from 'typedjson';
 
-export function SerializableSetMember(elementConstructor: Function, options?: IJsonSetMemberOptions): PropertyDecorator {
-    return (target: Object, propertyKey: string) => {
+/**
+ * @param {Constructor} elementConstructor Element constructor
+ * @param {IJsonSetMemberOptions} options Member options
+ * @returns {PropertyDecorator} Property decorator
+ */
+export function SerializableSetMember<T>(
+    elementConstructor: Constructor<T>,
+    options?: IJsonSetMemberOptions,
+): PropertyDecorator {
+    return (target: unknown, propertyKey: string) => {
         jsonSetMember(elementConstructor, options)(target, propertyKey);
     };
 }

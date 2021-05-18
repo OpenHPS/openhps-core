@@ -1,3 +1,6 @@
+import { TimeService } from '../../service/TimeService';
+import { DataSerializer } from '../DataSerializer';
+import { DataType, SerializableMember, SerializableObject } from '../decorators';
 import { Position } from './Position';
 
 /**
@@ -5,20 +8,49 @@ import { Position } from './Position';
  *
  * @category Position
  */
-export interface RelativePosition<T = number> extends Position {
+@SerializableObject()
+export abstract class RelativePosition<T = number> implements Position {
     /**
-     * Get the reference object UID that this location is relative to
+     * Position recording timestamp
      */
-    referenceObjectUID: string;
+    @SerializableMember({
+        type: DataType.BIGINT,
+        index: true,
+    })
+    public timestamp: number = TimeService.now();
+    /**
+     * Reference object UID that this location is relative to
+     */
+    @SerializableMember()
+    public referenceObjectUID: string;
+    @SerializableMember()
+    public referenceObjectType: string;
+    public referenceValue: T;
 
-    referenceObjectType: string;
+    constructor(referenceObject?: any, value?: T) {
+        if (referenceObject !== undefined) {
+            if (referenceObject instanceof String || typeof referenceObject === 'string') {
+                this.referenceObjectUID = referenceObject as string;
+            } else {
+                this.referenceObjectType = referenceObject.constructor.name;
+                this.referenceObjectUID = referenceObject.uid;
+            }
+        }
+        this.referenceValue = value;
+    }
 
-    referenceValue: T;
-
-    equals(position: this): boolean;
+    public equals(position: this): boolean {
+        return this.timestamp === position.timestamp;
+    }
 
     /**
      * Clone the position
+     *
+     * @returns {RelativePosition} Cloned relative position
      */
-    clone(): this;
+    public clone(): this {
+        const serialized = DataSerializer.serialize(this);
+        const clone = DataSerializer.deserialize(serialized) as this;
+        return clone;
+    }
 }

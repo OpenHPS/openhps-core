@@ -1,7 +1,7 @@
-import { AbsolutePosition, AbsolutePositionDeserializer } from '../position/AbsolutePosition';
+import { AbsolutePosition } from '../position/AbsolutePosition';
 import { RelativePosition } from '../position/RelativePosition';
 import { TypedJSON } from 'typedjson';
-import { SerializableObject, SerializableMember, SerializableArrayMember } from '../decorators';
+import { SerializableObject, SerializableMember, SerializableArrayMember, DataType } from '../decorators';
 import { v4 as uuidv4 } from 'uuid';
 import { DataSerializer } from '../DataSerializer';
 import { TimeService } from '../../service/TimeService';
@@ -42,7 +42,10 @@ export class DataObject {
      */
     @SerializableMember()
     public parentUID: string;
-    @SerializableMember()
+    @SerializableMember({
+        type: DataType.BIGINT,
+        index: true,
+    })
     public createdTimestamp: number;
 
     private _uid!: string;
@@ -66,7 +69,9 @@ export class DataObject {
      *
      * @returns {string} Unique object identifier
      */
-    @SerializableMember()
+    @SerializableMember({
+        primaryKey: true,
+    })
     public get uid(): string {
         return this._uid;
     }
@@ -81,9 +86,7 @@ export class DataObject {
      *
      * @returns {AbsolutePosition} Absolute position of data object
      */
-    @SerializableMember({
-        deserializer: AbsolutePositionDeserializer,
-    })
+    @SerializableMember()
     public get position(): AbsolutePosition {
         return this.getPosition();
     }
