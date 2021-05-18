@@ -2,7 +2,7 @@ import 'mocha';
 import { FilterQuery, DataObject, Absolute2DPosition, DataFrame } from '../../../src';
 import { expect } from 'chai';
 import { DummyDataObject } from '../../mock/data/object/DummyDataObject';
-import { MemoryQueryEvaluator } from '../../../src/service/_internal';
+import { MemoryQueryEvaluator } from '../../../src/service';
 
 describe('query', () => {
     describe('syntax', () => {

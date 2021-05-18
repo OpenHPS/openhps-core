@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DataObject } from './object/DataObject';
-import { SerializableObject, SerializableMember, SerializableMapMember, DataType } from './decorators';
+import { SerializableObject, SerializableMember, SerializableMapMember } from './decorators';
 import { ReferenceSpace } from './object/space';
 import { TimeService } from '../service/TimeService';
 import { DataSerializer } from './DataSerializer';
@@ -50,7 +50,6 @@ export class DataFrame {
      */
     @SerializableMember({
         index: true,
-        type: DataType.BIGINT,
     })
     public createdTimestamp: number;
     @SerializableMember()

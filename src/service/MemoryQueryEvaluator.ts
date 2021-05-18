@@ -1,4 +1,4 @@
-import { FilterQuery, QuerySelector } from '../FilterQuery';
+import { FilterQuery, QuerySelector } from './FilterQuery';
 
 /**
  * Query evaluator for [[FilterQuery]]s with [[MemoryDataService]].

@@ -2,7 +2,7 @@ import { DataSerializer } from '../data';
 import { DataServiceDriver } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
 import { FindOptions } from './FindOptions';
-import { MemoryQueryEvaluator } from './_internal/MemoryQueryEvaluator';
+import { MemoryQueryEvaluator } from './MemoryQueryEvaluator';
 
 export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     protected _data: Map<I, any> = new Map();

@@ -1,4 +1,4 @@
-import { DataType, SerializableMember, SerializableObject } from '../decorators';
+import { SerializableMember, SerializableObject } from '../decorators';
 import { LengthUnit, Vector3 } from '../../utils';
 import { Absolute2DPosition } from './Absolute2DPosition';
 /**
@@ -14,9 +14,7 @@ export class Absolute3DPosition extends Absolute2DPosition {
         this.vector.z = unit.convert(z ? z : 0, LengthUnit.METER);
     }
 
-    @SerializableMember({
-        type: DataType.DECIMAL,
-    })
+    @SerializableMember()
     get z(): number {
         if (!this.vector) {
             return undefined;

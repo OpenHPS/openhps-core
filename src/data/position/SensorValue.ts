@@ -1,7 +1,7 @@
 import { TimeService } from '../../service/TimeService';
 import { Unit } from '../../utils';
 import { Vector3 } from '../../utils/math/';
-import { DataType, SerializableMember, SerializableObject } from '../decorators';
+import { SerializableMember, SerializableObject } from '../decorators';
 
 /**
  * 3D vector sensor value with accuracy and timestamp.
@@ -10,12 +10,10 @@ import { DataType, SerializableMember, SerializableObject } from '../decorators'
 export class SensorValue extends Vector3 {
     @SerializableMember({
         isRequired: false,
-        type: DataType.BIGINT,
     })
     public timestamp: number;
     @SerializableMember({
         isRequired: false,
-        type: DataType.FLOAT,
     })
     public accuracy: number;
 

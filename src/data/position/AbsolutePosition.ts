@@ -4,7 +4,7 @@ import { Velocity } from './Velocity';
 import { LinearVelocity } from './LinearVelocity';
 import { AngularVelocity } from './AngularVelocity';
 import { Orientation } from './Orientation';
-import { DataType, SerializableMember, SerializableObject } from '../decorators';
+import { SerializableMember, SerializableObject } from '../decorators';
 import { TimeService } from '../../service/TimeService';
 
 /**
@@ -19,7 +19,6 @@ export abstract class AbsolutePosition implements Position {
      */
     @SerializableMember({
         index: true,
-        type: DataType.BIGINT,
     })
     timestamp: number = TimeService.now();
     /**

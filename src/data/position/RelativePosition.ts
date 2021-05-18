@@ -1,6 +1,6 @@
 import { TimeService } from '../../service/TimeService';
 import { DataSerializer } from '../DataSerializer';
-import { DataType, SerializableMember, SerializableObject } from '../decorators';
+import { SerializableMember, SerializableObject } from '../decorators';
 import { Position } from './Position';
 
 /**
@@ -14,7 +14,6 @@ export abstract class RelativePosition<T = number> implements Position {
      * Position recording timestamp
      */
     @SerializableMember({
-        type: DataType.BIGINT,
         index: true,
     })
     public timestamp: number = TimeService.now();

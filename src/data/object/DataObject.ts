@@ -1,7 +1,7 @@
 import { AbsolutePosition } from '../position/AbsolutePosition';
 import { RelativePosition } from '../position/RelativePosition';
 import { TypedJSON } from 'typedjson';
-import { SerializableObject, SerializableMember, SerializableArrayMember, DataType } from '../decorators';
+import { SerializableObject, SerializableMember, SerializableArrayMember } from '../decorators';
 import { v4 as uuidv4 } from 'uuid';
 import { DataSerializer } from '../DataSerializer';
 import { TimeService } from '../../service/TimeService';
@@ -43,7 +43,6 @@ export class DataObject {
     @SerializableMember()
     public parentUID: string;
     @SerializableMember({
-        type: DataType.BIGINT,
         index: true,
     })
     public createdTimestamp: number;

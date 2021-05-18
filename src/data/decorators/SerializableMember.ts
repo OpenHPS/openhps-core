@@ -24,14 +24,4 @@ export interface SerializableMemberOptions extends IJsonMemberOptions {
     unique?: boolean;
     primaryKey?: boolean;
     index?: string | boolean;
-    type?: DataType;
-}
-
-export enum DataType {
-    BIGINT,
-    INTEGER,
-    FLOAT,
-    DOUBLE,
-    REAL,
-    DECIMAL,
 }
