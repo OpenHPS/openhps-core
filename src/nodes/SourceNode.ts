@@ -265,7 +265,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
         });
     }
 
-    public abstract onPull(options?: PullOptions): Promise<Out>;
+    public abstract onPull(options?: PullOptions): Promise<Out | undefined>;
 }
 
 export interface SourceNodeOptions extends NodeOptions {
