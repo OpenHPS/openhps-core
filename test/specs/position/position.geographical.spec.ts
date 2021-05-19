@@ -44,7 +44,6 @@ describe('GeographicalPosition', () => {
         expect(Math.round(vector.y)).to.equal(6589612);
         const pos2 = new GeographicalPosition();
         pos2.fromVector(vector, GCS.EPSG3857);
-        console.log(pos2)
         expect(pos2.latitude).to.equal(50.820548);
         expect(pos2.longitude).to.equal(4.392123);
     });

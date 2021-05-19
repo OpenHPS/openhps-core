@@ -177,7 +177,7 @@ describe('DataObjectService', () => {
         });
     });
 
-    describe('input layer', () => {
+    describe('source node', () => {
         let model: Model<DataFrame, DataFrame>;
         let objectDataService: DataObjectService<DataObject>;
 
@@ -229,6 +229,40 @@ describe('DataObjectService', () => {
             Promise.resolve(objectDataService.deleteAll());
         });
 
+        it('should delete all objects based on a query', (done) => {
+            const promises = [];
+            const object = new DummySensorObject('x');
+            object.setPosition(new Absolute2DPosition(5, 3));
+            object.displayName = 'X';
+            promises.push(objectDataService.insert(object.uid, object));
+            for (let i = 0 ; i <= 10 ; i++){
+                const object = new DummySensorObject('123' + i);
+                object.setPosition(new Absolute2DPosition(5, i));
+                object.displayName = 'Beat';
+                promises.push(objectDataService.insert(object.uid, object));
+            }
+            Promise.all(promises).then(() => {
+                objectDataService.count({
+                    displayName: "Beat"
+                }).then(count1 => {
+                    expect(count1, "Stored objects count is 0").to.not.eq(0);
+                    objectDataService.deleteAll({
+                        displayName: "Beat"
+                    }).then(() => {
+                        return objectDataService.count({
+                            displayName: "Beat"
+                        });
+                    }).then(count2 => {
+                        expect(count2).to.eq(0);
+                        return objectDataService.count();
+                    }).then(count => {
+                        expect(count).to.not.eq(0);
+                        done();
+                    }).catch(done);
+                }).catch(done);
+            }).catch(done);
+        });
+
         it('should delete all objects', (done) => {
             objectDataService.deleteAll().then(() => {
                 done();
@@ -236,7 +270,7 @@ describe('DataObjectService', () => {
         });
     });
 
-    describe('output node', () => {
+    describe('sink node', () => {
         let model: Model<DataFrame, DataFrame>;
         let objectDataService: DataObjectService<DataObject>;
 
@@ -252,7 +286,7 @@ describe('DataObjectService', () => {
                 });
         });
 
-        it('should store objects at the output layer', (done) => {
+        it('should store objects at the sink node', (done) => {
             const object = new DataObject();
             object.setPosition(new Absolute2DPosition(1, 2));
             object.displayName = 'Test';
@@ -279,7 +313,7 @@ describe('DataObjectService', () => {
                 });
         });
 
-        it('should store unknown data objects at the output layer', (done) => {
+        it('should store unknown data objects at the sink node', (done) => {
             const object = new DummySensorObject();
             object.displayName = 'Testabc';
             const frame = new DataFrame();
@@ -321,7 +355,7 @@ describe('DataObjectService', () => {
     });
 
     
-    describe('output node without persistence', () => {
+    describe('sink node without persistence', () => {
         let model: Model<DataFrame, DataFrame>;
         let objectDataService: DataObjectService<DataObject>;
 
@@ -339,7 +373,7 @@ describe('DataObjectService', () => {
                 });
         });
 
-        it('should not store objects at the output layer', (done) => {
+        it('should not store objects at the sink node', (done) => {
             const object = new DataObject();
             object.setPosition(new Absolute2DPosition(1, 2));
             object.displayName = 'Test';

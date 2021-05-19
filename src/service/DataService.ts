@@ -57,7 +57,7 @@ export abstract class DataService<I, T> extends DataServiceDriver<I, T> {
         return this.driver.delete(id);
     }
 
-    public deleteAll(): Promise<void> {
-        return this.driver.deleteAll();
+    public deleteAll(filter?: FilterQuery<T>): Promise<void> {
+        return this.driver.deleteAll(filter);
     }
 }
