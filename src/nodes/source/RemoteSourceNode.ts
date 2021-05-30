@@ -25,6 +25,7 @@ export class RemoteSourceNode<Out extends DataFrame, S extends RemoteNodeService
         this.remoteNode.logger = this.logger;
         graphBuilder.addNode(this.remoteNode);
         graphBuilder.addEdge(new Edge(this.remoteNode, this));
+        graphBuilder.addEdge(new Edge(this, this.remoteNode));
         return this.remoteNode.emitAsync('build', graphBuilder);
     }
 
