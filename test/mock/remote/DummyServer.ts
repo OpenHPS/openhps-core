@@ -2,6 +2,11 @@ import { DataFrame, DataSerializer, Node, PullOptions, PushOptions, RemoteNodeSe
 import { DummyBroker } from "./DummyBroker";
 
 export class DummyServer extends RemoteNodeService {
+    constructor() {
+        super();
+        this.once('build', this.initialize.bind(this));
+    }
+    
     protected initialize(): Promise<void> {
         return new Promise((resolve) => {
             DummyBroker.instance.on('push', (sender, uid, data) => {

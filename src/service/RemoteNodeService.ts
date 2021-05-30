@@ -12,17 +12,6 @@ export abstract class RemoteNodeService extends Service {
     protected nodes: Map<string, Node<any, any>> = new Map();
     public model: Model;
 
-    constructor() {
-        super();
-        this.once('build', this.initialize.bind(this));
-    }
-
-    protected initialize(): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
     /**
      * Local positioning model push
      *

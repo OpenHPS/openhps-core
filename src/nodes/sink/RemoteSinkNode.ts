@@ -11,11 +11,11 @@ import { PushOptions } from '../../graph/options/PushOptions';
  * Remote sink node
  */
 export class RemoteSinkNode<In extends DataFrame, S extends RemoteNodeService> extends SinkNode<In> {
-    private _remoteNode: RemoteNode<In, In, S>;
+    protected remoteNode: RemoteNode<In, In, S>;
 
     constructor(options?: SinkNodeOptions & RemoteNodeOptions) {
         super(options);
-        this._remoteNode = new RemoteNode<In, In, S>(options);
+        this.remoteNode = new RemoteNode<In, In, S>(options);
         this.uid = `${this.uid}-sink`;
 
         this.once('build', this._onRemoteBuild.bind(this));
@@ -23,19 +23,19 @@ export class RemoteSinkNode<In extends DataFrame, S extends RemoteNodeService> e
     }
 
     private _onRemoteBuild(graphBuilder: ModelBuilder<any, any>): Promise<boolean> {
-        this._remoteNode.graph = this.graph;
-        this._remoteNode.logger = this.logger;
-        graphBuilder.addNode(this._remoteNode);
-        graphBuilder.addEdge(new Edge(this, this._remoteNode));
-        return this._remoteNode.emitAsync('build', graphBuilder);
+        this.remoteNode.graph = this.graph;
+        this.remoteNode.logger = this.logger;
+        graphBuilder.addNode(this.remoteNode);
+        graphBuilder.addEdge(new Edge(this, this.remoteNode));
+        return this.remoteNode.emitAsync('build', graphBuilder);
     }
 
     private _onRemoteDestroy(): Promise<boolean> {
-        return this._remoteNode.emitAsync('destroy');
+        return this.remoteNode.emitAsync('destroy');
     }
 
     public onPush(data: In | In[], options?: PushOptions): Promise<void> {
         // Force push to remote node, sink nodes do not push by default
-        return this._remoteNode.push(data, options);
+        return this.remoteNode.push(data, options);
     }
 }

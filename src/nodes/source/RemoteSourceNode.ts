@@ -9,11 +9,11 @@ import { SourceNode, SourceNodeOptions } from '../SourceNode';
  * Remote source node
  */
 export class RemoteSourceNode<Out extends DataFrame, S extends RemoteNodeService> extends SourceNode<Out> {
-    private _remoteNode: RemoteNode<Out, Out, S>;
+    protected remoteNode: RemoteNode<Out, Out, S>;
 
     constructor(options?: SourceNodeOptions & RemoteNodeOptions) {
         super(options);
-        this._remoteNode = new RemoteNode<Out, Out, S>(options);
+        this.remoteNode = new RemoteNode<Out, Out, S>(options);
         this.uid = `${this.uid}-source`;
 
         this.once('build', this._onRemoteBuild.bind(this));
@@ -21,16 +21,16 @@ export class RemoteSourceNode<Out extends DataFrame, S extends RemoteNodeService
 
     private _onRemoteBuild(graphBuilder: ModelBuilder<any, any>): Promise<boolean> {
         // Add a remote node before this node
-        this._remoteNode.graph = this.graph;
-        this._remoteNode.logger = this.logger;
-        graphBuilder.addNode(this._remoteNode);
-        graphBuilder.addEdge(new Edge(this._remoteNode, this));
-        return this._remoteNode.emitAsync('build', graphBuilder);
+        this.remoteNode.graph = this.graph;
+        this.remoteNode.logger = this.logger;
+        graphBuilder.addNode(this.remoteNode);
+        graphBuilder.addEdge(new Edge(this.remoteNode, this));
+        return this.remoteNode.emitAsync('build', graphBuilder);
     }
 
     public onPull(): Promise<Out> {
         return new Promise((resolve, reject) => {
-            this._remoteNode
+            this.remoteNode
                 .pull()
                 .then(() => {
                     resolve(undefined);
