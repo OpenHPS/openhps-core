@@ -46,7 +46,7 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
     private _onPush(frame: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve) => {
             // Send push to clients
-            this.service.push(this.uid, frame, options);
+            this.service.remotePush(this.uid, frame, options);
             resolve();
         });
     }
@@ -54,7 +54,7 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
     private _onPull(options?: PullOptions): Promise<void> {
         return new Promise<void>((resolve) => {
             // Send pull to clients
-            this.service.pull(this.uid, options);
+            this.service.remotePull(this.uid, options);
             resolve();
         });
     }
@@ -86,12 +86,12 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
 
     private _onDownstreamCompleted(event: PushCompletedEvent): void {
         // Send completed event to client
-        this.service.sendEvent(this.uid, 'completed', event);
+        this.service.remoteEvent(this.uid, 'completed', event);
     }
 
     private _onDownstreamError(error: PushError): void {
         // Send error to clients
-        this.service.sendEvent(this.uid, 'error', error);
+        this.service.remoteEvent(this.uid, 'error', error);
     }
 }
 

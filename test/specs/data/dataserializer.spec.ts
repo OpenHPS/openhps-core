@@ -69,5 +69,15 @@ describe('DataSerializer', () => {
             expect(deserialized.length).to.equal(2);
             expect(deserialized[0]).to.be.instanceOf(DataObject);
         });
+
+        it('should throw an error when deserializing fails', (done) => {
+            const obj = { test: "abc" }
+            try {
+                DataSerializer.deserialize(obj);
+                done('No error thrown!');
+            } catch (ex) {
+                done();
+            }
+        });
     });
 });

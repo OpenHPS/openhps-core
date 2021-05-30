@@ -54,7 +54,9 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
     public from(...nodes: Array<GraphNode<any, any> | string>): GraphShapeBuilder<any> {
         const selectedNodes: Array<GraphNode<any, any>> = [];
         nodes.forEach((node: GraphNode<any, any> | string) => {
-            if (typeof node === 'string') {
+            if (node === undefined) {
+                throw new Error('Undefined node was provided as a source!');
+            } else if (typeof node === 'string') {
                 let nodeObject = this.graph.findNodeByUID(node) || this.graph.findNodeByName(node);
                 if (nodeObject === undefined) {
                     // Add a placeholder
@@ -185,7 +187,9 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
     public via(...nodes: Array<GraphNode<any, any> | string | GraphShape<any, any> | GraphBuilder<any, any>>): this {
         const selectedNodes: Array<GraphNode<any, any>> = [];
         nodes.forEach((node) => {
-            if (node instanceof GraphBuilder) {
+            if (node === undefined) {
+                throw new Error('Undefined node was provided!');
+            } else if (node instanceof GraphBuilder) {
                 selectedNodes.push(this.viaGraph(node.graph));
             } else if (node instanceof GraphShape) {
                 selectedNodes.push(this.viaGraph(node));
@@ -331,7 +335,9 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
             const selectedNodes: Array<SinkNode<any>> = [];
             nodes.forEach((node) => {
                 let nodeObject: GraphNode<any, any>;
-                if (typeof node === 'string') {
+                if (node === undefined) {
+                    throw new Error('Undefined node was provided as a sink!');
+                } else if (typeof node === 'string') {
                     nodeObject = this.graph.findNodeByUID(node) || this.graph.findNodeByName(node);
                     if (nodeObject === undefined) {
                         // Add a placeholder

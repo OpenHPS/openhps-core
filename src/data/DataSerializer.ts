@@ -1,8 +1,13 @@
 import { TypedJSON, JsonObjectMetadata } from 'typedjson';
-import { Deserializer } from 'typedjson/src/deserializer';
 import { Serializer } from 'typedjson/src/serializer';
 
 const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
+
+TypedJSON.setGlobalConfig({
+    errorHandler: (e: Error) => {
+        throw e;
+    },
+});
 
 /**
  * Allows the serialization and deserialization of objects using the [[SerializableObject]] decorator.
@@ -138,19 +143,7 @@ export class DataSerializer {
                 return serializedData;
             }
             const typedJSON = new TypedJSON(finalType);
-            const deserializer: Deserializer<any> = (typedJSON as any).deserializer;
-            // Error callback throwing does not work, capture error and put in 'error' variable
-            // TODO: Fix this, this is ugly
-            let error = undefined;
-            deserializer.setErrorHandler((ex) => {
-                error = ex;
-            });
-            const result = typedJSON.parse(serializedData);
-            if (!result && error) {
-                throw error;
-            } else {
-                return result;
-            }
+            return typedJSON.parse(serializedData);
         }
     }
 

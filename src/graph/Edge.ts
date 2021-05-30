@@ -20,7 +20,7 @@ export class Edge<InOut extends DataFrame> extends EventEmitter implements Inlet
     public inputNode: GraphNode<any, InOut>;
     public outputNode: GraphNode<InOut, any>;
 
-    constructor(inputNode: GraphNode<any, InOut>, outputNode: GraphNode<any, InOut>) {
+    constructor(inputNode: GraphNode<any, InOut>, outputNode: GraphNode<InOut, any>) {
         super();
         this.inputNode = inputNode;
         this.outputNode = outputNode;

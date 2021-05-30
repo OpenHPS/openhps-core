@@ -5,12 +5,16 @@ import { ModelBuilder } from '../../ModelBuilder';
 import { RemoteNodeService } from '../../service/RemoteNodeService';
 import { SourceNode, SourceNodeOptions } from '../SourceNode';
 
+/**
+ * Remote source node
+ */
 export class RemoteSourceNode<Out extends DataFrame, S extends RemoteNodeService> extends SourceNode<Out> {
     private _remoteNode: RemoteNode<Out, Out, S>;
 
     constructor(options?: SourceNodeOptions & RemoteNodeOptions) {
         super(options);
         this._remoteNode = new RemoteNode<Out, Out, S>(options);
+        this.uid = `${this.uid}-source`;
 
         this.once('build', this._onRemoteBuild.bind(this));
     }
