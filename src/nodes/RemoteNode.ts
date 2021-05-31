@@ -27,8 +27,7 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
         this.on('completed', this._onDownstreamCompleted.bind(this));
         this.on('localpush', this._onLocalPush.bind(this));
         this.on('localpull', this._onLocalPull.bind(this));
-        this.on('localerror', this._onLocalError.bind(this));
-        this.on('localcompleted', this._onLocalCompleted.bind(this));
+        this.on('localevent', this._onLocalEvent.bind(this));
         this.once('build', this._onBuild.bind(this));
     }
 
@@ -76,12 +75,8 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
         });
     }
 
-    private _onLocalError(error: PushError): void {
-        this.inlets.forEach((inlet) => inlet.emit('error', error));
-    }
-
-    private _onLocalCompleted(event: PushCompletedEvent): void {
-        this.inlets.forEach((inlet) => inlet.emit('completed', event));
+    private _onLocalEvent(event: string, arg: any): void {
+        this.inlets.forEach((inlet) => inlet.emit(event, arg));
     }
 
     private _onDownstreamCompleted(event: PushCompletedEvent): void {

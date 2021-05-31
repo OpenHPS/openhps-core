@@ -17,6 +17,13 @@ export interface Inlet<In extends DataFrame> {
     pull(options?: PullOptions): Promise<void>;
 
     /**
+     * Emit unknown event
+     *
+     * @param {string} name completed
+     * @param {any} arg Argument
+     */
+    emit(name: string, arg: any): boolean;
+    /**
      * Emit completed event
      *
      * @param {string} name completed

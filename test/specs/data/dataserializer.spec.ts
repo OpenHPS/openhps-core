@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataSerializer, DataObject, DataFrame, AbsolutePosition } from '../../../src';
+import { DataSerializer, DataObject, AbsolutePosition } from '../../../src';
 import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
 
 describe('DataSerializer', () => {
