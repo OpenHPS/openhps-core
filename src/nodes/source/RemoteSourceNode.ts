@@ -4,6 +4,7 @@ import { Edge } from '../../graph/Edge';
 import { ModelBuilder } from '../../ModelBuilder';
 import { RemoteNodeService } from '../../service/RemoteNodeService';
 import { SourceNode, SourceNodeOptions } from '../SourceNode';
+import { PushCompletedEvent, PushError } from '../../graph/events';
 
 /**
  * Remote source node
@@ -17,6 +18,8 @@ export class RemoteSourceNode<Out extends DataFrame, S extends RemoteNodeService
         this.uid = `${this.uid}-source`;
 
         this.once('build', this._onRemoteBuild.bind(this));
+        this.on('error', this._onDownstreamError.bind(this));
+        this.on('completed', this._onDownstreamCompleted.bind(this));
     }
 
     private _onRemoteBuild(graphBuilder: ModelBuilder<any, any>): Promise<boolean> {
@@ -25,7 +28,6 @@ export class RemoteSourceNode<Out extends DataFrame, S extends RemoteNodeService
         this.remoteNode.logger = this.logger;
         graphBuilder.addNode(this.remoteNode);
         graphBuilder.addEdge(new Edge(this.remoteNode, this));
-        graphBuilder.addEdge(new Edge(this, this.remoteNode));
         return this.remoteNode.emitAsync('build', graphBuilder);
     }
 
@@ -38,5 +40,13 @@ export class RemoteSourceNode<Out extends DataFrame, S extends RemoteNodeService
                 })
                 .catch(reject);
         });
+    }
+
+    private _onDownstreamError(error: PushError): void {
+        this.remoteNode.emit('error', error);
+    }
+
+    private _onDownstreamCompleted(event: PushCompletedEvent): void {
+        this.remoteNode.emit('completed', event);
     }
 }

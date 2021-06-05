@@ -106,4 +106,45 @@ describe('RemoteNodeService', () => {
             client.push(new DataFrame());
         });
     });
+
+    describe('error forwarding', () => {
+        let server: Model;
+        let client: Model;
+        let server_sink: CallbackSinkNode<any> = new CallbackSinkNode();
+        let client_sink: CallbackSinkNode<any> = new CallbackSinkNode();
+    
+        before(async () => {
+            new DummyBroker();
+            server = await ModelBuilder.create()
+                .addService(new DummyServer())
+                .from(new RemoteSourceNode({
+                    uid: "/api/v1/uid1",
+                    service: "DummyServer"
+                }))
+                .via(new CallbackNode(frame => {
+                    // Process
+                    throw new Error('Test');
+                }))
+                .to(new RemoteSinkNode({
+                    uid: "/api/v1/uid2",
+                    service: "DummyServer"
+                }), server_sink).build();
+            client = await ModelBuilder.create()
+                .addService(new DummyClient())
+                .from()
+                .to(new RemoteSinkNode({
+                    uid: "/api/v1/uid1",
+                    service: "DummyClient"
+                }), client_sink)
+                .build();
+        });
+    
+        it('should forward an error', (done) => {
+            client.once('error', error => {
+                done();
+            });
+            client.push(new DataFrame());
+        });
+
+    });
 });
