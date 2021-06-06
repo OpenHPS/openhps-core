@@ -129,8 +129,18 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
             // Find by name
             return this._findServiceByName(q);
         } else {
-            return this._findServiceByName(q.name);
+            return this._findServiceByClass(q);
         }
+    }
+
+    private _findServiceByClass<F extends Service>(serviceClass: new () => F): F {
+        let service: F;
+        for (const s of this._services.values()) {
+            if (s instanceof serviceClass) {
+                service = s;
+            }
+        }
+        return service;
     }
 
     private _findServiceByName<F extends Service>(name: string): F {
