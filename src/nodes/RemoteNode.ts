@@ -33,7 +33,11 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
 
     private _onBuild(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this.service = (this.graph as Model<any, any>).findService<S>(this.options.service);
+            this.service = (this.graph as Model<any, any>).findService<S>(
+                this.options.service instanceof RemoteNodeService
+                    ? (this.options.service as any)
+                    : (this.options.service as string),
+            );
             if (this.service === undefined || this.service === null) {
                 return reject(new Error(`Remote node service was not added to model!`));
             }
@@ -91,5 +95,5 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
 }
 
 export interface RemoteNodeOptions extends NodeOptions {
-    service?: string;
+    service?: string | (new () => RemoteNodeService);
 }
