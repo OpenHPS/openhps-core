@@ -32,7 +32,7 @@ describe('RemoteNodeService', () => {
                 .from()
                 .to(new RemoteSinkNode({
                     uid: "/api/v1/uid1",
-                    service: "DummyClient"
+                    service: DummyClient
                 }), client_sink)
                 .build();
         });

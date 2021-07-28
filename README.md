@@ -51,7 +51,7 @@ OpenHPS is a data processing positioning framework. It is designed to support ma
 ### Communication
 - **[@openhps/socket](https://github.com/OpenHPS/openhps-socket)** - Provides node communication through Socket.IO for remote models.
 - **[@openhps/rest](https://github.com/OpenHPS/openhps-rest)** - Provides node communication through restful endpoints.
-- **[@openhps/mqtt]()** - MQTT client node communication and standalone MQTT server.
+- **[@openhps/mqtt](https://github.com/OpenHPS/openhps-mqtt)** - MQTT client node communication and standalone MQTT server.
 
 ### Misc
 - **[@openhps/sphero](https://github.com/OpenHPS/openhps-sphero)** - Example implementation for controlling and receiving sensor data from Sphero toys.

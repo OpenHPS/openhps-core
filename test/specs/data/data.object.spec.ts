@@ -171,4 +171,9 @@ describe('DataObject', () => {
             );
         `;
     });
+
+    it('should support multiple positions', () => {
+        const object = new DataObject("test");
+    });
+
 });

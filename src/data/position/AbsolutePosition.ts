@@ -23,11 +23,9 @@ export abstract class AbsolutePosition implements Position {
     timestamp: number = TimeService.now();
     /**
      * Velocity at recorded position
-     *
-     * @deprecated use linearVelocity and angularVelocity instead
      */
     @SerializableMember()
-    velocity: Velocity = new Velocity();
+    protected velocity: Velocity = new Velocity();
     /**
      * Orientation at recorded position
      */

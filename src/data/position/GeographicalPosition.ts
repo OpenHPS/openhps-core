@@ -5,7 +5,7 @@ import { Absolute3DPosition } from './Absolute3DPosition';
 import { GCS, Unit, Vector3 } from '../../utils';
 
 /**
- * Geographical WGS84 position stored as an 3D vector in ISO 6709.
+ * Geographical WGS 84 position stored as an 3D vector in ISO 6709.
  *
  * @category Position
  */
