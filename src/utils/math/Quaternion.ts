@@ -29,13 +29,13 @@ export class Quaternion extends THREE.Quaternion {
      * @param {THREE.Quaternion} threeQuaternion ThreeJS created quaternion
      * @returns {Quaternion} Serializable quaternion
      */
-    public static fromThreeJS(threeQuaternion: THREE.Quaternion): Quaternion {
-        const quaternion = new Quaternion();
+    public static fromThreeJS<T extends Quaternion>(threeQuaternion: THREE.Quaternion): T {
+        const quaternion = new this();
         quaternion.x = threeQuaternion.x;
         quaternion.y = threeQuaternion.y;
         quaternion.z = threeQuaternion.z;
         quaternion.w = threeQuaternion.w;
-        return quaternion;
+        return quaternion as T;
     }
 
     /**
@@ -44,18 +44,23 @@ export class Quaternion extends THREE.Quaternion {
      * @param {Vector3 | Euler} euler Euler vector
      * @returns {Quaternion} Serializable quaternion
      */
-    public static fromEuler(euler: Vector3): Quaternion;
-    public static fromEuler(euler: Euler): Quaternion;
-    public static fromEuler(euler: { yaw: number; pitch: number; roll: number; unit?: AngleUnit }): Quaternion;
-    public static fromEuler(euler: {
+    public static fromEuler<T extends Quaternion>(euler: Vector3): T;
+    public static fromEuler<T extends Quaternion>(euler: Euler): T;
+    public static fromEuler<T extends Quaternion>(euler: {
+        yaw: number;
+        pitch: number;
+        roll: number;
+        unit?: AngleUnit;
+    }): T;
+    public static fromEuler<T extends Quaternion>(euler: {
         x: number;
         y: number;
         z: number;
         order?: EulerOrder;
         unit?: AngleUnit;
-    }): Quaternion;
-    public static fromEuler(euler: number[]): Quaternion;
-    public static fromEuler(euler: any): Quaternion {
+    }): T;
+    public static fromEuler<T extends Quaternion>(euler: number[]): T;
+    public static fromEuler<T extends Quaternion>(euler: any): T {
         const quaternion = new this();
         if (euler instanceof Euler) {
             quaternion.setFromEuler(euler);
@@ -68,7 +73,7 @@ export class Quaternion extends THREE.Quaternion {
         } else {
             quaternion.setFromEuler(new Euler(euler.roll, euler.pitch, euler.yaw, 'ZYX', euler.unit));
         }
-        return quaternion;
+        return quaternion as T;
     }
 
     /**
@@ -77,16 +82,16 @@ export class Quaternion extends THREE.Quaternion {
      * @param {any} axis Axis-angle rotation
      * @returns {Quaternion} Serializable quaternion
      */
-    public static fromAxisAngle(axis: {
+    public static fromAxisAngle<T extends Quaternion>(axis: {
         x: number;
         y: number;
         z: number;
         angle?: number;
         unit?: AngleUnit;
-    }): Quaternion;
-    public static fromAxisAngle(axis: number[]): Quaternion;
-    public static fromAxisAngle(axis: AxisAngle): Quaternion;
-    public static fromAxisAngle(axis: any): Quaternion {
+    }): T;
+    public static fromAxisAngle<T extends Quaternion>(axis: number[]): T;
+    public static fromAxisAngle<T extends Quaternion>(axis: AxisAngle): T;
+    public static fromAxisAngle<T extends Quaternion>(axis: any): T {
         const quaternion = new this();
         if (axis instanceof AxisAngle) {
             quaternion.setFromAxisAngle(new Vector3(axis.x, axis.y, axis.z), axis.angle);
@@ -97,7 +102,7 @@ export class Quaternion extends THREE.Quaternion {
             const axisAngle = new AxisAngle(axis.x, axis.y, axis.z, axis.angle ? axis.angle : null, axis.unit);
             quaternion.setFromAxisAngle(axisAngle, axisAngle.angle);
         }
-        return quaternion;
+        return quaternion as T;
     }
 
     /**
@@ -106,10 +111,10 @@ export class Quaternion extends THREE.Quaternion {
      * @param {Matrix4} matrix Rotation matrix
      * @returns {Quaternion} Serializable quaternion
      */
-    public static fromRotationMatrix(matrix: Matrix4): Quaternion {
+    public static fromRotationMatrix<T extends Quaternion>(matrix: Matrix4): T {
         const quaternion = new this();
         quaternion.setFromRotationMatrix(matrix);
-        return quaternion;
+        return quaternion as T;
     }
 
     /**

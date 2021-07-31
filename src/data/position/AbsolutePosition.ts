@@ -25,7 +25,7 @@ export abstract class AbsolutePosition implements Position {
      * Velocity at recorded position
      */
     @SerializableMember()
-    protected velocity: Velocity = new Velocity();
+    velocity: Velocity = new Velocity();
     /**
      * Orientation at recorded position
      */

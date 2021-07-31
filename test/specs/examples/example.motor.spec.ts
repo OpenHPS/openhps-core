@@ -170,8 +170,8 @@ describe('example', () => {
                     position.x = 0;
                     position.y = 0;
                     position.orientation = new Quaternion();
-                    position.velocity.linear = new LinearVelocity(1, 0, 0);
-                    position.velocity.angular = new AngularVelocity(0, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
+                    position.linearVelocity = new LinearVelocity(1, 0, 0);
+                    position.angularVelocity = new AngularVelocity(0, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
                     position.timestamp = currentTime;
                     robot.setPosition(position);
                     const frame = new DataFrame(robot);
@@ -200,8 +200,8 @@ describe('example', () => {
                     expect(Math.round(orientation.x)).to.equal(0);
                     expect(Math.round(orientation.y)).to.equal(0);
                     expect(Math.round(orientation.z)).to.equal(0);
-                    position.velocity.linear = new LinearVelocity(1, 0, 0);
-                    position.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
+                    position.linearVelocity = new LinearVelocity(1, 0, 0);
+                    position.angularVelocity = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
                     const frame = new DataFrame(robot);
                     model.push(frame);
                     return model.onceCompleted(frame.uid);
@@ -219,8 +219,8 @@ describe('example', () => {
                     expect(Math.round(orientation.x)).to.equal(0);
                     expect(Math.round(orientation.y)).to.equal(0);
                     expect(Math.round(orientation.z)).to.equal(90);
-                    position.velocity.linear = new LinearVelocity(2, -2, 0);
-                    position.velocity.angular = new AngularVelocity(0, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
+                    position.linearVelocity = new LinearVelocity(2, -2, 0);
+                    position.angularVelocity = new AngularVelocity(0, 0, 0, AngularVelocityUnit.DEGREE_PER_SECOND);
                     const frame = new DataFrame(robot);
                     model.push(frame);
                     return model.onceCompleted(frame.uid);
@@ -238,8 +238,8 @@ describe('example', () => {
                     expect(Math.round(orientation.x)).to.equal(0);
                     expect(Math.round(orientation.y)).to.equal(0);
                     expect(Math.round(orientation.z)).to.equal(90);
-                    position.velocity.linear = new LinearVelocity(2, 0, 0);
-                    position.velocity.angular = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
+                    position.linearVelocity = new LinearVelocity(2, 0, 0);
+                    position.angularVelocity = new AngularVelocity(0, 0, 90, AngularVelocityUnit.DEGREE_PER_SECOND);
                     const frame = new DataFrame(robot);
                     model.push(frame);
                     return model.onceCompleted(frame.uid);
