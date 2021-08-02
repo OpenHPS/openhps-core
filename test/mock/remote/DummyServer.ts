@@ -24,6 +24,11 @@ export class DummyServer extends RemoteNodeService {
                     return;
                 this.localEvent(uid, event, arg);
             });
+            DummyBroker.instance.on('service', (sender, uid, method, ...args) => {
+                if (sender === this.constructor.name)
+                    return;
+                this.localServiceCall(uid, method, args);
+            });
             resolve();
         });
     }
@@ -74,6 +79,20 @@ export class DummyServer extends RemoteNodeService {
     public remoteEvent(uid: string, event: string, arg: any): Promise<void> {
         return new Promise((resolve) => {
             DummyBroker.instance.emit("event", this.constructor.name, uid, event, arg);
+            resolve();
+        });
+    }
+
+    /**
+     * Send a remote service call
+     *
+     * @param {string} uid Service uid
+     * @param {string} method Method to call 
+     * @param {any[]} args Optional set of arguments 
+     */
+    public remoteServiceCall(uid: string, method: string, ...args: any[]): Promise<any> {
+        return new Promise((resolve) => {
+            DummyBroker.instance.emit("service", this.constructor.name, uid, method, ...args);
             resolve();
         });
     }

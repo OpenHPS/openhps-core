@@ -6,6 +6,10 @@ import { DummyClient } from '../../mock/remote/DummyClient';
 import { DummyBroker } from '../../mock/remote/DummyBroker';
 
 describe('RemoteNodeService', () => {
+    describe('service', () => {
+
+    });
+    
     describe('source and sink', () => {
         let server: Model;
         let client: Model;

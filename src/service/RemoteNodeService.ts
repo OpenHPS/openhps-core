@@ -56,6 +56,21 @@ export abstract class RemoteNodeService extends Service {
     }
 
     /**
+     * Local service call
+     *
+     * @param {string} uid Service uid
+     * @param {string} method Method name
+     * @param {any[]} [args] optional arguments
+     * @returns {Promise<any> | any | void} service call output
+     */
+    localServiceCall(uid: string, method: string, ...args: any[]): Promise<any> | any | void {
+        if (this.services.has(uid)) {
+            const service: any = this.model.findService(uid);
+            return service[method](...args);
+        }
+    }
+
+    /**
      * Send a push to a specific remote node
      *
      * @param {string} uid Remote Node UID
@@ -80,6 +95,15 @@ export abstract class RemoteNodeService extends Service {
      * @param {any} arg Event argument
      */
     abstract remoteEvent(uid: string, event: string, arg: any): Promise<void>;
+
+    /**
+     * Send a remote service call
+     *
+     * @param {string} uid Service uid
+     * @param {string} method Method to call
+     * @param {any[]} [args] Optional set of arguments
+     */
+    abstract remoteServiceCall(uid: string, method: string, ...args: any[]): Promise<any>;
 
     /**
      * Register a node as a remotely available node
