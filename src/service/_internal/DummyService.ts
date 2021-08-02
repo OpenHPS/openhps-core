@@ -1,8 +1,8 @@
 import { Service } from '../Service';
 
 export class DummyService extends Service {
-    constructor(name: string) {
+    constructor(uid: string) {
         super();
-        this.name = name;
+        this.uid = uid;
     }
 }

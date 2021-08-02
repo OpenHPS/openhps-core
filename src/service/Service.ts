@@ -7,7 +7,7 @@ export abstract class Service extends AsyncEventEmitter {
     /**
      * Service name
      */
-    public name: string;
+    public uid: string;
     public logger: (level: string, log: any) => void = () => true;
     private _ready = false;
     /**
@@ -17,11 +17,27 @@ export abstract class Service extends AsyncEventEmitter {
 
     constructor() {
         super();
-        this.name = this.constructor.name;
+        this.uid = this.constructor.name;
 
         this.prependOnceListener('ready', () => {
             this._ready = true;
         });
+    }
+
+    /**
+     * @deprecated use uid instead
+     * @returns {string} uid
+     */
+    public get name(): string {
+        return this.uid;
+    }
+
+    /**
+     * @deprecated use uid instead
+     * @param {string} value uid
+     */
+    public set name(value: string) {
+        this.uid = value;
     }
 
     public isReady(): boolean {

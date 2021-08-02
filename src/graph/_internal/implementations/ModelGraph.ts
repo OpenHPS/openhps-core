@@ -234,10 +234,10 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
         service.model = this.graph === undefined ? this : this.model;
         if (service instanceof DataService) {
             // Data service
-            this._dataServices.set(service.name, new Proxy(service, proxy));
+            this._dataServices.set(service.uid, new Proxy(service, proxy));
         } else {
             // Normal service
-            this._services.set(service.name, new Proxy(service, proxy));
+            this._services.set(service.uid, new Proxy(service, proxy));
         }
     }
 

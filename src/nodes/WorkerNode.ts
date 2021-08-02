@@ -210,7 +210,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
             // Services are wrapped in a proxy. Get prototype
             const serviceBase = Object.getPrototypeOf(service);
             return {
-                name: service.name,
+                uid: service.uid,
                 type: serviceBase.constructor.name,
                 dataType:
                     service instanceof DataService
@@ -235,17 +235,17 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                 if (service.dataType) {
                     const DataType = DataSerializer.findTypeByName(service.dataType);
                     model.addService(
-                        new DummyDataService(service.name, DataType),
+                        new DummyDataService(service.uid, DataType),
                         new WorkerServiceProxy({
-                            name: service.name,
+                            uid: service.uid,
                             callFunction: call,
                         }),
                     );
                 } else {
                     model.addService(
-                        new DummyService(service.name),
+                        new DummyService(service.uid),
                         new WorkerServiceProxy({
-                            name: service.name,
+                            uid: service.uid,
                             callFunction: call,
                         }),
                     );

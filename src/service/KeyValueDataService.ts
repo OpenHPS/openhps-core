@@ -7,7 +7,7 @@ import { MemoryDataService } from './MemoryDataService';
  * between workers and the main thread.
  */
 export class KeyValueDataService extends DataService<string, any> {
-    constructor(name?: string, dataServiceDriver?: DataServiceDriver<string, any>) {
+    constructor(uid?: string, dataServiceDriver?: DataServiceDriver<string, any>) {
         super(dataServiceDriver);
         if (!dataServiceDriver) {
             this.driver = new MemoryDataService(
@@ -17,7 +17,7 @@ export class KeyValueDataService extends DataService<string, any> {
             );
             this.dataType = Object;
         }
-        this.name = name;
+        this.uid = uid;
     }
 
     /**

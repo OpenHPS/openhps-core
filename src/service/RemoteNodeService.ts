@@ -9,7 +9,8 @@ import { Service } from './Service';
  * Remote node service
  */
 export abstract class RemoteNodeService extends Service {
-    protected nodes: Map<string, Node<any, any>> = new Map();
+    protected nodes: Set<string> = new Set();
+    protected services: Set<string> = new Set();
     public model: Model;
 
     /**
@@ -24,7 +25,7 @@ export abstract class RemoteNodeService extends Service {
         if (this.nodes.has(uid)) {
             // Parse frame and options
             const frameDeserialized = frame instanceof DataFrame ? frame : DataSerializer.deserialize(frame);
-            this.nodes.get(uid).emit('localpush', frameDeserialized, options);
+            this.model.findNodeByUID(uid).emit('localpush', frameDeserialized, options);
         }
     }
 
@@ -37,7 +38,7 @@ export abstract class RemoteNodeService extends Service {
     localPull(uid: string, options?: PullOptions): void {
         options = options || {};
         if (this.nodes.has(uid)) {
-            this.nodes.get(uid).emit('localpull', options);
+            this.model.findNodeByUID(uid).emit('localpull', options);
         }
     }
 
@@ -50,7 +51,7 @@ export abstract class RemoteNodeService extends Service {
      */
     localEvent(uid: string, event: string, arg: any): void {
         if (this.nodes.has(uid)) {
-            this.nodes.get(uid).emit('localevent', event, arg);
+            this.model.findNodeByUID(uid).emit('localevent', event, arg);
         }
     }
 
@@ -88,10 +89,21 @@ export abstract class RemoteNodeService extends Service {
      */
     registerNode(node: Node<any, any> | string): this {
         const existingNode = node instanceof Node ? node : (this.model.findNodeByUID(node) as Node<any, any>);
-        this.nodes.set(existingNode.uid, existingNode);
+        this.nodes.add(existingNode.uid);
         this.logger('debug', {
             message: `Registered remote server node ${existingNode.uid}`,
         });
+        return this;
+    }
+
+    /**
+     * Register a service to be remotely available
+     *
+     * @param {Service} service Service to register
+     * @returns {RemoteNodeService} Service instance
+     */
+    registerService(service: Service): this {
+        this.services.add(service.uid);
         return this;
     }
 }

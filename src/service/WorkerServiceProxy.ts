@@ -16,7 +16,7 @@ export class WorkerServiceProxy extends ServiceProxy<Service> {
     constructor(options?: WorkerProxyOptions) {
         super();
         this.options = options;
-        this.name = options.name;
+        this.uid = options.uid;
         if (this.options.responseObservable) {
             this.options.responseObservable.subscribe(this._onOutput.bind(this));
         }
@@ -83,7 +83,7 @@ export class WorkerServiceProxy extends ServiceProxy<Service> {
                 // Service call
                 const call = {
                     id: uuid,
-                    serviceName: this.name,
+                    serviceName: this.uid,
                     method: p as string,
                     parameters: serializedArgs,
                 };
@@ -106,7 +106,7 @@ export class WorkerServiceProxy extends ServiceProxy<Service> {
 }
 
 interface WorkerProxyOptions {
-    name: string;
+    uid: string;
     callFunction?: (call: WorkerServiceCall) => Promise<WorkerServiceResponse>;
     callObservable?: Subject<WorkerServiceCall>;
     responseObservable?: Subject<WorkerServiceResponse>;

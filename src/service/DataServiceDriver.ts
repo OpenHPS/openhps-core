@@ -13,7 +13,7 @@ export abstract class DataServiceDriver<I, T> extends Service {
         super();
 
         if (dataType) {
-            this.name = dataType.name;
+            this.uid = dataType.name;
             this.dataType = dataType;
         }
     }

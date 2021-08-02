@@ -15,7 +15,7 @@ export class TimeService extends Service {
         this._timeCallback = timeCallback;
         this._timeUnit = unit;
 
-        // Speciy the default time callback used by class initializers
+        // Specify the default time callback used by class initializers
         if (!TimeService._defaultTimeCallback) {
             TimeService.initialize();
         }

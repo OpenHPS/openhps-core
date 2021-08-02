@@ -87,18 +87,18 @@ expose({
                 if (service.dataType) {
                     const DataType = DataSerializer.findTypeByName(service.dataType);
                     modelBuilder.addService(
-                        new DummyDataService(service.name, DataType),
+                        new DummyDataService(service.uid, DataType),
                         new WorkerServiceProxy({
-                            name: service.name,
+                            uid: service.uid,
                             callObservable: serviceOutputCall,
                             responseObservable: serviceOutputResponse,
                         }),
                     );
                 } else {
                     modelBuilder.addService(
-                        new DummyService(service.name),
+                        new DummyService(service.uid),
                         new WorkerServiceProxy({
-                            name: service.name,
+                            uid: service.uid,
                             callObservable: serviceOutputCall,
                             responseObservable: serviceOutputResponse,
                         }),
@@ -236,7 +236,7 @@ expose({
                     // Services are wrapped in a proxy. Get prototype
                     const serviceBase = Object.getPrototypeOf(service);
                     return {
-                        name: service.name,
+                        uid: service.uid,
                         type: serviceBase.constructor.name,
                         dataType: service instanceof DataService ? (service as any).driver.dataType.name : undefined,
                     };

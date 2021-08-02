@@ -7,18 +7,20 @@ module.exports = {
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "project": "tsconfig.json",
-        "sourceType": "module"
+        "sourceType": "module",
     },
     "plugins": [
         "@typescript-eslint",
         "eslint-plugin-import",
         "eslint-plugin-jsdoc",
-        "prettier"
+        "prettier",
+        "deprecation"
     ],
     "rules": {
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-unused-vars": "warn",
+        "deprecation/deprecation": "warn",
         "import/no-cycle": ["error", { "maxDepth": 15 }],
         "import/no-unresolved": "off",
         "prettier/prettier": ["error"],
