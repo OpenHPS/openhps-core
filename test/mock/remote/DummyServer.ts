@@ -34,7 +34,7 @@ export class DummyServer extends RemoteService {
             DummyBroker.instance.on('service-response', (sender, uuid, data) => {
                 if (sender === this.constructor.name)
                     return;
-                this.promises.get(uuid).resolve(data);
+                this.getPromise(uuid).resolve(data);
             });
             resolve();
         });
@@ -99,9 +99,8 @@ export class DummyServer extends RemoteService {
      */
     public remoteServiceCall(uid: string, method: string, ...args: any[]): Promise<any> {
         return new Promise((resolve, reject) => {
-            const uuid = this.generateUUID();
+            const uuid = this.registerPromise(resolve, reject);
             DummyBroker.instance.emit("service", this.constructor.name, uuid, uid, method, ...args);
-            this.promises.set(uuid, { resolve, reject });
         });
     }
 }

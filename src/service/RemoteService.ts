@@ -19,15 +19,13 @@ export abstract class RemoteService extends Service {
     constructor() {
         super();
 
-        this.once('build', this._onBuild.bind(this));
+        this.once('build', this._registerServices.bind(this));
     }
 
-    private _onBuild(): Promise<void> {
+    private _registerServices(): Promise<void> {
         return new Promise((resolve) => {
             this.model.findAllServices().forEach((service) => {
-                if (!(service instanceof RemoteServiceProxy)) {
-                    this.localServices.add(service.uid);
-                }
+                this.registerService(service);
             });
             resolve();
         });
@@ -35,6 +33,20 @@ export abstract class RemoteService extends Service {
 
     protected generateUUID(): string {
         return uuidv4();
+    }
+
+    protected registerPromise(resolve: (data?: any) => void, reject: (ex?: any) => void): string {
+        const uuid = this.generateUUID();
+        this.promises.set(uuid, { resolve, reject });
+        return uuid;
+    }
+
+    protected getPromise(uuid: string): { resolve: (data?: any) => void; reject: (ex?: any) => void } {
+        const promise = this.promises.get(uuid);
+        if (promise) {
+            this.promises.delete(uuid);
+        }
+        return promise;
     }
 
     /**
@@ -133,7 +145,7 @@ export abstract class RemoteService extends Service {
      * Register a node as a remotely available node
      *
      * @param {Node<any, any> | string} node Node to register
-     * @returns {RemoteNodeService} Service instance
+     * @returns {RemoteService} Service instance
      */
     registerNode(node: Node<any, any> | string): this {
         const existingNode = node instanceof Node ? node : (this.model.findNodeByUID(node) as Node<any, any>);
@@ -147,11 +159,15 @@ export abstract class RemoteService extends Service {
     /**
      * Register a service to be remotely available
      *
-     * @param {RemoteServiceProxy} service Service to register
-     * @returns {RemoteNodeService} Service instance
+     * @param {Service} service Service to register
+     * @returns {RemoteService} Service instance
      */
-    registerService(service: RemoteServiceProxy): this {
-        this.remoteServices.add(service.uid);
+    registerService(service: Service): this {
+        if (!(service instanceof RemoteServiceProxy)) {
+            this.localServices.add(service.uid);
+        } else {
+            this.remoteServices.add(service.uid);
+        }
         return this;
     }
 }
