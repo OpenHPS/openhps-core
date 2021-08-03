@@ -24,8 +24,10 @@ export abstract class RemoteService extends Service {
 
     private _registerServices(): Promise<void> {
         return new Promise((resolve) => {
-            this.model.findAllServices().forEach((service) => {
-                this.registerService(service);
+            this.model.once('ready', () => {
+                this.model.findAllServices().forEach((service) => {
+                    this.registerService(service);
+                });
             });
             resolve();
         });
