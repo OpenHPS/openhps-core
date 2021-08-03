@@ -1,7 +1,7 @@
 import { DataSerializer } from '../data/DataSerializer';
 import { Subject } from 'threads/observable';
 import { v4 as uuidv4 } from 'uuid';
-import { ServiceProxy } from './_internal';
+import { ServiceProxy } from './_internal/ServiceProxy';
 import { Service } from './Service';
 
 /**
@@ -83,7 +83,7 @@ export class WorkerServiceProxy extends ServiceProxy<Service> {
                 // Service call
                 const call = {
                     id: uuid,
-                    serviceName: this.uid,
+                    serviceUID: this.uid,
                     method: p as string,
                     parameters: serializedArgs,
                 };
@@ -114,9 +114,9 @@ interface WorkerProxyOptions {
 
 export interface WorkerServiceCall {
     id: string;
-    serviceName: string;
+    serviceUID: string;
     method: string;
-    parameters: any;
+    parameters: any[];
 }
 
 export interface WorkerServiceResponse {

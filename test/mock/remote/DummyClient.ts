@@ -1,7 +1,7 @@
-import { DataFrame, DataSerializer, Node, PullOptions, PushOptions, RemoteNodeService } from "../../../src";
+import { DataFrame, DataSerializer, Node, PullOptions, PushOptions, RemoteService } from "../../../src";
 import { DummyBroker } from "./DummyBroker";
 
-export class DummyClient extends RemoteNodeService {
+export class DummyClient extends RemoteService {
     constructor() {
         super();
         this.once('build', this.initialize.bind(this));
@@ -19,15 +19,22 @@ export class DummyClient extends RemoteNodeService {
                     return;
                 this.localPull(uid, options);
             });
-            DummyBroker.instance.on('event', (sender, uid, event, arg) => {
+            DummyBroker.instance.on('event', (sender, uid, event, ...args) => {
                 if (sender === this.constructor.name)
                     return;
-                this.localEvent(uid, event, arg);
+                this.localEvent(uid, event, ...args);
             });
-            DummyBroker.instance.on('service', (sender, uid, method, ...args) => {
+            DummyBroker.instance.on('service', (sender, uuid, uid, method, ...args) => {
                 if (sender === this.constructor.name)
                     return;
-                this.localServiceCall(uid, method, args);
+                Promise.resolve(this.localServiceCall(uid, method, ...args)).then(data => {
+                    DummyBroker.instance.emit('service-response', this.constructor.name, uuid, data);
+                });
+            });
+            DummyBroker.instance.on('service-response', (sender, uuid, data) => {
+                if (sender === this.constructor.name)
+                    return;
+                this.promises.get(uuid).resolve(data);
             });
             resolve();
         });
@@ -84,9 +91,9 @@ export class DummyClient extends RemoteNodeService {
      * @param {string} event Event to send
      * @param {any} arg Event argument
      */
-    public remoteEvent(uid: string, event: string, arg: any): Promise<void> {
+    public remoteEvent(uid: string, event: string, ...args: any[]): Promise<void> {
         return new Promise((resolve) => {
-            DummyBroker.instance.emit("event", this.constructor.name, uid, event, arg);
+            DummyBroker.instance.emit("event", this.constructor.name, uid, event, ...args);
             resolve();
         });
     }
@@ -99,9 +106,10 @@ export class DummyClient extends RemoteNodeService {
      * @param {any[]} args Optional set of arguments 
      */
     public remoteServiceCall(uid: string, method: string, ...args: any[]): Promise<any> {
-        return new Promise((resolve) => {
-            DummyBroker.instance.emit("service", this.constructor.name, uid, method, ...args);
-            resolve(undefined);
+        return new Promise((resolve, reject) => {
+            const uuid = this.generateUUID();
+            DummyBroker.instance.emit("service", this.constructor.name, uuid, uid, method, ...args);
+            this.promises.set(uuid, { resolve, reject });
         });
     }
 }

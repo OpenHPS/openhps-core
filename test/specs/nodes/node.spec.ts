@@ -1,18 +1,37 @@
 import { expect } from 'chai';
 import 'mocha';
-import { CallbackNode, DataFrame, LoggingSinkNode } from '../../../src';
+import { CallbackNode, DataFrame, LoggingSinkNode, Node, Service, SourceNode } from '../../../src';
 
-describe('node', () => {
+describe('Node', () => {
     describe('uid', () => {
         it('should not be null', () => {
             const node = new LoggingSinkNode();
             expect(node.uid).to.not.equal(null);
         });
 
-        it('should be changeablel', () => {
+        it('should be changeable', () => {
             const node = new LoggingSinkNode();
             node.uid = 'abc';
             expect(node.uid).to.equal('abc');
+        });
+    });
+
+    describe('serialization', () => {
+
+        it('should return all subclasses', () => {
+            const nodes: Array<new () => Node<any, any>> = new Array();
+            const services: Array<new () => Service> = new Array();
+            module.children.forEach(module => {
+                Object.keys(module.exports).forEach(key => {
+                    if (module.exports[key].prototype instanceof Node) {
+                        nodes.push(module.exports[key]);
+                    } else if (module.exports[key].prototype instanceof Service) {
+                        services.push(module.exports[key]);
+                    }
+                });
+            });
+            // console.log(nodes);
+            // console.log(services);
         });
     });
 

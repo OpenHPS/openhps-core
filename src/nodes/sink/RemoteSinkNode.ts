@@ -2,7 +2,7 @@ import { RemoteNode, RemoteNodeOptions } from '../RemoteNode';
 import { DataFrame } from '../../data';
 import { SinkNode, SinkNodeOptions } from '../SinkNode';
 
-import { RemoteNodeService } from '../../service/RemoteNodeService';
+import { RemoteService } from '../../service/RemoteService';
 import { ModelBuilder } from '../../ModelBuilder';
 import { Edge } from '../../graph/Edge';
 import { PushOptions } from '../../graph/options/PushOptions';
@@ -10,7 +10,7 @@ import { PushOptions } from '../../graph/options/PushOptions';
 /**
  * Remote sink node
  */
-export class RemoteSinkNode<In extends DataFrame, S extends RemoteNodeService> extends SinkNode<In> {
+export class RemoteSinkNode<In extends DataFrame, S extends RemoteService> extends SinkNode<In> {
     protected remoteNode: RemoteNode<In, In, S>;
 
     constructor(options?: SinkNodeOptions & RemoteNodeOptions) {

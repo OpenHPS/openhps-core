@@ -255,7 +255,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
 
     private _onWorkerService(threadId: number, value: WorkerServiceCall): void {
         const service: Service =
-            this.model.findDataService(value.serviceName) || this.model.findService(value.serviceName);
+            this.model.findDataService(value.serviceUID) || this.model.findService(value.serviceUID);
         if ((service as any)[value.method]) {
             const serializedParams = value.parameters;
             const params: any[] = [];

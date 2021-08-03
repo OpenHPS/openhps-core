@@ -2,14 +2,14 @@ import { RemoteNode, RemoteNodeOptions } from '../RemoteNode';
 import { DataFrame } from '../../data/DataFrame';
 import { Edge } from '../../graph/Edge';
 import { ModelBuilder } from '../../ModelBuilder';
-import { RemoteNodeService } from '../../service/RemoteNodeService';
+import { RemoteService } from '../../service/RemoteService';
 import { SourceNode, SourceNodeOptions } from '../SourceNode';
 import { PushCompletedEvent, PushError } from '../../graph/events';
 
 /**
  * Remote source node
  */
-export class RemoteSourceNode<Out extends DataFrame, S extends RemoteNodeService> extends SourceNode<Out> {
+export class RemoteSourceNode<Out extends DataFrame, S extends RemoteService> extends SourceNode<Out> {
     protected remoteNode: RemoteNode<Out, Out, S>;
 
     constructor(options?: SourceNodeOptions & RemoteNodeOptions) {

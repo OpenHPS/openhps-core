@@ -1,13 +1,53 @@
-import { CallbackNode, CallbackSinkNode, DataFrame, DataObject, Model, ModelBuilder, RemoteNode, RemoteSinkNode, RemoteSourceNode } from '../../../src';
+import { CallbackNode, CallbackSinkNode, DataFrame, DataObject, DataObjectService, KeyValueDataService, MemoryDataService, Model, ModelBuilder, RemoteNode, RemoteServiceProxy, RemoteSinkNode, RemoteSourceNode } from '../../../src';
 import { expect } from 'chai';
 import 'mocha';
 import { DummyServer } from '../../mock/remote/DummyServer';
 import { DummyClient } from '../../mock/remote/DummyClient';
 import { DummyBroker } from '../../mock/remote/DummyBroker';
 
-describe('RemoteNodeService', () => {
+describe('RemoteService', () => {
     describe('service', () => {
+        let server: Model;
+        let client: Model;
+        let server_sink: CallbackSinkNode<any> = new CallbackSinkNode();
+        let client_sink: CallbackSinkNode<any> = new CallbackSinkNode();
+    
+        before(async () => {
+            new DummyBroker();
+            server = await ModelBuilder.create()
+                .addService(new DummyServer())
+                .addService(new KeyValueDataService("test123", new MemoryDataService(String, (v) => v, (v) => v)))
+                .from(new RemoteSourceNode({
+                    uid: "/api/v1/uid1",
+                    service: "DummyServer"
+                }))
+                .via(new CallbackNode(frame => {
+                    // Process
+                }))
+                .to(new RemoteSinkNode({
+                    uid: "/api/v1/uid2",
+                    service: "DummyServer"
+                }), server_sink).build();
+            client = await ModelBuilder.create()
+                .addService(new DummyClient())
+                .addService(new KeyValueDataService("test123"), new RemoteServiceProxy({
+                    service: DummyClient,
+                    uid: "test123"
+                }))
+                .from()
+                .to(new RemoteSinkNode({
+                    uid: "/api/v1/uid1",
+                    service: DummyClient
+                }), client_sink)
+                .build();
+        });
 
+        it('should forward methods', async () => {
+            expect(client.findDataService("test123")).to.not.be.undefined;
+            await (client.findDataService("test123") as KeyValueDataService).setValue("abc", "123");
+            expect(await (server.findDataService("test123") as KeyValueDataService).getValue("abc")).to.equal("123");
+            expect(await (client.findDataService("test123") as KeyValueDataService).getValue("abc")).to.equal("123");
+        });
     });
     
     describe('source and sink', () => {

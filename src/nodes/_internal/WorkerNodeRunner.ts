@@ -196,7 +196,7 @@ expose({
     },
     serviceInputCall(call: WorkerServiceCall): Promise<WorkerServiceResponse> {
         return new Promise((resolve, reject) => {
-            const service: Service = model.findDataService(call.serviceName) || model.findService(call.serviceName);
+            const service: Service = model.findDataService(call.serviceUID) || model.findService(call.serviceUID);
             if ((service as any)[call.method]) {
                 const serializedParams = call.parameters;
                 const params: any[] = [];

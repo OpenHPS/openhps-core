@@ -4,7 +4,7 @@ import { Service } from '../../../service/Service';
 import { DataService } from '../../../service/DataService';
 import { GraphShape } from './GraphShape';
 import { Model } from '../../../Model';
-import { ServiceProxy } from '../../../service/_internal';
+import { ServiceProxy } from '../../../service/_internal/ServiceProxy';
 import { PushOptions } from '../../options';
 
 /**

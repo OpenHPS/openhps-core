@@ -4,14 +4,38 @@ import { PullOptions, PushOptions } from '../graph/options';
 import { Model } from '../Model';
 import { Node } from '../Node';
 import { Service } from './Service';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Remote node service
  */
-export abstract class RemoteNodeService extends Service {
+export abstract class RemoteService extends Service {
     protected nodes: Set<string> = new Set();
-    protected services: Set<string> = new Set();
+    protected localServices: Set<string> = new Set();
+    protected remoteServices: Set<string> = new Set();
+    protected promises: Map<string, { resolve: (data?: any) => void; reject: (ex?: any) => void }> = new Map();
     public model: Model;
+
+    constructor() {
+        super();
+
+        this.once('build', this._onBuild.bind(this));
+    }
+
+    private _onBuild(): Promise<void> {
+        return new Promise((resolve) => {
+            this.model.findAllServices().forEach((service) => {
+                if (!(service instanceof RemoteServiceProxy)) {
+                    this.localServices.add(service.uid);
+                }
+            });
+            resolve();
+        });
+    }
+
+    protected generateUUID(): string {
+        return uuidv4();
+    }
 
     /**
      * Local positioning model push
@@ -47,11 +71,11 @@ export abstract class RemoteNodeService extends Service {
      *
      * @param {string} uid UID of the node
      * @param {string} event Event name
-     * @param {any} arg Argument
+     * @param {any[]} [args] Argument
      */
-    localEvent(uid: string, event: string, arg: any): void {
+    localEvent(uid: string, event: string, ...args: any[]): void {
         if (this.nodes.has(uid)) {
-            this.model.findNodeByUID(uid).emit('localevent', event, arg);
+            this.model.findNodeByUID(uid).emit('localevent', event, ...args);
         }
     }
 
@@ -64,8 +88,8 @@ export abstract class RemoteNodeService extends Service {
      * @returns {Promise<any> | any | void} service call output
      */
     localServiceCall(uid: string, method: string, ...args: any[]): Promise<any> | any | void {
-        if (this.services.has(uid)) {
-            const service: any = this.model.findService(uid);
+        if (this.localServices.has(uid)) {
+            const service: any = this.model.findService(uid) || this.model.findDataService(uid);
             return service[method](...args);
         }
     }
@@ -92,9 +116,9 @@ export abstract class RemoteNodeService extends Service {
      *
      * @param {string} uid Remote Node UID
      * @param {string} event Event to send
-     * @param {any} arg Event argument
+     * @param {any[]} [args] Event argument
      */
-    abstract remoteEvent(uid: string, event: string, arg: any): Promise<void>;
+    abstract remoteEvent(uid: string, event: string, ...args: any[]): Promise<void>;
 
     /**
      * Send a remote service call
@@ -123,11 +147,65 @@ export abstract class RemoteNodeService extends Service {
     /**
      * Register a service to be remotely available
      *
-     * @param {Service} service Service to register
+     * @param {RemoteServiceProxy} service Service to register
      * @returns {RemoteNodeService} Service instance
      */
-    registerService(service: Service): this {
-        this.services.add(service.uid);
+    registerService(service: RemoteServiceProxy): this {
+        this.remoteServices.add(service.uid);
         return this;
     }
+}
+
+export class RemoteServiceProxy<T extends Service = Service, S extends RemoteService = RemoteService>
+    extends Service
+    implements ProxyHandler<T>
+{
+    protected options: RemoteServiceOptions;
+    protected service: S;
+
+    constructor(options?: RemoteServiceOptions) {
+        super();
+        this.options = options;
+        this.uid = options.uid;
+    }
+
+    public get?(target: T, p: PropertyKey): any {
+        const ownResult = (this as any)[p];
+        if (ownResult) {
+            return ownResult;
+        }
+        return this.createHandler(target, p);
+    }
+
+    public set?(target: T, p: PropertyKey, value: any): boolean {
+        (target as any)[p] = value;
+        return true;
+    }
+
+    /**
+     * Create handler function for a specific property key
+     *
+     * @param {Service} target Target service
+     * @param {string|number|symbol} p Property
+     * @returns {Function} Handler function
+     */
+    public createHandler(target: T, p: PropertyKey): (...args: any[]) => any {
+        if (!this.service) {
+            this.service = target.model.findService(
+                this.options.service instanceof String
+                    ? (this.options.service as string)
+                    : (this.options.service as any),
+            );
+            if (this.service === undefined || this.service === null) {
+                return (..._: any[]) => undefined;
+            }
+            this.service.registerService(this);
+        }
+        return (...args: any[]) => this.service.remoteServiceCall(target.uid, p as string, ...args);
+    }
+}
+
+export interface RemoteServiceOptions {
+    uid: string;
+    service?: string | (new () => RemoteService);
 }

@@ -1,7 +1,7 @@
-import { DataFrame, DataSerializer, Node, PullOptions, PushOptions, RemoteNodeService } from "../../../src";
+import { DataFrame, DataSerializer, Node, PullOptions, PushOptions, RemoteService } from "../../../src";
 import { DummyBroker } from "./DummyBroker";
 
-export class DummyServer extends RemoteNodeService {
+export class DummyServer extends RemoteService {
     constructor() {
         super();
         this.once('build', this.initialize.bind(this));
@@ -24,10 +24,17 @@ export class DummyServer extends RemoteNodeService {
                     return;
                 this.localEvent(uid, event, arg);
             });
-            DummyBroker.instance.on('service', (sender, uid, method, ...args) => {
+            DummyBroker.instance.on('service', (sender, uuid, uid, method, ...args) => {
                 if (sender === this.constructor.name)
                     return;
-                this.localServiceCall(uid, method, args);
+                Promise.resolve(this.localServiceCall(uid, method, ...args)).then(data => {
+                    DummyBroker.instance.emit('service-response', this.constructor.name, uuid, data);
+                });
+            });
+            DummyBroker.instance.on('service-response', (sender, uuid, data) => {
+                if (sender === this.constructor.name)
+                    return;
+                this.promises.get(uuid).resolve(data);
             });
             resolve();
         });
@@ -91,9 +98,10 @@ export class DummyServer extends RemoteNodeService {
      * @param {any[]} args Optional set of arguments 
      */
     public remoteServiceCall(uid: string, method: string, ...args: any[]): Promise<any> {
-        return new Promise((resolve) => {
-            DummyBroker.instance.emit("service", this.constructor.name, uid, method, ...args);
-            resolve();
+        return new Promise((resolve, reject) => {
+            const uuid = this.generateUUID();
+            DummyBroker.instance.emit("service", this.constructor.name, uuid, uid, method, ...args);
+            this.promises.set(uuid, { resolve, reject });
         });
     }
 }

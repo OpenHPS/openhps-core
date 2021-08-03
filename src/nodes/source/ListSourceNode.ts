@@ -2,7 +2,7 @@ import { DataFrame } from '../../data/DataFrame';
 import { SourceNode, SourceNodeOptions } from '../SourceNode';
 
 /**
- * This source node is initialised with an array of data. This data
+ * This source node is initialized with an array of data. This data
  * is popped when pulling from this node.
  *
  * @category Source node

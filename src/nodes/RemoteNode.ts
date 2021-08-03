@@ -3,23 +3,20 @@ import { PullOptions, PushOptions } from '../graph/options';
 import { PushCompletedEvent, PushError } from '../graph/events';
 import { Model } from '../Model';
 import { Node, NodeOptions } from '../Node';
-import { RemoteNodeService } from '../service/RemoteNodeService';
+import { RemoteService } from '../service/RemoteService';
 
 /**
  * A remote node connects to a service in order to provide a remote connection.
  *
  * @category Node
  */
-export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends RemoteNodeService> extends Node<
-    In,
-    Out
-> {
+export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends RemoteService> extends Node<In, Out> {
     protected service: S;
     protected options: RemoteNodeOptions;
 
     constructor(options?: RemoteNodeOptions) {
         super(options);
-        this.options.service = this.options.service || 'RemoteNodeService';
+        this.options.service = this.options.service || 'RemoteService';
 
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
@@ -39,7 +36,7 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
                     : (this.options.service as any),
             );
             if (this.service === undefined || this.service === null) {
-                return reject(new Error(`Remote node service was not added to model!`));
+                return reject(new Error(`Remote service was not added to model!`));
             }
             this.service.registerNode(this);
             resolve();
@@ -95,5 +92,5 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
 }
 
 export interface RemoteNodeOptions extends NodeOptions {
-    service?: string | (new () => RemoteNodeService);
+    service?: string | (new () => RemoteService);
 }
