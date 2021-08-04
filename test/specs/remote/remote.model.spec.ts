@@ -1,4 +1,4 @@
-import { CallbackNode, CallbackSinkNode, DataFrame, DataObject, DataObjectService, KeyValueDataService, MemoryDataService, Model, ModelBuilder, RemoteNode, RemoteServiceProxy, RemoteSinkNode, RemoteSourceNode } from '../../../src';
+import { CallbackNode, CallbackSinkNode, DataFrame, DataObject, KeyValueDataService, MemoryDataService, Model, ModelBuilder, RemoteNode, RemoteServiceProxy, RemoteSinkNode, RemoteSourceNode } from '../../../src';
 import { expect } from 'chai';
 import 'mocha';
 import { DummyServer } from '../../mock/remote/DummyServer';

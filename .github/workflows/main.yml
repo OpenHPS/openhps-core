@@ -11,7 +11,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - name: Build
         run: |
           npm install
@@ -25,15 +24,11 @@ jobs:
       - name: Documentation
         run: |
           npm run build:typedoc
+  test:
+    runs-on: ubuntu-latest
+    steps:
       - name: Test
         run: |
           npm run test
-      - name: Publish Development
-        if: 'contains(github.ref, "dev")'
-        run: |
-          echo "I only run if the branch has dev in its name!"
-      - name: Publish Development
-        if: 'contains(github.ref, "master")'
-        run: |
-          echo "I only run if the branch has master in its name!"
+          npm run cover
       
