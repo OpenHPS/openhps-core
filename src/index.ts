@@ -7,3 +7,4 @@ export * from './data';
 export * from './service';
 export * from './ModelBuilder';
 export * from './nodes';
+export * from './ModelSerializer';
