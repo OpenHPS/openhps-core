@@ -5,7 +5,6 @@ import { Model } from './Model';
 import { GraphBuilder } from './graph/builders/GraphBuilder';
 import { GraphShape } from './graph/_internal/implementations/GraphShape';
 import { Service, NodeData, TimeService, DataObjectService, MemoryDataService, NodeDataService } from './service';
-import { ServiceProxy } from './service/_internal';
 
 /**
  * Model builder to construct and build a [[Model]] consisting of graph shapes and services.
