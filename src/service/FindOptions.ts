@@ -6,5 +6,9 @@ export interface FindOptions {
     /**
      * Sort keys
      */
-    sort?: Array<[string, number]>;
+    sort?: Sort;
 }
+
+export declare type Sort = [string, SortDirection][];
+
+export declare type SortDirection = 1 | -1;
