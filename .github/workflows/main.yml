@@ -11,8 +11,8 @@ jobs:
   build_and_test:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Build
-        uses: actions/checkout@v2
         run: |
           npm install
           npm run build:three
