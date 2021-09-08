@@ -11,8 +11,8 @@ jobs:
   build_and_test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - name: Build
+        uses: actions/checkout@v2
         run: |
           npm install
           npm run build:three
@@ -29,8 +29,8 @@ jobs:
         run: |
           npm run test
           npm run cover
-      - name: Publish Web Artifacts
-      - uses: actions/upload-artifact@v2
+      - name: Publish
+        uses: actions/upload-artifact@v2
         with:
           name: web
           path: |
