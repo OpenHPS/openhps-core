@@ -212,7 +212,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
     /**
      * Find all services and data services
      *
-     * @param {new () => Service} [q] Service class
+     * @param {typeof Service} [q] Service class
      * @returns {Service[]} Array of all services
      */
     public findAllServices<S extends Service>(q?: new () => S): S[] {

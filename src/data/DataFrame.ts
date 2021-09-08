@@ -105,7 +105,7 @@ export class DataFrame {
     /**
      * Get known objects used in this data frame
      *
-     * @param {new () => DataObject} dataType Data object type
+     * @param {typeof DataObject} dataType Data object type
      * @returns {DataObject[]} Array of found data objects
      */
     public getObjects<T extends DataObject>(dataType?: new () => T): T[] {

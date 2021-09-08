@@ -27,7 +27,7 @@ export class DataSerializer {
     /**
      * Manually register a new type
      *
-     * @param {new () => any} type Type to register
+     * @param {typeof any} type Type to register
      */
     public static registerType(type: new () => any): void {
         this._serializableTypes.set(type.name, type);

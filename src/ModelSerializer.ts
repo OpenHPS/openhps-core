@@ -4,7 +4,7 @@ import { GraphNode } from './graph/_internal/GraphNode';
 import { ModelGraph } from './graph/_internal/implementations';
 import { Model } from './Model';
 import { Node } from './Node';
-import { DataService, Service } from './service';
+import { Service } from './service';
 
 export class ModelSerializer {
     public static NODES: Map<string, new () => Node<any, any>> = new Map();
