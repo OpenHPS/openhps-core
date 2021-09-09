@@ -215,7 +215,7 @@ export class RemoteServiceProxy<T extends Service = Service, S extends RemoteSer
                     : (this.options.service as any),
             );
             if (this.service === undefined || this.service === null) {
-                return (..._: any[]) => undefined;
+                return () => undefined;
             }
             this.service.registerService(this);
         }

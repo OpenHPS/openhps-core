@@ -9,11 +9,10 @@ export class MemoryBufferNode<InOut extends DataFrame> extends BufferNode<InOut>
     constructor(options?: BufferOptions) {
         super(options);
         this.service = new DataFrameService(
-            new MemoryDataService(
-                DataFrame,
-                (d) => d,
-                (d) => d,
-            ),
+            new MemoryDataService(DataFrame, {
+                serialize: (d) => d,
+                deserialize: (d) => d,
+            }),
         ) as DataFrameService<InOut>;
     }
 }

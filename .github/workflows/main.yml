@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build_and_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -28,12 +28,12 @@ jobs:
       - name: Test
         run: |
           npm run test
-      - name: Publish Development
-        if: 'contains(github.ref, "dev")'
-        run: |
-          echo "I only run if the branch has dev in its name!"
-      - name: Publish Development
-        if: 'contains(github.ref, "master")'
-        run: |
-          echo "I only run if the branch has master in its name!"
+          npm run cover
+      - name: Publish
+        uses: actions/upload-artifact@v2
+        with:
+          name: web
+          path: |
+            dist/web/*
+            !dist/web/*.txt
       

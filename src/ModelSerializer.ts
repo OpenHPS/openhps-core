@@ -5,19 +5,26 @@ import { ModelGraph } from './graph/_internal/implementations';
 import { Model } from './Model';
 import { Node } from './Node';
 import { ProcessingNode, SinkNode, SourceNode } from './nodes';
-import { DataService, Service } from './service';
+import { Service } from './service';
 
 export class ModelSerializer {
-    public static NODES: Map<string, new () => Node<any, any>> = new Map();
-    public static SERVICES: Map<string, new () => Service> = new Map();
+    public static NODES: Map<string, ClassDeclaration<Node<any, any>>> = new Map();
+    public static SERVICES: Map<string, ClassDeclaration<Service>> = new Map();
+    private static _modules = new Set();
 
     public static serialize(model: Model): SerializedModel {
+        this._initialize();
+
+        const nodes: SerializedNode[] = model.nodes.map(this._serializeNode);
+        const edges: SerializedEdge[] = model.edges.map(this._serializeEdge);
+        const services: SerializedService[] = model.findAllServices().map(this._serializeService);
+
         return {
             uid: model.uid,
             name: model.name,
-            nodes: model.nodes.map(this._serializeNode),
-            edges: model.edges.map(this._serializeEdge),
-            services: model.findAllServices().map(this._serializeService),
+            nodes,
+            edges,
+            services,
         };
     }
 
@@ -26,11 +33,14 @@ export class ModelSerializer {
             class: node.constructor.name,
             uid: node.uid,
             name: node.name,
-            type: node instanceof SourceNode ? "SourceNode" : (
-                node instanceof SinkNode ? "SinkNode" : (
-                    node instanceof ProcessingNode ? "ProcessingNode" : "Unknown"
-                )
-            )
+            type:
+                node instanceof SourceNode
+                    ? 'SourceNode'
+                    : node instanceof SinkNode
+                    ? 'SinkNode'
+                    : node instanceof ProcessingNode
+                    ? 'ProcessingNode'
+                    : 'Unknown',
         };
     }
 
@@ -49,14 +59,12 @@ export class ModelSerializer {
     }
 
     public static deserialize<In extends DataFrame, Out extends DataFrame>(model: SerializedModel): Model<In, Out> {
-        if (this.SERVICES.size === 0 || this.NODES.size === 0) {
-            this._loadClasses();
-        }
+        this._initialize();
 
         const modelInstance = new ModelGraph<In, Out>();
         model.nodes.forEach((node) => {
-            const NodeType = this.NODES.get(node.class);
-            const nodeInstance = new NodeType();
+            const classDeclaration = this.NODES.get(node.class);
+            const nodeInstance = new classDeclaration.constructor();
             nodeInstance.uid = node.uid;
             nodeInstance.name = node.name;
             modelInstance.addNode(nodeInstance);
@@ -67,26 +75,40 @@ export class ModelSerializer {
             );
         });
         model.services.forEach((service) => {
-            const ServiceType = this.SERVICES.get(service.class);
-            const serviceInstance = new ServiceType();
+            const classDeclaration = this.SERVICES.get(service.class);
+            const serviceInstance = new classDeclaration.constructor();
             serviceInstance.uid = service.uid;
             modelInstance.addService(serviceInstance);
         });
         return modelInstance;
     }
 
-    private static _loadClasses(): void {
-        this.NODES.clear();
-        this.SERVICES.clear();
-        module.children.forEach((module) => {
-            Object.keys(module.exports).forEach((key) => {
-                if (module.exports[key].prototype instanceof Node) {
-                    this.NODES.set(key, module.exports[key]);
-                } else if (module.exports[key].prototype instanceof Service) {
-                    this.SERVICES.set(key, module.exports[key]);
-                }
-            });
+    private static _loadClasses(module: NodeModule = require.main): void {
+        this._modules.add(module.id);
+        Object.keys(module.exports).forEach((key) => {
+            const childModule = module.exports[key];
+            if (childModule && childModule.prototype instanceof Node) {
+                this.NODES.set(key, {
+                    constructor: childModule,
+                });
+            } else if (childModule && childModule.prototype instanceof Service) {
+                this.SERVICES.set(key, {
+                    constructor: childModule,
+                });
+            }
         });
+        module.children.forEach((module) => {
+            if (!this._modules.has(module.id)) {
+                this._loadClasses(module);
+            }
+        });
+    }
+
+    private static _initialize(): void {
+        if (this.SERVICES.size === 0 || this.NODES.size === 0) {
+            this._loadClasses();
+            this._modules.clear();
+        }
     }
 }
 
@@ -94,6 +116,9 @@ export class ModelSerializer {
  * Serialized model
  */
 interface SerializedModel {
+    /**
+     * UID of the model
+     */
     uid: string;
     dependencies?: SerializedDependency[];
     name: string;
@@ -121,4 +146,8 @@ interface SerializedEdge {
 interface SerializedService {
     class: string;
     uid: string;
+}
+
+interface ClassDeclaration<T> {
+    constructor: new () => T;
 }

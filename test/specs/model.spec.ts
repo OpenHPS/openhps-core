@@ -17,10 +17,25 @@ import {
     DataObjectService,
     MemoryDataService,
     IMUSensorObject,
+    ModelSerializer,
 } from '../../src';
 import { PlaceholderNode } from '../../src/nodes/_internal/PlaceholderNode';
 
 describe('model', () => {
+    describe('serializer', () => {
+
+        it('should serialize a model', (done) => {
+            ModelBuilder.create()
+                .from()
+                .to()
+                .build().then(model => {
+                    console.log(ModelSerializer.serialize(model));
+                    done();
+                })
+        }).timeout(60000);
+
+    });
+
     describe('service', () => {
         it('should be able to find services by class', async () => {
             const model: Model = await ModelBuilder.create()

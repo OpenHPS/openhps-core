@@ -1,4 +1,4 @@
-import { CallbackNode, CallbackSinkNode, DataFrame, DataObject, DataObjectService, KeyValueDataService, MemoryDataService, Model, ModelBuilder, RemoteNode, RemoteServiceProxy, RemoteSinkNode, RemoteSourceNode } from '../../../src';
+import { CallbackNode, CallbackSinkNode, DataFrame, DataObject, KeyValueDataService, MemoryDataService, Model, ModelBuilder, RemoteNode, RemoteServiceProxy, RemoteSinkNode, RemoteSourceNode } from '../../../src';
 import { expect } from 'chai';
 import 'mocha';
 import { DummyServer } from '../../mock/remote/DummyServer';
@@ -16,7 +16,10 @@ describe('RemoteService', () => {
             new DummyBroker();
             server = await ModelBuilder.create()
                 .addService(new DummyServer())
-                .addService(new KeyValueDataService("test123", new MemoryDataService(String, (v) => v, (v) => v)))
+                .addService(new KeyValueDataService("test123", new MemoryDataService(String, {
+                    serialize: (d) => d,
+                    deserialize: (d) => d
+                })))
                 .from(new RemoteSourceNode({
                     uid: "/api/v1/uid1",
                     service: "DummyServer"

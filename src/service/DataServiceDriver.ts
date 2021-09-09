@@ -1,6 +1,7 @@
 import { Service } from './Service';
 import { FilterQuery } from './FilterQuery';
 import { FindOptions } from './FindOptions';
+import { DataSerializer } from '../data/DataSerializer';
 
 /**
  * DataService driver for storing and querying data objects
@@ -8,9 +9,14 @@ import { FindOptions } from './FindOptions';
  */
 export abstract class DataServiceDriver<I, T> extends Service {
     public dataType: new () => T;
+    protected options: DataServiceOptions<T>;
 
-    constructor(dataType: new () => T) {
+    constructor(dataType: new () => T, options: DataServiceOptions<T> = {}) {
         super();
+
+        this.options = options;
+        this.options.serialize = this.options.serialize || ((obj) => DataSerializer.serialize(obj));
+        this.options.deserialize = this.options.deserialize || ((obj) => DataSerializer.deserialize(obj));
 
         if (dataType) {
             this.uid = dataType.name;
@@ -31,4 +37,9 @@ export abstract class DataServiceDriver<I, T> extends Service {
     public abstract delete(id: I): Promise<void>;
 
     public abstract deleteAll(query?: FilterQuery<T>): Promise<void>;
+}
+
+export interface DataServiceOptions<T = any> {
+    serialize?: (obj: T) => any;
+    deserialize?: (obj: any) => T;
 }

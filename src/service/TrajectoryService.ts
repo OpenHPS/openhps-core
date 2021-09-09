@@ -1,7 +1,7 @@
 import { Trajectory } from '../data/position';
 import { DataObject } from '../data/object/DataObject';
 import { DataService } from './DataService';
-import { DataServiceDriver } from './DataServiceDriver';
+import { DataServiceDriver, DataServiceOptions } from './DataServiceDriver';
 import { Model } from '../Model';
 
 /**
@@ -115,7 +115,7 @@ export class TrajectoryService<T extends Trajectory = Trajectory> extends DataSe
     }
 }
 
-export interface TrajectoryServiceOptions {
+export interface TrajectoryServiceOptions extends DataServiceOptions {
     /**
      * Dataservice to fetch stored data objects
      */

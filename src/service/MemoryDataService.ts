@@ -1,28 +1,19 @@
-import { DataSerializer } from '../data';
-import { DataServiceDriver } from './DataServiceDriver';
+import { DataServiceDriver, DataServiceOptions } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
 import { FindOptions } from './FindOptions';
 import { MemoryQueryEvaluator } from './MemoryQueryEvaluator';
 
 export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     protected _data: Map<I, any> = new Map();
-    protected serialize: (obj: T) => any;
-    protected deserialize: (obj: any) => T;
 
-    constructor(
-        dataType: new () => T,
-        serializer: (obj: T) => any = (obj) => DataSerializer.serialize(obj),
-        deserializer: (obj: any) => T = (obj) => DataSerializer.deserialize(obj),
-    ) {
-        super(dataType);
-        this.serialize = serializer;
-        this.deserialize = deserializer;
+    constructor(dataType: new () => T, options?: DataServiceOptions<T>) {
+        super(dataType, options);
     }
 
     public findByUID(uid: I): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             if (this._data.has(uid)) {
-                resolve(this.deserialize(this._data.get(uid)));
+                resolve(this.options.deserialize(this._data.get(uid)));
             } else {
                 reject(`${this.dataType.name} with identifier #${uid} not found!`);
             }
@@ -77,7 +68,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
                     )
                     .slice(0, options.limit);
             }
-            data = data.map(this.deserialize);
+            data = data.map(this.options.deserialize);
             resolve(data);
         });
     }
@@ -85,7 +76,7 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     public insert(id: I, object: T): Promise<T> {
         return new Promise<T>((resolve) => {
             if (id && object) {
-                this._data.set(id, this.serialize(object));
+                this._data.set(id, this.options.serialize(object));
                 resolve(object);
             } else {
                 resolve(undefined);

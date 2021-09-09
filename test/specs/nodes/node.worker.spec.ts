@@ -64,7 +64,7 @@ describe('node', () => {
                 .catch((ex) => {
                     done(ex);
                 });
-        }).slow(5000);
+        }).slow(5000).timeout(60000);
 
         it('should take 20ms with 2 workers', (done) => {
             let model;
@@ -120,7 +120,7 @@ describe('node', () => {
                 .catch((ex) => {
                     done(ex);
                 });
-        }).slow(5000);
+        }).slow(5000).timeout(60000);
 
         it('should take 10ms with 3 workers', (done) => {
             let model;
@@ -176,7 +176,7 @@ describe('node', () => {
                 .catch((ex) => {
                     done(ex);
                 });
-        }).slow(5000);
+        }).slow(5000).timeout(60000);
 
         it('should be able to access data services', (done) => {
             let model;
@@ -213,7 +213,7 @@ describe('node', () => {
                         model.push(new DataFrame());
                     });
                 });
-        }).slow(5000);
+        }).slow(5000).timeout(60000);
 
         it('should be able to access node data services', (done) => {
             let model;
@@ -249,7 +249,7 @@ describe('node', () => {
                     model = m;
                     model.push(new DataFrame(new DataObject("mvdewync")));
                 });
-        }).slow(5000);
+        }).slow(5000).timeout(60000);
 
         it('should support error events', (done) => {
             let model;
@@ -280,7 +280,7 @@ describe('node', () => {
                     })
                     model.push(new DataFrame(new DataObject("mvdewync")));
                 });
-        }).slow(5000);
+        }).slow(5000).timeout(60000);
 
         it('should support completed events', (done) => {
             let model;
@@ -315,7 +315,7 @@ describe('node', () => {
                     })
                     model.push(new DataFrame(new DataObject("mvdewync")));
                 });
-        }).slow(5000);
+        }).slow(5000).timeout(60000);
     });
 
     describe('worker graph', () => {
@@ -338,7 +338,7 @@ describe('node', () => {
                 .build().then(model => {
                     model.pull();
                 });
-        }).slow(8000).timeout(30000);
+        }).slow(8000).timeout(60000);
 
         it('should build a model from a file using a main service', (done) => {
             ModelBuilder.create()
@@ -363,7 +363,7 @@ describe('node', () => {
                         model.pull();
                     }).catch(done);
                 });
-        }).slow(8000).timeout(30000);
+        }).slow(8000).timeout(60000);
 
         it('should build a model from a file using a worker service', (done) => {
             ModelBuilder.create()
@@ -387,7 +387,7 @@ describe('node', () => {
                         model.pull();
                     }).catch(done);
                 }).catch(done);
-        }).slow(8000).timeout(30000);
+        }).slow(8000).timeout(60000);
 
     });
 });

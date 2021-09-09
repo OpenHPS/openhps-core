@@ -10,11 +10,10 @@ export class KeyValueDataService extends DataService<string, any> {
     constructor(uid?: string, dataServiceDriver?: DataServiceDriver<string, any>) {
         super(dataServiceDriver);
         if (!dataServiceDriver) {
-            this.driver = new MemoryDataService(
-                Object,
-                (a) => a,
-                (b) => b,
-            );
+            this.driver = new MemoryDataService(Object, {
+                serialize: (d) => d,
+                deserialize: (d) => d,
+            });
             this.dataType = Object;
         }
         this.uid = uid;
