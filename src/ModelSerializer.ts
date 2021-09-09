@@ -4,6 +4,7 @@ import { GraphNode } from './graph/_internal/GraphNode';
 import { ModelGraph } from './graph/_internal/implementations';
 import { Model } from './Model';
 import { Node } from './Node';
+import { ProcessingNode, SinkNode, SourceNode } from './nodes';
 import { DataService, Service } from './service';
 
 export class ModelSerializer {
@@ -25,6 +26,11 @@ export class ModelSerializer {
             class: node.constructor.name,
             uid: node.uid,
             name: node.name,
+            type: node instanceof SourceNode ? "SourceNode" : (
+                node instanceof SinkNode ? "SinkNode" : (
+                    node instanceof ProcessingNode ? "ProcessingNode" : "Unknown"
+                )
+            )
         };
     }
 
@@ -84,18 +90,27 @@ export class ModelSerializer {
     }
 }
 
+/**
+ * Serialized model
+ */
 interface SerializedModel {
     uid: string;
+    dependencies?: SerializedDependency[];
     name: string;
     edges: SerializedEdge[];
     nodes: SerializedNode[];
     services: SerializedService[];
 }
 
+interface SerializedDependency {
+    [key: string]: string;
+}
+
 interface SerializedNode {
     class: string;
     uid: string;
     name: string;
+    type: string;
 }
 
 interface SerializedEdge {
