@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { DataFrame, DataObject, ReferenceSpace } from './data';
-import { ModelGraph } from './graph/_internal/implementations';
+import { GraphValidator, ModelGraph } from './graph/_internal/implementations';
 import { Model } from './Model';
 import { GraphBuilder } from './graph/builders/GraphBuilder';
 import { GraphShape } from './graph/_internal/implementations/GraphShape';
@@ -205,7 +205,7 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
             (this.graph as ModelGraph<In, Out>).findAllServices().forEach((service) => {
                 service.logger = this.graph.logger;
             });
-            this.graph.validate();
+            GraphValidator.validate(this.graph);
             this.graph.once('ready', () => {
                 resolve(this.graph as Model<In, Out>);
             });

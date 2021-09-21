@@ -103,68 +103,23 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
         this._nodes.delete(node.uid);
     }
 
-    private _getNodeOutlets(node: GraphNode<any, any>): Array<Edge<Out>> {
-        return this.edges.filter((edge) => edge.inputNode === node);
-    }
-
-    private _getNodeInlets(node: GraphNode<any, any>): Array<Edge<In>> {
-        return this.edges.filter((edge) => edge.outputNode === node);
-    }
-
     /**
-     * Validate if the graph is connected
+     * Find an edge by the identifiers of its inlet and outlet
+     *
+     * @param {string} inlet Node uid of inlet
+     * @param {string} outlet Node uid of outlet
+     * @returns {Edge<any>} Edge
      */
-    public validate(): void {
-        this._validateNodes();
-        this._validateEdges();
-    }
-
-    private _validateInternalNode(node: GraphNode<any, any>): void {
-        if (node.outlets.length === 0 && node.inlets.length === 0) {
-            this.deleteNode(node);
-        } else if (!this._nodes.has(node.uid)) {
-            throw new Error(`Internal node ${node.uid} (${node.name}) is not connected to the graph!`);
-        }
-    }
-
-    private _validateNodes(): void {
-        this._validateInternalNode(this.internalSource);
-        this._validateInternalNode(this.internalSink);
-
-        this._nodes.forEach((node) => {
-            if (node.graph === undefined) {
-                throw new Error(`Node ${node.uid} (${node.name}) does not have a graph set!`);
-            }
-            if (this._getNodeInlets(node).length === 0 && this._getNodeOutlets(node).length === 0) {
-                throw new Error(`Node ${node.uid} (${node.name}) is not connected to the graph!`);
-            }
-        });
-    }
-
-    private _validateEdges(): void {
-        this._edges.forEach((edge) => {
-            if (!this._nodes.has(edge.inputNode.uid)) {
-                throw new Error(
-                    `Node ${edge.inputNode.uid} (${edge.inputNode.name}) is used in an edge but not added to the graph!`,
-                );
-            } else if (!this._nodes.has(edge.outputNode.uid)) {
-                throw new Error(
-                    `Node ${edge.outputNode.uid} (${edge.outputNode.name}) is used in an edge but not added to the graph!`,
-                );
-            }
-        });
+    findEdge(inlet: string, outlet: string): Edge<any> {
+        return this._edges.get(inlet + outlet);
     }
 
     /**
      * Graph logger
      *
-     * @param {string} level Logging level
-     * @param {any} log Message
+     * @returns {(level: string, log: any) => void} logger function
      */
-    // eslint-disable-next-line
-    public logger(level: string, log: any): void {
-        return;
-    }
+    public logger: (level: string, log: any) => void = () => undefined;
 
     /**
      * Send a pull request to the graph

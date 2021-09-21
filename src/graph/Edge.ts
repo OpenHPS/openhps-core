@@ -51,10 +51,10 @@ export class Edge<InOut extends DataFrame> extends EventEmitter implements Inlet
                 ...options,
                 lastNode: this.inputNode.uid,
             };
-            const pushListener: (data: InOut | InOut[], options: PushOptions) => Promise<void> = this.listeners(
+            const pushListeners: Array<(data: InOut | InOut[], options: PushOptions) => Promise<void>> = this.listeners(
                 'push',
-            )[0] as any;
-            pushListener(data, newOptions)
+            ) as any[];
+            Promise.all(pushListeners.map((listener) => listener(data, newOptions)))
                 .then(() => {
                     resolve();
                 })
@@ -78,8 +78,14 @@ export class Edge<InOut extends DataFrame> extends EventEmitter implements Inlet
      * @returns {Promise<void>} Pull promise
      */
     public pull(options?: PullOptions): Promise<void> {
-        const pullListener: (options: PullOptions) => Promise<void> = this.listeners('pull')[0] as any;
-        return pullListener(options);
+        return new Promise((resolve, reject) => {
+            const pullListeners: Array<(options: PullOptions) => Promise<void>> = this.listeners('pull') as any[];
+            Promise.all(pullListeners.map((listener) => listener(options)))
+                .then(() => {
+                    resolve();
+                })
+                .catch(reject);
+        });
     }
 
     public emit(name: 'completed', event: PushCompletedEvent): boolean;

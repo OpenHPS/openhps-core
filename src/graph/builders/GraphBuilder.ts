@@ -7,6 +7,7 @@ import { SinkNode } from '../../nodes/SinkNode';
 import { SourceNode } from '../../nodes/SourceNode';
 import { Edge } from '../Edge';
 import { Graph } from '../Graph';
+import { GraphValidator } from '../_internal/implementations';
 
 /**
  * Graph builder
@@ -146,7 +147,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
 
     public build(): Promise<Graph<In, Out>> {
         return new Promise((resolve, reject) => {
-            this.graph.validate();
+            GraphValidator.validate(this.graph);
             this.graph.once('ready', () => {
                 resolve(this.graph);
             });
