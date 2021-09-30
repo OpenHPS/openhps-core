@@ -91,11 +91,21 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
      * Get node data
      *
      * @param {DataObject} dataObject Data object to get node data from
+     * @param {any} [defaultData] Default data
      * @returns {Promise<any>} Promise with node data
      */
-    protected getNodeData(dataObject: DataObject): Promise<any> {
+    protected getNodeData(dataObject: DataObject, defaultData: any = {}): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.findNodeDataService().findData(this.uid, dataObject).then(resolve).catch(reject);
+            this.findNodeDataService()
+                .findData(this.uid, dataObject)
+                .then((data) => {
+                    if (!data) {
+                        resolve(defaultData);
+                    } else {
+                        resolve(data);
+                    }
+                })
+                .catch(reject);
         });
     }
 
