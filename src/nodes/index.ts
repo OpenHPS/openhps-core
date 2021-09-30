@@ -9,3 +9,4 @@ export * from './ObjectProcessingNode';
 export * from './WorkerNode';
 export * from './CallbackNode';
 export * from './RemoteNode';
+export * from './GraphShapeNode';
