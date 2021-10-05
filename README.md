@@ -8,7 +8,8 @@
     </a>
     <a href="https://ci.mvdw-software.com/view/OpenHPS/job/openhps-core/job/dev/lastCompletedBuild/testReport" target="_blank">
         <img alt="Tests" src="https://img.shields.io/jenkins/tests?compact_message&jobUrl=https%3A%2F%2Fci.mvdw-software.com%2Fview%2FOpenHPS%2Fjob%2Fopenhps-core%2Fjob%2Fdev">
-    </a>
+    </a><a href="https://app.fossa.com/projects/git%2Bgithub.com%2FOpenHPS%2Fopenhps-core?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FOpenHPS%2Fopenhps-core.svg?type=shield"/></a>
+
     <a href="https://ci.mvdw-software.com/view/OpenHPS/job/openhps-core/job/dev/lastCompletedBuild/cobertura/" target="_blank">
         <img alt="Code coverage" src="https://img.shields.io/jenkins/coverage/cobertura?jobUrl=https%3A%2F%2Fci.mvdw-software.com%2Fview%2FOpenHPS%2Fjob%2Fopenhps-core%2Fjob%2Fdev%2F">
     </a>
@@ -90,3 +91,5 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 https://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FOpenHPS%2Fopenhps-core.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FOpenHPS%2Fopenhps-core?ref=badge_large)
