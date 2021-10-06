@@ -21,7 +21,18 @@ export function SerializableMember(options?: SerializableMemberOptions): Propert
 }
 
 export interface SerializableMemberOptions extends IJsonMemberOptions {
+    /**
+     * Identify this attribute as unique
+     */
     unique?: boolean;
+    /**
+     * Identify this attribute as a primary key
+     */
     primaryKey?: boolean;
+    /**
+     * Create an index on this attribute. Possible values
+     * are true/false or a string for specifying this attribute
+     * as part of multiple attributes in an index.
+     */
     index?: string | boolean;
 }

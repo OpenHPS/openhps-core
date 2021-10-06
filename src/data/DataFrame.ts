@@ -44,14 +44,14 @@ export class DataFrame {
     @SerializableMember({
         primaryKey: true,
     })
-    public uid: string = uuidv4();
+    uid: string = uuidv4();
     /**
      * Data frame created timestamp (ISO 8601)
      */
     @SerializableMember({
         index: true,
     })
-    public createdTimestamp: number;
+    createdTimestamp: number;
     @SerializableMember()
     private _source: string;
     @SerializableMapMember(String, DataObject)
@@ -87,7 +87,7 @@ export class DataFrame {
      *
      * @returns {DataObject} Source data object
      */
-    public get source(): DataObject {
+    get source(): DataObject {
         return this.getObjectByUID(this._source);
     }
 
@@ -96,7 +96,7 @@ export class DataFrame {
      *
      * @param {DataObject} object Source data object
      */
-    public set source(object: DataObject) {
+    set source(object: DataObject) {
         if (object === undefined) return;
         this.addObject(object.clone());
         this._source = object.uid;
@@ -108,7 +108,7 @@ export class DataFrame {
      * @param {typeof DataObject} dataType Data object type
      * @returns {DataObject[]} Array of found data objects
      */
-    public getObjects<T extends DataObject>(dataType?: new () => T): T[] {
+    getObjects<T extends DataObject>(dataType?: new () => T): T[] {
         if (dataType === undefined) {
             const filteredObjects: T[] = [];
             this._objects.forEach((object) => {
@@ -124,7 +124,7 @@ export class DataFrame {
         }
     }
 
-    public getObjectByUID<T extends DataObject>(uid: string): T {
+    getObjectByUID<T extends DataObject>(uid: string): T {
         return this._objects.get(uid) as T;
     }
 
@@ -134,7 +134,7 @@ export class DataFrame {
      * @param {DataObject} object Data object to find
      * @returns {boolean} Object exist
      */
-    public hasObject(object: DataObject): boolean {
+    hasObject(object: DataObject): boolean {
         return this._objects.has(object.uid);
     }
 
@@ -143,7 +143,7 @@ export class DataFrame {
      *
      * @param {DataObject} object Relevant object
      */
-    public addObject(object: DataObject): void {
+    addObject(object: DataObject): void {
         if (object === undefined) return;
         this._objects.set(object.uid, object);
     }
@@ -154,7 +154,7 @@ export class DataFrame {
      * @alias addObject Alias for addObject
      * @param {ReferenceSpace} referenceSpace Relevant reference space
      */
-    public addReferenceSpace(referenceSpace: ReferenceSpace): void {
+    addReferenceSpace(referenceSpace: ReferenceSpace): void {
         this.addObject(referenceSpace);
     }
 
@@ -163,7 +163,7 @@ export class DataFrame {
      *
      * @param {DataObject} object Object to remove
      */
-    public removeObject(object: DataObject): void {
+    removeObject(object: DataObject): void {
         this._objects.delete(object.uid);
     }
 
@@ -172,7 +172,7 @@ export class DataFrame {
      *
      * @returns {DataFrame} Cloned data frame
      */
-    public clone(): this {
+    clone(): this {
         return DataSerializer.deserialize(DataSerializer.serialize(this));
     }
 }

@@ -1,5 +1,4 @@
 import { TypedJSON, JsonObjectMetadata } from 'typedjson';
-import { Serializer } from 'typedjson/src/serializer';
 
 const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
 
@@ -102,17 +101,8 @@ export class DataSerializer {
 
     protected static serializeObject<T>(data: T, dataType: new () => T): any {
         const typedJSON = new TypedJSON(dataType as new () => T);
-        const serializer: Serializer = (typedJSON as any).serializer;
-        // Error callback throwing does not work, capture error and put in 'error' variable
-        // TODO: Fix this, this is ugly
-        let error = undefined;
-        serializer.setErrorHandler((ex) => {
-            error = ex;
-        });
         const serialized = typedJSON.toPlainJson(data) as any;
-        if (error) {
-            throw error;
-        } else if (serialized instanceof Object) {
+        if (serialized instanceof Object) {
             serialized['__type'] = dataType.name;
             return serialized;
         } else {

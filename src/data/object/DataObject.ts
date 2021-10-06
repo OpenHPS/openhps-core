@@ -31,7 +31,7 @@ import { DataService } from '../../service/DataService';
  * @category data
  */
 @SerializableObject()
-export class DataObject {
+export class DataObject<P extends AbsolutePosition = AbsolutePosition> {
     /**
      * Object display name
      */
@@ -95,7 +95,7 @@ export class DataObject {
      * relative to the global reference space
      */
     public set position(position: AbsolutePosition) {
-        this.setPosition(position);
+        this.setPosition(position as P);
     }
 
     /**
@@ -104,13 +104,13 @@ export class DataObject {
      * @param {TransformationSpace} [referenceSpace] Reference space to transform it to
      * @returns {AbsolutePosition} Position of the data object
      */
-    public getPosition(referenceSpace?: TransformationSpace): AbsolutePosition {
+    public getPosition(referenceSpace?: TransformationSpace): P {
         if (referenceSpace !== undefined && this._position !== undefined) {
             return referenceSpace.transform(this._position, {
                 inverse: true,
             });
         } else {
-            return this._position;
+            return this._position as P;
         }
     }
 
@@ -121,7 +121,7 @@ export class DataObject {
      * @param {TransformationSpace} [referenceSpace] Reference space
      * @returns {DataObject} Data object instance
      */
-    public setPosition(position: AbsolutePosition, referenceSpace?: TransformationSpace): this {
+    public setPosition(position: P, referenceSpace?: TransformationSpace): this {
         this._position = referenceSpace
             ? referenceSpace.transform(position, {
                   inverse: false,

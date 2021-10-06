@@ -94,7 +94,7 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
      * @param {any} [defaultData] Default data
      * @returns {Promise<any>} Promise with node data
      */
-    protected getNodeData(dataObject: DataObject, defaultData: any = {}): Promise<any> {
+    protected getNodeData<T = any>(dataObject: DataObject, defaultData: T = {} as any): Promise<any> {
         return new Promise((resolve, reject) => {
             this.findNodeDataService()
                 .findData(this.uid, dataObject)

@@ -24,7 +24,7 @@ export class Matrix4 extends THREE.Matrix4 {
      * @returns {Matrix4} Matrix4
      */
     public static fromArray(array: number[][]): Matrix4 {
-        const matrix = new Matrix4();
+        const matrix = new this();
         matrix.fromArray([].concat(...array));
         matrix.transpose();
         return matrix;

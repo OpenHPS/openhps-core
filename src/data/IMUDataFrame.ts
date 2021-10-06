@@ -5,21 +5,21 @@ import { Magnetism, Acceleration, LinearVelocity, AngularVelocity, Orientation }
 @SerializableObject()
 export class IMUDataFrame extends DataFrame {
     @SerializableMember()
-    public frequency: number;
+    frequency: number;
     @SerializableMember()
-    public magnetism: Magnetism;
+    magnetism: Magnetism;
     @SerializableMember()
-    public acceleration: Acceleration;
+    acceleration: Acceleration;
     @SerializableMember()
-    public linearAcceleration: Acceleration;
+    linearAcceleration: Acceleration;
     @SerializableMember()
-    public gravity: Acceleration;
+    gravity: Acceleration;
     @SerializableMember()
-    public relativeOrientation: Orientation;
+    relativeOrientation: Orientation;
     @SerializableMember()
-    public absoluteOrientation: Orientation;
+    absoluteOrientation: Orientation;
     @SerializableMember()
-    public linearVelocity: LinearVelocity;
+    linearVelocity: LinearVelocity;
     @SerializableMember()
-    public angularVelocity: AngularVelocity;
+    angularVelocity: AngularVelocity;
 }
