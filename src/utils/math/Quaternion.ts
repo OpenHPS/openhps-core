@@ -146,6 +146,6 @@ export class Quaternion extends THREE.Quaternion {
     }
 
     public clone(): this {
-        return new Quaternion().copy(this) as this;
+        return new (Object.getPrototypeOf(this).constructor)().copy(this) as this;
     }
 }
