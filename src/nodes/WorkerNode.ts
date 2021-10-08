@@ -1,16 +1,10 @@
-import { DataFrame, DataSerializer } from '../data';
+import { DataFrame } from '../data';
 import { Node, NodeOptions } from '../Node';
-import { Thread, Worker, spawn, Pool } from 'threads';
-import { Observable } from 'threads/observable';
-import { PoolEvent } from 'threads/dist/master/pool';
-import { DataService, Service, WorkerServiceCall, WorkerServiceProxy, WorkerServiceResponse } from '../service';
 import { GraphShapeBuilder } from '../graph/builders/GraphBuilder';
 import { ModelBuilder } from '../ModelBuilder';
 import { PullOptions, PushOptions } from '../graph/options';
-import { ModelGraph } from '../graph/_internal/implementations';
-import { DummyDataService, DummyService } from '../service/_internal';
-
-declare const __non_webpack_require__: typeof require;
+import { WorkerOptions } from '../worker/WorkerOptions';
+import { WorkerHandler } from '../worker';
 
 /**
  * Worker nodes are normal nodes that initialize multiple web workers.
@@ -48,10 +42,8 @@ declare const __non_webpack_require__: typeof require;
  */
 export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
     protected options: WorkerNodeOptions;
-
-    private _pool: Pool<Thread>;
-    private _workerData: any = {};
-    private _serviceOutputResponse: Map<number, (response: WorkerServiceResponse) => Promise<void>> = new Map();
+    protected config: any = {};
+    protected handler: WorkerHandler;
 
     constructor(
         builderCallback: (
@@ -64,30 +56,38 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
     constructor(file: string, options?: WorkerNodeOptions);
     constructor(worker: ((...args: any[]) => void) | string, options?: WorkerNodeOptions) {
         super(options);
-        this.options.worker = this.options.worker || './_internal/WorkerNodeRunner';
+        this.options.worker = this.options.worker || '../worker/WorkerRunner';
         if (worker instanceof Function) {
             // Code
-            this._workerData.builder = worker.toString();
+            this.config.builder = worker.toString();
             if (this.options.typescript) {
                 // eslint-disable-next-line
-                this._workerData.builder = require('typescript').transpile( this._workerData.builder);
+                this.config.builder = require('typescript').transpile(this.config.builder);
             }
         } else {
-            this._workerData.shape = worker;
-        }
-
-        if (typeof process.env.NODE_ENV === 'undefined') {
-            // eslint-disable-next-line
-            const NativeWorker = typeof __non_webpack_require__ === "function" ? __non_webpack_require__("worker_threads").Worker : eval("require")("worker_threads").Worker;
-            if (NativeWorker) {
-                NativeWorker.defaultMaxListeners = 0;
-            }
+            this.config.shape = worker;
         }
 
         this.once('build', this._onBuild.bind(this));
         this.once('destroy', this._onDestroy.bind(this));
         this.on('pull', this._onPull.bind(this));
         this.on('push', this._onPush.bind(this));
+    }
+
+    private _onBuild(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.handler = new WorkerHandler(this.model, this.options, this.config);
+            this.handler.on('push', this._onWorkerPush.bind(this));
+            this.handler.on('pull', this._onWorkerPull.bind(this));
+            this.handler.on('event', this._onWorkerEvent.bind(this));
+            this.handler.build().then(resolve).catch(reject);
+        });
+    }
+
+    private _onDestroy(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.handler.destroy().then(resolve).catch(reject);
+        });
     }
 
     private _onPull(options?: PullOptions): Promise<void> {
@@ -100,194 +100,17 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
                     })
                     .catch(reject);
             } else {
-                // Pass the pull request to the worker
-                this._pool
-                    .queue((worker: any) => {
-                        const pullFn: (options?: PullOptions) => Promise<void> = worker.pull;
-                        return pullFn(options);
-                    })
-                    .then(resolve)
-                    .catch(reject);
+                this.handler.pull(options).then(resolve).catch(reject);
             }
         });
     }
 
     private _onPush(frame: In | In[], options?: PushOptions): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            this._pool
-                .queue((worker: any) => {
-                    const pushFn: (frame: any, options?: PushOptions) => Promise<void> = worker.push;
-                    return pushFn(DataSerializer.serialize(frame), options);
-                })
-                .then(() => {
-                    resolve();
-                })
-                .catch(reject);
-        });
-    }
-
-    private _onDestroy(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            if (this._pool === undefined) {
-                return resolve();
-            }
-            const timeout = setTimeout(() => {
-                this._pool.terminate(true);
-            }, 2500);
-            this._pool
-                .terminate()
-                .then(() => {
-                    clearTimeout(timeout);
-                    resolve();
-                })
-                .catch((ex) => {
-                    clearTimeout(timeout);
-                    reject(ex);
-                });
-        });
-    }
-
-    /**
-     * Spawn a single worker
-     *  This method can be called multiple times in a pool
-     *
-     * @returns {Promise<Thread>} Thread spawn promise
-     */
-    private _spawnWorker(): Promise<Thread> {
-        return new Promise((resolve, reject) => {
-            // NOTE: We can not use a conditional expression as this breaks the webpack threads plugin
-            const worker = new Worker(this.options.worker);
-            spawn(worker).then((thread: Thread) => {
-                const init: (workerData: any) => Promise<void> = (thread as any).init;
-                const pushOutput: () => Observable<any> = (thread as any).pushOutput;
-                const pullOutput: () => Observable<void> = (thread as any).pullOutput;
-                const serviceOutputCall: () => Observable<WorkerServiceCall> = (thread as any).serviceOutputCall;
-                const serviceInputCall: (call: WorkerServiceCall) => Promise<WorkerServiceResponse> = (thread as any)
-                    .serviceInputCall;
-                const eventOutput: () => Observable<any> = (thread as any).eventOutput;
-                const findAllServices: () => Promise<any[]> = (thread as any).findAllServices;
-
-                const threadId = (worker as any).threadId;
-                this._serviceOutputResponse.set(threadId, (thread as any).serviceOutputResponse);
-
-                this.logger('debug', { message: 'Worker thread spawned!' });
-
-                // Subscribe to the workers pull, push and service functions
-                pullOutput().subscribe(this._onWorkerPull.bind(this));
-                pushOutput().subscribe(this._onWorkerPush.bind(this));
-                serviceOutputCall().subscribe(this._onWorkerService.bind(this, threadId));
-                eventOutput().subscribe(this._onWorkerEvent.bind(this));
-
-                // Initialize the worker
-                init({
-                    dirname: this.options.directory || __dirname,
-                    services: this._getServices(),
-                    imports: this.options.imports || [],
-                    args: this.options.args || {},
-                    ...this._workerData,
-                })
-                    .then(() => {
-                        return findAllServices();
-                    })
-                    .then((services: any[]) => {
-                        this._addServices(services, serviceInputCall);
-                        resolve(thread);
-                    })
-                    .catch(reject);
-            });
-        });
-    }
-
-    /**
-     * Serialize the services of this model
-     *
-     * @returns {any[]} Services array
-     */
-    private _getServices(): any[] {
-        // Serialize this model services to the worker
-        const services: Service[] = this.options.services || this.model.findAllServices();
-        const servicesArray: any[] = services.map((service) => {
-            // Services are wrapped in a proxy. Get prototype
-            const serviceBase = Object.getPrototypeOf(service);
-            return {
-                uid: service.uid,
-                type: serviceBase.constructor.name,
-                dataType:
-                    service instanceof DataService
-                        ? (service as any).driver.dataType
-                            ? (service as any).driver.dataType.name
-                            : undefined
-                        : undefined,
-            };
-        });
-        return servicesArray;
-    }
-
-    private _addServices(services: any[], call: (call: WorkerServiceCall) => Promise<WorkerServiceResponse>): void {
-        const model = this.model as ModelGraph<any, any>;
-        services
-            .filter((service) => {
-                const internalService =
-                    this.model.findService(service.name) || this.model.findDataService(service.name);
-                return internalService === undefined;
-            })
-            .forEach((service) => {
-                if (service.dataType) {
-                    const DataType = DataSerializer.findTypeByName(service.dataType);
-                    model.addService(
-                        new DummyDataService(service.uid, DataType),
-                        new WorkerServiceProxy({
-                            uid: service.uid,
-                            callFunction: call,
-                        }),
-                    );
-                } else {
-                    model.addService(
-                        new DummyService(service.uid),
-                        new WorkerServiceProxy({
-                            uid: service.uid,
-                            callFunction: call,
-                        }),
-                    );
-                }
-            });
-    }
-
-    private _onWorkerService(threadId: number, value: WorkerServiceCall): void {
-        const service: Service =
-            this.model.findDataService(value.serviceUID) || this.model.findService(value.serviceUID);
-        if ((service as any)[value.method]) {
-            const serializedParams = value.parameters;
-            const params: any[] = [];
-            serializedParams.forEach((param: any) => {
-                if (param['__type']) {
-                    params.push(DataSerializer.deserialize(param));
-                } else {
-                    params.push(param);
-                }
-            });
-            const promise = (service as any)[value.method](...params) as Promise<any>;
-            Promise.resolve(promise)
-                .then((_) => {
-                    if (Array.isArray(_)) {
-                        const result: any[] = [];
-                        _.forEach((r) => {
-                            result.push(DataSerializer.serialize(r));
-                        });
-                        this._serviceOutputResponse.get(threadId)({ id: value.id, success: true, result });
-                    } else {
-                        const result = DataSerializer.serialize(_);
-                        this._serviceOutputResponse.get(threadId)({ id: value.id, success: true, result });
-                    }
-                })
-                .catch((ex) => {
-                    this._serviceOutputResponse.get(threadId)({ id: value.id, success: false, result: ex });
-                });
-        }
+        return this.handler.push(frame, options);
     }
 
     private _onWorkerEvent(value: { name: string; event: any }): void {
-        this.inlets.map((inlet) => inlet.emit(value.name as any, value.event));
+        this.inlets.map((inlet) => inlet.emit(value.name, value.event));
     }
 
     /**
@@ -302,64 +125,17 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
     /**
      * Triggered for each worker that pushes data
      *
-     * @param {any} value Serialized data
+     * @param {DataFrame} frame Deserialized frame
      * @param {PushOptions} options Push options
      */
-    private _onWorkerPush(value: any, options?: PushOptions): void {
-        const deserializedFrame: DataFrame = DataSerializer.deserialize(value);
-        this.outlets.forEach((outlet) => outlet.push(deserializedFrame as any, options));
-    }
-
-    private _onBuild(): Promise<void> {
-        return new Promise<void>((resolve) => {
-            this.logger('debug', {
-                message: 'Spawning new worker thread ...',
-            });
-            this._pool = Pool(() => this._spawnWorker(), {
-                size: this.options.poolSize || 4,
-                concurrency: this.options.poolConcurrency || 2,
-            });
-            this._pool.events().subscribe((value: PoolEvent<Thread>) => {
-                if (value.type === 'initialized') {
-                    resolve();
-                }
-            });
-        });
+    private _onWorkerPush(frame: DataFrame, options?: PushOptions): void {
+        this.outlets.forEach((outlet) => outlet.push(frame as any, options));
     }
 }
 
-export interface WorkerNodeOptions extends NodeOptions {
-    directory?: string;
-    /**
-     * Pool size, defaults to 4 but should equal the amount of available cores - 1
-     */
-    poolSize?: number;
-    /**
-     * Concurrent tasks send to the same worker in the pool
-     */
-    poolConcurrency?: number;
+export interface WorkerNodeOptions extends NodeOptions, WorkerOptions {
     /**
      * Pull requests skip the worker
      */
     optimizedPull?: boolean;
-    /**
-     * Worker runner file. When running in the browser, this is the js file named
-     * ```worker.openhps-core.min.js```
-     */
-    worker?: string;
-    /**
-     * Worker external imports
-     */
-    imports?: string[];
-    /**
-     * Services to clone from main thread. When not specified it will clone all services
-     *
-     * @default model.findAllServices()
-     */
-    services?: Service[];
-    /**
-     * Specify if the worker is written in TypeScript
-     */
-    typescript?: boolean;
-    args?: any;
 }

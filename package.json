@@ -121,7 +121,7 @@
     ],
     "exclude": [
       "test",
-      "src/**/_internal/Worker*.ts",
+      "src/worker/WorkerRunner.ts",
       "src/**/WorkerService.ts",
       "src/service/_internal/DummyDataService.ts",
       "src/utils/math/three/**"
