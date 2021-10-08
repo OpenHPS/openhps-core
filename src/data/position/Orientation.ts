@@ -1,6 +1,7 @@
 import { Quaternion } from '../../utils/math';
 import { SerializableMember, SerializableObject } from '../decorators';
 import * as THREE from '../../utils/math/_internal';
+import { TimeService } from '../../service/TimeService';
 
 /**
  * Orientation quaternion with accuracy
@@ -21,6 +22,7 @@ export class Orientation extends Quaternion {
     constructor(x?: number, y?: number, z?: number, w?: number, accuracy?: number) {
         super(x, y, z, w);
         this.accuracy = accuracy;
+        this.timestamp = TimeService.now();
     }
 
     public static fromQuaternion(quat: Quaternion | THREE.Quaternion): Orientation {

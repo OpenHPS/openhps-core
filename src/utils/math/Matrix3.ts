@@ -15,14 +15,14 @@ export class Matrix3 extends THREE.Matrix3 {
      * @param {number[][]} array Array
      * @returns {Matrix3} Matrix3
      */
-    public static fromArray(array: number[][]): Matrix3 {
+    public static fromArray<T extends Matrix3>(array: number[][]): T {
         const matrix = new this();
         matrix.fromArray([].concat(...array));
         matrix.transpose();
-        return matrix;
+        return matrix as T;
     }
 
     public clone(): this {
-        return new Matrix3().fromArray(this.elements) as this;
+        return new (Object.getPrototypeOf(this).constructor)().fromArray(this.elements) as this;
     }
 }

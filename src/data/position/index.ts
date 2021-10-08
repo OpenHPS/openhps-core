@@ -16,3 +16,4 @@ export * from './RelativeRSSI';
 export * from './Orientation';
 export * from './SensorValue';
 export * from './Trajectory';
+export * from './Pose';

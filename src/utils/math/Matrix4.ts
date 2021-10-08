@@ -23,11 +23,11 @@ export class Matrix4 extends THREE.Matrix4 {
      * @param {number[][]} array Array
      * @returns {Matrix4} Matrix4
      */
-    public static fromArray(array: number[][]): Matrix4 {
+    public static fromArray<T extends Matrix4>(array: number[][]): T {
         const matrix = new this();
         matrix.fromArray([].concat(...array));
         matrix.transpose();
-        return matrix;
+        return matrix as T;
     }
 
     /**
@@ -36,10 +36,10 @@ export class Matrix4 extends THREE.Matrix4 {
      * @param {THREE.Quaternion} quat Quaternion
      * @returns {Matrix4} Rotation matrix
      */
-    public static rotationFromQuaternion(quat: THREE.Quaternion): Matrix4 {
-        const matrix = new Matrix4();
+    public static rotationFromQuaternion<T extends Matrix4>(quat: THREE.Quaternion): T {
+        const matrix = new this();
         matrix.makeRotationFromQuaternion(quat);
-        return matrix;
+        return matrix as T;
     }
 
     /**
@@ -48,10 +48,10 @@ export class Matrix4 extends THREE.Matrix4 {
      * @param {THREE.Euler} euler Euler angles
      * @returns {Matrix4} Rotation matrix
      */
-    public static rotationFromEuler(euler: THREE.Euler): Matrix4 {
-        const matrix = new Matrix4();
+    public static rotationFromEuler<T extends Matrix4>(euler: THREE.Euler): T {
+        const matrix = new this();
         matrix.makeRotationFromEuler(euler);
-        return matrix;
+        return matrix as T;
     }
 
     /**
@@ -61,13 +61,13 @@ export class Matrix4 extends THREE.Matrix4 {
      * @param {number} angle Angle
      * @returns {Matrix4} Rotation matrix
      */
-    public static rotationFromAxisAngle(vector: THREE.Vector3, angle: number): Matrix4 {
-        const matrix = new Matrix4();
+    public static rotationFromAxisAngle<T extends Matrix4>(vector: THREE.Vector3, angle: number): T {
+        const matrix = new this();
         matrix.makeRotationAxis(vector, angle);
-        return matrix;
+        return matrix as T;
     }
 
     public clone(): this {
-        return new Matrix4().fromArray(this.elements) as this;
+        return new (Object.getPrototypeOf(this).constructor)().fromArray(this.elements) as this;
     }
 }
