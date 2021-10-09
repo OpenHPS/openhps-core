@@ -39,7 +39,11 @@ function transform(directory) {
             // Transpile
             console.log(file);
             const result = babel.transformFileSync(file, {
-                presets: ["@babel/preset-env"]
+                presets: [["@babel/preset-env", {
+                    "targets": {
+                        "node": "current"
+                    },
+                }]]
             });
             fs.writeFileSync(file, result.code);
         }

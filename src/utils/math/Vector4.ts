@@ -7,16 +7,16 @@ import * as THREE from './_internal';
 @SerializableObject()
 export class Vector4 extends THREE.Vector4 {
     @SerializableMember()
-    public x: number;
+    x: number;
 
     @SerializableMember()
-    public y: number;
+    y: number;
 
     @SerializableMember()
-    public z: number;
+    z: number;
 
     @SerializableMember()
-    public w: number;
+    w: number;
 
     public static fromArray(array: number[]): Vector4 {
         return new this().fromArray(array);

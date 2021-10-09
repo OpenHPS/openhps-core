@@ -98,7 +98,7 @@ export class Euler extends THREE.Euler {
     }
 
     public clone(): this {
-        return new Euler().copy(this) as this;
+        return new (this.constructor as new () => this)().copy(this) as this;
     }
 }
 

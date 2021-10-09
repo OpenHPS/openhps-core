@@ -68,6 +68,6 @@ export class Matrix4 extends THREE.Matrix4 {
     }
 
     public clone(): this {
-        return new (Object.getPrototypeOf(this).constructor)().fromArray(this.elements) as this;
+        return new (this.constructor as new () => this)().fromArray(this.elements) as this;
     }
 }

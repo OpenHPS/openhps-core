@@ -60,7 +60,7 @@ export class AxisAngle extends Vector3 {
     }
 
     public clone(): this {
-        const vector = new AxisAngle().copy(this) as this;
+        const vector = new (this.constructor as new () => this)();
         vector.angle = this.angle;
         return vector;
     }

@@ -36,12 +36,20 @@ export class Pose extends Matrix4 implements Position {
         return pose as T;
     }
 
-    static fromPosition<T extends Pose>(position: Absolute3DPosition, orientation: Orientation): T {
+    /**
+     * Create a pose from a position
+     *
+     * @param {Absolute3DPosition} position 3D position
+     * @returns {Pose} Output pose
+     */
+    static fromPosition<T extends Pose>(position: Absolute3DPosition): T {
         const pose = new this();
         pose.timestamp = position.timestamp;
         pose.unit = position.unit;
         const vector = position.toVector3();
-        pose.makeRotationFromQuaternion(orientation);
+        if (position.orientation) {
+            pose.makeRotationFromQuaternion(position.orientation);
+        }
         pose.setPosition(vector.x, vector.y, vector.z);
         return pose as T;
     }

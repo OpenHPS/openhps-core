@@ -127,7 +127,7 @@ export class DataFrame {
     /**
      * Get a specific object by its identifier
      *
-     * @param {string} uid Object UID 
+     * @param {string} uid Object UID
      * @returns {DataObject} Data object if found
      */
     getObjectByUID<T extends DataObject>(uid: string): T {
