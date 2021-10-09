@@ -65,8 +65,8 @@ module.exports = env => [
   bundle(env, false),
   {
     name:`${PROJECT_NAME}-worker`,
-    entry: `./dist/cjs/nodes/_internal/WorkerNodeRunner.js`,
-    externals: {'../../': LIBRARY_NAME},
+    entry: `./dist/cjs/worker/WorkerRunner.js`,
+    externals: {'..': LIBRARY_NAME},
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: `web/worker.${PROJECT_NAME}${env.prod ? ".min" : ""}.js`,
@@ -77,7 +77,7 @@ module.exports = env => [
     },
     plugins: [
       new InjectPlugin(function() {
-        return `importScripts('openhps-core.min.js'); __WEBPACK_EXTERNAL_MODULE____ = self['@openhps/core'];`
+        return `importScripts('${PROJECT_NAME}${env.prod ? ".min" : ""}.js'); __WEBPACK_EXTERNAL_MODULE____ = self['@openhps/core'];`
       })
     ],
     ...defaultConfig(env)

@@ -14,3 +14,5 @@ export * from './FindOptions';
 export * from './LocationBasedService';
 export * from './RemoteService';
 export * from './MemoryQueryEvaluator';
+export * from './DummyDataService';
+export * from './DummyService';

@@ -15,6 +15,7 @@
     <a href="https://codeclimate.com/github/OpenHPS/openhps-core/" target="_blank">
         <img alt="Maintainability" src="https://img.shields.io/codeclimate/maintainability/OpenHPS/openhps-core">
     </a>
+    <a href="https://app.fossa.com/projects/git%2Bgithub.com%2FOpenHPS%2Fopenhps-core?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FOpenHPS%2Fopenhps-core.svg?type=shield"/></a>
 </p>
 
 <h3 align="center">
