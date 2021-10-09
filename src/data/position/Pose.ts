@@ -47,6 +47,11 @@ export class Pose extends Matrix4 {
         return pose as T;
     }
 
+    /**
+     * Extract the orientation from the pose
+     *
+     * @returns {Orientation} Orientation
+     */
     get orientation(): Orientation {
         const rotationMatrix = this.extractRotation(this);
         const orientation = Orientation.fromRotationMatrix(rotationMatrix) as Orientation;
@@ -54,6 +59,11 @@ export class Pose extends Matrix4 {
         return orientation;
     }
 
+    /**
+     * Extract the 3d position from the pose
+     *
+     * @returns {Absolute3DPosition} 3D position
+     */
     get position(): Absolute3DPosition {
         const positionMatrix = this.copyPosition(this);
         const position = new Absolute3DPosition(

@@ -31,7 +31,7 @@ import { DataService } from '../../service/DataService';
  * @category data
  */
 @SerializableObject()
-export class DataObject<P extends AbsolutePosition = AbsolutePosition> {
+export class DataObject {
     /**
      * Object display name
      */
@@ -95,7 +95,7 @@ export class DataObject<P extends AbsolutePosition = AbsolutePosition> {
      * relative to the global reference space
      */
     public set position(position: AbsolutePosition) {
-        this.setPosition(position as P);
+        this.setPosition(position);
     }
 
     /**
@@ -104,13 +104,13 @@ export class DataObject<P extends AbsolutePosition = AbsolutePosition> {
      * @param {TransformationSpace} [referenceSpace] Reference space to transform it to
      * @returns {AbsolutePosition} Position of the data object
      */
-    public getPosition(referenceSpace?: TransformationSpace): P {
+    public getPosition(referenceSpace?: TransformationSpace): AbsolutePosition {
         if (referenceSpace !== undefined && this._position !== undefined) {
             return referenceSpace.transform(this._position, {
                 inverse: true,
             });
         } else {
-            return this._position as P;
+            return this._position;
         }
     }
 
@@ -121,7 +121,7 @@ export class DataObject<P extends AbsolutePosition = AbsolutePosition> {
      * @param {TransformationSpace} [referenceSpace] Reference space
      * @returns {DataObject} Data object instance
      */
-    public setPosition(position: P, referenceSpace?: TransformationSpace): this {
+    public setPosition(position: AbsolutePosition, referenceSpace?: TransformationSpace): this {
         this._position = referenceSpace
             ? referenceSpace.transform(position, {
                   inverse: false,
@@ -249,7 +249,7 @@ export class DataObject<P extends AbsolutePosition = AbsolutePosition> {
      * @returns {DataObject} Cloned data object
      */
     public clone(): this {
-        return DataSerializer.deserialize(DataSerializer.serialize(this));
+        return DataSerializer.clone(this);
     }
 }
 
