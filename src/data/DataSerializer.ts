@@ -61,6 +61,12 @@ export class DataSerializer {
         return this._serializableTypes.get(name);
     }
 
+    /**
+     * Clone a serializable object
+     *
+     * @param {any} object Serializable object
+     * @returns {any} Cloned object
+     */
     public static clone<T extends any>(object: T): T {
         return this.deserialize(this.serialize(object));
     }
