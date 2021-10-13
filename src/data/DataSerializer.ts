@@ -34,7 +34,7 @@ export class DataSerializer {
      * @param {typeof any} type Type to register
      * @param {MappedTypeConverters} [converters] Optional converters
      */
-    static registerType<T>(type: new () => T, converters?: MappedTypeConverters<T>): void {
+    static registerType<T>(type: new (...args: any[]) => T, converters?: MappedTypeConverters<T>): void {
         this._serializableTypes.set(type.name, type);
         if (converters) {
             const objectMetadata = new JsonObjectMetadata(type);

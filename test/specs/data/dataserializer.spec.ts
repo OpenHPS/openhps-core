@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataSerializer, DataObject, AbsolutePosition } from '../../../src';
+import { DataSerializer, DataObject, AbsolutePosition, DataFrame, SerializableObject, SerializableMember } from '../../../src';
 import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
 
 describe('DataSerializer', () => {
@@ -19,7 +19,7 @@ describe('DataSerializer', () => {
             expect(meta.dataMembers).to.not.be.undefined;
         });
 
-        it('should serialize global types', () => {
+        it('should serialize global types directly', () => {
             class SomeClass {
                 abc: string;
             };
@@ -46,6 +46,75 @@ describe('DataSerializer', () => {
             const serialized = DataSerializer.serialize(obj);
             const deserialized = DataSerializer.deserialize(serialized);
             expect(deserialized).to.eql(obj);
+        });
+
+        it('should serialize global types with constructor', () => {
+            class SomeClass {
+                abc: string;
+
+                constructor(abc: string) {
+                    this.abc = abc;
+                }
+            };
+
+            const obj = new SomeClass("test");
+
+            DataSerializer.registerType(SomeClass, {
+                serializer: (obj) => {
+                    return {
+                        hello: obj.abc
+                    };
+                },
+                deserializer: (json) => {
+                    if (!json) {
+                        return undefined;
+                    }
+                    const obj = new SomeClass(json.hello);
+                    return obj;
+                }
+            });
+
+            const serialized = DataSerializer.serialize(obj);
+            const deserialized = DataSerializer.deserialize(serialized);
+            expect(deserialized).to.eql(obj);
+        });
+
+        it('should serialize global types indirectly', () => {
+            class SomeClass {
+                abc: string;
+            };
+
+            const obj = new SomeClass();
+            obj.abc = "test";
+
+            DataSerializer.registerType(SomeClass, {
+                serializer: (obj) => {
+                    return {
+                        hello: obj.abc
+                    };
+                },
+                deserializer: (json) => {
+                    if (!json) {
+                        return undefined;
+                    }
+                    const obj = new SomeClass();
+                    obj.abc = json.hello;
+                    return obj;
+                }
+            });
+
+            @SerializableObject()
+            class SomeFrame extends DataFrame {
+                @SerializableMember()
+                obj: SomeClass;
+            }
+
+            const frame = new SomeFrame();
+            frame.obj = obj;
+
+            const serialized = DataSerializer.serialize(frame);
+            const deserialized = DataSerializer.deserialize(serialized);
+            expect(deserialized).to.eql(frame);
         });
 
         it('should serialize map members', () => {
