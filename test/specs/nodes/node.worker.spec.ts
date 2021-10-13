@@ -337,8 +337,8 @@ describe('node', () => {
                 }))
                 .build().then(model => {
                     model.pull();
-                });
-        }).slow(8000).timeout(120000);
+                }).catch(done);
+        }).slow(8000).timeout(30000);
 
         it('should build a model from a file using a main service', (done) => {
             ModelBuilder.create()

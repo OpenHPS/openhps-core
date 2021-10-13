@@ -19,6 +19,35 @@ describe('DataSerializer', () => {
             expect(meta.dataMembers).to.not.be.undefined;
         });
 
+        it('should serialize global types', () => {
+            class SomeClass {
+                abc: string;
+            };
+
+            const obj = new SomeClass();
+            obj.abc = "test";
+
+            DataSerializer.registerType(SomeClass, {
+                serializer: (obj) => {
+                    return {
+                        hello: obj.abc
+                    };
+                },
+                deserializer: (json) => {
+                    if (!json) {
+                        return undefined;
+                    }
+                    const obj = new SomeClass();
+                    obj.abc = json.hello;
+                    return obj;
+                }
+            });
+
+            const serialized = DataSerializer.serialize(obj);
+            const deserialized = DataSerializer.deserialize(serialized);
+            expect(deserialized).to.eql(obj);
+        });
+
         it('should serialize map members', () => {
             const frame = new DummyDataFrame();
             frame.testMap.set("1", { name: "one" });

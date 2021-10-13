@@ -1,4 +1,5 @@
-import { TypedJSON, JsonObjectMetadata } from 'typedjson';
+import { TypedJSON, JsonObjectMetadata, ITypedJSONSettings } from 'typedjson';
+import { MappedTypeConverters } from 'typedjson/lib/types/parser';
 
 const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
 
@@ -23,13 +24,24 @@ TypedJSON.setGlobalConfig({
 export class DataSerializer {
     private static _serializableTypes: Map<string, new () => any> = new Map();
 
+    private static get _globalConfig(): ITypedJSONSettings {
+        return TypedJSON['_globalConfig'];
+    }
+
     /**
      * Manually register a new type
      *
      * @param {typeof any} type Type to register
+     * @param {MappedTypeConverters} [converters] Optional converters
      */
-    public static registerType(type: new () => any): void {
+    static registerType<T>(type: new () => T, converters?: MappedTypeConverters<T>): void {
         this._serializableTypes.set(type.name, type);
+        if (converters) {
+            const objectMetadata = new JsonObjectMetadata(type);
+            objectMetadata.isExplicitlyMarked = true;
+            type.prototype[META_FIELD] = objectMetadata;
+            TypedJSON.mapType(type, converters);
+        }
     }
 
     /**
@@ -39,7 +51,7 @@ export class DataSerializer {
      * @param {any} proto Prototype of target
      * @returns {JsonObjectMetadata} Root object metadata
      */
-    public static findRootMetaInfo(proto: any): JsonObjectMetadata {
+    static findRootMetaInfo(proto: any): JsonObjectMetadata {
         const protoProto = proto instanceof Function ? proto.prototype : Object.getPrototypeOf(proto);
         if (!protoProto || !protoProto[META_FIELD]) {
             return proto[META_FIELD];
@@ -47,17 +59,17 @@ export class DataSerializer {
         return DataSerializer.findRootMetaInfo(protoProto);
     }
 
-    public static unregisterType(type: new () => any): void {
+    static unregisterType(type: new () => any): void {
         if (this._serializableTypes.has(type.name)) {
             this._serializableTypes.delete(type.name);
         }
     }
 
-    public static get serializableTypes(): Array<new () => any> {
+    static get serializableTypes(): Array<new () => any> {
         return Array.from(this._serializableTypes.values());
     }
 
-    public static findTypeByName(name: string): new () => any {
+    static findTypeByName(name: string): new () => any {
         return this._serializableTypes.get(name);
     }
 
@@ -67,7 +79,7 @@ export class DataSerializer {
      * @param {any} object Serializable object
      * @returns {any} Cloned object
      */
-    public static clone<T extends any>(object: T): T {
+    static clone<T extends any>(object: T): T {
         return this.deserialize(this.serialize(object));
     }
 
@@ -77,7 +89,7 @@ export class DataSerializer {
      * @param {any} data Data to serialize
      * @returns {any} Serialized data
      */
-    public static serialize<T extends any>(data: T): any {
+    static serialize<T extends any>(data: T): any {
         if (data === null || data === undefined) {
             return undefined;
         }
@@ -110,7 +122,7 @@ export class DataSerializer {
     }
 
     protected static serializeObject<T>(data: T, dataType: new () => T): any {
-        const typedJSON = new TypedJSON(dataType as new () => T);
+        const typedJSON = new TypedJSON(dataType as new () => T, this._globalConfig);
         const serialized = typedJSON.toPlainJson(data) as any;
         if (serialized instanceof Object) {
             serialized['__type'] = dataType.name;
@@ -126,9 +138,9 @@ export class DataSerializer {
      * @param serializedData Data to deserialze
      * @param dataType Optional data type to specify deserialization type
      */
-    public static deserialize<T>(serializedData: any, dataType?: new () => T): T;
-    public static deserialize<T>(serializedData: any[], dataType?: new () => T): T[];
-    public static deserialize<T>(serializedData: any, dataType?: new () => T): T | T[] {
+    static deserialize<T>(serializedData: any, dataType?: new () => T): T;
+    static deserialize<T>(serializedData: any[], dataType?: new () => T): T[];
+    static deserialize<T>(serializedData: any, dataType?: new () => T): T | T[] {
         if (serializedData === null || serializedData === undefined) {
             return undefined;
         }
@@ -142,7 +154,7 @@ export class DataSerializer {
             if (finalType === undefined) {
                 return serializedData;
             }
-            const typedJSON = new TypedJSON(finalType);
+            const typedJSON = new TypedJSON(finalType, this._globalConfig);
             return typedJSON.parse(serializedData);
         }
     }
@@ -158,7 +170,7 @@ export class DataSerializer {
                 if (finalType === undefined) {
                     deserializedResult.push(d);
                 }
-                deserializedResult.push(new TypedJSON(finalType).parse(d));
+                deserializedResult.push(new TypedJSON(finalType, this._globalConfig).parse(d));
             }
         });
         return deserializedResult;
