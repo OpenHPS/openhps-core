@@ -1,6 +1,6 @@
 import { TimeService } from '../../service/TimeService';
 import { Unit } from '../../utils';
-import { Vector3 } from '../../utils/math/';
+import { Vector3 } from '../../utils/math';
 import { SerializableMember, SerializableObject } from '../decorators';
 
 /**

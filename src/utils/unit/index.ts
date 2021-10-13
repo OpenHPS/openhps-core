@@ -13,3 +13,5 @@ export * from './LinearVelocityUnit';
 export * from './AccelerationUnit';
 export * from './MagnetismUnit';
 export * from './GCS';
+export * from './TemperatureUnit';
+export * from './LuminanceUnit';

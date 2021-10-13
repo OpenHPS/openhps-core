@@ -17,3 +17,4 @@ export * from './Orientation';
 export * from './SensorValue';
 export * from './Trajectory';
 export * from './Pose';
+export * from './Temperature';

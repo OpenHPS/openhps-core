@@ -25,5 +25,4 @@ export interface RootQuerySelector<T> {
 
 export type FilterQuery<T = any> = {
     [P in keyof T]?: QuerySelector<T[P]> | T[P] | RegExp | T | any;
-} &
-    RootQuerySelector<T>;
+} & RootQuerySelector<T>;

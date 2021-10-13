@@ -179,6 +179,6 @@ export class DataFrame {
      * @returns {DataFrame} Cloned data frame
      */
     clone(): this {
-        return DataSerializer.deserialize(DataSerializer.serialize(this));
+        return DataSerializer.clone(this);
     }
 }
