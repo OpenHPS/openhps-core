@@ -325,7 +325,7 @@ describe('node', () => {
                 .addNode(new WorkerNode("../../mock/ExampleGraph", {
                     name: "output",
                     directory: __dirname,
-                    poolSize: 4
+                    poolSize: 3
                 }))
                 .from("output")
                 .to(new CallbackSinkNode(function(frame) {
@@ -338,7 +338,7 @@ describe('node', () => {
                 .build().then(model => {
                     model.pull();
                 }).catch(done);
-        }).slow(8000).timeout(30000);
+        }).slow(8000).timeout(60000);
 
         it('should build a model from a file using a main service', (done) => {
             ModelBuilder.create()
