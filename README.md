@@ -40,7 +40,10 @@ OpenHPS is a data processing positioning framework. It is designed to support ma
 ### Positioning Algorithms
 - **[@openhps/imu](https://github.com/OpenHPS/openhps-imu)** - Adds IMU processing nodes for fusing IMU sensors.
 - **[@openhps/fingerprinting](https://github.com/OpenHPS/openhps-fingerprinting)** - Adds various fingerprinting nodes and services for offline and offline positioning models.
+- **[@openhps/video](https://github.com/OpenHPS/openhps-video)** - Provides general data objects and data frames for working with images, video data or cameras.
 - **[@openhps/opencv](https://github.com/OpenHPS/openhps-opencv)** - Provides linkage with opencv4nodejs and OpenCV.js for computer vision algorithms on the server or browser.
+- **[@openhps/openvslam](https://github.com/OpenHPS/openhps-openvslam)** - Provides bindings to OpenVSLAM
+- **[@openhps/orb-slam3](https://github.com/OpenHPS/openhps-orb-slam3)** - Provides bindings to ORB-SLAM3
 
 ### Abstractions
 - **[@openhps/spaces](https://github.com/OpenHPS/openhps-spaces)** - Enables the concept of symbolic spaces (e.g. building, room) on top of reference spaces.
@@ -57,6 +60,7 @@ OpenHPS is a data processing positioning framework. It is designed to support ma
 ### Misc
 - **[@openhps/sphero](https://github.com/OpenHPS/openhps-sphero)** - Example implementation for controlling and receiving sensor data from Sphero toys.
 - **[@openhps/react-native](https://github.com/OpenHPS/openhps-react-native)** - Provides nodes for retrieving sensor data in react-native.
+- **[@openhps/nativescript](https://github.com/OpenHPS/openhps-nativescript)** - Provides nodes for retrieving sensor data in NativeScript.
 - **[@openhps/csv](https://github.com/OpenHPS/openhps-csv)** - Read and write data frames from/to CSV files.
 
 ## Getting Started
