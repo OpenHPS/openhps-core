@@ -1,4 +1,4 @@
-import { DataFrame, DataObject, RelativePosition, RelativeRSSI } from '../../../data';
+import { DataFrame, DataObject, RelativePosition } from '../../../data';
 import { TimeService } from '../../../service/TimeService';
 import { BKFilterNode, KalmanFilterOptions } from './BKFilterNode';
 
@@ -19,7 +19,7 @@ export class RelativePositionFilter<InOut extends DataFrame, R extends RelativeP
             Promise.all(
                 object.relativePositions
                     .filter((x) => x instanceof this._relativePositionType)
-                    .map((relPos: RelativeRSSI) => {
+                    .map((relPos: RelativePosition) => {
                         return this.filterValue(
                             object,
                             relPos,

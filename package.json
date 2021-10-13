@@ -32,7 +32,7 @@
     "test": "mocha --config test/.mocharc.json",
     "test:jenkins": "jenkins-mocha --cobertura --config test/.mocharc.json",
     "benchmark": "ts-node test/bench/worker.bench.ts",
-    "cover": "nyc mocha && nyc report --reporter=cobertura",
+    "cover": "nyc mocha --config test/.mocharc.json && nyc report --reporter=cobertura",
     "lint": "eslint src/** --ignore-pattern three",
     "clean": "shx rm -rf ./dist && shx rm -rf ./docs/out",
     "build": "npm run clean && npm run build:three && npm-run-all --parallel build:esm build:cjs && npm run build:webpack",
