@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataObject, IMUDataFrame, DataSerializer, DataFrame, Absolute2DPosition } from '../../../src';
+import { DataObject, DataSerializer, DataFrame, Absolute2DPosition } from '../../../src';
 import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
 import { DummyDataObject } from '../../mock/data/object/DummyDataObject';
 
@@ -37,18 +37,9 @@ describe('DataFrame', () => {
     });
 
     it('should copy a data frame in the constructor', () => {
-        const imuFrame = new IMUDataFrame();
+        const imuFrame = new DataFrame();
         const frame = new DataFrame(imuFrame);
         expect(frame.createdTimestamp).to.equal(imuFrame.createdTimestamp);
     });
 
-});
-
-describe('IMUDataFrae', () => {
-    it('should be serializable and deserializable', (done) => {
-        const dataFrame = new IMUDataFrame();
-        const serialized = DataSerializer.serialize(dataFrame);
-        const deserialized = DataSerializer.deserialize(serialized, IMUDataFrame);
-        done();
-    });
 });

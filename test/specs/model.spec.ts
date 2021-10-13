@@ -16,10 +16,10 @@ import {
     TimeService,
     DataObjectService,
     MemoryDataService,
-    IMUSensorObject,
     ModelSerializer,
 } from '../../src';
 import { PlaceholderNode } from '../../src/nodes/_internal/PlaceholderNode';
+import { DummySensorObject } from '../mock/data/object/DummySensorObject';
 
 describe('model', () => {
     describe('serializer', () => {
@@ -40,7 +40,7 @@ describe('model', () => {
         it('should be able to find services by class', async () => {
             const model: Model = await ModelBuilder.create()
                 .addService(new DataObjectService(new MemoryDataService(DataObject)))
-                .addService(new DataObjectService(new MemoryDataService(IMUSensorObject)))
+                .addService(new DataObjectService(new MemoryDataService(DummySensorObject)))
                 .from()
                 .to()
                 .build();
@@ -314,7 +314,7 @@ describe('model', () => {
             const model: Model = await ModelBuilder.create()
                 .addServices(
                     new DataObjectService(new MemoryDataService(DataObject)), 
-                    new DataObjectService(new MemoryDataService(IMUSensorObject))
+                    new DataObjectService(new MemoryDataService(DummySensorObject))
                 )
                 .from()
                 .to()

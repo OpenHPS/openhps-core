@@ -3,4 +3,3 @@ export * from './object';
 export * from './position';
 export * from './decorators';
 export * from './DataSerializer';
-export * from './IMUDataFrame';

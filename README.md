@@ -39,6 +39,7 @@ OpenHPS is a data processing positioning framework. It is designed to support ma
 ## Add-ons
 ### Positioning Algorithms
 - **[@openhps/imu](https://github.com/OpenHPS/openhps-imu)** - Adds IMU processing nodes for fusing IMU sensors.
+- **[@openhps/rf](https://github.com/OpenHPS/openhps-rf)** - Adds RF processing nodes and data objects.
 - **[@openhps/fingerprinting](https://github.com/OpenHPS/openhps-fingerprinting)** - Adds various fingerprinting nodes and services for offline and offline positioning models.
 - **[@openhps/video](https://github.com/OpenHPS/openhps-video)** - Provides general data objects and data frames for working with images, video data or cameras.
 - **[@openhps/opencv](https://github.com/OpenHPS/openhps-opencv)** - Provides linkage with opencv4nodejs and OpenCV.js for computer vision algorithms on the server or browser.
