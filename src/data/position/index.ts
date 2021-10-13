@@ -12,7 +12,6 @@ export * from './LinearVelocity';
 export * from './RelativeVelocity';
 export * from './Acceleration';
 export * from './Magnetism';
-export * from './RelativeRSSI';
 export * from './Orientation';
 export * from './SensorValue';
 export * from './Trajectory';

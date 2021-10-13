@@ -11,7 +11,6 @@ import {
     CallbackSinkNode,
     LinearVelocity,
     Model,
-    RFTransmitterObject,
     Absolute3DPosition,
 } from '../../../src';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
@@ -142,17 +141,6 @@ describe('DataObject', () => {
                 expect(dataObject.uid).to.equal(deserialized.uid);
                 expect(dataObject.displayName).to.equal(deserialized.displayName);
                 expect(dataObject.horizontalFOV).to.equal(15);
-                done();
-            });
-
-            it('should serialize RF sensors', (done) => {
-                const dataObject = new RFTransmitterObject();
-                dataObject.txPower = -10;
-                const serialized = DataSerializer.serialize(dataObject);
-                const deserialized = DataSerializer.deserialize(serialized, DummySensorObject);
-                expect(dataObject.uid).to.equal(deserialized.uid);
-                expect(dataObject.displayName).to.equal(deserialized.displayName);
-                expect(dataObject.txPower).to.equal(-10);
                 done();
             });
         });
