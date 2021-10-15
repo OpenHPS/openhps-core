@@ -94,14 +94,9 @@ export class Absolute2DPosition extends AbsolutePosition {
      * @returns {Absolute2DPosition} Cloned position
      */
     clone(): this {
-        const position = new Absolute2DPosition(this.x, this.y);
-        position.unit = this.unit;
-        position.accuracy = this.accuracy;
-        position.orientation = this.orientation ? this.orientation.clone() : undefined;
-        position.linearVelocity = this.linearVelocity ? this.linearVelocity.clone() : undefined;
-        position.angularVelocity = this.angularVelocity ? this.angularVelocity.clone() : undefined;
-        position.timestamp = this.timestamp;
-        position.referenceSpaceUID = this.referenceSpaceUID;
+        const position = super.clone();
+        position.x = this.x;
+        position.y = this.y;
         return position as this;
     }
 }

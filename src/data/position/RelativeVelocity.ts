@@ -1,6 +1,6 @@
 import { RelativePosition } from './RelativePosition';
 import { SerializableObject, SerializableMember } from '../decorators';
-import { Velocity } from './Velocity';
+import { Velocity } from '../values/Velocity';
 
 /**
  * Relative velocity to another reference object
@@ -9,12 +9,6 @@ import { Velocity } from './Velocity';
  */
 @SerializableObject()
 export class RelativeVelocity extends RelativePosition<Velocity> {
-    /**
-     * Position accuracy
-     */
-    @SerializableMember()
-    public accuracy: number;
-
     @SerializableMember()
     public get velocity(): Velocity {
         return this.referenceValue;

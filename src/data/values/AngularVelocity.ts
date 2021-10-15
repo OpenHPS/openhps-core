@@ -3,7 +3,7 @@ import { SerializableObject } from '../decorators';
 import { SensorValue } from './SensorValue';
 
 /**
- * @category Position
+ * @category Sensor Value
  */
 @SerializableObject()
 export class AngularVelocity extends SensorValue {
@@ -11,7 +11,7 @@ export class AngularVelocity extends SensorValue {
         super(x, y, z, unit, AngularVelocityUnit.RADIAN_PER_SECOND);
     }
 
-    public static fromArray(
+    static fromArray(
         array: number[],
         unit: AngularVelocityUnit = AngularVelocityUnit.RADIAN_PER_SECOND,
     ): AngularVelocity {

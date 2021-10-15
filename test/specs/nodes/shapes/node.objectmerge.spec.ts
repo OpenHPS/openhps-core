@@ -20,7 +20,7 @@ describe('node', () => {
                         const frame = new DataFrame();
                         const object = new DataObject('abc');
                         const position = new Absolute2DPosition(1, 1);
-                        position.accuracy = 1;
+                        position.setAccuracy(1);
                         object.setPosition(position);
                         frame.source = object;
                         frame.addObject(new DataObject("random1"));
@@ -31,7 +31,7 @@ describe('node', () => {
                         const frame = new DataFrame();
                         const object = new DataObject('abc');
                         const position = new Absolute2DPosition(0, 0);
-                        position.accuracy = 1;
+                        position.setAccuracy(1);
                         object.setPosition(position);
                         frame.source = object;
                         frame.addObject(new DataObject("random3"));
@@ -41,7 +41,7 @@ describe('node', () => {
                         const frame = new DataFrame();
                         const object = new DataObject('abc');
                         const position = new Absolute2DPosition(5, 5);
-                        position.accuracy = 1;
+                        position.setAccuracy(1);
                         object.setPosition(position);
                         frame.source = object;
                         frame.addObject(new DataObject("random4"));
@@ -77,7 +77,7 @@ describe('node', () => {
                         const frame = new DataFrame();
                         const object = new DataObject('abc');
                         const position = new Absolute2DPosition(1, 1);
-                        position.accuracy = 1;
+                        position.setAccuracy(1);
                         object.setPosition(position);
                         frame.source = object;
                         return frame;
@@ -86,7 +86,7 @@ describe('node', () => {
                         const frame = new DataFrame();
                         const object = new DataObject('abc');
                         const position = new Absolute2DPosition(2, 2);
-                        position.accuracy = 2;
+                        position.setAccuracy(2);
                         object.setPosition(position);
                         frame.source = object;
                         return frame;
@@ -95,7 +95,7 @@ describe('node', () => {
                         const frame = new DataFrame();
                         const object = new DataObject('abc');
                         const position = new Absolute2DPosition(500, 500);
-                        position.accuracy = 5000;
+                        position.setAccuracy(5000);
                         object.setPosition(position);
                         frame.source = object;
                         return frame;

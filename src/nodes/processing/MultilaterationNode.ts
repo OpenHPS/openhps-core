@@ -50,7 +50,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                 case 1:
                     position = spheres[0].position.clone() as P;
                     position.timestamp = dataFrame.createdTimestamp;
-                    position.accuracy = spheres[0].radius;
+                    position.accuracy.setValue(spheres[0].radius);
                     dataObject.setPosition(position);
                     return resolve(dataObject);
                 case 2:
@@ -107,7 +107,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
         const pointA: P = sphereA.position;
         const pointB: P = sphereB.position;
         const newPoint: P = pointA.clone();
-        newPoint.accuracy = pointA.accuracy + pointB.accuracy / 2;
+        newPoint.accuracy.setValue(pointA.accuracy.valueOf() + pointB.accuracy.valueOf() / 2);
         newPoint.fromVector(
             pointA
                 .toVector3()
@@ -158,7 +158,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
             const D = pointB.destination(bearingBA, sphereB.radius);
             // Calculate the middle of C and D
             const midpoint = this.midpoint(new Sphere(C, 1), new Sphere(D, 1));
-            midpoint.accuracy = Math.round((C.distanceTo(D) / 2) * 100) / 100;
+            midpoint.accuracy.setValue(Math.round((C.distanceTo(D) / 2) * 100) / 100);
             return midpoint;
         }
     }

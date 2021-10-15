@@ -1,11 +1,13 @@
 import { Position } from './Position';
-import { LengthUnit, Vector3 } from '../../utils';
-import { Velocity } from './Velocity';
-import { LinearVelocity } from './LinearVelocity';
-import { AngularVelocity } from './AngularVelocity';
+import { LengthUnit, Unit } from '../../utils/unit';
+import { Vector3 } from '../../utils/math';
+import { Velocity } from '../values/Velocity';
+import { LinearVelocity } from '../values/LinearVelocity';
+import { AngularVelocity } from '../values/AngularVelocity';
 import { Orientation } from './Orientation';
 import { SerializableMember, SerializableObject } from '../decorators';
 import { TimeService } from '../../service/TimeService';
+import { Accuracy } from '../values/Accuracy';
 
 /**
  * An absolute position of a [[DataObject]].
@@ -29,10 +31,7 @@ export abstract class AbsolutePosition implements Position {
     /**
      * Orientation at recorded position
      */
-    @SerializableMember({
-        deserializer: Orientation.deserializer,
-        serializer: Orientation.serializer,
-    })
+    @SerializableMember()
     orientation: Orientation;
     /**
      * Position unit
@@ -46,11 +45,27 @@ export abstract class AbsolutePosition implements Position {
         index: true,
     })
     referenceSpaceUID: string;
+    private _accuracy: Accuracy;
+
     /**
      * Position accuracy
+     *
+     * @returns {Accuracy} Position accuracy
      */
     @SerializableMember()
-    accuracy: number;
+    get accuracy(): Accuracy {
+        if (!this._accuracy) {
+            this._accuracy = new Accuracy(0, this.unit);
+        }
+        return this._accuracy;
+    }
+
+    set accuracy(value: Accuracy) {
+        if (!value) {
+            throw new Error(`Accuracy can not be undefined!`);
+        }
+        this._accuracy = value;
+    }
 
     /**
      * Get the linear velocity
@@ -96,6 +111,22 @@ export abstract class AbsolutePosition implements Position {
         this.velocity.angular = value;
     }
 
+    /**
+     * Set the accuracy of the absolute position
+     *
+     * @param {number | Accuracy} accuracy Accuracy object or number
+     * @param {Unit} [unit] Optional unit
+     * @returns {AbsolutePosition} instance
+     */
+    setAccuracy(accuracy: number | Accuracy, unit?: Unit): this {
+        if (typeof accuracy === 'number') {
+            this.accuracy = new Accuracy(accuracy, unit || this.unit);
+        } else {
+            this.accuracy = accuracy;
+        }
+        return this;
+    }
+
     abstract fromVector(vector: Vector3, unit?: LengthUnit): this;
 
     abstract toVector3(unit?: LengthUnit): Vector3;
@@ -120,10 +151,19 @@ export abstract class AbsolutePosition implements Position {
         return this.toVector3(this.unit).equals(position.toVector3(this.unit));
     }
 
-    /**
+   /**
      * Clone the position
      *
-     * @returns {AbsolutePosition} Cloned position
+     * @returns {Absolute3DPosition} Cloned position
      */
-    abstract clone(): this;
+    clone(): this {
+        const position = new (this.constructor as new () => this)();
+        position.unit = this.unit;
+        position.accuracy = this.accuracy.clone();
+        position.orientation = this.orientation ? this.orientation.clone() : undefined;
+        position.velocity = this.velocity ? this.velocity.clone() : undefined;
+        position.timestamp = this.timestamp;
+        position.referenceSpaceUID = this.referenceSpaceUID;
+        return position as this;
+    }
 }

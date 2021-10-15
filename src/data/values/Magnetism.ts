@@ -3,7 +3,7 @@ import { MagnetismUnit } from '../../utils';
 import { SensorValue } from './SensorValue';
 
 /**
- * @category Position
+ * @category Sensor Value
  */
 @SerializableObject()
 export class Magnetism extends SensorValue {

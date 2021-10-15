@@ -12,16 +12,16 @@ import { AngleUnit } from '../unit';
 @SerializableObject()
 export class Quaternion extends THREE.Quaternion {
     @SerializableMember()
-    public x: number;
+    x: number;
 
     @SerializableMember()
-    public y: number;
+    y: number;
 
     @SerializableMember()
-    public z: number;
+    z: number;
 
     @SerializableMember()
-    public w: number;
+    w: number;
 
     /**
      * Convert a threejs quaternion to serializable quaternion
@@ -29,13 +29,13 @@ export class Quaternion extends THREE.Quaternion {
      * @param {THREE.Quaternion} threeQuaternion ThreeJS created quaternion
      * @returns {Quaternion} Serializable quaternion
      */
-    public static fromThreeJS<T extends Quaternion>(threeQuaternion: THREE.Quaternion): T {
+    static fromThreeJS<T extends typeof Quaternion>(threeQuaternion: THREE.Quaternion): InstanceType<T> {
         const quaternion = new this();
         quaternion.x = threeQuaternion.x;
         quaternion.y = threeQuaternion.y;
         quaternion.z = threeQuaternion.z;
         quaternion.w = threeQuaternion.w;
-        return quaternion as T;
+        return quaternion as InstanceType<T>;
     }
 
     /**
@@ -44,23 +44,29 @@ export class Quaternion extends THREE.Quaternion {
      * @param {Vector3 | Euler} euler Euler vector
      * @returns {Quaternion} Serializable quaternion
      */
-    public static fromEuler<T extends Quaternion>(euler: Vector3): T;
-    public static fromEuler<T extends Quaternion>(euler: Euler): T;
-    public static fromEuler<T extends Quaternion>(euler: {
-        yaw: number;
-        pitch: number;
-        roll: number;
-        unit?: AngleUnit;
-    }): T;
-    public static fromEuler<T extends Quaternion>(euler: {
-        x: number;
-        y: number;
-        z: number;
-        order?: EulerOrder;
-        unit?: AngleUnit;
-    }): T;
-    public static fromEuler<T extends Quaternion>(euler: number[]): T;
-    public static fromEuler<T extends Quaternion>(euler: any): T {
+    static fromEuler<T extends typeof Quaternion>(this: T, euler: Vector3): InstanceType<T>;
+    static fromEuler<T extends typeof Quaternion>(this: T, euler: Euler): InstanceType<T>;
+    static fromEuler<T extends typeof Quaternion>(
+        this: T,
+        euler: {
+            yaw: number;
+            pitch: number;
+            roll: number;
+            unit?: AngleUnit;
+        },
+    ): InstanceType<T>;
+    static fromEuler<T extends typeof Quaternion>(
+        this: T,
+        euler: {
+            x: number;
+            y: number;
+            z: number;
+            order?: EulerOrder;
+            unit?: AngleUnit;
+        },
+    ): InstanceType<T>;
+    static fromEuler<T extends typeof Quaternion>(this: T, euler: number[]): InstanceType<T>;
+    static fromEuler<T extends typeof Quaternion>(this: T, euler: any): InstanceType<T> {
         const quaternion = new this();
         if (euler instanceof Euler) {
             quaternion.setFromEuler(euler);
@@ -73,7 +79,7 @@ export class Quaternion extends THREE.Quaternion {
         } else {
             quaternion.setFromEuler(new Euler(euler.roll, euler.pitch, euler.yaw, 'ZYX', euler.unit));
         }
-        return quaternion as T;
+        return quaternion as InstanceType<T>;
     }
 
     /**
@@ -82,16 +88,19 @@ export class Quaternion extends THREE.Quaternion {
      * @param {any} axis Axis-angle rotation
      * @returns {Quaternion} Serializable quaternion
      */
-    public static fromAxisAngle<T extends Quaternion>(axis: {
-        x: number;
-        y: number;
-        z: number;
-        angle?: number;
-        unit?: AngleUnit;
-    }): T;
-    public static fromAxisAngle<T extends Quaternion>(axis: number[]): T;
-    public static fromAxisAngle<T extends Quaternion>(axis: AxisAngle): T;
-    public static fromAxisAngle<T extends Quaternion>(axis: any): T {
+    static fromAxisAngle<T extends typeof Quaternion>(
+        this: T,
+        axis: {
+            x: number;
+            y: number;
+            z: number;
+            angle?: number;
+            unit?: AngleUnit;
+        },
+    ): InstanceType<T>;
+    static fromAxisAngle<T extends typeof Quaternion>(this: T, axis: number[]): InstanceType<T>;
+    static fromAxisAngle<T extends typeof Quaternion>(this: T, axis: AxisAngle): InstanceType<T>;
+    static fromAxisAngle<T extends typeof Quaternion>(this: T, axis: any): InstanceType<T> {
         const quaternion = new this();
         if (axis instanceof AxisAngle) {
             quaternion.setFromAxisAngle(new Vector3(axis.x, axis.y, axis.z), axis.angle);
@@ -102,7 +111,7 @@ export class Quaternion extends THREE.Quaternion {
             const axisAngle = new AxisAngle(axis.x, axis.y, axis.z, axis.angle ? axis.angle : null, axis.unit);
             quaternion.setFromAxisAngle(axisAngle, axisAngle.angle);
         }
-        return quaternion as T;
+        return quaternion as InstanceType<T>;
     }
 
     /**
@@ -111,10 +120,10 @@ export class Quaternion extends THREE.Quaternion {
      * @param {Matrix4} matrix Rotation matrix
      * @returns {Quaternion} Serializable quaternion
      */
-    public static fromRotationMatrix<T extends Quaternion>(matrix: Matrix4): T {
+    static fromRotationMatrix<T extends typeof Quaternion>(this: T, matrix: Matrix4): InstanceType<T> {
         const quaternion = new this();
         quaternion.setFromRotationMatrix(matrix);
-        return quaternion as T;
+        return quaternion as InstanceType<T>;
     }
 
     /**
@@ -123,7 +132,7 @@ export class Quaternion extends THREE.Quaternion {
      * @param {EulerOrder} order Euler order
      * @returns {Euler} Converted euler
      */
-    public toEuler(order?: EulerOrder): Euler {
+    toEuler(order?: EulerOrder): Euler {
         return Euler.fromQuaternion(this, order);
     }
 
@@ -132,7 +141,7 @@ export class Quaternion extends THREE.Quaternion {
      *
      * @returns {AxisAngle} Converted axis angle
      */
-    public toAxisAngle(): AxisAngle {
+    toAxisAngle(): AxisAngle {
         return AxisAngle.fromQuaternion(this);
     }
 
@@ -141,11 +150,11 @@ export class Quaternion extends THREE.Quaternion {
      *
      * @returns {Matrix4} Rotation matrix
      */
-    public toRotationMatrix(): Matrix4 {
+    toRotationMatrix(): Matrix4 {
         return Matrix4.rotationFromQuaternion(this);
     }
 
-    public clone(): this {
+    clone(): this {
         return new (this.constructor as new () => this)().copy(this) as this;
     }
 }

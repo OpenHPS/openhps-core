@@ -2,6 +2,7 @@ import { TimeService } from '../../service/TimeService';
 import { LengthUnit } from '../../utils';
 import { Matrix4 } from '../../utils/math/';
 import { SerializableMember, SerializableObject } from '../decorators';
+import { Accuracy } from '../values/Accuracy';
 import { Absolute3DPosition } from './Absolute3DPosition';
 import { Orientation } from './Orientation';
 import { Position } from './Position';
@@ -23,6 +24,24 @@ export class Pose extends Matrix4 implements Position {
      */
     @SerializableMember()
     unit: LengthUnit = LengthUnit.METER;
+    private _accuracy: Accuracy;
+
+    /**
+     * Position accuracy
+     *
+     * @returns {Accuracy} Position accuracy
+     */
+    @SerializableMember()
+    get accuracy(): Accuracy {
+        if (!this._accuracy) {
+            this._accuracy = new Accuracy(0, this.unit);
+        }
+        return this._accuracy;
+    }
+
+    set accuracy(value: Accuracy) {
+        this.accuracy = value;
+    }
 
     /**
      * Get a pose from a 4d matrix

@@ -178,7 +178,7 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
         // Transform the position to the length unit
         if (this.referenceUnit) {
             newPosition.fromVector(newPosition.toVector3(this._unit));
-            newPosition.accuracy = newPosition.unit.convert(newPosition.accuracy, this._unit);
+            newPosition.setAccuracy(newPosition.accuracy.to(this._unit));
         }
 
         const transformationMatrix = config.inverse
@@ -199,7 +199,7 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
             newPosition.linearVelocity.applyMatrix4(scale).applyMatrix4(Matrix4.rotationFromQuaternion(rotation));
         }
         if (newPosition.accuracy) {
-            newPosition.accuracy = new Vector3(newPosition.accuracy, 0, 0).applyMatrix4(scale).x;
+            newPosition.setAccuracy(new Vector3(newPosition.accuracy.valueOf(), 0, 0).applyMatrix4(scale).x);
         }
 
         newPosition.referenceSpaceUID = this.uid;

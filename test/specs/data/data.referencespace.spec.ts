@@ -17,6 +17,7 @@ import {
     Euler,
     DataObjectService,
     MemoryDataService,
+    Orientation,
 } from '../../../src';
 import { Vector3 } from '../../../src/utils/math/_internal';
 
@@ -101,7 +102,7 @@ describe('data', () => {
                     unit: AngleUnit.DEGREE,
                 });
                 const position = new Absolute3DPosition(0, 0);
-                position.orientation = Quaternion.fromEuler({ yaw: 0, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
+                position.orientation = Orientation.fromEuler({ yaw: 0, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
                 const result = refSpace.transform(position) as Absolute3DPosition;
                 expect(result.orientation.toEuler().toVector(AngleUnit.DEGREE).z).to.equal(180);
             });
@@ -116,7 +117,7 @@ describe('data', () => {
                     unit: AngleUnit.DEGREE,
                 });
                 const position = new Absolute3DPosition(0, 0);
-                position.orientation = Quaternion.fromEuler({ yaw: 90, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
+                position.orientation = Orientation.fromEuler({ yaw: 90, pitch: 0, roll: 0, unit: AngleUnit.DEGREE });
                 const result = refSpace.transform(position) as Absolute3DPosition;
                 expect(Math.round(result.orientation.toEuler().toVector(AngleUnit.DEGREE).z)).to.equal(-90);
             });
@@ -127,7 +128,7 @@ describe('data', () => {
                 const refSpace = new ReferenceSpace(globalReferenceSpace)
                     .rotation(new Euler(180, 0, 0, 'ZXY', AngleUnit.DEGREE));
                 const position = new Absolute3DPosition(0, 0);
-                position.orientation = new Quaternion(0, 0, 0, 1);
+                position.orientation = new Orientation(0, 0, 0, 1);
                 const result = refSpace.transform(position) as Absolute3DPosition;
                 // 180 degree rotation around the X axis should not modify Z
                 expect(result.orientation.toEuler().toVector(AngleUnit.DEGREE).z).to.equal(0);

@@ -198,6 +198,13 @@ describe('units', () => {
             expect(converted.valueOf()).to.equal(500);
             expect(converted.unit.name).to.equal('centimeter');
         });
+
+        it('should be serializable', () => {
+            const value = new UnitValue(5, LengthUnit.METER);
+            const serialized = DataSerializer.serialize(value);
+            const deserialized = DataSerializer.deserialize(serialized);
+            expect(deserialized.valueOf()).to.eq(value.valueOf());
+        });
     });
 
     describe('definition order', () => {

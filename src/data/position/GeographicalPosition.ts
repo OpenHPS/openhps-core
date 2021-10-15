@@ -190,14 +190,10 @@ export class GeographicalPosition extends Absolute3DPosition {
      * @returns {GeographicalPosition} Cloned geographical position
      */
     public clone(): this {
-        const position = new GeographicalPosition(this.latitude, this.longitude, this.altitude);
-        position.unit = this.unit;
-        position.accuracy = this.accuracy;
-        position.orientation = this.orientation ? this.orientation.clone() : undefined;
-        position.linearVelocity = this.linearVelocity ? this.linearVelocity.clone() : undefined;
-        position.angularVelocity = this.angularVelocity ? this.angularVelocity.clone() : undefined;
-        position.timestamp = this.timestamp;
-        position.referenceSpaceUID = this.referenceSpaceUID;
+        const position = super.clone();
+        position.latitude = this.latitude;
+        position.longitude = this.longitude;
+        position.z = this.altitude;
         return position as this;
     }
 }

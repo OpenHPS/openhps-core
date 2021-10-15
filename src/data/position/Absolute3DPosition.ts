@@ -1,6 +1,7 @@
 import { SerializableMember, SerializableObject } from '../decorators';
 import { LengthUnit, Vector3 } from '../../utils';
 import { Absolute2DPosition } from './Absolute2DPosition';
+
 /**
  * Absolute cartesian 3D position. This class uses a [[Vector3]]. This location can be used both as
  * an absolute location or relative location.
@@ -59,14 +60,11 @@ export class Absolute3DPosition extends Absolute2DPosition {
      *
      * @returns {Absolute3DPosition} Cloned position
      */
-    public clone(): this {
-        const position = new Absolute3DPosition(this.x, this.y, this.z);
-        position.unit = this.unit;
-        position.accuracy = this.accuracy;
-        position.orientation = this.orientation ? this.orientation.clone() : undefined;
-        position.velocity = this.velocity ? this.velocity.clone() : undefined;
-        position.timestamp = this.timestamp;
-        position.referenceSpaceUID = this.referenceSpaceUID;
+    clone(): this {
+        const position = super.clone();
+        position.x = this.x;
+        position.y = this.y;
+        position.z = this.z;
         return position as this;
     }
 }

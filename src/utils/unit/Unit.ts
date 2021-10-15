@@ -51,6 +51,8 @@ export class Unit {
     // Units (e.g. second, meter, ...)
     protected static readonly UNITS: Map<string, Unit> = new Map();
 
+    static readonly UNKNOWN = new Unit('unknown');
+
     /**
      * Create a new unit
      *
@@ -128,11 +130,11 @@ export class Unit {
      * @returns {string} Name
      */
     @SerializableMember()
-    public get name(): string {
+    get name(): string {
         return this._name;
     }
 
-    public set name(name: string) {
+    set name(name: string) {
         this._name = name;
         const existingUnit = Unit.findByName(name);
         if (existingUnit) {
@@ -148,19 +150,19 @@ export class Unit {
      *
      * @returns {string[]} Alias names as array
      */
-    public get aliases(): string[] {
+    get aliases(): string[] {
         return this._aliases;
     }
 
-    public get baseName(): string {
+    get baseName(): string {
         return this._baseName;
     }
 
-    public get prefixType(): UnitPrefixType {
+    get prefixType(): UnitPrefixType {
         return this._prefixType;
     }
 
-    public get definitions(): UnitDefinition[] {
+    get definitions(): UnitDefinition[] {
         return Array.from(this._definitions.values());
     }
 
@@ -178,7 +180,7 @@ export class Unit {
      *
      * @returns {UnitFunctionDefinition} Definition to base
      */
-    public createBaseDefinition(): UnitFunctionDefinition<any, any> {
+    createBaseDefinition(): UnitFunctionDefinition<any, any> {
         let newDefinition: UnitFunctionDefinition<any, any>;
 
         // Get base unit
@@ -205,7 +207,7 @@ export class Unit {
         return newDefinition;
     }
 
-    public createDefinition(targetUnit: Unit): UnitFunctionDefinition<any, any> {
+    createDefinition(targetUnit: Unit): UnitFunctionDefinition<any, any> {
         let newDefinition: UnitFunctionDefinition<any, any>;
 
         // Get base unit
@@ -249,7 +251,7 @@ export class Unit {
      * @param {UnitPrefix} prefix Unit prefix
      * @returns {Unit} Unit with specifier
      */
-    public specifier(prefix: UnitPrefix): this {
+    specifier(prefix: UnitPrefix): this {
         // Check if the unit already exists
         const unitName = `${prefix.name}${this.name}`;
         if (Unit.UNITS.has(unitName)) {
@@ -310,7 +312,7 @@ export class Unit {
      * @param {string} baseName Optional base name to specific result
      * @returns {Unit} Unit if found
      */
-    public static findByName(name: string, baseName?: string): Unit {
+    static findByName(name: string, baseName?: string): Unit {
         if (name === undefined) {
             return undefined;
         } else if (Unit.UNITS.has(name)) {
@@ -334,11 +336,11 @@ export class Unit {
     /**
      * Convert a value in the current unit to a target unit
      *
-     * @param {number} value Value to convert
+     * @param {number | Vector3 | number} value Value to convert
      * @param {string | Unit} target Target unit
      * @returns {number} Converted unit
      */
-    public convert<T extends number | Vector3>(value: T, target: string | Unit): T {
+    convert<T extends number | Vector3 | number>(value: T, target: string | Unit): T {
         const targetUnit: Unit = target instanceof Unit ? target : Unit.findByName(target, this.baseName);
 
         // Do not convert if target unit is the same or undefined
@@ -357,12 +359,12 @@ export class Unit {
     /**
      * Convert a value from a specific unit to a target unit
      *
-     * @param {Vector3 | number} value Value to convert
+     * @param {Vector3 | number | number} value Value to convert
      * @param {string | Unit} from Source unit
      * @param {string | Unit} to Target unit
      * @returns {Vector3 | number} Converted unit
      */
-    public static convert(value: Vector3 | number, from: string | Unit, to: string | Unit): Vector3 | number {
+    static convert<T extends number | Vector3 | number>(value: T, from: string | Unit, to: string | Unit): T {
         const fromUnit: Unit = typeof from === 'string' ? Unit.findByName(from) : from;
         return fromUnit.convert(value, to);
     }
@@ -374,7 +376,7 @@ export class Unit {
      * @param {boolean} override Override an existing unit with the same name
      * @returns {Unit} Registered unit
      */
-    public static registerUnit(unit: Unit, override = false): Unit {
+    static registerUnit(unit: Unit, override = false): Unit {
         if (!unit.name) {
             return unit;
         }

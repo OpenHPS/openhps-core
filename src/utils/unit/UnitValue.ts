@@ -1,3 +1,4 @@
+import { SerializableMember, SerializableObject } from '../../data/decorators';
 import { Unit } from './Unit';
 
 /**
@@ -17,11 +18,16 @@ import { Unit } from './Unit';
  *
  * @category Unit
  */
+@SerializableObject()
 export class UnitValue<U extends Unit = Unit> implements Number {
-    private _value: number;
-    private _unit: U;
+    @SerializableMember()
+    protected _value: number;
+    @SerializableMember({
+        constructor: Unit
+    })
+    protected _unit: U;
 
-    constructor(value: number, unit: U) {
+    constructor(value?: number, unit?: U) {
         this._value = value;
         this._unit = unit;
     }
@@ -32,9 +38,9 @@ export class UnitValue<U extends Unit = Unit> implements Number {
      * @param {Unit} unit Target unit
      * @returns {UnitValue} Converted value
      */
-    public to<T extends Unit>(unit: T): UnitValue<T> {
+    to<T extends Unit>(unit: T): this {
         const result = this.unit.convert(this.valueOf(), unit);
-        return new UnitValue(result, unit);
+        return new (this.constructor as new (...args: any[]) => this)(result, unit);
     }
 
     /**
@@ -42,7 +48,7 @@ export class UnitValue<U extends Unit = Unit> implements Number {
      *
      * @returns {Unit} Unit this value is in
      */
-    public get unit(): U {
+    get unit(): U {
         return this._unit;
     }
 
@@ -52,8 +58,8 @@ export class UnitValue<U extends Unit = Unit> implements Number {
      * @param {number} radix specifies a radix for converting numeric values to strings. This value is only used for numbers.
      * @returns {string} Unit value as string
      */
-    public toString(radix?: number): string {
-        return this._value.toString(radix);
+    toString(radix?: number): string {
+        return this.valueOf().toString(radix);
     }
 
     /**
@@ -62,8 +68,8 @@ export class UnitValue<U extends Unit = Unit> implements Number {
      * @param {number} fractionDigits of digits after the decimal point. Must be in the range 0 - 20, inclusive.
      * @returns {string} Fixed number
      */
-    public toFixed(fractionDigits?: number): string {
-        return this._value.toFixed(fractionDigits);
+    toFixed(fractionDigits?: number): string {
+        return this.valueOf().toFixed(fractionDigits);
     }
 
     /**
@@ -72,8 +78,8 @@ export class UnitValue<U extends Unit = Unit> implements Number {
      * @param {number} fractionDigits of digits after the decimal point. Must be in the range 0 - 20, inclusive.
      * @returns {string} Exponential string
      */
-    public toExponential(fractionDigits?: number): string {
-        return this._value.toExponential(fractionDigits);
+    toExponential(fractionDigits?: number): string {
+        return this.valueOf().toExponential(fractionDigits);
     }
 
     /**
@@ -82,8 +88,8 @@ export class UnitValue<U extends Unit = Unit> implements Number {
      * @param {number} precision Number of significant digits. Must be in the range 1 - 21, inclusive.
      * @returns {string} Precision string
      */
-    public toPrecision(precision?: number): string {
-        return this._value.toPrecision(precision);
+    toPrecision(precision?: number): string {
+        return this.valueOf().toPrecision(precision);
     }
 
     /**
@@ -91,7 +97,12 @@ export class UnitValue<U extends Unit = Unit> implements Number {
      *
      * @returns {number} Primitive value
      */
-    public valueOf(): number {
-        return this._value.valueOf();
+    valueOf(): number {
+        return this._value;
+    }
+
+    setValue(value: number): this {
+        this._value = value;
+        return this;
     }
 }

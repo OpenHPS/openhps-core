@@ -7,19 +7,19 @@ import * as THREE from './_internal';
 @SerializableObject()
 export class Vector3 extends THREE.Vector3 {
     @SerializableMember()
-    public x: number;
+    x: number;
 
     @SerializableMember()
-    public y: number;
+    y: number;
 
     @SerializableMember()
-    public z: number;
+    z: number;
 
-    public static fromArray(array: number[]): Vector3 {
+    static fromArray(array: number[]): Vector3 {
         return new this().fromArray(array);
     }
 
-    public clone(): this {
+    clone(): this {
         return new (this.constructor as new () => this)().copy(this) as this;
     }
 }

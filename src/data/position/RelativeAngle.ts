@@ -11,11 +11,6 @@ import { RelativePosition } from './RelativePosition';
 @SerializableObject()
 export class RelativeAngle extends RelativePosition<number> {
     /**
-     * Position accuracy
-     */
-    @SerializableMember()
-    public accuracy: number;
-    /**
      * Orientation at recorded position
      */
     @SerializableMember()

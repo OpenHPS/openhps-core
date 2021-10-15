@@ -1,4 +1,4 @@
-import { AbsolutePosition, DataFrame, DataObject, LinearVelocity, Orientation } from '../../data';
+import { AbsolutePosition, Accuracy, DataFrame, DataObject, LinearVelocity, Orientation } from '../../data';
 import { MergeShape } from './MergeShape';
 
 /**
@@ -38,10 +38,10 @@ export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
             newPosition = this.mergePositions(newPosition, positions[i].clone());
         }
         if (newPosition.accuracy) {
-            newPosition.accuracy = 1 / newPosition.accuracy;
+            newPosition.accuracy.setValue(1 / newPosition.accuracy.valueOf());
         }
         if (newPosition.linearVelocity) {
-            newPosition.linearVelocity.accuracy = 1 / newPosition.linearVelocity.accuracy;
+            newPosition.linearVelocity.setAccuracy(1 / newPosition.linearVelocity.accuracy.valueOf());
         }
         baseObject.setPosition(newPosition);
         return baseObject;
@@ -54,26 +54,29 @@ export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
         }
 
         // Accuracy of the two positions
-        const posAccuracyA = positionA.accuracy || 1;
-        const posAccuracyB = positionB.unit.convert(positionB.accuracy || 1, positionA.unit);
+        const posAccuracyA = positionA.accuracy || new Accuracy(1, positionA.unit);
+        let posAccuracyB = positionB.accuracy || new Accuracy(1, positionB.unit);
+        posAccuracyB = posAccuracyB.to(posAccuracyA.unit);
 
         // Apply position merging
         newPosition.fromVector(
             newPosition
                 .toVector3()
-                .multiplyScalar(1 / posAccuracyA)
-                .add(positionB.toVector3(newPosition.unit).multiplyScalar(1 / posAccuracyB)),
+                .multiplyScalar(1 / posAccuracyA.valueOf())
+                .add(positionB.toVector3(newPosition.unit).multiplyScalar(1 / posAccuracyB.valueOf())),
         );
-        newPosition.fromVector(newPosition.toVector3().divideScalar(1 / posAccuracyA + 1 / posAccuracyB));
-        newPosition.accuracy = 1 / (posAccuracyA + posAccuracyB);
+        newPosition.fromVector(
+            newPosition.toVector3().divideScalar(1 / posAccuracyA.valueOf() + 1 / posAccuracyB.valueOf()),
+        );
+        newPosition.accuracy.setValue(1 / (posAccuracyA.valueOf() + posAccuracyB.valueOf()));
 
         newPosition.linearVelocity = this._mergeVelocity(newPosition.linearVelocity, positionB.linearVelocity);
         newPosition.orientation = this._mergeOrientation(newPosition.orientation, positionB.orientation);
 
         // Average timestamp
         newPosition.timestamp = Math.round(
-            (positionA.timestamp * (1 / posAccuracyA) + positionB.timestamp * (1 / posAccuracyB)) /
-                (1 / posAccuracyA + 1 / posAccuracyB),
+            (positionA.timestamp * (1 / posAccuracyA.valueOf()) + positionB.timestamp * (1 / posAccuracyB.valueOf())) /
+                (1 / posAccuracyA.valueOf() + 1 / posAccuracyB.valueOf()),
         );
         return newPosition;
     }
@@ -81,12 +84,14 @@ export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
     private _mergeVelocity(velocityA: LinearVelocity, velocityB: LinearVelocity): LinearVelocity {
         if (velocityB) {
             if (velocityA) {
-                const lvAccuracyA = velocityA.accuracy || 1;
-                const lvAccuracyB = velocityB.accuracy || 1;
+                const lvAccuracyA = velocityA.accuracy;
+                const lvAccuracyB = velocityB.accuracy;
                 // Merge linear velocity
-                velocityA.multiplyScalar(1 / lvAccuracyA).add(velocityB.multiplyScalar(1 / lvAccuracyB));
-                velocityA.divideScalar(1 / lvAccuracyA + 1 / lvAccuracyB);
-                velocityA.accuracy = 1 / (lvAccuracyA + lvAccuracyB);
+                velocityA
+                    .multiplyScalar(1 / lvAccuracyA.valueOf())
+                    .add(velocityB.multiplyScalar(1 / lvAccuracyB.valueOf()));
+                velocityA.divideScalar(1 / lvAccuracyA.valueOf() + 1 / lvAccuracyB.valueOf());
+                velocityA.setAccuracy(1 / (lvAccuracyA.valueOf() + lvAccuracyB.valueOf()));
             } else {
                 velocityA = velocityB;
             }
@@ -99,7 +104,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
             if (orientationA) {
                 const accuracyA = orientationA.accuracy || 1;
                 const accuracyB = orientationB.accuracy || 1;
-                const slerp = (1 / accuracyA + 1 / accuracyB) / accuracyB / 2;
+                const slerp = (1 / accuracyA.valueOf() + 1 / accuracyB.valueOf()) / accuracyB.valueOf() / 2;
                 orientationA.slerp(orientationB, slerp);
             } else {
                 orientationA = orientationB;

@@ -18,11 +18,11 @@ export class Vector4 extends THREE.Vector4 {
     @SerializableMember()
     w: number;
 
-    public static fromArray(array: number[]): Vector4 {
+    static fromArray(array: number[]): Vector4 {
         return new this().fromArray(array);
     }
 
-    public clone(): this {
+    clone(): this {
         return new (this.constructor as new () => this)().copy(this) as this;
     }
 }

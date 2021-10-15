@@ -10,11 +10,6 @@ import { RelativePosition } from './RelativePosition';
 @SerializableObject()
 export class RelativeDistance extends RelativePosition<number> {
     /**
-     * Position accuracy
-     */
-    @SerializableMember()
-    public accuracy: number;
-    /**
      * Distance unit
      */
     @SerializableMember()

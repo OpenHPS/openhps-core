@@ -52,9 +52,13 @@ export class DataFrame {
         index: true,
     })
     createdTimestamp: number;
-    @SerializableMember()
+    @SerializableMember({
+        name: 'source',
+    })
     private _source: string;
-    @SerializableMapMember(String, DataObject)
+    @SerializableMapMember(String, DataObject, {
+        name: 'objects',
+    })
     private _objects: Map<string, DataObject> = new Map();
 
     /**

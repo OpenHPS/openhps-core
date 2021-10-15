@@ -3,7 +3,7 @@ import { SerializableObject } from '../decorators';
 import { SensorValue } from './SensorValue';
 
 /**
- * @category Position
+ * @category Sensor Value
  */
 @SerializableObject()
 export class Temperature extends SensorValue {

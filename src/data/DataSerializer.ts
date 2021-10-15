@@ -1,6 +1,5 @@
 import { TypedJSON, JsonObjectMetadata, ITypedJSONSettings } from 'typedjson';
 import { MappedTypeConverters } from 'typedjson/lib/types/parser';
-
 const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
 
 TypedJSON.setGlobalConfig({

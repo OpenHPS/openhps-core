@@ -1,6 +1,8 @@
 import { TimeService } from '../../service/TimeService';
+import { Unit } from '../../utils';
 import { DataSerializer } from '../DataSerializer';
 import { SerializableMember, SerializableObject } from '../decorators';
+import { Accuracy } from '../values/Accuracy';
 import { Position } from './Position';
 
 /**
@@ -16,15 +18,36 @@ export abstract class RelativePosition<T = number> implements Position {
     @SerializableMember({
         index: true,
     })
-    public timestamp: number = TimeService.now();
+    timestamp: number = TimeService.now();
     /**
      * Reference object UID that this location is relative to
      */
     @SerializableMember()
-    public referenceObjectUID: string;
+    referenceObjectUID: string;
     @SerializableMember()
-    public referenceObjectType: string;
-    public referenceValue: T;
+    referenceObjectType: string;
+    referenceValue: T;
+    private _accuracy: Accuracy;
+
+    /**
+     * Position accuracy
+     *
+     * @returns {Accuracy} Position accuracy
+     */
+    @SerializableMember()
+    get accuracy(): Accuracy {
+        if (!this._accuracy) {
+            this._accuracy = new Accuracy(0, Unit.UNKNOWN);
+        }
+        return this._accuracy;
+    }
+
+    set accuracy(value: Accuracy) {
+        if (!value) {
+            throw new Error(`Accuracy can not be undefined!`);
+        }
+        this.accuracy = value;
+    }
 
     constructor(referenceObject?: any, value?: T) {
         if (referenceObject !== undefined) {
@@ -36,6 +59,22 @@ export abstract class RelativePosition<T = number> implements Position {
             }
         }
         this.referenceValue = value;
+    }
+
+    /**
+     * Set the accuracy of the absolute position
+     *
+     * @param {number | Accuracy} accuracy Accuracy object or number
+     * @param {Unit} [unit] Optional unit
+     * @returns {RelativePosition} instance
+     */
+    setAccuracy(accuracy: number | Accuracy, unit?: Unit): this {
+        if (typeof accuracy === 'number') {
+            this.accuracy = new Accuracy(accuracy, unit || Unit.UNKNOWN);
+        } else {
+            this.accuracy = accuracy;
+        }
+        return this;
     }
 
     public equals(position: this): boolean {
