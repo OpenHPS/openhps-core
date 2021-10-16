@@ -12,11 +12,4 @@ export class Accuracy<U extends Unit = Unit> extends UnitValue<U> {
         this._value = value;
         return this;
     }
-
-    clone(): this {
-        const result = new (this.constructor as new (...args: any[]) => this)();
-        result._value = this._value;
-        result._unit = this._unit;
-        return result;
-    }
 }

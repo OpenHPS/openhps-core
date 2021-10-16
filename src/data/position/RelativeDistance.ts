@@ -13,7 +13,7 @@ export class RelativeDistance extends RelativePosition<number> {
      * Distance unit
      */
     @SerializableMember()
-    public distanceUnit: LengthUnit;
+    distanceUnit: LengthUnit;
 
     constructor(referenceObject?: any, distance?: number, distanceUnit?: LengthUnit) {
         super(referenceObject, distance);

@@ -33,7 +33,7 @@ export class Orientation extends Quaternion {
 
     clone(): this {
         const vector = super.clone();
-        vector.accuracy = this.accuracy;
+        vector.accuracy = this.accuracy ? this.accuracy.clone() : undefined;
         vector.timestamp = this.timestamp;
         return vector as this;
     }

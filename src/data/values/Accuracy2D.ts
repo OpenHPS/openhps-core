@@ -5,7 +5,9 @@ import { Accuracy } from './Accuracy';
 
 @SerializableObject()
 export class Accuracy2D<U extends Unit = Unit> extends Accuracy<U> {
-    @SerializableMember()
+    @SerializableMember({
+        name: "vector"
+    })
     private _vector: Vector2 = new Vector2();
 
     constructor(x?: number, y?: number, unit?: U) {

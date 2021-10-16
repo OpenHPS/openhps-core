@@ -20,12 +20,15 @@ import { Unit } from './Unit';
  */
 @SerializableObject()
 export class UnitValue<U extends Unit = Unit> implements Number {
-    @SerializableMember()
+    @SerializableMember({
+        name: "value"
+    })
     protected _value: number;
     @SerializableMember({
-        constructor: Unit
+        constructor: Unit,
+        name: "unit"
     })
-    protected _unit: U;
+    protected _unit!: U;
 
     constructor(value?: number, unit?: U) {
         this._value = value;
@@ -39,6 +42,9 @@ export class UnitValue<U extends Unit = Unit> implements Number {
      * @returns {UnitValue} Converted value
      */
     to<T extends Unit>(unit: T): this {
+        if (!unit) {
+            throw new Error(`${this.constructor.name} does not have a unit to convert from!`);
+        }
         const result = this.unit.convert(this.valueOf(), unit);
         return new (this.constructor as new (...args: any[]) => this)(result, unit);
     }
@@ -104,5 +110,12 @@ export class UnitValue<U extends Unit = Unit> implements Number {
     setValue(value: number): this {
         this._value = value;
         return this;
+    }
+
+    clone(): this {
+        const result = new (this.constructor as new (...args: any[]) => this)();
+        result._value = this._value;
+        result._unit = this._unit;
+        return result;
     }
 }

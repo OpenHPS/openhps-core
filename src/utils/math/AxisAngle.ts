@@ -10,7 +10,7 @@ import * as THREE from './_internal';
 @SerializableObject()
 export class AxisAngle extends Vector3 {
     @SerializableMember()
-    public angle: number;
+    angle: number;
 
     constructor(x?: number, y?: number, z?: number, angle: number = null, unit: AngleUnit = AngleUnit.RADIAN) {
         super(
