@@ -26,7 +26,11 @@ export abstract class RelativePosition<T = number> implements Position {
     referenceObjectUID: string;
     @SerializableMember()
     referenceObjectType: string;
+    @SerializableMember()
     referenceValue: T;
+    @SerializableMember({
+        name: "accuracy"
+    })
     private _accuracy: Accuracy;
 
     /**
@@ -34,7 +38,6 @@ export abstract class RelativePosition<T = number> implements Position {
      *
      * @returns {Accuracy} Position accuracy
      */
-    @SerializableMember()
     get accuracy(): Accuracy {
         if (!this._accuracy) {
             this._accuracy = new Accuracy(0, Unit.UNKNOWN);

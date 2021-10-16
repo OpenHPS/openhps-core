@@ -1,7 +1,10 @@
 import { TypedJSON, JsonObjectMetadata, ITypedJSONSettings } from 'typedjson';
 import { MappedTypeConverters } from 'typedjson/lib/types/parser';
+import { Constructor } from './decorators';
+
 const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
 
+// Throw an error instead of logging the message
 TypedJSON.setGlobalConfig({
     errorHandler: (e: Error) => {
         throw e;
@@ -21,7 +24,7 @@ TypedJSON.setGlobalConfig({
  * ```
  */
 export class DataSerializer {
-    private static _serializableTypes: Map<string, new () => any> = new Map();
+    private static _serializableTypes: Map<string, Constructor<any>> = new Map();
 
     private static get _globalConfig(): ITypedJSONSettings {
         return TypedJSON['_globalConfig'];
@@ -33,7 +36,7 @@ export class DataSerializer {
      * @param {typeof any} type Type to register
      * @param {MappedTypeConverters} [converters] Optional converters
      */
-    static registerType<T>(type: new (...args: any[]) => T, converters?: MappedTypeConverters<T>): void {
+    static registerType<T>(type: Constructor<T>, converters?: MappedTypeConverters<T>): void {
         this._serializableTypes.set(type.name, type);
         if (converters) {
             const objectMetadata = new JsonObjectMetadata(type);
@@ -58,17 +61,22 @@ export class DataSerializer {
         return DataSerializer.findRootMetaInfo(protoProto);
     }
 
-    static unregisterType(type: new () => any): void {
+    /**
+     * Unregister a type
+     *
+     * @param {typeof any} type Type to unregister
+     */
+    static unregisterType(type: Constructor<any>): void {
         if (this._serializableTypes.has(type.name)) {
             this._serializableTypes.delete(type.name);
         }
     }
 
-    static get serializableTypes(): Array<new () => any> {
+    static get serializableTypes(): Array<Constructor<any>> {
         return Array.from(this._serializableTypes.values());
     }
 
-    static findTypeByName(name: string): new () => any {
+    static findTypeByName(name: string): Constructor<any> {
         return this._serializableTypes.get(name);
     }
 
@@ -120,7 +128,7 @@ export class DataSerializer {
         return serializedResult;
     }
 
-    protected static serializeObject<T>(data: T, dataType: new () => T): any {
+    protected static serializeObject<T>(data: T, dataType: Constructor<T>): any {
         const typedJSON = new TypedJSON(dataType as new () => T, this._globalConfig);
         const serialized = typedJSON.toPlainJson(data) as any;
         if (serialized instanceof Object) {
@@ -137,14 +145,18 @@ export class DataSerializer {
      * @param serializedData Data to deserialze
      * @param dataType Optional data type to specify deserialization type
      */
-    static deserialize<T>(serializedData: any, dataType?: new () => T): T;
-    static deserialize<T>(serializedData: any[], dataType?: new () => T): T[];
-    static deserialize<T>(serializedData: any, dataType?: new () => T): T | T[] {
+    static deserialize<T>(serializedData: any, dataType?: Constructor<T>): T;
+    static deserialize<T>(serializedData: any[], dataType?: Constructor<T>): T[];
+    static deserialize<T>(serializedData: any, dataType?: Constructor<T>): T | T[] {
         if (serializedData === null || serializedData === undefined) {
             return undefined;
         }
 
-        if (Array.isArray(serializedData)) {
+        if ((typeof serializedData !== 'object' && typeof serializedData !== 'function') || serializedData === null) {
+            // Serialized data is a primitive value
+            return serializedData;
+        } else if (Array.isArray(serializedData)) {
+            // Serialized data is an array
             return DataSerializer.deserializeArray(serializedData, dataType);
         } else {
             const detectedType =
@@ -158,7 +170,7 @@ export class DataSerializer {
         }
     }
 
-    protected static deserializeArray<T>(serializedData: any[], dataType?: new () => T): T[] {
+    protected static deserializeArray<T>(serializedData: any[], dataType?: Constructor<T>): T[] {
         const deserializedResult: T[] = [];
         serializedData.forEach((d) => {
             if (d === null || d === undefined) {

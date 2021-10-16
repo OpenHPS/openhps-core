@@ -25,7 +25,6 @@ export class RelativeDistance extends RelativePosition<number> {
      *
      * @returns {number} Distance
      */
-    @SerializableMember()
     public get distance(): number {
         return this.referenceValue;
     }

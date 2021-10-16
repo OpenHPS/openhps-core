@@ -9,7 +9,6 @@ import { Velocity } from '../values/Velocity';
  */
 @SerializableObject()
 export class RelativeVelocity extends RelativePosition<Velocity> {
-    @SerializableMember()
     public get velocity(): Velocity {
         return this.referenceValue;
     }

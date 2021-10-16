@@ -24,6 +24,9 @@ export class Pose extends Matrix4 implements Position {
      */
     @SerializableMember()
     unit: LengthUnit = LengthUnit.METER;
+    @SerializableMember({
+        name: "accuracy"
+    })
     private _accuracy: Accuracy;
 
     /**
@@ -31,7 +34,6 @@ export class Pose extends Matrix4 implements Position {
      *
      * @returns {Accuracy} Position accuracy
      */
-    @SerializableMember()
     get accuracy(): Accuracy {
         if (!this._accuracy) {
             this._accuracy = new Accuracy(0, this.unit);
@@ -40,7 +42,7 @@ export class Pose extends Matrix4 implements Position {
     }
 
     set accuracy(value: Accuracy) {
-        this.accuracy = value;
+        this._accuracy = value;
     }
 
     /**

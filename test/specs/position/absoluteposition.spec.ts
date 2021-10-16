@@ -1,10 +1,18 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Absolute2DPosition, Accuracy2D, AngleUnit, DataSerializer, LengthUnit, Orientation } from '../../../src';
+import { Absolute2DPosition, Accuracy2D, AngleUnit, DataObject, DataSerializer, LengthUnit, Orientation } from '../../../src';
 
 describe('AbsolutePosition', () => {
 
     describe('serialization', () => {
+        it('should serialize a position indirectly', () => {
+            const obj = new DataObject();
+            obj.position = new Absolute2DPosition(1, 2, LengthUnit.METER);
+            const serialized = DataSerializer.serialize(obj);
+            const deserialized = DataSerializer.deserialize(serialized);
+            expect(deserialized).to.eql(obj);
+        });
+
         it('should serialize a position without orientation', () => {
             const position = new Absolute2DPosition(1, 2, LengthUnit.METER);
             const serialized = DataSerializer.serialize(position);

@@ -2,16 +2,17 @@ import { Service } from './Service';
 import { FilterQuery } from './FilterQuery';
 import { FindOptions } from './FindOptions';
 import { DataSerializer } from '../data/DataSerializer';
+import { Constructor } from '../data/decorators';
 
 /**
  * DataService driver for storing and querying data objects
  * of a specific data type using a certain implementation.
  */
 export abstract class DataServiceDriver<I, T> extends Service {
-    public dataType: new () => T;
+    public dataType: Constructor<T>;
     protected options: DataServiceOptions<T>;
 
-    constructor(dataType: new () => T, options: DataServiceOptions<T> = {}) {
+    constructor(dataType: Constructor<T>, options: DataServiceOptions<T> = {}) {
         super();
 
         this.options = options;

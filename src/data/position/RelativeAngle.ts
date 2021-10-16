@@ -14,12 +14,12 @@ export class RelativeAngle extends RelativePosition<number> {
      * Orientation at recorded position
      */
     @SerializableMember()
-    public orientation: Orientation = new Orientation();
+    orientation: Orientation = new Orientation();
     /**
      * Angle unit
      */
     @SerializableMember()
-    public angleUnit: AngleUnit;
+    angleUnit: AngleUnit;
 
     constructor(referenceObject?: any, angle?: number, angleUnit?: AngleUnit, orientation?: Orientation) {
         super(referenceObject, angle);
@@ -34,7 +34,6 @@ export class RelativeAngle extends RelativePosition<number> {
      *
      * @returns {number} Angle
      */
-    @SerializableMember()
     public get angle(): number {
         return this.referenceValue;
     }

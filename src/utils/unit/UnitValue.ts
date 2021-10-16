@@ -1,4 +1,5 @@
 import { SerializableMember, SerializableObject } from '../../data/decorators';
+import { Vector3 } from '../math';
 import { Unit } from './Unit';
 
 /**
@@ -19,18 +20,18 @@ import { Unit } from './Unit';
  * @category Unit
  */
 @SerializableObject()
-export class UnitValue<U extends Unit = Unit> implements Number {
+export class UnitValue<U extends Unit = Unit, T extends number | Vector3 = number> {
     @SerializableMember({
         name: "value"
     })
-    protected _value: number;
+    protected _value!: T;
     @SerializableMember({
         constructor: Unit,
         name: "unit"
     })
     protected _unit!: U;
 
-    constructor(value?: number, unit?: U) {
+    constructor(value?: T, unit?: U) {
         this._value = value;
         this._unit = unit;
     }
@@ -61,41 +62,10 @@ export class UnitValue<U extends Unit = Unit> implements Number {
     /**
      * Returns a string representation of an object.
      *
-     * @param {number} radix specifies a radix for converting numeric values to strings. This value is only used for numbers.
      * @returns {string} Unit value as string
      */
-    toString(radix?: number): string {
-        return this.valueOf().toString(radix);
-    }
-
-    /**
-     * Returns a string representing a number in fixed-point notation.
-     *
-     * @param {number} fractionDigits of digits after the decimal point. Must be in the range 0 - 20, inclusive.
-     * @returns {string} Fixed number
-     */
-    toFixed(fractionDigits?: number): string {
-        return this.valueOf().toFixed(fractionDigits);
-    }
-
-    /**
-     * Returns a string containing a number represented in exponential notation.
-     *
-     * @param {number} fractionDigits of digits after the decimal point. Must be in the range 0 - 20, inclusive.
-     * @returns {string} Exponential string
-     */
-    toExponential(fractionDigits?: number): string {
-        return this.valueOf().toExponential(fractionDigits);
-    }
-
-    /**
-     * Returns a string containing a number represented either in exponential or fixed-point notation with a specified number of digits.
-     *
-     * @param {number} precision Number of significant digits. Must be in the range 1 - 21, inclusive.
-     * @returns {string} Precision string
-     */
-    toPrecision(precision?: number): string {
-        return this.valueOf().toPrecision(precision);
+    toString(): string {
+        return this.valueOf().toString();
     }
 
     /**
@@ -103,11 +73,11 @@ export class UnitValue<U extends Unit = Unit> implements Number {
      *
      * @returns {number} Primitive value
      */
-    valueOf(): number {
+    valueOf(): T {
         return this._value;
     }
 
-    setValue(value: number): this {
+    setValue(value: T): this {
         this._value = value;
         return this;
     }

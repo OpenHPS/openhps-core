@@ -1,19 +1,14 @@
 import { Unit } from '../../utils';
-import { Vector2 } from '../../utils/math/';
-import { SerializableMember, SerializableObject } from '../decorators';
+import { Vector3 } from '../../utils/math/';
+import { SerializableObject } from '../decorators';
 import { Accuracy } from './Accuracy';
 
 @SerializableObject()
-export class Accuracy2D<U extends Unit = Unit> extends Accuracy<U> {
-    @SerializableMember({
-        name: "vector"
-    })
-    private _vector: Vector2 = new Vector2();
-
+export class Accuracy2D<U extends Unit = Unit> extends Accuracy<U, Vector3> {
     constructor(x?: number, y?: number, unit?: U) {
-        super(x + y / 2, unit);
-        this._vector.x = x;
-        this._vector.y = y;
+        super(new Vector3(), unit);
+        this.valueOf().x = x;
+        this.valueOf().y = y;
     }
 
     /**
@@ -29,31 +24,19 @@ export class Accuracy2D<U extends Unit = Unit> extends Accuracy<U> {
         return accuracy;
     }
 
-    private _updateValue(): void {
-        this._value = this.x + this.y / 2;
-    }
-
     get x(): number {
-        return this._vector.x;
+        return this._value.x;
     }
 
     set x(val: number) {
-        this._vector.x = val;
-        this._updateValue();
+        this._value.x = val;
     }
 
     get y(): number {
-        return this._vector.y;
+        return this._value.y;
     }
 
     set y(val: number) {
-        this._vector.y = val;
-        this._updateValue();
-    }
-
-    clone(): this {
-        const result = super.clone();
-        result._vector = this._vector.clone();
-        return result;
+        this._value.y = val;
     }
 }
