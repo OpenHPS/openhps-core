@@ -21,14 +21,12 @@ export class AccuracyModifierNode<InOut extends DataFrame> extends ObjectProcess
         return new Promise((resolve) => {
             if (object.position) {
                 if (this.options.value) {
-                    object.position.accuracy.setValue(
-                        LengthUnit.METER.convert(this.options.value, object.position.unit),
-                    );
+                    object.position.accuracy.value = LengthUnit.METER.convert(this.options.value, object.position.unit);
                 } else {
-                    const accuracy = object.position.accuracy.valueOf() || this.options.defaultValue;
+                    const accuracy = object.position.accuracy.value || this.options.defaultValue;
                     if (accuracy) {
                         const offset = this.options.offsetUnit.convert(this.options.offset, object.position.unit);
-                        object.position.accuracy.setValue(accuracy * this.options.magnitude + offset);
+                        object.position.accuracy.value = accuracy * this.options.magnitude + offset;
                     }
                 }
             }

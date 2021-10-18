@@ -7,8 +7,8 @@ import { Accuracy } from './Accuracy';
 export class Accuracy2D<U extends Unit = Unit> extends Accuracy<U, Vector3> {
     constructor(x?: number, y?: number, unit?: U) {
         super(new Vector3(), unit);
-        this.valueOf().x = x;
-        this.valueOf().y = y;
+        this.value.x = x;
+        this.value.y = y;
     }
 
     /**
@@ -24,19 +24,27 @@ export class Accuracy2D<U extends Unit = Unit> extends Accuracy<U, Vector3> {
         return accuracy;
     }
 
+    valueOf(): number {
+        return (this.x + this.y) / 2;
+    }
+
+    toString(): string {
+        return this.valueOf().toString();
+    }
+
     get x(): number {
-        return this._value.x;
+        return this.value.x;
     }
 
     set x(val: number) {
-        this._value.x = val;
+        this.value.x = val;
     }
 
     get y(): number {
-        return this._value.y;
+        return this.value.y;
     }
 
     set y(val: number) {
-        this._value.y = val;
+        this.value.y = val;
     }
 }

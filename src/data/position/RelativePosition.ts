@@ -3,6 +3,7 @@ import { Unit } from '../../utils';
 import { DataSerializer } from '../DataSerializer';
 import { SerializableMember, SerializableObject } from '../decorators';
 import { Accuracy } from '../values/Accuracy';
+import { Accuracy1D } from '../values/Accuracy1D';
 import { Position } from './Position';
 
 /**
@@ -11,7 +12,7 @@ import { Position } from './Position';
  * @category Position
  */
 @SerializableObject()
-export abstract class RelativePosition<T = number> implements Position {
+export abstract class RelativePosition<T = number, U extends Unit = Unit> implements Position<U> {
     /**
      * Position recording timestamp
      */
@@ -31,21 +32,39 @@ export abstract class RelativePosition<T = number> implements Position {
     @SerializableMember({
         name: 'accuracy',
     })
-    private _accuracy: Accuracy;
+    private _accuracy: Accuracy<U, any>;
+    private _probability = 1.0;
+
+    /**
+     * Get the position probability
+     *
+     * @returns {number} Probability between 0 and 1
+     */
+    @SerializableMember()
+    get probability(): number {
+        return this._probability;
+    }
+
+    set probability(value: number) {
+        if (value > 1 || value < 0) {
+            throw new Error(`${this.constructor.name} should be between 0 and 1.`);
+        }
+        this._probability = value;
+    }
 
     /**
      * Position accuracy
      *
      * @returns {Accuracy} Position accuracy
      */
-    get accuracy(): Accuracy {
+    get accuracy(): Accuracy<U, any> {
         if (!this._accuracy) {
-            this._accuracy = new Accuracy(0, Unit.UNKNOWN);
+            this._accuracy = new Accuracy1D(0, Unit.UNKNOWN as U);
         }
         return this._accuracy;
     }
 
-    set accuracy(value: Accuracy) {
+    set accuracy(value: Accuracy<U, any>) {
         if (!value) {
             throw new Error(`Accuracy can not be undefined!`);
         }
@@ -71,16 +90,16 @@ export abstract class RelativePosition<T = number> implements Position {
      * @param {Unit} [unit] Optional unit
      * @returns {RelativePosition} instance
      */
-    setAccuracy(accuracy: number | Accuracy, unit?: Unit): this {
+    setAccuracy(accuracy: number | Accuracy<U, T>, unit?: U): this {
         if (typeof accuracy === 'number') {
-            this.accuracy = new Accuracy(accuracy, unit || Unit.UNKNOWN);
+            this.accuracy = new Accuracy1D(accuracy, unit || Unit.UNKNOWN as U);
         } else {
             this.accuracy = accuracy;
         }
         return this;
     }
 
-    public equals(position: this): boolean {
+    equals(position: this): boolean {
         return this.timestamp === position.timestamp;
     }
 
@@ -89,7 +108,7 @@ export abstract class RelativePosition<T = number> implements Position {
      *
      * @returns {RelativePosition} Cloned relative position
      */
-    public clone(): this {
+    clone(): this {
         const serialized = DataSerializer.serialize(this);
         const clone = DataSerializer.deserialize(serialized) as this;
         return clone;

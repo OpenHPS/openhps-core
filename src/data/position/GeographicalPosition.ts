@@ -24,11 +24,11 @@ export class GeographicalPosition extends Absolute3DPosition {
      * @returns {number} Latitude
      */
     @SerializableMember()
-    public get latitude(): number {
+    get latitude(): number {
         return this.y;
     }
 
-    public set latitude(lat: number) {
+    set latitude(lat: number) {
         this.y = lat;
     }
 
@@ -38,11 +38,11 @@ export class GeographicalPosition extends Absolute3DPosition {
      * @returns {number} Longitude
      */
     @SerializableMember()
-    public get longitude(): number {
+    get longitude(): number {
         return this.x;
     }
 
-    public set longitude(lng: number) {
+    set longitude(lng: number) {
         this.x = lng;
     }
 
@@ -52,11 +52,11 @@ export class GeographicalPosition extends Absolute3DPosition {
      * @returns {number} Altitude
      */
     @SerializableMember()
-    public get altitude(): number {
+    get altitude(): number {
         return this.z;
     }
 
-    public set altitude(amsl: number) {
+    set altitude(amsl: number) {
         this.z = amsl;
     }
 
@@ -66,7 +66,7 @@ export class GeographicalPosition extends Absolute3DPosition {
      * @param {GeographicalPosition} destination Destination location
      * @returns {number} Distance between this point and destination
      */
-    public distanceTo(destination: GeographicalPosition): number {
+    distanceTo(destination: GeographicalPosition): number {
         const latRadA = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
         const latRadB = AngleUnit.DEGREE.convert(destination.latitude, AngleUnit.RADIAN);
         const deltaLat = AngleUnit.DEGREE.convert(destination.latitude - this.latitude, AngleUnit.RADIAN);
@@ -84,7 +84,7 @@ export class GeographicalPosition extends Absolute3DPosition {
      * @param {GeographicalPosition} destination Destination location
      * @returns {number} Bearing in degrees from this position to destination
      */
-    public bearing(destination: GeographicalPosition): number {
+    bearing(destination: GeographicalPosition): number {
         return AngleUnit.RADIAN.convert(this.angleTo(destination), AngleUnit.DEGREE);
     }
 
@@ -94,7 +94,7 @@ export class GeographicalPosition extends Absolute3DPosition {
      * @param {GeographicalPosition} destination Destination location
      * @returns {number} Bearing in radians from this position to destination
      */
-    public angleTo(destination: GeographicalPosition): number {
+    angleTo(destination: GeographicalPosition): number {
         const lonRadA = AngleUnit.DEGREE.convert(this.longitude, AngleUnit.RADIAN);
         const latRadA = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
         const lonRadB = AngleUnit.DEGREE.convert(destination.longitude, AngleUnit.RADIAN);
@@ -105,7 +105,7 @@ export class GeographicalPosition extends Absolute3DPosition {
         return Math.atan2(y, x);
     }
 
-    public destination(
+    destination(
         bearing: number,
         distance: number,
         bearingUnit = AngleUnit.DEGREE,
@@ -132,9 +132,9 @@ export class GeographicalPosition extends Absolute3DPosition {
         return location;
     }
 
-    public fromVector(vector: Vector3, unit?: LengthUnit): this;
-    public fromVector(vector: Vector3, unit?: GCS): this;
-    public fromVector(vector: Vector3, unit: Unit = GCS.WGS84): this {
+    fromVector(vector: Vector3, unit?: LengthUnit): this;
+    fromVector(vector: Vector3, unit?: GCS): this;
+    fromVector(vector: Vector3, unit: Unit = GCS.WGS84): this {
         let converted: Vector3;
         if (unit instanceof LengthUnit) {
             converted = GCS.ECEF.convert(
@@ -161,15 +161,15 @@ export class GeographicalPosition extends Absolute3DPosition {
      * @param {LengthUnit} [unit] Metric length unit
      * @returns {Vector3} Vector of the position
      */
-    public toVector3(unit?: LengthUnit): Vector3;
+    toVector3(unit?: LengthUnit): Vector3;
     /**
      * Convert the geographical position to a vector
      *
      * @param {GCS} [unit=GCS.WGS84] coordinate system
      * @returns {Vector3} Vector of the position
      */
-    public toVector3(unit?: GCS): Vector3;
-    public toVector3(unit: Unit = GCS.WGS84): Vector3 {
+    toVector3(unit?: GCS): Vector3;
+    toVector3(unit: Unit = GCS.WGS84): Vector3 {
         if (unit instanceof GCS) {
             return GCS.WGS84.convert(new Vector3(this.x, this.y, this.z), unit);
         } else if (unit instanceof LengthUnit) {
@@ -189,7 +189,7 @@ export class GeographicalPosition extends Absolute3DPosition {
      *
      * @returns {GeographicalPosition} Cloned geographical position
      */
-    public clone(): this {
+    clone(): this {
         const position = super.clone();
         position.latitude = this.latitude;
         position.longitude = this.longitude;

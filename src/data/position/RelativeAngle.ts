@@ -9,7 +9,7 @@ import { RelativePosition } from './RelativePosition';
  * @category Position
  */
 @SerializableObject()
-export class RelativeAngle extends RelativePosition<number> {
+export class RelativeAngle extends RelativePosition<number, AngleUnit> {
     /**
      * Orientation at recorded position
      */
@@ -34,11 +34,11 @@ export class RelativeAngle extends RelativePosition<number> {
      *
      * @returns {number} Angle
      */
-    public get angle(): number {
+    get angle(): number {
         return this.referenceValue;
     }
 
-    public set angle(value: number) {
+    set angle(value: number) {
         this.referenceValue = value;
     }
 }

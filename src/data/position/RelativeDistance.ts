@@ -25,11 +25,11 @@ export class RelativeDistance extends RelativePosition<number> {
      *
      * @returns {number} Distance
      */
-    public get distance(): number {
+    get distance(): number {
         return this.referenceValue;
     }
 
-    public set distance(value: number) {
+    set distance(value: number) {
         this.referenceValue = value;
     }
 }

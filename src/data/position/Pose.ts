@@ -3,6 +3,7 @@ import { LengthUnit } from '../../utils';
 import { Matrix4 } from '../../utils/math/';
 import { SerializableMember, SerializableObject } from '../decorators';
 import { Accuracy } from '../values/Accuracy';
+import { Accuracy1D } from '../values/Accuracy1D';
 import { Absolute3DPosition } from './Absolute3DPosition';
 import { Orientation } from './Orientation';
 import { Position } from './Position';
@@ -11,7 +12,7 @@ import { Position } from './Position';
  * Position and orientation
  */
 @SerializableObject()
-export class Pose extends Matrix4 implements Position {
+export class Pose extends Matrix4 implements Position<LengthUnit> {
     /**
      * Position recording timestamp
      */
@@ -27,21 +28,39 @@ export class Pose extends Matrix4 implements Position {
     @SerializableMember({
         name: 'accuracy',
     })
-    private _accuracy: Accuracy;
+    private _accuracy: Accuracy<LengthUnit, any>;
+    private _probability = 1.0;
+
+    /**
+     * Get the position probability
+     *
+     * @returns {number} Probability between 0 and 1
+     */
+    @SerializableMember()
+    get probability(): number {
+        return this._probability;
+    }
+
+    set probability(value: number) {
+        if (value > 1 || value < 0) {
+            throw new Error(`${this.constructor.name} should be between 0 and 1.`);
+        }
+        this._probability = value;
+    }
 
     /**
      * Position accuracy
      *
      * @returns {Accuracy} Position accuracy
      */
-    get accuracy(): Accuracy {
+    get accuracy(): Accuracy<LengthUnit, any> {
         if (!this._accuracy) {
-            this._accuracy = new Accuracy(0, this.unit);
+            this._accuracy = new Accuracy1D(1, this.unit);
         }
         return this._accuracy;
     }
 
-    set accuracy(value: Accuracy) {
+    set accuracy(value: Accuracy<LengthUnit, any>) {
         this._accuracy = value;
     }
 
@@ -67,6 +86,8 @@ export class Pose extends Matrix4 implements Position {
         const pose = new this();
         pose.timestamp = position.timestamp;
         pose.unit = position.unit;
+        pose.probability = position.probability;
+        pose.accuracy = pose.accuracy.clone();
         const vector = position.toVector3();
         if (position.orientation) {
             pose.makeRotationFromQuaternion(position.orientation);
@@ -101,6 +122,8 @@ export class Pose extends Matrix4 implements Position {
         );
         position.timestamp = this.timestamp;
         position.unit = this.unit;
+        position.probability = this.probability;
+        position.accuracy = this.accuracy.clone();
         position.orientation = this.orientation;
         return position;
     }

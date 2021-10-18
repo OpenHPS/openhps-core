@@ -4,6 +4,7 @@ import * as THREE from '../../utils/math/_internal';
 import { TimeService } from '../../service/TimeService';
 import { Accuracy } from '../values/Accuracy';
 import { AngleUnit } from '../../utils';
+import { Accuracy1D } from '../values/Accuracy1D';
 
 /**
  * Orientation quaternion with accuracy
@@ -19,11 +20,11 @@ export class Orientation extends Quaternion {
     @SerializableMember({
         isRequired: false,
     })
-    accuracy!: Accuracy;
+    accuracy!: Accuracy<AngleUnit, number>;
 
-    constructor(x?: number, y?: number, z?: number, w?: number, accuracy?: Accuracy) {
+    constructor(x?: number, y?: number, z?: number, w?: number, accuracy?: Accuracy<AngleUnit, number>) {
         super(x, y, z, w);
-        this.accuracy = accuracy || new Accuracy(0, AngleUnit.RADIAN);
+        this.accuracy = accuracy || new Accuracy1D(0, AngleUnit.RADIAN);
         this.timestamp = TimeService.now();
     }
 

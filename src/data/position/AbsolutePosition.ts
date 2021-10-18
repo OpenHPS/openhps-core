@@ -8,6 +8,7 @@ import { Orientation } from './Orientation';
 import { SerializableMember, SerializableObject } from '../decorators';
 import { TimeService } from '../../service/TimeService';
 import { Accuracy } from '../values/Accuracy';
+import { Accuracy1D } from '../values/Accuracy1D';
 
 /**
  * An absolute position of a [[DataObject]].
@@ -15,7 +16,7 @@ import { Accuracy } from '../values/Accuracy';
  * @category Position
  */
 @SerializableObject()
-export abstract class AbsolutePosition implements Position {
+export abstract class AbsolutePosition implements Position<LengthUnit> {
     /**
      * Position recording timestamp
      */
@@ -48,21 +49,39 @@ export abstract class AbsolutePosition implements Position {
     @SerializableMember({
         name: 'accuracy',
     })
-    private _accuracy: Accuracy;
+    private _accuracy: Accuracy<LengthUnit, any>;
+    private _probability = 1.0;
+
+    /**
+     * Get the position probability
+     *
+     * @returns {number} Probability between 0 and 1
+     */
+    @SerializableMember()
+    get probability(): number {
+        return this._probability;
+    }
+
+    set probability(value: number) {
+        if (value > 1 || value < 0) {
+            throw new Error(`${this.constructor.name} should be between 0 and 1.`);
+        }
+        this._probability = value;
+    }
 
     /**
      * Position accuracy
      *
      * @returns {Accuracy} Position accuracy
      */
-    get accuracy(): Accuracy {
+    get accuracy(): Accuracy<LengthUnit, any> {
         if (!this._accuracy) {
-            this._accuracy = new Accuracy(0, this.unit);
+            this._accuracy = new Accuracy1D(1, this.unit);
         }
         return this._accuracy;
     }
 
-    set accuracy(value: Accuracy) {
+    set accuracy(value: Accuracy<LengthUnit, any>) {
         if (!value) {
             throw new Error(`Accuracy can not be undefined!`);
         }
@@ -120,9 +139,9 @@ export abstract class AbsolutePosition implements Position {
      * @param {Unit} [unit] Optional unit
      * @returns {AbsolutePosition} instance
      */
-    setAccuracy(accuracy: number | Accuracy, unit?: Unit): this {
+    setAccuracy(accuracy: number | Accuracy<LengthUnit, any>, unit?: Unit): this {
         if (typeof accuracy === 'number') {
-            this.accuracy = new Accuracy(accuracy, unit || this.unit);
+            this.accuracy = new Accuracy1D(accuracy, unit || this.unit);
         } else {
             this.accuracy = accuracy;
         }

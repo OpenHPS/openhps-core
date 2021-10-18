@@ -36,19 +36,20 @@ export class DataObject {
      * Object display name
      */
     @SerializableMember()
-    public displayName: string;
+    displayName: string;
     /**
      * Parent object identifier
      */
     @SerializableMember()
-    public parentUID: string;
+    parentUID: string;
     @SerializableMember({
         index: true,
     })
-    public createdTimestamp: number;
+    createdTimestamp: number;
 
     private _uid!: string;
     private _position: AbsolutePosition;
+    private _positionProbability: number;
     private _relativePositions: Map<string, Map<string, RelativePosition<any>>> = new Map();
 
     /**
@@ -71,11 +72,11 @@ export class DataObject {
     @SerializableMember({
         primaryKey: true,
     })
-    public get uid(): string {
+    get uid(): string {
         return this._uid;
     }
 
-    public set uid(value: string) {
+    set uid(value: string) {
         this._uid = value;
     }
 
@@ -86,7 +87,7 @@ export class DataObject {
      * @returns {AbsolutePosition} Absolute position of data object
      */
     @SerializableMember()
-    public get position(): AbsolutePosition {
+    get position(): AbsolutePosition {
         return this.getPosition();
     }
 
@@ -94,7 +95,7 @@ export class DataObject {
      * Set the current absolute position of the object
      * relative to the global reference space
      */
-    public set position(position: AbsolutePosition) {
+    set position(position: AbsolutePosition) {
         this.setPosition(position);
     }
 
@@ -104,7 +105,7 @@ export class DataObject {
      * @param {TransformationSpace} [referenceSpace] Reference space to transform it to
      * @returns {AbsolutePosition} Position of the data object
      */
-    public getPosition(referenceSpace?: TransformationSpace): AbsolutePosition {
+    getPosition(referenceSpace?: TransformationSpace): AbsolutePosition {
         if (referenceSpace !== undefined && this._position !== undefined) {
             return referenceSpace.transform(this._position, {
                 inverse: true,
@@ -121,7 +122,7 @@ export class DataObject {
      * @param {TransformationSpace} [referenceSpace] Reference space
      * @returns {DataObject} Data object instance
      */
-    public setPosition(position: AbsolutePosition, referenceSpace?: TransformationSpace): this {
+    setPosition(position: AbsolutePosition, referenceSpace?: TransformationSpace): this {
         this._position = referenceSpace
             ? referenceSpace.transform(position, {
                   inverse: false,
@@ -149,7 +150,7 @@ export class DataObject {
             return output;
         },
     })
-    public get relativePositions(): RelativePosition<any>[] {
+    get relativePositions(): RelativePosition<any>[] {
         const relativePostions: RelativePosition<any>[] = [];
         if (this._relativePositions !== undefined) {
             this._relativePositions.forEach((values: Map<string, RelativePosition<any>>) => {
@@ -161,14 +162,14 @@ export class DataObject {
         return relativePostions;
     }
 
-    public set relativePositions(relativePostions: RelativePosition<any>[]) {
+    set relativePositions(relativePostions: RelativePosition<any>[]) {
         this._relativePositions = new Map();
         relativePostions.forEach((relativePostion) => {
             this.addRelativePosition(relativePostion);
         });
     }
 
-    public removeRelativePositions(referenceObjectUID: string): void {
+    removeRelativePositions(referenceObjectUID: string): void {
         this._relativePositions.delete(referenceObjectUID);
     }
 
@@ -178,7 +179,7 @@ export class DataObject {
      * @param {RelativePosition} relativePosition Relative position to add
      * @returns {DataObject} Data object instance
      */
-    public addRelativePosition(relativePosition: RelativePosition<any>): this {
+    addRelativePosition(relativePosition: RelativePosition<any>): this {
         if (!relativePosition || relativePosition.referenceObjectUID === undefined) {
             return;
         }
@@ -199,7 +200,7 @@ export class DataObject {
      * @param {string} [referenceObjectUID] Reference object identifier
      * @returns {RelativePosition[]} Array of relative positions for the reference object
      */
-    public getRelativePositions(referenceObjectUID?: string): RelativePosition<any>[] {
+    getRelativePositions(referenceObjectUID?: string): RelativePosition<any>[] {
         if (referenceObjectUID === undefined) {
             return this.relativePositions;
         } else if (this._relativePositions.has(referenceObjectUID)) {
@@ -216,7 +217,7 @@ export class DataObject {
      * @param {string} type Constructor type of the relative position
      * @returns {RelativePosition} Relative position to reference object
      */
-    public getRelativePosition(referenceObjectUID: string, type?: string): RelativePosition<any> {
+    getRelativePosition(referenceObjectUID: string, type?: string): RelativePosition<any> {
         if (this._relativePositions.has(referenceObjectUID)) {
             const positions = this._relativePositions.get(referenceObjectUID);
             if (type) {
@@ -229,7 +230,7 @@ export class DataObject {
         }
     }
 
-    public hasRelativePosition(referenceObjectUID: string): boolean {
+    hasRelativePosition(referenceObjectUID: string): boolean {
         return this._relativePositions.has(referenceObjectUID);
     }
 
@@ -239,7 +240,7 @@ export class DataObject {
      * @param {DataService<string, DataObject>} service Service to bind it to
      * @returns {DataObjectBinding<DataObject>} Data object binding with a service
      */
-    public bind(service: DataService<string, this>): DataObjectBinding<this> {
+    bind(service: DataService<string, this>): DataObjectBinding<this> {
         return new DataObjectBinding(this, service as DataService<string, this>);
     }
 
@@ -248,7 +249,7 @@ export class DataObject {
      *
      * @returns {DataObject} Cloned data object
      */
-    public clone(): this {
+    clone(): this {
         return DataSerializer.clone(this);
     }
 }
@@ -271,15 +272,15 @@ class DataObjectBinding<T extends DataObject> extends EventEmitter {
         }
     }
 
-    public on(name: string | symbol, listener: (...args: any[]) => void): this;
+    on(name: string | symbol, listener: (...args: any[]) => void): this;
     /**
      * Event when a data object is updated
      *
      * @param {string} name update
      * @param {Function} listener Event callback
      */
-    public on(name: 'update', listener: (newObject: T, oldObject: T) => Promise<void> | void): this;
-    public on(name: string | symbol, listener: (...args: any[]) => void): this {
+    on(name: 'update', listener: (newObject: T, oldObject: T) => Promise<void> | void): this;
+    on(name: string | symbol, listener: (...args: any[]) => void): this {
         return super.on(name, listener);
     }
 
@@ -288,7 +289,7 @@ class DataObjectBinding<T extends DataObject> extends EventEmitter {
      *
      * @returns {Promise<DataObject>} Promise of stored data object
      */
-    public save(): Promise<T> {
+    save(): Promise<T> {
         return this.service.insert(this.target.uid, this.target);
     }
 
@@ -297,14 +298,14 @@ class DataObjectBinding<T extends DataObject> extends EventEmitter {
      *
      * @returns {Promise<void>} Destroy promise
      */
-    public delete(): Promise<void> {
+    delete(): Promise<void> {
         return this.service.delete(this.target.uid);
     }
 
     /**
      * Dispose of the binding
      */
-    public dispose(): void {
+    dispose(): void {
         this.service.removeListener('update', this._onInsert.bind(this));
     }
 }

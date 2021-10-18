@@ -8,7 +8,7 @@ import { Accuracy } from './Accuracy';
  * 3D vector sensor value with accuracy and timestamp.
  */
 @SerializableObject()
-export class SensorValue extends Vector3 {
+export class SensorValue<U extends Unit = Unit> extends Vector3 {
     @SerializableMember({
         isRequired: false,
     })
@@ -16,7 +16,7 @@ export class SensorValue extends Vector3 {
     @SerializableMember({
         isRequired: false,
     })
-    accuracy!: Accuracy;
+    accuracy!: Accuracy<U, Vector3>;
     private _defaultUnit: Unit;
 
     constructor(x?: number, y?: number, z?: number, unit?: Unit, defaultUnit?: Unit, accuracy?: Accuracy) {

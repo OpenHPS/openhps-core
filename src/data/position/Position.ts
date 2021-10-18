@@ -1,3 +1,4 @@
+import { Unit } from '../../utils';
 import { Accuracy } from '../values/Accuracy';
 
 /**
@@ -5,7 +6,7 @@ import { Accuracy } from '../values/Accuracy';
  *
  * @category Position
  */
-export interface Position {
+export interface Position<U extends Unit> {
     /**
      * Position recording timestamp
      */
@@ -14,7 +15,12 @@ export interface Position {
     /**
      * Position accuracy
      */
-    accuracy: Accuracy;
+    accuracy: Accuracy<U, any>;
+
+    /**
+     * Position probability
+     */
+    probability: number;
 
     /**
      * Clone the position
