@@ -43,7 +43,7 @@ export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
             newPosition.accuracy.value = 1 / newPosition.accuracy.value;
         }
         if (newPosition.linearVelocity) {
-            newPosition.linearVelocity.setAccuracy(1 / newPosition.linearVelocity.accuracy.value);
+            newPosition.linearVelocity.setAccuracy(1 / newPosition.linearVelocity.accuracy.valueOf());
         }
         baseObject.setPosition(newPosition);
         return baseObject;
@@ -86,8 +86,8 @@ export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
     private _mergeVelocity(velocityA: LinearVelocity, velocityB: LinearVelocity): LinearVelocity {
         if (velocityB) {
             if (velocityA) {
-                const lvAccuracyA = velocityA.accuracy.value || 1;
-                const lvAccuracyB = velocityB.accuracy.value || 1;
+                const lvAccuracyA = velocityA.accuracy.valueOf() || 1;
+                const lvAccuracyB = velocityB.accuracy.valueOf() || 1;
                 // Merge linear velocity
                 velocityA.multiplyScalar(1 / lvAccuracyA).add(velocityB.multiplyScalar(1 / lvAccuracyB));
                 velocityA.divideScalar(1 / lvAccuracyA + 1 / lvAccuracyB);
@@ -102,8 +102,8 @@ export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
     private _mergeOrientation(orientationA: Orientation, orientationB: Orientation): Orientation {
         if (orientationB) {
             if (orientationA) {
-                const accuracyA = orientationA.accuracy || new Accuracy(1, AngleUnit.RADIAN);
-                const accuracyB = orientationB.accuracy || new Accuracy(1, AngleUnit.RADIAN);
+                const accuracyA = orientationA.accuracy || new Accuracy1D(1, AngleUnit.RADIAN);
+                const accuracyB = orientationB.accuracy || new Accuracy1D(1, AngleUnit.RADIAN);
                 const slerp = (1 / accuracyA.value + 1 / accuracyB.value) / accuracyB.value / 2;
                 orientationA.slerp(orientationB, slerp);
             } else {

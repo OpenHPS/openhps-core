@@ -18,7 +18,7 @@ describe('Accuracy', () => {
             @SerializableObject()
             class ExampleObject {
                 @SerializableMember()
-                accuracy: Accuracy;
+                accuracy: Accuracy<any, any>;
             }
             const obj = new ExampleObject();
             obj.accuracy = new Accuracy2D(3, 2, LengthUnit.METER);

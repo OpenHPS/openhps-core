@@ -7,10 +7,10 @@ import { UnitPrefix } from './UnitPrefix';
  */
 @SerializableObject()
 export class MagnetismUnit extends Unit {
-    public static readonly TESLA: MagnetismUnit = new MagnetismUnit('tesla', {
+    static readonly TESLA: MagnetismUnit = new MagnetismUnit('tesla', {
         baseName: 'magnetism',
         aliases: ['T'],
         prefixes: 'decimal',
     });
-    public static readonly MICROTESLA: MagnetismUnit = MagnetismUnit.TESLA.specifier(UnitPrefix.MICRO);
+    static readonly MICROTESLA: MagnetismUnit = MagnetismUnit.TESLA.specifier(UnitPrefix.MICRO);
 }

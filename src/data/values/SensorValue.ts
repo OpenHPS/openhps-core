@@ -3,6 +3,7 @@ import { Unit } from '../../utils';
 import { Vector3 } from '../../utils/math';
 import { SerializableMember, SerializableObject } from '../decorators';
 import { Accuracy } from './Accuracy';
+import { Accuracy1D } from './Accuracy1D';
 
 /**
  * 3D vector sensor value with accuracy and timestamp.
@@ -16,10 +17,10 @@ export class SensorValue<U extends Unit = Unit> extends Vector3 {
     @SerializableMember({
         isRequired: false,
     })
-    accuracy!: Accuracy<U, Vector3>;
-    private _defaultUnit: Unit;
+    accuracy!: Accuracy<U, Vector3 | number>;
+    private _defaultUnit: U;
 
-    constructor(x?: number, y?: number, z?: number, unit?: Unit, defaultUnit?: Unit, accuracy?: Accuracy) {
+    constructor(x?: number, y?: number, z?: number, unit?: Unit, defaultUnit?: U, accuracy?: Accuracy<U, Vector3 | number>) {
         if (unit && defaultUnit) {
             super(
                 unit.convert(x ? x : 0, defaultUnit),
@@ -31,7 +32,7 @@ export class SensorValue<U extends Unit = Unit> extends Vector3 {
             super(x, y, z);
         }
         this.timestamp = TimeService.now();
-        this.accuracy = accuracy || new Accuracy(1, this._defaultUnit || Unit.UNKNOWN);
+        this.accuracy = accuracy || new Accuracy1D(1, this._defaultUnit || Unit.UNKNOWN as U);
     }
 
     /**
@@ -40,9 +41,9 @@ export class SensorValue<U extends Unit = Unit> extends Vector3 {
      * @param {number | Accuracy} accuracy Accuracy object or number
      * @returns {SensorValue} instance
      */
-    setAccuracy(accuracy: number | Accuracy): this {
+    setAccuracy(accuracy: number | Accuracy<U, Vector3 | number>): this {
         if (typeof accuracy === 'number') {
-            this.accuracy = new Accuracy(accuracy, this._defaultUnit);
+            this.accuracy = new Accuracy1D(accuracy, this._defaultUnit);
         } else {
             this.accuracy = accuracy;
         }

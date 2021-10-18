@@ -13,7 +13,7 @@ export class DerivedUnit extends Unit {
     private _units: Map<string, Unit> = new Map();
     private _unitPower: Map<string, number> = new Map();
 
-    public addUnit(unit: Unit, power: number): DerivedUnit {
+    addUnit(unit: Unit, power: number): DerivedUnit {
         if (this._units.has(unit.baseName)) {
             throw new Error(`A unit with base name '${unit.baseName}' already exists for this unit!`);
         }
@@ -22,7 +22,7 @@ export class DerivedUnit extends Unit {
         return this;
     }
 
-    public swap(subunits: Unit[], options?: UnitOptions): DerivedUnit {
+    swap(subunits: Unit[], options?: UnitOptions): DerivedUnit {
         if (Unit.UNITS.has(options.name)) {
             return Unit.UNITS.get(options.name) as this;
         }

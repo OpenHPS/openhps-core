@@ -277,7 +277,7 @@ describe('FrameMergeNode', () => {
                     const frame = new DataFrame();
                     const object = new DataObject('abc');
                     const position = new Absolute2DPosition(1, 1);
-                    position.accuracy.setValue(1);
+                    position.accuracy.value = 1;
                     position.linearVelocity = new LinearVelocity(2, 2);
                     object.setPosition(position);
                     frame.source = object;
@@ -287,7 +287,7 @@ describe('FrameMergeNode', () => {
                     const frame = new DataFrame();
                     const object = new DataObject('abc');
                     const position = new Absolute2DPosition(0, 0);
-                    position.accuracy.setValue(1);
+                    position.accuracy.value = 1;
                     position.linearVelocity = new LinearVelocity(1, 1);
                     object.setPosition(position);
                     frame.source = object;
@@ -298,7 +298,7 @@ describe('FrameMergeNode', () => {
                     const object = new DataObject('abc');
                     const position = new Absolute2DPosition(5, 5);
                     position.linearVelocity = new LinearVelocity(6, 6);
-                    position.accuracy.setValue(1);
+                    position.accuracy.value = 1;
                     object.setPosition(position);
                     frame.source = object;
                     return frame;
@@ -337,7 +337,7 @@ describe('FrameMergeNode', () => {
                     const frame = new DataFrame();
                     const object = new DataObject('abc');
                     const position = new Absolute2DPosition(1, 1);
-                    position.accuracy.setValue(1);
+                    position.accuracy.value = 1;
                     position.linearVelocity = new LinearVelocity(2, 2);
                     object.setPosition(position);
                     frame.source = object;
@@ -347,7 +347,7 @@ describe('FrameMergeNode', () => {
                     const frame = new DataFrame();
                     const object = new DataObject('abc');
                     const position = new Absolute2DPosition(0, 0);
-                    position.accuracy.setValue(1);
+                    position.accuracy.value = 1;
                     position.linearVelocity = new LinearVelocity(1, 1);
                     object.setPosition(position);
                     frame.source = object;
@@ -358,7 +358,7 @@ describe('FrameMergeNode', () => {
                     const object = new DataObject('abc');
                     const position = new Absolute2DPosition(5, 5);
                     position.linearVelocity = new LinearVelocity(6, 6);
-                    position.accuracy.setValue(1);
+                    position.accuracy.value = 1;
                     object.setPosition(position);
                     frame.source = object;
                     return frame;
@@ -368,7 +368,7 @@ describe('FrameMergeNode', () => {
                     const object = new DataObject('abc');
                     const position = new Absolute2DPosition(3, 3);
                     position.linearVelocity = new LinearVelocity(1, 1);
-                    position.accuracy.setValue(1);
+                    position.accuracy.value = 1;
                     object.setPosition(position);
                     frame.source = object;
                     return frame;

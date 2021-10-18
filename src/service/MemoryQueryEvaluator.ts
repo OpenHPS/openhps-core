@@ -8,7 +8,7 @@ export class MemoryQueryEvaluator {
         return Object.prototype.toString.call(query) === '[object RegExp]';
     }
 
-    public static evaluateComponent<T>(object: T, key: string, query: any): boolean {
+    static evaluateComponent<T>(object: T, key: string, query: any): boolean {
         let result = true;
         const value = (object as any)[key];
         if (key.startsWith('$')) {
@@ -25,7 +25,7 @@ export class MemoryQueryEvaluator {
         return result;
     }
 
-    public static evaluate<T>(object: T, query: FilterQuery<T>): boolean {
+    static evaluate<T>(object: T, query: FilterQuery<T>): boolean {
         let result = true;
         if (query) {
             for (const key of Object.keys(query)) {
@@ -35,7 +35,7 @@ export class MemoryQueryEvaluator {
         return result;
     }
 
-    public static getValueFromPath<T>(object: T, path: string): [any, any, string] {
+    static getValueFromPath<T>(object: T, path: string): [any, any, string] {
         // https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-and-arays-by-string-path
         let o: any = object;
         path = path.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties

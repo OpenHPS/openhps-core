@@ -1,9 +1,10 @@
 import { Unit } from '../../utils';
 import { Vector3 } from '../../utils/math/_internal';
 import { SerializableObject, SerializableMember } from '../decorators';
+import { ReferenceSpace } from '../object';
 
 @SerializableObject()
-export abstract class Accuracy<U extends Unit, T extends any> {
+export abstract class Accuracy<U extends Unit = Unit, T extends number | Vector3 | ReferenceSpace = number> {
     @SerializableMember()
     value: T;
     @SerializableMember({

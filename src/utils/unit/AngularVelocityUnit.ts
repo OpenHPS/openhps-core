@@ -8,23 +8,23 @@ import { TimeUnit } from './TimeUnit';
  */
 @SerializableObject()
 export class AngularVelocityUnit extends DerivedUnit {
-    public static readonly RADIAN_PER_SECOND = new AngularVelocityUnit('radian per second', {
+    static readonly RADIAN_PER_SECOND = new AngularVelocityUnit('radian per second', {
         baseName: 'angularvelocity',
         aliases: ['rad/s', 'radians per second'],
     })
         .addUnit(AngleUnit.RADIAN, 1)
         .addUnit(TimeUnit.SECOND, -1);
-    public static readonly DEGREE_PER_SECOND = AngularVelocityUnit.RADIAN_PER_SECOND.swap([AngleUnit.DEGREE], {
+    static readonly DEGREE_PER_SECOND = AngularVelocityUnit.RADIAN_PER_SECOND.swap([AngleUnit.DEGREE], {
         baseName: 'angularvelocity',
         name: 'degree per second',
         aliases: ['deg/s', 'degrees per second'],
     });
-    public static readonly RADIAN_PER_MINUTE = AngularVelocityUnit.RADIAN_PER_SECOND.swap([TimeUnit.MINUTE], {
+    static readonly RADIAN_PER_MINUTE = AngularVelocityUnit.RADIAN_PER_SECOND.swap([TimeUnit.MINUTE], {
         baseName: 'angularvelocity',
         name: 'radian per minute',
         aliases: ['rad/min', 'radian per minute'],
     });
-    public static readonly DEGREE_PER_MINUTE = AngularVelocityUnit.RADIAN_PER_SECOND.swap(
+    static readonly DEGREE_PER_MINUTE = AngularVelocityUnit.RADIAN_PER_SECOND.swap(
         [AngleUnit.DEGREE, TimeUnit.MINUTE],
         {
             baseName: 'angularvelocity',

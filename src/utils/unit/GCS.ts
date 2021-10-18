@@ -8,14 +8,14 @@ import { Unit } from './Unit';
  */
 @SerializableObject()
 export class GCS extends Unit {
-    public static readonly EARTH_RADIUS = 6371008;
+    static readonly EARTH_RADIUS = 6371008;
 
-    public static readonly EPSG4326 = new GCS('EPSG:4326', {
+    static readonly EPSG4326 = new GCS('EPSG:4326', {
         baseName: 'gcs',
         aliases: ['WGS84', 'World Geodetic System'],
     });
-    public static readonly WGS84 = GCS.EPSG4326;
-    public static readonly ECEF = new GCS('ECEF', {
+    static readonly WGS84 = GCS.EPSG4326;
+    static readonly ECEF = new GCS('ECEF', {
         baseName: 'gcs',
         aliases: ['earth-centered, earth-fixed', 'ECR', 'earth centered rotational'],
         definitions: [
@@ -39,7 +39,7 @@ export class GCS extends Unit {
             },
         ],
     });
-    public static readonly EPSG3857 = new GCS('EPSG:3857', {
+    static readonly EPSG3857 = new GCS('EPSG:3857', {
         baseName: 'gcs',
         aliases: ['pseudo mercator', 'web mercator'],
         definitions: [

@@ -11,7 +11,7 @@ export class NodeDataService<T extends NodeData | NodeData> extends DataService<
      * @param {DataObject} dataObject Data object to get node data for
      * @returns {Promise<any>} Promise of node data for data object
      */
-    public findData(nodeUID: string, dataObject: DataObject | string): Promise<any> {
+    findData(nodeUID: string, dataObject: DataObject | string): Promise<any> {
         return new Promise<any>((resolve) => {
             this.findByUID(this.getUID(nodeUID, typeof dataObject === 'string' ? dataObject : dataObject.uid))
                 .then((nodeData) => {
@@ -23,7 +23,7 @@ export class NodeDataService<T extends NodeData | NodeData> extends DataService<
         });
     }
 
-    public insertData(nodeUID: string, dataObject: DataObject | string, data: any): Promise<T> {
+    insertData(nodeUID: string, dataObject: DataObject | string, data: any): Promise<T> {
         const uid = this.getUID(nodeUID, typeof dataObject === 'string' ? dataObject : dataObject.uid);
         return this.insert(uid, new NodeData(uid, data) as T);
     }

@@ -33,7 +33,7 @@ export abstract class RelativePosition<T = number, U extends Unit = Unit> implem
         name: 'accuracy',
     })
     private _accuracy: Accuracy<U, any>;
-    private _probability = 1.0;
+    private _probability: number;
 
     /**
      * Get the position probability
@@ -42,6 +42,9 @@ export abstract class RelativePosition<T = number, U extends Unit = Unit> implem
      */
     @SerializableMember()
     get probability(): number {
+        if (!this._probability) {
+            return 1 / this.accuracy.valueOf();
+        }
         return this._probability;
     }
 
@@ -59,7 +62,7 @@ export abstract class RelativePosition<T = number, U extends Unit = Unit> implem
      */
     get accuracy(): Accuracy<U, any> {
         if (!this._accuracy) {
-            this._accuracy = new Accuracy1D(0, Unit.UNKNOWN as U);
+            this._accuracy = new Accuracy1D(1, Unit.UNKNOWN as U);
         }
         return this._accuracy;
     }
@@ -90,7 +93,7 @@ export abstract class RelativePosition<T = number, U extends Unit = Unit> implem
      * @param {Unit} [unit] Optional unit
      * @returns {RelativePosition} instance
      */
-    setAccuracy(accuracy: number | Accuracy<U, T>, unit?: U): this {
+    setAccuracy(accuracy: number | Accuracy<U, any>, unit?: U): this {
         if (typeof accuracy === 'number') {
             this.accuracy = new Accuracy1D(accuracy, unit || Unit.UNKNOWN as U);
         } else {

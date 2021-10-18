@@ -336,11 +336,11 @@ export class Unit {
     /**
      * Convert a value in the current unit to a target unit
      *
-     * @param {number | Vector3 | number} value Value to convert
+     * @param {UnitValueType} value Value to convert
      * @param {string | Unit} target Target unit
      * @returns {number} Converted unit
      */
-    convert<T extends number | Vector3 | number>(value: T, target: string | Unit): T {
+    convert<T extends UnitValueType>(value: T, target: string | Unit): T {
         const targetUnit: Unit = target instanceof Unit ? target : Unit.findByName(target, this.baseName);
 
         // Do not convert if target unit is the same or undefined
@@ -359,12 +359,12 @@ export class Unit {
     /**
      * Convert a value from a specific unit to a target unit
      *
-     * @param {Vector3 | number | number} value Value to convert
+     * @param {UnitValueType} value Value to convert
      * @param {string | Unit} from Source unit
      * @param {string | Unit} to Target unit
-     * @returns {Vector3 | number} Converted unit
+     * @returns {UnitValueType} Converted unit
      */
-    static convert<T extends number | Vector3 | number>(value: T, from: string | Unit, to: string | Unit): T {
+    static convert<T extends UnitValueType>(value: T, from: string | Unit, to: string | Unit): T {
         const fromUnit: Unit = typeof from === 'string' ? Unit.findByName(from) : from;
         return fromUnit.convert(value, to);
     }
@@ -403,3 +403,5 @@ export class Unit {
         return unit;
     }
 }
+
+export type UnitValueType = Number | Vector3 | number;

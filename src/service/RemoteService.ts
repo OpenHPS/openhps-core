@@ -14,7 +14,7 @@ export abstract class RemoteService extends Service {
     protected localServices: Set<string> = new Set();
     protected remoteServices: Set<string> = new Set();
     protected promises: Map<string, { resolve: (data?: any) => void; reject: (ex?: any) => void }> = new Map();
-    public model: Model;
+    model: Model;
 
     constructor() {
         super();
@@ -187,7 +187,7 @@ export class RemoteServiceProxy<T extends Service = Service, S extends RemoteSer
         this.uid = options.uid;
     }
 
-    public get?(target: T, p: PropertyKey): any {
+    get?(target: T, p: PropertyKey): any {
         const ownResult = (this as any)[p];
         if (ownResult) {
             return ownResult;
@@ -195,7 +195,7 @@ export class RemoteServiceProxy<T extends Service = Service, S extends RemoteSer
         return this.createHandler(target, p);
     }
 
-    public set?(target: T, p: PropertyKey, value: any): boolean {
+    set?(target: T, p: PropertyKey, value: any): boolean {
         (target as any)[p] = value;
         return true;
     }
@@ -207,7 +207,7 @@ export class RemoteServiceProxy<T extends Service = Service, S extends RemoteSer
      * @param {string|number|symbol} p Property
      * @returns {Function} Handler function
      */
-    public createHandler(target: T, p: PropertyKey): (...args: any[]) => any {
+    createHandler(target: T, p: PropertyKey): (...args: any[]) => any {
         if (!this.service) {
             this.service = target.model.findService(
                 this.options.service instanceof String

@@ -52,7 +52,7 @@ export class WorkerServiceProxy extends ServiceProxy<Service> {
         }
     }
 
-    public get?(target: Service, p: PropertyKey): any {
+    get?(target: Service, p: PropertyKey): any {
         const ownResult = (this as any)[p];
         if (ownResult) {
             return ownResult;
@@ -67,7 +67,7 @@ export class WorkerServiceProxy extends ServiceProxy<Service> {
      * @param {string|number|symbol} p Property
      * @returns {Function} Handler function
      */
-    public createHandler(target: Service, p: PropertyKey): (...args: any[]) => any {
+    createHandler(target: Service, p: PropertyKey): (...args: any[]) => any {
         return (...args: any[]) =>
             new Promise<any>((resolve, reject) => {
                 const uuid = uuidv4();

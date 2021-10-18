@@ -37,7 +37,7 @@ export class CellIdentificationNode<InOut extends DataFrame> extends RelativePos
             if (spheres.length > 0 && spheres[0][1] <= this.options.maxDistance) {
                 const position = spheres[0][0].clone() as P;
                 position.timestamp = dataFrame.createdTimestamp;
-                position.accuracy.setValue(spheres[0][1]);
+                position.accuracy.value = spheres[0][1];
                 dataObject.setPosition(position);
                 return resolve(dataObject);
             }

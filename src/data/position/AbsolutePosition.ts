@@ -50,7 +50,7 @@ export abstract class AbsolutePosition implements Position<LengthUnit> {
         name: 'accuracy',
     })
     private _accuracy: Accuracy<LengthUnit, any>;
-    private _probability = 1.0;
+    private _probability: number;
 
     /**
      * Get the position probability
@@ -59,6 +59,9 @@ export abstract class AbsolutePosition implements Position<LengthUnit> {
      */
     @SerializableMember()
     get probability(): number {
+        if (!this._probability) {
+            return 1 / this.accuracy.valueOf();
+        }
         return this._probability;
     }
 
