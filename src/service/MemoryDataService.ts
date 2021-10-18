@@ -1,3 +1,4 @@
+import { Constructor } from '../data/decorators/';
 import { DataServiceDriver, DataServiceOptions } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
 import { FindOptions } from './FindOptions';
@@ -6,7 +7,7 @@ import { MemoryQueryEvaluator } from './MemoryQueryEvaluator';
 export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
     protected _data: Map<I, any> = new Map();
 
-    constructor(dataType: new () => T, options?: DataServiceOptions<T>) {
+    constructor(dataType: Constructor<T>, options?: DataServiceOptions<T>) {
         super(dataType, options);
     }
 

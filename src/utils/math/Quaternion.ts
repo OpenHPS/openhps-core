@@ -117,6 +117,7 @@ export class Quaternion extends THREE.Quaternion {
     /**
      * Convert rotation matrix to quaternion
      *
+     * @param {Quaternion} this This type
      * @param {Matrix4} matrix Rotation matrix
      * @returns {Quaternion} Serializable quaternion
      */

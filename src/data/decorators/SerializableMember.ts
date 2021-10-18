@@ -1,5 +1,6 @@
 import { jsonMember, IJsonMemberOptions, JsonObjectMetadata, AnyT } from 'typedjson';
 import { JsonMemberMetadata } from 'typedjson/lib/types/metadata';
+import { Constructor } from '../../utils/math/three/Three';
 import { DataSerializer } from '../DataSerializer';
 
 /**
@@ -9,8 +10,7 @@ import { DataSerializer } from '../DataSerializer';
 export function SerializableMember(options?: SerializableMemberOptions): PropertyDecorator {
     return (target: unknown, propertyKey: string) => {
         jsonMember(options)(target, propertyKey);
-        const reflectPropCtor: Function | null | undefined =
-            Reflect.getMetadata('design:type', target, propertyKey);
+        const reflectPropCtor: Constructor<any> = Reflect.getMetadata('design:type', target, propertyKey);
 
         // Inject additional options if available
         if (options) {
@@ -24,7 +24,10 @@ export function SerializableMember(options?: SerializableMemberOptions): Propert
         }
 
         // Detect generic types that have no deserialization or constructor specified
-        if (reflectPropCtor === Object && (!options || (!options.deserializer && !Object.keys(options).includes('constructor')))) {
+        if (
+            reflectPropCtor === Object &&
+            (!options || (!options.deserializer && !Object.keys(options).includes('constructor')))
+        ) {
             const meta = JsonObjectMetadata.ensurePresentInPrototype(target);
             const existingOptions = meta.dataMembers.get(options ? options.name || propertyKey : propertyKey);
             existingOptions.deserializer = DataSerializer.deserialize.bind(DataSerializer);

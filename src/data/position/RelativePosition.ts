@@ -29,7 +29,7 @@ export abstract class RelativePosition<T = number> implements Position {
     @SerializableMember()
     referenceValue: T;
     @SerializableMember({
-        name: "accuracy"
+        name: 'accuracy',
     })
     private _accuracy: Accuracy;
 

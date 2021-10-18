@@ -38,7 +38,6 @@ describe('AbsolutePosition', () => {
             position.accuracy = new Accuracy2D(10, 5, LengthUnit.METER);
             const serialized = DataSerializer.serialize(position);
             const deserialized = DataSerializer.deserialize(serialized);
-            console.log(serialized, deserialized)
             expect(deserialized).to.eql(position);
         });
     });

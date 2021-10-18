@@ -31,7 +31,7 @@ export class SensorValue extends Vector3 {
             super(x, y, z);
         }
         this.timestamp = TimeService.now();
-        this.accuracy = accuracy || new Accuracy(0, Unit.UNKNOWN);
+        this.accuracy = accuracy || new Accuracy(1, this._defaultUnit || Unit.UNKNOWN);
     }
 
     /**

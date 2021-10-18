@@ -1,5 +1,5 @@
 import { RelativePosition } from './RelativePosition';
-import { SerializableObject, SerializableMember } from '../decorators';
+import { SerializableObject } from '../decorators';
 import { Velocity } from '../values/Velocity';
 
 /**

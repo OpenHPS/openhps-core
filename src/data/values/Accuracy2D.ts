@@ -15,7 +15,7 @@ export class Accuracy2D<U extends Unit = Unit> extends Accuracy<U, Vector3> {
      * Convert the value to another unit
      *
      * @param {Unit} unit Target unit
-     * @returns {Vector2} Converted value
+     * @returns {Accuracy2D} Converted value
      */
     to<T extends Unit>(unit: T): this {
         const accuracy = super.to(unit) as this;

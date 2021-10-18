@@ -32,7 +32,7 @@ export class Velocity {
      * @returns {Velocity} Cloned velocity object
      */
     public clone(): this {
-        return new (this.constructor as new (...args:any[]) => this)(
+        return new (this.constructor as new (...args: any[]) => this)(
             this.linear ? this.linear.clone() : undefined,
             this.angular ? this.angular.clone() : undefined,
         );

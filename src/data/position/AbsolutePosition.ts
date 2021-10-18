@@ -46,7 +46,7 @@ export abstract class AbsolutePosition implements Position {
     })
     referenceSpaceUID: string;
     @SerializableMember({
-        name: "accuracy"
+        name: 'accuracy',
     })
     private _accuracy: Accuracy;
 
@@ -153,10 +153,10 @@ export abstract class AbsolutePosition implements Position {
         return this.toVector3(this.unit).equals(position.toVector3(this.unit));
     }
 
-   /**
+    /**
      * Clone the position
      *
-     * @returns {Absolute3DPosition} Cloned position
+     * @returns {AbsolutePosition} Cloned position
      */
     clone(): this {
         const position = new (this.constructor as new () => this)();

@@ -53,7 +53,7 @@ export class DataFrame {
     })
     createdTimestamp: number;
     @SerializableMember({
-        name: 'source'
+        name: 'source',
     })
     private _source: string;
     @SerializableMapMember(String, DataObject, {

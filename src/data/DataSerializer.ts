@@ -1,6 +1,5 @@
-import { TypedJSON, JsonObjectMetadata, ITypedJSONSettings } from 'typedjson';
+import { TypedJSON, JsonObjectMetadata, ITypedJSONSettings, Constructor } from 'typedjson';
 import { MappedTypeConverters } from 'typedjson/lib/types/parser';
-import { Constructor } from './decorators';
 
 const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
 

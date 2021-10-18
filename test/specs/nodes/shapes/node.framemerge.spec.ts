@@ -320,6 +320,7 @@ describe('FrameMergeNode', () => {
             )
             .build()
             .then((model) => {
+                model.once('error', done);
                 Promise.resolve(model.pull()).finally(() => {
                     model.emit('destroy');
                 });
@@ -388,6 +389,7 @@ describe('FrameMergeNode', () => {
             )
             .build()
             .then((model) => {
+                model.once('error', done);
                 Promise.resolve(model.pull()).finally(() => {
                     model.emit('destroy');
                 });

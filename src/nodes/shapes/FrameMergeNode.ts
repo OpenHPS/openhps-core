@@ -84,14 +84,12 @@ export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
     private _mergeVelocity(velocityA: LinearVelocity, velocityB: LinearVelocity): LinearVelocity {
         if (velocityB) {
             if (velocityA) {
-                const lvAccuracyA = velocityA.accuracy;
-                const lvAccuracyB = velocityB.accuracy;
+                const lvAccuracyA = velocityA.accuracy.valueOf() || 1;
+                const lvAccuracyB = velocityB.accuracy.valueOf() || 1;
                 // Merge linear velocity
-                velocityA
-                    .multiplyScalar(1 / lvAccuracyA.valueOf())
-                    .add(velocityB.multiplyScalar(1 / lvAccuracyB.valueOf()));
-                velocityA.divideScalar(1 / lvAccuracyA.valueOf() + 1 / lvAccuracyB.valueOf());
-                velocityA.setAccuracy(1 / (lvAccuracyA.valueOf() + lvAccuracyB.valueOf()));
+                velocityA.multiplyScalar(1 / lvAccuracyA).add(velocityB.multiplyScalar(1 / lvAccuracyB));
+                velocityA.divideScalar(1 / lvAccuracyA + 1 / lvAccuracyB);
+                velocityA.setAccuracy(1 / (lvAccuracyA + lvAccuracyB));
             } else {
                 velocityA = velocityB;
             }

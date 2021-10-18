@@ -1,7 +1,7 @@
 import { SerializableObject, SerializableMember } from '../../data/decorators';
 import * as THREE from './_internal';
 import { Matrix4 } from './Matrix4';
-import { AngleUnit } from '../unit';
+import { AngleUnit } from '../unit/AngleUnit';
 import { Vector3 } from './Vector3';
 
 /**

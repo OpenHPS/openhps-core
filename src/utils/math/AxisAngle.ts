@@ -1,4 +1,4 @@
-import { AngleUnit } from '../unit';
+import { AngleUnit } from '../unit/AngleUnit';
 import { SerializableObject, SerializableMember } from '../../data/decorators';
 import { Matrix4 } from './Matrix4';
 import { Vector3 } from './Vector3';

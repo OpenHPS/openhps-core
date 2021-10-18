@@ -176,7 +176,7 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
         // Clone the position
         const newPosition = this._parent ? this._parent.transform(position, options) : position.clone();
         // Transform the position to the length unit
-        if (this.referenceUnit) {
+        if (this._unit) {
             newPosition.fromVector(newPosition.toVector3(this._unit));
             newPosition.setAccuracy(newPosition.accuracy.to(this._unit));
         }
@@ -198,9 +198,10 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
             // Transform the linear velocity (rotation and scale)
             newPosition.linearVelocity.applyMatrix4(scale).applyMatrix4(Matrix4.rotationFromQuaternion(rotation));
         }
-        if (newPosition.accuracy) {
-            newPosition.setAccuracy(new Vector3(newPosition.accuracy.valueOf(), 0, 0).applyMatrix4(scale).x);
-        }
+        newPosition.setAccuracy(
+            new Vector3(newPosition.accuracy.valueOf(), 0, 0).applyMatrix4(scale).x,
+            newPosition.accuracy.unit,
+        );
 
         newPosition.referenceSpaceUID = this.uid;
         return newPosition as unknown as Out;

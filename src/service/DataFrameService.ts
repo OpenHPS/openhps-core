@@ -54,7 +54,7 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
     public findByDataObject(dataObject: DataObject | string, options?: FindOptions): Promise<T[]> {
         return this.findAll(
             {
-                _objects: {
+                objects: {
                     $elemMatch: {
                         uid: dataObject instanceof DataObject ? dataObject.uid : dataObject,
                     },

@@ -1,5 +1,5 @@
 import { SerializableMember, SerializableObject } from '../../data/decorators';
-import { Vector3 } from '../math';
+import { Vector3 } from '../math/Vector3';
 import { Unit } from './Unit';
 
 /**
@@ -22,12 +22,11 @@ import { Unit } from './Unit';
 @SerializableObject()
 export class UnitValue<U extends Unit = Unit, T extends number | Vector3 = number> {
     @SerializableMember({
-        name: "value"
+        name: 'value',
     })
     protected _value!: T;
     @SerializableMember({
-        constructor: Unit,
-        name: "unit"
+        name: 'unit',
     })
     protected _unit!: U;
 

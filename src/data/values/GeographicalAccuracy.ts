@@ -19,5 +19,4 @@ export class GeographicalAccuracy extends Accuracy3D {
     set verticalAccuracy(val: number) {
         this.z = val;
     }
-    
 }

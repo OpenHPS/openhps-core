@@ -25,7 +25,7 @@ export class Pose extends Matrix4 implements Position {
     @SerializableMember()
     unit: LengthUnit = LengthUnit.METER;
     @SerializableMember({
-        name: "accuracy"
+        name: 'accuracy',
     })
     private _accuracy: Accuracy;
 
