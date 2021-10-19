@@ -34,7 +34,7 @@
     "cover": "nyc mocha --config test/.mocharc.json && nyc report --reporter=cobertura",
     "lint": "eslint src/** --ignore-pattern three",
     "clean": "shx rm -rf ./dist && shx rm -rf ./docs/out",
-    "build": "npm run clean && npm run build:three && npm-run-all --parallel build:esm build:cjs && npm run build:webpack",
+    "build": "npm run clean && npm run build:three && npm-run-all --parallel build:esm build:cjs build:typedoc && npm run build:webpack",
     "build:quick": "npm-run-all --parallel build:cjs build:esm && npm run build:webpack",
     "build:typedoc": "typedoc --options docs/typedoc.json",
     "build:esm": "tsc --module es2015 --outDir dist/esm && shx cp -r ./node_modules/three/src/ ./dist/esm/utils/math/three",
