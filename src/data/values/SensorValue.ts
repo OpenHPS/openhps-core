@@ -20,7 +20,14 @@ export class SensorValue<U extends Unit = Unit> extends Vector3 {
     accuracy!: Accuracy<U, Vector3 | number>;
     private _defaultUnit: U;
 
-    constructor(x?: number, y?: number, z?: number, unit?: Unit, defaultUnit?: U, accuracy?: Accuracy<U, Vector3 | number>) {
+    constructor(
+        x?: number,
+        y?: number,
+        z?: number,
+        unit?: Unit,
+        defaultUnit?: U,
+        accuracy?: Accuracy<U, Vector3 | number>,
+    ) {
         if (unit && defaultUnit) {
             super(
                 unit.convert(x ? x : 0, defaultUnit),
@@ -32,7 +39,7 @@ export class SensorValue<U extends Unit = Unit> extends Vector3 {
             super(x, y, z);
         }
         this.timestamp = TimeService.now();
-        this.accuracy = accuracy || new Accuracy1D(1, this._defaultUnit || Unit.UNKNOWN as U);
+        this.accuracy = accuracy || new Accuracy1D(1, this._defaultUnit || (Unit.UNKNOWN as U));
     }
 
     /**

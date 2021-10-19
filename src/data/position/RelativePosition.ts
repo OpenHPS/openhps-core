@@ -33,14 +33,17 @@ export abstract class RelativePosition<T = number, U extends Unit = Unit> implem
         name: 'accuracy',
     })
     private _accuracy: Accuracy<U, any>;
+    @SerializableMember({
+        name: 'probability',
+    })
     private _probability: number;
+    private _defaultUnit: U;
 
     /**
      * Get the position probability
      *
      * @returns {number} Probability between 0 and 1
      */
-    @SerializableMember()
     get probability(): number {
         if (!this._probability) {
             return 1 / this.accuracy.valueOf();
@@ -62,7 +65,7 @@ export abstract class RelativePosition<T = number, U extends Unit = Unit> implem
      */
     get accuracy(): Accuracy<U, any> {
         if (!this._accuracy) {
-            this._accuracy = new Accuracy1D(1, Unit.UNKNOWN as U);
+            this._accuracy = new Accuracy1D(1, this._defaultUnit);
         }
         return this._accuracy;
     }
@@ -74,7 +77,7 @@ export abstract class RelativePosition<T = number, U extends Unit = Unit> implem
         this.accuracy = value;
     }
 
-    constructor(referenceObject?: any, value?: T) {
+    constructor(referenceObject?: any, value?: T, unit?: U) {
         if (referenceObject !== undefined) {
             if (referenceObject instanceof String || typeof referenceObject === 'string') {
                 this.referenceObjectUID = referenceObject as string;
@@ -83,6 +86,7 @@ export abstract class RelativePosition<T = number, U extends Unit = Unit> implem
                 this.referenceObjectUID = referenceObject.uid;
             }
         }
+        this._defaultUnit = unit || (Unit.UNKNOWN as U);
         this.referenceValue = value;
     }
 
@@ -95,7 +99,7 @@ export abstract class RelativePosition<T = number, U extends Unit = Unit> implem
      */
     setAccuracy(accuracy: number | Accuracy<U, any>, unit?: U): this {
         if (typeof accuracy === 'number') {
-            this.accuracy = new Accuracy1D(accuracy, unit || Unit.UNKNOWN as U);
+            this.accuracy = new Accuracy1D(accuracy, unit || this._defaultUnit);
         } else {
             this.accuracy = accuracy;
         }

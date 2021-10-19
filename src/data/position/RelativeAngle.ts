@@ -22,7 +22,7 @@ export class RelativeAngle extends RelativePosition<number, AngleUnit> {
     angleUnit: AngleUnit;
 
     constructor(referenceObject?: any, angle?: number, angleUnit?: AngleUnit, orientation?: Orientation) {
-        super(referenceObject, angle);
+        super(referenceObject, angle, angleUnit || AngleUnit.RADIAN);
         this.angleUnit = angleUnit;
         if (orientation) {
             this.orientation = orientation;

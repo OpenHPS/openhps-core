@@ -8,7 +8,7 @@ import { RelativePosition } from './RelativePosition';
  * @category Position
  */
 @SerializableObject()
-export class RelativeDistance extends RelativePosition<number> {
+export class RelativeDistance extends RelativePosition<number, LengthUnit> {
     /**
      * Distance unit
      */
@@ -16,7 +16,7 @@ export class RelativeDistance extends RelativePosition<number> {
     distanceUnit: LengthUnit;
 
     constructor(referenceObject?: any, distance?: number, distanceUnit?: LengthUnit) {
-        super(referenceObject, distance);
+        super(referenceObject, distance, LengthUnit.METER);
         this.distanceUnit = distanceUnit;
     }
 

@@ -10,7 +10,7 @@ export class GeographicalAccuracy extends Accuracy3D {
     set latitudeAccuracy(value: number) {
         this.x = value;
     }
-    
+
     get longitudeAccuracy(): number {
         return this.y;
     }

@@ -1,4 +1,4 @@
-import { AbsolutePosition, Accuracy, DataFrame, DataObject, LinearVelocity, Orientation } from '../../data';
+import { AbsolutePosition, DataFrame, DataObject, LinearVelocity, Orientation } from '../../data';
 import { Accuracy1D } from '../../data/values/Accuracy1D';
 import { AngleUnit } from '../../utils';
 import { MergeShape } from './MergeShape';

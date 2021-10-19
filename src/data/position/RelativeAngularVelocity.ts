@@ -10,6 +10,10 @@ import { AngularVelocityUnit } from '../../utils';
  */
 @SerializableObject()
 export class RelativeAngularVelocity extends RelativePosition<AngularVelocity, AngularVelocityUnit> {
+    constructor(referenceObject?: any, velocity?: AngularVelocity) {
+        super(referenceObject, velocity, AngularVelocityUnit.RADIAN_PER_MINUTE);
+    }
+
     get velocity(): AngularVelocity {
         return this.referenceValue;
     }

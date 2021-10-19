@@ -404,4 +404,4 @@ export class Unit {
     }
 }
 
-export type UnitValueType = Number | Vector3 | number;
+export type UnitValueType = number | Vector3 | number;
