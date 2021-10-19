@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { describe } from 'mocha';
-import { Absolute2DPosition, Accuracy, Accuracy2D, Accuracy3D, DataObject, DataSerializer, LengthUnit, SerializableMember, SerializableObject } from '../../../src';
+import { Accuracy, Accuracy2D, Accuracy3D, DataSerializer, LengthUnit, SerializableMember, SerializableObject } from '../../../src';
 
 describe('Accuracy', () => {
 

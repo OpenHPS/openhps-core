@@ -29,11 +29,23 @@ jobs:
         run: |
           npm run test
           npm run cover
-      - name: Publish
+      - name: Publish Web Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: web
           path: |
             dist/web/*
             !dist/web/*.txt
-      
+      - name: Publish Documentation
+        uses: actions/upload-artifact@v2
+        with:
+          name: docs
+          path: |
+            docs/out/*
+      - name: Publish NPM development
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          git config --global user.name 'CI'
+          git config --global user.email 'ci@openhps.org'
+          npm run publish:development
+          git push
