@@ -1,5 +1,17 @@
 import { Suite } from 'benchmark';
-import { Absolute3DPosition, AngularVelocity, CallbackSinkNode, DataFrame, DataObject, GraphBuilder, LinearVelocity, LoggingSinkNode, Model, ModelBuilder, Orientation, Quaternion, TimeService, VelocityProcessingNode, WorkerNode } from '../../src';
+import { 
+    Absolute3DPosition, 
+    AngularVelocity, 
+    CallbackSinkNode, 
+    DataFrame, 
+    DataObject, 
+    GraphBuilder, 
+    LinearVelocity, 
+    Model,
+    ModelBuilder, 
+    Orientation,
+    WorkerNode 
+} from '../../src';
 import * as path from 'path';
 import { ComputingNode } from '../mock/nodes/ComputingNode';
 import Benchmark = require('benchmark');
@@ -76,7 +88,7 @@ function testFunction(model: Model, deferred: any): void {
     frames.forEach(frame => {
         promises.push(model.push(frame));
     });
-    const sink = model.getNodeByUID("sink") as CallbackSinkNode<any>;
+    const sink = model.findNodeByUID("sink") as CallbackSinkNode<any>;
     let count = 0;
     sink.callback = (frame) => {
         count++;
@@ -109,7 +121,7 @@ init().then(() => {
             });
     }, settingsCreate)
     .add("worker#computenode", (deferred: any) => {
-        const sink = model.getNodeByUID("sink") as CallbackSinkNode<any>;
+        const sink = model.findNodeByUID("sink") as CallbackSinkNode<any>;
         sink.callback = (frame) => {
             deferred.resolve();
         };

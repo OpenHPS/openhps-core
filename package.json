@@ -30,7 +30,6 @@
   ],
   "scripts": {
     "test": "mocha --config test/.mocharc.json",
-    "test:jenkins": "jenkins-mocha --cobertura --config test/.mocharc.json",
     "benchmark": "ts-node test/bench/worker.bench.ts",
     "cover": "nyc mocha --config test/.mocharc.json && nyc report --reporter=cobertura",
     "lint": "eslint src/** --ignore-pattern three",
