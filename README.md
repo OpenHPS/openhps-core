@@ -3,17 +3,17 @@
   @openhps/core
 </h1>
 <p align="center">
-    <a href="https://ci.mvdw-software.com/job/openhps-core/" target="_blank">
-        <img alt="Build Status" src="https://ci.mvdw-software.com/job/openhps-core/job/dev/badge/icon">
+    <a href="https://github.com/OpenHPS/openhps-core/actions/workflows/main.yml" target="_blank">
+        <img alt="Build Status" src="https://github.com/OpenHPS/openhps-core/actions/workflows/main.yml/badge.svg">
     </a>
-    <a href="https://ci.mvdw-software.com/view/OpenHPS/job/openhps-core/job/dev/lastCompletedBuild/testReport" target="_blank">
-        <img alt="Tests" src="https://img.shields.io/jenkins/tests?compact_message&jobUrl=https%3A%2F%2Fci.mvdw-software.com%2Fview%2FOpenHPS%2Fjob%2Fopenhps-core%2Fjob%2Fdev">
-    </a>
-    <a href="https://ci.mvdw-software.com/view/OpenHPS/job/openhps-core/job/dev/lastCompletedBuild/cobertura/" target="_blank">
-        <img alt="Code coverage" src="https://img.shields.io/jenkins/coverage/cobertura?jobUrl=https%3A%2F%2Fci.mvdw-software.com%2Fview%2FOpenHPS%2Fjob%2Fopenhps-core%2Fjob%2Fdev%2F">
+    <a href="https://codecov.io/gh/OpenHPS/openhps-core">
+        <img src="https://codecov.io/gh/OpenHPS/openhps-core/branch/master/graph/badge.svg"/>
     </a>
     <a href="https://codeclimate.com/github/OpenHPS/openhps-core/" target="_blank">
         <img alt="Maintainability" src="https://img.shields.io/codeclimate/maintainability/OpenHPS/openhps-core">
+    </a>
+    <a href="https://badge.fury.io/js/@openhps%2Fcore">
+        <img src="https://badge.fury.io/js/@openhps%2Fcore.svg" alt="npm version" height="18">
     </a>
     <a href="https://app.fossa.com/projects/git%2Bgithub.com%2FOpenHPS%2Fopenhps-core?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FOpenHPS%2Fopenhps-core.svg?type=shield"/></a>
 </p>

@@ -15,19 +15,13 @@ jobs:
       - name: Build
         run: |
           npm install
-          npm run build:three
-          npm run build:cjs
-          npm run build:esm
-          npm run build:webpack
+          npm run build
       - name: Quality
         run: |
           npm run lint
-      - name: Documentation
-        run: |
-          npm run build:typedoc
       - name: Test
         run: |
-          npm run test
+          npm run test -- --reporter mocha-junit-reporter
           npm run cover
       - name: Publish Web Artifacts
         uses: actions/upload-artifact@v2
@@ -42,10 +36,34 @@ jobs:
           name: docs
           path: |
             docs/out/*
-      - name: Publish NPM development
-        if: github.ref == 'refs/heads/dev'
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: test-results.xml
+      - name: Upload code coverage
+        uses: codecov/codecov-action@v2
+        with:
+          files: coverage/cobertura-coverage.xml
+          verbose: true
+      - name: Configure Publish
         run: |
           git config --global user.name 'CI'
           git config --global user.email 'ci@openhps.org'
-          npm run publish:development
+      - name: Bump version development
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          npm run bump:development
+      - name: Bump version release
+        if: github.ref == 'refs/heads/master'
+        run: |
+          npm run bump:release
+      - name: Publish to NPM
+        uses: JS-DevTools/npm-publish@v1
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to GitHub
+        if: success()
+        run: |
           git push
