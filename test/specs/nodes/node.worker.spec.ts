@@ -336,6 +336,10 @@ describe('node', () => {
                     done();
                 }))
                 .build().then(model => {
+                    model.once('error', (ex) => {
+                        model.destroy();
+                        done(ex);
+                    });
                     model.pull();
                 }).catch(done);
         }).slow(8000).timeout(60000);
