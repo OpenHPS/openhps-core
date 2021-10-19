@@ -6,3 +6,4 @@ artifacts/
 src/utils/math/three/
 .nyc_output/
 .cache/
+test-results.xml

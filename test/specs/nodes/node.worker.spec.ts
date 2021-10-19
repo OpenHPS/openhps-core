@@ -122,62 +122,6 @@ describe('node', () => {
                 });
         }).slow(5000).timeout(60000);
 
-        it('should take 10ms with 3 workers', (done) => {
-            let model;
-            let start;
-            ModelBuilder.create()
-                .from()
-                .via(
-                    new WorkerNode(
-                        (builder) => {
-                            const { TimeConsumingNode } = require(path.join(
-                                __dirname,
-                                '../../mock/nodes/TimeConsumingNode',
-                            ));
-                            builder.via(new TimeConsumingNode());
-                        },
-                        {
-                            directory: __dirname,
-                            poolSize: 3,
-                        },
-                    ),
-                )
-                .to(
-                    new CallbackSinkNode((data: DataFrame) => {
-                        expect(data.getObjects()[0].uid).to.equal('time object');
-                    }),
-                )
-                .build()
-                .then((m) => {
-                    model = m;
-
-                    // Warm-up
-                    return model.push(new DataFrame());
-                })
-                .then(() => {
-                    // Push three frames and wait for them to finish
-                    start = new Date().getTime();
-                    let count = 0;
-                    model.on('completed', () => {
-                        count++;
-                        if (count === 3) {
-                            const end = new Date().getTime();
-                            const diff = end - start;
-                            expect(diff).to.be.lessThan(10 + overhead);
-                            model.emit('destroy');
-                            done();
-                        }
-                    });
-
-                    for (let i = 0 ; i < 3 ; i ++){
-                        model.push(new DataFrame());
-                    }
-                })
-                .catch((ex) => {
-                    done(ex);
-                });
-        }).slow(5000).timeout(60000);
-
         it('should be able to access data services', (done) => {
             let model;
             ModelBuilder.create()
@@ -325,7 +269,7 @@ describe('node', () => {
                 .addNode(new WorkerNode("../../mock/ExampleGraph", {
                     name: "output",
                     directory: __dirname,
-                    poolSize: 3
+                    poolSize: 2
                 }))
                 .from("output")
                 .to(new CallbackSinkNode(function(frame) {
