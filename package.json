@@ -47,7 +47,7 @@
     "publish:development": "npm run bump:beta && npm publish --tag dev",
     "publish:beta": "npm run bump:beta && npm publish --tag beta",
     "publish:release": "npm run bump:beta && npm publish --tag latest",
-    "bump:development": "standard-version --prerelease alpha -m 'chore(alpha): %s'--skip.changelog",
+    "bump:development": "standard-version --prerelease alpha -m 'chore(alpha): %s' --skip.changelog",
     "bump:beta": "standard-version --prerelease beta -m 'chore(beta): %s' --skip.changelog",
     "bump:release": "standard-version -m 'chore(release): %s' --skip.changelog"
   },
