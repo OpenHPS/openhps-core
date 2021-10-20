@@ -12,7 +12,7 @@ describe('proxy', () => {
         });
 
         it('should be able to proxy name requests', () => {
-            expect(proxy.name).to.equal('DataObject');
+            expect(proxy.uid).to.equal('DataObject');
         });
 
         it('should be able to proxy function calls', (done) => {

@@ -99,7 +99,7 @@ describe('DataObject', () => {
                     done();
                 });
                 model.push(new DataFrame(dataObject));
-            });
+            }).catch(done);
     });
 
     describe('binding', () => {

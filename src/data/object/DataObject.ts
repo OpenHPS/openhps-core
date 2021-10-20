@@ -49,7 +49,6 @@ export class DataObject {
 
     private _uid!: string;
     private _position: AbsolutePosition;
-    private _positionProbability: number;
     private _relativePositions: Map<string, Map<string, RelativePosition<any>>> = new Map();
 
     /**

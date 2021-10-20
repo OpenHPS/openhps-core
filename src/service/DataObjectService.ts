@@ -19,11 +19,11 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
      * @param {DataObject} object Data object to insert
      * @returns {DataObject} Inserted object
      */
-    public insertObject(object: T): Promise<T> {
+    insertObject(object: T): Promise<T> {
         return this.insert(object.uid, object);
     }
 
-    public insert(id: string, object: T): Promise<T> {
+    insert(id: string, object: T): Promise<T> {
         return new Promise((resolve, reject) => {
             this.driver
                 .insert(id, object)
@@ -40,7 +40,7 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
      * @param {string} displayName Name to search for
      * @returns {DataObject[]} Array of data objects that match the display name
      */
-    public findByDisplayName(displayName: string): Promise<T[]> {
+    findByDisplayName(displayName: string): Promise<T[]> {
         return this.findAll({
             displayName,
         }) as Promise<T[]>;
@@ -52,7 +52,7 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
      * @param {AbsolutePosition} position Current absolute position
      * @returns {DataObject[]} Array of data objects that match the position
      */
-    public findByPosition(position: AbsolutePosition): Promise<T[]> {
+    findByPosition(position: AbsolutePosition): Promise<T[]> {
         const vector: Vector3 = position.toVector3();
         let filter: FilterQuery<any>;
         if (position instanceof Absolute3DPosition) {
@@ -76,7 +76,7 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
      * @param {string} parentUID string Parent UID
      * @returns {DataObject[]} Array of data objects that match the parent UID
      */
-    public findByParentUID(parentUID: string): Promise<T[]> {
+    findByParentUID(parentUID: string): Promise<T[]> {
         return this.findAll({
             parentUID,
         }) as Promise<T[]>;
@@ -88,7 +88,7 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
      * @param {number} timestamp Timestamp
      * @returns {DataObject[]} Array of data objects before the specified timestamp
      */
-    public findBefore(timestamp: number): Promise<T[]> {
+    findBefore(timestamp: number): Promise<T[]> {
         return this._findTimestamp({ $lte: timestamp });
     }
 
@@ -98,7 +98,7 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
      * @param {number} timestamp Timestamp
      * @returns {DataObject[]} Array of data objects after the specified timestamp
      */
-    public findAfter(timestamp: number): Promise<T[]> {
+    findAfter(timestamp: number): Promise<T[]> {
         return this._findTimestamp({ $gte: timestamp });
     }
 

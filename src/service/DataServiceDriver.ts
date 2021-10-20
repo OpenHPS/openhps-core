@@ -9,7 +9,7 @@ import { Constructor } from '../data/decorators';
  * of a specific data type using a certain implementation.
  */
 export abstract class DataServiceDriver<I, T> extends Service {
-    public dataType: Constructor<T>;
+    dataType: Constructor<T>;
     protected options: DataServiceOptions<T>;
 
     constructor(dataType: Constructor<T>, options: DataServiceOptions<T> = {}) {
@@ -25,19 +25,19 @@ export abstract class DataServiceDriver<I, T> extends Service {
         }
     }
 
-    public abstract findByUID(id: I): Promise<T>;
+    abstract findByUID(id: I): Promise<T>;
 
-    public abstract findOne(query?: FilterQuery<T>, options?: FindOptions): Promise<T>;
+    abstract findOne(query?: FilterQuery<T>, options?: FindOptions): Promise<T>;
 
-    public abstract findAll(query?: FilterQuery<T>, options?: FindOptions): Promise<T[]>;
+    abstract findAll(query?: FilterQuery<T>, options?: FindOptions): Promise<T[]>;
 
-    public abstract count(query?: FilterQuery<T>): Promise<number>;
+    abstract count(query?: FilterQuery<T>): Promise<number>;
 
-    public abstract insert(id: I, object: T): Promise<T>;
+    abstract insert(id: I, object: T): Promise<T>;
 
-    public abstract delete(id: I): Promise<void>;
+    abstract delete(id: I): Promise<void>;
 
-    public abstract deleteAll(query?: FilterQuery<T>): Promise<void>;
+    abstract deleteAll(query?: FilterQuery<T>): Promise<void>;
 }
 
 export interface DataServiceOptions<T = any> {

@@ -12,7 +12,7 @@ import { Position } from './Position';
  * @category Position
  */
 @SerializableObject()
-export abstract class RelativePosition<T = number, U extends Unit = Unit> implements Position<U> {
+export class RelativePosition<T = number, U extends Unit = Unit> implements Position<U> {
     /**
      * Position recording timestamp
      */

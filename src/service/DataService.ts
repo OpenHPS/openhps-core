@@ -1,6 +1,8 @@
+import { Constructor } from '../utils/math/three/Three';
 import { DataServiceDriver } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
 import { FindOptions } from './FindOptions';
+import { Service } from './Service';
 
 /**
  * DataService
@@ -14,7 +16,7 @@ import { FindOptions } from './FindOptions';
  * export class CustomNode extends Node<DataFrame> {
  *     // Data services can be found in any function inside a node
  *     // that is added to a model
- *     public functionInsideNode(): void {
+ *     functionInsideNode(): void {
  *         // Get a service by its type
  *         let service = this.model.findDataService(DataObject);
  *         let service = this.model.findDataServiceByName("DataObject");
@@ -22,42 +24,60 @@ import { FindOptions } from './FindOptions';
  * }
  * ```
  */
-export abstract class DataService<I, T> extends DataServiceDriver<I, T> {
+export abstract class DataService<I, T> extends Service {
     protected driver: DataServiceDriver<I, T>;
 
     constructor(dataServiceDriver?: DataServiceDriver<I, T>) {
-        super(dataServiceDriver ? dataServiceDriver.dataType : undefined);
+        super();
         this.driver = dataServiceDriver;
+
+        if (this.dataType) {
+            this.uid = this.dataType.name;
+        }
 
         this.once('build', () => this.driver.emitAsync('build'));
         this.once('destroy', () => this.driver.emitAsync('destroy'));
     }
 
-    public findByUID(uid: I): Promise<T> {
+    get dataType(): Constructor<T> {
+        if (!this.driver) {
+            return undefined;
+        }
+        return this.driver.dataType;
+    }
+
+    set dataType(value: Constructor<T>) {
+        if (!this.driver) {
+            return;
+        }
+        this.driver.dataType = value;
+    }
+
+    findByUID(uid: I): Promise<T> {
         return this.driver.findByUID(uid);
     }
 
-    public findOne(query?: FilterQuery<T>, options?: FindOptions): Promise<T> {
+    findOne(query?: FilterQuery<T>, options?: FindOptions): Promise<T> {
         return this.driver.findOne(query, options);
     }
 
-    public findAll(query?: FilterQuery<T>, options?: FindOptions): Promise<T[]> {
+    findAll(query?: FilterQuery<T>, options?: FindOptions): Promise<T[]> {
         return this.driver.findAll(query, options);
     }
 
-    public insert(id: I, object: T): Promise<T> {
+    insert(id: I, object: T): Promise<T> {
         return this.driver.insert(id, object);
     }
 
-    public count(query?: FilterQuery<T>): Promise<number> {
+    count(query?: FilterQuery<T>): Promise<number> {
         return this.driver.count(query);
     }
 
-    public delete(id: I): Promise<void> {
+    delete(id: I): Promise<void> {
         return this.driver.delete(id);
     }
 
-    public deleteAll(filter?: FilterQuery<T>): Promise<void> {
+    deleteAll(filter?: FilterQuery<T>): Promise<void> {
         return this.driver.deleteAll(filter);
     }
 }
