@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import 'mocha';
 import { Vector2, Vector3 } from '../../../src/utils/math/_internal';
 
-describe('units', () => {
+describe('Unit', () => {
     describe('registration', () => {
         it('should register units upon creation', () => {
             expect(Unit.findByName('euro')).to.be.undefined;
@@ -74,6 +74,13 @@ describe('units', () => {
             } catch (ex) {
                 done();
             }
+        });
+
+        it('should deserialize a derived unit', () => {
+            const u1 = AngularVelocityUnit.RADIAN_PER_SECOND;
+            const serialized = DataSerializer.serialize(u1);
+            const deserialized = DataSerializer.deserialize(serialized, Unit);
+            expect(deserialized).to.eql(u1);
         });
     });
 

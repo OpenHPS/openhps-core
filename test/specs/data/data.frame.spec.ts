@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataObject, DataSerializer, DataFrame, Absolute2DPosition } from '../../../src';
+import { DataObject, DataSerializer, DataFrame, Absolute2DPosition, AngularVelocity, LinearVelocity, AngularVelocityUnit } from '../../../src';
 import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
 import { DummyDataObject } from '../../mock/data/object/DummyDataObject';
 

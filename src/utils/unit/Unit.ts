@@ -27,17 +27,7 @@ import { Vector3 } from '../math/Vector3';
  * @category Unit
  */
 @SerializableObject({
-    initializer: <T extends Unit | Unit>(_: T, rawSourceObject: T) => {
-        if (rawSourceObject.name !== undefined) {
-            const unit = Unit.findByName(rawSourceObject.name);
-            if (unit === undefined) {
-                throw new Error(`Unit with name '${rawSourceObject.name}' not found! Unable to deserialize!`);
-            }
-            return unit;
-        } else {
-            throw new Error(`Unit does not define a serialization name! Unable to deserialize!`);
-        }
-    },
+    initializer: Unit.fromJSON
 })
 export class Unit {
     private _name: string;
@@ -76,6 +66,24 @@ export class Unit {
 
         if (this.name) {
             Unit.registerUnit(this, config.override);
+        }
+    }
+
+    /**
+     * Get a unit from JSON
+     *
+     * @param {any} json JSON object 
+     * @returns {Unit} Unit if found
+     */
+    static fromJSON<T extends Unit | Unit>(json: any): T {
+        if (json.name !== undefined) {
+            const unit = Unit.findByName(json.name);
+            if (!unit) {
+                throw new Error(`Unit with name '${json.name}' not found! Unable to deserialize!`);
+            }
+            return unit as T;
+        } else {
+            throw new Error(`Unit does not define a serialization name! Unable to deserialize!`);
         }
     }
 
