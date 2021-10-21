@@ -27,7 +27,7 @@ import { Vector3 } from '../math/Vector3';
  * @category Unit
  */
 @SerializableObject({
-    initializer: Unit.fromJSON
+    initializer: Unit.fromJSON,
 })
 export class Unit {
     private _name: string;
@@ -72,7 +72,7 @@ export class Unit {
     /**
      * Get a unit from JSON
      *
-     * @param {any} json JSON object 
+     * @param {any} json JSON object
      * @returns {Unit} Unit if found
      */
     static fromJSON<T extends Unit | Unit>(json: any): T {
