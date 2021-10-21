@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { jsonMember, IJsonMemberOptions, JsonObjectMetadata, AnyT } from 'typedjson';
 import { JsonMemberMetadata } from 'typedjson/lib/types/metadata';
 import { Constructor } from '../../utils/math/three/Three';
@@ -30,8 +31,8 @@ export function SerializableMember(options?: SerializableMemberOptions): Propert
         ) {
             const meta = JsonObjectMetadata.ensurePresentInPrototype(target);
             const existingOptions = meta.dataMembers.get(options ? options.name || propertyKey : propertyKey);
-            existingOptions.deserializer = DataSerializer.deserialize.bind(DataSerializer);
-            existingOptions.serializer = DataSerializer.serialize.bind(DataSerializer);
+            existingOptions.deserializer = (json) => DataSerializer.deserialize(json);
+            existingOptions.serializer = (obj) => DataSerializer.serialize(obj);
             existingOptions.type = () => AnyT;
         }
     };
