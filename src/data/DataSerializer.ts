@@ -161,9 +161,6 @@ export class DataSerializer {
             const detectedType =
                 serializedData['__type'] !== undefined ? this.findTypeByName(serializedData['__type']) : Object;
             const finalType = dataType === undefined ? detectedType : dataType;
-            if (finalType === undefined) {
-                return serializedData;
-            }
             const typedJSON = new TypedJSON(finalType, this._globalConfig);
             return typedJSON.parse(serializedData);
         }
@@ -177,9 +174,6 @@ export class DataSerializer {
             } else {
                 const detectedType = d['__type'] !== undefined ? this.findTypeByName(d['__type']) : Object;
                 const finalType = dataType === undefined ? detectedType : dataType;
-                if (finalType === undefined) {
-                    deserializedResult.push(d);
-                }
                 deserializedResult.push(new TypedJSON(finalType, this._globalConfig).parse(d));
             }
         });

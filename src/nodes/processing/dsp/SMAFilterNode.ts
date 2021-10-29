@@ -14,7 +14,7 @@ export class SMAFilterNode<InOut extends DataFrame> extends PropertyFilterProces
         super(propertySelector, options);
     }
 
-    public initFilter(object: DataObject, value: number | Vector, options: SMAFilterOptions): Promise<any> {
+    initFilter(object: DataObject, value: number | Vector, options: SMAFilterOptions): Promise<any> {
         return new Promise<any>((resolve) => {
             if (options.taps < 1) {
                 throw new Error(`Filter taps needs to be higher than 1!`);
@@ -27,7 +27,7 @@ export class SMAFilterNode<InOut extends DataFrame> extends PropertyFilterProces
         });
     }
 
-    public filter<T extends number | Vector>(
+    filter<T extends number | Vector>(
         object: DataObject,
         value: T,
         filter: { x: any[]; taps: number },

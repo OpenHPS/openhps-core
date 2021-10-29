@@ -17,7 +17,7 @@ export abstract class PropertyFilterProcessingNode<InOut extends DataFrame> exte
         this._propertySelector = propertySelector;
     }
 
-    public processObject(object: DataObject, frame: InOut): Promise<DataObject> {
+    processObject(object: DataObject, frame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             // Extract all sensor values from the frame
             const [obj, propertyKey] = this._propertySelector(object, frame);
@@ -59,13 +59,13 @@ export abstract class PropertyFilterProcessingNode<InOut extends DataFrame> exte
         });
     }
 
-    public abstract initFilter<T extends number | Vector3>(
+    abstract initFilter<T extends number | Vector3>(
         object: DataObject,
         value: T,
         options: FilterProcessingOptions,
     ): Promise<any>;
 
-    public abstract filter<T extends number | Vector3>(
+    abstract filter<T extends number | Vector3>(
         object: DataObject,
         value: T,
         filter: any,

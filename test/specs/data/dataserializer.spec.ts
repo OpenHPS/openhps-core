@@ -19,6 +19,10 @@ describe('DataSerializer', () => {
             expect(meta.dataMembers).to.not.be.undefined;
         });
 
+        it('should not crash on null or undefined objects in an array', () => {
+            DataSerializer.deserialize([null, undefined]);
+        });
+
         it('should serialize global types directly', () => {
             class SomeClass {
                 abc: string;

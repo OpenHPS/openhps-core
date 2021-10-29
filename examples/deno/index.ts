@@ -3,11 +3,9 @@ import {
     DataObject, 
     ModelBuilder,
     Model,
-    CallbackSinkNode,
     CallbackSourceNode,
-    CallbackNode,
     DataFrame
-} from 'https://cdn.skypack.dev/@openhps/core@v0.1.0-alpha.92/dist=dts';
+} from 'https://cdn.skypack.dev/@openhps/core?dts';
 
 ModelBuilder.create()
     .from(new CallbackSourceNode(() => {
@@ -16,5 +14,5 @@ ModelBuilder.create()
     }))
     .to()
     .build().then((model: Model) => {
-        return model.push(object);
+        return model.pull();
     });

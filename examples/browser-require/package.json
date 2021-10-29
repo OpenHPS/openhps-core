@@ -1,0 +1,16 @@
+{
+  "name": "openhps-core-example-browser-require",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "shx cp node_modules/@openhps/core/dist/web/openhps-core.min.js public/openhps-core.min.js && serve ./public"
+  },
+  "dependencies": {
+    "@openhps/core": "file:../../",
+    "serve": "^12.0.1",
+    "shx": "^0.3.3"
+  },
+  "author": "Maxim Van de Wynckel",
+  "license": "Apache-2.0"
+}

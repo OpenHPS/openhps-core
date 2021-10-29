@@ -16,11 +16,7 @@ export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterProcess
         super(propertySelector, options);
     }
 
-    public initFilter<T extends number | Vector3>(
-        object: DataObject,
-        value: T,
-        options: KalmanFilterOptions,
-    ): Promise<any> {
+    initFilter<T extends number | Vector3>(object: DataObject, value: T, options: KalmanFilterOptions): Promise<any> {
         return new Promise<any>((resolve) => {
             Object.keys(options).forEach((key) => {
                 if (typeof (options as any)[key] === 'number' && ['R', 'Q', 'A', 'B', 'C'].includes(key)) {
@@ -31,7 +27,7 @@ export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterProcess
         });
     }
 
-    public filter<T extends number | Vector3>(object: DataObject, value: T, filter: any): Promise<T> {
+    filter<T extends number | Vector3>(object: DataObject, value: T, filter: any): Promise<T> {
         return new Promise<T>((resolve) => {
             const kf = new KalmanFilter(filter.R, filter.Q, filter.A, filter.B, filter.C, filter.x, filter.cov);
             const numeric = typeof value === 'number';
@@ -110,7 +106,7 @@ class KalmanFilter<T extends Vector3> {
      * @param  {number} u Control
      * @returns {number} Filtered value
      */
-    public filter(z: Vector3, u?: Vector3): Vector3 {
+    filter(z: Vector3, u?: Vector3): Vector3 {
         if (this._x === undefined) {
             const ct = new Vector3(1, 1, 1).divide(this._C);
             this._x = ct.clone().multiply(z) as T;
@@ -142,7 +138,7 @@ class KalmanFilter<T extends Vector3> {
      * @param  {number} [u] Control
      * @returns {number} Predicted value
      */
-    public predict(u?: Vector3): Vector3 {
+    predict(u?: Vector3): Vector3 {
         return this._A
             .clone()
             .multiply(this._x)
@@ -154,7 +150,7 @@ class KalmanFilter<T extends Vector3> {
      *
      * @returns {number} Uncertainty
      */
-    public uncertainty(): T {
+    uncertainty(): T {
         return this._A.clone().multiply(this._cov).multiply(this._A).add(this._R);
     }
 
@@ -163,11 +159,11 @@ class KalmanFilter<T extends Vector3> {
      *
      * @returns {number} Last measurement
      */
-    public get measurement(): T {
+    get measurement(): T {
         return this._x;
     }
 
-    public get covariance(): T {
+    get covariance(): T {
         return this._cov;
     }
 }

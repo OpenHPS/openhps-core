@@ -1,10 +1,9 @@
-import { AbsolutePosition, DataObject, GeographicalPosition, RelativeDistance } from '../../data';
+import { AbsolutePosition, Accuracy1D, DataObject, GeographicalPosition, RelativeDistance } from '../../data';
 import { DataFrame } from '../../data/DataFrame';
 import { AngleUnit } from '../../utils';
 import { Vector3 } from '../../utils/math';
 import { ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
 import { RelativePositionProcessing } from './RelativePositionProcessing';
-import { nelderMead } from 'fmin';
 
 /**
  * Multilateration processing node
@@ -29,7 +28,13 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
             let spheres: Array<Sphere<P>> = [];
             relativePositions.forEach((object, relativePosition) => {
                 if (object.getPosition()) {
-                    spheres.push(new Sphere(object.getPosition() as P, relativePosition.distance));
+                    spheres.push(
+                        new Sphere(
+                            object.getPosition() as P,
+                            relativePosition.distance,
+                            relativePosition.accuracy.valueOf(),
+                        ),
+                    );
                 }
             });
 
@@ -50,7 +55,10 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                 case 1:
                     position = spheres[0].position.clone() as P;
                     position.timestamp = dataFrame.createdTimestamp;
-                    position.accuracy.value = spheres[0].radius;
+                    // Accuracy is radius + accuracy of the position that we are using
+                    position.accuracy = new Accuracy1D(
+                        spheres[0].radius + position.accuracy.valueOf() + spheres[0].accuracy,
+                    );
                     dataObject.setPosition(position);
                     return resolve(dataObject);
                 case 2:
@@ -63,6 +71,9 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                         position = this.midpoint(spheres[0], spheres[1]) as P;
                     }
                     position.timestamp = dataFrame.createdTimestamp;
+                    position.accuracy = new Accuracy1D(
+                        spheres.map((s) => s.accuracy).reduce((a, b) => a.valueOf() + b.valueOf()) / spheres.length,
+                    );
                     dataObject.setPosition(position);
                     return resolve(dataObject);
                 case 3:
@@ -70,6 +81,10 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                         .then((position) => {
                             if (position) {
                                 position.timestamp = dataFrame.createdTimestamp;
+                                position.accuracy = new Accuracy1D(
+                                    spheres.map((s) => s.accuracy).reduce((a, b) => a.valueOf() + b.valueOf()) /
+                                        spheres.length,
+                                );
                                 dataObject.setPosition(position);
                             }
                             resolve(dataObject);
@@ -79,20 +94,164 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                 default:
                     position = this.nls(spheres) as P;
                     position.timestamp = dataFrame.createdTimestamp;
+                    position.accuracy = new Accuracy1D(
+                        spheres.map((s) => s.accuracy).reduce((a, b) => a.valueOf() + b.valueOf()) / spheres.length,
+                    );
                     dataObject.setPosition(position);
                     resolve(dataObject);
             }
         });
     }
 
+    /**
+     * Nonlinear least squares using nelder mead
+     *
+     * @see {@link https://github.com/benfred/fmin}
+     * @author {Ben Frederickson, Qingrong Ke}
+     * @param {Array<Sphere<any>>} spheres Spheres with position and radius
+     * @returns {AbsolutePosition} Output position
+     */
     protected nls(spheres: Array<Sphere<any>>): AbsolutePosition {
-        const coord = nelderMead(
-            (point: number[]) => this._calculateError(point, spheres),
-            this._calculateInit(spheres),
-            { maxIterations: this.options.maxIterations },
-        ).x;
+        // Initiailize parameters
+        const f = (point: number[]) => this._calculateError(point, spheres);
+        const x0 = this._calculateInit(spheres);
+        const maxIterations = this.options.maxIterations;
+        const nonZeroDelta = 1.05;
+        const zeroDelta = 0.001;
+        const minErrorDelta = 1e-6;
+        const minTolerance = 1e-5;
+        const rho = 1;
+        const chi = 2;
+        const psi = -0.5;
+        const sigma = 0.5;
+        let maxDiff = 0;
+
+        // Initialize simplex
+        const N = x0.length;
+        const simplex = new Array(N + 1);
+        simplex[0] = x0;
+        simplex[0].fx = f(x0);
+        simplex[0].id = 0;
+        for (let i = 0; i < N; ++i) {
+            const point = x0.slice();
+            point[i] = point[i] ? point[i] * nonZeroDelta : zeroDelta;
+            simplex[i + 1] = point;
+            simplex[i + 1].fx = f(point);
+            simplex[i + 1].id = i + 1;
+        }
+
+        /**
+         * @param value
+         */
+        function updateSimplex(value) {
+            for (let i = 0; i < value.length; i++) {
+                simplex[N][i] = value[i];
+            }
+            simplex[N].fx = value.fx;
+        }
+
+        /**
+         * @param ret
+         * @param w1
+         * @param v1
+         * @param w2
+         * @param v2
+         */
+        function weightedSum(ret, w1, v1, w2, v2) {
+            for (let j = 0; j < ret.length; ++j) {
+                ret[j] = w1 * v1[j] + w2 * v2[j];
+            }
+        }
+
+        const sortOrder = (a, b) => a.fx - b.fx;
+
+        const centroid = x0.slice() as number[] & { fx?: number };
+        const reflected = x0.slice() as number[] & { fx?: number };
+        const contracted = x0.slice() as number[] & { fx?: number };
+        const expanded = x0.slice() as number[] & { fx?: number };
+
+        for (let iteration = 0; iteration < maxIterations; ++iteration) {
+            simplex.sort(sortOrder);
+
+            maxDiff = 0;
+            for (let i = 0; i < N; ++i) {
+                maxDiff = Math.max(maxDiff, Math.abs(simplex[0][i] - simplex[1][i]));
+            }
+
+            if (Math.abs(simplex[0].fx - simplex[N].fx) < minErrorDelta && maxDiff < minTolerance) {
+                break;
+            }
+
+            // compute the centroid of all but the worst point in the simplex
+            for (let i = 0; i < N; ++i) {
+                centroid[i] = 0;
+                for (let j = 0; j < N; ++j) {
+                    centroid[i] += simplex[j][i];
+                }
+                centroid[i] /= N;
+            }
+
+            // reflect the worst point past the centroid and compute loss at reflected
+            // point
+            const worst = simplex[N];
+            weightedSum(reflected, 1 + rho, centroid, -rho, worst);
+            reflected.fx = f(reflected);
+
+            // if the reflected point is the best seen, then possibly expand
+            if (reflected.fx < simplex[0].fx) {
+                weightedSum(expanded, 1 + chi, centroid, -chi, worst);
+                expanded.fx = f(expanded);
+                if (expanded.fx < reflected.fx) {
+                    updateSimplex(expanded);
+                } else {
+                    updateSimplex(reflected);
+                }
+            }
+
+            // if the reflected point is worse than the second worst, we need to
+            // contract
+            else if (reflected.fx >= simplex[N - 1].fx) {
+                let shouldReduce = false;
+
+                if (reflected.fx > worst.fx) {
+                    // do an inside contraction
+                    weightedSum(contracted, 1 + psi, centroid, -psi, worst);
+                    contracted.fx = f(contracted);
+                    if (contracted.fx < worst.fx) {
+                        updateSimplex(contracted);
+                    } else {
+                        shouldReduce = true;
+                    }
+                } else {
+                    // do an outside contraction
+                    weightedSum(contracted, 1 - psi * rho, centroid, psi * rho, worst);
+                    contracted.fx = f(contracted);
+                    if (contracted.fx < reflected.fx) {
+                        updateSimplex(contracted);
+                    } else {
+                        shouldReduce = true;
+                    }
+                }
+
+                if (shouldReduce) {
+                    // if we don't contract here, we're done
+                    if (sigma >= 1) break;
+
+                    // do a reduction
+                    for (let i = 1; i < simplex.length; ++i) {
+                        weightedSum(simplex[i], 1 - sigma, simplex[0], sigma, simplex[i]);
+                        simplex[i].fx = f(simplex[i]);
+                    }
+                }
+            } else {
+                updateSimplex(reflected);
+            }
+        }
+
+        simplex.sort(sortOrder);
+
         const position = spheres[0].position.clone();
-        position.fromVector(new Vector3(...coord));
+        position.fromVector(new Vector3(...simplex[0]));
         return position;
     }
 
@@ -107,7 +266,6 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
         const pointA: P = sphereA.position;
         const pointB: P = sphereB.position;
         const newPoint: P = pointA.clone();
-        newPoint.accuracy.value = pointA.accuracy.valueOf() + pointB.accuracy.valueOf() / 2;
         newPoint.fromVector(
             pointA
                 .toVector3()
@@ -157,8 +315,11 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
             const C = pointA.destination(bearingAB, sphereA.radius);
             const D = pointB.destination(bearingBA, sphereB.radius);
             // Calculate the middle of C and D
-            const midpoint = this.midpoint(new Sphere(C, 1), new Sphere(D, 1));
-            midpoint.accuracy.value = Math.round((C.distanceTo(D) / 2) * 100) / 100;
+            const midpoint = this.midpoint(
+                new Sphere(C, 1, C.accuracy.valueOf()),
+                new Sphere(D, 1, D.accuracy.valueOf()),
+            );
+            midpoint.accuracy = new Accuracy1D(Math.round((C.distanceTo(D) / 2) * 100) / 100);
             return midpoint;
         }
     }
@@ -237,10 +398,12 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
 class Sphere<P extends AbsolutePosition> {
     position: P;
     radius: number;
+    accuracy: number;
 
-    constructor(position: P, radius: number) {
+    constructor(position: P, radius: number, accuracy: number) {
         this.position = position;
         this.radius = radius;
+        this.accuracy = accuracy;
     }
 
     get center(): Vector3 {

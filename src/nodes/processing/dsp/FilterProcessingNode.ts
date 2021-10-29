@@ -11,7 +11,7 @@ export abstract class FilterProcessingNode<InOut extends DataFrame> extends Obje
         super(options);
     }
 
-    public processObject(object: DataObject, frame: InOut): Promise<DataObject> {
+    processObject(object: DataObject, frame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             // Get existing filter data
             this.getNodeData(object)
@@ -37,9 +37,9 @@ export abstract class FilterProcessingNode<InOut extends DataFrame> extends Obje
         });
     }
 
-    public abstract initFilter(object: DataObject, frame: InOut, options?: FilterProcessingOptions): Promise<any>;
+    abstract initFilter(object: DataObject, frame: InOut, options?: FilterProcessingOptions): Promise<any>;
 
-    public abstract filter(
+    abstract filter(
         object: DataObject,
         frame: InOut,
         filter: any,

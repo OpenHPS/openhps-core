@@ -14,7 +14,7 @@ export class RelativePositionFilter<InOut extends DataFrame, R extends RelativeP
         this.options.maxTimeDifference = this.options.maxTimeDifference || Infinity;
     }
 
-    public processObject(object: DataObject): Promise<DataObject> {
+    processObject(object: DataObject): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             Promise.all(
                 object.relativePositions

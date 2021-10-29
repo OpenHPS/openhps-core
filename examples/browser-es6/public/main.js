@@ -1,4 +1,4 @@
-import { ModelBuilder } from '../../../dist/web/openhps-core.es.js';
+import { ModelBuilder } from './openhps-core.es.js';
 
 ModelBuilder.create()
     .from()
