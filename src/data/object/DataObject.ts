@@ -37,11 +37,6 @@ export class DataObject {
      */
     @SerializableMember()
     displayName: string;
-    /**
-     * Parent object identifier
-     */
-    @SerializableMember()
-    parentUID: string;
     @SerializableMember({
         index: true,
     })
@@ -50,6 +45,8 @@ export class DataObject {
     private _uid!: string;
     private _position: AbsolutePosition;
     private _relativePositions: Map<string, Map<string, RelativePosition<any>>> = new Map();
+    @SerializableMember()
+    parentUID: string;
 
     /**
      * Create a new data object
@@ -166,6 +163,17 @@ export class DataObject {
         relativePostions.forEach((relativePostion) => {
             this.addRelativePosition(relativePostion);
         });
+    }
+
+    /**
+     * Set a parent object to the data object
+     *
+     * @param {DataObject | string | undefined} object Data object or UID to add as parent
+     * @returns {DataObject} instance
+     */
+    setParent(object: DataObject | string | undefined): this {
+        this.parentUID = object instanceof DataObject ? object.uid : object;
+        return this;
     }
 
     removeRelativePositions(referenceObjectUID: string): void {

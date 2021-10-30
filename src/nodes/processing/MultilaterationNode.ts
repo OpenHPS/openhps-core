@@ -107,7 +107,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
      * Nonlinear least squares using nelder mead
      *
      * @see {@link https://github.com/benfred/fmin}
-     * @author {Ben Frederickson, Qingrong Ke}
+     * @author Ben Frederickson, Qingrong Ke
      * @param {Array<Sphere<any>>} spheres Spheres with position and radius
      * @returns {AbsolutePosition} Output position
      */

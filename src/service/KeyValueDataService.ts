@@ -16,7 +16,7 @@ export class KeyValueDataService extends DataService<string, any> {
             });
             this.dataType = Object;
         }
-        this.uid = uid;
+        this.uid = uid || this.constructor.name;
     }
 
     /**

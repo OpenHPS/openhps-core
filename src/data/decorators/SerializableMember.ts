@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { jsonMember, IJsonMemberOptions, JsonObjectMetadata, AnyT } from 'typedjson';
+import { jsonMember, IJsonMemberOptions, JsonObjectMetadata, AnyT, IndexedObject } from 'typedjson';
 import { JsonMemberMetadata } from 'typedjson/lib/types/metadata';
 import { Constructor } from '../../utils/math/three/Three';
 import { DataSerializer } from '../DataSerializer';
@@ -8,7 +8,7 @@ import { DataSerializer } from '../DataSerializer';
  * @param {IJsonMemberOptions} [options] Member options
  * @returns {PropertyDecorator} Property decorator
  */
-export function SerializableMember(options?: SerializableMemberOptions): PropertyDecorator {
+export function SerializableMember(options?: SerializableMemberOptions | IndexedObject): PropertyDecorator {
     return (target: unknown, propertyKey: string) => {
         jsonMember(options)(target, propertyKey);
         const reflectPropCtor: Constructor<any> = Reflect.getMetadata('design:type', target, propertyKey);

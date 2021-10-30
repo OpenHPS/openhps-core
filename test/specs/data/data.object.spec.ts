@@ -12,10 +12,50 @@ import {
     LinearVelocity,
     Model,
     Absolute3DPosition,
+    SerializableMember,
 } from '../../../src';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 
+declare module '../../../src/data/object/DataObject' {
+    interface DataObject {
+        _test: string;
+        _testfn: () => string;
+    }         
+}
+
 describe('DataObject', () => {
+
+    describe('augmentation', () => {
+
+        it('should support property augmentation', () => {
+            const object = new DataObject();
+            object._test = "abc";
+            expect(object._test).to.equal("abc");
+        });
+
+        it('should support function augmentation', () => {
+            const object = new DataObject();
+            expect(object._testfn).to.be.undefined;
+            DataObject.prototype._testfn = function() {
+                return "123";
+            }
+            expect(object._testfn()).to.equal("123");
+        });
+
+        it('should support applying decorators externally', () => {
+            let object = new DataObject();
+            object._test = "abc";
+            object.uid = "TestUID";
+            let serialized = DataSerializer.serialize(object);
+            expect(serialized.uid).to.equal("TestUID");
+            expect(serialized._test).to.be.undefined;
+            SerializableMember(String)(DataObject.prototype, "_test");
+            serialized = DataSerializer.serialize(object);
+            expect(serialized._test).to.equal("abc");
+        });
+
+    });
+
     it('should have a uuidv4 uid', (done) => {
         const obj = new DataObject();
         expect(obj.uid).to.include("-");
