@@ -51,6 +51,7 @@ describe('DataObjectService', () => {
             });
     });
 
+
     it('should support sorting in descending order', (done) => {
         objectDataService
             .findAll({}, {
@@ -197,6 +198,16 @@ describe('DataObjectService', () => {
                         done();
                     });
                 });
+        });
+
+        describe('driver', () => {
+            it('should have access to the model', () => {
+                expect(objectDataService['driver'].model).to.not.be.undefined;
+            });
+
+            it('should have access to the logger', () => {
+                expect(objectDataService['driver'].logger).to.not.be.undefined;
+            });
         });
 
         it('should load unknown objects', (done) => {
