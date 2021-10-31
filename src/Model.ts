@@ -31,9 +31,9 @@ export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame =
      *
      * @returns {DataService} Found data service
      */
-    findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(name: string): F;
-    findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(dataType: new () => D): F;
-    findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(object: D): F;
+    findDataService<D, F extends DataService<any, D> = DataService<any, D>>(name: string): F;
+    findDataService<D, F extends DataService<any, D> = DataService<any, D>>(dataType: new () => D): F;
+    findDataService<D, F extends DataService<any, D> = DataService<any, D>>(object: D): F;
 
     /**
      * Find all services and data services

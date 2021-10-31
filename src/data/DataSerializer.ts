@@ -6,6 +6,11 @@ const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
 // Throw an error instead of logging the message
 TypedJSON.setGlobalConfig({
     errorHandler: (e: Error) => {
+        e.message = e.message.replace('@jsonObject', '@SerializableObject()');
+        e.message = e.message.replace('@jsonMember', '@SerializableMember()');
+        e.message = e.message.replace('@jsonSetMember', '@SerializableSetMember()');
+        e.message = e.message.replace('@jsonMapMember', '@SerializableMapMember()');
+        e.message = e.message.replace('@jsonArrayMember', '@SerializableArrayMember()');
         throw e;
     },
 });
@@ -85,7 +90,7 @@ export class DataSerializer {
      * @param {any} object Serializable object
      * @returns {any} Cloned object
      */
-    static clone<T extends any>(object: T): T {
+    static clone<T>(object: T): T {
         return this.deserialize(this.serialize(object));
     }
 
@@ -95,7 +100,7 @@ export class DataSerializer {
      * @param {any} data Data to serialize
      * @returns {any} Serialized data
      */
-    static serialize<T extends any>(data: T): any {
+    static serialize<T>(data: T): any {
         if (data === null || data === undefined) {
             return undefined;
         }

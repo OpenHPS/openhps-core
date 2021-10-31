@@ -1,7 +1,6 @@
 import 'reflect-metadata';
-import { jsonMember, IJsonMemberOptions, JsonObjectMetadata, AnyT, IndexedObject } from 'typedjson';
+import { jsonMember, IJsonMemberOptions, JsonObjectMetadata, AnyT, IndexedObject, Constructor } from 'typedjson';
 import { JsonMemberMetadata } from 'typedjson/lib/types/metadata';
-import { Constructor } from '../../utils/math/three/Three';
 import { DataSerializer } from '../DataSerializer';
 
 /**

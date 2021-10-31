@@ -10,7 +10,7 @@
         "preserveConstEnums": true,
         "skipLibCheck": true,
         "sourceMap": true,
-        "declaration": true,
+        "declaration": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "rootDir": "src",

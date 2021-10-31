@@ -45,7 +45,7 @@ import { GraphOptions, PullOptions, PushOptions } from '../graph/options';
  * @category Source node
  */
 export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node<Out, Out> {
-    protected options: SourceNodeOptions;
+    protected declare options: SourceNodeOptions;
 
     /**
      * Construct a new source node

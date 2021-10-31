@@ -31,7 +31,7 @@ import { DataObjectService } from '../service';
  * @category Sink node
  */
 export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In, In> {
-    protected options: SinkNodeOptions;
+    protected declare options: SinkNodeOptions;
 
     constructor(options?: SinkNodeOptions) {
         super(options);

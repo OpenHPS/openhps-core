@@ -1,4 +1,4 @@
-import { Constructor } from '../utils/math/three/Three';
+import { Constructor } from '../data/decorators';
 import { DataServiceDriver } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
 import { FindOptions } from './FindOptions';

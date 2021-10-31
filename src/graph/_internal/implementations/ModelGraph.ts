@@ -156,12 +156,10 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
      *
      * @returns {DataService} Found data service
      */
-    public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(name: string): F;
-    public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(
-        dataType: new () => D,
-    ): F;
-    public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(object: D): F;
-    public findDataService<D extends any, F extends DataService<any, D> = DataService<any, D>>(q: any): F {
+    public findDataService<D, F extends DataService<any, D> = DataService<any, D>>(name: string): F;
+    public findDataService<D, F extends DataService<any, D> = DataService<any, D>>(dataType: new () => D): F;
+    public findDataService<D, F extends DataService<any, D> = DataService<any, D>>(object: D): F;
+    public findDataService<D, F extends DataService<any, D> = DataService<any, D>>(q: any): F {
         let result: F;
         if (q === undefined) {
             result = undefined;
@@ -178,9 +176,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
         return result;
     }
 
-    private _findDataServiceByType<D extends any, F extends DataService<any, D> = DataService<any, D>>(
-        dataType: new () => D,
-    ): F {
+    private _findDataServiceByType<D, F extends DataService<any, D> = DataService<any, D>>(dataType: new () => D): F {
         // Find by constructor
         let service: F = this._findDataServiceByName(dataType.name);
         if (!service) {
@@ -201,7 +197,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
         }
     }
 
-    private _findDataServiceByName<D extends any, F extends DataService<any, D>>(name: string): F {
+    private _findDataServiceByName<D, F extends DataService<any, D>>(name: string): F {
         if (this._dataServices.has(name)) {
             return this._dataServices.get(name) as F;
         } else {
