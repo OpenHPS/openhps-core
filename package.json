@@ -32,7 +32,7 @@
     "test": "mocha --config test/.mocharc.json",
     "benchmark": "ts-node test/bench/worker.bench.ts",
     "cover": "nyc mocha --config test/.mocharc.json && nyc report --reporter=cobertura",
-    "lint": "eslint src/** --ignore-pattern **/three/*",
+    "lint": "eslint src/** --ignore-pattern three",
     "clean": "shx rm -rf ./lib && shx rm -rf ./docs/out",
     "build": "npm run clean && npm run build:three && npm-run-all --parallel build:esm build:cjs build:typedoc && npm run build:webpack",
     "build:quick": "npm-run-all --parallel build:cjs build:esm build:declarations && npm run build:webpack",
