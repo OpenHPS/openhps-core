@@ -15,7 +15,6 @@
     <a href="https://badge.fury.io/js/@openhps%2Fcore">
         <img src="https://badge.fury.io/js/@openhps%2Fcore.svg" alt="npm version" height="18">
     </a>
-    <a href="https://app.fossa.com/projects/git%2Bgithub.com%2FOpenHPS%2Fopenhps-core?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FOpenHPS%2Fopenhps-core.svg?type=shield"/></a>
 </p>
 
 <h3 align="center">
