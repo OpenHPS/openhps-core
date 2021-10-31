@@ -13,7 +13,7 @@ import { PushOptions } from '../../graph/options/PushOptions';
 export class RemoteSinkNode<In extends DataFrame, S extends RemoteService> extends SinkNode<In> {
     protected remoteNode: RemoteNode<In, In, S>;
 
-    constructor(options?: SinkNodeOptions & RemoteNodeOptions) {
+    constructor(options?: SinkNodeOptions & RemoteNodeOptions<S>) {
         super(options);
         this.remoteNode = new RemoteNode<In, In, S>(options);
         this.uid = `${this.uid}-sink`;

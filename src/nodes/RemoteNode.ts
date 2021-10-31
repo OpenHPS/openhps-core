@@ -4,6 +4,7 @@ import { PushCompletedEvent, PushError } from '../graph/events';
 import { Model } from '../Model';
 import { Node, NodeOptions } from '../Node';
 import { RemoteService } from '../service/RemoteService';
+import { Serializable } from '../data/decorators';
 
 /**
  * A remote node connects to a service in order to provide a remote connection.
@@ -12,11 +13,11 @@ import { RemoteService } from '../service/RemoteService';
  */
 export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends RemoteService> extends Node<In, Out> {
     protected service: S;
-    protected options: RemoteNodeOptions;
+    protected options: RemoteNodeOptions<S>;
 
-    constructor(options?: RemoteNodeOptions) {
+    constructor(options?: RemoteNodeOptions<S>) {
         super(options);
-        this.options.service = this.options.service || 'RemoteService';
+        this.options.service = this.options.service || (RemoteService as unknown as Serializable<S>);
 
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
@@ -30,11 +31,7 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
 
     private _onBuild(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this.service = (this.graph as Model<any, any>).findService<S>(
-                this.options.service instanceof String
-                    ? (this.options.service as string)
-                    : (this.options.service as any),
-            );
+            this.service = (this.graph as Model<any, any>).findService<S>(this.options.service as Serializable<S>);
             if (this.service === undefined || this.service === null) {
                 return reject(new Error(`Remote service was not added to model!`));
             }
@@ -91,6 +88,6 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
     }
 }
 
-export interface RemoteNodeOptions extends NodeOptions {
-    service?: string | (new () => RemoteService);
+export interface RemoteNodeOptions<S extends RemoteService> extends NodeOptions {
+    service?: Serializable<S>;
 }

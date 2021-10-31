@@ -12,7 +12,7 @@ import { PushCompletedEvent, PushError } from '../../graph/events';
 export class RemoteSourceNode<Out extends DataFrame, S extends RemoteService> extends SourceNode<Out> {
     protected remoteNode: RemoteNode<Out, Out, S>;
 
-    constructor(options?: SourceNodeOptions & RemoteNodeOptions) {
+    constructor(options?: SourceNodeOptions & RemoteNodeOptions<S>) {
         super(options);
         this.remoteNode = new RemoteNode<Out, Out, S>(options);
         this.uid = `${this.uid}-source`;

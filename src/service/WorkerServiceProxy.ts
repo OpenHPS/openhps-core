@@ -56,6 +56,8 @@ export class WorkerServiceProxy extends ServiceProxy<Service> {
         const ownResult = (this as any)[p];
         if (ownResult) {
             return ownResult;
+        } else if (p === 'target') {
+            return target;
         }
         return this.createHandler(target, p);
     }

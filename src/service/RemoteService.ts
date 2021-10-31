@@ -4,7 +4,7 @@ import { PullOptions, PushOptions } from '../graph/options';
 import { Model } from '../Model';
 import { Node } from '../Node';
 import { Service } from './Service';
-import { v4 as uuidv4 } from 'uuid';
+import { Constructor } from '../data/decorators';
 
 /**
  * Remote node service
@@ -18,7 +18,6 @@ export abstract class RemoteService extends Service {
 
     constructor() {
         super();
-
         this.once('build', this._registerServices.bind(this));
     }
 
@@ -31,10 +30,6 @@ export abstract class RemoteService extends Service {
             });
             resolve();
         });
-    }
-
-    protected generateUUID(): string {
-        return uuidv4();
     }
 
     protected registerPromise(resolve: (data?: any) => void, reject: (ex?: any) => void): string {
@@ -209,11 +204,7 @@ export class RemoteServiceProxy<T extends Service = Service, S extends RemoteSer
      */
     createHandler(target: T, p: PropertyKey): (...args: any[]) => any {
         if (!this.service) {
-            this.service = target.model.findService(
-                this.options.service instanceof String
-                    ? (this.options.service as string)
-                    : (this.options.service as any),
-            );
+            this.service = target.model.findService(this.options.service);
             if (this.service === undefined || this.service === null) {
                 return () => undefined;
             }
@@ -225,5 +216,5 @@ export class RemoteServiceProxy<T extends Service = Service, S extends RemoteSer
 
 export interface RemoteServiceOptions {
     uid: string;
-    service?: string | (new () => RemoteService);
+    service?: Constructor<RemoteService>;
 }

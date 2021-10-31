@@ -1,4 +1,5 @@
 import { AsyncEventEmitter } from '../_internal/AsyncEventEmitter';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Service is accessible by each [[Node]] inside the [[Model]]
@@ -17,6 +18,7 @@ export abstract class Service extends AsyncEventEmitter {
 
     constructor() {
         super();
+
         this.uid = this.constructor.name;
 
         this.prependOnceListener('ready', () => {
@@ -24,20 +26,13 @@ export abstract class Service extends AsyncEventEmitter {
         });
     }
 
-    /**
-     * @deprecated use uid instead
-     * @returns {string} uid
-     */
-    get name(): string {
-        return this.uid;
+    protected generateUUID(): string {
+        return uuidv4();
     }
 
-    /**
-     * @deprecated use uid instead
-     * @param {string} value uid
-     */
-    set name(value: string) {
-        this.uid = value;
+    setUID(uid: string): this {
+        this.uid = uid;
+        return this;
     }
 
     isReady(): boolean {

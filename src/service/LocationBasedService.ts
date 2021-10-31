@@ -5,6 +5,7 @@ import { TimeUnit } from '../utils';
 import { DataObjectService } from './DataObjectService';
 import { Service } from './Service';
 import { TimeService } from './TimeService';
+import { Constructor } from '../data/decorators';
 
 /**
  * Location-Based Service
@@ -42,13 +43,13 @@ export class LocationBasedService<
     constructor(options?: LBSOptions) {
         super();
         this.options = options || {};
-        this.on('build', this._initLBS.bind(this));
+        this.once('build', this._initLBS.bind(this));
     }
 
     private _initLBS(): void {
         // Default options
         this.options.pullNode = this.options.pullNode || (this.model as Graph<any, any>).internalSink.uid;
-        this.options.dataService = this.options.dataService || DataObject.name;
+        this.options.dataService = this.options.dataService || DataObject;
 
         this.service = this.model.findDataService(this.options.dataService);
         this.service.on('insert', (uid: string, storedObject: T) => {
@@ -180,5 +181,5 @@ export interface LBSOptions {
     /**
      * Dataservice to fetch stored data objects
      */
-    dataService?: string;
+    dataService?: Constructor<DataObject>;
 }

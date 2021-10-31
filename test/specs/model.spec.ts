@@ -17,11 +17,14 @@ import {
     DataObjectService,
     MemoryDataService,
     ModelSerializer,
+    DataService,
 } from '../../src';
 import { PlaceholderNode } from '../../src/nodes/_internal/PlaceholderNode';
+import { DataServiceProxy, ServiceProxy } from '../../src/service/_internal';
+import { DummyDataObject } from '../mock/data/object/DummyDataObject';
 import { DummySensorObject } from '../mock/data/object/DummySensorObject';
 
-describe('model', () => {
+describe('Model', () => {
     describe('serializer', () => {
 
         it('should serialize a model', (done) => {
@@ -37,6 +40,14 @@ describe('model', () => {
     });
 
     describe('service', () => {
+
+        it('should be possible to get the datatype of a proxied service', () => {
+            let service = new DataObjectService(new MemoryDataService(DummySensorObject));
+            expect(service.dataType).to.equal(DummySensorObject);
+            service = new Proxy(service, new DataServiceProxy());
+            expect(service.dataType).to.equal(DummySensorObject);
+        });
+
         it('should be able to find services by class', async () => {
             const model: Model = await ModelBuilder.create()
                 .addService(new DataObjectService(new MemoryDataService(DataObject)))
@@ -49,6 +60,81 @@ describe('model', () => {
             expect(services1.length).to.equal(5);
             expect(services2.length).to.equal(3);
         });
+
+        it('should be able to find data services by class', async () => {
+            const model: Model = await ModelBuilder.create()
+                .addService(new DataObjectService(new MemoryDataService(DataObject)))
+                .addService(new DataObjectService(new MemoryDataService(DummySensorObject)))
+                .from()
+                .to()
+                .build();
+            const service = model.findDataService(DataObjectService);
+            expect(service).to.not.be.undefined;
+        });
+
+        describe('find data services', () => {
+            it('should be able to find by data type', async () => {
+                const model: Model = await ModelBuilder.create()
+                    .addService(new DataObjectService(new MemoryDataService(DataObject)))
+                    .addService(new DataObjectService(new MemoryDataService(DummySensorObject)))
+                    .from()
+                    .to()
+                    .build();
+                const services: Array<DataService<any, any>> = model.findAllDataServices(DummySensorObject);
+                expect(services).to.not.be.undefined;
+                expect(services.length).to.equal(2);
+                expect(services[0].dataType).to.equal(DummySensorObject);
+            });
+
+            it('should be able to find by data type sorted by specificity', async () => {
+                const model: Model = await ModelBuilder.create()
+                    .addService(new DataObjectService(new MemoryDataService(DataObject)))
+                    .addService(new DataObjectService(new MemoryDataService(DummyDataObject)))
+                    .addService(new DataObjectService(new MemoryDataService(DummySensorObject)).setPriority(20).setUID("abc"))
+                    .addService(new DataObjectService(new MemoryDataService(DummySensorObject)).setPriority(10).setUID("123"))
+                    .from()
+                    .to()
+                    .build();
+                const services: Array<DataService<any, any>> = model.findAllDataServices(DummySensorObject);
+                expect(services).to.not.be.undefined;
+                expect(services.length).to.equal(4);
+                expect(services[0].dataType).to.equal(DummySensorObject);
+                expect(services[0].priority).to.equal(20);
+                expect(services[1].priority).to.equal(10);
+                expect(services[2].dataType).to.equal(DummyDataObject);
+            });
+
+            it('should be able to find by data type', async () => {
+                const model: Model = await ModelBuilder.create()
+                    .addService(new DataObjectService(new MemoryDataService(DataObject)))
+                    .from()
+                    .to()
+                    .build();
+                const service = model.findDataService(DummySensorObject);
+                expect(service).to.not.be.undefined;
+            });
+
+            it('should determine instanceof with priority', () => {
+                let result;
+                result = instanceofPriority(DummySensorObject, DataObject);
+                expect(result[0]).to.be.true;
+            });
+
+            function instanceofPriority(obj: any, constr: any): [boolean, number] {
+                if (obj === constr) {
+                    return [true, 0];
+                }
+                let level = 1;
+                while (obj = Object.getPrototypeOf(obj)) {
+                    if (obj === constr) {
+                        return [true, level];
+                    }
+                    level++;
+                }
+                return [false, undefined];
+            }        
+        });
+
     });
 
     describe('builder', () => {

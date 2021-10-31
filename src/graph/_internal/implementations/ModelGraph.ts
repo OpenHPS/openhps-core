@@ -6,6 +6,8 @@ import { GraphShape } from './GraphShape';
 import { Model } from '../../../Model';
 import { ServiceProxy } from '../../../service/_internal/ServiceProxy';
 import { PushOptions } from '../../options';
+import { Serializable } from '../../../data/decorators';
+import { DataServiceProxy } from '../../../service/_internal';
 
 /**
  * [[Model]] implementation
@@ -120,34 +122,15 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
      *
      * @returns {Service} Found service
      */
-    public findService<F extends Service>(name: string): F;
-    public findService<F extends Service>(serviceClass: new () => F): F;
-    public findService<F extends Service>(q: any): F {
+    findService<S extends Service>(uid: string): S;
+    findService<S extends Service>(serviceClass: Serializable<S>): S;
+    findService<S extends Service>(q: any): S {
         if (!q) {
             return undefined;
         } else if (typeof q === 'string') {
-            // Find by name
-            return this._findServiceByName(q);
+            return this._services.get(q) as S;
         } else {
-            return this._findServiceByClass(q);
-        }
-    }
-
-    private _findServiceByClass<F extends Service>(serviceClass: new () => F): F {
-        let service: F;
-        for (const s of this._services.values()) {
-            if (s instanceof serviceClass) {
-                service = s;
-            }
-        }
-        return service;
-    }
-
-    private _findServiceByName<F extends Service>(name: string): F {
-        if (this._services.has(name)) {
-            return this._services.get(name) as F;
-        } else {
-            return undefined;
+            return Array.from(this._services.values()).filter((s) => s instanceof q)[0] as S;
         }
     }
 
@@ -156,19 +139,22 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
      *
      * @returns {DataService} Found data service
      */
-    public findDataService<D, F extends DataService<any, D> = DataService<any, D>>(name: string): F;
-    public findDataService<D, F extends DataService<any, D> = DataService<any, D>>(dataType: new () => D): F;
-    public findDataService<D, F extends DataService<any, D> = DataService<any, D>>(object: D): F;
-    public findDataService<D, F extends DataService<any, D> = DataService<any, D>>(q: any): F {
+    findDataService<D, F extends DataService<any, D> = DataService<any, D>>(uid: string): F;
+    findDataService<D, F extends DataService<any, D> = DataService<any, D>>(dataType: Serializable<D>): F;
+    findDataService<D, F extends DataService<any, D> = DataService<any, D>>(object: D): F;
+    findDataService<D, F extends DataService<any, D> = DataService<any, D>>(q: any): F {
         let result: F;
         if (q === undefined) {
             result = undefined;
         } else if (typeof q === 'string') {
             // Find by name
-            result = this._findDataServiceByName(q);
+            result = this._findDataServiceByUID(q);
+        } else if (q.prototype instanceof DataService) {
+            // Find by data service class
+            result = this.findAllServices(q)[0] as F;
         } else if (q instanceof Function) {
             // Find by constructor
-            result = this._findDataServiceByType(q);
+            result = this.findAllDataServices(q)[0] as F;
         } else {
             // Find by instance
             result = this.findDataService(q.constructor);
@@ -176,33 +162,8 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
         return result;
     }
 
-    private _findDataServiceByType<D, F extends DataService<any, D> = DataService<any, D>>(dataType: new () => D): F {
-        // Find by constructor
-        let service: F = this._findDataServiceByName(dataType.name);
-        if (!service) {
-            // Find the parent class
-            let parent = Object.getPrototypeOf(dataType);
-            while (!service) {
-                service = this._findDataServiceByName(parent.name);
-                if (service) {
-                    return service;
-                }
-                if (parent.name === 'DataObject') {
-                    return undefined;
-                }
-                parent = Object.getPrototypeOf(parent);
-            }
-        } else {
-            return service;
-        }
-    }
-
-    private _findDataServiceByName<D, F extends DataService<any, D>>(name: string): F {
-        if (this._dataServices.has(name)) {
-            return this._dataServices.get(name) as F;
-        } else {
-            return undefined;
-        }
+    private _findDataServiceByUID<D, F extends DataService<any, D>>(uid: string): F {
+        return Array.from(this._dataServices.values()).filter((s) => s.uid === uid)[0] as F;
     }
 
     /**
@@ -211,12 +172,46 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
      * @param {typeof Service} [q] Service class
      * @returns {Service[]} Array of all services
      */
-    public findAllServices<S extends Service>(q?: new () => S): S[] {
+    findAllServices<S extends Service>(q?: Serializable<S>): S[] {
         if (q !== undefined) {
-            return this.findAllServices().filter((s) => s instanceof q) as S[];
+            return (this.findAllServices().filter((s) => s instanceof q) as S[]) || [];
         } else {
-            return Array.from(this._services.values()).concat(Array.from(this._dataServices.values())) as S[];
+            return (Array.from(this._services.values()).concat(Array.from(this._dataServices.values())) as S[]) || [];
         }
+    }
+
+    /**
+     * Find all data services by data type
+     *
+     * @param {typeof Service} [q] data type class
+     * @returns {Service[]} Array of all services
+     */
+    findAllDataServices<T, S extends DataService<any, T>>(q?: Serializable<T>): S[] {
+        if (q !== undefined) {
+            return (
+                (this.findAllDataServices()
+                    .map((s) => [s, ...this._instanceofPriority(q, s['target'].dataType)])
+                    .filter((s) => s[1])
+                    .sort((a: any[], b: any[]) => (a[2] === b[2] ? b[0].priority - a[0].priority : a[2] - b[2]))
+                    .map((s) => s[0]) as S[]) || []
+            );
+        } else {
+            return (Array.from(this._dataServices.values()) as S[]) || [];
+        }
+    }
+
+    private _instanceofPriority(obj: any, constr: any): [boolean, number] {
+        if (obj === constr) {
+            return [true, 0];
+        }
+        let level = 1;
+        while ((obj = Object.getPrototypeOf(obj))) {
+            if (obj === constr) {
+                return [true, level];
+            }
+            level++;
+        }
+        return [false, undefined];
     }
 
     /**
@@ -225,27 +220,26 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
      * @param {Service} service Service to add
      * @param {ProxyHandler} [proxy] Proxy handler
      */
-    public addService(service: Service, proxy?: ProxyHandler<any>): void {
-        proxy = proxy || new ServiceProxy();
+    addService(service: Service, proxy?: ProxyHandler<any>): void {
         service.model = this.graph === undefined ? this : this.model;
         if (service instanceof DataService) {
             // Data service
-            this._dataServices.set(service.uid, new Proxy(service, proxy));
+            this._dataServices.set(service.uid, new Proxy(service, proxy || new DataServiceProxy()));
         } else {
             // Normal service
-            this._services.set(service.uid, new Proxy(service, proxy));
+            this._services.set(service.uid, new Proxy(service, proxy || new ServiceProxy()));
         }
     }
 
-    public get referenceSpace(): ReferenceSpace {
+    get referenceSpace(): ReferenceSpace {
         return this._referenceSpace;
     }
 
-    public set referenceSpace(space: ReferenceSpace) {
+    set referenceSpace(space: ReferenceSpace) {
         this._referenceSpace = space;
     }
 
-    public push(frame: In | In[], options?: PushOptions): Promise<void> {
+    push(frame: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const servicePromises: Array<Promise<unknown>> = [];
 
@@ -273,7 +267,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
         });
     }
 
-    public destroy(): Promise<boolean> {
+    destroy(): Promise<boolean> {
         return this.emitAsync('destroy');
     }
 }

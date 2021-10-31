@@ -165,11 +165,7 @@ export class WorkerHandler extends AsyncEventEmitter {
                 uid: service.uid,
                 type: serviceBase.constructor.name,
                 dataType:
-                    service instanceof DataService
-                        ? (service as any).driver.dataType
-                            ? (service as any).driver.dataType.name
-                            : undefined
-                        : undefined,
+                    service instanceof DataService ? (service.dataType ? service.dataType.name : undefined) : undefined,
             };
         });
         return servicesArray;

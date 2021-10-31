@@ -26,13 +26,14 @@ import { Service } from './Service';
  */
 export abstract class DataService<I, T> extends Service {
     protected driver: DataServiceDriver<I, T>;
+    priority = -1;
 
     constructor(dataServiceDriver?: DataServiceDriver<I, T>) {
         super();
         this.driver = dataServiceDriver;
 
-        if (this.dataType) {
-            this.uid = this.dataType.name;
+        if (this.driver) {
+            this.uid = this.driver.dataType.name;
         }
 
         this.once('build', () => {
@@ -44,17 +45,22 @@ export abstract class DataService<I, T> extends Service {
     }
 
     get dataType(): Constructor<T> {
-        if (!this.driver) {
-            return undefined;
+        if (this.driver) {
+            return this.driver.dataType;
         }
-        return this.driver.dataType;
+        return undefined;
     }
 
-    set dataType(value: Constructor<T>) {
-        if (!this.driver) {
-            return;
-        }
-        this.driver.dataType = value;
+    /**
+     * Set the priority of the data service
+     * a higher number means a higher priority.
+     *
+     * @param {number} value Priority value
+     * @returns {DataService} data service instance
+     */
+    setPriority(value: number): this {
+        this.priority = value;
+        return this;
     }
 
     findByUID(uid: I): Promise<T> {

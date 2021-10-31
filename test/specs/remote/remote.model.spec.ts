@@ -22,14 +22,14 @@ describe('RemoteService', () => {
                 })))
                 .from(new RemoteSourceNode({
                     uid: "/api/v1/uid1",
-                    service: "DummyServer"
+                    service: DummyServer
                 }))
                 .via(new CallbackNode(frame => {
                     // Process
                 }))
                 .to(new RemoteSinkNode({
                     uid: "/api/v1/uid2",
-                    service: "DummyServer"
+                    service: DummyServer
                 }), server_sink).build();
             client = await ModelBuilder.create()
                 .addService(new DummyClient())
@@ -65,14 +65,14 @@ describe('RemoteService', () => {
                 .addService(new DummyServer())
                 .from(new RemoteSourceNode({
                     uid: "/api/v1/uid1",
-                    service: "DummyServer"
+                    service: DummyServer
                 }))
                 .via(new CallbackNode(frame => {
                     // Process
                 }))
                 .to(new RemoteSinkNode({
                     uid: "/api/v1/uid2",
-                    service: "DummyServer"
+                    service: DummyServer
                 }), server_sink).build();
             client = await ModelBuilder.create()
                 .addService(new DummyClient())
@@ -113,7 +113,7 @@ describe('RemoteService', () => {
                 .addService(new DummyServer())
                 .from(new RemoteSourceNode({
                     uid: "/api/v1/uid1",
-                    service: "DummyServer"
+                    service: DummyServer
                 }))
                 .via(new CallbackNode(frame => {
                     // Process
@@ -121,18 +121,18 @@ describe('RemoteService', () => {
                 }))
                 .to(new RemoteSinkNode({
                     uid: "/api/v1/uid2",
-                    service: "DummyServer"
+                    service: DummyServer
                 }), server_sink).build();
             client = await ModelBuilder.create()
                 .addService(new DummyClient())
                 .from()
                 .via(new RemoteNode({
                     uid: "/api/v1/uid1",
-                    service: "DummyClient"
+                    service: DummyClient
                 }))
                 .via(new RemoteNode({
                     uid: "/api/v1/uid2",
-                    service: "DummyClient"
+                    service: DummyClient
                 }))
                 .to(client_sink)
                 .build();
@@ -166,7 +166,7 @@ describe('RemoteService', () => {
                 .addService(new DummyServer())
                 .from(new RemoteSourceNode({
                     uid: "/api/v1/uid1",
-                    service: "DummyServer"
+                    service: DummyServer
                 }))
                 .via(new CallbackNode(frame => {
                     // Process
@@ -174,14 +174,14 @@ describe('RemoteService', () => {
                 }))
                 .to(new RemoteSinkNode({
                     uid: "/api/v1/uid2",
-                    service: "DummyServer"
+                    service: DummyServer
                 }), server_sink).build();
             client = await ModelBuilder.create()
                 .addService(new DummyClient())
                 .from()
                 .to(new RemoteSinkNode({
                     uid: "/api/v1/uid1",
-                    service: "DummyClient"
+                    service: DummyClient
                 }), client_sink)
                 .build();
         });

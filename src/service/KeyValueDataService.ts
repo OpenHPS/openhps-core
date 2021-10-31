@@ -14,7 +14,7 @@ export class KeyValueDataService extends DataService<string, any> {
                 serialize: (d) => d,
                 deserialize: (d) => d,
             });
-            this.dataType = Object;
+            this.driver.dataType = Object;
         }
         this.uid = uid || this.constructor.name;
     }

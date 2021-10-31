@@ -20,12 +20,12 @@ import {
 import { WorkerData } from './WorkerData';
 
 export class WorkerBase {
-    public model: Model<any, any>;
-    public pullOutput: Subject<any> = new Subject();
-    public pushOutput: Subject<any> = new Subject();
-    public serviceOutputCall: Subject<WorkerServiceCall> = new Subject();
-    public serviceOutputResponse: Subject<WorkerServiceResponse> = new Subject();
-    public eventOutput: Subject<{
+    model: Model<any, any>;
+    pullOutput: Subject<any> = new Subject();
+    pushOutput: Subject<any> = new Subject();
+    serviceOutputCall: Subject<WorkerServiceCall> = new Subject();
+    serviceOutputResponse: Subject<WorkerServiceResponse> = new Subject();
+    eventOutput: Subject<{
         name: string;
         event: any;
     }> = new Subject();

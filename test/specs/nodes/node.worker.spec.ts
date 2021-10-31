@@ -4,338 +4,336 @@ import { ModelBuilder, DataFrame, WorkerNode, CallbackSinkNode, DataObject, Node
 import * as path from 'path';
 import { KeyValueDataService } from '../../../src/service/KeyValueDataService';
 
-describe('node', () => {
-    describe('worker node', () => {
-        // Overhead in ms
-        const overhead = 25;
+describe('WorkerNode', () => {
+    // Overhead in ms
+    const overhead = 25;
 
-        it('should take 30ms with 1 worker', (done) => {
-            let model;
-            let start;
-            ModelBuilder.create()
-                .from()
-                .via(
-                    new WorkerNode(
-                        (builder) => {
-                            // eslint-ignore-next-line
-                            const { TimeConsumingNode } = require(path.join(
-                                __dirname,
-                                '../../mock/nodes/TimeConsumingNode',
-                            ));
-                            builder.via(new TimeConsumingNode());
-                        },
-                        {
-                            directory: __dirname,
-                            poolSize: 1,
-                        },
-                    ),
-                )
-                .to(
-                    new CallbackSinkNode((data: DataFrame) => {
-                        expect(data.getObjects()[0].uid).to.equal('time object');
-                    }),
-                )
-                .build()
-                .then((m) => {
-                    model = m;
+    it('should take 30ms with 1 worker', (done) => {
+        let model;
+        let start;
+        ModelBuilder.create()
+            .from()
+            .via(
+                new WorkerNode(
+                    (builder) => {
+                        // eslint-ignore-next-line
+                        const { TimeConsumingNode } = require(path.join(
+                            __dirname,
+                            '../../mock/nodes/TimeConsumingNode',
+                        ));
+                        builder.via(new TimeConsumingNode());
+                    },
+                    {
+                        directory: __dirname,
+                        poolSize: 1,
+                    },
+                ),
+            )
+            .to(
+                new CallbackSinkNode((data: DataFrame) => {
+                    expect(data.getObjects()[0].uid).to.equal('time object');
+                }),
+            )
+            .build()
+            .then((m) => {
+                model = m;
 
-                    // Warm-up
-                    return model.push(new DataFrame());
-                })
-                .then(() => {
-                    // Push three frames and wait for them to finish
-                    start = new Date().getTime();
-                    let count = 0;
-                    model.on('completed', () => {
-                        count++;
-                        if (count === 3) {
-                            const end = new Date().getTime();
-                            const diff = end - start;
-                            expect(diff).to.be.lessThan(30 + overhead);
-                            model.emit('destroy');
-                            done();
-                        }
-                    });
-
-                    for (let i = 0 ; i < 3 ; i ++){
-                        model.push(new DataFrame());
-                    }
-                })
-                .catch((ex) => {
-                    done(ex);
-                });
-        }).slow(5000).timeout(60000);
-
-        it('should take 20ms with 2 workers', (done) => {
-            let model;
-            let start;
-            ModelBuilder.create()
-                .from()
-                .via(
-                    new WorkerNode(
-                        (builder) => {
-                            const { TimeConsumingNode } = require(path.join(
-                                __dirname,
-                                '../../mock/nodes/TimeConsumingNode',
-                            ));
-                            builder.via(new TimeConsumingNode());
-                        },
-                        {
-                            directory: __dirname,
-                            poolSize: 2
-                        },
-                    ),
-                )
-                .to(
-                    new CallbackSinkNode((data: DataFrame) => {
-                        expect(data.getObjects()[0].uid).to.equal('time object');
-                    }),
-                )
-                .build()
-                .then((m) => {
-                    model = m;
-
-                    // Warm-up
-                    return model.push(new DataFrame());
-                })
-                .then(() => {
-                    // Push three frames and wait for them to finish
-                    start = new Date().getTime();
-                    let count = 0;
-                    model.on('completed', () => {
-                        count++;
-                        if (count === 3) {
-                            const end = new Date().getTime();
-                            const diff = end - start;
-                            expect(diff).to.be.lessThan(20 + overhead);
-                            model.emit('destroy');
-                            done();
-                        }
-                    });
-
-                    for (let i = 0 ; i < 3 ; i ++){
-                        model.push(new DataFrame());
-                    }
-                })
-                .catch((ex) => {
-                    done(ex);
-                });
-        }).slow(5000).timeout(60000);
-
-        it('should be able to access data services', (done) => {
-            let model;
-            ModelBuilder.create()
-                .from()
-                .via(
-                    new WorkerNode(
-                        (builder) => {
-                            const { DataServiceTestNode } = require(path.join(
-                                __dirname,
-                                '../../mock/nodes/DataServiceTestNode',
-                            ));
-                            builder.via(new DataServiceTestNode());
-                        },
-                        {
-                            directory: __dirname,
-                            poolSize: 1,
-                        },
-                    ),
-                )
-                .to(
-                    new CallbackSinkNode((data: DataFrame) => {
-                        expect(data.getObjects()[0].uid).to.equal('abc456');
-                        expect(data.getObjects()[0].displayName).to.equal('hello world');
+                // Warm-up
+                return model.push(new DataFrame());
+            })
+            .then(() => {
+                // Push three frames and wait for them to finish
+                start = new Date().getTime();
+                let count = 0;
+                model.on('completed', () => {
+                    count++;
+                    if (count === 3) {
+                        const end = new Date().getTime();
+                        const diff = end - start;
+                        expect(diff).to.be.lessThan(30 + overhead);
                         model.emit('destroy');
                         done();
-                    }),
-                )
-                .build()
-                .then((m) => {
-                    model = m;
-                    const dataService = model.findDataService(DataObject);
-                    dataService.insert('abc456', new DataObject('abc456')).then(() => {
-                        model.push(new DataFrame());
-                    });
+                    }
                 });
-        }).slow(5000).timeout(60000);
 
-        it('should be able to access node data services', (done) => {
-            let model;
-            ModelBuilder.create()
-                .from()
-                .via(
-                    new WorkerNode(
-                        (builder) => {
-                            const { NodeDataServiceTestNode } = require(path.join(
-                                __dirname,
-                                '../../mock/nodes/NodeDataServiceTestNode',
-                            ));
-                            builder.via(new NodeDataServiceTestNode());
-                        },
-                        {
-                            directory: __dirname,
-                            poolSize: 1,
-                        },
-                    ),
-                )
-                .to(
-                    new CallbackSinkNode((data: DataFrame) => {
-                        const dataService: NodeDataService<NodeData> = model.findDataService(NodeData);
-                        dataService.findData("x123", "mvdewync").then(data => {
-                            expect(data.test).to.equal("abc");
-                            model.emit('destroy');
-                            done();
-                        });
-                    }),
-                )
-                .build()
-                .then((m) => {
-                    model = m;
-                    model.push(new DataFrame(new DataObject("mvdewync")));
-                });
-        }).slow(5000).timeout(60000);
+                for (let i = 0 ; i < 3 ; i ++){
+                    model.push(new DataFrame());
+                }
+            })
+            .catch((ex) => {
+                done(ex);
+            });
+    }).slow(5000).timeout(60000);
 
-        it('should support error events', (done) => {
-            let model;
-            ModelBuilder.create()
-                .from()
-                .via(
-                    new WorkerNode(
-                        (builder) => {
-                            const { ErrorThrowingNode } = require(path.join(
-                                __dirname,
-                                '../../mock/nodes/ErrorThrowingNode',
-                            ));
-                            builder.via(new ErrorThrowingNode());
-                        },
-                        {
-                            directory: __dirname,
-                            poolSize: 1,
-                        },
-                    ),
-                )
-                .to()
-                .build()
-                .then((m) => {
-                    model = m;
-                    model.once('error', event => {
-                        model.destroy();
+    it('should take 20ms with 2 workers', (done) => {
+        let model;
+        let start;
+        ModelBuilder.create()
+            .from()
+            .via(
+                new WorkerNode(
+                    (builder) => {
+                        const { TimeConsumingNode } = require(path.join(
+                            __dirname,
+                            '../../mock/nodes/TimeConsumingNode',
+                        ));
+                        builder.via(new TimeConsumingNode());
+                    },
+                    {
+                        directory: __dirname,
+                        poolSize: 2
+                    },
+                ),
+            )
+            .to(
+                new CallbackSinkNode((data: DataFrame) => {
+                    expect(data.getObjects()[0].uid).to.equal('time object');
+                }),
+            )
+            .build()
+            .then((m) => {
+                model = m;
+
+                // Warm-up
+                return model.push(new DataFrame());
+            })
+            .then(() => {
+                // Push three frames and wait for them to finish
+                start = new Date().getTime();
+                let count = 0;
+                model.on('completed', () => {
+                    count++;
+                    if (count === 3) {
+                        const end = new Date().getTime();
+                        const diff = end - start;
+                        expect(diff).to.be.lessThan(20 + overhead);
+                        model.emit('destroy');
                         done();
-                    })
-                    model.push(new DataFrame(new DataObject("mvdewync")));
+                    }
                 });
-        }).slow(5000).timeout(60000);
 
-        it('should support completed events', (done) => {
-            let model;
-            ModelBuilder.create()
-                .from()
-                .via(
-                    new WorkerNode(
-                        (builder) => {
-                            const { TimeConsumingNode } = require(path.join(
-                                __dirname,
-                                '../../mock/nodes/TimeConsumingNode',
-                            ));
-                            builder.via(new TimeConsumingNode());
-                        },
-                        {
-                            directory: __dirname,
-                            poolSize: 1,
-                        },
-                    ),
-                )
-                .to(
-                    new CallbackSinkNode((data: DataFrame) => {
-                        
-                    }),
-                )
-                .build()
-                .then((m) => {
-                    model = m;
-                    model.once('completed', event => {
-                        model.destroy();
-                        done();
-                    })
-                    model.push(new DataFrame(new DataObject("mvdewync")));
-                });
-        }).slow(5000).timeout(60000);
-    });
+                for (let i = 0 ; i < 3 ; i ++){
+                    model.push(new DataFrame());
+                }
+            })
+            .catch((ex) => {
+                done(ex);
+            });
+    }).slow(5000).timeout(60000);
 
-    describe('worker graph', () => {
-
-        it('should build a graph or node from a file', (done) => {
-            ModelBuilder.create()
-                .addNode(new WorkerNode("../../mock/ExampleGraph", {
-                    name: "output",
-                    directory: __dirname,
-                    poolSize: 2
-                }))
-                .from("output")
-                .to(new CallbackSinkNode(function(frame) {
-                    expect(frame).to.not.be.undefined;
-                    expect(frame.source).to.not.be.undefined;
-                    expect(frame.source.uid).to.be.equal("mvdewync");
-                    this.model.destroy();
+    it('should be able to access data services', (done) => {
+        let model;
+        ModelBuilder.create()
+            .from()
+            .via(
+                new WorkerNode(
+                    (builder) => {
+                        const { DataServiceTestNode } = require(path.join(
+                            __dirname,
+                            '../../mock/nodes/DataServiceTestNode',
+                        ));
+                        builder.via(new DataServiceTestNode());
+                    },
+                    {
+                        directory: __dirname,
+                        poolSize: 1,
+                    },
+                ),
+            )
+            .to(
+                new CallbackSinkNode((data: DataFrame) => {
+                    expect(data.getObjects()[0].uid).to.equal('abc456');
+                    expect(data.getObjects()[0].displayName).to.equal('hello world');
+                    model.emit('destroy');
                     done();
-                }))
-                .build().then(model => {
-                    model.once('error', (ex) => {
-                        model.destroy();
-                        done(ex);
+                }),
+            )
+            .build()
+            .then((m) => {
+                model = m;
+                const dataService = model.findDataService(DataObject);
+                dataService.insert('abc456', new DataObject('abc456')).then(() => {
+                    model.push(new DataFrame());
+                });
+            });
+    }).slow(5000).timeout(60000);
+
+    it('should be able to access node data services', (done) => {
+        let model;
+        ModelBuilder.create()
+            .from()
+            .via(
+                new WorkerNode(
+                    (builder) => {
+                        const { NodeDataServiceTestNode } = require(path.join(
+                            __dirname,
+                            '../../mock/nodes/NodeDataServiceTestNode',
+                        ));
+                        builder.via(new NodeDataServiceTestNode());
+                    },
+                    {
+                        directory: __dirname,
+                        poolSize: 1,
+                    },
+                ),
+            )
+            .to(
+                new CallbackSinkNode((data: DataFrame) => {
+                    const dataService: NodeDataService<NodeData> = model.findDataService(NodeData);
+                    dataService.findData("x123", "mvdewync").then(data => {
+                        expect(data.test).to.equal("abc");
+                        model.emit('destroy');
+                        done();
                     });
+                }),
+            )
+            .build()
+            .then((m) => {
+                model = m;
+                model.push(new DataFrame(new DataObject("mvdewync")));
+            });
+    }).slow(5000).timeout(60000);
+
+    it('should support error events', (done) => {
+        let model;
+        ModelBuilder.create()
+            .from()
+            .via(
+                new WorkerNode(
+                    (builder) => {
+                        const { ErrorThrowingNode } = require(path.join(
+                            __dirname,
+                            '../../mock/nodes/ErrorThrowingNode',
+                        ));
+                        builder.via(new ErrorThrowingNode());
+                    },
+                    {
+                        directory: __dirname,
+                        poolSize: 1,
+                    },
+                ),
+            )
+            .to()
+            .build()
+            .then((m) => {
+                model = m;
+                model.once('error', event => {
+                    model.destroy();
+                    done();
+                })
+                model.push(new DataFrame(new DataObject("mvdewync")));
+            });
+    }).slow(5000).timeout(60000);
+
+    it('should support completed events', (done) => {
+        let model;
+        ModelBuilder.create()
+            .from()
+            .via(
+                new WorkerNode(
+                    (builder) => {
+                        const { TimeConsumingNode } = require(path.join(
+                            __dirname,
+                            '../../mock/nodes/TimeConsumingNode',
+                        ));
+                        builder.via(new TimeConsumingNode());
+                    },
+                    {
+                        directory: __dirname,
+                        poolSize: 1,
+                    },
+                ),
+            )
+            .to(
+                new CallbackSinkNode((data: DataFrame) => {
+                    
+                }),
+            )
+            .build()
+            .then((m) => {
+                model = m;
+                model.once('completed', event => {
+                    model.destroy();
+                    done();
+                })
+                model.push(new DataFrame(new DataObject("mvdewync")));
+            });
+    }).slow(5000).timeout(60000);
+});
+
+describe('worker graph', () => {
+
+    it('should build a graph or node from a file', (done) => {
+        ModelBuilder.create()
+            .addNode(new WorkerNode("../../mock/ExampleGraph", {
+                name: "output",
+                directory: __dirname,
+                poolSize: 2
+            }))
+            .from("output")
+            .to(new CallbackSinkNode(function(frame) {
+                expect(frame).to.not.be.undefined;
+                expect(frame.source).to.not.be.undefined;
+                expect(frame.source.uid).to.be.equal("mvdewync");
+                this.model.destroy();
+                done();
+            }))
+            .build().then(model => {
+                model.once('error', (ex) => {
+                    model.destroy();
+                    done(ex);
+                });
+                model.pull();
+            }).catch(done);
+    }).slow(8000).timeout(60000);
+
+    it('should build a model from a file using a main service', (done) => {
+        ModelBuilder.create()
+            .addService(new KeyValueDataService("abc123"))
+            .addNode(new WorkerNode("../../mock/ExampleModel", {
+                name: "output",
+                directory: __dirname,
+                poolSize: 2
+            }))
+            .from("output")
+            .to(new CallbackSinkNode(function(frame) {
+                expect(frame).to.not.be.undefined;
+                expect(frame.source).to.not.be.undefined;
+                expect(frame.source.uid).to.be.equal("mvdewync");
+                expect(frame.source.displayName).to.equal("abc");
+                this.model.destroy();
+                done();
+            }))
+            .build().then(model => {
+                const service = model.findDataService("abc123");
+                service.setValue("displayName", "abc").then(() => {
                     model.pull();
                 }).catch(done);
-        }).slow(8000).timeout(60000);
+            });
+    }).slow(8000).timeout(60000);
 
-        it('should build a model from a file using a main service', (done) => {
-            ModelBuilder.create()
-                .addService(new KeyValueDataService("abc123"))
-                .addNode(new WorkerNode("../../mock/ExampleModel", {
-                    name: "output",
-                    directory: __dirname,
-                    poolSize: 2
-                }))
-                .from("output")
-                .to(new CallbackSinkNode(function(frame) {
-                    expect(frame).to.not.be.undefined;
-                    expect(frame.source).to.not.be.undefined;
-                    expect(frame.source.uid).to.be.equal("mvdewync");
-                    expect(frame.source.displayName).to.equal("abc");
-                    this.model.destroy();
-                    done();
-                }))
-                .build().then(model => {
-                    const service = model.findDataService("abc123");
-                    service.setValue("displayName", "abc").then(() => {
-                        model.pull();
-                    }).catch(done);
-                });
-        }).slow(8000).timeout(60000);
-
-        it('should build a model from a file using a worker service', (done) => {
-            ModelBuilder.create()
-                .addNode(new WorkerNode("../../mock/ExampleModel2", {
-                    name: "output",
-                    directory: __dirname,
-                    poolSize: 1
-                }))
-                .from("output")
-                .to(new CallbackSinkNode(function(frame) {
-                    expect(frame).to.not.be.undefined;
-                    expect(frame.source).to.not.be.undefined;
-                    expect(frame.source.uid).to.be.equal("mvdewync");
-                    expect(frame.source.displayName).to.equal("maxim");
-                    this.model.destroy();
-                    done();
-                }))
-                .build().then(model => {
-                    const service = model.findDataService("test123");
-                    service.setValue("displayName", "maxim").then(() => {
-                        model.pull();
-                    }).catch(done);
+    it('should build a model from a file using a worker service', (done) => {
+        ModelBuilder.create()
+            .addNode(new WorkerNode("../../mock/ExampleModel2", {
+                name: "output",
+                directory: __dirname,
+                poolSize: 1
+            }))
+            .from("output")
+            .to(new CallbackSinkNode(function(frame) {
+                expect(frame).to.not.be.undefined;
+                expect(frame.source).to.not.be.undefined;
+                expect(frame.source.uid).to.be.equal("mvdewync");
+                expect(frame.source.displayName).to.equal("maxim");
+                this.model.destroy();
+                done();
+            }))
+            .build().then(model => {
+                const service = model.findDataService("test123");
+                service.setValue("displayName", "maxim").then(() => {
+                    model.pull();
                 }).catch(done);
-        }).slow(8000).timeout(60000);
+            }).catch(done);
+    }).slow(8000).timeout(60000);
 
-    });
 });
