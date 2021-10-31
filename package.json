@@ -19,13 +19,13 @@
     "typescript": false,
     "microtime": false
   },
-  "module": "./dist/esm/index.js",
+  "module": "./lib/esm/index.js",
   "exports": {
     "require": "./lib/cjs/index.js",
     "import": "./lib/esm/index.js"
   },
   "files": [
-    "dist/**/*",
+    "lib/**/*",
     "src/**/*"
   ],
   "scripts": {
