@@ -1,4 +1,4 @@
-import { AbsolutePosition, DataObject } from '../data';
+import { AbsolutePosition, DataObject, GeographicalPosition } from '../data';
 import { Graph } from '../graph/Graph';
 import { Model } from '../Model';
 import { TimeUnit } from '../utils';
@@ -27,6 +27,8 @@ import { Constructor } from '../data/decorators';
  *
  * ### Getting the current position
  *
+ * ### Setting the current position
+ *
  * ### Watching the position of an object
  */
 export class LocationBasedService<
@@ -34,7 +36,7 @@ export class LocationBasedService<
     P extends AbsolutePosition = AbsolutePosition,
 > extends Service {
     protected options: LBSOptions;
-    public model: Model;
+    model: Model;
     protected service: DataObjectService<T>;
     protected watchers: Map<number, Watcher> = new Map();
     protected watchedObjects: Map<string, number> = new Map();
@@ -65,13 +67,33 @@ export class LocationBasedService<
     }
 
     /**
+     * Set the current position of an object
+     *
+     * @param {DataObject | string} object Data object to get the current position of or uid
+     * @param {AbsolutePosition} position Position to update
+     * @returns {Promise<void>} Promise of updating
+     */
+    setCurrentPosition(object: T | string, position: P): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const uid = object instanceof DataObject ? object.uid : object;
+            this.service
+                .findByUID(uid)
+                .then((storedObj) => {
+                    storedObj.setPosition(position);
+                    resolve();
+                })
+                .catch(reject);
+        });
+    }
+
+    /**
      * Get the current position of a specific data object.
      *
      * @param {DataObject | string} object Data object to get the current position of or uid
      * @param {GeoOptions} [options] Current position options
      * @returns {Promise<AbsolutePosition>} Promise of latest absolute position
      */
-    public getCurrentPosition(object: T | string, options: GeoOptions = {}): Promise<P> {
+    getCurrentPosition(object: T | string, options: GeoOptions = {}): Promise<P> {
         return new Promise((resolve, reject) => {
             const maximumAge = options.maximumAge || Infinity;
             options.timeout = options.timeout || 10000;
@@ -106,7 +128,7 @@ export class LocationBasedService<
         });
     }
 
-    public watchPosition(
+    watchPosition(
         object: T | string,
         callback: (position: P, err?: Error) => void,
         options: GeoWatchOptions = {},
@@ -136,7 +158,7 @@ export class LocationBasedService<
      *
      * @param {number} watchId Watch identifier
      */
-    public clearWatch(watchId: number): void {
+    clearWatch(watchId: number): void {
         const watcher = this.watchers.get(watchId);
         if (watcher.timer) clearInterval(watcher.timer);
         this.watchers.delete(watchId);

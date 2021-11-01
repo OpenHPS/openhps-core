@@ -43,9 +43,9 @@ const defaultConfig = env => ({
 
 const bundle = (env, module) => ({
   name: PROJECT_NAME,
-  entry: `./lib/${module ? "esm" : "cjs"}/index.js`,
+  entry: `./dist/${module ? "esm" : "cjs"}/index.js`,
   output: {
-    path: path.resolve(__dirname, 'lib'),
+    path: path.resolve(__dirname, 'dist'),
     filename: `web/${PROJECT_NAME}${module ? ".es" : ""}${env.prod ? ".min" : ""}.js`,
     library: module ? undefined : LIBRARY_NAME,
     libraryTarget: module ? "module" : "umd",
@@ -65,10 +65,10 @@ module.exports = env => [
   bundle(env, false),
   {
     name:`${PROJECT_NAME}-worker`,
-    entry: `./lib/cjs/worker/WorkerRunner.js`,
+    entry: `./dist/cjs/worker/WorkerRunner.js`,
     externals: {'..': LIBRARY_NAME},
     output: {
-      path: path.resolve(__dirname, 'lib'),
+      path: path.resolve(__dirname, 'dist'),
       filename: `web/worker.${PROJECT_NAME}${env.prod ? ".min" : ""}.js`,
       library: LIBRARY_NAME,
       libraryTarget: 'umd',

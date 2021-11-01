@@ -11,21 +11,24 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "./lib/cjs/index.js",
-  "types": "./lib/types/index.d.ts",
-  "unpkg": "./lib/web/openhps-core.min.js",
-  "jsdelivr": "./lib/web/openhps-core.min.js",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/types/index.d.ts",
+  "unpkg": "./dist/web/openhps-core.min.js",
+  "jsdelivr": "./dist/web/openhps-core.min.js",
   "browser": {
     "typescript": false,
     "microtime": false
   },
-  "module": "./lib/esm/index.js",
+  "module": "./dist/esm/index.js",
   "exports": {
-    "require": "./lib/cjs/index.js",
-    "import": "./lib/esm/index.js"
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
   },
   "files": [
-    "lib/**/*",
+    "dist/**/*",
     "src/**/*"
   ],
   "scripts": {
@@ -33,14 +36,14 @@
     "benchmark": "ts-node test/bench/worker.bench.ts",
     "cover": "nyc mocha --config test/.mocharc.json && nyc report --reporter=cobertura",
     "lint": "eslint src/ --ignore-pattern three",
-    "clean": "shx rm -rf ./lib && shx rm -rf ./docs/out",
+    "clean": "shx rm -rf ./dist && shx rm -rf ./docs/out",
     "build": "npm run clean && npm run build:three && npm-run-all --parallel build:esm build:cjs build:declarations build:typedoc && npm run build:webpack",
     "build:quick": "npm-run-all --parallel build:cjs build:esm build:declarations && npm run build:webpack",
     "build:typedoc": "typedoc --options docs/typedoc.json",
     "build:three": "node ./scripts/build.three.js",
-    "build:declarations": "tsc --declaration --emitDeclarationOnly --outdir lib/types",
-    "build:esm": "tsc --module es2015 --outDir lib/esm",
-    "build:cjs": "tsc --module commonjs  --outDir lib/cjs",
+    "build:declarations": "tsc --declaration --emitDeclarationOnly --outdir dist/types",
+    "build:esm": "tsc --module es2015 --outDir dist/esm",
+    "build:cjs": "tsc --module commonjs  --outDir dist/cjs",
     "build:webpack": "npm-run-all --parallel build:webpack:*",
     "build:webpack:prod": "webpack --env prod --",
     "build:webpack:dev": "webpack --env dev --",

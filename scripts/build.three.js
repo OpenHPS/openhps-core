@@ -9,9 +9,9 @@ const fs = require('fs');
 
 const three_dir = path.join(path.dirname(require.resolve('three')), "../");
 const src_dir = path.join(__dirname, "../src/three");
-const cjs_dir = path.join(__dirname, "../lib/cjs/three");
-const esm_dir = path.join(__dirname, "../lib/esm/three");
-const types_dir = path.join(__dirname, "../lib/types/three");
+const cjs_dir = path.join(__dirname, "../dist/cjs/three");
+const esm_dir = path.join(__dirname, "../dist/esm/three");
+const types_dir = path.join(__dirname, "../dist/types/three");
 
 console.log("Three dir: ", three_dir);
 console.log("Source dir: ", src_dir);

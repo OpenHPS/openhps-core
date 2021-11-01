@@ -51,6 +51,8 @@ OpenHPS is a data processing positioning framework. It is designed to support ma
 ### Data Services
 - **[@openhps/mongodb](https://github.com/OpenHPS/openhps-mongodb)** - Adds MongoDB support for the storage of data objects.
 - **[@openhps/localstorage](https://github.com/OpenHPS/openhps-localstorage)** - Basic persistent storage for browser based models.
+- **@openhps/rdf** - RDF exporting of data objects and data frames.
+- **@openhps/solid** - Solid Pods as data storage for data objects.
 
 ### Communication
 - **[@openhps/socket](https://github.com/OpenHPS/openhps-socket)** - Provides node communication through Socket.IO for remote models.
