@@ -2,9 +2,11 @@ import { JsonObjectMetadata } from 'typedjson';
 import { JsonMemberMetadata } from 'typedjson/lib/types/metadata';
 
 /**
- * @param target
- * @param propertyKey
- * @param options
+ * Inject member options into object
+ *
+ * @param {any} target Prototype
+ * @param {PropertyKey} propertyKey Property key
+ * @param {any} options Options to inject
  */
 export function injectMemberOptions(target: unknown, propertyKey: PropertyKey, options: any) {
     const meta = JsonObjectMetadata.ensurePresentInPrototype(target);

@@ -1,7 +1,7 @@
 import { TypedJSON, JsonObjectMetadata, ITypedJSONSettings, Constructor, Serializable, IndexedObject } from 'typedjson';
 import type { MappedTypeConverters } from 'typedjson/lib/types/parser';
-import { Deserializer, DeserializerFn } from './Deserializer';
-import { Serializer, SerializerFn, TypeDescriptor } from './Serializer';
+import { Deserializer } from './Deserializer';
+import { Serializer } from './Serializer';
 
 const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
 
@@ -146,16 +146,16 @@ export class DataSerializer {
         // may extend an array
         if (this.findTypeByName(data.constructor.name)) {
             const typedJSON = new TypedJSON(globalDataType);
-            typedJSON['serializer'] = new Serializer().setDefaultSerializer(mergedConfig.serializer);
-            typedJSON['deserializer'] = new Deserializer().setDefaultDeserializer(mergedConfig.deserializer);
+            typedJSON['serializer'] = mergedConfig.serializer ?? new Serializer();
+            typedJSON['deserializer'] = mergedConfig.deserializer ?? new Deserializer();
             typedJSON.config(mergedConfig);
             return typedJSON.toPlainJson(data);
         } else if (Array.isArray(data)) {
             return data.map(this.serialize.bind(this));
         } else {
             const typedJSON = new TypedJSON(globalDataType);
-            typedJSON['serializer'] = new Serializer().setDefaultSerializer(mergedConfig.serializer);
-            typedJSON['deserializer'] = new Deserializer().setDefaultDeserializer(mergedConfig.deserializer);
+            typedJSON['serializer'] = mergedConfig.serializer ?? new Serializer();
+            typedJSON['deserializer'] = mergedConfig.deserializer ?? new Deserializer();
             typedJSON.config(mergedConfig);
             return typedJSON.toPlainJson(data);
         }
@@ -189,8 +189,8 @@ export class DataSerializer {
             return serializedData;
         }
         const typedJSON = new TypedJSON(finalType);
-        typedJSON['serializer'] = new Serializer().setDefaultSerializer(mergedConfig.serializer);
-        typedJSON['deserializer'] = new Deserializer().setDefaultDeserializer(mergedConfig.deserializer);
+        typedJSON['serializer'] = mergedConfig.serializer ?? new Serializer();
+        typedJSON['deserializer'] = mergedConfig.deserializer ?? new Deserializer();
         typedJSON.config(mergedConfig);
         return typedJSON.parse(serializedData);
     }
@@ -199,12 +199,16 @@ export class DataSerializer {
 export interface DataSerializerConfig extends ITypedJSONSettings {
     /**
      * Set the serializer used for serializing.
+     *
+     * @default TypedJSON JSON serializer
      */
-    serializer?: SerializerFn<any, TypeDescriptor, any>;
+    serializer?: Serializer;
     /**
      * Set the deserializer used for deserializing.
+     *
+     * @default TypedJSON JSON deserializer
      */
-    deserializer?: DeserializerFn<any>;
+    deserializer?: Deserializer<any>;
 }
 
 export { MappedTypeConverters };

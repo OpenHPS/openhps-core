@@ -1,15 +1,23 @@
 import { Serializer as JSONSerializer } from 'typedjson/lib/cjs/serializer';
+import type { Serializer as ISerializer } from 'typedjson/lib/types/serializer';
 import type { TypeDescriptor } from 'typedjson/lib/types/type-descriptor';
 import type { OptionsBase } from 'typedjson/lib/types/options-base';
-import { Serializable } from 'typedjson';
+import { Serializable, TypeHintEmitter } from 'typedjson';
 
-export class Serializer extends JSONSerializer {
-    defaultSerializer: SerializerFn<any, TypeDescriptor, any>;
-
-    setDefaultSerializer(serializer: SerializerFn<any, TypeDescriptor, any>): this {
-        this.defaultSerializer = serializer;
-        return this;
-    }
+export class Serializer extends JSONSerializer implements Partial<ISerializer> {
+    declare options?: OptionsBase;
+    declare typeHintEmitter: TypeHintEmitter;
+    declare serializationStrategy: Map<Serializable<any>, SerializerFn<any, TypeDescriptor, any>>;
+    declare errorHandler: (error: Error) => void;
+    declare setSerializationStrategy: (
+        type: Serializable<any>,
+        serializer: SerializerFn<any, TypeDescriptor, any>,
+    ) => void;
+    declare setTypeHintEmitter: (typeEmitterCallback: TypeHintEmitter) => void;
+    declare getTypeHintEmitter: () => TypeHintEmitter;
+    declare setErrorHandler: (errorHandlerCallback: (error: Error) => void) => void;
+    declare getErrorHandler: () => (error: Error) => void;
+    declare retrievePreserveNull: (memberOptions?: OptionsBase) => boolean;
 
     convertSingleValue(
         sourceObject: any,
@@ -17,19 +25,6 @@ export class Serializer extends JSONSerializer {
         memberName: string,
         memberOptions?: OptionsBase,
     ): any {
-        if (this.defaultSerializer) {
-            const mapProxy = new Proxy(this['serializationStrategy'], {
-                get: (target, p: PropertyKey) => {
-                    if (p === 'get') {
-                        return (key: Serializable<any>) => {
-                            return target.get(key) ?? this.defaultSerializer;
-                        };
-                    }
-                    return target[p];
-                },
-            });
-            this['serializationStrategy'] = mapProxy;
-        }
         const targetObject = super.convertSingleValue(sourceObject, typeDescriptor, memberName, memberOptions);
         if (memberName === undefined && typeof targetObject === 'object') {
             targetObject.__type = typeDescriptor.ctor.name;
@@ -42,7 +37,7 @@ export type SerializerFn<T, TD extends TypeDescriptor, Raw> = (
     sourceObject: T,
     typeDescriptor: TD,
     memberName: string,
-    serializer: Serializer,
+    serializer: ISerializer,
     memberOptions?: OptionsBase,
 ) => Raw;
 

@@ -80,6 +80,7 @@
     "dead reckoning"
   ],
   "dependencies": {
+    "rdf-js": "^4.0.2",
     "reflect-metadata": ">=0.1.13",
     "threads": "^1.7.0",
     "typedjson": "^1.8.0",

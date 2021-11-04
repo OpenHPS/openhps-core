@@ -10,7 +10,6 @@ import {
     Absolute2DPosition,
 } from '../../../src';
 import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
-import { RDFSerializerConfig } from '../../mock/serialization/RDFSerializerConfig';
 
 describe('DataSerializer', () => {
     it('should register and unregister serializable objects', () => {
@@ -189,14 +188,6 @@ describe('DataSerializer', () => {
             } catch (ex) {
                 done();
             }
-        });
-    });
-
-    describe('custom RDFSerializer', () => {
-        it('should serialize a simple data object', () => {
-            const object = new DataObject();
-            object.position = new Absolute2DPosition(1, 2);
-            const serialized = DataSerializer.serialize(object, RDFSerializerConfig.get());
         });
     });
 });
