@@ -63,18 +63,40 @@ export class DataSerializer {
     }
 
     /**
-     * Find the root TypedJSON metadata
+     * Get the TypedJSON metadata
      *
      * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
      * @param {any} proto Prototype of target
      * @returns {JsonObjectMetadata} Root object metadata
      */
-    static findRootMetaInfo(proto: any): JsonObjectMetadata {
+    static getMetadata(proto: any): JsonObjectMetadata {
+        return JsonObjectMetadata.getFromConstructor(proto instanceof Function ? proto : proto.constructor);
+    }
+
+    /**
+     * Get the root TypedJSON metadata
+     *
+     * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
+     * @param {any} proto Prototype of target
+     * @returns {JsonObjectMetadata} Root object metadata
+     */
+    static getRootMetadata(proto: any): JsonObjectMetadata {
         const protoProto = proto instanceof Function ? proto.prototype : Object.getPrototypeOf(proto);
         if (!protoProto || !protoProto[META_FIELD]) {
             return proto[META_FIELD];
         }
-        return DataSerializer.findRootMetaInfo(protoProto);
+        return DataSerializer.getRootMetadata(protoProto);
+    }
+
+    /**
+     * Find the root TypedJSON metadata
+     *
+     * @deprecated use [[DataSerializer.findRootMetadata]]
+     * @param {any} proto Prototype of target
+     * @returns {JsonObjectMetadata} Root object metadata
+     */
+    static findRootMetaInfo(proto: any): JsonObjectMetadata {
+        return this.getRootMetadata(proto);
     }
 
     /**

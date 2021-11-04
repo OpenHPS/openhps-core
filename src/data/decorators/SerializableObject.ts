@@ -1,4 +1,4 @@
-import { jsonObject, Serializable, IJsonObjectOptions, JsonObjectMetadata } from 'typedjson';
+import { jsonObject, Serializable, IJsonObjectOptions } from 'typedjson';
 import { DataSerializer } from '../DataSerializer';
 
 /**
@@ -10,8 +10,8 @@ import { DataSerializer } from '../DataSerializer';
 export function SerializableObject<T>(options?: SerializableObjectOptions<T>): ClassDecorator {
     return (target: Serializable<T>) => {
         jsonObject(options)(target as Serializable<T>);
-        const ownMeta = JsonObjectMetadata.getFromConstructor(target);
-        const rootMeta = DataSerializer.findRootMetaInfo(target.prototype);
+        const ownMeta = DataSerializer.getMetadata(target);
+        const rootMeta = DataSerializer.getRootMetadata(target.prototype);
         rootMeta.knownTypes.add(target);
         if (rootMeta.initializerCallback) {
             ownMeta.initializerCallback = rootMeta.initializerCallback;
