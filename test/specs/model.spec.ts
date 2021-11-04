@@ -26,21 +26,19 @@ import { DummySensorObject } from '../mock/data/object/DummySensorObject';
 
 describe('Model', () => {
     describe('serializer', () => {
-
         it('should serialize a model', (done) => {
             ModelBuilder.create()
                 .from()
                 .to()
-                .build().then(model => {
+                .build()
+                .then((model) => {
                     console.log(ModelSerializer.serialize(model));
                     done();
-                })
+                });
         }).timeout(60000);
-
     });
 
     describe('service', () => {
-
         it('should be possible to get the datatype of a proxied service', () => {
             let service = new DataObjectService(new MemoryDataService(DummySensorObject));
             expect(service.dataType).to.equal(DummySensorObject);
@@ -90,8 +88,12 @@ describe('Model', () => {
                 const model: Model = await ModelBuilder.create()
                     .addService(new DataObjectService(new MemoryDataService(DataObject)))
                     .addService(new DataObjectService(new MemoryDataService(DummyDataObject)))
-                    .addService(new DataObjectService(new MemoryDataService(DummySensorObject)).setPriority(20).setUID("abc"))
-                    .addService(new DataObjectService(new MemoryDataService(DummySensorObject)).setPriority(10).setUID("123"))
+                    .addService(
+                        new DataObjectService(new MemoryDataService(DummySensorObject)).setPriority(20).setUID('abc'),
+                    )
+                    .addService(
+                        new DataObjectService(new MemoryDataService(DummySensorObject)).setPriority(10).setUID('123'),
+                    )
                     .from()
                     .to()
                     .build();
@@ -120,39 +122,45 @@ describe('Model', () => {
                 expect(result[0]).to.be.true;
             });
 
+            /**
+             * @param obj
+             * @param constr
+             */
             function instanceofPriority(obj: any, constr: any): [boolean, number] {
                 if (obj === constr) {
                     return [true, 0];
                 }
                 let level = 1;
-                while (obj = Object.getPrototypeOf(obj)) {
+                while ((obj = Object.getPrototypeOf(obj))) {
                     if (obj === constr) {
                         return [true, level];
                     }
                     level++;
                 }
                 return [false, undefined];
-            }        
+            }
         });
-
     });
 
     describe('builder', () => {
-
         it('should support pushing without building', (done) => {
             const builder = GraphBuilder.create()
                 .from()
-                .via(new CallbackNode(() => {
-                    done();
-                }))
-                .to()
+                .via(
+                    new CallbackNode(() => {
+                        done();
+                    }),
+                )
+                .to();
             builder.graph.push(new DataFrame());
         });
 
         it('should support graphs as nodes', (done) => {
             GraphBuilder.create()
                 .from()
-                .to().build().then(graph => {
+                .to()
+                .build()
+                .then((graph) => {
                     ModelBuilder.create()
                         .from()
                         .via(graph)
@@ -160,7 +168,8 @@ describe('Model', () => {
                         .build()
                         .then((model) => {
                             done();
-                        }).catch(done);
+                        })
+                        .catch(done);
                 });
         });
 
@@ -170,29 +179,32 @@ describe('Model', () => {
                 .via(
                     GraphBuilder.create()
                         .from()
-                        .via(new CallbackNode(() => {
-                            done();
-                        }))
-                        .to()
+                        .via(
+                            new CallbackNode(() => {
+                                done();
+                            }),
+                        )
+                        .to(),
                 )
                 .to()
                 .build()
                 .then((model) => {
                     model.push(new DataFrame());
-                }).catch(done);
+                })
+                .catch(done);
         });
 
         it('should support loggers', (done) => {
             ModelBuilder.create()
-            .withLogger((level, log) => {
-                expect(level).to.equal('debug');
-                expect(log).to.equal('test');
-                done();
-            })
-            .build()
-            .then((model) => {
-                model.logger('debug', 'test');
-            });
+                .withLogger((level, log) => {
+                    expect(level).to.equal('debug');
+                    expect(log).to.equal('test');
+                    done();
+                })
+                .build()
+                .then((model) => {
+                    model.logger('debug', 'test');
+                });
         });
 
         it('should have an input and output by default', (done) => {
@@ -281,11 +293,12 @@ describe('Model', () => {
 
         it('should be able to take names from other shapes', (done) => {
             ModelBuilder.create()
-                .addShape(GraphBuilder.create()
-                    .addNode(new PlaceholderNode('1'))
-                    .addNode(new PlaceholderNode('2'))
-                    .addNode(new PlaceholderNode('3'))
-                    .addNode(new PlaceholderNode('4'))
+                .addShape(
+                    GraphBuilder.create()
+                        .addNode(new PlaceholderNode('1'))
+                        .addNode(new PlaceholderNode('2'))
+                        .addNode(new PlaceholderNode('3'))
+                        .addNode(new PlaceholderNode('4')),
                 )
                 .from()
                 .via('1')
@@ -305,21 +318,15 @@ describe('Model', () => {
 
         it('should be able to take names in other shapes', (done) => {
             ModelBuilder.create()
-                .addShape(GraphBuilder.create()
-                    .addNode(new PlaceholderNode('1'))
-                    .addNode(new PlaceholderNode('2'))
-                    .addNode(new PlaceholderNode('3'))
-                    .addNode(new PlaceholderNode('4'))
+                .addShape(
+                    GraphBuilder.create()
+                        .addNode(new PlaceholderNode('1'))
+                        .addNode(new PlaceholderNode('2'))
+                        .addNode(new PlaceholderNode('3'))
+                        .addNode(new PlaceholderNode('4')),
                 )
-                .addShape(GraphBuilder.create()
-                    .from()
-                    .via('1')
-                    .via('2', '3')
-                    .to())
-                .addShape(GraphBuilder.create()
-                    .from('1')
-                    .via('4')
-                    .to())
+                .addShape(GraphBuilder.create().from().via('1').via('2', '3').to())
+                .addShape(GraphBuilder.create().from('1').via('4').to())
                 .build()
                 .then((model) => {
                     done();
@@ -331,15 +338,8 @@ describe('Model', () => {
 
         it('should be able to use string shapes as placeholder without being defined', (done) => {
             ModelBuilder.create()
-                .addShape(GraphBuilder.create()
-                    .from()
-                    .via('1')
-                    .via('2', '3')
-                    .to())
-                .addShape(GraphBuilder.create()
-                    .from('1')
-                    .via('4')
-                    .to())
+                .addShape(GraphBuilder.create().from().via('1').via('2', '3').to())
+                .addShape(GraphBuilder.create().from('1').via('4').to())
                 .build()
                 .then((model) => {
                     done();
@@ -363,11 +363,13 @@ describe('Model', () => {
 
         it('should be able to take unbuild model shapes', (done) => {
             ModelBuilder.create()
-                .addShape(ModelBuilder.create()
-                    .addService(new TimeService())
-                    .from()
-                    .via(new PlaceholderNode('1'), new PlaceholderNode('2'))
-                    .to())
+                .addShape(
+                    ModelBuilder.create()
+                        .addService(new TimeService())
+                        .from()
+                        .via(new PlaceholderNode('1'), new PlaceholderNode('2'))
+                        .to(),
+                )
                 .build()
                 .then((model) => {
                     done();
@@ -383,7 +385,8 @@ describe('Model', () => {
                 .from()
                 .via(new PlaceholderNode('1'), new PlaceholderNode('2'))
                 .to()
-                .build().then(m1 => {
+                .build()
+                .then((m1) => {
                     ModelBuilder.create()
                         .addShape(m1)
                         .build()
@@ -399,8 +402,8 @@ describe('Model', () => {
         it('should support multiple services', async () => {
             const model: Model = await ModelBuilder.create()
                 .addServices(
-                    new DataObjectService(new MemoryDataService(DataObject)), 
-                    new DataObjectService(new MemoryDataService(DummySensorObject))
+                    new DataObjectService(new MemoryDataService(DataObject)),
+                    new DataObjectService(new MemoryDataService(DummySensorObject)),
                 )
                 .from()
                 .to()
@@ -428,73 +431,85 @@ describe('Model', () => {
     });
 
     describe('pushing', () => {
-
         it('should support pushing to placeholders', (done) => {
             ModelBuilder.create()
-            .addShape(GraphBuilder.create()
-                .from("in-a")
-                .clone()
-                .via(new CallbackNode(frame => {
-                    frame.uid = "a"
-                }))
-                .to("a"))
-            .addShape(GraphBuilder.create()
-                .from("in-b")
-                .clone()
-                .via(new CallbackNode(frame => {
-                    frame.uid = "b"
-                }))
-                .to("b"))
-            .addShape(GraphBuilder.create()
-                .from("in-c")
-                .clone()
-                .via(new CallbackNode(frame => {
-                    frame.uid = "c"
-                }))
-                .to("c"))
-            .from("a", "b", "c")
-            .to(new CallbackSinkNode(frame => {
-                expect(frame.uid).to.equal("b");
-                done();
-            })).build().then(model => {
-                const frame = new DataFrame(new DataObject("test"));
-                model.onceCompleted(frame.uid).then(() => {
-                    model.destroy();
-                    expect(frames).to.equal(1);
-                    done();
+                .addShape(
+                    GraphBuilder.create()
+                        .from('in-a')
+                        .clone()
+                        .via(
+                            new CallbackNode((frame) => {
+                                frame.uid = 'a';
+                            }),
+                        )
+                        .to('a'),
+                )
+                .addShape(
+                    GraphBuilder.create()
+                        .from('in-b')
+                        .clone()
+                        .via(
+                            new CallbackNode((frame) => {
+                                frame.uid = 'b';
+                            }),
+                        )
+                        .to('b'),
+                )
+                .addShape(
+                    GraphBuilder.create()
+                        .from('in-c')
+                        .clone()
+                        .via(
+                            new CallbackNode((frame) => {
+                                frame.uid = 'c';
+                            }),
+                        )
+                        .to('c'),
+                )
+                .from('a', 'b', 'c')
+                .to(
+                    new CallbackSinkNode((frame) => {
+                        expect(frame.uid).to.equal('b');
+                        done();
+                    }),
+                )
+                .build()
+                .then((model) => {
+                    const frame = new DataFrame(new DataObject('test'));
+                    model.onceCompleted(frame.uid).then(() => {
+                        model.destroy();
+                        expect(frames).to.equal(1);
+                        done();
+                    });
+                    model.findNodeByName('in-b').push(frame);
                 });
-                model.findNodeByName("in-b").push(frame);
-            });
         });
 
         it('should support multiple shape pushing', (done) => {
             let frames = 0;
             ModelBuilder.create()
-                .addShape(GraphBuilder.create()
-                    .from()
-                    .clone()
-                    .to("a"))
-                .addShape(GraphBuilder.create()
-                    .from()
-                    .clone()
-                    .to("b"))
-                .addShape(GraphBuilder.create()
-                    .from()
-                    .clone()
-                    .to("c"))
-                .from("a", "b", "c")
-                .via(new FrameMergeNode(
-                    frame => frame.source.uid,
-                    (frame, options) => options.lastNode,
-                    {
-                        timeout: 100,
-                        minCount: 1
-                    }
-                ))
-                .to(new CallbackSinkNode(frame => {
-                    frames++;
-                })).build().then(model => {
-                    const frame = new DataFrame(new DataObject("test"));
+                .addShape(GraphBuilder.create().from().clone().to('a'))
+                .addShape(GraphBuilder.create().from().clone().to('b'))
+                .addShape(GraphBuilder.create().from().clone().to('c'))
+                .from('a', 'b', 'c')
+                .via(
+                    new FrameMergeNode(
+                        (frame) => frame.source.uid,
+                        (frame, options) => options.lastNode,
+                        {
+                            timeout: 100,
+                            minCount: 1,
+                        },
+                    ),
+                )
+                .to(
+                    new CallbackSinkNode((frame) => {
+                        frames++;
+                    }),
+                )
+                .build()
+                .then((model) => {
+                    const frame = new DataFrame(new DataObject('test'));
                     model.onceCompleted(frame.uid).then(() => {
                         model.destroy();
                         expect(frames).to.equal(1);
@@ -506,22 +521,42 @@ describe('Model', () => {
 
         it('should store the source in the options', (done) => {
             ModelBuilder.create()
-                .from(new CallbackSourceNode(() => {
-                    return new DataFrame();
-                }, {
-                    uid: "n_s"
-                }))
-                .via(new CallbackNode(() => {}, () => undefined, {
-                    uid: "n_1"
-                }))
-                .via(new CallbackNode(() => {}, () => undefined, {
-                    uid: "n_2"
-                }))
-                .to(new CallbackSinkNode((frame, options) => {
-                    expect(options.sourceNode).to.equal("n_s");
-                    done();
-                }))
-                .build().then(model =>{
+                .from(
+                    new CallbackSourceNode(
+                        () => {
+                            return new DataFrame();
+                        },
+                        {
+                            uid: 'n_s',
+                        },
+                    ),
+                )
+                .via(
+                    new CallbackNode(
+                        () => {},
+                        () => undefined,
+                        {
+                            uid: 'n_1',
+                        },
+                    ),
+                )
+                .via(
+                    new CallbackNode(
+                        () => {},
+                        () => undefined,
+                        {
+                            uid: 'n_2',
+                        },
+                    ),
+                )
+                .to(
+                    new CallbackSinkNode((frame, options) => {
+                        expect(options.sourceNode).to.equal('n_s');
+                        done();
+                    }),
+                )
+                .build()
+                .then((model) => {
                     return model.pull();
                 });
         });
@@ -546,13 +581,17 @@ describe('Model', () => {
 
         it('should throw an exception when a graph shape node throws an error', (done) => {
             ModelBuilder.create()
-                .addShape(GraphBuilder.create()
-                    .from()
-                    .via(new CallbackSinkNode((data: DataFrame) => {
-                        throw new Error('Excepting this error');
-                    }))
-                    .to("a"))
-                .from("a")
+                .addShape(
+                    GraphBuilder.create()
+                        .from()
+                        .via(
+                            new CallbackSinkNode((data: DataFrame) => {
+                                throw new Error('Excepting this error');
+                            }),
+                        )
+                        .to('a'),
+                )
+                .from('a')
                 .to()
                 .build()
                 .then((model) => {
@@ -563,7 +602,7 @@ describe('Model', () => {
                     });
                 });
         });
-        
+
         it('should throw an exception when a processing node throws an error', (done) => {
             ModelBuilder.create()
                 .from()
@@ -579,14 +618,14 @@ describe('Model', () => {
                 .to()
                 .build()
                 .then((model) => {
-                   model.push(new DataFrame());
-                   model.once('error', (ex) => {
-                       expect(ex).to.be.not.undefined;
-                       done();
-                   });
+                    model.push(new DataFrame());
+                    model.once('error', (ex) => {
+                        expect(ex).to.be.not.undefined;
+                        done();
+                    });
                 });
         });
-        
+
         it('should throw an exception when a processing node rejects', (done) => {
             ModelBuilder.create()
                 .from()
@@ -602,11 +641,11 @@ describe('Model', () => {
                 .to()
                 .build()
                 .then((model) => {
-                   model.push(new DataFrame());
-                   model.once('error', (ex) => {
-                       expect(ex).to.be.not.undefined;
-                       done();
-                   });
+                    model.push(new DataFrame());
+                    model.once('error', (ex) => {
+                        expect(ex).to.be.not.undefined;
+                        done();
+                    });
                 });
         });
 
@@ -659,18 +698,23 @@ describe('Model', () => {
         it('should pull multiple frames through the options', (done) => {
             let count = 0;
             ModelBuilder.create()
-                .from(new CallbackSourceNode(() => {
-                    return new DataFrame();
-                }))
-                .to(new CallbackSinkNode(frame => {
-                    count++;
-                    if (count === 3){
-                        done();
-                    }
-                }))
-                .build().then((model: Model) => {
+                .from(
+                    new CallbackSourceNode(() => {
+                        return new DataFrame();
+                    }),
+                )
+                .to(
+                    new CallbackSinkNode((frame) => {
+                        count++;
+                        if (count === 3) {
+                            done();
+                        }
+                    }),
+                )
+                .build()
+                .then((model: Model) => {
                     return model.pull({
-                        count: 3
+                        count: 3,
                     });
                 });
         });

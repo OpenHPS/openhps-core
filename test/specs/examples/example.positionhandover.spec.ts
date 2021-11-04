@@ -1,5 +1,3 @@
 import 'mocha';
 
-describe('example position handover', () => {
-    
-});
+describe('example position handover', () => {});

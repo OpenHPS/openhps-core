@@ -186,7 +186,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
      * @param {typeof Service} [q] data type class
      * @returns {Service[]} Array of all services
      */
-    findAllDataServices<T, S extends DataService<any, T>>(q?: Serializable<T>): S[] {
+    findAllDataServices<T, S extends DataService<any, any>>(q?: Serializable<T>): S[] {
         if (q !== undefined) {
             return (
                 (this.findAllDataServices()

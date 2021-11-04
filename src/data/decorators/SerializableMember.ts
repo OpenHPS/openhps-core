@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { jsonMember, IJsonMemberOptions, JsonObjectMetadata, AnyT, IndexedObject, Constructor } from 'typedjson';
-import { JsonMemberMetadata } from 'typedjson/lib/types/metadata';
+import { injectMemberOptions } from './utils';
 import { DataSerializer } from '../DataSerializer';
 
 /**
@@ -10,20 +10,17 @@ import { DataSerializer } from '../DataSerializer';
 export function SerializableMember(options?: SerializableMemberOptions | IndexedObject): PropertyDecorator {
     return (target: unknown, propertyKey: string) => {
         jsonMember(options)(target, propertyKey);
-        const reflectPropCtor: Constructor<any> = Reflect.getMetadata('design:type', target, propertyKey);
 
         // Inject additional options if available
         if (options) {
-            const meta = JsonObjectMetadata.ensurePresentInPrototype(target);
-            const existingOptions = meta.dataMembers.get(propertyKey) || meta.dataMembers.get(options.name);
-            options.index = options.index || options.primaryKey;
-            meta.dataMembers.set(existingOptions.name, {
+            injectMemberOptions(target, propertyKey, {
+                index: options.index || options.primaryKey,
                 ...options,
-                ...existingOptions,
-            } as JsonMemberMetadata);
+            });
         }
 
         // Detect generic types that have no deserialization or constructor specified
+        const reflectPropCtor: Constructor<any> = Reflect.getMetadata('design:type', target, propertyKey);
         if (
             reflectPropCtor === Object &&
             (!options || (!options.deserializer && !Object.keys(options).includes('constructor')))

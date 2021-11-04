@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "noImplicitAny": false,
+        "noEmitHelpers": true,
+        "importHelpers": true,
+        "removeComments": false,
+        "preserveConstEnums": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "declaration": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+    },
+}

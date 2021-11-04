@@ -14,10 +14,13 @@ describe('TrajectoryService', () => {
             const position = new Absolute2DPosition(i, i);
             position.timestamp = i;
             object.setPosition(position);
-            insertPromise = insertPromise.then(() => new Promise((next) => {
-                trajectoryService.appendPosition(object);
-                next();
-            }));
+            insertPromise = insertPromise.then(
+                () =>
+                    new Promise((next) => {
+                        trajectoryService.appendPosition(object);
+                        next();
+                    }),
+            );
         }
 
         insertPromise
@@ -42,10 +45,13 @@ describe('TrajectoryService', () => {
             const position = new Absolute2DPosition(i, i);
             position.timestamp = i;
             object.setPosition(position);
-            insertPromise = insertPromise.then(() => new Promise((next) => {
-                trajectoryService.appendPosition(object);
-                next();
-            }));
+            insertPromise = insertPromise.then(
+                () =>
+                    new Promise((next) => {
+                        trajectoryService.appendPosition(object);
+                        next();
+                    }),
+            );
         }
 
         insertPromise
@@ -70,10 +76,13 @@ describe('TrajectoryService', () => {
             const position = new Absolute2DPosition(i, i);
             position.timestamp = i;
             object.setPosition(position);
-            insertPromise = insertPromise.then(() => new Promise((next) => {
-                trajectoryService.appendPosition(object);
-                next();
-            }));
+            insertPromise = insertPromise.then(
+                () =>
+                    new Promise((next) => {
+                        trajectoryService.appendPosition(object);
+                        next();
+                    }),
+            );
         }
 
         insertPromise
@@ -98,10 +107,13 @@ describe('TrajectoryService', () => {
             const position = new Absolute2DPosition(i, i);
             position.timestamp = i;
             object.setPosition(position);
-            insertPromise = insertPromise.then(() => new Promise((next) => {
-                trajectoryService.appendPosition(object);
-                next();
-            }));
+            insertPromise = insertPromise.then(
+                () =>
+                    new Promise((next) => {
+                        trajectoryService.appendPosition(object);
+                        next();
+                    }),
+            );
         }
 
         insertPromise

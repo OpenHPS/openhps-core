@@ -1,6 +1,14 @@
 import { expect } from 'chai';
 import 'mocha';
-import { ModelBuilder, DataFrame, WorkerNode, CallbackSinkNode, DataObject, NodeDataService, NodeData } from '../../../src';
+import {
+    ModelBuilder,
+    DataFrame,
+    WorkerNode,
+    CallbackSinkNode,
+    DataObject,
+    NodeDataService,
+    NodeData,
+} from '../../../src';
 import * as path from 'path';
 import { KeyValueDataService } from '../../../src/service/KeyValueDataService';
 
@@ -56,14 +64,16 @@ describe('WorkerNode', () => {
                     }
                 });
 
-                for (let i = 0 ; i < 3 ; i ++){
+                for (let i = 0; i < 3; i++) {
                     model.push(new DataFrame());
                 }
             })
             .catch((ex) => {
                 done(ex);
             });
-    }).slow(5000).timeout(60000);
+    })
+        .slow(5000)
+        .timeout(60000);
 
     it('should take 20ms with 2 workers', (done) => {
         let model;
@@ -81,7 +91,7 @@ describe('WorkerNode', () => {
                     },
                     {
                         directory: __dirname,
-                        poolSize: 2
+                        poolSize: 2,
                     },
                 ),
             )
@@ -112,14 +122,16 @@ describe('WorkerNode', () => {
                     }
                 });
 
-                for (let i = 0 ; i < 3 ; i ++){
+                for (let i = 0; i < 3; i++) {
                     model.push(new DataFrame());
                 }
             })
             .catch((ex) => {
                 done(ex);
             });
-    }).slow(5000).timeout(60000);
+    })
+        .slow(5000)
+        .timeout(60000);
 
     it('should be able to access data services', (done) => {
         let model;
@@ -156,7 +168,9 @@ describe('WorkerNode', () => {
                     model.push(new DataFrame());
                 });
             });
-    }).slow(5000).timeout(60000);
+    })
+        .slow(5000)
+        .timeout(60000);
 
     it('should be able to access node data services', (done) => {
         let model;
@@ -180,8 +194,8 @@ describe('WorkerNode', () => {
             .to(
                 new CallbackSinkNode((data: DataFrame) => {
                     const dataService: NodeDataService<NodeData> = model.findDataService(NodeData);
-                    dataService.findData("x123", "mvdewync").then(data => {
-                        expect(data.test).to.equal("abc");
+                    dataService.findData('x123', 'mvdewync').then((data) => {
+                        expect(data.test).to.equal('abc');
                         model.emit('destroy');
                         done();
                     });
@@ -190,9 +204,11 @@ describe('WorkerNode', () => {
             .build()
             .then((m) => {
                 model = m;
-                model.push(new DataFrame(new DataObject("mvdewync")));
+                model.push(new DataFrame(new DataObject('mvdewync')));
             });
-    }).slow(5000).timeout(60000);
+    })
+        .slow(5000)
+        .timeout(60000);
 
     it('should support error events', (done) => {
         let model;
@@ -217,13 +233,15 @@ describe('WorkerNode', () => {
             .build()
             .then((m) => {
                 model = m;
-                model.once('error', event => {
+                model.once('error', (event) => {
                     model.destroy();
                     done();
-                })
-                model.push(new DataFrame(new DataObject("mvdewync")));
+                });
+                model.push(new DataFrame(new DataObject('mvdewync')));
             });
-    }).slow(5000).timeout(60000);
+    })
+        .slow(5000)
+        .timeout(60000);
 
     it('should support completed events', (done) => {
         let model;
@@ -244,96 +262,121 @@ describe('WorkerNode', () => {
                     },
                 ),
             )
-            .to(
-                new CallbackSinkNode((data: DataFrame) => {
-                    
-                }),
-            )
+            .to(new CallbackSinkNode((data: DataFrame) => {}))
             .build()
             .then((m) => {
                 model = m;
-                model.once('completed', event => {
+                model.once('completed', (event) => {
                     model.destroy();
                     done();
-                })
-                model.push(new DataFrame(new DataObject("mvdewync")));
+                });
+                model.push(new DataFrame(new DataObject('mvdewync')));
             });
-    }).slow(5000).timeout(60000);
+    })
+        .slow(5000)
+        .timeout(60000);
 });
 
 describe('worker graph', () => {
-
     it('should build a graph or node from a file', (done) => {
         ModelBuilder.create()
-            .addNode(new WorkerNode("../../mock/ExampleGraph", {
-                name: "output",
-                directory: __dirname,
-                poolSize: 2
-            }))
-            .from("output")
-            .to(new CallbackSinkNode(function(frame) {
-                expect(frame).to.not.be.undefined;
-                expect(frame.source).to.not.be.undefined;
-                expect(frame.source.uid).to.be.equal("mvdewync");
-                this.model.destroy();
-                done();
-            }))
-            .build().then(model => {
+            .addNode(
+                new WorkerNode('../../mock/ExampleGraph', {
+                    name: 'output',
+                    directory: __dirname,
+                    poolSize: 2,
+                }),
+            )
+            .from('output')
+            .to(
+                new CallbackSinkNode(function (frame) {
+                    expect(frame).to.not.be.undefined;
+                    expect(frame.source).to.not.be.undefined;
+                    expect(frame.source.uid).to.be.equal('mvdewync');
+                    this.model.destroy();
+                    done();
+                }),
+            )
+            .build()
+            .then((model) => {
                 model.once('error', (ex) => {
                     model.destroy();
                     done(ex);
                 });
                 model.pull();
-            }).catch(done);
-    }).slow(8000).timeout(60000);
+            })
+            .catch(done);
+    })
+        .slow(8000)
+        .timeout(60000);
 
     it('should build a model from a file using a main service', (done) => {
         ModelBuilder.create()
-            .addService(new KeyValueDataService("abc123"))
-            .addNode(new WorkerNode("../../mock/ExampleModel", {
-                name: "output",
-                directory: __dirname,
-                poolSize: 2
-            }))
-            .from("output")
-            .to(new CallbackSinkNode(function(frame) {
-                expect(frame).to.not.be.undefined;
-                expect(frame.source).to.not.be.undefined;
-                expect(frame.source.uid).to.be.equal("mvdewync");
-                expect(frame.source.displayName).to.equal("abc");
-                this.model.destroy();
-                done();
-            }))
-            .build().then(model => {
-                const service = model.findDataService("abc123");
-                service.setValue("displayName", "abc").then(() => {
-                    model.pull();
-                }).catch(done);
+            .addService(new KeyValueDataService('abc123'))
+            .addNode(
+                new WorkerNode('../../mock/ExampleModel', {
+                    name: 'output',
+                    directory: __dirname,
+                    poolSize: 2,
+                }),
+            )
+            .from('output')
+            .to(
+                new CallbackSinkNode(function (frame) {
+                    expect(frame).to.not.be.undefined;
+                    expect(frame.source).to.not.be.undefined;
+                    expect(frame.source.uid).to.be.equal('mvdewync');
+                    expect(frame.source.displayName).to.equal('abc');
+                    this.model.destroy();
+                    done();
+                }),
+            )
+            .build()
+            .then((model) => {
+                const service = model.findDataService('abc123');
+                service
+                    .setValue('displayName', 'abc')
+                    .then(() => {
+                        model.pull();
+                    })
+                    .catch(done);
             });
-    }).slow(8000).timeout(60000);
+    })
+        .slow(8000)
+        .timeout(60000);
 
     it('should build a model from a file using a worker service', (done) => {
         ModelBuilder.create()
-            .addNode(new WorkerNode("../../mock/ExampleModel2", {
-                name: "output",
-                directory: __dirname,
-                poolSize: 1
-            }))
-            .from("output")
-            .to(new CallbackSinkNode(function(frame) {
-                expect(frame).to.not.be.undefined;
-                expect(frame.source).to.not.be.undefined;
-                expect(frame.source.uid).to.be.equal("mvdewync");
-                expect(frame.source.displayName).to.equal("maxim");
-                this.model.destroy();
-                done();
-            }))
-            .build().then(model => {
-                const service = model.findDataService("test123");
-                service.setValue("displayName", "maxim").then(() => {
-                    model.pull();
-                }).catch(done);
-            }).catch(done);
-    }).slow(8000).timeout(60000);
-
+            .addNode(
+                new WorkerNode('../../mock/ExampleModel2', {
+                    name: 'output',
+                    directory: __dirname,
+                    poolSize: 1,
+                }),
+            )
+            .from('output')
+            .to(
+                new CallbackSinkNode(function (frame) {
+                    expect(frame).to.not.be.undefined;
+                    expect(frame.source).to.not.be.undefined;
+                    expect(frame.source.uid).to.be.equal('mvdewync');
+                    expect(frame.source.displayName).to.equal('maxim');
+                    this.model.destroy();
+                    done();
+                }),
+            )
+            .build()
+            .then((model) => {
+                const service = model.findDataService('test123');
+                service
+                    .setValue('displayName', 'maxim')
+                    .then(() => {
+                        model.pull();
+                    })
+                    .catch(done);
+            })
+            .catch(done);
+    })
+        .slow(8000)
+        .timeout(60000);
 });

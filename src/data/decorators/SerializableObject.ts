@@ -4,10 +4,10 @@ import { DataSerializer } from '../DataSerializer';
 /**
  * Serializable object
  *
- * @param {IJsonObjectOptions} [options] Object serialization options
+ * @param {SerializableObjectOptions} [options] Object serialization options
  * @returns {ClassDecorator} Class decorator
  */
-export function SerializableObject<T>(options?: IJsonObjectOptions<T>): ClassDecorator {
+export function SerializableObject<T>(options?: SerializableObjectOptions<T>): ClassDecorator {
     return (target: Serializable<T>) => {
         jsonObject(options)(target as Serializable<T>);
         const ownMeta = JsonObjectMetadata.getFromConstructor(target);
@@ -16,6 +16,13 @@ export function SerializableObject<T>(options?: IJsonObjectOptions<T>): ClassDec
         if (rootMeta.initializerCallback) {
             ownMeta.initializerCallback = rootMeta.initializerCallback;
         }
-        DataSerializer.registerType(target as new () => any);
+        DataSerializer.registerType(target);
+        if (options) {
+            Object.entries(options).forEach(([key, value]) => {
+                ownMeta[key] = value;
+            });
+        }
     };
 }
+
+export interface SerializableObjectOptions<T> extends IJsonObjectOptions<T> {}

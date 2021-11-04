@@ -1,4 +1,4 @@
-import { AbsolutePosition, DataObject, GeographicalPosition } from '../data';
+import { AbsolutePosition, DataObject } from '../data';
 import { Graph } from '../graph/Graph';
 import { Model } from '../Model';
 import { TimeUnit } from '../utils';

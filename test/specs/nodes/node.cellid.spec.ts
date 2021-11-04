@@ -9,7 +9,7 @@ import {
     Absolute2DPosition,
     RelativeDistance,
     LoggingSinkNode,
-    CallbackSinkNode
+    CallbackSinkNode,
 } from '../../../src';
 
 describe('node cell identification', () => {
@@ -42,6 +42,7 @@ describe('node cell identification', () => {
                     done();
                 };
                 return model.push(frame);
-            }).catch(done);
+            })
+            .catch(done);
     });
 });

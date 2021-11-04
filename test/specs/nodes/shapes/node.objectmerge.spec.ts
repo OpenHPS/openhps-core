@@ -23,8 +23,8 @@ describe('node', () => {
                         position.setAccuracy(1);
                         object.setPosition(position);
                         frame.source = object;
-                        frame.addObject(new DataObject("random1"));
-                        frame.addObject(new DataObject("random2"));
+                        frame.addObject(new DataObject('random1'));
+                        frame.addObject(new DataObject('random2'));
                         return frame;
                     }),
                     new CallbackSourceNode(() => {
@@ -34,7 +34,7 @@ describe('node', () => {
                         position.setAccuracy(1);
                         object.setPosition(position);
                         frame.source = object;
-                        frame.addObject(new DataObject("random3"));
+                        frame.addObject(new DataObject('random3'));
                         return frame;
                     }),
                     new CallbackSourceNode(() => {
@@ -44,15 +44,11 @@ describe('node', () => {
                         position.setAccuracy(1);
                         object.setPosition(position);
                         frame.source = object;
-                        frame.addObject(new DataObject("random4"));
+                        frame.addObject(new DataObject('random4'));
                         return frame;
                     }),
                 )
-                .via(
-                    new ObjectMergeNode(
-                        (frame: DataFrame, options: PushOptions) => options.sourceNode
-                    )
-                )
+                .via(new ObjectMergeNode((frame: DataFrame, options: PushOptions) => options.sourceNode))
                 .to(
                     new CallbackSinkNode((frame: DataFrame) => {
                         expect(frame.source.getPosition().toVector3().x).to.equal(2);
@@ -101,11 +97,7 @@ describe('node', () => {
                         return frame;
                     }),
                 )
-                .via(
-                    new ObjectMergeNode(
-                        (frame: DataFrame, options: PushOptions) => options.sourceNode,
-                    )
-                )
+                .via(new ObjectMergeNode((frame: DataFrame, options: PushOptions) => options.sourceNode))
                 .to(
                     new CallbackSinkNode((frame: DataFrame) => {
                         expect(frame.source.getPosition().toVector3().x).to.lt(2);

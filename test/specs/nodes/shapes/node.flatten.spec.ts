@@ -1,11 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import {
-    CallbackSinkNode,
-    DataFrame,
-    DataObject,
-    ModelBuilder,
-} from '../../../../src';
+import { CallbackSinkNode, DataFrame, DataObject, ModelBuilder } from '../../../../src';
 
 describe('node', () => {
     describe('frame flatten', () => {

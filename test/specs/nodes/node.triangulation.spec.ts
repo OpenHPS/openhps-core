@@ -9,7 +9,7 @@ import {
     Absolute2DPosition,
     RelativeAngle,
     AngleUnit,
-    TriangulationNode 
+    TriangulationNode,
 } from '../../../src';
 
 describe('node', () => {

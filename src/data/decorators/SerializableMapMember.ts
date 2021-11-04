@@ -1,15 +1,16 @@
 import { jsonMapMember, IJsonMapMemberOptions, Serializable } from 'typedjson';
+import { injectMemberOptions } from './utils';
 
 /**
  * @param {Serializable<any>} keyConstructor Map key constructor
  * @param {Serializable<any>} valueConstructor Map value constructor
- * @param {IJsonMapMemberOptions} [options] Member options
+ * @param {SerializableMapMemberOptions} [options] Member options
  * @returns {PropertyDecorator} Property decorator
  */
 export function SerializableMapMember(
     keyConstructor: Serializable<any>,
     valueConstructor: Serializable<any>,
-    options?: IJsonMapMemberOptions,
+    options?: SerializableMapMemberOptions,
 ): PropertyDecorator {
     return (target: unknown, propertyKey: string) => {
         if (valueConstructor === Object && options === undefined) {
@@ -31,5 +32,12 @@ export function SerializableMapMember(
         }
 
         jsonMapMember(keyConstructor, valueConstructor, options)(target, propertyKey);
+
+        // Inject additional options if available
+        if (options) {
+            injectMemberOptions(target, propertyKey, options);
+        }
     };
 }
+
+export interface SerializableMapMemberOptions extends IJsonMapMemberOptions {}

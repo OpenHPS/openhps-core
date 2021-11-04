@@ -38,9 +38,11 @@ describe('node', () => {
                                 expect(position.y).to.equal(-7);
                             }),
                         )
-                        .via(new ReferenceSpaceConversionNode(myReferenceSpace, {
-                            inverse: true
-                        }))
+                        .via(
+                            new ReferenceSpaceConversionNode(myReferenceSpace, {
+                                inverse: true,
+                            }),
+                        )
                         .to(new CallbackSinkNode()),
                 ) // Sink node stores data objects
                 .build()

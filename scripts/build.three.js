@@ -11,14 +11,16 @@ const three_dir = path.join(path.dirname(require.resolve('three')), "../");
 const src_dir = path.join(__dirname, "../src/three");
 const cjs_dir = path.join(__dirname, "../dist/cjs/three");
 const esm_dir = path.join(__dirname, "../dist/esm/three");
+const esm5_dir = path.join(__dirname, "../dist/esm5/three");
 const types_dir = path.join(__dirname, "../dist/types/three");
 
 console.log("Three dir: ", three_dir);
 console.log("Source dir: ", src_dir);
 console.log("CJS dir: ", cjs_dir);
 console.log("ESM dir: ", esm_dir);
+console.log("ESM5 dir: ", esm5_dir);
 
-[src_dir, esm_dir, cjs_dir, types_dir].forEach(dir => {
+[src_dir, esm_dir, esm5_dir, cjs_dir, types_dir].forEach(dir => {
     // Delete the three directory
     shell.rm("-rf", dir);
    
@@ -27,7 +29,7 @@ console.log("ESM dir: ", esm_dir);
 });
 
 // Copy three javascript files
-[src_dir, esm_dir].forEach(dir => {
+[src_dir, esm_dir, esm5_dir].forEach(dir => {
     shell.cp("-r",
         path.join(three_dir, "src/*"),
         dir

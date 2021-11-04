@@ -51,12 +51,14 @@ describe('DataObjectService', () => {
             });
     });
 
-
     it('should support sorting in descending order', (done) => {
         objectDataService
-            .findAll({}, {
-                sort: [['createdTimestamp', -1]]
-            })
+            .findAll(
+                {},
+                {
+                    sort: [['createdTimestamp', -1]],
+                },
+            )
             .then((objects) => {
                 expect(objects.length).to.equal(3);
                 expect(objects[0].createdTimestamp).to.equal(794800800000);
@@ -65,14 +67,17 @@ describe('DataObjectService', () => {
             })
             .catch((ex) => {
                 done(ex);
-        });
+            });
     });
 
     it('should support sorting in ascending order', (done) => {
         objectDataService
-            .findAll({}, {
-                sort: [['createdTimestamp', 1]]
-            })
+            .findAll(
+                {},
+                {
+                    sort: [['createdTimestamp', 1]],
+                },
+            )
             .then((objects) => {
                 expect(objects.length).to.equal(3);
                 expect(objects[0].createdTimestamp).to.equal(794793600000);
@@ -81,7 +86,7 @@ describe('DataObjectService', () => {
             })
             .catch((ex) => {
                 done(ex);
-        });
+            });
     });
 
     it('should find data objects before a certain date', (done) => {
@@ -246,32 +251,42 @@ describe('DataObjectService', () => {
             object.setPosition(new Absolute2DPosition(5, 3));
             object.displayName = 'X';
             promises.push(objectDataService.insert(object.uid, object));
-            for (let i = 0 ; i <= 10 ; i++){
+            for (let i = 0; i <= 10; i++) {
                 const object = new DummySensorObject('123' + i);
                 object.setPosition(new Absolute2DPosition(5, i));
                 object.displayName = 'Beat';
                 promises.push(objectDataService.insert(object.uid, object));
             }
-            Promise.all(promises).then(() => {
-                objectDataService.count({
-                    displayName: "Beat"
-                }).then(count1 => {
-                    expect(count1, "Stored objects count is 0").to.not.eq(0);
-                    objectDataService.deleteAll({
-                        displayName: "Beat"
-                    }).then(() => {
-                        return objectDataService.count({
-                            displayName: "Beat"
-                        });
-                    }).then(count2 => {
-                        expect(count2).to.eq(0);
-                        return objectDataService.count();
-                    }).then(count => {
-                        expect(count).to.not.eq(0);
-                        done();
-                    }).catch(done);
-                }).catch(done);
-            }).catch(done);
+            Promise.all(promises)
+                .then(() => {
+                    objectDataService
+                        .count({
+                            displayName: 'Beat',
+                        })
+                        .then((count1) => {
+                            expect(count1, 'Stored objects count is 0').to.not.eq(0);
+                            objectDataService
+                                .deleteAll({
+                                    displayName: 'Beat',
+                                })
+                                .then(() => {
+                                    return objectDataService.count({
+                                        displayName: 'Beat',
+                                    });
+                                })
+                                .then((count2) => {
+                                    expect(count2).to.eq(0);
+                                    return objectDataService.count();
+                                })
+                                .then((count) => {
+                                    expect(count).to.not.eq(0);
+                                    done();
+                                })
+                                .catch(done);
+                        })
+                        .catch(done);
+                })
+                .catch(done);
         });
 
         it('should delete all objects', (done) => {
@@ -365,7 +380,6 @@ describe('DataObjectService', () => {
         });
     });
 
-    
     describe('sink node without persistence', () => {
         let model: Model<DataFrame, DataFrame>;
         let objectDataService: DataObjectService<DataObject>;
@@ -373,9 +387,11 @@ describe('DataObjectService', () => {
         before((done) => {
             ModelBuilder.create()
                 .from()
-                .to(new CallbackSinkNode(() => {}, {
-                    persistence: false
-                }))
+                .to(
+                    new CallbackSinkNode(() => {}, {
+                        persistence: false,
+                    }),
+                )
                 .build()
                 .then((m) => {
                     model = m;

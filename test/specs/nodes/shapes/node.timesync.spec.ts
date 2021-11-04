@@ -1,31 +1,28 @@
 import { expect } from 'chai';
 import 'mocha';
-import {
-    CallbackSinkNode,
-    DataFrame,
-    ModelBuilder,
-    TimeService,
-    TimeSyncNode,
-} from '../../../../src';
+import { CallbackSinkNode, DataFrame, ModelBuilder, TimeService, TimeSyncNode } from '../../../../src';
 
 describe('node', () => {
     describe('time sync', () => {
         it('should synchronize data frames', (done) => {
             let i = 0;
+            /**
+             *
+             */
             function createFrame() {
                 const frame = new DataFrame();
                 frame.createdTimestamp = i;
                 i += 5000;
                 return frame;
             }
-            let time = 0;
+            const time = 0;
             let count = 0;
             ModelBuilder.create()
                 .addService(new TimeService(() => time))
                 .from()
                 .via(new TimeSyncNode())
                 .to(
-                    new CallbackSinkNode(frame => {
+                    new CallbackSinkNode((frame) => {
                         return new Promise((resolve) => {
                             count++;
                             resolve();

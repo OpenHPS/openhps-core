@@ -25,31 +25,28 @@ describe('FrameMergeNode', () => {
     it('should support merging from same source', (done) => {
         let frames = 0;
         ModelBuilder.create()
-            .addShape(GraphBuilder.create()
-                .from()
-                .clone()
-                .to("a"))
-            .addShape(GraphBuilder.create()
-                .from()
-                .clone()
-                .to("b"))
-            .addShape(GraphBuilder.create()
-                .from()
-                .clone()
-                .to("c"))
-            .from("a", "b", "c")
-            .via(new FrameMergeNode(
-                frame => frame.source.uid,
-                (frame, options) => options.lastNode,
-                {
-                    timeout: 100,
-                    minCount: 1
-                }
-            ))
-            .to(new CallbackSinkNode(frame => {
-                frames++;
-            })).build().then(model => {
-                const object = new DataObject("test");
+            .addShape(GraphBuilder.create().from().clone().to('a'))
+            .addShape(GraphBuilder.create().from().clone().to('b'))
+            .addShape(GraphBuilder.create().from().clone().to('c'))
+            .from('a', 'b', 'c')
+            .via(
+                new FrameMergeNode(
+                    (frame) => frame.source.uid,
+                    (frame, options) => options.lastNode,
+                    {
+                        timeout: 100,
+                        minCount: 1,
+                    },
+                ),
+            )
+            .to(
+                new CallbackSinkNode((frame) => {
+                    frames++;
+                }),
+            )
+            .build()
+            .then((model) => {
+                const object = new DataObject('test');
                 //object.setPosition(new Absolute2DPosition(0, 0));
                 const frame = new DataFrame(object);
                 model.onceCompleted(frame.uid).then(() => {
@@ -58,118 +55,122 @@ describe('FrameMergeNode', () => {
                     done();
                 });
                 return model.push(frame);
-            }).catch(done);
+            })
+            .catch(done);
     });
 
     it('should support merging with one inlet', (done) => {
-        let frames = 0;
+        const frames = 0;
         ModelBuilder.create()
-            .addShape(GraphBuilder.create()
-                .from("i_a")
-                .clone()
-                .to("a"))
-            .addShape(GraphBuilder.create()
-                .from("i_b")
-                .clone()
-                .to("b"))
-            .addShape(GraphBuilder.create()
-                .from("i_c")
-                .clone()
-                .to("c"))
-            .from("a", "b", "c")
+            .addShape(GraphBuilder.create().from('i_a').clone().to('a'))
+            .addShape(GraphBuilder.create().from('i_b').clone().to('b'))
+            .addShape(GraphBuilder.create().from('i_c').clone().to('c'))
+            .from('a', 'b', 'c')
             .via(new CallbackNode())
-            .via(new FrameMergeNode(
-                frame => true,
-                (frame, options) => frame.uid,
-                {
-                    timeout: 2000,
-                    minCount: 1,
-                    maxCount: 4
-                }
-            ))
-            .to(new CallbackSinkNode(function(frame: DataFrame) {
-                expect(frame.getObjects().length).to.equal(3);
-                this.model.destroy();
-                done();
-            })).build().then(model => {
-                model.findNodeByName("i_a").push(new DataFrame(new DataObject("1")));
-                model.findNodeByName("i_b").push(new DataFrame(new DataObject("2")));
-                model.findNodeByName("i_c").push(new DataFrame(new DataObject("3")));
-            }).catch(done);
+            .via(
+                new FrameMergeNode(
+                    (frame) => true,
+                    (frame, options) => frame.uid,
+                    {
+                        timeout: 2000,
+                        minCount: 1,
+                        maxCount: 4,
+                    },
+                ),
+            )
+            .to(
+                new CallbackSinkNode(function (frame: DataFrame) {
+                    expect(frame.getObjects().length).to.equal(3);
+                    this.model.destroy();
+                    done();
+                }),
+            )
+            .build()
+            .then((model) => {
+                model.findNodeByName('i_a').push(new DataFrame(new DataObject('1')));
+                model.findNodeByName('i_b').push(new DataFrame(new DataObject('2')));
+                model.findNodeByName('i_c').push(new DataFrame(new DataObject('3')));
+            })
+            .catch(done);
     });
 
     it('should support merging relative positions with one inlet', (done) => {
-        let frames = 0;
+        const frames = 0;
         ModelBuilder.create()
-            .addShape(GraphBuilder.create()
-                .from("i_a")
-                .clone()
-                .to("a"))
-            .addShape(GraphBuilder.create()
-                .from("i_b")
-                .clone()
-                .to("b"))
-            .addShape(GraphBuilder.create()
-                .from("i_c")
-                .clone()
-                .to("c"))
-            .from("a", "b", "c")
+            .addShape(GraphBuilder.create().from('i_a').clone().to('a'))
+            .addShape(GraphBuilder.create().from('i_b').clone().to('b'))
+            .addShape(GraphBuilder.create().from('i_c').clone().to('c'))
+            .from('a', 'b', 'c')
             .via(new CallbackNode())
-            .via(new FrameMergeNode(
-                frame => true,
-                (frame, options) => frame.uid,
-                {
-                    timeout: 2000,
-                    minCount: 1,
-                    maxCount: 4
-                }
-            ))
-            .to(new CallbackSinkNode(function(frame: DataFrame) {
-                expect(frame.getObjects().length).to.equal(1);
-                expect(frame.source.relativePositions.length).to.equal(3);
-                this.model.destroy();
-                done();
-            })).build().then(model => {
-                model.findNodeByName("i_a").push(new DataFrame(new DataObject("1")
-                    .addRelativePosition(new RelativeDistance("a", 1))));
-                model.findNodeByName("i_b").push(new DataFrame(new DataObject("1")
-                    .addRelativePosition(new RelativeDistance("b", 21))));
-                model.findNodeByName("i_c").push(new DataFrame(new DataObject("1")
-                    .addRelativePosition(new RelativeDistance("c", 13))));
-            }).catch(done);
+            .via(
+                new FrameMergeNode(
+                    (frame) => true,
+                    (frame, options) => frame.uid,
+                    {
+                        timeout: 2000,
+                        minCount: 1,
+                        maxCount: 4,
+                    },
+                ),
+            )
+            .to(
+                new CallbackSinkNode(function (frame: DataFrame) {
+                    expect(frame.getObjects().length).to.equal(1);
+                    expect(frame.source.relativePositions.length).to.equal(3);
+                    this.model.destroy();
+                    done();
+                }),
+            )
+            .build()
+            .then((model) => {
+                model
+                    .findNodeByName('i_a')
+                    .push(new DataFrame(new DataObject('1').addRelativePosition(new RelativeDistance('a', 1))));
+                model
+                    .findNodeByName('i_b')
+                    .push(new DataFrame(new DataObject('1').addRelativePosition(new RelativeDistance('b', 21))));
+                model
+                    .findNodeByName('i_c')
+                    .push(new DataFrame(new DataObject('1').addRelativePosition(new RelativeDistance('c', 13))));
+            })
+            .catch(done);
     });
 
     it('should support merging of a position', (done) => {
         let frames = 0;
         ModelBuilder.create()
-            .addShape(GraphBuilder.create()
-                .from()
-                .clone()
-                .to("a"))
-            .addShape(GraphBuilder.create()
-                .from()
-                .clone()
-                .to("b"))
-            .addShape(GraphBuilder.create()
-                .from()
-                .clone()
-                .via(new CallbackNode(frame => {
-                    frame.source.position.orientation = new Quaternion();
-                }))
-                .to("c"))
-            .from("a", "b", "c")
-            .via(new FrameMergeNode(
-                frame => frame.source.uid,
-                (frame, options) => options.lastNode,
-                {
-                    timeout: 100,
-                    minCount: 1
-                }
-            ))
-            .to(new CallbackSinkNode(frame => {
-                frames++;
-            })).build().then(model => {
-                const object = new DataObject("test");
+            .addShape(GraphBuilder.create().from().clone().to('a'))
+            .addShape(GraphBuilder.create().from().clone().to('b'))
+            .addShape(
+                GraphBuilder.create()
+                    .from()
+                    .clone()
+                    .via(
+                        new CallbackNode((frame) => {
+                            frame.source.position.orientation = new Quaternion();
+                        }),
+                    )
+                    .to('c'),
+            )
+            .from('a', 'b', 'c')
+            .via(
+                new FrameMergeNode(
+                    (frame) => frame.source.uid,
+                    (frame, options) => options.lastNode,
+                    {
+                        timeout: 100,
+                        minCount: 1,
+                    },
+                ),
+            )
+            .to(
+                new CallbackSinkNode((frame) => {
+                    frames++;
+                }),
+            )
+            .build()
+            .then((model) => {
+                const object = new DataObject('test');
                 object.setPosition(new Absolute2DPosition(0, 0));
                 const frame = new DataFrame(object);
                 model.onceCompleted(frame.uid).then(() => {
@@ -183,38 +184,45 @@ describe('FrameMergeNode', () => {
 
     it('should support merging one frame from multiple inlets', (done) => {
         ModelBuilder.create()
-            .addShape(GraphBuilder.create()
-                .from()
-                .clone()
-                .to("a"))
-            .addShape(GraphBuilder.create()
-                .from()
-                .clone()
-                .filter(() => false)
-                .to("b"))
-            .addShape(GraphBuilder.create()
-                .from()
-                .clone()
-                .filter(() => false)
-                .to("c"))
-            .from("a", "b", "c")
-            .via(new FrameMergeNode(
-                frame => frame.source.uid,
-                (frame, options) => options.lastNode,
-                {
-                    timeout: 100,
-                    minCount: 1
-                }
-            ))
-            .to(new CallbackSinkNode(frame => {
-            })).build().then(model => {
-                const object = new DataObject("test");
+            .addShape(GraphBuilder.create().from().clone().to('a'))
+            .addShape(
+                GraphBuilder.create()
+                    .from()
+                    .clone()
+                    .filter(() => false)
+                    .to('b'),
+            )
+            .addShape(
+                GraphBuilder.create()
+                    .from()
+                    .clone()
+                    .filter(() => false)
+                    .to('c'),
+            )
+            .from('a', 'b', 'c')
+            .via(
+                new FrameMergeNode(
+                    (frame) => frame.source.uid,
+                    (frame, options) => options.lastNode,
+                    {
+                        timeout: 100,
+                        minCount: 1,
+                    },
+                ),
+            )
+            .to(new CallbackSinkNode((frame) => {}))
+            .build()
+            .then((model) => {
+                const object = new DataObject('test');
                 object.setPosition(new Absolute2DPosition(0, 0));
                 const frame = new DataFrame(object);
-                model.onceCompleted(frame.uid).then(() => {
-                    model.destroy();
-                    done();
-                }).catch(done);
+                model
+                    .onceCompleted(frame.uid)
+                    .then(() => {
+                        model.destroy();
+                        done();
+                    })
+                    .catch(done);
                 model.push(frame);
             });
     });
@@ -308,7 +316,7 @@ describe('FrameMergeNode', () => {
                 new FrameMergeNode(
                     (frame: DataFrame, options: PushOptions) => frame.source.uid,
                     (frame: DataFrame, options: PushOptions) => options.sourceNode,
-                )
+                ),
             )
             .to(
                 new CallbackSinkNode((frame: DataFrame) => {
@@ -378,7 +386,7 @@ describe('FrameMergeNode', () => {
                 new FrameMergeNode(
                     (frame: DataFrame, options: PushOptions) => frame.source.uid,
                     (frame: DataFrame, options: PushOptions) => options.sourceNode,
-                )
+                ),
             )
             .to(
                 new CallbackSinkNode((frame: DataFrame) => {

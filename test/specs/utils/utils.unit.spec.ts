@@ -1,4 +1,13 @@
-import { DataSerializer, LengthUnit, AngleUnit, Unit, UnitPrefix, AngularVelocityUnit, UnitValue, GCS } from '../../../src';
+import {
+    DataSerializer,
+    LengthUnit,
+    AngleUnit,
+    Unit,
+    UnitPrefix,
+    AngularVelocityUnit,
+    UnitValue,
+    GCS,
+} from '../../../src';
 import { expect } from 'chai';
 import 'mocha';
 import { Vector2, Vector3 } from '../../../src/utils/math/_internal';
@@ -65,8 +74,8 @@ describe('Unit', () => {
 
         it('should not deserialize an unknown unit', (done) => {
             const serialized = {
-                name: "abc",
-                __type: "Unit"
+                name: 'abc',
+                __type: 'Unit',
             };
             try {
                 const deserialized = DataSerializer.deserialize(serialized);
@@ -215,36 +224,30 @@ describe('Unit', () => {
     });
 
     describe('definition order', () => {
-        const CELCIUS = new Unit("celcius", {
-            baseName: "temperature"
-        });
-    
-        const FAHRENHEIT = new Unit("fahrenheit", {
-            baseName: "temperature",
-            definitions: [
-                { unit: 'celcius', offset: -32, magnitude: 5 / 9 },
-            ]
+        const CELCIUS = new Unit('celcius', {
+            baseName: 'temperature',
         });
 
-        const KELVIN = new Unit("kelvin", {
-            baseName: "temperature",
-            definitions: [
-                { unit: 'celcius', offset: -273.15 },
-            ]
+        const FAHRENHEIT = new Unit('fahrenheit', {
+            baseName: 'temperature',
+            definitions: [{ unit: 'celcius', offset: -32, magnitude: 5 / 9 }],
         });
 
-        const RANKINE = new Unit("rankine", {
-            baseName: "temperature",
-            definitions: [
-                { unit: 'kelvin', magnitude: 1 / 1.8 },
-            ]
+        const KELVIN = new Unit('kelvin', {
+            baseName: 'temperature',
+            definitions: [{ unit: 'celcius', offset: -273.15 }],
+        });
+
+        const RANKINE = new Unit('rankine', {
+            baseName: 'temperature',
+            definitions: [{ unit: 'kelvin', magnitude: 1 / 1.8 }],
         });
 
         it('should convert celcius to fahrenheit', () => {
             const result = CELCIUS.convert(100, FAHRENHEIT);
             expect(Math.round(result)).to.equal(212);
         });
-    
+
         it('should convert fahrenheit to celcius', () => {
             const result = FAHRENHEIT.convert(99, CELCIUS);
             expect(result).to.equal(37.22222222222222);
@@ -290,7 +293,6 @@ describe('Unit', () => {
         it('should convert WGS84 to ECEF', () => {
             const input = new Vector3(50, 4, 0);
             const output = GCS.WGS84.convert(input, GCS.ECEF);
-            
         });
     });
 });

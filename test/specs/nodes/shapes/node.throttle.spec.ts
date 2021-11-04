@@ -1,12 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import {
-    CallbackSinkNode,
-    DataFrame,
-    DataObject,
-    ModelBuilder,
-    ThrottleNode,
-} from '../../../../src';
+import { CallbackSinkNode, DataFrame, DataObject, ModelBuilder, ThrottleNode } from '../../../../src';
 
 describe('node', () => {
     describe('throttle', () => {
@@ -16,7 +10,7 @@ describe('node', () => {
                 .from()
                 .via(new ThrottleNode())
                 .to(
-                    new CallbackSinkNode(frame => {
+                    new CallbackSinkNode((frame) => {
                         return new Promise((resolve) => {
                             setTimeout(() => {
                                 count++;
@@ -41,9 +35,7 @@ describe('node', () => {
                         model.push(new DataFrame(new DataObject('h'))),
                         model.push(new DataFrame(new DataObject('i'))),
                         model.push(new DataFrame(new DataObject('j'))),
-                    ]).then(() => {
-                        
-                    });
+                    ]).then(() => {});
                 });
         }).timeout(1000);
     });

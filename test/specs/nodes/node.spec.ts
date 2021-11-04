@@ -17,12 +17,11 @@ describe('Node', () => {
     });
 
     describe('serialization', () => {
-
         it('should return all subclasses', () => {
-            const nodes: Array<new () => Node<any, any>> = new Array();
-            const services: Array<new () => Service> = new Array();
-            module.children.forEach(module => {
-                Object.keys(module.exports).forEach(key => {
+            const nodes: Array<new () => Node<any, any>> = [];
+            const services: Array<new () => Service> = [];
+            module.children.forEach((module) => {
+                Object.keys(module.exports).forEach((key) => {
                     if (module.exports[key].prototype instanceof Node) {
                         nodes.push(module.exports[key]);
                     } else if (module.exports[key].prototype instanceof Service) {
@@ -33,7 +32,6 @@ describe('Node', () => {
             // console.log(nodes);
             // console.log(services);
         });
-
     });
 
     describe('pull', () => {
@@ -57,9 +55,7 @@ describe('Node', () => {
     describe('push', () => {
         it('should not accept null frames', (done) => {
             const node = new CallbackNode(
-                (frame: DataFrame) => {
-
-                },
+                (frame: DataFrame) => {},
                 () => {
                     return null;
                 },
@@ -93,12 +89,11 @@ describe('Node', () => {
 
         it('should be available when not busy', () => {
             const node = new CallbackNode(
-                (frame: DataFrame) => {
-                },
+                (frame: DataFrame) => {},
                 () => {
                     return null;
                 },
-            ); 
+            );
             expect(node.isAvailable()).to.equal(true);
         });
     });
@@ -106,13 +101,13 @@ describe('Node', () => {
     describe('updating', () => {
         it('should support updating options', () => {
             const node = new LoggingSinkNode(() => undefined, {
-                uid: "test"
+                uid: 'test',
             });
             node.setOptions({
-                name: "abc"
+                name: 'abc',
             });
-            expect(node.getOptions().name).to.equal("abc");
-            expect(node.name).to.equal("abc");
+            expect(node.getOptions().name).to.equal('abc');
+            expect(node.name).to.equal('abc');
         });
     });
 });

@@ -1,15 +1,9 @@
 import { expect } from 'chai';
 import 'mocha';
-import {
-    CallbackSinkNode,
-    DataFrame,
-    DataObject,
-    ModelBuilder,
-} from '../../../../src';
+import { CallbackSinkNode, DataFrame, DataObject, ModelBuilder } from '../../../../src';
 
 describe('node', () => {
     describe('frame filter', () => {
-        
         it('should filter data frames', (done) => {
             ModelBuilder.create()
                 .from()
@@ -30,9 +24,11 @@ describe('node', () => {
                         model.push(new DataFrame(new DataObject('c'))),
                         model.push(new DataFrame()),
                         model.push(new DataFrame(new DataObject('e'))),
-                    ]).then(() => {
-                        done();
-                    }).catch(done);
+                    ])
+                        .then(() => {
+                            done();
+                        })
+                        .catch(done);
                 });
         }).timeout(10000);
     });

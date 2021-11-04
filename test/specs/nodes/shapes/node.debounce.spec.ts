@@ -1,12 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import {
-    CallbackSinkNode,
-    DataFrame,
-    DataObject,
-    ModelBuilder,
-    TimeUnit,
-} from '../../../../src';
+import { CallbackSinkNode, DataFrame, DataObject, ModelBuilder, TimeUnit } from '../../../../src';
 
 describe('node', () => {
     describe('frame delay', () => {

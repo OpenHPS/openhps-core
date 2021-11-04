@@ -125,8 +125,9 @@ describe('data', () => {
             it('should rotate the orientation (roll)', () => {
                 const globalReferenceSpace = new ReferenceSpace(undefined);
 
-                const refSpace = new ReferenceSpace(globalReferenceSpace)
-                    .rotation(new Euler(180, 0, 0, 'ZXY', AngleUnit.DEGREE));
+                const refSpace = new ReferenceSpace(globalReferenceSpace).rotation(
+                    new Euler(180, 0, 0, 'ZXY', AngleUnit.DEGREE),
+                );
                 const position = new Absolute3DPosition(0, 0);
                 position.orientation = new Orientation(0, 0, 0, 1);
                 const result = refSpace.transform(position) as Absolute3DPosition;
@@ -147,7 +148,7 @@ describe('data', () => {
                 const refSpace = new ReferenceSpace(globalReferenceSpace).perspective(-0.5, 0.5, -0.5, 0.5, 2.0, 10.0);
                 corners.forEach((corner) => {
                     const result = refSpace.transform(corner, {
-                        inverse: true
+                        inverse: true,
                     }) as Absolute3DPosition;
                 });
             });
@@ -195,14 +196,17 @@ describe('data', () => {
                 model.push(new DataFrame(object));
 
                 model.once('completed', () => {
-                    model.findDataService(DataObject).findByUID("test").then(obj => {
-                        // Confirm that it is inserted
-                        const storedLocation = obj.getPosition() as Absolute3DPosition;
-                        expect(storedLocation.x).to.eq(2);
-                        expect(storedLocation.y).to.eq(2);
-                        expect(storedLocation.z).to.eq(1);
-                        done();
-                    });
+                    model
+                        .findDataService(DataObject)
+                        .findByUID('test')
+                        .then((obj) => {
+                            // Confirm that it is inserted
+                            const storedLocation = obj.getPosition() as Absolute3DPosition;
+                            expect(storedLocation.x).to.eq(2);
+                            expect(storedLocation.y).to.eq(2);
+                            expect(storedLocation.z).to.eq(1);
+                            done();
+                        });
                 });
             });
 
@@ -222,13 +226,15 @@ describe('data', () => {
                 };
 
                 Promise.resolve(model.findDataService(DataObject).findByUID('test'))
-                    .then(obj => {
+                    .then((obj) => {
                         const frame = new DataFrame(obj);
                         model.push(frame);
                         return model.onceCompleted(frame.uid);
-                    }).then(() => {
+                    })
+                    .then(() => {
                         return model.findDataService(DataObject).findByUID('test');
-                    }).then((storedObject) => {
+                    })
+                    .then((storedObject) => {
                         // This will return the current position relative to the 'calibratedReferenceSpace'
                         // Meaning the position will be (5, 5, 5)
                         const relativePosition = storedObject.getPosition(
@@ -247,7 +253,8 @@ describe('data', () => {
                         expect(transformedPosition.y).to.equal(7);
                         expect(transformedPosition.z).to.equal(6);
                         done();
-                    }).catch((ex) => {
+                    })
+                    .catch((ex) => {
                         done(ex);
                     });
             });
@@ -273,8 +280,10 @@ describe('data', () => {
                 };
 
                 Promise.resolve(model.findDataService(DataObject).findByUID('test'))
-                    .then(obj => {
-                        expect(obj.getPosition(calibratedReferenceSpace).toVector3()).to.deep.equal(new Vector3(0, 0, 0));
+                    .then((obj) => {
+                        expect(obj.getPosition(calibratedReferenceSpace).toVector3()).to.deep.equal(
+                            new Vector3(0, 0, 0),
+                        );
                         const frame = new DataFrame(obj);
                         model.push(frame);
                         return model.onceCompleted(frame.uid);
@@ -309,7 +318,6 @@ describe('data', () => {
         });
 
         describe('conversion', () => {
-
             it('should convert translation to the first parent', async () => {
                 const service = new DataObjectService(new MemoryDataService(ReferenceSpace));
                 let ref1 = new ReferenceSpace();
@@ -364,7 +372,7 @@ describe('data', () => {
                 expect(position.x).to.equal(7);
                 expect(position.y).to.equal(7);
                 expect(position.z).to.equal(0);
-                let loadedRef = await service.findByUID(ref1.uid) as ReferenceSpace;
+                let loadedRef = (await service.findByUID(ref1.uid)) as ReferenceSpace;
                 loadedRef.translation(3, 3);
                 loadedRef = await service.insertObject(loadedRef);
                 await ref3.update(service);
@@ -373,8 +381,6 @@ describe('data', () => {
                 expect(position.y).to.equal(10);
                 expect(position.z).to.equal(0);
             });
-
         });
-
     });
 });

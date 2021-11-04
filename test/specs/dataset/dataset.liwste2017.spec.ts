@@ -9,10 +9,10 @@ import {
     CallbackSinkNode,
     RelativeDistance,
     LengthUnit,
+    MultilaterationNode,
 } from '../../../src';
 import { CSVDataSource } from '../../mock/nodes/source/CSVDataSource';
 import { EvaluationDataFrame } from '../../mock/data/EvaluationDataFrame';
-import { MultilaterationNode } from '../../../src';
 
 describe('dataset liwste2017', () => {
     let calibrationModel: Model<DataFrame, DataFrame>;
@@ -43,53 +43,48 @@ describe('dataset liwste2017', () => {
                 calibrationModel = model;
 
                 // Process the calibration
-                Promise.all([calibrationModel.pull(), calibrationModel.pull(), calibrationModel.pull()]).then(
-                    (_) => {
-                        callbackNode = new CallbackSinkNode<EvaluationDataFrame>();
-                        scanSourceNode = new CSVDataSource('test/data/liwste2017/scans.csv', (row: any) => {
-                            const dataFrame = new EvaluationDataFrame();
+                Promise.all([calibrationModel.pull(), calibrationModel.pull(), calibrationModel.pull()]).then((_) => {
+                    callbackNode = new CallbackSinkNode<EvaluationDataFrame>();
+                    scanSourceNode = new CSVDataSource('test/data/liwste2017/scans.csv', (row: any) => {
+                        const dataFrame = new EvaluationDataFrame();
 
-                            const trackedObject = new DataObject('tracked');
-                            // The tracked object has three relative locations
-                            trackedObject.addRelativePosition(
-                                new RelativeDistance(
-                                    new DataObject('beacon_A'),
-                                    parseFloat(row['Distance A']),
-                                    LengthUnit.METER,
-                                ),
-                            );
-                            trackedObject.addRelativePosition(
-                                new RelativeDistance(
-                                    new DataObject('beacon_B'),
-                                    parseFloat(row['Distance B']),
-                                    LengthUnit.METER,
-                                ),
-                            );
-                            trackedObject.addRelativePosition(
-                                new RelativeDistance(
-                                    new DataObject('beacon_C'),
-                                    parseFloat(row['Distance C']),
-                                    LengthUnit.METER,
-                                ),
-                            );
-                            dataFrame.addObject(trackedObject);
+                        const trackedObject = new DataObject('tracked');
+                        // The tracked object has three relative locations
+                        trackedObject.addRelativePosition(
+                            new RelativeDistance(
+                                new DataObject('beacon_A'),
+                                parseFloat(row['Distance A']),
+                                LengthUnit.METER,
+                            ),
+                        );
+                        trackedObject.addRelativePosition(
+                            new RelativeDistance(
+                                new DataObject('beacon_B'),
+                                parseFloat(row['Distance B']),
+                                LengthUnit.METER,
+                            ),
+                        );
+                        trackedObject.addRelativePosition(
+                            new RelativeDistance(
+                                new DataObject('beacon_C'),
+                                parseFloat(row['Distance C']),
+                                LengthUnit.METER,
+                            ),
+                        );
+                        dataFrame.addObject(trackedObject);
 
-                            // Control object
-                            const evaluationObject = new DataObject('tracked');
-                            evaluationObject.setPosition(
-                                new Absolute2DPosition(
-                                    parseFloat(row['Position X']),
-                                    parseFloat(row['Position Y']),
-                                ),
-                            );
-                            (evaluationObject.getPosition() as Absolute2DPosition).unit = LengthUnit.CENTIMETER;
-                            dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
+                        // Control object
+                        const evaluationObject = new DataObject('tracked');
+                        evaluationObject.setPosition(
+                            new Absolute2DPosition(parseFloat(row['Position X']), parseFloat(row['Position Y'])),
+                        );
+                        (evaluationObject.getPosition() as Absolute2DPosition).unit = LengthUnit.CENTIMETER;
+                        dataFrame.evaluationObjects.set(evaluationObject.uid, evaluationObject);
 
-                            return dataFrame;
-                        });
-                        done();
-                    },
-                );
+                        return dataFrame;
+                    });
+                    done();
+                });
             });
     });
 
@@ -100,9 +95,11 @@ describe('dataset liwste2017', () => {
                 // Use the data from the calibration model
                 .addService(calibrationModel.findDataService(DataObject))
                 .from(scanSourceNode)
-                .via(new MultilaterationNode({
-                    incrementStep: 0.1
-                }))
+                .via(
+                    new MultilaterationNode({
+                        incrementStep: 0.1,
+                    }),
+                )
                 .to(callbackNode)
                 .build()
                 .then((model) => {

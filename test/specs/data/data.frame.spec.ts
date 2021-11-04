@@ -1,6 +1,14 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataObject, DataSerializer, DataFrame, Absolute2DPosition, AngularVelocity, LinearVelocity, AngularVelocityUnit } from '../../../src';
+import {
+    DataObject,
+    DataSerializer,
+    DataFrame,
+    Absolute2DPosition,
+    AngularVelocity,
+    LinearVelocity,
+    AngularVelocityUnit,
+} from '../../../src';
 import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
 import { DummyDataObject } from '../../mock/data/object/DummyDataObject';
 
@@ -27,13 +35,13 @@ describe('DataFrame', () => {
     });
 
     it('should clone added data objects', () => {
-        const object = new DataObject("123");
-        object.displayName = "abc";
+        const object = new DataObject('123');
+        object.displayName = 'abc';
         const dataFrame = new DataFrame(object);
-        object.uid = "234";
-        object.displayName = "cde";
-        expect(dataFrame.source.uid).to.equal("123");
-        expect(dataFrame.source.displayName).to.equal("abc");
+        object.uid = '234';
+        object.displayName = 'cde';
+        expect(dataFrame.source.uid).to.equal('123');
+        expect(dataFrame.source.displayName).to.equal('abc');
     });
 
     it('should copy a data frame in the constructor', () => {
@@ -41,5 +49,4 @@ describe('DataFrame', () => {
         const frame = new DataFrame(imuFrame);
         expect(frame.createdTimestamp).to.equal(imuFrame.createdTimestamp);
     });
-
 });

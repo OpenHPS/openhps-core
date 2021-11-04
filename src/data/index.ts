@@ -2,5 +2,8 @@ export * from './DataFrame';
 export * from './object';
 export * from './position';
 export * from './decorators';
-export * from './DataSerializer';
 export * from './values';
+
+export * from './DataSerializer';
+export * from './Serializer';
+export * from './Deserializer';

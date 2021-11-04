@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+      "target": "ES6",
+      "moduleResolution": "node",
+      "noImplicitAny": false,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "declaration": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "sourceMap": false,
+      "strict": false
+  },
+  "transpileOnline": true,
+  "include": [
+    "../test/specs/**/*.ts"
+  ]
+}

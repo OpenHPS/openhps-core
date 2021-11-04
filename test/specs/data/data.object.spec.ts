@@ -20,45 +20,42 @@ declare module '../../../src/data/object/DataObject' {
     interface DataObject {
         _test: string;
         _testfn: () => string;
-    }         
+    }
 }
 
 describe('DataObject', () => {
-
     describe('augmentation', () => {
-
         it('should support property augmentation', () => {
             const object = new DataObject();
-            object._test = "abc";
-            expect(object._test).to.equal("abc");
+            object._test = 'abc';
+            expect(object._test).to.equal('abc');
         });
 
         it('should support function augmentation', () => {
             const object = new DataObject();
             expect(object._testfn).to.be.undefined;
-            DataObject.prototype._testfn = function() {
-                return "123";
-            }
-            expect(object._testfn()).to.equal("123");
+            DataObject.prototype._testfn = function () {
+                return '123';
+            };
+            expect(object._testfn()).to.equal('123');
         });
 
         it('should support applying decorators externally', () => {
-            let object = new DataObject();
-            object._test = "abc";
-            object.uid = "TestUID";
+            const object = new DataObject();
+            object._test = 'abc';
+            object.uid = 'TestUID';
             let serialized = DataSerializer.serialize(object);
-            expect(serialized.uid).to.equal("TestUID");
+            expect(serialized.uid).to.equal('TestUID');
             expect(serialized._test).to.be.undefined;
-            SerializableMember(String)(DataObject.prototype, "_test");
+            SerializableMember(String)(DataObject.prototype, '_test');
             serialized = DataSerializer.serialize(object);
-            expect(serialized._test).to.equal("abc");
+            expect(serialized._test).to.equal('abc');
         });
-
     });
 
     it('should have a uuidv4 uid', (done) => {
         const obj = new DataObject();
-        expect(obj.uid).to.include("-");
+        expect(obj.uid).to.include('-');
         done();
     });
 
@@ -101,7 +98,7 @@ describe('DataObject', () => {
         dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_b'), 2));
         dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_c'), 3));
         const serialized = DataSerializer.serialize(dataObject);
-        serialized.relativePositions = serialized.relativePositions.map(r => {
+        serialized.relativePositions = serialized.relativePositions.map((r) => {
             r.__type = undefined;
         });
         const deserialized = DataSerializer.deserialize(serialized, DataObject);
@@ -129,17 +126,21 @@ describe('DataObject', () => {
         const dataObject = new DataObject('123');
         ModelBuilder.create()
             .from()
-            .via(new CallbackNode(frame => {
-                frame.source.displayName = "maxim";
-            }))
+            .via(
+                new CallbackNode((frame) => {
+                    frame.source.displayName = 'maxim';
+                }),
+            )
             .to(new CallbackSinkNode())
-            .build().then((model: Model) => {
+            .build()
+            .then((model: Model) => {
                 model.findDataService(DataObject).on('insert', (uid, obj) => {
-                    expect(obj.displayName).to.eq("maxim");
+                    expect(obj.displayName).to.eq('maxim');
                     done();
                 });
                 model.push(new DataFrame(dataObject));
-            }).catch(done);
+            })
+            .catch(done);
     });
 
     describe('binding', () => {
@@ -147,29 +148,37 @@ describe('DataObject', () => {
             ModelBuilder.create()
                 .from()
                 .to()
-                .build().then((model: Model) => {
-                    const object = new DataObject("mvdewync", "Maxim");
-                    object.bind(model.findDataService(object)).save().then(() => {
-                        done();
-                    }).catch(done);
+                .build()
+                .then((model: Model) => {
+                    const object = new DataObject('mvdewync', 'Maxim');
+                    object
+                        .bind(model.findDataService(object))
+                        .save()
+                        .then(() => {
+                            done();
+                        })
+                        .catch(done);
                 });
-        }); 
+        });
 
         it('should support saving with changes', (done) => {
             ModelBuilder.create()
                 .from()
                 .to()
-                .build().then((model: Model) => {
-                    const object = new DataObject("mvdewync", "Maxim");
+                .build()
+                .then((model: Model) => {
+                    const object = new DataObject('mvdewync', 'Maxim');
                     const binding = object.bind(model.findDataService(object));
-                    object.uid += "1";
-                    binding.on('update', (newObj, oldObj) => {
-                    });
-                    binding.save().then(() => {
-                        done();
-                    }).catch(done);
+                    object.uid += '1';
+                    binding.on('update', (newObj, oldObj) => {});
+                    binding
+                        .save()
+                        .then(() => {
+                            done();
+                        })
+                        .catch(done);
                 });
-        }); 
+        });
 
         describe('sensor object', () => {
             it('should be serializable and deserializable', (done) => {
@@ -201,7 +210,6 @@ describe('DataObject', () => {
     });
 
     it('should support multiple positions', () => {
-        const object = new DataObject("test");
+        const object = new DataObject('test');
     });
-
 });

@@ -16,6 +16,7 @@ jobs:
         run: |
           npm install
           npm run build
+          npm run size
       - name: Quality
         run: |
           npm run lint

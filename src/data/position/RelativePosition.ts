@@ -116,8 +116,6 @@ export class RelativePosition<T = number, U extends Unit = Unit> implements Posi
      * @returns {RelativePosition} Cloned relative position
      */
     clone(): this {
-        const serialized = DataSerializer.serialize(this);
-        const clone = DataSerializer.deserialize(serialized) as this;
-        return clone;
+        return DataSerializer.clone(this);
     }
 }

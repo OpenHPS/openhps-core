@@ -1,9 +1,18 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Absolute2DPosition, Accuracy2D, AngleUnit, AngularVelocity, DataObject, DataSerializer, LengthUnit, LinearVelocity, Orientation } from '../../../src';
+import {
+    Absolute2DPosition,
+    Accuracy2D,
+    AngleUnit,
+    AngularVelocity,
+    DataObject,
+    DataSerializer,
+    LengthUnit,
+    LinearVelocity,
+    Orientation,
+} from '../../../src';
 
 describe('AbsolutePosition', () => {
-
     describe('serialization', () => {
         it('should serialize a position indirectly', () => {
             const obj = new DataObject();
@@ -23,7 +32,10 @@ describe('AbsolutePosition', () => {
         it('should serialize a position with orientation', () => {
             const position = new Absolute2DPosition(1, 2, LengthUnit.METER);
             position.orientation = Orientation.fromEuler({
-                yaw: 0, pitch: 0, roll: 0, unit: AngleUnit.DEGREE
+                yaw: 0,
+                pitch: 0,
+                roll: 0,
+                unit: AngleUnit.DEGREE,
             });
             const serialized = DataSerializer.serialize(position);
             const deserialized = DataSerializer.deserialize(serialized);
@@ -33,7 +45,10 @@ describe('AbsolutePosition', () => {
         it('should serialize a position with orientation and accuracy', () => {
             const position = new Absolute2DPosition(1, 2, LengthUnit.METER);
             position.orientation = Orientation.fromEuler({
-                yaw: 0, pitch: 0, roll: 0, unit: AngleUnit.DEGREE
+                yaw: 0,
+                pitch: 0,
+                roll: 0,
+                unit: AngleUnit.DEGREE,
             });
             position.accuracy = new Accuracy2D(10, 5, LengthUnit.METER);
             const serialized = DataSerializer.serialize(position);
@@ -44,7 +59,10 @@ describe('AbsolutePosition', () => {
         it('should serialize a position with all components', () => {
             const position = new Absolute2DPosition(1, 2, LengthUnit.METER);
             position.orientation = Orientation.fromEuler({
-                yaw: 0, pitch: 0, roll: 0, unit: AngleUnit.DEGREE
+                yaw: 0,
+                pitch: 0,
+                roll: 0,
+                unit: AngleUnit.DEGREE,
             });
             position.linearVelocity = new LinearVelocity(1, 2);
             position.angularVelocity = new AngularVelocity(5, 1, 2);
@@ -54,5 +72,4 @@ describe('AbsolutePosition', () => {
             expect(deserialized).to.eql(position);
         });
     });
-    
 });
