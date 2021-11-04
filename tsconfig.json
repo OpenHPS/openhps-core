@@ -13,5 +13,13 @@
       {
         "path": "./tsconfig/tsconfig.spec.json"
       }
-    ]
+    ],
+    /* Required for workers */
+    "compilerOptions": {
+      "target": "es6",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+    }
 }

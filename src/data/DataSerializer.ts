@@ -5,6 +5,18 @@ import { Serializer, SerializerFn, TypeDescriptor } from './Serializer';
 
 const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
 
+/* Set global TypedJSON options for decorator errors */
+TypedJSON.setGlobalConfig({
+    errorHandler: (e: Error) => {
+        e.message = e.message.replace('@jsonObject', '@SerializableObject()');
+        e.message = e.message.replace('@jsonMember', '@SerializableMember()');
+        e.message = e.message.replace('@jsonSetMember', '@SerializableSetMember()');
+        e.message = e.message.replace('@jsonMapMember', '@SerializableMapMember()');
+        e.message = e.message.replace('@jsonArrayMember', '@SerializableArrayMember()');
+        throw e;
+    },
+});
+
 /**
  * Allows the serialization and deserialization of objects using the [[SerializableObject]] decorator.
  *
@@ -20,14 +32,6 @@ const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
 export class DataSerializer {
     static serializableTypes: Map<string, Serializable<any>> = new Map();
     static readonly defaultSettings: DataSerializerConfig = {
-        errorHandler: (e: Error) => {
-            e.message = e.message.replace('@jsonObject', '@SerializableObject()');
-            e.message = e.message.replace('@jsonMember', '@SerializableMember()');
-            e.message = e.message.replace('@jsonSetMember', '@SerializableSetMember()');
-            e.message = e.message.replace('@jsonMapMember', '@SerializableMapMember()');
-            e.message = e.message.replace('@jsonArrayMember', '@SerializableArrayMember()');
-            throw e;
-        },
         typeResolver: (sourceObject: IndexedObject, knownTypes: Map<string, Serializable<any>>) => {
             return sourceObject['__type'] !== undefined
                 ? knownTypes.get(sourceObject.__type)
@@ -171,7 +175,13 @@ export class DataSerializer {
 }
 
 export interface DataSerializerConfig extends ITypedJSONSettings {
+    /**
+     * Set the serializer used for serializing.
+     */
     serializer?: SerializerFn<any, TypeDescriptor, any>;
+    /**
+     * Set the deserializer used for deserializing.
+     */
     deserializer?: DeserializerFn<any>;
 }
 

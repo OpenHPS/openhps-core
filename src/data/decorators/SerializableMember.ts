@@ -4,7 +4,7 @@ import { injectMemberOptions } from './utils';
 import { DataSerializer } from '../DataSerializer';
 
 /**
- * @param {IJsonMemberOptions} [options] Member options
+ * @param {SerializableMemberOptions} [options] Member options
  * @returns {PropertyDecorator} Property decorator
  */
 export function SerializableMember(options?: SerializableMemberOptions | IndexedObject): PropertyDecorator {
