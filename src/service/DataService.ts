@@ -1,4 +1,4 @@
-import { Constructor } from '../data/decorators';
+import { Serializable } from '../data/decorators';
 import { DataServiceDriver } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
 import { FindOptions } from './FindOptions';
@@ -44,7 +44,7 @@ export abstract class DataService<I, T> extends Service {
         this.once('destroy', () => this.driver.emitAsync('destroy'));
     }
 
-    get dataType(): Constructor<T> {
+    get dataType(): Serializable<T> {
         if (this.driver) {
             return this.driver.dataType;
         }

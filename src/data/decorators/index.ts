@@ -3,4 +3,5 @@ export * from './SerializableMember';
 export * from './SerializableArrayMember';
 export * from './SerializableMapMember';
 export * from './SerializableSetMember';
-export { Constructor, Serializable } from 'typedjson';
+export { Constructor, Serializable, JsonObjectMetadata, IndexedObject } from 'typedjson';
+export type { ConcreteTypeDescriptor } from 'typedjson/lib/types/type-descriptor';

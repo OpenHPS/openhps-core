@@ -1,14 +1,15 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataSerializer, DataObject, AbsolutePosition, DataFrame, SerializableObject, SerializableMember } from '../../../src';
+import { DataSerializer, DataObject, AbsolutePosition, DataFrame, SerializableObject, SerializableMember, Absolute2DPosition } from '../../../src';
 import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
+import { RDFSerializerConfig } from '../../mock/serialization/RDFSerializerConfig';
 
 describe('DataSerializer', () => {
     it('should register and unregister serializable objects', () => {
         DataSerializer.unregisterType(DataObject);
         expect(DataSerializer.findTypeByName('DataObject')).to.equal(undefined);
         DataSerializer.unregisterType(DataObject); // Should not crash
-        expect(DataSerializer.serializableTypes.length).to.be.greaterThan(40);
+        expect(DataSerializer.serializableTypes.size).to.be.greaterThan(40);
         DataSerializer.registerType(DataObject);
         expect(DataSerializer.findTypeByName('DataObject')).to.equal(DataObject);
     });
@@ -66,7 +67,7 @@ describe('DataSerializer', () => {
             DataSerializer.registerType(SomeClass, {
                 serializer: (obj) => {
                     return {
-                        hello: obj.abc
+                        hello: obj.abc,
                     };
                 },
                 deserializer: (json) => {
@@ -151,8 +152,8 @@ describe('DataSerializer', () => {
             const obj = new DataObject();
             (obj as any).createdTimestamp = { test: "abc" };
             try {
-                DataSerializer.serialize(obj);
-                done('No error thrown!');
+                const serialized = DataSerializer.serialize(obj);
+                done('No error thrown! Serialization succeeded ' + JSON.stringify(serialized));
             } catch (ex) {
                 done();
             }
@@ -173,13 +174,21 @@ describe('DataSerializer', () => {
         });
 
         it('should throw an error when deserializing fails', (done) => {
-            const obj = { test: "abc" }
+            const obj = { timestamp: "abc", __type: "AbsolutePosition" }
             try {
-                DataSerializer.deserialize(obj);
-                done('No error thrown!');
+                const deserialized = DataSerializer.deserialize(obj);
+                done('No error thrown! Deserialization succeeded with ' + JSON.stringify(deserialized));
             } catch (ex) {
                 done();
             }
+        });
+    });
+
+    describe('custom RDFSerializer', () => {
+        it ('should serialize a simple data object', () => {
+            const object = new DataObject();
+            object.position = new Absolute2DPosition(1, 2);
+            const serialized = DataSerializer.serialize(object, RDFSerializerConfig.get());
         });
     });
 });

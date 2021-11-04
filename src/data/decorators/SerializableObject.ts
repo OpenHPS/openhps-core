@@ -17,5 +17,10 @@ export function SerializableObject<T>(options?: IJsonObjectOptions<T>): ClassDec
             ownMeta.initializerCallback = rootMeta.initializerCallback;
         }
         DataSerializer.registerType(target as new () => any);
+        if (options) {
+            Object.entries(options).forEach(([key, value]) => {
+                ownMeta[key] = value;
+            });
+        }
     };
 }
