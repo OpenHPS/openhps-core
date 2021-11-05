@@ -7,7 +7,6 @@ import {
     DataFrame,
     SerializableObject,
     SerializableMember,
-    Absolute2DPosition,
 } from '../../../src';
 import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
 
@@ -16,14 +15,13 @@ describe('DataSerializer', () => {
         DataSerializer.unregisterType(DataObject);
         expect(DataSerializer.findTypeByName('DataObject')).to.equal(undefined);
         DataSerializer.unregisterType(DataObject); // Should not crash
-        expect(DataSerializer.serializableTypes.size).to.be.greaterThan(40);
         DataSerializer.registerType(DataObject);
         expect(DataSerializer.findTypeByName('DataObject')).to.equal(DataObject);
     });
 
     describe('serializing', () => {
         it('should support extracting meta info', () => {
-            const meta = DataSerializer.findRootMetaInfo(AbsolutePosition);
+            const meta = DataSerializer.getRootMetadata(AbsolutePosition);
             expect(meta.dataMembers).to.not.be.undefined;
         });
 

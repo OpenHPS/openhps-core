@@ -32,7 +32,7 @@ TypedJSON.setGlobalConfig({
  * ```
  */
 export class DataSerializer {
-    static readonly serializableTypes: Map<string, Serializable<any>> = new Map();
+    protected static readonly knownTypes: Map<string, Serializable<any>> = new Map();
     protected static readonly serializer: Serializer = new Serializer();
     protected static readonly deserializer: Deserializer = new Deserializer();
     protected static eventEmitter: EventEmitter = new EventEmitter();
@@ -48,7 +48,7 @@ export class DataSerializer {
      * @param {MappedTypeConverters} [converters] Optional converters
      */
     static registerType<T>(type: Serializable<T>, converters?: MappedTypeConverters<T>): void {
-        this.serializableTypes.set(type.name, type);
+        this.knownTypes.set(type.name, type);
         if (converters) {
             const objectMetadata = new JsonObjectMetadata(type);
             objectMetadata.isExplicitlyMarked = true;
@@ -61,7 +61,7 @@ export class DataSerializer {
             this.deserializer.setDeserializationStrategy(type, (value) => {
                 return converters.deserializer(value, {
                     fallback: (so, td) =>
-                        this.deserializer.convertSingleValue(so, td as TypeDescriptor, this.serializableTypes),
+                        this.deserializer.convertSingleValue(so, td as TypeDescriptor, this.knownTypes),
                 });
             });
         }
@@ -111,12 +111,12 @@ export class DataSerializer {
      * @param {typeof any} type Type to unregister
      */
     static unregisterType(type: Serializable<any>): void {
-        this.serializableTypes.delete(type.name);
+        this.knownTypes.delete(type.name);
         this.eventEmitter.emit('unregister', type);
     }
 
     static findTypeByName(name: string): Serializable<any> {
-        return this.serializableTypes.get(name);
+        return this.knownTypes.get(name);
     }
 
     /**
@@ -180,7 +180,7 @@ export class DataSerializer {
         }
 
         const deserializer = config.deserializer ?? this.deserializer;
-        const finalType = dataType ?? deserializer.getTypeResolver()(serializedData, this.serializableTypes);
+        const finalType = dataType ?? deserializer.getTypeResolver()(serializedData, this.knownTypes);
         if (finalType === Object) {
             return serializedData;
         }
