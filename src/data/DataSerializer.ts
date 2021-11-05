@@ -1,5 +1,7 @@
-import { TypedJSON, JsonObjectMetadata, ITypedJSONSettings, Constructor, Serializable, IndexedObject } from 'typedjson';
+import { EventEmitter } from 'events';
+import { TypedJSON, JsonObjectMetadata, ITypedJSONSettings, Constructor, Serializable } from 'typedjson';
 import type { MappedTypeConverters } from 'typedjson/lib/types/parser';
+import type { TypeDescriptor } from 'typedjson/lib/types/type-descriptor';
 import { Deserializer } from './Deserializer';
 import { Serializer } from './Serializer';
 
@@ -30,20 +32,13 @@ TypedJSON.setGlobalConfig({
  * ```
  */
 export class DataSerializer {
-    static serializableTypes: Map<string, Serializable<any>> = new Map();
-    static readonly defaultSettings: DataSerializerConfig = {
-        typeResolver: (sourceObject: IndexedObject, knownTypes: Map<string, Serializable<any>>) => {
-            return sourceObject['__type'] !== undefined
-                ? knownTypes.get(sourceObject.__type)
-                : sourceObject.constructor ?? Object;
-        },
-    };
+    static readonly serializableTypes: Map<string, Serializable<any>> = new Map();
+    protected static readonly serializer: Serializer = new Serializer();
+    protected static readonly deserializer: Deserializer = new Deserializer();
+    protected static eventEmitter: EventEmitter = new EventEmitter();
 
-    static get globalConfig(): DataSerializerConfig {
-        return {
-            ...TypedJSON['_globalConfig'],
-            ...this.defaultSettings,
-        };
+    private static get globalConfig(): ITypedJSONSettings {
+        return TypedJSON['_globalConfig'];
     }
 
     /**
@@ -58,8 +53,19 @@ export class DataSerializer {
             const objectMetadata = new JsonObjectMetadata(type);
             objectMetadata.isExplicitlyMarked = true;
             type.prototype[META_FIELD] = objectMetadata;
-            TypedJSON.mapType(type, converters);
+            this.serializer.setSerializationStrategy(type, (value) => {
+                return converters.serializer(value, {
+                    fallback: (so, td) => this.serializer.convertSingleValue(so, td as TypeDescriptor),
+                });
+            });
+            this.deserializer.setDeserializationStrategy(type, (value) => {
+                return converters.deserializer(value, {
+                    fallback: (so, td) =>
+                        this.deserializer.convertSingleValue(so, td as TypeDescriptor, this.serializableTypes),
+                });
+            });
         }
+        this.eventEmitter.emit('register', type, converters);
     }
 
     /**
@@ -106,6 +112,7 @@ export class DataSerializer {
      */
     static unregisterType(type: Serializable<any>): void {
         this.serializableTypes.delete(type.name);
+        this.eventEmitter.emit('unregister', type);
     }
 
     static findTypeByName(name: string): Serializable<any> {
@@ -129,34 +136,27 @@ export class DataSerializer {
      * @param {DataSerializerConfig} [config] Data serializer configuration
      * @returns {any} Serialized data
      */
-    static serialize<T>(data: T, config?: DataSerializerConfig): any {
+    static serialize<T>(data: T, config: DataSerializerConfig = {}): any {
         if (data === null || data === undefined) {
             return undefined;
         }
 
         const globalDataType = data.constructor;
 
-        const mergedConfig = {
-            ...this.globalConfig,
-            ...config,
-        };
-
         // First check if it is a registered type
         // this is important as some serializable classes
         // may extend an array
         if (this.findTypeByName(data.constructor.name)) {
             const typedJSON = new TypedJSON(globalDataType);
-            typedJSON['serializer'] = mergedConfig.serializer ?? new Serializer();
-            typedJSON['deserializer'] = mergedConfig.deserializer ?? new Deserializer();
-            typedJSON.config(mergedConfig);
+            typedJSON['serializer'] = config.serializer ?? this.serializer;
+            typedJSON.config(this.globalConfig);
             return typedJSON.toPlainJson(data);
         } else if (Array.isArray(data)) {
             return data.map(this.serialize.bind(this));
         } else {
             const typedJSON = new TypedJSON(globalDataType);
-            typedJSON['serializer'] = mergedConfig.serializer ?? new Serializer();
-            typedJSON['deserializer'] = mergedConfig.deserializer ?? new Deserializer();
-            typedJSON.config(mergedConfig);
+            typedJSON['serializer'] = config.serializer ?? this.serializer;
+            typedJSON.config(this.globalConfig);
             return typedJSON.toPlainJson(data);
         }
     }
@@ -170,7 +170,7 @@ export class DataSerializer {
      */
     static deserialize<T>(serializedData: any, dataType?: Constructor<T>, config?: DataSerializerConfig): T;
     static deserialize<T>(serializedData: any[], dataType?: Constructor<T>, config?: DataSerializerConfig): T[];
-    static deserialize<T>(serializedData: any, dataType?: Constructor<T>, config?: DataSerializerConfig): T | T[] {
+    static deserialize<T>(serializedData: any, dataType?: Constructor<T>, config: DataSerializerConfig = {}): T | T[] {
         if ((typeof serializedData !== 'object' && typeof serializedData !== 'function') || !serializedData) {
             return serializedData;
         }
@@ -179,24 +179,19 @@ export class DataSerializer {
             return serializedData.map((serializedObject) => this.deserialize(serializedObject));
         }
 
-        const mergedConfig = {
-            ...this.globalConfig,
-            ...config,
-        };
-
-        const finalType = dataType ?? mergedConfig.typeResolver(serializedData, this.serializableTypes);
+        const deserializer = config.deserializer ?? this.deserializer;
+        const finalType = dataType ?? deserializer.getTypeResolver()(serializedData, this.serializableTypes);
         if (finalType === Object) {
             return serializedData;
         }
         const typedJSON = new TypedJSON(finalType);
-        typedJSON['serializer'] = mergedConfig.serializer ?? new Serializer();
-        typedJSON['deserializer'] = mergedConfig.deserializer ?? new Deserializer();
-        typedJSON.config(mergedConfig);
+        typedJSON['deserializer'] = deserializer;
+        typedJSON.config(this.globalConfig);
         return typedJSON.parse(serializedData);
     }
 }
 
-export interface DataSerializerConfig extends ITypedJSONSettings {
+export interface DataSerializerConfig {
     /**
      * Set the serializer used for serializing.
      *
@@ -208,7 +203,7 @@ export interface DataSerializerConfig extends ITypedJSONSettings {
      *
      * @default TypedJSON JSON deserializer
      */
-    deserializer?: Deserializer<any>;
+    deserializer?: Deserializer;
 }
 
 export { MappedTypeConverters };

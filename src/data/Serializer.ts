@@ -1,14 +1,13 @@
 import { Serializer as JSONSerializer } from 'typedjson/lib/cjs/serializer';
-import type { Serializer as ISerializer } from 'typedjson/lib/types/serializer';
 import type { TypeDescriptor } from 'typedjson/lib/types/type-descriptor';
 import type { OptionsBase } from 'typedjson/lib/types/options-base';
 import { Serializable, TypeHintEmitter } from 'typedjson';
 
-export class Serializer extends JSONSerializer implements Partial<ISerializer> {
+export class Serializer extends JSONSerializer {
     declare options?: OptionsBase;
-    declare typeHintEmitter: TypeHintEmitter;
-    declare serializationStrategy: Map<Serializable<any>, SerializerFn<any, TypeDescriptor, any>>;
-    declare errorHandler: (error: Error) => void;
+    protected declare typeHintEmitter: TypeHintEmitter;
+    protected declare serializationStrategy: Map<Serializable<any>, SerializerFn<any, TypeDescriptor, any>>;
+    protected declare errorHandler: (error: Error) => void;
     declare setSerializationStrategy: (
         type: Serializable<any>,
         serializer: SerializerFn<any, TypeDescriptor, any>,
@@ -22,7 +21,7 @@ export class Serializer extends JSONSerializer implements Partial<ISerializer> {
     convertSingleValue(
         sourceObject: any,
         typeDescriptor: TypeDescriptor,
-        memberName: string,
+        memberName?: string,
         memberOptions?: OptionsBase,
     ): any {
         const targetObject = super.convertSingleValue(sourceObject, typeDescriptor, memberName, memberOptions);
@@ -37,7 +36,7 @@ export type SerializerFn<T, TD extends TypeDescriptor, Raw> = (
     sourceObject: T,
     typeDescriptor: TD,
     memberName: string,
-    serializer: ISerializer,
+    serializer: Serializer,
     memberOptions?: OptionsBase,
 ) => Raw;
 

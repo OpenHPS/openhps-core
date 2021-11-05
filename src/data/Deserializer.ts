@@ -1,14 +1,17 @@
 import { Deserializer as JSONDeserializer } from 'typedjson/lib/cjs/deserializer';
-import type { Deserializer as IDeserializer } from 'typedjson/lib/types/deserializer';
 import type { TypeDescriptor } from 'typedjson/lib/types/type-descriptor';
 import type { OptionsBase } from 'typedjson/lib/types/options-base';
-import { Serializable, TypeResolver } from 'typedjson';
+import { IndexedObject, Serializable, TypeResolver } from 'typedjson';
 
-export class Deserializer<T> extends JSONDeserializer implements Partial<IDeserializer<T>> {
-    declare deserializationStrategy: Map<Serializable<any>, DeserializerFn<any, TypeDescriptor, any>>;
-    declare errorHandler: (error: Error) => void;
-    declare typeResolver: TypeResolver;
-    declare nameResolver?: (ctor: Serializable<any>) => string;
+export class Deserializer extends JSONDeserializer {
+    protected declare deserializationStrategy: Map<Serializable<any>, DeserializerFn<any, TypeDescriptor, any>>;
+    protected declare errorHandler: (error: Error) => void;
+    protected typeResolver(sourceObject: IndexedObject, knownTypes: Map<string, Serializable<any>>) {
+        return sourceObject['__type'] !== undefined
+            ? knownTypes.get(sourceObject.__type)
+            : sourceObject.constructor ?? Object;
+    }
+    protected declare nameResolver?: (ctor: Serializable<any>) => string;
     declare options?: OptionsBase;
 
     declare setDeserializationStrategy: (
@@ -43,6 +46,6 @@ export type DeserializerFn<T, TD extends TypeDescriptor, Raw> = (
     typeDescriptor: TD,
     knownTypes: Map<string, Serializable<any>>,
     memberName: string,
-    deserializer: IDeserializer<T>,
+    deserializer: Deserializer,
     memberOptions?: OptionsBase,
 ) => T;
