@@ -1,7 +1,9 @@
 import { EventEmitter } from 'events';
 import { TypedJSON, JsonObjectMetadata, ITypedJSONSettings, Constructor, Serializable } from 'typedjson';
+import { JsonMemberMetadata } from 'typedjson/lib/types/metadata';
 import type { MappedTypeConverters } from 'typedjson/lib/types/parser';
 import type { TypeDescriptor } from 'typedjson/lib/types/type-descriptor';
+import type { MemberOptionsBase, SerializableObjectOptions } from './decorators/options';
 import { Deserializer } from './Deserializer';
 import { Serializer } from './Serializer';
 
@@ -73,9 +75,9 @@ export class DataSerializer {
      *
      * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
      * @param {any} proto Prototype of target
-     * @returns {JsonObjectMetadata} Root object metadata
+     * @returns {ObjectMetadata} Root object metadata
      */
-    static getMetadata(proto: any): JsonObjectMetadata {
+    static getMetadata(proto: any): ObjectMetadata {
         return JsonObjectMetadata.getFromConstructor(proto instanceof Function ? proto : proto.constructor);
     }
 
@@ -84,9 +86,9 @@ export class DataSerializer {
      *
      * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
      * @param {any} proto Prototype of target
-     * @returns {JsonObjectMetadata} Root object metadata
+     * @returns {ObjectMetadata} Root object metadata
      */
-    static getRootMetadata(proto: any): JsonObjectMetadata {
+    static getRootMetadata(proto: any): ObjectMetadata {
         const protoProto = proto instanceof Function ? proto.prototype : Object.getPrototypeOf(proto);
         if (!protoProto || !protoProto[META_FIELD]) {
             return proto[META_FIELD];
@@ -99,9 +101,9 @@ export class DataSerializer {
      *
      * @deprecated use [[DataSerializer.findRootMetadata]]
      * @param {any} proto Prototype of target
-     * @returns {JsonObjectMetadata} Root object metadata
+     * @returns {ObjectMetadata} Root object metadata
      */
-    static findRootMetaInfo(proto: any): JsonObjectMetadata {
+    static findRootMetaInfo(proto: any): ObjectMetadata {
         return this.getRootMetadata(proto);
     }
 
@@ -204,6 +206,15 @@ export interface DataSerializerConfig {
      * @default TypedJSON JSON deserializer
      */
     deserializer?: Deserializer;
+}
+
+export interface ObjectMetadata extends JsonObjectMetadata {
+    dataMembers: Map<string, ObjectMemberMetadata>;
+    options?: SerializableObjectOptions<any>;
+}
+
+export interface ObjectMemberMetadata extends JsonMemberMetadata {
+    options?: MemberOptionsBase;
 }
 
 export { MappedTypeConverters };

@@ -1,5 +1,4 @@
 import { JsonObjectMetadata } from 'typedjson';
-import { JsonMemberMetadata } from 'typedjson/lib/types/metadata';
 
 /**
  * Inject member options into object
@@ -11,8 +10,8 @@ import { JsonMemberMetadata } from 'typedjson/lib/types/metadata';
 export function injectMemberOptions(target: unknown, propertyKey: PropertyKey, options: any) {
     const meta = JsonObjectMetadata.ensurePresentInPrototype(target);
     const existingOptions = meta.dataMembers.get(propertyKey.toString()) || meta.dataMembers.get(options.name);
-    meta.dataMembers.set(existingOptions.name, {
+    existingOptions.options = {
+        ...existingOptions.options,
         ...options,
-        ...existingOptions,
-    } as JsonMemberMetadata);
+    };
 }

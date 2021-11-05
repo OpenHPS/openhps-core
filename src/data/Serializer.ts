@@ -1,10 +1,9 @@
 import { Serializer as JSONSerializer } from 'typedjson/lib/cjs/serializer';
 import type { TypeDescriptor } from 'typedjson/lib/types/type-descriptor';
-import type { OptionsBase } from 'typedjson/lib/types/options-base';
 import { Serializable, TypeHintEmitter } from 'typedjson';
+import { MemberOptionsBase } from './decorators/options';
 
 export class Serializer extends JSONSerializer {
-    declare options?: OptionsBase;
     protected declare typeHintEmitter: TypeHintEmitter;
     protected declare serializationStrategy: Map<Serializable<any>, SerializerFn<any, TypeDescriptor, any>>;
     protected declare errorHandler: (error: Error) => void;
@@ -16,13 +15,13 @@ export class Serializer extends JSONSerializer {
     declare getTypeHintEmitter: () => TypeHintEmitter;
     declare setErrorHandler: (errorHandlerCallback: (error: Error) => void) => void;
     declare getErrorHandler: () => (error: Error) => void;
-    declare retrievePreserveNull: (memberOptions?: OptionsBase) => boolean;
+    declare retrievePreserveNull: (memberOptions?: MemberOptionsBase) => boolean;
 
     convertSingleValue(
         sourceObject: any,
         typeDescriptor: TypeDescriptor,
         memberName?: string,
-        memberOptions?: OptionsBase,
+        memberOptions?: MemberOptionsBase,
     ): any {
         const targetObject = super.convertSingleValue(sourceObject, typeDescriptor, memberName, memberOptions);
         if (memberName === undefined && typeof targetObject === 'object') {
@@ -37,7 +36,7 @@ export type SerializerFn<T, TD extends TypeDescriptor, Raw> = (
     typeDescriptor: TD,
     memberName: string,
     serializer: Serializer,
-    memberOptions?: OptionsBase,
+    memberOptions?: MemberOptionsBase,
 ) => Raw;
 
-export { TypeDescriptor, OptionsBase };
+export { TypeDescriptor };

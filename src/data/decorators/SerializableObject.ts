@@ -1,5 +1,6 @@
-import { jsonObject, Serializable, IJsonObjectOptions } from 'typedjson';
+import { jsonObject, Serializable } from 'typedjson';
 import { DataSerializer } from '../DataSerializer';
+import { SerializableObjectOptions } from './options';
 
 /**
  * Serializable object
@@ -18,11 +19,10 @@ export function SerializableObject<T>(options?: SerializableObjectOptions<T>): C
         }
         DataSerializer.registerType(target);
         if (options) {
-            Object.entries(options).forEach(([key, value]) => {
-                ownMeta[key] = value;
-            });
+            ownMeta.options = {
+                ...ownMeta.options,
+                ...options,
+            };
         }
     };
 }
-
-export interface SerializableObjectOptions<T> extends IJsonObjectOptions<T> {}

@@ -1,4 +1,5 @@
-import { jsonMapMember, IJsonMapMemberOptions, Serializable } from 'typedjson';
+import { jsonMapMember, Serializable } from 'typedjson';
+import { SerializableMapMemberOptions } from './options';
 import { injectMemberOptions } from './utils';
 
 /**
@@ -39,5 +40,3 @@ export function SerializableMapMember(
         }
     };
 }
-
-export interface SerializableMapMemberOptions extends IJsonMapMemberOptions {}

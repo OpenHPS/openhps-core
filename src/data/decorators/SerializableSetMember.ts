@@ -1,4 +1,5 @@
-import { jsonSetMember, IJsonSetMemberOptions, Constructor } from 'typedjson';
+import { jsonSetMember, Constructor } from 'typedjson';
+import { SerializableSetMemberOptions } from './options';
 import { injectMemberOptions } from './utils';
 
 /**
@@ -19,5 +20,3 @@ export function SerializableSetMember<T>(
         }
     };
 }
-
-export interface SerializableSetMemberOptions extends IJsonSetMemberOptions {}

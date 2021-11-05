@@ -1,7 +1,8 @@
 import 'reflect-metadata';
-import { jsonMember, IJsonMemberOptions, JsonObjectMetadata, AnyT, IndexedObject, Constructor } from 'typedjson';
+import { jsonMember, JsonObjectMetadata, AnyT, IndexedObject, Constructor } from 'typedjson';
 import { injectMemberOptions } from './utils';
 import { DataSerializer } from '../DataSerializer';
+import { SerializableMemberOptions } from './options';
 
 /**
  * @param {SerializableMemberOptions} [options] Member options
@@ -32,21 +33,4 @@ export function SerializableMember(options?: SerializableMemberOptions | Indexed
             existingOptions.type = () => AnyT;
         }
     };
-}
-
-export interface SerializableMemberOptions extends IJsonMemberOptions {
-    /**
-     * Identify this attribute as unique
-     */
-    unique?: boolean;
-    /**
-     * Identify this attribute as a primary key
-     */
-    primaryKey?: boolean;
-    /**
-     * Create an index on this attribute. Possible values
-     * are true/false or a string for specifying this attribute
-     * as part of multiple attributes in an index.
-     */
-    index?: string | boolean;
 }

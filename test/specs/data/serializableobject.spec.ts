@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import 'mocha';
 import { DataSerializer, SerializableObject } from '../../../src';
 
-declare module "../../../src/data/decorators/SerializableObject" {
+declare module "../../../src/data/decorators/options" {
     interface SerializableObjectOptions<T> {
         abc?: string;
     }
@@ -19,8 +19,8 @@ describe('SerializableObject', () => {
 
             }
             const obj = new Test();
-            const meta = DataSerializer.findRootMetaInfo(obj);
-            expect((meta as any).abc).to.equal("hello");
+            const meta = DataSerializer.getRootMetadata(obj);
+            expect(meta.options.abc).to.equal("hello");
         });
     });
 

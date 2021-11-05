@@ -1,4 +1,5 @@
-import { jsonArrayMember, IJsonArrayMemberOptions, Serializable } from 'typedjson';
+import { jsonArrayMember, Serializable } from 'typedjson';
+import { SerializableArrayMemberOptions } from './options';
 import { injectMemberOptions } from './utils';
 
 export function SerializableArrayMember<T>(
@@ -23,5 +24,3 @@ export function SerializableArrayMember<T>(
         }
     };
 }
-
-export interface SerializableArrayMemberOptions extends IJsonArrayMemberOptions {}

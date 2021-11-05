@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import 'mocha';
 import { DataSerializer, SerializableMember, SerializableObject } from '../../../src';
 
-declare module "../../../src/data/decorators/SerializableMember" {
-    interface SerializableMemberOptions {
+declare module "../../../src/data/decorators/options" {
+    interface MemberOptionsBase {
         abc?: string;
     }
 }
@@ -21,7 +21,7 @@ describe('SerializableMember', () => {
             }
             const obj = new Test();
             const meta = DataSerializer.getRootMetadata(obj);
-            expect((meta.dataMembers.get('member1') as any).abc).to.equal("hello");
+            expect(meta.dataMembers.get('member1').options.abc).to.equal("hello");
         });
     });
 
