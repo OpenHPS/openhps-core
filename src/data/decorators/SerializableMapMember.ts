@@ -1,6 +1,6 @@
 import { jsonMapMember, Serializable } from 'typedjson';
 import { SerializableMapMemberOptions } from './options';
-import { injectMemberOptions } from './utils';
+import { updateSerializableMember } from './utils';
 
 /**
  * @param {Serializable<any>} keyConstructor Map key constructor
@@ -33,10 +33,6 @@ export function SerializableMapMember(
         }
 
         jsonMapMember(keyConstructor, valueConstructor, options)(target, propertyKey);
-
-        // Inject additional options if available
-        if (options) {
-            injectMemberOptions(target, propertyKey, options);
-        }
+        updateSerializableMember(target, propertyKey, options);
     };
 }

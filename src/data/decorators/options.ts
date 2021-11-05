@@ -5,13 +5,12 @@ import {
     IJsonObjectOptions,
     IJsonSetMemberOptions,
 } from 'typedjson';
-import type { OptionsBase as TypedJSONOptionsBase } from 'typedjson/lib/types/options-base';
 
 export interface SerializableArrayMemberOptions extends MemberOptionsBase, IJsonArrayMemberOptions {}
 
 export interface SerializableObjectOptions<T> extends IJsonObjectOptions<T> {}
 
-export interface SerializableMemberOptions extends MemberOptionsBase, IJsonMemberOptions {
+export interface SerializableMemberOptions extends MemberOptionsBase {
     /**
      * Identify this attribute as unique
      */
@@ -28,7 +27,7 @@ export interface SerializableMemberOptions extends MemberOptionsBase, IJsonMembe
     index?: string | boolean;
 }
 
-export interface MemberOptionsBase extends TypedJSONOptionsBase {}
+export interface MemberOptionsBase extends IJsonMemberOptions {}
 
 export interface SerializableSetMemberOptions extends MemberOptionsBase, IJsonSetMemberOptions {}
 

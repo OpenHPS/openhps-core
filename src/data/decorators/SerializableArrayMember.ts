@@ -1,6 +1,6 @@
 import { jsonArrayMember, Serializable } from 'typedjson';
 import { SerializableArrayMemberOptions } from './options';
-import { injectMemberOptions } from './utils';
+import { updateSerializableMember } from './utils';
 
 export function SerializableArrayMember<T>(
     elementConstructor: Serializable<T>,
@@ -17,10 +17,6 @@ export function SerializableArrayMember<T>(
 ): PropertyDecorator {
     return (target: unknown, propertyKey: string) => {
         jsonArrayMember(elementConstructor, options)(target, propertyKey);
-
-        // Inject additional options if available
-        if (options) {
-            injectMemberOptions(target, propertyKey, options);
-        }
+        updateSerializableMember(target, propertyKey, options);
     };
 }

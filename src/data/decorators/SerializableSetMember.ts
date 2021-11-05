@@ -1,6 +1,6 @@
 import { jsonSetMember, Constructor } from 'typedjson';
 import { SerializableSetMemberOptions } from './options';
-import { injectMemberOptions } from './utils';
+import { updateSerializableMember } from './utils';
 
 /**
  * @param {Constructor} elementConstructor Element constructor
@@ -13,10 +13,6 @@ export function SerializableSetMember<T>(
 ): PropertyDecorator {
     return (target: unknown, propertyKey: string) => {
         jsonSetMember(elementConstructor, options)(target, propertyKey);
-
-        // Inject additional options if available
-        if (options) {
-            injectMemberOptions(target, propertyKey, options);
-        }
+        updateSerializableMember(target, propertyKey, options);
     };
 }
