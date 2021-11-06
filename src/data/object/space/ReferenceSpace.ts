@@ -19,21 +19,21 @@ import { DataService } from '../../../service/DataService';
 export class ReferenceSpace extends DataObject implements TransformationSpace {
     // Raw transformation matrix
     @SerializableMember({
-        name: 'transformationMatrix'
+        name: 'transformationMatrix',
     })
     private _transformationMatrix: Matrix4;
     // Scale matrix (needed for scaling linear velocity)
     @SerializableMember({
-        name: 'scaleMatrix'
+        name: 'scaleMatrix',
     })
     private _scaleMatrix: Matrix4;
     // Rotation matrix (needed for orientation, angular velocity and linear velocity)
     @SerializableMember({
-        name: 'rotation'
+        name: 'rotation',
     })
     private _rotation: Quaternion;
     @SerializableMember({
-        name: 'unit'
+        name: 'unit',
     })
     private _unit: LengthUnit;
     private _parent: TransformationSpace;
