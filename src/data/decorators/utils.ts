@@ -83,8 +83,8 @@ function mergeDeep(target, source) {
     if (isObject(target) && isObject(source)) {
         Object.keys(source).forEach((key) => {
             if (Array.isArray(source[key])) {
-                output[key] = target[key] ?? [];
-                output[key].unshift(...source[key]);
+                output[key] = source[key];
+                output[key].push(...(target[key] || []));
             } else if (isObject(source[key])) {
                 if (!(key in target)) Object.assign(output, { [key]: source[key] });
                 else output[key] = mergeDeep(target[key], source[key]);

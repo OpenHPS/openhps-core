@@ -78,6 +78,8 @@ describe('SerializableObject', () => {
             }
             const obj = new Class2();
             const meta = DataSerializer.getMetadata(obj);
+            const rootMeta = DataSerializer.getMetadata(Class1);
+            
             expect(meta.options.abc).to.equal("class2");
             expect(meta.options.anArray.length).to.equal(2);
             expect(meta.options.anArray[1]).to.equal("http://class1");
@@ -88,6 +90,15 @@ describe('SerializableObject', () => {
             expect(meta.options.nested.anArray[1]).to.equal("http://class1");
             expect(meta.options.nested.anArray[0]).to.equal("http://class2");
             expect(meta.options.nested.record['abc'].length).to.equal(2);
+
+            expect(rootMeta.options.abc).to.equal("class1");
+            expect(rootMeta.options.anArray.length).to.equal(1);
+            expect(rootMeta.options.anArray[0]).to.equal("http://class1");
+
+            expect(rootMeta.options.nested.abc).to.equal("class1");
+            expect(rootMeta.options.nested.anArray.length).to.equal(1);
+            expect(rootMeta.options.nested.anArray[0]).to.equal("http://class1");
+            expect(rootMeta.options.nested.record['abc'].length).to.equal(1);
         });
     });
 
