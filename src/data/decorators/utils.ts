@@ -47,13 +47,15 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
     if (rootMeta.initializerCallback) {
         ownMeta.initializerCallback = rootMeta.initializerCallback;
     }
-    DataSerializer.registerType(target);
+    // Merge options
     if (options) {
         ownMeta.options = mergeDeep(ownMeta.options ?? {}, options);
         if (ownMeta !== rootMeta) {
             rootMeta.options = mergeDeep(rootMeta.options ?? {}, options);
         }
     }
+    // (Re)register type
+    DataSerializer.registerType(target);
 }
 
 /**

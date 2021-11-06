@@ -1,9 +1,8 @@
 import { EventEmitter } from 'events';
 import { TypedJSON, JsonObjectMetadata, ITypedJSONSettings, Constructor, Serializable } from 'typedjson';
-import { JsonMemberMetadata } from 'typedjson/lib/types/metadata';
 import type { MappedTypeConverters } from 'typedjson/lib/types/parser';
 import type { TypeDescriptor } from 'typedjson/lib/types/type-descriptor';
-import type { MemberOptionsBase, SerializableObjectOptions } from './decorators/options';
+import { ObjectMetadata } from './decorators/metadata';
 import { Deserializer } from './Deserializer';
 import { Serializer } from './Serializer';
 
@@ -37,6 +36,7 @@ export class DataSerializer {
     protected static readonly knownTypes: Map<string, Serializable<any>> = new Map();
     protected static readonly serializer: Serializer = new Serializer();
     protected static readonly deserializer: Deserializer = new Deserializer();
+    /* Event emitter used to listen for registrations and unregister of data types */
     protected static eventEmitter: EventEmitter = new EventEmitter();
 
     private static get globalConfig(): ITypedJSONSettings {
@@ -206,15 +206,6 @@ export interface DataSerializerConfig {
      * @default TypedJSON JSON deserializer
      */
     deserializer?: Deserializer;
-}
-
-export interface ObjectMetadata extends JsonObjectMetadata {
-    dataMembers: Map<string, ObjectMemberMetadata>;
-    options?: SerializableObjectOptions<any>;
-}
-
-export interface ObjectMemberMetadata extends JsonMemberMetadata {
-    options?: MemberOptionsBase;
 }
 
 export { MappedTypeConverters };

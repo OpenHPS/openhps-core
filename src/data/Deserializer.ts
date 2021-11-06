@@ -1,7 +1,7 @@
 import { Deserializer as JSONDeserializer } from 'typedjson/lib/cjs/deserializer';
 import type { TypeDescriptor } from 'typedjson/lib/types/type-descriptor';
 import { IndexedObject, Serializable, TypeResolver } from 'typedjson';
-import type { MemberOptionsBase } from './decorators/options';
+import { ObjectMemberMetadata } from './decorators/metadata';
 
 export class Deserializer extends JSONDeserializer {
     protected declare deserializationStrategy: Map<Serializable<any>, DeserializerFn<any, TypeDescriptor, any>>;
@@ -26,14 +26,14 @@ export class Deserializer extends JSONDeserializer {
         ...knownTypeMaps: Array<Map<string, Serializable<any>>>
     ) => Map<string, Serializable<any>>;
     declare createKnownTypesMap: (knowTypes: Set<Serializable<any>>) => Map<string, Serializable<any>>;
-    declare retrievePreserveNull: (memberOptions?: MemberOptionsBase) => boolean;
+    declare retrievePreserveNull: (memberOptions?: ObjectMemberMetadata) => boolean;
 
     convertSingleValue(
         sourceObject: any,
         typeDescriptor: TypeDescriptor,
         knownTypes: Map<string, Serializable<any>>,
         memberName = 'object',
-        memberOptions?: MemberOptionsBase,
+        memberOptions?: ObjectMemberMetadata,
     ): any {
         return super.convertSingleValue(sourceObject, typeDescriptor, knownTypes, memberName, memberOptions);
     }
@@ -45,5 +45,5 @@ export type DeserializerFn<T, TD extends TypeDescriptor, Raw> = (
     knownTypes: Map<string, Serializable<any>>,
     memberName: string,
     deserializer: Deserializer,
-    memberOptions?: MemberOptionsBase,
+    memberOptions?: ObjectMemberMetadata,
 ) => T;

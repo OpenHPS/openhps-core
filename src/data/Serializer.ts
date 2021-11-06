@@ -2,6 +2,7 @@ import { Serializer as JSONSerializer } from 'typedjson/lib/cjs/serializer';
 import type { TypeDescriptor } from 'typedjson/lib/types/type-descriptor';
 import { Serializable, TypeHintEmitter } from 'typedjson';
 import { MemberOptionsBase } from './decorators/options';
+import { ObjectMemberMetadata } from './decorators/metadata';
 
 export class Serializer extends JSONSerializer {
     protected declare typeHintEmitter: TypeHintEmitter;
@@ -36,7 +37,7 @@ export type SerializerFn<T, TD extends TypeDescriptor, Raw> = (
     typeDescriptor: TD,
     memberName: string,
     serializer: Serializer,
-    memberOptions?: MemberOptionsBase,
+    memberOptions?: ObjectMemberMetadata,
 ) => Raw;
 
 export { TypeDescriptor };
