@@ -41,6 +41,10 @@
     {
       "path": "./dist/web/openhps-core.min.js",
       "limit": "75 KB"
+    },
+    {
+      "path": "./dist/web/openhps-core.es.min.js",
+      "limit": "70 KB"
     }
   ],
   "scripts": {

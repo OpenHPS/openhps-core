@@ -54,4 +54,5 @@ export type DeserializerFn<T, TD extends TypeDescriptor, Raw> = (
     memberName: string,
     deserializer: Deserializer,
     memberOptions?: ObjectMemberMetadata,
+    serializerOptions?: any,
 ) => T;

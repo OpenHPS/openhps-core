@@ -55,16 +55,6 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
         ownMeta.options = mergeDeep(ownMeta.options ?? {}, options);
         if (ownMeta !== rootMeta) {
             ownMeta.options = mergeDeep(rootMeta.options ?? {}, ownMeta.options);
-        } else {
-            // Merge super classes in case they were declared before this class
-            // (possible when doing the decoration afterwards)
-            rootMeta.knownTypes.forEach((type) => {
-                if (type === target) {
-                    return;
-                }
-                const knownTypeMeta = DataSerializer.getMetadata(type);
-                knownTypeMeta.options = mergeDeep(knownTypeMeta.options ?? {}, rootMeta.options);
-            });
         }
     }
     // (Re)register type

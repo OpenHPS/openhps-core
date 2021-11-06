@@ -46,4 +46,5 @@ export type SerializerFn<T, TD extends TypeDescriptor, Raw> = (
     memberName: string,
     serializer: Serializer,
     memberOptions?: ObjectMemberMetadata,
+    serializerOptions?: any,
 ) => Raw;
