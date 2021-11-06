@@ -12,12 +12,15 @@ import { MemberOptionsBase, SerializableObjectOptions } from './options';
 export function updateSerializableMember(target: unknown, propertyKey: string, options: MemberOptionsBase) {
     // Inject additional options if available
     if (options) {
-        const meta = JsonObjectMetadata.ensurePresentInPrototype(target);
-        const existingOptions = meta.dataMembers.get(propertyKey) || meta.dataMembers.get(options.name);
-        existingOptions.options = {
-            ...existingOptions.options,
-            ...options,
-        };
+        const ownMeta = JsonObjectMetadata.ensurePresentInPrototype(target);
+        const rootMeta = DataSerializer.getRootMetadata(target.constructor);
+        const ownMemberMetadata = ownMeta.dataMembers.get(propertyKey) || ownMeta.dataMembers.get(options.name);
+        const rootMemberMetadata = rootMeta.dataMembers.get(propertyKey) || rootMeta.dataMembers.get(options.name);
+
+        ownMemberMetadata.options = mergeDeep(ownMemberMetadata.options ?? {}, options);
+        if (rootMemberMetadata) {
+            ownMemberMetadata.options = mergeDeep(rootMemberMetadata.options ?? {}, ownMemberMetadata.options);
+        }
     }
 
     // Detect generic types that have no deserialization or constructor specified
@@ -49,10 +52,7 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
     }
     // Merge options
     if (options) {
-        ownMeta.options = mergeDeep(ownMeta.options ?? {}, options);
-        if (ownMeta !== rootMeta) {
-            rootMeta.options = mergeDeep(rootMeta.options ?? {}, options);
-        }
+        ownMeta.options = mergeDeep(rootMeta.options ?? {}, mergeDeep(ownMeta.options ?? {}, options));
     }
     // (Re)register type
     DataSerializer.registerType(target);
@@ -81,7 +81,7 @@ function mergeDeep(target, source) {
         Object.keys(source).forEach((key) => {
             if (Array.isArray(source[key])) {
                 output[key] = target[key] ?? [];
-                output[key].push(...source[key]);
+                output[key].unshift(...source[key]);
             } else if (isObject(source[key])) {
                 if (!(key in target)) Object.assign(output, { [key]: source[key] });
                 else output[key] = mergeDeep(target[key], source[key]);

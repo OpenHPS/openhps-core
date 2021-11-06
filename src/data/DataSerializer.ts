@@ -50,7 +50,7 @@ export class DataSerializer {
                 });
             });
         }
-        this.eventEmitter.emit('register', type, converters);
+        this.eventEmitter.emit('registerType', type, converters);
     }
 
     /**
@@ -97,7 +97,7 @@ export class DataSerializer {
      */
     static unregisterType(type: Serializable<any>): void {
         this.knownTypes.delete(type.name);
-        this.eventEmitter.emit('unregister', type);
+        this.eventEmitter.emit('unregisterType', type);
     }
 
     static findTypeByName(name: string): Serializable<any> {
@@ -219,3 +219,5 @@ export class ConcreteTypeDescriptor extends TypeDescriptor {
         super(ctor);
     }
 }
+
+export type { ArrayTypeDescriptor, MapTypeDescriptor, SetTypeDescriptor } from 'typedjson/lib/types/type-descriptor';
