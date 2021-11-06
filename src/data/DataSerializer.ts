@@ -1,24 +1,11 @@
 import { EventEmitter } from 'events';
-import { TypedJSON, JsonObjectMetadata, ITypedJSONSettings, Constructor, Serializable } from 'typedjson';
+import { JsonObjectMetadata, Constructor, Serializable } from 'typedjson';
 import type { MappedTypeConverters } from 'typedjson/lib/types/parser';
-import type { TypeDescriptor } from 'typedjson/lib/types/type-descriptor';
 import { ObjectMetadata } from './decorators/metadata';
 import { Deserializer } from './Deserializer';
 import { Serializer } from './Serializer';
 
 const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
-
-/* Set global TypedJSON options for decorator errors */
-TypedJSON.setGlobalConfig({
-    errorHandler: (e: Error) => {
-        e.message = e.message.replace('@jsonObject', '@SerializableObject()');
-        e.message = e.message.replace('@jsonMember', '@SerializableMember()');
-        e.message = e.message.replace('@jsonSetMember', '@SerializableSetMember()');
-        e.message = e.message.replace('@jsonMapMember', '@SerializableMapMember()');
-        e.message = e.message.replace('@jsonArrayMember', '@SerializableArrayMember()');
-        throw e;
-    },
-});
 
 /**
  * Allows the serialization and deserialization of objects using the [[SerializableObject]] decorator.
@@ -38,10 +25,6 @@ export class DataSerializer {
     protected static readonly deserializer: Deserializer = new Deserializer();
     /* Event emitter used to listen for registrations and unregister of data types */
     protected static eventEmitter: EventEmitter = new EventEmitter();
-
-    private static get globalConfig(): ITypedJSONSettings {
-        return TypedJSON['_globalConfig'];
-    }
 
     /**
      * Manually register a new type
@@ -148,19 +131,21 @@ export class DataSerializer {
         // First check if it is a registered type
         // this is important as some serializable classes
         // may extend an array
-        if (this.findTypeByName(data.constructor.name)) {
-            const typedJSON = new TypedJSON(globalDataType);
-            typedJSON['serializer'] = config.serializer ?? this.serializer;
-            typedJSON.config(this.globalConfig);
-            return typedJSON.toPlainJson(data);
-        } else if (Array.isArray(data)) {
+        if (!this.findTypeByName(data.constructor.name) && Array.isArray(data)) {
             return data.map(this.serialize.bind(this));
-        } else {
-            const typedJSON = new TypedJSON(globalDataType);
-            typedJSON['serializer'] = config.serializer ?? this.serializer;
-            typedJSON.config(this.globalConfig);
-            return typedJSON.toPlainJson(data);
         }
+        const serializer = config.serializer ?? this.serializer;
+        return serializer.convertSingleValue(
+            data,
+            this.ensureTypeDescriptor(globalDataType),
+            undefined,
+            undefined,
+            config,
+        );
+    }
+
+    protected static ensureTypeDescriptor(type: Typelike): TypeDescriptor {
+        return type instanceof TypeDescriptor ? type : new ConcreteTypeDescriptor(type);
     }
 
     /**
@@ -186,10 +171,14 @@ export class DataSerializer {
         if (finalType === Object) {
             return serializedData;
         }
-        const typedJSON = new TypedJSON(finalType);
-        typedJSON['deserializer'] = deserializer;
-        typedJSON.config(this.globalConfig);
-        return typedJSON.parse(serializedData);
+        return deserializer.convertSingleValue(
+            serializedData,
+            this.ensureTypeDescriptor(finalType),
+            this.knownTypes,
+            undefined,
+            undefined,
+            config,
+        );
     }
 }
 
@@ -209,3 +198,24 @@ export interface DataSerializerConfig {
 }
 
 export { MappedTypeConverters };
+
+export abstract class TypeDescriptor {
+    protected constructor(readonly ctor: Serializable<any>) {}
+
+    getTypes(): Array<Serializable<any>> {
+        return [this.ctor];
+    }
+
+    hasFriendlyName(): boolean {
+        return this.ctor.name !== 'Object';
+    }
+}
+
+export type Typelike = TypeDescriptor | Serializable<any>;
+
+export class ConcreteTypeDescriptor extends TypeDescriptor {
+    // eslint-disable-next-line @typescript-eslint/no-useless-constructor
+    constructor(ctor: Serializable<any>) {
+        super(ctor);
+    }
+}

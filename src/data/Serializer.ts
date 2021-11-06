@@ -7,7 +7,14 @@ import { ObjectMemberMetadata } from './decorators/metadata';
 export class Serializer extends JSONSerializer {
     protected declare typeHintEmitter: TypeHintEmitter;
     protected declare serializationStrategy: Map<Serializable<any>, SerializerFn<any, TypeDescriptor, any>>;
-    protected declare errorHandler: (error: Error) => void;
+    protected errorHandler: (error: Error) => void = (e: Error) => {
+        e.message = e.message.replace('@jsonObject', '@SerializableObject()');
+        e.message = e.message.replace('@jsonMember', '@SerializableMember()');
+        e.message = e.message.replace('@jsonSetMember', '@SerializableSetMember()');
+        e.message = e.message.replace('@jsonMapMember', '@SerializableMapMember()');
+        e.message = e.message.replace('@jsonArrayMember', '@SerializableArrayMember()');
+        throw e;
+    };
     declare setSerializationStrategy: (
         type: Serializable<any>,
         serializer: SerializerFn<any, TypeDescriptor, any>,
@@ -23,6 +30,7 @@ export class Serializer extends JSONSerializer {
         typeDescriptor: TypeDescriptor,
         memberName?: string,
         memberOptions?: MemberOptionsBase,
+        _?: any, // eslint-disable-line @typescript-eslint/no-unused-vars
     ): any {
         const targetObject = super.convertSingleValue(sourceObject, typeDescriptor, memberName, memberOptions);
         if (memberName === undefined && typeof targetObject === 'object') {
@@ -39,5 +47,3 @@ export type SerializerFn<T, TD extends TypeDescriptor, Raw> = (
     serializer: Serializer,
     memberOptions?: ObjectMemberMetadata,
 ) => Raw;
-
-export { TypeDescriptor };

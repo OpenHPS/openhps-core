@@ -5,7 +5,14 @@ import { ObjectMemberMetadata } from './decorators/metadata';
 
 export class Deserializer extends JSONDeserializer {
     protected declare deserializationStrategy: Map<Serializable<any>, DeserializerFn<any, TypeDescriptor, any>>;
-    protected declare errorHandler: (error: Error) => void;
+    protected errorHandler: (error: Error) => void = (e: Error) => {
+        e.message = e.message.replace('@jsonObject', '@SerializableObject()');
+        e.message = e.message.replace('@jsonMember', '@SerializableMember()');
+        e.message = e.message.replace('@jsonSetMember', '@SerializableSetMember()');
+        e.message = e.message.replace('@jsonMapMember', '@SerializableMapMember()');
+        e.message = e.message.replace('@jsonArrayMember', '@SerializableArrayMember()');
+        throw e;
+    };
     protected typeResolver(sourceObject: IndexedObject, knownTypes: Map<string, Serializable<any>>) {
         return sourceObject['__type'] !== undefined
             ? knownTypes.get(sourceObject.__type)
@@ -32,8 +39,9 @@ export class Deserializer extends JSONDeserializer {
         sourceObject: any,
         typeDescriptor: TypeDescriptor,
         knownTypes: Map<string, Serializable<any>>,
-        memberName = 'object',
+        memberName?: string,
         memberOptions?: ObjectMemberMetadata,
+        _?: any, // eslint-disable-line @typescript-eslint/no-unused-vars
     ): any {
         return super.convertSingleValue(sourceObject, typeDescriptor, knownTypes, memberName, memberOptions);
     }

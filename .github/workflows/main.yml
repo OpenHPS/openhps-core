@@ -59,11 +59,18 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run: |
           npm run bump:release
-      - name: Publish to NPM
+      - name: Publish to NPM (master)
         uses: JS-DevTools/npm-publish@v1
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
+        if: github.ref == 'refs/heads/master'
         with:
           token: ${{ secrets.NPM_TOKEN }}
+          tag: latest
+      - name: Publish to NPM (dev)
+        uses: JS-DevTools/npm-publish@v1
+        if: github.ref == 'refs/heads/dev'
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: dev
       - name: Publish to GitHub
         if: success()
         run: |
