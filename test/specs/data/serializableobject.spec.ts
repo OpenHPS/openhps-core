@@ -6,6 +6,11 @@ declare module "../../../src/data/decorators/options" {
     interface SerializableObjectOptions<T> {
         abc?: string;
         anArray?: string[];
+        nested?: {
+            abc?: string;
+            anArray?: string[];
+            record?: Record<string, string[]>;
+        }
     }
 }
 
@@ -44,7 +49,14 @@ describe('SerializableObject', () => {
         it('should be able to deep merge options', () => {
             @SerializableObject({
                 abc: "class1",
-                anArray: ["http://class1"]
+                anArray: ["http://class1"],
+                nested: {
+                    abc: "class1",
+                    anArray: ["http://class1"],
+                    record: {
+                        abc: ['class1']
+                    }
+                }
             })
             class Class1 {
 
@@ -52,7 +64,14 @@ describe('SerializableObject', () => {
 
             @SerializableObject({
                 abc: "class2",
-                anArray: ["http://class2"]
+                anArray: ["http://class2"],
+                nested: {
+                    abc: "class2",
+                    anArray: ["http://class2"],
+                    record: {
+                        abc: ['class2']
+                    }
+                }
             })
             class Class2 extends Class1 {
 
@@ -63,6 +82,12 @@ describe('SerializableObject', () => {
             expect(meta.options.anArray.length).to.equal(2);
             expect(meta.options.anArray[1]).to.equal("http://class1");
             expect(meta.options.anArray[0]).to.equal("http://class2");
+
+            expect(meta.options.nested.abc).to.equal("class2");
+            expect(meta.options.nested.anArray.length).to.equal(2);
+            expect(meta.options.nested.anArray[1]).to.equal("http://class1");
+            expect(meta.options.nested.anArray[0]).to.equal("http://class2");
+            expect(meta.options.nested.record['abc'].length).to.equal(2);
         });
     });
 
