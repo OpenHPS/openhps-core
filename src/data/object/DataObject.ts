@@ -1,6 +1,5 @@
 import { AbsolutePosition } from '../position/AbsolutePosition';
 import { RelativePosition } from '../position/RelativePosition';
-import { TypedJSON } from 'typedjson';
 import { SerializableObject, SerializableMember, SerializableArrayMember } from '../decorators';
 import { v4 as uuidv4 } from 'uuid';
 import { DataSerializer } from '../DataSerializer';
@@ -132,20 +131,7 @@ export class DataObject {
      *
      * @returns {RelativePosition[]} Array of relative positions
      */
-    @SerializableArrayMember(Object, {
-        deserializer(rawArray: any[]): RelativePosition<any>[] {
-            if (rawArray === undefined) {
-                return [];
-            }
-            const output: RelativePosition<any>[] = [];
-            rawArray.forEach((raw) => {
-                if (raw && raw.__type !== undefined) {
-                    output.push(new TypedJSON(DataSerializer.findTypeByName(raw.__type)).parse(raw));
-                }
-            });
-            return output;
-        },
-    })
+    @SerializableArrayMember(RelativePosition)
     get relativePositions(): RelativePosition<any>[] {
         const relativePostions: RelativePosition<any>[] = [];
         if (this._relativePositions !== undefined) {

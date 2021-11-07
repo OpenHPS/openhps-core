@@ -54,7 +54,7 @@
     "lint": "eslint src/ --ignore-pattern three",
     "size": "size-limit",
     "clean": "shx rm -rf ./dist && shx rm -rf ./docs/out",
-    "build": "npm run clean && npm run build:three && npm-run-all --parallel build:ts:* && npm run build:webpack",
+    "build": "npm run clean && npm run build:three && npm-run-all --parallel build:ts:* build:typedoc && npm run build:webpack",
     "build:quick": "npm-run-all --parallel build:ts:* && npm run build:webpack",
     "build:typedoc": "typedoc --options docs/typedoc.json",
     "build:three": "node ./scripts/build.three.js",
