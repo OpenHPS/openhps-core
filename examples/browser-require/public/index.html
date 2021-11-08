@@ -16,6 +16,9 @@
                     .build().then(model => {
                         model.push(new core.DataFrame());
                     });
+                return d3.require('./openhps-geospatial.min.js');
+            }).then(geospatial => {
+                console.log(geospatial);
             }).catch(console.error);
         </script>
     </body>

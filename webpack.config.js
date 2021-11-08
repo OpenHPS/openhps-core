@@ -49,7 +49,7 @@ const bundle = (env, module) => ({
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: `web/${PROJECT_NAME}${module ? ".es" : ""}${env.prod ? ".min" : ""}.js`,
-    library: module ? undefined : LIBRARY_NAME,
+    library: module ? undefined : ['OpenHPS', 'core'],
     libraryTarget: module ? "module" : "umd",
     umdNamedDefine: !module,
     globalObject: module ? undefined : `(typeof self !== 'undefined' ? self : this)`,
@@ -72,14 +72,14 @@ module.exports = env => [
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: `web/worker.${PROJECT_NAME}${env.prod ? ".min" : ""}.js`,
-      library: LIBRARY_NAME,
+      library: "OpenHPS",
       libraryTarget: 'umd',
       umdNamedDefine: true,
       globalObject: `(typeof self !== 'undefined' ? self : this)`,
     },
     plugins: [
       new InjectPlugin(function() {
-        return `importScripts('${PROJECT_NAME}${env.prod ? ".min" : ""}.js'); __WEBPACK_EXTERNAL_MODULE____ = self['@openhps/core'];`
+        return `importScripts('${PROJECT_NAME}${env.prod ? ".min" : ""}.js'); __WEBPACK_EXTERNAL_MODULE____ = self.OpenHPS;`
       })
     ],
     ...defaultConfig(env)
