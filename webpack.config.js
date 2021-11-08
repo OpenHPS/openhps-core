@@ -79,7 +79,7 @@ module.exports = env => [
     },
     plugins: [
       new InjectPlugin(function() {
-        return `importScripts('${PROJECT_NAME}${env.prod ? ".min" : ""}.js'); __WEBPACK_EXTERNAL_MODULE____ = self.OpenHPS;`
+        return `importScripts('${PROJECT_NAME}${env.prod ? ".min" : ""}.js'); __WEBPACK_EXTERNAL_MODULE____ = self.OpenHPS.core;`
       })
     ],
     ...defaultConfig(env)

@@ -5,9 +5,26 @@
     </head>
     <body>
         <script src="./openhps-core.min.js"></script>
-        <script src="./openhps-geospatial.min.js"></script>
+        <script src="./openhps-geospatial.js"></script>
         <script>
         console.log(window.OpenHPS);
+        OpenHPS.core.ModelBuilder.create()
+            .from()
+            .via(new OpenHPS.core.WorkerNode((builder) => {
+                builder.via(new OpenHPS.core.CallbackNode(frame => {
+                    console.log(frame);
+                }))
+            },
+            {
+                imports: ['openhps-core.min.js'],
+                worker: 'worker.openhps-core.js',
+                poolSize: 2,
+            }))
+            .to()
+            .build().then(model => {
+                console.log(model);
+                model.push(new OpenHPS.core.DataFrame())
+            });
         </script>
     </body>
 </html>

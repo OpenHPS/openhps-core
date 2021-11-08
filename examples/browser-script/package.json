@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "shx cp node_modules/@openhps/core/dist/web/openhps-core.min.js public/openhps-core.min.js && serve ./public"
+    "start": "shx cp node_modules/@openhps/core/dist/web/*openhps-core* public/ && serve ./public"
   },
   "dependencies": {
     "@openhps/core": "file:../../",

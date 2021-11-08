@@ -7,5 +7,5 @@ src/three/
 .nyc_output/
 .cache/
 test-results.xml
-examples/**/public/openhps-*
+examples/**/public/*openhps-core*
 examples/**/package-lock.json
