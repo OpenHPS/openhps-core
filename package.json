@@ -1,6 +1,6 @@
 {
   "name": "@openhps/core",
-  "version": "0.3.7-alpha.7",
+  "version": "0.3.7",
   "description": "Open Hybrid Positioning System - Core component",
   "author": "Maxim Van de Wynckel",
   "license": "Apache-2.0",
