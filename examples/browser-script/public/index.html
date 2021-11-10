@@ -5,7 +5,7 @@
     </head>
     <body>
         <script src="./openhps-core.min.js"></script>
-        <script src="./openhps-geospatial.js"></script>
+        <script src="./openhps-geospatial.min.js"></script>
         <script>
         console.log(window.OpenHPS);
         OpenHPS.core.ModelBuilder.create()
@@ -16,7 +16,6 @@
                 }))
             },
             {
-                imports: ['openhps-core.min.js'],
                 worker: 'worker.openhps-core.js',
                 poolSize: 2,
             }))

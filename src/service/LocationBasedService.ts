@@ -80,6 +80,9 @@ export class LocationBasedService<
                 .findByUID(uid)
                 .then((storedObj) => {
                     storedObj.setPosition(position);
+                    return this.service.insertObject(storedObj);
+                })
+                .then(() => {
                     resolve();
                 })
                 .catch(reject);

@@ -45,7 +45,7 @@ const defaultConfig = env => ({
 
 const bundle = (env, module) => ({
   name: PROJECT_NAME,
-  entry: `./dist/${module ? "esm" : "cjs"}/index.js`,
+  entry: `./dist/esm/index.js`,
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: `web/${PROJECT_NAME}${module ? ".es" : ""}${env.prod ? ".min" : ""}.js`,
@@ -72,7 +72,6 @@ module.exports = env => [
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: `web/worker.${PROJECT_NAME}${env.prod ? ".min" : ""}.js`,
-      library: "OpenHPS",
       libraryTarget: 'umd',
       umdNamedDefine: true,
       globalObject: `(typeof self !== 'undefined' ? self : this)`,

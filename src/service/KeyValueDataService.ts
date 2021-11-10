@@ -25,7 +25,7 @@ export class KeyValueDataService extends DataService<string, any> {
      * @param {string} key Key
      * @returns {Promise<any>} Promise of the value
      */
-    public getValue(key: string): Promise<any> {
+    getValue(key: string): Promise<any> {
         return this.findByUID(key);
     }
 
@@ -36,7 +36,7 @@ export class KeyValueDataService extends DataService<string, any> {
      * @param {any} value Value to store
      * @returns {Promise<void>} Promise of setting the value
      */
-    public setValue(key: string, value: any): Promise<void> {
+    setValue(key: string, value: any): Promise<void> {
         this.emit('set', key, value);
         return this.insert(key, value);
     }

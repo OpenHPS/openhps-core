@@ -29,6 +29,7 @@ import { WorkerHandler } from '../worker';
  * ```
  *
  * ### Web Worker
+ * Web workers can be used by specifying the worker file.
  * ```typescript
  * const workerNode = new WorkerNode((builder) => {
  *      const TimeConsumingNode = require(path.join(__dirname, '../TimeConsumingNode'));
