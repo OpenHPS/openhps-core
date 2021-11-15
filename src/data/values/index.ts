@@ -10,4 +10,3 @@ export * from './Accuracy';
 export * from './Accuracy1D';
 export * from './Accuracy2D';
 export * from './Accuracy3D';
-export * from './GeographicalAccuracy';

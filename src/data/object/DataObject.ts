@@ -36,12 +36,22 @@ export class DataObject {
      */
     @SerializableMember()
     displayName: string;
+    /**
+     * Created timestamp
+     */
     @SerializableMember({
         index: true,
     })
     createdTimestamp: number;
-
-    private _uid!: string;
+    /**
+     * Object identifier
+     *
+     * @returns {string} Unique object identifier
+     */
+    @SerializableMember({
+        primaryKey: true,
+    })
+    uid!: string;
     private _position: AbsolutePosition;
     private _relativePositions: Map<string, Map<string, RelativePosition<any>>> = new Map();
     @SerializableMember()
@@ -57,22 +67,6 @@ export class DataObject {
         this.uid = uid;
         this.createdTimestamp = TimeService.now();
         this.displayName = displayName;
-    }
-
-    /**
-     * Object identifier
-     *
-     * @returns {string} Unique object identifier
-     */
-    @SerializableMember({
-        primaryKey: true,
-    })
-    get uid(): string {
-        return this._uid;
-    }
-
-    set uid(value: string) {
-        this._uid = value;
     }
 
     /**

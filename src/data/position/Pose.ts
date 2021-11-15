@@ -9,7 +9,11 @@ import { Orientation } from './Orientation';
 import { Position } from './Position';
 
 /**
- * Position and orientation
+ * Position and orientation.
+ *
+ * In computer vision and robotics, a typical task is to identify specific objects in an image and to determine each object's position and orientation relative to some coordinate system. This information can then be used, for example, to allow a robot to manipulate an object or to avoid moving into the object. The combination of position and orientation is referred to as the pose of an object, even though this concept is sometimes used only to describe the orientation. Exterior orientation and translation are also used as synonyms of pose.
+ *
+ * @see {@link https://en.wikipedia.org/wiki/Pose_(computer_vision)}
  */
 @SerializableObject()
 export class Pose extends Matrix4 implements Position<LengthUnit> {

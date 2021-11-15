@@ -13,7 +13,7 @@ export class SensorValue<U extends Unit = Unit> extends Vector3 {
     @SerializableMember({
         isRequired: false,
     })
-    public timestamp: number;
+    timestamp: number;
     @SerializableMember({
         isRequired: false,
     })
