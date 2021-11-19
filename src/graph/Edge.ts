@@ -17,8 +17,8 @@ import { EventEmitter } from 'events';
  * @category Graph
  */
 export class Edge<InOut extends DataFrame> extends EventEmitter implements Inlet<InOut>, Outlet<InOut> {
-    public inputNode: GraphNode<any, InOut>;
-    public outputNode: GraphNode<InOut, any>;
+    inputNode: GraphNode<any, InOut>;
+    outputNode: GraphNode<InOut, any>;
 
     constructor(inputNode: GraphNode<any, InOut>, outputNode: GraphNode<InOut, any>) {
         super();
@@ -45,7 +45,7 @@ export class Edge<InOut extends DataFrame> extends EventEmitter implements Inlet
      * @param {PushOptions} [options] Push options
      * @returns {Promise<void>} Push promise
      */
-    public push(data: InOut | InOut[], options: PushOptions = {}): Promise<void> {
+    push(data: InOut | InOut[], options: PushOptions = {}): Promise<void> {
         return new Promise((resolve) => {
             const newOptions: PushOptions = {
                 ...options,
@@ -77,7 +77,7 @@ export class Edge<InOut extends DataFrame> extends EventEmitter implements Inlet
      * @param {PullOptions} [options] Pull options
      * @returns {Promise<void>} Pull promise
      */
-    public pull(options?: PullOptions): Promise<void> {
+    pull(options?: PullOptions): Promise<void> {
         return new Promise((resolve, reject) => {
             const pullListeners: Array<(options: PullOptions) => Promise<void>> = this.listeners('pull') as any[];
             Promise.all(pullListeners.map((listener) => listener(options)))
@@ -88,9 +88,9 @@ export class Edge<InOut extends DataFrame> extends EventEmitter implements Inlet
         });
     }
 
-    public emit(name: 'completed', event: PushCompletedEvent): boolean;
-    public emit(name: 'error', event: PushError): boolean;
-    public emit(name: string, event: any): boolean {
+    emit(name: 'completed', event: PushCompletedEvent): boolean;
+    emit(name: 'error', event: PushError): boolean;
+    emit(name: string, event: any): boolean {
         return this.inputNode.emit(name, event);
     }
 
@@ -100,15 +100,15 @@ export class Edge<InOut extends DataFrame> extends EventEmitter implements Inlet
      * @param {string} name receive
      * @param {Function} listener Event callback
      */
-    public on(name: 'pull', listener: (options?: PullOptions) => Promise<void> | void): this;
+    on(name: 'pull', listener: (options?: PullOptions) => Promise<void> | void): this;
     /**
      * Event when a data frame is push to the node
      *
      * @param {string} name receive
      * @param {Function} listener Event callback
      */
-    public on(name: 'push', listener: (frame: InOut, options?: PushOptions) => Promise<void> | void): this;
-    public on(name: string | symbol, listener: (...args: any[]) => void): this {
+    on(name: 'push', listener: (frame: InOut, options?: PushOptions) => Promise<void> | void): this;
+    on(name: string | symbol, listener: (...args: any[]) => void): this {
         this.removeAllListeners(name);
         return super.on(name, listener);
     }

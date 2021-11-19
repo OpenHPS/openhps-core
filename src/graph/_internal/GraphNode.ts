@@ -1,11 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DataFrame } from '../../data';
+import { SerializableMember, SerializableObject } from '../../data/decorators';
 import { AsyncEventEmitter } from '../../_internal/AsyncEventEmitter';
 import { PushCompletedEvent, PushError, PushEvent } from '../events';
 import { Inlet } from '../Inlet';
 import { PullOptions, PushOptions } from '../options';
 import { Outlet } from '../Outlet';
 
+@SerializableObject()
 export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
     extends AsyncEventEmitter
     implements Inlet<Out>, Outlet<In>
@@ -13,15 +15,17 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
     /**
      * Name of the node. Does not have to be unique.
      */
-    public name: string;
+    @SerializableMember()
+    name: string;
     /**
      * Unique identifier of node.
      */
-    public uid: string = uuidv4();
+    @SerializableMember()
+    uid: string = uuidv4();
     /**
      * Graph shape
      */
-    public graph: any;
+    graph: any;
     private _ready = false;
     private _available = true;
 
@@ -40,11 +44,11 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
      * @param {string} level Logging level
      * @param {any} log Message
      */
-    public logger(level: string, log: any): void {
+    logger(level: string, log: any): void {
         this.graph.logger(level, log);
     }
 
-    public isReady(): boolean {
+    isReady(): boolean {
         return this._ready;
     }
 
@@ -53,7 +57,7 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
      *
      * @returns {boolean} Is the node available to push
      */
-    public isAvailable(): boolean {
+    isAvailable(): boolean {
         return this._available;
     }
 
@@ -62,7 +66,7 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
      *
      * @returns {Array<Outlet<DataFrame>>} Outgoing edges
      */
-    public get outlets(): Array<Outlet<Out>> {
+    get outlets(): Array<Outlet<Out>> {
         return this.graph.edges.filter((edge) => edge.inputNode === this);
     }
 
@@ -71,122 +75,122 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
      *
      * @returns {Array<Inlet<DataFrame>>} Incoming edges
      */
-    public get inlets(): Array<Inlet<In>> {
+    get inlets(): Array<Inlet<In>> {
         return this.graph.edges.filter((edge) => edge.outputNode === this);
     }
 
-    public emit(name: string | symbol, ...args: any[]): boolean;
+    emit(name: string | symbol, ...args: any[]): boolean;
     /**
      * Emit available event
      *
      * @param {string} event available
      */
-    public emit(event: 'available'): boolean;
+    emit(event: 'available'): boolean;
     /**
      * Emit completed event
      *
      * @param {string} name completed
      */
-    public emit(name: 'completed', e: PushCompletedEvent): boolean;
+    emit(name: 'completed', e: PushCompletedEvent): boolean;
     /**
      * Emit error
      *
      * @param {string} name error
      */
-    public emit(name: 'error', e: PushError): boolean;
+    emit(name: 'error', e: PushError): boolean;
     /**
      * Node ready
      *
      * @param {string} name ready
      */
-    public emit(name: 'ready'): boolean;
+    emit(name: 'ready'): boolean;
     /**
      * Destroy the node
      *
      * @param {string} name destroy
      */
-    public emit(name: 'destroy'): boolean;
-    public emit(name: string | symbol, ...args: any[]): boolean {
+    emit(name: 'destroy'): boolean;
+    emit(name: string | symbol, ...args: any[]): boolean {
         return super.emit(name, ...args);
     }
 
-    public on(name: string | symbol, listener: (...args: any[]) => void): this;
+    on(name: string | symbol, listener: (...args: any[]) => void): this;
     /**
      * Event when a node is available
      *
      * @param {string} event available
      * @param {Function} listener Event callback
      */
-    public on(event: 'available', listener: () => Promise<void> | void): this;
+    on(event: 'available', listener: () => Promise<void> | void): this;
     /**
      * Event when a push is completed
      *
      * @param {string} name error
      * @param {Function} listener Event callback
      */
-    public on(name: 'completed', listener: (event: PushCompletedEvent) => Promise<void> | void): this;
+    on(name: 'completed', listener: (event: PushCompletedEvent) => Promise<void> | void): this;
     /**
      * Event when an error is triggered
      *
      * @param {string} name error
      * @param {Function} listener Error event callback
      */
-    public on(name: 'error', listener: (event: PushError) => Promise<void> | void): this;
+    on(name: 'error', listener: (event: PushError) => Promise<void> | void): this;
     /**
      * Event when a data frame is pulled
      *
      * @param {string} name receive
      * @param {Function} listener Event callback
      */
-    public on(name: 'pull', listener: (options?: PullOptions) => Promise<void> | void): this;
+    on(name: 'pull', listener: (options?: PullOptions) => Promise<void> | void): this;
     /**
      * Event when a data frame is push to the node
      *
      * @param {string} name receive
      * @param {Function} listener Event callback
      */
-    public on(name: 'push', listener: (frame: In, options?: PushOptions) => Promise<void> | void): this;
-    public on(name: string | symbol, listener: (...args: any[]) => void): this {
+    on(name: 'push', listener: (frame: In, options?: PushOptions) => Promise<void> | void): this;
+    on(name: string | symbol, listener: (...args: any[]) => void): this {
         return super.on(name, listener);
     }
 
-    public once(name: string | symbol, listener: (...args: any[]) => void): this;
+    once(name: string | symbol, listener: (...args: any[]) => void): this;
     /**
      * Event when a node is available
      *
      * @param {string} event available
      * @param {Function} listener Event callback
      */
-    public once(event: 'available', listener: () => Promise<void> | void): this;
+    once(event: 'available', listener: () => Promise<void> | void): this;
     /**
      * Event when a push is completed
      *
      * @param {string} name error
      * @param {Function} listener Event callback
      */
-    public once(name: 'completed', listener: (event: PushCompletedEvent) => Promise<void> | void): this;
+    once(name: 'completed', listener: (event: PushCompletedEvent) => Promise<void> | void): this;
     /**
      * Event called when node is destroyed
      *
      * @param {string} name destroy
      * @param {Function} listener Event callback
      */
-    public once(name: 'destroy', listener: () => void | Promise<void>): this;
+    once(name: 'destroy', listener: () => void | Promise<void>): this;
     /**
      * Event called when node is build
      *
      * @param {string} name build
      * @param {Function} listener Event callback
      */
-    public once(name: 'build', listener: (builder: any) => void | Promise<void>): this;
+    once(name: 'build', listener: (builder: any) => void | Promise<void>): this;
     /**
      * Event called when node is ready
      *
      * @param {string} name ready
      * @param {Function} listener Event callback
      */
-    public once(name: 'ready', listener: () => void | Promise<void>): this;
-    public once(name: string | symbol, listener: (...args: any[]) => void): this {
+    once(name: 'ready', listener: () => void | Promise<void>): this;
+    once(name: string | symbol, listener: (...args: any[]) => void): this {
         return super.once(name, listener);
     }
 
@@ -196,7 +200,7 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
      * @param {PullOptions} [options] Pull options
      * @returns {Promise<void>} Pull promise
      */
-    public pull(options?: PullOptions): Promise<void> {
+    pull(options?: PullOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const callbackPromises: Array<Promise<void>> = [];
             this.listeners('pull').forEach((callback) => {
@@ -224,7 +228,7 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
      * @param {PushOptions} [options] Push options
      * @returns {Promise<void>} Push promise
      */
-    public push(data: In | In[], options: PushOptions = {}): Promise<void> {
+    push(data: In | In[], options: PushOptions = {}): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (data === null || data === undefined) {
                 return reject(new Error('Node received null data frame!'));
@@ -253,7 +257,7 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
      *
      * @returns {Promise} Promise when the node is available
      */
-    public onceAvailable(): Promise<void> {
+    onceAvailable(): Promise<void> {
         return new Promise((resolve) => {
             if (this.isAvailable()) {
                 resolve();
@@ -271,7 +275,7 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
      * @param {string} frameUID Frame UID
      * @returns {Promise} Promise when the frame is completed
      */
-    public onceCompleted(frameUID: string): Promise<PushEvent> {
+    onceCompleted(frameUID: string): Promise<PushEvent> {
         return new Promise((resolve, reject) => {
             const completedListener = function (event: PushEvent) {
                 if (event.frameUID === frameUID) {

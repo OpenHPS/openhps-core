@@ -6,16 +6,18 @@ import { PushCompletedEvent, PushError } from '../../events';
 import { Edge } from '../../Edge';
 import { Graph } from '../../Graph';
 import { Node } from '../../../Node';
+import { SerializableArrayMember, SerializableObject } from '../../../data/decorators';
 
 /**
  * @category Graph
  */
+@SerializableObject()
 export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> implements Graph<In, Out> {
     private _nodes: Map<string, GraphNode<any, any>> = new Map();
     private _edges: Map<string, Edge<any>> = new Map();
 
-    public internalSource: GraphNode<any, In> = new BroadcastNode<In>();
-    public internalSink: GraphNode<Out, any> = new BroadcastNode<Out>();
+    internalSource: GraphNode<any, In> = new BroadcastNode<In>();
+    internalSink: GraphNode<Out, any> = new BroadcastNode<Out>();
 
     constructor() {
         super();
@@ -55,27 +57,36 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
         });
     }
 
-    public get edges(): Array<Edge<any>> {
+    @SerializableArrayMember(Edge, {
+        serializer: (edges) => {
+            return edges.map((edge: Edge<any>) => ({
+                input: edge.inputNode.uid,
+                output: edge.outputNode.uid,
+            }));
+        },
+    })
+    get edges(): Array<Edge<any>> {
         return this._edges ? Array.from(this._edges.values()) : [];
     }
 
-    public set edges(edges: Array<Edge<any>>) {
+    set edges(edges: Array<Edge<any>>) {
         edges.forEach(this.addEdge);
     }
 
-    public get nodes(): Array<GraphNode<any, any>> {
+    @SerializableArrayMember(GraphNode)
+    get nodes(): Array<GraphNode<any, any>> {
         return this._nodes ? Array.from(this._nodes.values()) : [];
     }
 
-    public set nodes(nodes: Array<GraphNode<any, any>>) {
+    set nodes(nodes: Array<GraphNode<any, any>>) {
         nodes.forEach(this.addNode);
     }
 
-    public findNodeByUID(uid: string): GraphNode<any, any> {
+    findNodeByUID(uid: string): GraphNode<any, any> {
         return this._nodes.get(uid);
     }
 
-    public findNodeByName(name: string): GraphNode<any, any> {
+    findNodeByName(name: string): GraphNode<any, any> {
         let result: GraphNode<any, any>;
         this._nodes.forEach((node) => {
             if (node.name === name) {
@@ -86,20 +97,20 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
         return result;
     }
 
-    public addNode(node: GraphNode<any, any>): void {
+    addNode(node: GraphNode<any, any>): void {
         node.graph = this.graph === undefined ? this : this.model;
         this._nodes.set(node.uid, node as Node<any, any>);
     }
 
-    public addEdge(edge: Edge<any>): void {
+    addEdge(edge: Edge<any>): void {
         this._edges.set(edge.inputNode.uid + edge.outputNode.uid, edge);
     }
 
-    public deleteEdge(edge: Edge<any>): void {
+    deleteEdge(edge: Edge<any>): void {
         this._edges.delete(edge.inputNode.uid + edge.outputNode.uid);
     }
 
-    public deleteNode(node: GraphNode<any, any>): void {
+    deleteNode(node: GraphNode<any, any>): void {
         this._nodes.delete(node.uid);
     }
 
@@ -119,7 +130,7 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
      *
      * @returns {(level: string, log: any) => void} logger function
      */
-    public logger: (level: string, log: any) => void = () => undefined;
+    logger: (level: string, log: any) => void = () => undefined;
 
     /**
      * Send a pull request to the graph
@@ -127,7 +138,7 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
      * @param {PullOptions} [options] Pull options
      * @returns {Promise<void>} Pull promise
      */
-    public pull(options?: PullOptions): Promise<void> {
+    pull(options?: PullOptions): Promise<void> {
         return this.internalSink.pull(options);
     }
 
@@ -138,7 +149,7 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
      * @param {PushOptions} [options] Push options
      * @returns {Promise<void>} Push promise
      */
-    public push(frame: In | In[], options?: PushOptions): Promise<void> {
+    push(frame: In | In[], options?: PushOptions): Promise<void> {
         return this.internalSource.push(frame, options);
     }
 

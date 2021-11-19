@@ -1,4 +1,4 @@
-import { Serializable } from '../data/decorators';
+import { Serializable, SerializableObject } from '../data/decorators';
 import { DataServiceDriver } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
 import { FindOptions } from './FindOptions';
@@ -24,6 +24,7 @@ import { Service } from './Service';
  * }
  * ```
  */
+@SerializableObject()
 export abstract class DataService<I, T> extends Service {
     protected driver: DataServiceDriver<I, T>;
     priority = -1;

@@ -16,8 +16,8 @@ import {
     TimeService,
     DataObjectService,
     MemoryDataService,
-    ModelSerializer,
     DataService,
+    DataSerializer,
 } from '../../src';
 import { PlaceholderNode } from '../../src/nodes/_internal/PlaceholderNode';
 import { DataServiceProxy, ServiceProxy } from '../../src/service/_internal';
@@ -32,9 +32,12 @@ describe('Model', () => {
                 .to()
                 .build()
                 .then((model) => {
-                    console.log(ModelSerializer.serialize(model));
+                    const serialized = DataSerializer.serialize(model);
+                    console.log(serialized);
+                    const deserialized = DataSerializer.deserialize(serialized);
+                    console.log(deserialized);
                     done();
-                });
+                }).catch(done);
         }).timeout(60000);
     });
 

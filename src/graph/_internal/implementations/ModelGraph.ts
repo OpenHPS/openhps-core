@@ -6,17 +6,24 @@ import { GraphShape } from './GraphShape';
 import { Model } from '../../../Model';
 import { ServiceProxy } from '../../../service/_internal/ServiceProxy';
 import { PushOptions } from '../../options';
-import { Serializable } from '../../../data/decorators';
+import { Serializable, SerializableMapMember, SerializableObject } from '../../../data/decorators';
 import { DataServiceProxy } from '../../../service/_internal';
 
 /**
  * [[Model]] implementation
  */
+@SerializableObject()
 export class ModelGraph<In extends DataFrame, Out extends DataFrame>
     extends GraphShape<In, Out>
     implements Model<In, Out>
 {
+    @SerializableMapMember(String, Service, {
+        name: 'services',
+    })
     private _services: Map<string, Service> = new Map();
+    @SerializableMapMember(String, DataService, {
+        name: 'dataServices',
+    })
     private _dataServices: Map<string, DataService<any, any>> = new Map();
     private _referenceSpace: ReferenceSpace;
 

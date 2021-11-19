@@ -1,9 +1,11 @@
 import { AsyncEventEmitter } from '../_internal/AsyncEventEmitter';
 import { v4 as uuidv4 } from 'uuid';
+import { SerializableObject } from '../data/decorators';
 
 /**
  * Service is accessible by each [[Node]] inside the [[Model]]
  */
+@SerializableObject()
 export abstract class Service extends AsyncEventEmitter {
     /**
      * Service name

@@ -1,6 +1,7 @@
 import { DataFrame } from './data/DataFrame';
 import { Model } from './Model';
 import { GraphNode } from './graph/_internal/GraphNode';
+import { SerializableObject } from './data';
 
 /**
  * The graph node has an input and output [[DataFrame]]
@@ -22,6 +23,7 @@ import { GraphNode } from './graph/_internal/GraphNode';
  *
  * @category Node
  */
+@SerializableObject()
 export class Node<In extends DataFrame, Out extends DataFrame> extends GraphNode<In, Out> {
     /**
      * Node options
