@@ -2,6 +2,8 @@ import { DataFrame } from '../data/DataFrame';
 import { DataObject } from '../data/object/DataObject';
 import { Node, NodeOptions } from '../Node';
 import { GraphOptions, PullOptions, PushOptions } from '../graph/options';
+import { SerializableMember } from '../data';
+import { SerializableObject } from '../data/decorators';
 
 /**
  * Source node
@@ -44,7 +46,9 @@ import { GraphOptions, PullOptions, PushOptions } from '../graph/options';
  *
  * @category Source node
  */
+@SerializableObject()
 export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node<Out, Out> {
+    @SerializableMember()
     protected declare options: SourceNodeOptions;
 
     /**

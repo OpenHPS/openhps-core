@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
+import { JsonObjectMetadata } from 'typedjson';
 import {
     DataSerializer,
     DataObject,
@@ -8,6 +9,7 @@ import {
     SerializableObject,
     SerializableMember,
 } from '../../../src';
+import { BroadcastNode } from '../../../src/nodes/shapes/BroadcastNode';
 import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
 
 describe('DataSerializer', () => {
@@ -20,6 +22,27 @@ describe('DataSerializer', () => {
     });
 
     describe('serializing', () => {
+        it('should correctly serialize an extended object without decorators', () => {
+            @SerializableObject()
+            class Bar {
+                @SerializableMember({
+                    name: "displayName"
+                })
+                name: string;
+            }    
+
+            class Foo extends Bar {
+                username: string;
+            }
+
+            const obj = new Foo();
+            obj.username = "mvdewync";
+            obj.name = "Maxim";
+            const serialized = DataSerializer.serialize(obj);
+            expect(serialized.username).to.be.undefined;
+            expect(serialized.displayName).to.not.be.undefined;
+        });
+
         it('should support extracting meta info', () => {
             const meta = DataSerializer.getRootMetadata(AbsolutePosition);
             expect(meta.dataMembers).to.not.be.undefined;

@@ -1,7 +1,7 @@
 import { DataFrame } from './data/DataFrame';
 import { Model } from './Model';
 import { GraphNode } from './graph/_internal/GraphNode';
-import { SerializableObject } from './data';
+import { SerializableMember, SerializableObject } from './data';
 
 /**
  * The graph node has an input and output [[DataFrame]]
@@ -28,6 +28,7 @@ export class Node<In extends DataFrame, Out extends DataFrame> extends GraphNode
     /**
      * Node options
      */
+    @SerializableMember()
     protected options: NodeOptions;
 
     constructor(options?: NodeOptions) {
@@ -44,7 +45,7 @@ export class Node<In extends DataFrame, Out extends DataFrame> extends GraphNode
      * @param {NodeOptions} options Node options to set
      * @returns {Node} Node instance
      */
-    public setOptions(options: NodeOptions): this {
+    setOptions(options: NodeOptions): this {
         this.options = {
             ...options,
             ...(this.options || []),
@@ -59,7 +60,7 @@ export class Node<In extends DataFrame, Out extends DataFrame> extends GraphNode
      *
      * @returns {NodeOptions} Node options
      */
-    public getOptions(): NodeOptions {
+    getOptions(): NodeOptions {
         return this.options;
     }
 
@@ -68,7 +69,7 @@ export class Node<In extends DataFrame, Out extends DataFrame> extends GraphNode
      *
      * @returns {Model} Positioning model
      */
-    public get model(): Model<any, any> {
+    get model(): Model<any, any> {
         return this.graph as Model;
     }
 }

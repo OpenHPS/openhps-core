@@ -19,8 +19,9 @@ import {
     DataService,
     DataSerializer,
 } from '../../src';
+import { BroadcastNode } from '../../src/nodes/shapes/BroadcastNode';
 import { PlaceholderNode } from '../../src/nodes/_internal/PlaceholderNode';
-import { DataServiceProxy, ServiceProxy } from '../../src/service/_internal';
+import { DataServiceProxy } from '../../src/service/_internal';
 import { DummyDataObject } from '../mock/data/object/DummyDataObject';
 import { DummySensorObject } from '../mock/data/object/DummySensorObject';
 
@@ -34,6 +35,7 @@ describe('Model', () => {
                 .then((model) => {
                     const serialized = DataSerializer.serialize(model);
                     console.log(serialized);
+                    console.log(JSON.stringify(serialized, undefined, 2));
                     const deserialized = DataSerializer.deserialize(serialized);
                     console.log(deserialized);
                     done();

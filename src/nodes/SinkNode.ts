@@ -1,5 +1,6 @@
 import { DataFrame } from '../data/DataFrame';
 import { DataObject } from '../data';
+import { SerializableObject } from '../data/decorators';
 import { v4 as uuidv4 } from 'uuid';
 import { Node, NodeOptions } from '../Node';
 import { PushCompletedEvent } from '../graph/events';
@@ -30,6 +31,7 @@ import { DataObjectService } from '../service';
  *
  * @category Sink node
  */
+@SerializableObject()
 export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In, In> {
     protected declare options: SinkNodeOptions;
 

@@ -2,6 +2,7 @@ import { DataFrame, DataObject } from '../data';
 import { Node, NodeOptions } from '../Node';
 import { NodeDataService, NodeData } from '../service';
 import { PushOptions } from '../graph/options';
+import { SerializableObject } from '../data/decorators';
 
 /**
  * Node that processes a dataframe or the contained objects.
@@ -29,6 +30,7 @@ import { PushOptions } from '../graph/options';
  *
  * @category Processing node
  */
+@SerializableObject()
 export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame> extends Node<
     In,
     Out

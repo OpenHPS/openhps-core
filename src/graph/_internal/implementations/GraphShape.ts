@@ -6,7 +6,7 @@ import { PushCompletedEvent, PushError } from '../../events';
 import { Edge } from '../../Edge';
 import { Graph } from '../../Graph';
 import { Node } from '../../../Node';
-import { SerializableArrayMember, SerializableObject } from '../../../data/decorators';
+import { SerializableArrayMember, SerializableMember, SerializableObject } from '../../../data/decorators';
 
 /**
  * @category Graph
@@ -16,7 +16,13 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
     private _nodes: Map<string, GraphNode<any, any>> = new Map();
     private _edges: Map<string, Edge<any>> = new Map();
 
+    @SerializableMember({
+        serializer: node => node.uid
+    })
     internalSource: GraphNode<any, In> = new BroadcastNode<In>();
+    @SerializableMember({
+        serializer: node => node.uid
+    })
     internalSink: GraphNode<Out, any> = new BroadcastNode<Out>();
 
     constructor() {

@@ -6,7 +6,7 @@ import { GraphShape } from './GraphShape';
 import { Model } from '../../../Model';
 import { ServiceProxy } from '../../../service/_internal/ServiceProxy';
 import { PushOptions } from '../../options';
-import { Serializable, SerializableMapMember, SerializableObject } from '../../../data/decorators';
+import { Serializable, SerializableMapMember, SerializableMember, SerializableObject } from '../../../data/decorators';
 import { DataServiceProxy } from '../../../service/_internal';
 
 /**
@@ -25,7 +25,8 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
         name: 'dataServices',
     })
     private _dataServices: Map<string, DataService<any, any>> = new Map();
-    private _referenceSpace: ReferenceSpace;
+    @SerializableMember()
+    referenceSpace: ReferenceSpace;
 
     /**
      * Create a new OpenHPS model
@@ -236,14 +237,6 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
             // Normal service
             this._services.set(service.uid, new Proxy(service, proxy || new ServiceProxy()));
         }
-    }
-
-    get referenceSpace(): ReferenceSpace {
-        return this._referenceSpace;
-    }
-
-    set referenceSpace(space: ReferenceSpace) {
-        this._referenceSpace = space;
     }
 
     push(frame: In | In[], options?: PushOptions): Promise<void> {

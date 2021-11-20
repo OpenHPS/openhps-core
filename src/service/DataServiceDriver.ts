@@ -2,14 +2,20 @@ import { Service } from './Service';
 import { FilterQuery } from './FilterQuery';
 import { FindOptions } from './FindOptions';
 import { DataSerializer } from '../data/DataSerializer';
-import { Constructor } from '../data/decorators';
+import { Constructor, SerializableMember, SerializableObject } from '../data/decorators';
 
 /**
  * DataService driver for storing and querying data objects
  * of a specific data type using a certain implementation.
  */
+@SerializableObject()
 export abstract class DataServiceDriver<I, T> extends Service {
+    @SerializableMember({
+        serializer: dataType => dataType.name,
+        deserializer: dataTypeString => DataSerializer.findTypeByName(dataTypeString)
+    })
     dataType: Constructor<T>;
+    @SerializableMember()
     protected options: DataServiceOptions<T>;
 
     constructor(dataType: Constructor<T>, options: DataServiceOptions<T> = {}) {

@@ -6,6 +6,41 @@ import { Deserializer } from './Deserializer';
 import { Serializer } from './Serializer';
 
 const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
+JsonObjectMetadata.getFromConstructor = function(ctor) {
+    if (!ctor) {
+        return;
+    }
+    const prototype = ctor.prototype;
+
+    if (prototype == null) {
+        return;
+    }
+
+    let metadata: JsonObjectMetadata | undefined;
+    if (Object.prototype.hasOwnProperty.call(prototype, META_FIELD)) {
+        // The class prototype contains own jsonObject metadata
+        metadata = prototype[META_FIELD];
+    } else {
+        const parent = Object.getPrototypeOf(ctor.prototype);
+        if (!parent) {
+            return;
+        }
+        metadata = JsonObjectMetadata.getFromConstructor(parent.constructor);
+    }
+
+    // Ignore implicitly added jsonObject (through jsonMember)
+    if (metadata?.isExplicitlyMarked === true) {
+        return metadata;
+    }
+
+    // In the end maybe it is something which we can handle directly
+    if (JsonObjectMetadata['doesHandleWithoutAnnotation'](ctor)) {
+        const primitiveMeta = new JsonObjectMetadata(ctor);
+        primitiveMeta.isExplicitlyMarked = true;
+        // we do not store the metadata here to not modify builtin prototype
+        return primitiveMeta;
+    }
+}
 
 /**
  * Allows the serialization and deserialization of objects using the [[SerializableObject]] decorator.
