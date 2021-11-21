@@ -8,3 +8,4 @@ export * from './service';
 export * from './ModelBuilder';
 export * from './nodes';
 export * from './worker';
+export * from './ModelSerializer';

@@ -8,8 +8,11 @@ import {
     DataFrame,
     SerializableObject,
     SerializableMember,
+    TimeService,
+    SerializableMemberFunction,
 } from '../../../src';
 import { BroadcastNode } from '../../../src/nodes/shapes/BroadcastNode';
+import { ServiceProxy } from '../../../src/service/_internal';
 import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
 
 describe('DataSerializer', () => {
@@ -43,6 +46,12 @@ describe('DataSerializer', () => {
             expect(serialized.displayName).to.not.be.undefined;
         });
 
+        it('should serialize a proxied object', () => {
+            const service = new TimeService();
+            const proxied = new Proxy(service, new ServiceProxy());
+            const serialized = DataSerializer.serialize(proxied);
+        });
+
         it('should support extracting meta info', () => {
             const meta = DataSerializer.getRootMetadata(AbsolutePosition);
             expect(meta.dataMembers).to.not.be.undefined;
@@ -50,6 +59,18 @@ describe('DataSerializer', () => {
 
         it('should not crash on null or undefined objects in an array', () => {
             DataSerializer.deserialize([null, undefined]);
+        });
+
+        it('should serialize functions', () => {
+            @SerializableObject()
+            class Test {
+                @SerializableMemberFunction()
+                fn = (abc: string) => abc + "_test";
+            }
+            const obj = new Test();
+            const serialized = DataSerializer.serialize(obj);
+            const deserialized: Test = DataSerializer.deserialize(serialized);
+            expect(deserialized.fn("hello")).to.equal(obj.fn("hello"));
         });
 
         it('should serialize global types directly', () => {

@@ -4,11 +4,12 @@ import { PullOptions, PushOptions } from '../graph/options';
 import { Model } from '../Model';
 import { Node } from '../Node';
 import { Service } from './Service';
-import { Constructor } from '../data/decorators';
+import { Constructor, SerializableObject } from '../data/decorators';
 
 /**
  * Remote node service
  */
+@SerializableObject()
 export abstract class RemoteService extends Service {
     protected nodes: Set<string> = new Set();
     protected localServices: Set<string> = new Set();

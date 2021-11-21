@@ -28,6 +28,7 @@ import { Service } from './Service';
 export abstract class DataService<I, T> extends Service {
     @SerializableMember()
     protected driver: DataServiceDriver<I, T>;
+    @SerializableMember()
     priority = -1;
 
     constructor(dataServiceDriver?: DataServiceDriver<I, T>) {

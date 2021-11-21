@@ -3,7 +3,6 @@ import { DataObject } from '../data';
 import { SerializableObject } from '../data/decorators';
 import { v4 as uuidv4 } from 'uuid';
 import { Node, NodeOptions } from '../Node';
-import { PushCompletedEvent } from '../graph/events';
 import { PushOptions } from '../graph/options';
 import { DataObjectService } from '../service';
 
@@ -71,10 +70,14 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In
                     if (this.options.completedEvent) {
                         if (data instanceof Array) {
                             data.forEach((f: In) => {
-                                this.emit('completed', new PushCompletedEvent(f.uid));
+                                this.emit('completed', {
+                                    frameUID: f.uid,
+                                });
                             });
                         } else {
-                            this.emit('completed', new PushCompletedEvent(data.uid));
+                            this.emit('completed', {
+                                frameUID: data.uid,
+                            });
                         }
                     }
                 })

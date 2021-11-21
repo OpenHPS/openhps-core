@@ -53,6 +53,7 @@ describe('MultilaterationNode', () => {
         object.addRelativePosition(new RelativeDistance('1', 10));
         const frame = new DataFrame(object);
         frame.addObject(new DataObject('1').setPosition(new Absolute2DPosition(5, 4)));
+        model.once('error', done);
         model.push(frame);
     });
 
@@ -71,6 +72,7 @@ describe('MultilaterationNode', () => {
         const frame = new DataFrame(object);
         frame.addObject(new DataObject('1').setPosition(new Absolute2DPosition(5, 4)));
         frame.addObject(new DataObject('2').setPosition(new Absolute2DPosition(10, 8)));
+        model.once('error', done);
         model.push(frame);
     });
 
@@ -89,6 +91,7 @@ describe('MultilaterationNode', () => {
         const frame = new DataFrame(object);
         frame.addObject(new DataObject('1').setPosition(new GeographicalPosition(5, 4)));
         frame.addObject(new DataObject('2').setPosition(new GeographicalPosition(10, 8)));
+        model.once('error', done);
         model.push(frame);
     });
 
@@ -109,6 +112,7 @@ describe('MultilaterationNode', () => {
         frame.addObject(new DataObject('1').setPosition(new Absolute2DPosition(5, 4)));
         frame.addObject(new DataObject('2').setPosition(new Absolute2DPosition(10, 8)));
         frame.addObject(new DataObject('3').setPosition(new Absolute2DPosition(8, 3)));
+        model.once('error', done);
         model.push(frame);
     });
 
@@ -131,6 +135,7 @@ describe('MultilaterationNode', () => {
         frame.addObject(new DataObject('2').setPosition(new Absolute2DPosition(10, 8)));
         frame.addObject(new DataObject('3').setPosition(new Absolute2DPosition(8, 3)));
         frame.addObject(new DataObject('4').setPosition(new Absolute2DPosition(15, 14)));
+        model.once('error', done);
         model.push(frame);
     });
 });

@@ -19,7 +19,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
         this.options.minReferences = this.options.minReferences || 1;
     }
 
-    public processRelativePositions<P extends AbsolutePosition>(
+    processRelativePositions<P extends AbsolutePosition>(
         dataObject: DataObject,
         relativePositions: Map<RelativeDistance, DataObject>,
         dataFrame: DataFrame,
@@ -141,7 +141,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
         }
 
         /**
-         * @param value
+         * @param {number} value Value
          */
         function updateSimplex(value) {
             for (let i = 0; i < value.length; i++) {
@@ -151,11 +151,11 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
         }
 
         /**
-         * @param ret
-         * @param w1
-         * @param v1
-         * @param w2
-         * @param v2
+         * @param {number[]} ret Return value
+         * @param {number} w1 Weight 1
+         * @param {number} v1 Value 1
+         * @param {number} w2 Weight 2
+         * @param {number} v2 Value 2
          */
         function weightedSum(ret, w1, v1, w2, v2) {
             for (let j = 0; j < ret.length; ++j) {

@@ -1,13 +1,9 @@
 /**
  * @category Graph
  */
-export class PushEvent {
+export interface PushEvent {
     /**
      * Frame subject
      */
     frameUID: string;
-
-    constructor(frameUID: string) {
-        this.frameUID = frameUID;
-    }
 }

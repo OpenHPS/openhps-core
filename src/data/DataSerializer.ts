@@ -6,7 +6,7 @@ import { Deserializer } from './Deserializer';
 import { Serializer } from './Serializer';
 
 const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
-JsonObjectMetadata.getFromConstructor = function(ctor) {
+JsonObjectMetadata.getFromConstructor = function (ctor) {
     if (!ctor) {
         return;
     }
@@ -40,7 +40,7 @@ JsonObjectMetadata.getFromConstructor = function(ctor) {
         // we do not store the metadata here to not modify builtin prototype
         return primitiveMeta;
     }
-}
+};
 
 /**
  * Allows the serialization and deserialization of objects using the [[SerializableObject]] decorator.
@@ -70,9 +70,6 @@ export class DataSerializer {
     static registerType<T>(type: Serializable<T>, converters?: MappedTypeConverters<T>): void {
         this.knownTypes.set(type.name, type);
         if (converters) {
-            const objectMetadata = new JsonObjectMetadata(type);
-            objectMetadata.isExplicitlyMarked = true;
-            type.prototype[META_FIELD] = objectMetadata;
             this.serializer.setSerializationStrategy(type, (value) => {
                 return converters.serializer(value, {
                     fallback: (so, td) => this.serializer.convertSingleValue(so, td as TypeDescriptor),
@@ -84,8 +81,48 @@ export class DataSerializer {
                         this.deserializer.convertSingleValue(so, td as TypeDescriptor, this.knownTypes),
                 });
             });
+            if (type.name !== 'Object') {
+                const objectMetadata = new JsonObjectMetadata(type);
+                objectMetadata.isExplicitlyMarked = true;
+                type.prototype[META_FIELD] = objectMetadata;
+            }
         }
         this.eventEmitter.emit('registerType', type, converters);
+    }
+
+    static {
+        this.registerType(Object, {
+            serializer: (object) => ({
+                ...Object.keys(object)
+                    .map((key) => {
+                        return {
+                            [key]:
+                                typeof object[key] === 'function'
+                                    ? {
+                                          function: object[key].toString(),
+                                          __type: 'Function',
+                                      }
+                                    : DataSerializer.serialize(object[key]),
+                        };
+                    })
+                    .reduce((a, b) => ({ ...a, ...b }), {}),
+                __type: 'Object',
+            }),
+            deserializer: (objectJson) =>
+                Object.keys(objectJson)
+                    .map((key) => {
+                        if (key === '__type') {
+                            return {};
+                        }
+                        return {
+                            [key]:
+                                typeof objectJson[key] === 'object' && objectJson[key].__type === 'Function'
+                                    ? eval(objectJson[key].function)
+                                    : DataSerializer.deserialize(objectJson[key]),
+                        };
+                    })
+                    .reduce((a, b) => ({ ...a, ...b }), {}),
+        });
     }
 
     /**
@@ -161,12 +198,12 @@ export class DataSerializer {
             return undefined;
         }
 
-        const globalDataType = data.constructor;
+        const globalDataType = Object.getPrototypeOf(data).constructor;
 
         // First check if it is a registered type
         // this is important as some serializable classes
         // may extend an array
-        if (!this.findTypeByName(data.constructor.name) && Array.isArray(data)) {
+        if (!this.findTypeByName(globalDataType.name) && Array.isArray(data)) {
             return data.map(this.serialize.bind(this));
         }
         const serializer = config.serializer ?? this.serializer;
@@ -203,9 +240,6 @@ export class DataSerializer {
 
         const deserializer = config.deserializer ?? this.deserializer;
         const finalType = dataType ?? deserializer.getTypeResolver()(serializedData, this.knownTypes);
-        if (finalType === Object) {
-            return serializedData;
-        }
         return deserializer.convertSingleValue(
             serializedData,
             this.ensureTypeDescriptor(finalType),

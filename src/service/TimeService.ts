@@ -1,11 +1,15 @@
 import { Service } from './Service';
 import { TimeUnit } from '../utils';
+import { SerializableMember, SerializableMemberFunction, SerializableObject } from '../data/decorators';
 
 /**
  * Time service for retrieving the current time.
  */
+@SerializableObject()
 export class TimeService extends Service {
+    @SerializableMemberFunction()
     private _timeCallback: () => number;
+    @SerializableMember()
     private _timeUnit: TimeUnit;
     private static _defaultTimeCallback: () => number;
     private static _defaultUnit: TimeUnit;
@@ -28,6 +32,18 @@ export class TimeService extends Service {
         } else {
             TimeService._defaultTimeCallback = timeCallback;
             TimeService._defaultUnit = unit;
+        }
+    }
+
+    @SerializableMember()
+    get isDefault(): boolean {
+        return TimeService._defaultTimeCallback === this._timeCallback;
+    }
+
+    set isDefault(value: boolean) {
+        if (value) {
+            TimeService._defaultTimeCallback = this._timeCallback;
+            TimeService._defaultUnit = this._timeUnit;
         }
     }
 

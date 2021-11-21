@@ -6,7 +6,12 @@ import { PushCompletedEvent, PushError } from '../../events';
 import { Edge } from '../../Edge';
 import { Graph } from '../../Graph';
 import { Node } from '../../../Node';
-import { SerializableArrayMember, SerializableMember, SerializableObject } from '../../../data/decorators';
+import {
+    SerializableArrayMember,
+    SerializableMapMember,
+    SerializableMember,
+    SerializableObject,
+} from '../../../data/decorators';
 
 /**
  * @category Graph
@@ -14,14 +19,28 @@ import { SerializableArrayMember, SerializableMember, SerializableObject } from 
 @SerializableObject()
 export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> implements Graph<In, Out> {
     private _nodes: Map<string, GraphNode<any, any>> = new Map();
+    @SerializableMapMember(String, Edge, {
+        serializer: (edges: Map<string, Edge<any>>) => {
+            return Array.from(edges.values()).map((edge: Edge<any>) => ({
+                input: edge.inputNode.uid,
+                output: edge.outputNode.uid,
+            }));
+        },
+    })
     private _edges: Map<string, Edge<any>> = new Map();
 
     @SerializableMember({
-        serializer: node => node.uid
+        serializer: (node) => node.uid,
+        deserializer: () => {
+            return undefined;
+        },
     })
     internalSource: GraphNode<any, In> = new BroadcastNode<In>();
     @SerializableMember({
-        serializer: node => node.uid
+        serializer: (node) => node.uid,
+        deserializer: () => {
+            return undefined;
+        },
     })
     internalSink: GraphNode<Out, any> = new BroadcastNode<Out>();
 
@@ -63,14 +82,6 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
         });
     }
 
-    @SerializableArrayMember(Edge, {
-        serializer: (edges) => {
-            return edges.map((edge: Edge<any>) => ({
-                input: edge.inputNode.uid,
-                output: edge.outputNode.uid,
-            }));
-        },
-    })
     get edges(): Array<Edge<any>> {
         return this._edges ? Array.from(this._edges.values()) : [];
     }

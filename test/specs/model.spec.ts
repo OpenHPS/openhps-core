@@ -18,6 +18,7 @@ import {
     MemoryDataService,
     DataService,
     DataSerializer,
+    ModelSerializer,
 } from '../../src';
 import { BroadcastNode } from '../../src/nodes/shapes/BroadcastNode';
 import { PlaceholderNode } from '../../src/nodes/_internal/PlaceholderNode';
@@ -28,16 +29,16 @@ import { DummySensorObject } from '../mock/data/object/DummySensorObject';
 describe('Model', () => {
     describe('serializer', () => {
         it('should serialize a model', (done) => {
+             
             ModelBuilder.create()
                 .from()
                 .to()
                 .build()
                 .then((model) => {
-                    const serialized = DataSerializer.serialize(model);
-                    console.log(serialized);
-                    console.log(JSON.stringify(serialized, undefined, 2));
-                    const deserialized = DataSerializer.deserialize(serialized);
-                    console.log(deserialized);
+                    // const serialized = ModelSerializer.serialize(model);
+                    // console.log(serialized)
+                    // const deserialized = ModelSerializer.deserialize(serialized);
+                    // console.log(deserialized)
                     done();
                 }).catch(done);
         }).timeout(60000);

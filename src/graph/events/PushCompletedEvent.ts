@@ -5,4 +5,4 @@ import { PushEvent } from './PushEvent';
  *
  * @category Graph
  */
-export class PushCompletedEvent extends PushEvent {}
+export interface PushCompletedEvent extends PushEvent {}

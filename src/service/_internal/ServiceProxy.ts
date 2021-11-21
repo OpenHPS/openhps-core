@@ -4,6 +4,8 @@ export class ServiceProxy<S extends Service> extends Service implements ProxyHan
     get?(target: S, p: PropertyKey): any {
         if (p === 'target') {
             return target;
+        } else if (p === 'constructor') {
+            return target.constructor;
         } else if (typeof (target as any)[p] === 'function') {
             return this.createHandler(target, p);
         }

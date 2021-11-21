@@ -31,8 +31,8 @@ export function updateSerializableMember(target: unknown, propertyKey: string, o
     ) {
         const meta = JsonObjectMetadata.ensurePresentInPrototype(target);
         const existingOptions = meta.dataMembers.get(options ? options.name || propertyKey : propertyKey);
-        existingOptions.deserializer = (json) => DataSerializer.deserialize(json);
-        existingOptions.serializer = (obj) => DataSerializer.serialize(obj);
+        existingOptions.serializer = (object) => DataSerializer.serialize(object);
+        existingOptions.deserializer = (objectJson) => DataSerializer.deserialize(objectJson);
         existingOptions.type = () => AnyT;
     }
 }
