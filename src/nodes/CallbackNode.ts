@@ -6,13 +6,14 @@ import { Node, NodeOptions } from '../Node';
  * @category Node
  */
 export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
-    public pushCallback: (frame: InOut | InOut[], options?: PushOptions) => Promise<void> | void;
-    public pullCallback: (options?: PullOptions) => InOut | InOut[] | Promise<InOut | InOut[]>;
+    pushCallback: (frame: InOut | InOut[], options?: PushOptions) => Promise<void> | void;
+    pullCallback: (options?: PullOptions) => InOut | InOut[] | Promise<InOut | InOut[]>;
+    protected options: CallbackNodeOptions;
 
     constructor(
         pushCallback: (frame: InOut | InOut[]) => void = () => true,
         pullCallback: () => InOut | InOut[] = () => null,
-        options?: NodeOptions,
+        options?: CallbackNodeOptions,
     ) {
         super(options);
         this.pushCallback = pushCallback;
@@ -26,7 +27,11 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
         return new Promise<void>((resolve, reject) => {
             Promise.resolve(this.pushCallback(frame, options))
                 .then(() => {
-                    return Promise.all(this.outlets.map((outlet) => outlet.push(frame, options as GraphOptions)));
+                    if (this.options.autoPush) {
+                        return Promise.all(this.outlets.map((outlet) => outlet.push(frame, options as GraphOptions)));
+                    } else {
+                        resolve();
+                    }
                 })
                 .then(() => {
                     resolve();
@@ -58,4 +63,14 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
                 .catch(reject);
         });
     }
+}
+
+export interface CallbackNodeOptions extends NodeOptions {
+    /**
+     * Automatically push data frames. If set to false it is expected that the
+     * callback handles the pushing.
+     *
+     * @default true
+     */
+    autoPush?: boolean;
 }

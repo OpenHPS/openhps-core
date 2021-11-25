@@ -11,6 +11,7 @@ import {
 } from '../../../src';
 import * as path from 'path';
 import { KeyValueDataService } from '../../../src/service/KeyValueDataService';
+import { TimeConsumingNode } from '../../mock/nodes/TimeConsumingNode';
 
 describe('WorkerNode', () => {
     // Overhead in ms
@@ -256,6 +257,33 @@ describe('WorkerNode', () => {
                         ));
                         builder.via(new TimeConsumingNode());
                     },
+                    {
+                        directory: __dirname,
+                        poolSize: 1,
+                    },
+                ),
+            )
+            .to(new CallbackSinkNode((data: DataFrame) => {}))
+            .build()
+            .then((m) => {
+                model = m;
+                model.once('completed', (event) => {
+                    model.destroy();
+                    done();
+                });
+                model.push(new DataFrame(new DataObject('mvdewync')));
+            });
+    })
+        .slow(5000)
+        .timeout(60000);
+
+    it('should support node serialization', (done) => {
+        let model;
+        ModelBuilder.create()
+            .from()
+            .via(
+                new WorkerNode(
+                    new TimeConsumingNode(),
                     {
                         directory: __dirname,
                         poolSize: 1,
