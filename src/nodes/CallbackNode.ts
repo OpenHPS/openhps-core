@@ -21,6 +21,8 @@ export class CallbackNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
+
+        this.options.autoPush = this.options.autoPush || true;
     }
 
     private _onPush(frame: InOut | InOut[], options?: PushOptions): Promise<void> {

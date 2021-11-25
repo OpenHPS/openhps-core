@@ -16,6 +16,8 @@ import {
     DataService,
     DummyDataService,
     DummyService,
+    Node,
+    ModelSerializer,
 } from '..'; // external @openhps/core
 import { WorkerData } from './WorkerData';
 
@@ -40,8 +42,9 @@ export class WorkerBase {
             __dirname = config.directory;
             // Load external scripts
             if (config.imports && config.imports.length > 0) {
+                const importFn = require === undefined ? importScripts : require;
                 config.imports.forEach((importFile) => {
-                    importScripts(importFile);
+                    importFn(importFile);
                 });
             }
 
@@ -77,7 +80,10 @@ export class WorkerBase {
             const path = this.config.imports.length > 0 ? undefined : require('path');
 
             if (this.config.serialized) {
-                
+                const traversalBuilder = modelBuilder.from();
+                const modelOrNode = ModelSerializer.deserializeNode(this.config.serialized);
+                traversalBuilder.via(modelOrNode as Node<any, any>);
+                traversalBuilder.to();
             } else if (this.config.builder) {
                 const traversalBuilder = modelBuilder.from();
                 // eslint-disable-next-line

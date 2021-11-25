@@ -10,21 +10,33 @@ export class ModelSerializer {
     private static _modules = new Set();
 
     static serialize(model: Model): SerializedModel & any {
-        this._initialize();
-
-        return DataSerializer.serialize(model);
+        return this.serializeNode(model as ModelGraph<any, any>);
     }
 
-    public static deserialize<In extends DataFrame, Out extends DataFrame>(model: SerializedModel): Model<In, Out> {
+    static serializeNode(node: Node<any, any>): any {
         this._initialize();
+        return DataSerializer.serialize(node);
+    }
 
-        return DataSerializer.deserialize(model, ModelGraph) as Model<any, Out>;
+    static deserialize<In extends DataFrame, Out extends DataFrame>(model: SerializedModel): Model<In, Out> {
+        return this.deserializeNode(model) as ModelGraph<In, Out> as Model<In, Out>;
+    }
+
+    static deserializeNode<In extends DataFrame, Out extends DataFrame>(node: any): Node<In, Out> {
+        this._initialize();
+        return DataSerializer.deserialize(node) as Node<any, Out>;
     }
 
     private static _loadClasses(module: NodeModule = require.main): void {
+        if (module === undefined) {
+            // Use cache instead
+            Object.values(require.cache).map((m) => this._loadClasses(m));
+            return;
+        }
         this._modules.add(module.id);
         Object.keys(module.exports).forEach((key) => {
             const childModule = module.exports[key];
+
             if (childModule && childModule.prototype instanceof Node) {
                 this.NODES.set(key, {
                     constructor: childModule,

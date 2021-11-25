@@ -277,7 +277,7 @@ describe('WorkerNode', () => {
         .slow(5000)
         .timeout(60000);
 
-    it('should support node serialization', (done) => {
+    it('should support node workerserialization', (done) => {
         let model;
         ModelBuilder.create()
             .from()
@@ -287,6 +287,12 @@ describe('WorkerNode', () => {
                     {
                         directory: __dirname,
                         poolSize: 1,
+                        imports: [
+                            path.join(
+                                __dirname,
+                                '../../mock/nodes/TimeConsumingNode',
+                            )
+                        ]
                     },
                 ),
             )
