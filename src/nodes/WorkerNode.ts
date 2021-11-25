@@ -1,4 +1,4 @@
-import { DataFrame } from '../data';
+import { DataFrame, DataSerializer } from '../data';
 import { Node, NodeOptions } from '../Node';
 import { GraphShapeBuilder } from '../graph/builders/GraphBuilder';
 import { ModelBuilder } from '../ModelBuilder';
@@ -46,6 +46,7 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
     protected config: any = {};
     protected handler: WorkerHandler;
 
+    constructor(node: Node<In, Out>, options?: WorkerNodeOptions);
     constructor(
         builderCallback: (
             builder: GraphShapeBuilder<ModelBuilder<any, any>>,
@@ -55,10 +56,13 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         options?: WorkerNodeOptions,
     );
     constructor(file: string, options?: WorkerNodeOptions);
-    constructor(worker: ((...args: any[]) => void) | string, options?: WorkerNodeOptions) {
+    constructor(worker: ((...args: any[]) => void) | string | Node<In, Out>, options?: WorkerNodeOptions) {
         super(options);
         this.options.worker = this.options.worker || '../worker/WorkerRunner';
-        if (worker instanceof Function) {
+        if (worker instanceof Node) {
+            // Serializable node
+            this.config.serialized = DataSerializer.serialize(worker);
+        } else if (worker instanceof Function) {
             // Code
             this.config.builder = worker.toString();
             if (this.options.typescript) {

@@ -4,6 +4,7 @@ export interface WorkerData {
         dataType?: string;
     }>;
     builder?: string;
+    serialized?: any;
     shape?: string;
     imports?: string[];
     directory?: string;

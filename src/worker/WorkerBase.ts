@@ -76,7 +76,9 @@ export class WorkerBase {
             // eslint-disable-next-line
             const path = this.config.imports.length > 0 ? undefined : require('path');
 
-            if (this.config.builder) {
+            if (this.config.serialized) {
+                
+            } else if (this.config.builder) {
                 const traversalBuilder = modelBuilder.from();
                 // eslint-disable-next-line
                 const builderCallback = eval(this.config.builder);
