@@ -9,6 +9,7 @@ import { SerializableMember, SerializableObject } from '../decorators';
 import { TimeService } from '../../service/TimeService';
 import { Accuracy } from '../values/Accuracy';
 import { Accuracy1D } from '../values/Accuracy1D';
+import { DistanceFn, EUCLIDEAN } from '../../utils';
 
 /**
  * An absolute position of a [[DataObject]].
@@ -169,9 +170,12 @@ export abstract class AbsolutePosition implements Position<LengthUnit> {
      * Get the distance from this location to a destination
      *
      * @param {AbsolutePosition} destination Destination location
+     * @param {DistanceFn} [distanceFunction] Distance function to use (default EUCLIDEAN distance)
      * @returns {number} Distance between this point and destination
      */
-    abstract distanceTo(destination: this): number;
+    distanceTo(destination: this, distanceFunction: DistanceFn = EUCLIDEAN): number {
+        return distanceFunction(this.toVector3().toArray(), destination.toVector3().toArray());
+    }
 
     equals(position: this): boolean {
         return this.toVector3(this.unit).equals(position.toVector3(this.unit));

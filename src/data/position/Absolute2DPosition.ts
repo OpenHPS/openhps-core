@@ -59,16 +59,6 @@ export class Absolute2DPosition extends AbsolutePosition {
         return this.vector.angleTo(destination.vector);
     }
 
-    /**
-     * Get the distance from this location to a destination
-     *
-     * @param {Absolute2DPosition} destination Destination location
-     * @returns {number} Distance between this point and destination
-     */
-    distanceTo(destination: Absolute2DPosition): number {
-        return this.vector.distanceTo(destination.vector);
-    }
-
     fromVector(vector: Vector2 | Vector3, unit?: LengthUnit): this {
         if (unit) {
             this.x = unit.convert(vector.x, this.unit);

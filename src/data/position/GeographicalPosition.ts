@@ -2,7 +2,7 @@ import { AngleUnit } from '../../utils/unit/AngleUnit';
 import { LengthUnit } from '../../utils/unit/LengthUnit';
 import { SerializableObject, SerializableMember } from '../decorators';
 import { Absolute3DPosition } from './Absolute3DPosition';
-import { GCS, Unit, Vector3 } from '../../utils';
+import { GCS, HAVERSINE, Unit, Vector3 } from '../../utils';
 
 /**
  * Geographical WGS 84 position stored as an 3D vector in ISO 6709.
@@ -67,15 +67,7 @@ export class GeographicalPosition extends Absolute3DPosition {
      * @returns {number} Distance between this point and destination
      */
     distanceTo(destination: GeographicalPosition): number {
-        const latRadA = AngleUnit.DEGREE.convert(this.latitude, AngleUnit.RADIAN);
-        const latRadB = AngleUnit.DEGREE.convert(destination.latitude, AngleUnit.RADIAN);
-        const deltaLat = AngleUnit.DEGREE.convert(destination.latitude - this.latitude, AngleUnit.RADIAN);
-        const deltaLon = AngleUnit.DEGREE.convert(destination.longitude - this.longitude, AngleUnit.RADIAN);
-        const a =
-            Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-            Math.cos(latRadA) * Math.cos(latRadB) * Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return GCS.EARTH_RADIUS * c;
+        return super.distanceTo(destination as this, HAVERSINE);
     }
 
     /**
