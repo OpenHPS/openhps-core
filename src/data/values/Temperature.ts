@@ -1,4 +1,4 @@
-import { TemperatureUnit } from '../../utils';
+import { TemperatureUnit } from '../../utils/unit';
 import { SerializableObject } from '../decorators';
 import { SensorValue } from './SensorValue';
 
@@ -6,7 +6,7 @@ import { SensorValue } from './SensorValue';
  * @category Sensor Value
  */
 @SerializableObject()
-export class Temperature extends SensorValue {
+export class Temperature extends SensorValue<TemperatureUnit> {
     constructor(value = 0, unit = TemperatureUnit.CELCIUS) {
         super(value, undefined, undefined, unit, TemperatureUnit.CELCIUS);
     }

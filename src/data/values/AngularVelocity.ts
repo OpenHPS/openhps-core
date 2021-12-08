@@ -6,7 +6,7 @@ import { SensorValue } from './SensorValue';
  * @category Sensor Value
  */
 @SerializableObject()
-export class AngularVelocity extends SensorValue {
+export class AngularVelocity extends SensorValue<AngularVelocityUnit> {
     constructor(x?: number, y?: number, z?: number, unit = AngularVelocityUnit.RADIAN_PER_SECOND) {
         super(x, y, z, unit, AngularVelocityUnit.RADIAN_PER_SECOND);
     }

@@ -18,7 +18,7 @@ export class SensorValue<U extends Unit = Unit> extends Vector3 {
         isRequired: false,
     })
     accuracy!: Accuracy<U, Vector3 | number>;
-    private _defaultUnit: U;
+    private _defaultUnit?: U;
 
     constructor(
         x?: number,

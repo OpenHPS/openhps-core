@@ -5,6 +5,8 @@ export * from './Acceleration';
 export * from './Magnetism';
 export * from './SensorValue';
 export * from './Temperature';
+export * from './Humidity';
+export * from './Pressure';
 
 export * from './Accuracy';
 export * from './Accuracy1D';
