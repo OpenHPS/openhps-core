@@ -66,7 +66,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
         this.on('pull', this._onPull.bind(this));
 
         if (this.source) {
-            this.once('build', this._initRegisterService.bind(this));
+            this.once('build', this.registerService.bind(this));
         }
     }
 
@@ -79,7 +79,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
         return this.options.source;
     }
 
-    private _initRegisterService(): Promise<void> {
+    protected registerService(): Promise<void> {
         return new Promise<void>((resolve) => {
             const service = this.model.findDataService(this.source);
             // Update source when modified
