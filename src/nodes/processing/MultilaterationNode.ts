@@ -17,6 +17,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
         super(RelativeDistance, options);
         this.options.incrementStep = this.options.incrementStep || 1;
         this.options.minReferences = this.options.minReferences || 1;
+        this.options.nlsFunction = this.options.nlsFunction || this.nls;
     }
 
     processRelativePositions<P extends AbsolutePosition>(
@@ -92,7 +93,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                         .catch(reject);
                     break;
                 default:
-                    position = this.nls(spheres) as P;
+                    position = this.options.nlsFunction(spheres) as P;
                     position.timestamp = dataFrame.createdTimestamp;
                     position.accuracy = new Accuracy1D(
                         spheres.map((s) => s.accuracy).reduce((a, b) => a.valueOf() + b.valueOf()) / spheres.length,
@@ -432,4 +433,10 @@ export interface MultilaterationOptions extends ObjectProcessingNodeOptions {
      * @default undefined
      */
     maxReferences?: number;
+    /**
+     * Nonlinear Least Squares function
+     *
+     * @default nelder-mead
+     */
+    nlsFunction?: (spheres: Array<Sphere<any>>) => AbsolutePosition;
 }

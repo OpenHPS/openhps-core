@@ -6,9 +6,8 @@ import { SerializableObject } from '../../data/decorators';
  */
 @SerializableObject()
 export class LuminanceIntensityUnit extends Unit {
-    static readonly CANDELA: LuminanceUnit = new LuminanceUnit('candela', {
-        baseName: 'pressure',
-        aliases: ['P'],
-        prefixes: 'decimal',
+    static readonly CANDELA: LuminanceIntensityUnit = new LuminanceIntensityUnit('candela', {
+        baseName: 'luminanceintensity',
+        aliases: ['cd'],
     });
 }
