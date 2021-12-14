@@ -17,7 +17,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
         super(RelativeDistance, options);
         this.options.incrementStep = this.options.incrementStep || 1;
         this.options.minReferences = this.options.minReferences || 1;
-        this.options.nlsFunction = this.options.nlsFunction || this.nls;
+        this.options.nlsFunction = this.options.nlsFunction || this.nls.bind(this);
     }
 
     processRelativePositions<P extends AbsolutePosition>(
