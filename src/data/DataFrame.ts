@@ -60,11 +60,6 @@ export class DataFrame {
         name: 'objects',
     })
     private _objects: Map<string, DataObject> = new Map();
-    /**
-     * Raw sensor data
-     */
-    @SerializableMember()
-    protected sensorData: Map<string, any> = new Map();
 
     /**
      * Create a new data frame
