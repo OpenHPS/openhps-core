@@ -270,8 +270,8 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
         newPoint.fromVector(
             pointA
                 .toVector3()
-                .multiplyScalar(sphereA.radius)
-                .add(pointB.toVector3().multiplyScalar(sphereB.radius))
+                .multiplyScalar(sphereB.radius)
+                .add(pointB.toVector3().multiplyScalar(sphereA.radius))
                 .divideScalar(sphereA.radius + sphereB.radius),
         );
         return newPoint;

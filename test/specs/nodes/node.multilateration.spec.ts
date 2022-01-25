@@ -75,6 +75,25 @@ describe('MultilaterationNode', () => {
         model.once('error', done);
         model.push(frame);
     });
+    
+    it('should work with 2 reference positions with two distances (2d)', (done) => {
+        sink.callback = (frame: DataFrame) => {
+            expect(frame.source.uid).to.eql('dummy');
+            expect(frame.source.position).to.not.be.undefined;
+            expect(frame.source.position.toVector3().x).to.eql(1);
+            expect(frame.source.position.toVector3().y).to.eql(0);
+            expect(frame.source.position.accuracy.valueOf()).to.eql(1);
+            done();
+        };
+        const object = new DataObject('dummy');
+        object.addRelativePosition(new RelativeDistance('1', 1));
+        object.addRelativePosition(new RelativeDistance('2', 3));
+        const frame = new DataFrame(object);
+        frame.addObject(new DataObject('1').setPosition(new Absolute2DPosition(0, 0)));
+        frame.addObject(new DataObject('2').setPosition(new Absolute2DPosition(4, 0)));
+        model.once('error', done);
+        model.push(frame);
+    });
 
     it('should work with 2 reference positions (geographical)', (done) => {
         sink.callback = (frame: DataFrame) => {
