@@ -186,7 +186,7 @@ describe('dataset liwste2017', () => {
                             expect(calculatedPosition).to.not.be.undefined;
 
                             // Accuracy
-                            expect(calculatedPosition.distanceTo(expectedPosition)).to.be.lessThan(65);
+                            expect(calculatedPosition.distanceTo(expectedPosition)).to.be.lessThan(72);
 
                             done();
                         }

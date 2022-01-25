@@ -329,10 +329,9 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
         return new Promise<P>((resolve) => {
             const maxIterations = this.options.maxIterations || 900;
             const v = spheres.map((p) => p.center);
-            const ex = v[1].clone().sub(v[0]).clone().divideScalar(v[1].length());
-            const i = ex.dot(v[2].clone().sub(v[0]));
-            const a = v[2].clone().sub(v[0]).sub(ex.clone().multiplyScalar(i));
-            const ey = a.clone().divideScalar(a.length());
+            const ex = v[1].clone().sub(v[0]).normalize();
+            const i = ex.clone().dot(v[2].clone().sub(v[0]));
+            const ey = v[2].clone().sub(v[0]).sub(ex.clone().multiplyScalar(i)).normalize();
             const ez = ex.clone().cross(ey);
             const d = v[1].clone().sub(v[0]).length();
             const j = ey.clone().dot(v[2].clone().sub(v[0]));
@@ -342,9 +341,9 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
             let BX = spheres[1].radius;
             let CX = spheres[2].radius;
 
-            let b = -1;
             let x = 0;
             let y = 0;
+            let b = -1;
             let iteration = 0;
             do {
                 x = (Math.pow(AX, 2) - Math.pow(BX, 2) + Math.pow(d, 2)) / (2 * d);
@@ -356,12 +355,8 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                 BX += this.options.incrementStep;
                 CX += this.options.incrementStep;
                 iteration++;
-            } while (b < 0 && iteration < maxIterations);
-            const z = Math.sqrt(b);
-            if (isNaN(z)) {
-                return resolve(undefined);
-            }
-
+            } while (b < -1e-10 && iteration < maxIterations);
+            const z = Math.sqrt(b) || 0;
             const point = spheres[0].position.clone();
             point.fromVector(
                 v[0].clone().add(ex.multiplyScalar(x)).add(ey.multiplyScalar(y)).add(ez.multiplyScalar(z)),

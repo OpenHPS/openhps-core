@@ -204,7 +204,7 @@ describe('dataset liwste2017 (reverse beacons)', () => {
                             expect(calculatedLocation).to.not.be.undefined;
 
                             // Accuracy
-                            expect(calculatedLocation.distanceTo(expectedLocation)).to.be.lessThan(65);
+                            expect(calculatedLocation.distanceTo(expectedLocation)).to.be.lessThan(72);
                             done();
                         }
                     });
