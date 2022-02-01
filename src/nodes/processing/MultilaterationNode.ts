@@ -78,20 +78,23 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                     dataObject.setPosition(position);
                     return resolve(dataObject);
                 case 3:
-                    this.trilaterate(spheres)
-                        .then((position) => {
-                            if (position) {
-                                position.timestamp = dataFrame.createdTimestamp;
-                                position.accuracy = new Accuracy1D(
-                                    spheres.map((s) => s.accuracy).reduce((a, b) => a.valueOf() + b.valueOf()) /
-                                        spheres.length,
-                                );
-                                dataObject.setPosition(position);
-                            }
-                            resolve(dataObject);
-                        })
-                        .catch(reject);
-                    break;
+                    if (!this.options.preferNls) {
+                        this.trilaterate(spheres)
+                            .then((position) => {
+                                if (position) {
+                                    position.timestamp = dataFrame.createdTimestamp;
+                                    position.accuracy = new Accuracy1D(
+                                        spheres.map((s) => s.accuracy).reduce((a, b) => a.valueOf() + b.valueOf()) /
+                                            spheres.length,
+                                    );
+                                    dataObject.setPosition(position);
+                                }
+                                resolve(dataObject);
+                            })
+                            .catch(reject);
+                        break;
+                    }
+                // eslint-disable-next-line
                 default:
                     position = this.options.nlsFunction(spheres) as P;
                     position.timestamp = dataFrame.createdTimestamp;
@@ -434,4 +437,8 @@ export interface MultilaterationOptions extends ObjectProcessingNodeOptions {
      * @default nelder-mead
      */
     nlsFunction?: (spheres: Array<Sphere<any>>) => AbsolutePosition;
+    /**
+     * Prefer non linear least squares
+     */
+    preferNls?: boolean;
 }

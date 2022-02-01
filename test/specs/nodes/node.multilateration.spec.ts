@@ -2,10 +2,12 @@ import { expect } from 'chai';
 import 'mocha';
 import {
     Absolute2DPosition,
+    Absolute3DPosition,
     CallbackSinkNode,
     DataFrame,
     DataObject,
     GeographicalPosition,
+    LengthUnit,
     Model,
     ModelBuilder,
     MultilaterationNode,
@@ -149,9 +151,9 @@ describe('MultilaterationNode', () => {
         object.addRelativePosition(new RelativeDistance('2', 5));
         object.addRelativePosition(new RelativeDistance('3', 3));
         const frame = new DataFrame(object);
-        frame.addObject(new DataObject('1').setPosition(new Absolute2DPosition(0, 3)));
-        frame.addObject(new DataObject('2').setPosition(new Absolute2DPosition(0, 0)));
-        frame.addObject(new DataObject('3').setPosition(new Absolute2DPosition(4, 0)));
+        frame.addObject(new DataObject('1').setPosition(new Absolute3DPosition(0, 3)));
+        frame.addObject(new DataObject('2').setPosition(new Absolute3DPosition(0, 0)));
+        frame.addObject(new DataObject('3').setPosition(new Absolute3DPosition(4, 0)));
         model.once('error', done);
         model.push(frame);
     });
@@ -199,4 +201,5 @@ describe('MultilaterationNode', () => {
         model.once('error', done);
         model.push(frame);
     });
+
 });
