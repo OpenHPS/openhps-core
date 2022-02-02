@@ -52,9 +52,9 @@ export abstract class RemoteService extends Service {
      *
      * @param {string} uid UID of the node
      * @param {DataFrame | any} frame Data frame
-     * @param {PushOptions} options Push options
+     * @param {RemotePushOptions} options Push options
      */
-    localPush(uid: string, frame: any | DataFrame, options?: PushOptions): void {
+    localPush(uid: string, frame: any | DataFrame, options?: RemotePushOptions): void {
         options = options || {};
         if (this.nodes.has(uid)) {
             // Parse frame and options
@@ -67,9 +67,9 @@ export abstract class RemoteService extends Service {
      * Local positioning model pull
      *
      * @param {string} uid UID of the node
-     * @param {PullOptions} options Pull options
+     * @param {RemotePullOptions} options Pull options
      */
-    localPull(uid: string, options?: PullOptions): void {
+    localPull(uid: string, options?: RemotePullOptions): void {
         options = options || {};
         if (this.nodes.has(uid)) {
             this.model.findNodeByUID(uid).emit('localpull', options);
@@ -109,9 +109,13 @@ export abstract class RemoteService extends Service {
      *
      * @param {string} uid Remote Node UID
      * @param {DataFrame} frame Data frame to push
-     * @param {PushOptions} [options] Push options
+     * @param {RemotePushOptions} [options] Push options
      */
-    abstract remotePush<T extends DataFrame | DataFrame[]>(uid: string, frame: T, options?: PushOptions): Promise<void>;
+    abstract remotePush<T extends DataFrame | DataFrame[]>(
+        uid: string,
+        frame: T,
+        options?: RemotePushOptions,
+    ): Promise<void>;
 
     /**
      * Send a pull request to a specific remote node
@@ -218,4 +222,24 @@ export class RemoteServiceProxy<T extends Service = Service, S extends RemoteSer
 export interface RemoteServiceOptions {
     uid: string;
     service?: Constructor<RemoteService>;
+}
+
+export interface RemotePullOptions extends PullOptions {
+    /**
+     * Client identifier pulling
+     */
+    clientId?: string;
+}
+
+export interface RemotePushOptions extends PushOptions {
+    /**
+     * Client identifier pushing
+     */
+    clientId?: string;
+    /**
+     * Broadcast the pushed data frame to all clients
+     *
+     * @default true
+     */
+    broadcast?: boolean;
 }

@@ -3,7 +3,7 @@ import { PullOptions, PushOptions } from '../graph/options';
 import { PushCompletedEvent, PushError } from '../graph/events';
 import { Model } from '../Model';
 import { Node, NodeOptions } from '../Node';
-import { RemoteService } from '../service/RemoteService';
+import { RemoteService, RemotePushOptions, RemotePullOptions } from '../service/RemoteService';
 import { Serializable } from '../data/decorators';
 
 /**
@@ -43,7 +43,10 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
     private _onPush(frame: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve) => {
             // Send push to clients
-            this.service.remotePush(this.uid, frame, options);
+            this.service.remotePush(this.uid, frame, {
+                ...options,
+                ...this.options,
+            });
             resolve();
         });
     }
@@ -56,14 +59,14 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
         });
     }
 
-    private _onLocalPush(frame: In | In[], options?: PushOptions): Promise<void> {
+    private _onLocalPush(frame: In | In[], options?: RemotePushOptions): Promise<void> {
         return new Promise<void>((resolve) => {
             this.outlets.forEach((outlet) => outlet.push(frame as any, options));
             resolve();
         });
     }
 
-    private _onLocalPull(options?: PullOptions): Promise<void> {
+    private _onLocalPull(options?: RemotePullOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             Promise.all(this.inlets.map((inlet) => inlet.pull(options)))
                 .then(() => {
@@ -89,5 +92,10 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
 }
 
 export interface RemoteNodeOptions<S extends RemoteService> extends NodeOptions {
+    /**
+     * Service to use for the remote note
+     *
+     * @default RemoteService any remote service
+     */
     service?: Serializable<S>;
 }
