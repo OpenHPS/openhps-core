@@ -42,7 +42,7 @@ export abstract class DataService<I, T> extends Service {
         this.once('build', () => {
             this.driver.model = this.model;
             this.driver.logger = this.logger;
-            this.driver.emitAsync('build');
+            return this.driver.emitAsync('build');
         });
         this.once('destroy', () => this.driver.emitAsync('destroy'));
     }
