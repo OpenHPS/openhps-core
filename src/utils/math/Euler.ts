@@ -53,12 +53,29 @@ export class Euler extends THREE.Euler {
         return euler;
     }
 
+    /**
+     * Convert the Euler angles to a vector
+     *
+     * @param {AngleUnit} [unit] Angle unit to use in vector
+     * @returns {Vector3} Vector output of Euler angles
+     */
     public toVector(unit: AngleUnit = AngleUnit.RADIAN): Vector3 {
         return new Vector3(
             AngleUnit.RADIAN.convert(this.x, unit),
             AngleUnit.RADIAN.convert(this.y, unit),
             AngleUnit.RADIAN.convert(this.z, unit),
         );
+    }
+
+    /**
+     * Convert the Euler angles to a vector
+     *
+     * @deprecated use [[toVector]]
+     * @param {AngleUnit} [unit] Angle unit to use in vector
+     * @returns {Vector3} Vector output of Euler angles
+     */
+    public toVector3(unit?: AngleUnit): Vector3 {
+        return this.toVector(unit);
     }
 
     /**

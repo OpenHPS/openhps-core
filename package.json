@@ -31,6 +31,11 @@
       "require": "./dist/cjs/index.js",
       "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
+    },
+    "./internal": {
+      "require": "./dist/cjs/index.internal.js",
+      "import": "./dist/esm/index.internal.js",
+      "types": "./dist/types/index.internal.d.ts"
     }
   },
   "files": [
@@ -100,7 +105,7 @@
     "@types/chai": "^4.2.22",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.6",
-    "@types/three": "^0.133.1",
+    "@types/three": "^0.138.0",
     "@types/uuid": "^8.3.1",
     "@typescript-eslint/eslint-plugin": "^5.2.0",
     "@typescript-eslint/parser": "^5.2.0",
@@ -124,7 +129,7 @@
     "size-limit": "^6.0.4",
     "standard-version": "^9.3.2",
     "terser-webpack-plugin": "^5.2.4",
-    "three": "^0.134.0",
+    "three": "^0.139.0",
     "ts-node": "^10.4.0",
     "typedoc": "^0.22.7",
     "typescript": "^4.4.4",
