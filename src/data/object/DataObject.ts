@@ -123,7 +123,7 @@ export class DataObject {
     /**
      * Set the unique identifier of this object
      *
-     * @param {string} uid Unique Identifier 
+     * @param {string} uid Unique Identifier
      * @returns {DataObject} Data object instance
      */
     setUID(uid: string): this {
