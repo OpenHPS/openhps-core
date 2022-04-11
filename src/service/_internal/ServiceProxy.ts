@@ -18,8 +18,8 @@ export class ServiceProxy<S extends Service> extends Service implements ProxyHan
     }
 
     createHandler(target: S, p: PropertyKey): (...args: any[]) => any {
+        const key = p as string;
         return (...args: any[]) => {
-            const key = p as string;
             if (key !== 'emit' && key !== 'emitAsync' && key !== 'on' && key !== 'once') {
                 target.emit(key, ...args);
             }

@@ -2,16 +2,18 @@ import { Constructor, DataServiceOptions, FilterQuery, FindOptions, MemoryDataSe
 
 export class SlowMemoryDataService<I, T> extends MemoryDataService<I, T> {
     protected _data: Map<I, any> = new Map();
+    protected options: SlowMemoryDataServiceOptions<T>;
 
-    constructor(dataType: Constructor<T>, options?: DataServiceOptions<T>) {
+    constructor(dataType: Constructor<T>, options?: SlowMemoryDataServiceOptions<T>) {
         super(dataType, options);
+        this.options.timeout = this.options.timeout ?? 200;
     }
 
     public findByUID(uid: I): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             setTimeout(() => {
                 super.findByUID(uid).then(resolve).catch(reject);
-            }, 200);
+            }, this.options.timeout);
         });
     }
 
@@ -19,7 +21,7 @@ export class SlowMemoryDataService<I, T> extends MemoryDataService<I, T> {
         return new Promise<T>((resolve, reject) => {
             setTimeout(() => {
                 super.findOne(query, options).then(resolve).catch(reject);
-            }, 200);
+            }, this.options.timeout);
         });
     }
 
@@ -27,7 +29,7 @@ export class SlowMemoryDataService<I, T> extends MemoryDataService<I, T> {
         return new Promise<T[]>((resolve, reject) => {
             setTimeout(() => {
                 super.findAll(query, options).then(resolve).catch(reject);
-            }, 200);
+            }, this.options.timeout);
         });
     }
 
@@ -35,7 +37,7 @@ export class SlowMemoryDataService<I, T> extends MemoryDataService<I, T> {
         return new Promise<T>((resolve, reject) => {
             setTimeout(() => {
                 super.insert(id, object).then(resolve).catch(reject);
-            }, 200);
+            }, this.options.timeout);
         });
     }
 
@@ -43,7 +45,7 @@ export class SlowMemoryDataService<I, T> extends MemoryDataService<I, T> {
         return new Promise<void>((resolve, reject) => {
             setTimeout(() => {
                 super.delete(id).then(resolve).catch(reject);
-            }, 200);
+            }, this.options.timeout);
         });
     }
 
@@ -51,7 +53,7 @@ export class SlowMemoryDataService<I, T> extends MemoryDataService<I, T> {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 super.count(filter).then(resolve).catch(reject);
-            }, 200);
+            }, this.options.timeout);
         });
     }
 
@@ -59,7 +61,11 @@ export class SlowMemoryDataService<I, T> extends MemoryDataService<I, T> {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 super.deleteAll(filter).then(resolve).catch(reject);
-            }, 200);
+            }, this.options.timeout);
         });
     }
+}
+
+export interface SlowMemoryDataServiceOptions<T> extends DataServiceOptions<T> {
+    timeout?: number;
 }

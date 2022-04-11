@@ -1,4 +1,4 @@
-import { DataObject, Absolute2DPosition, MemoryDataService, TrajectoryService, Trajectory, ModelBuilder, CallbackSinkNode, DataFrame, Model } from '../../../src';
+import { DataObject, Absolute2DPosition, TrajectoryService, Trajectory, ModelBuilder, CallbackSinkNode, DataFrame, Model } from '../../../src';
 import { expect } from 'chai';
 import 'mocha';
 import { SlowMemoryDataService } from '../../mock/services/SlowMemoryDataService';
@@ -83,7 +83,7 @@ describe('TrajectoryService', () => {
         // Create position model
         let model: Model;
         ModelBuilder.create()
-            .addService(new TrajectoryService(new MemoryDataService(Trajectory), {
+            .addService(new TrajectoryService(new SlowMemoryDataService(Trajectory), {
                 dataService: DataObject // If you want to store trajectory of BLEObject, use BLEObject
             }))
             .from()
@@ -91,6 +91,9 @@ describe('TrajectoryService', () => {
                 // The trajectory service will automatically store
                 // the position when the object is stored in the DataObjectService
                 // (i.e. when reaching a sink)
+
+                // Downside: this can cause race conditions if frames are pushed too fast
+                // check autobind=false with a custom sink for solving this issue
             }))
             .build().then(m => {
                 model = m;
@@ -112,7 +115,13 @@ describe('TrajectoryService', () => {
                     pushPromise = pushPromise.then(
                         () =>
                             new Promise((next) => {
-                                model.push(new DataFrame(object)).then(next);
+                                const frame = new DataFrame(object);
+                                model.push(frame);
+                                model.onceCompleted(frame.uid).then(() => {
+                                    setTimeout(() => {
+                                        next();
+                                    }, 500); // Avoid race conditions
+                                });
                             }),
                     );
                 }
@@ -133,7 +142,7 @@ describe('TrajectoryService', () => {
         // Create position model
         let model: Model;
         ModelBuilder.create()
-            .addService(new TrajectoryService(new MemoryDataService(Trajectory), {
+            .addService(new TrajectoryService(new SlowMemoryDataService(Trajectory), {
                 dataService: DataObject, // If you want to store trajectory of BLEObject, use BLEObject
                 autoBind: false // You manually have to "appendPosition" in a sink
             }))
@@ -161,7 +170,9 @@ describe('TrajectoryService', () => {
                     pushPromise = pushPromise.then(
                         () =>
                             new Promise((next) => {
-                                model.push(new DataFrame(object)).then(next);
+                                const frame = new DataFrame(object);
+                                model.push(frame);
+                                model.onceCompleted(frame.uid).then(() => next());
                             }),
                     );
                 }
@@ -177,4 +188,66 @@ describe('TrajectoryService', () => {
             }).catch(done);
     });
 
+    it('should support a practical example with a custom sink and autobind=false', (done) => {
+        // Create position model
+        let model: Model;
+        ModelBuilder.create()
+            .addService(new TrajectoryService(new SlowMemoryDataService(Trajectory), {
+                autoBind: false,
+                dataService: DataObject
+            }))
+            .from()
+            .to(new CallbackSinkNode(function(frame: DataFrame) {
+                return new Promise((resolve, reject) => {
+                    // The trajectory service will not store automatically
+
+                    const service: TrajectoryService = this.model.findDataService(Trajectory);
+                    // Append the position (similar to autoBind=true)
+                    // service.appendPosition(frame.source);
+
+                    // Append the position with a custom UID for the trajectory
+                    service.appendPosition(frame.source, frame.source.uid + "_movement").then(() => {
+                        resolve();
+                    }).catch(reject);
+                });
+            }))
+            .build().then(m => {
+                model = m;
+                let pushPromise = Promise.resolve();
+                // Delete all data from previous tests
+                pushPromise = pushPromise.then(
+                    () =>
+                        new Promise((next) => {
+                            model.findDataService(Trajectory).deleteAll().then(next);
+                        }),
+                );
+
+                // Test data to push
+                for (let i = 0; i < 10; i++) {
+                    const object = new DataObject('abc');
+                    const position = new Absolute2DPosition(i, i);
+                    position.timestamp = i;
+                    object.setPosition(position);
+                    pushPromise = pushPromise.then(
+                        () =>
+                            new Promise((next) => {
+                                const frame = new DataFrame(object);
+                                model.push(frame);
+                                model.onceCompleted(frame.uid).then(() => next());
+                            }),
+                    );
+                }
+
+                return pushPromise;
+            }).then(() => {
+                // Verify that trajectory is stored
+                const service = model.findDataService(Trajectory);
+                return service.findAll();
+            }).then((trajectories: Trajectory[]) => {
+                expect(trajectories.length).to.equal(1);
+                expect(trajectories[0].positions.length).to.equal(10);
+                expect(trajectories[0].uid).to.equal("abc_movement");
+                done();
+            }).catch(done);
+    });
 });
