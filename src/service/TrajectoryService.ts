@@ -3,6 +3,7 @@ import { DataObject } from '../data/object/DataObject';
 import { DataService } from './DataService';
 import { DataServiceDriver, DataServiceOptions } from './DataServiceDriver';
 import { Model } from '../Model';
+import { Constructor } from 'typedjson';
 
 /**
  * A trajectory service stores the position of a data object
@@ -15,16 +16,29 @@ export class TrajectoryService<T extends Trajectory = Trajectory> extends DataSe
     constructor(dataServiceDriver?: DataServiceDriver<string, T>, options?: TrajectoryServiceOptions) {
         super(dataServiceDriver as any);
         this.options = options || {};
-        this.options.dataService = this.options.dataService || DataObject.name;
-        this.driver.once('ready', this._bindService.bind(this));
+        this.options.autoBind = this.options.autoBind === undefined ? true : this.options.autoBind;
+        this.options.dataService = this.options.dataService || DataObject;
+        if (this.options.autoBind) {
+            this.once('build', this._bindService.bind(this));
+        }
     }
 
     private _bindService(): Promise<void> {
-        return new Promise((resolve) => {
-            this.model.findDataService(this.options.dataService).on('insert', (_, object) => {
-                this.appendPosition(object);
-            });
-            resolve();
+        return new Promise((resolve, reject) => {
+            if (!this.model) {
+                // No model
+                return resolve();
+            }
+
+            const dataObjectService = this.model.findDataService(this.options.dataService);
+            if (dataObjectService) {
+                dataObjectService.on('insert', async (_, object) => {
+                    await this.appendPosition(object);
+                });
+                resolve();
+            } else {
+                reject(new Error(`Data object service not found for '${this.options.dataService}'`));
+            }
         });
     }
 
@@ -119,5 +133,11 @@ export interface TrajectoryServiceOptions extends DataServiceOptions {
     /**
      * Dataservice to fetch stored data objects
      */
-    dataService?: string;
+    dataService?: Constructor<DataObject>;
+    /**
+     * Automatically bind to the data object service
+     *
+     * @default true
+     */
+    autoBind?: boolean;
 }
