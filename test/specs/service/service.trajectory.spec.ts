@@ -1,12 +1,13 @@
 import { DataObject, Absolute2DPosition, MemoryDataService, TrajectoryService, Trajectory, ModelBuilder, CallbackSinkNode, DataFrame, Model } from '../../../src';
 import { expect } from 'chai';
 import 'mocha';
+import { SlowMemoryDataService } from '../../mock/services/SlowMemoryDataService';
 
 describe('TrajectoryService', () => {
     let trajectoryService: TrajectoryService<Trajectory>;
 
     before((done) => {
-        trajectoryService = new TrajectoryService(new MemoryDataService(Trajectory));
+        trajectoryService = new TrajectoryService(new SlowMemoryDataService(Trajectory));
         // Prepare
         trajectoryService.emitAsync("build").then(() => {
             trajectoryService.deleteAll().then(_ => {
@@ -32,8 +33,7 @@ describe('TrajectoryService', () => {
             insertPromise = insertPromise.then(
                 () =>
                     new Promise((next) => {
-                        trajectoryService.appendPosition(object);
-                        next();
+                        trajectoryService.appendPosition(object).then(() => next()).catch(done);
                     }),
             );
         }
@@ -46,9 +46,7 @@ describe('TrajectoryService', () => {
                 expect(trajectories.length).to.equal(1);
                 done();
             })
-            .catch((ex) => {
-                done(ex);
-            });
+            .catch(done);
     });
 
     it('should find the last known trajectory', (done) => {

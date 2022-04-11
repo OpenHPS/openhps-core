@@ -18,6 +18,7 @@ export class TrajectoryService<T extends Trajectory = Trajectory> extends DataSe
         this.options = options || {};
         this.options.autoBind = this.options.autoBind === undefined ? true : this.options.autoBind;
         this.options.dataService = this.options.dataService || DataObject;
+        this.options.defaultUID = this.options.defaultUID ?? ((object) => object.uid);
         if (this.options.autoBind) {
             this.once('build', this._bindService.bind(this));
         }
@@ -50,9 +51,14 @@ export class TrajectoryService<T extends Trajectory = Trajectory> extends DataSe
      */
     public findCurrentTrajectory(object: DataObject | string): Promise<T> {
         return new Promise((resolve, reject) => {
-            this.findOne({
-                objectUID: object instanceof DataObject ? object.uid : object,
-            })
+            this.findOne(
+                {
+                    objectUID: object instanceof DataObject ? object.uid : object,
+                },
+                {
+                    sort: [['createdTimestamp', -1]],
+                },
+            )
                 .then(resolve)
                 .catch(reject);
         });
@@ -71,9 +77,11 @@ export class TrajectoryService<T extends Trajectory = Trajectory> extends DataSe
             this.findOne({
                 objectUID: object instanceof DataObject ? object.uid : object,
                 positions: {
-                    timestamp: {
-                        $lte: end ? (end instanceof Date ? end.getTime() : end) : Number.MAX_VALUE,
-                        $gte: start ? (start instanceof Date ? start.getTime() : start) : -1,
+                    $elemMatch: {
+                        timestamp: {
+                            $lte: end ? (end instanceof Date ? end.getTime() : end) : Number.MAX_VALUE,
+                            $gte: start ? (start instanceof Date ? start.getTime() : start) : -1,
+                        },
                     },
                 },
             })
@@ -116,6 +124,7 @@ export class TrajectoryService<T extends Trajectory = Trajectory> extends DataSe
                         if (!trajectory) {
                             trajectory = new this.driver.dataType();
                             trajectory.objectUID = object.uid;
+                            trajectory.uid = uid ?? this.options.defaultUID(object);
                         }
                         trajectory.positions.push(object.position);
                         return this.insert(trajectory.uid, trajectory);
@@ -140,4 +149,10 @@ export interface TrajectoryServiceOptions extends DataServiceOptions {
      * @default true
      */
     autoBind?: boolean;
+    /**
+     * Default UID of a trajectory with autoBind = true
+     *
+     * @default (object) => object.uid
+     */
+    defaultUID?: (object: DataObject) => string;
 }

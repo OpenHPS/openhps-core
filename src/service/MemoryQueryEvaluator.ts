@@ -112,8 +112,7 @@ export class MemoryQueryEvaluator {
                         if (element['key'] && element['value']) {
                             result = result || MemoryQueryEvaluator.evaluate(element['value'], subquery[selector]);
                         } else {
-                            result =
-                                result || MemoryQueryEvaluator.evaluateComponent(element, selector, subquery[selector]);
+                            result = result || MemoryQueryEvaluator.evaluate(element, subquery[selector]);
                         }
                     });
                 } else if (value instanceof Map) {
