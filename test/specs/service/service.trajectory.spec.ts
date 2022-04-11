@@ -97,6 +97,13 @@ describe('TrajectoryService', () => {
             .build().then(m => {
                 model = m;
                 let pushPromise = Promise.resolve();
+                // Delete all data from previous tests
+                pushPromise = pushPromise.then(
+                    () =>
+                        new Promise((next) => {
+                            model.findDataService(Trajectory).deleteAll().then(next);
+                        }),
+                );
 
                 // Test data to push
                 for (let i = 0; i < 10; i++) {
@@ -107,8 +114,7 @@ describe('TrajectoryService', () => {
                     pushPromise = pushPromise.then(
                         () =>
                             new Promise((next) => {
-                                model.push(new DataFrame(object));
-                                next();
+                                model.push(new DataFrame(object)).then(next);
                             }),
                     );
                 }
@@ -117,13 +123,11 @@ describe('TrajectoryService', () => {
             }).then(() => {
                 // Verify that trajectory is stored
                 const service = model.findDataService(Trajectory);
-                setTimeout(() => {
-                    service.findAll().then(trajectories => {
-                        expect(trajectories.length).to.equal(1);
-                        expect(trajectories[0].positions.length).to.equal(10);
-                        done();
-                    }).catch(done);
-                }, 100);
+                return service.findAll();
+            }).then(trajectories => {
+                expect(trajectories.length).to.equal(1);
+                expect(trajectories[0].positions.length).to.equal(10);
+                done();
             }).catch(done);
     });
 
@@ -142,6 +146,13 @@ describe('TrajectoryService', () => {
             .build().then(m => {
                 model = m;
                 let pushPromise = Promise.resolve();
+                // Delete all data from previous tests
+                pushPromise = pushPromise.then(
+                    () =>
+                        new Promise((next) => {
+                            model.findDataService(Trajectory).deleteAll().then(next);
+                        }),
+                );
 
                 // Test data to push
                 for (let i = 0; i < 10; i++) {
@@ -152,8 +163,7 @@ describe('TrajectoryService', () => {
                     pushPromise = pushPromise.then(
                         () =>
                             new Promise((next) => {
-                                model.push(new DataFrame(object));
-                                next();
+                                model.push(new DataFrame(object)).then(next);
                             }),
                     );
                 }
@@ -162,12 +172,10 @@ describe('TrajectoryService', () => {
             }).then(() => {
                 // Verify that trajectory is NOT stored
                 const service = model.findDataService(Trajectory);
-                setTimeout(() => {
-                    service.findAll().then(trajectories => {
-                        expect(trajectories.length).to.equal(0);
-                        done();
-                    }).catch(done);
-                }, 100);
+                return service.findAll();
+            }).then(trajectories => {
+                expect(trajectories.length).to.equal(0);
+                done();
             }).catch(done);
     });
 
