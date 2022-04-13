@@ -1,5 +1,6 @@
 import { SerializableMemberOptions } from './options';
 import { SerializableMember } from './SerializableMember';
+import { mergeMemberOptions, updateSerializableMember } from './utils';
 
 /**
  * @param {SerializableMemberOptions} [options] Member options
@@ -9,6 +10,8 @@ export function SerializableMemberFunction(options: SerializableMemberOptions = 
     return (target: unknown, propertyKey: string) => {
         options.serializer = (fn) => fn.toString();
         options.deserializer = (fnStr) => eval(fnStr);
-        SerializableMember(options)(target, propertyKey);
+        const finalOptions = mergeMemberOptions(target, propertyKey, options);
+        SerializableMember(finalOptions)(target, propertyKey);
+        updateSerializableMember(target, propertyKey, finalOptions);
     };
 }

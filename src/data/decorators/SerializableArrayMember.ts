@@ -1,6 +1,6 @@
 import { jsonArrayMember, Serializable } from 'typedjson';
 import { SerializableArrayMemberOptions } from './options';
-import { updateSerializableMember } from './utils';
+import { mergeMemberOptions, updateSerializableMember } from './utils';
 
 export function SerializableArrayMember<T>(
     elementConstructor: Serializable<T>,
@@ -16,7 +16,8 @@ export function SerializableArrayMember<T>(
     options?: SerializableArrayMemberOptions,
 ): PropertyDecorator {
     return (target: unknown, propertyKey: string) => {
-        jsonArrayMember(elementConstructor, options)(target, propertyKey);
-        updateSerializableMember(target, propertyKey, options);
+        const finalOptions = mergeMemberOptions(target, propertyKey, options);
+        jsonArrayMember(elementConstructor, finalOptions)(target, propertyKey);
+        updateSerializableMember(target, propertyKey, finalOptions);
     };
 }

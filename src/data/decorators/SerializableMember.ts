@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { jsonMember, IndexedObject } from 'typedjson';
-import { updateSerializableMember } from './utils';
+import { updateSerializableMember, mergeMemberOptions } from './utils';
 import { SerializableMemberOptions } from './options';
 
 /**
@@ -9,7 +9,8 @@ import { SerializableMemberOptions } from './options';
  */
 export function SerializableMember(options?: SerializableMemberOptions | IndexedObject): PropertyDecorator {
     return (target: unknown, propertyKey: string) => {
-        jsonMember(options)(target, propertyKey);
-        updateSerializableMember(target, propertyKey, options);
+        const finalOptions = mergeMemberOptions(target, propertyKey, options);
+        jsonMember(finalOptions)(target, propertyKey);
+        updateSerializableMember(target, propertyKey, finalOptions);
     };
 }
