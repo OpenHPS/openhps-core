@@ -3,9 +3,23 @@ import type { MappedTypeConverters } from 'typedjson/lib/types/parser';
 import { ObjectMetadata } from './decorators/metadata';
 import { SerializableMemberOptions } from './decorators/options';
 
+/**
+ * Data serializer utilities for managing the ORM mapping
+ */
 export class DataSerializerUtils {
     static get META_FIELD(): string {
         return '__typedJsonJsonObjectMetadataInformation__';
+    }
+
+    /**
+     * Get the own TypedJSON metadata of the prototype
+     *
+     * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
+     * @param {any} proto Prototype of target
+     * @returns {ObjectMetadata} Root object metadata
+     */
+    static geOwnMetadata(proto: any): ObjectMetadata {
+        return JsonObjectMetadata.getFromConstructor(proto instanceof Function ? proto : proto.constructor);
     }
 
     /**
@@ -16,10 +30,7 @@ export class DataSerializerUtils {
      * @returns {ObjectMetadata} Root object metadata
      */
     static getMetadata(proto: any): ObjectMetadata {
-        return (
-            JsonObjectMetadata.getFromConstructor(proto instanceof Function ? proto : proto.constructor) ??
-            DataSerializerUtils.getRootMetadata(proto)
-        );
+        return DataSerializerUtils.geOwnMetadata(proto) ?? DataSerializerUtils.getRootMetadata(proto);
     }
 
     /**
