@@ -15,7 +15,7 @@ import { TimeConsumingNode } from '../../mock/nodes/TimeConsumingNode';
 
 describe('WorkerNode', () => {
     // Overhead in ms
-    const overhead = 25;
+    const overhead = 50;
 
     it('should take 30ms with 1 worker', (done) => {
         let model;
