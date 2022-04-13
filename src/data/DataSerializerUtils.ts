@@ -18,7 +18,7 @@ export class DataSerializerUtils {
      * @param {any} proto Prototype of target
      * @returns {ObjectMetadata} Root object metadata
      */
-    static geOwnMetadata(proto: any): ObjectMetadata {
+    static getOwnMetadata(proto: any): ObjectMetadata {
         return JsonObjectMetadata.getFromConstructor(proto instanceof Function ? proto : proto.constructor);
     }
 
