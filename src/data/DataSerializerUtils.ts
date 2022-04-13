@@ -30,7 +30,7 @@ export class DataSerializerUtils {
      * @returns {ObjectMetadata} Root object metadata
      */
     static getMetadata(proto: any): ObjectMetadata {
-        return DataSerializerUtils.geOwnMetadata(proto) ?? DataSerializerUtils.getRootMetadata(proto);
+        return DataSerializerUtils.getOwnMetadata(proto) ?? DataSerializerUtils.getRootMetadata(proto);
     }
 
     /**
