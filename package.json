@@ -29,12 +29,12 @@
   "exports": {
     ".": {
       "require": "./dist/cjs/index.js",
-      "import": "./dist/esm/index.js",
+      "import": "./dist/esm5/index.js",
       "types": "./dist/types/index.d.ts"
     },
     "./internal": {
       "require": "./dist/cjs/index.internal.js",
-      "import": "./dist/esm/index.internal.js",
+      "import": "./dist/esm5/index.internal.js",
       "types": "./dist/types/index.internal.d.ts"
     }
   },
