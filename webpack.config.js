@@ -12,8 +12,6 @@ const defaultConfig = env => ({
   resolve: {
     alias: {
       typescript: false,
-      'typedjson/lib/cjs/serializer': 'typedjson/lib/esm5/serializer',
-      'typedjson/lib/cjs/deserializer': 'typedjson/lib/esm5/deserializer'
     },
     fallback: {
       path: false,

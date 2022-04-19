@@ -40,7 +40,8 @@
   },
   "files": [
     "dist/**/*",
-    "src/**/*"
+    "src/**/*",
+    "LICENSE"
   ],
   "size-limit": [
     {
@@ -64,8 +65,8 @@
     "build:typedoc": "typedoc --options docs/typedoc.json",
     "build:three": "node ./scripts/build.three.js",
     "build:ts:cjs": "tsc --build ./tsconfig/tsconfig.bundle.cjs.json",
-    "build:ts:esm": "tsc --build ./tsconfig/tsconfig.bundle.esm.json",
-    "build:ts:esm5": "tsc --build ./tsconfig/tsconfig.bundle.esm5.json",
+    "build:ts:esm": "tsc --build ./tsconfig/tsconfig.bundle.esm.json && babel --config-file ./babel/babel.esm.config.js --out-dir ./dist/esm ./dist/esm",
+    "build:ts:esm5": "tsc --build ./tsconfig/tsconfig.bundle.esm5.json && babel --config-file ./babel/babel.esm5.config.js --out-dir ./dist/esm5 ./dist/esm5",
     "build:ts:types": "tsc --build ./tsconfig/tsconfig.bundle.types.json",
     "build:webpack": "npm-run-all --parallel build:webpack:*",
     "build:webpack:prod": "webpack --env prod --",
@@ -97,7 +98,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.17.6",
-    "@babel/core": "^7.17.8",
+    "@babel/core": "^7.17.9",
     "@babel/preset-env": "^7.16.11",
     "@commitlint/cli": "^16.2.3",
     "@commitlint/config-conventional": "^16.2.1",
@@ -111,6 +112,7 @@
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
+    "babel-plugin-replace-imports": "^1.0.2",
     "benchmark": "^2.1.4",
     "chai": "^4.3.6",
     "csv-parser": "^3.0.0",
