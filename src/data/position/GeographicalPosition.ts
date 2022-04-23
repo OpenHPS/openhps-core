@@ -108,14 +108,14 @@ export class GeographicalPosition extends Absolute3DPosition {
         const lonRadA = bearingUnit.convert(this.longitude, AngleUnit.RADIAN);
         const latRadA = bearingUnit.convert(this.latitude, AngleUnit.RADIAN);
         const latX = Math.asin(
-            Math.sin(latRadA) * Math.cos(distance / GCS.EARTH_RADIUS) +
-                Math.cos(latRadA) * Math.sin(distance / GCS.EARTH_RADIUS) * Math.cos(brng),
+            Math.sin(latRadA) * Math.cos(distance / GCS.EARTH_RADIUS_MEAN) +
+                Math.cos(latRadA) * Math.sin(distance / GCS.EARTH_RADIUS_MEAN) * Math.cos(brng),
         );
         const lonX =
             lonRadA +
             Math.atan2(
-                Math.sin(brng) * Math.sin(distance / GCS.EARTH_RADIUS) * Math.cos(latRadA),
-                Math.cos(distance / GCS.EARTH_RADIUS) - Math.sin(latRadA) * Math.sin(latX),
+                Math.sin(brng) * Math.sin(distance / GCS.EARTH_RADIUS_MEAN) * Math.cos(latRadA),
+                Math.cos(distance / GCS.EARTH_RADIUS_MEAN) - Math.sin(latRadA) * Math.sin(latX),
             );
 
         const location = new GeographicalPosition();
