@@ -121,6 +121,8 @@ export class GeographicalPosition extends Absolute3DPosition {
         const location = new GeographicalPosition();
         location.latitude = AngleUnit.RADIAN.convert(latX, AngleUnit.DEGREE);
         location.longitude = AngleUnit.RADIAN.convert(lonX, AngleUnit.DEGREE);
+        location.altitude = this.altitude;
+        location.unit = this.unit;
         return location;
     }
 

@@ -18,6 +18,7 @@ import {
     DataObjectService,
     MemoryDataService,
     Orientation,
+    Absolute2DPosition,
 } from '../../../src';
 import { Vector3 } from '../../../src/utils/math/_internal';
 
@@ -37,6 +38,15 @@ describe('data', () => {
                 expect(result.x).to.equal(5);
                 expect(result.y).to.equal(5);
                 expect(result.z).to.equal(2);
+            });
+
+            it('should translate with a 2d position', () => {
+                const globalReferenceSpace = new ReferenceSpace(undefined);
+
+                const refSpace = new ReferenceSpace(globalReferenceSpace).translation(2.0, 2.0, 2.0);
+                const result = refSpace.transform(new Absolute2DPosition(3, 3)) as Absolute3DPosition;
+                expect(result.x).to.equal(5);
+                expect(result.y).to.equal(5);
             });
         });
 

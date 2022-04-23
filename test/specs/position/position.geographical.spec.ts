@@ -34,7 +34,8 @@ describe('GeographicalPosition', () => {
     });
 
     it('should calculate the destination from a point in a direction', () => {
-        const destination = new GeographicalPosition(1, 1).destination(100, 20, AngleUnit.DEGREE);
+        const destination = new GeographicalPosition(1, 1, 2).destination(100, 20, AngleUnit.DEGREE);
+        expect(destination.altitude).to.equal(2);
     });
 
     it('should convert the geographic position to EPSG3857', () => {
