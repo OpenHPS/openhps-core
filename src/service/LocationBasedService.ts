@@ -46,6 +46,7 @@ export class LocationBasedService<
         super();
         this.options = options || {};
         this.once('build', this._initLBS.bind(this));
+        this.once('destroy', this._destroy.bind(this));
     }
 
     private _initLBS(): void {
@@ -63,6 +64,12 @@ export class LocationBasedService<
                     watcher.callback(position);
                 }
             }
+        });
+    }
+
+    private _destroy(): void {
+        Array.from(this.watchers.keys()).forEach((watcher) => {
+            this.clearWatch(watcher);
         });
     }
 

@@ -202,4 +202,28 @@ describe('MultilaterationNode', () => {
         model.push(frame);
     });
 
+    it('should work with 3 reference positions (3d)', (done) => {
+        sink.callback = (frame: DataFrame) => {
+            expect(frame.source.uid).to.eql('dummy');
+            expect(frame.source.position).to.not.be.undefined;
+            expect(frame.source.position.toVector3().x).to.eql(9.975);
+            expect(frame.source.position.toVector3().y).to.eql(7.25);
+            expect(frame.source.position.toVector3().z).to.eql(2);
+            expect(frame.source.position.accuracy.valueOf()).to.eql(1);
+            done();
+        };
+        const object = new DataObject('dummy');
+        object.addRelativePosition(new RelativeDistance('1', 10));
+        object.addRelativePosition(new RelativeDistance('2', 10));
+        object.addRelativePosition(new RelativeDistance('3', 10));
+        object.addRelativePosition(new RelativeDistance('4', 10));
+        const frame = new DataFrame(object);
+        frame.addObject(new DataObject('1').setPosition(new Absolute3DPosition(5, 4, 2)));
+        frame.addObject(new DataObject('2').setPosition(new Absolute3DPosition(10, 8, 2)));
+        frame.addObject(new DataObject('3').setPosition(new Absolute3DPosition(8, 3, 2)));
+        frame.addObject(new DataObject('4').setPosition(new Absolute3DPosition(15, 14, 2)));
+        model.once('error', done);
+        model.push(frame);
+    });
+
 });

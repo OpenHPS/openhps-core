@@ -1,0 +1,11 @@
+{
+    "source": "dist/types/nodes",
+    "destination": "components",
+    "extension": "jsonld",
+    "ignoreComponents": [ 
+        
+    ],
+    "logLevel": "debug",
+    "debugState": "true",
+    "hardErrorUnsupported": false
+}

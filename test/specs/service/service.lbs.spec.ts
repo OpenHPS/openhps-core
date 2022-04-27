@@ -1,6 +1,5 @@
 import {
     Absolute3DPosition,
-    CallbackNode,
     CallbackSourceNode,
     DataFrame,
     DataObject,
@@ -69,6 +68,24 @@ describe('LocationBasedService', () => {
                     done();
                 })
                 .catch(done);
+        });
+    });
+
+    describe('watchPosition', () => {
+        it('should watch for changes', (done) => {
+            service
+                .watchPosition('mvdewync', pos => {
+                    expect(pos).to.not.be.undefined;
+                    service.emit('destroy');
+                    done();
+                }, {
+                    interval: 10000
+                });
+            const object = new DataObject('mvdewync');
+            const position = new Absolute3DPosition(1, 2, 3);
+            position.timestamp = 0;
+            object.setPosition(position);
+            model.push(new DataFrame(object));
         });
     });
 });

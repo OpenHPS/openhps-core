@@ -183,10 +183,10 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
     /**
      * Add graph shape to graph
      *
-     * @param {GraphBuilder | GraphShape} shape Graph builder or abstract graph
+     * @param {GraphBuilder | GraphShape | Model} shape Graph builder or abstract graph
      * @returns {GraphBuilder} Current graph builder instance
      */
-    public addShape(shape: GraphBuilder<any, any> | GraphShape<any, any>): this {
+    public addShape(shape: GraphBuilder<any, any> | GraphShape<any, any> | Model<any, any>): this {
         if (shape instanceof ModelGraph) {
             // Add services
             (shape as Model).findAllServices().forEach((service) => {
@@ -197,7 +197,7 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
                 this.addService(service);
             });
         }
-        return super.addShape(shape);
+        return super.addShape(shape as GraphShape<any, any>);
     }
 
     public build(): Promise<Model<In, Out>> {
