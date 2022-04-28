@@ -39,7 +39,7 @@ export class LocationBasedService<
     model: Model;
     protected service: DataObjectService<T>;
     protected watchers: Map<number, Watcher> = new Map();
-    protected watchedObjects: Map<string, number> = new Map();
+    protected watchedObjects: Map<string, number[]> = new Map();
     protected watchIndex = 1;
 
     constructor(options?: LBSOptions) {
@@ -56,13 +56,15 @@ export class LocationBasedService<
 
         this.service = this.model.findDataService(this.options.dataService);
         this.service.on('insert', (uid: string, storedObject: T) => {
-            const watchId = this.watchedObjects.get(uid);
-            if (watchId) {
+            const watchIds = this.watchedObjects.get(uid);
+            if (watchIds) {
                 const position = storedObject.position as P;
-                const watcher = this.watchers.get(watchId);
-                if (position) {
-                    watcher.callback(position);
-                }
+                watchIds.forEach((watchId) => {
+                    const watcher = this.watchers.get(watchId);
+                    if (position) {
+                        watcher.callback(position);
+                    }
+                });
             }
         });
     }
@@ -186,8 +188,24 @@ export class LocationBasedService<
             uid,
             callback,
         });
-        this.watchedObjects.set(uid, watchId);
+        this.watchObject(uid, watchId);
         return watchId;
+    }
+
+    protected watchObject(uid: string, watchId: number): void {
+        const existingIds = this.watchedObjects.get(uid) ?? [];
+        existingIds.push(watchId);
+        this.watchedObjects.set(uid, existingIds);
+    }
+
+    protected unwatchObject(uid: string, watchId: number): void {
+        const existingIds = this.watchedObjects.get(uid) ?? [];
+        existingIds.splice(existingIds.indexOf(watchId), 1);
+        if (existingIds.length === 0) {
+            this.watchedObjects.delete(uid);
+        } else {
+            this.watchedObjects.set(uid, existingIds);
+        }
     }
 
     /**
@@ -201,7 +219,7 @@ export class LocationBasedService<
             clearInterval(watcher.timer);
         }
         this.watchers.delete(watchId);
-        this.watchedObjects.delete(watcher.uid);
+        this.unwatchObject(watcher.uid, watchId);
     }
 }
 
