@@ -113,7 +113,7 @@ export class LocationBasedService<
                 .then((storedObj) => {
                     const position = storedObj.position;
                     const time = TimeService.getUnit().convert(TimeService.now(), TimeUnit.MILLISECOND);
-                    if (position && position.timestamp >= time - maximumAge) {
+                    if (position && position.timestamp >= time - maximumAge && !options.forceUpdate) {
                         // Stored position satisfies maximum age
                         resolve(position as P);
                     } else {
@@ -138,6 +138,14 @@ export class LocationBasedService<
         });
     }
 
+    /**
+     * Watch for position changes
+     *
+     * @param {DataObject | string} object Data object to watch for position changes for
+     * @param {(position: AbsolutePosition, err?: Error) => void} callback Callback function
+     * @param {GeoWatchOptions} [options] Watch options
+     * @returns {number} Watch number
+     */
     watchPosition(
         object: T | string,
         callback: (position: P, err?: Error) => void,
