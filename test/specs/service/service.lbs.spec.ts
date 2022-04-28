@@ -69,23 +69,52 @@ describe('LocationBasedService', () => {
                 })
                 .catch(done);
         });
+
+        it('should forcefully return a position', (done) => {
+            service
+                .getCurrentPosition('mvdewync', {
+                    forceUpdate: true
+                })
+                .then((position) => {
+                    expect(position.toVector3().x).to.equal(3);
+                    expect(position.toVector3().y).to.equal(2);
+                    expect(position.toVector3().z).to.equal(1);
+                    done();
+                })
+                .catch(done);
+        });
     });
 
     describe('watchPosition', () => {
         it('should watch for changes', (done) => {
-            service
+            let count = 0;
+            const watchId = service
                 .watchPosition('mvdewync', pos => {
                     expect(pos).to.not.be.undefined;
-                    service.emit('destroy');
-                    done();
+                    count++;
+                    if (count === 10) {
+                        service.clearWatch(watchId);
+                        done();
+                    }
                 }, {
-                    interval: 10000
+                    interval: 10
                 });
-            const object = new DataObject('mvdewync');
-            const position = new Absolute3DPosition(1, 2, 3);
-            position.timestamp = 0;
-            object.setPosition(position);
-            model.push(new DataFrame(object));
+        });
+
+        it('should forcefully watch for changes', (done) => {
+            let count = 0;
+            const watchId = service
+                .watchPosition('mvdewync', pos => {
+                    expect(pos).to.not.be.undefined;
+                    count++;
+                    if (count === 10) {
+                        service.clearWatch(watchId);
+                        done();
+                    }
+                }, {
+                    interval: 10,
+                    forceUpdate: true
+                });
         });
     });
 });

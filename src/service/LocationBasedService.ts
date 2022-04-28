@@ -108,33 +108,50 @@ export class LocationBasedService<
             const maximumAge = options.maximumAge || Infinity;
             options.timeout = options.timeout || 10000;
             const uid = object instanceof DataObject ? object.uid : object;
-            this.service
-                .findByUID(uid)
-                .then((storedObj) => {
-                    const position = storedObj.position;
-                    const time = TimeService.getUnit().convert(TimeService.now(), TimeUnit.MILLISECOND);
-                    if (position && position.timestamp >= time - maximumAge && !options.forceUpdate) {
-                        // Stored position satisfies maximum age
-                        resolve(position as P);
-                    } else {
-                        const timeout = setTimeout(() => {
-                            this.clearWatch(watchId);
-                            reject(new Error('Timeout error for getting current position!'));
-                        }, options.timeout);
-                        this.model.findNodeByUID(this.options.pullNode).pull({
-                            requestedObjects: [uid],
-                        });
-                        const watchId = this.watchPosition(object, (pos, err) => {
-                            this.clearWatch(watchId);
-                            clearTimeout(timeout);
-                            if (err) {
-                                return reject(err);
-                            }
-                            resolve(pos);
-                        });
-                    }
-                })
-                .catch(reject);
+            // Force update
+            if (options.forceUpdate) {
+                this.model.findNodeByUID(this.options.pullNode).pull({
+                    requestedObjects: [uid],
+                });
+                const timeout = setTimeout(() => {
+                    this.clearWatch(watchId);
+                    reject(new Error('Timeout error for getting current position!'));
+                }, options.timeout);
+                const watchId = this.watchPosition(
+                    object,
+                    (pos, err) => {
+                        this.clearWatch(watchId);
+                        clearTimeout(timeout);
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve(pos);
+                    },
+                    {
+                        ...options,
+                        interval: -1,
+                        forceUpdate: false,
+                    },
+                );
+            } else {
+                this.service
+                    .findByUID(uid)
+                    .then((storedObj) => {
+                        const position = storedObj.position;
+                        const time = TimeService.getUnit().convert(TimeService.now(), TimeUnit.MILLISECOND);
+                        if (position && position.timestamp >= time - maximumAge) {
+                            // Stored position satisfies maximum age
+                            resolve(position as P);
+                        } else {
+                            return this.getCurrentPosition(object, {
+                                ...options,
+                                forceUpdate: true,
+                            });
+                        }
+                    })
+                    .then(resolve)
+                    .catch(reject);
+            }
         });
     }
 
@@ -153,15 +170,17 @@ export class LocationBasedService<
     ): number {
         const uid = object instanceof DataObject ? object.uid : object;
         const watchId = this.watchIndex++;
-        const timer = options.interval
-            ? (setInterval(() => {
-                  this.getCurrentPosition(object, options)
-                      .then(callback)
-                      .catch((ex) => {
-                          callback(undefined, ex);
-                      });
-              }, options.interval) as unknown as number)
-            : undefined;
+        const interval = options.interval ?? 1000;
+        const timer =
+            interval !== -1
+                ? (setInterval(() => {
+                      this.getCurrentPosition(object, options)
+                          .then(callback)
+                          .catch((ex) => {
+                              callback(undefined, ex);
+                          });
+                  }, interval) as unknown as number)
+                : undefined;
         this.watchers.set(watchId, {
             timer,
             uid,
@@ -178,8 +197,11 @@ export class LocationBasedService<
      */
     clearWatch(watchId: number): void {
         const watcher = this.watchers.get(watchId);
-        if (watcher.timer) clearInterval(watcher.timer);
+        if (watcher.timer !== undefined) {
+            clearInterval(watcher.timer);
+        }
         this.watchers.delete(watchId);
+        this.watchedObjects.delete(watcher.uid);
     }
 }
 
