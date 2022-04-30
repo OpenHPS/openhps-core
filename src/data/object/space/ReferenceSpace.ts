@@ -52,13 +52,22 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
      *
      * @param {TransformationSpace} space Parent space
      */
-    public set parent(space: TransformationSpace) {
+    set parent(space: TransformationSpace) {
         if (!space) {
             return;
         } else {
             this.parentUID = space.uid;
             this._parent = space;
         }
+    }
+
+    /**
+     * Get the parent space if loaded
+     *
+     * @returns {TransformationSpace | undefined} Transformation space or undefined
+     */
+    get parent(): TransformationSpace {
+        return this._parent;
     }
 
     /**
