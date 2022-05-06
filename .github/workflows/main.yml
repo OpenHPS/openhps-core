@@ -24,6 +24,9 @@ jobs:
         run: |
           npm run test -- --reporter mocha-junit-reporter
           npm run cover
+      - name: Build Documentation
+        run: |
+          npm run build:typedoc
       - name: Publish Web Artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -71,6 +74,12 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           tag: dev
+      - name: Deploy site to GitHub
+        if: github.ref == 'refs/heads/master' && success()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/out
       - name: Publish to GitHub
         if: success()
         run: |
