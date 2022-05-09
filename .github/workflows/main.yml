@@ -58,7 +58,7 @@ jobs:
           npm run lint
 
   test:
-    name: Unit Tests
+    name: Unit tests
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -69,6 +69,13 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/package-lock.json') }}
+      - name: Load build cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/dist
+            **/src/three
+          key: ${{ runner.os }}-build-v1-${{ github.run_number }}
       - name: Load test cache
         uses: actions/cache@v2
         with:
@@ -80,7 +87,7 @@ jobs:
           npm run test -- --reporter mocha-junit-reporter
 
   coverage:
-    name: Code Coverage
+    name: Code coverage
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -91,6 +98,13 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/package-lock.json') }}
+      - name: Load build cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/dist
+            **/src/three
+          key: ${{ runner.os }}-build-v1-${{ github.run_number }}
       - name: Load coverage cache
         uses: actions/cache@v2
         with:
