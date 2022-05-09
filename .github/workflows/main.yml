@@ -42,7 +42,7 @@ jobs:
             !dist/web/*.txt
 
   quality:
-    name: Code Quality
+    name: Code quality
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -118,7 +118,9 @@ jobs:
 
   publish_documentation:
     name: Publish documentation
-    needs: documentation
+    needs:
+      - documentation
+      - quality
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -169,11 +171,18 @@ jobs:
     name: Release DEV
     needs:
       - build
+      - quality
       - test_coverage
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/dev'
     steps:
       - uses: actions/checkout@v3
+      - name: Load dependency cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/package-lock.json') }}
       - name: Load build cache
         uses: actions/cache@v2
         with:
@@ -202,11 +211,18 @@ jobs:
     name: Release MASTER
     needs:
       - build
+      - quality
       - test_coverage
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v3
+      - name: Load dependency cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/package-lock.json') }}
       - name: Load build cache
         uses: actions/cache@v2
         with:
