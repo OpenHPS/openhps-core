@@ -57,7 +57,7 @@ jobs:
         run: |
           npm run lint
 
-  test:
+  test_coverage:
     name: Unit tests
     needs: build
     runs-on: ubuntu-latest
@@ -76,44 +76,16 @@ jobs:
             **/dist
             **/src/three
           key: ${{ runner.os }}-build-v1-${{ github.run_number }}
-      - name: Load test cache
+      - name: Load test and coverage cache
         uses: actions/cache@v2
         with:
           path: |
             **/test-results.xml
+            **/coverage
           key: ${{ runner.os }}-test-v1-${{ github.run_number }}
       - name: Test
         run: |
-          npm run test -- --reporter mocha-junit-reporter
-
-  coverage:
-    name: Code coverage
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Load dependency cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('**/package-lock.json') }}
-      - name: Load build cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/dist
-            **/src/three
-          key: ${{ runner.os }}-build-v1-${{ github.run_number }}
-      - name: Load coverage cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/coverage
-          key: ${{ runner.os }}-coverage-v1-${{ github.run_number }}
-      - name: Coverage
-        run: |
-          npm run cover
+          npm run cover:ci
 
   documentation:
     name: Build documentation
@@ -171,23 +143,16 @@ jobs:
 
   publish_test_coverage:
     name: Publish unit tests and coverage
-    needs:
-      - test
-      - coverage
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Load coverage cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/docs/out
-          key: ${{ runner.os }}-coverage-v1-${{ github.run_number }}
-      - name: Load test cache
+      - name: Load test and coverage cache
         uses: actions/cache@v2
         with:
           path: |
             **/test-results.xml
+            **/coverage
           key: ${{ runner.os }}-test-v1-${{ github.run_number }}
       - name: Publish unit test results
         uses: EnricoMi/publish-unit-test-result-action@v1

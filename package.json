@@ -60,6 +60,7 @@
     "test": "mocha --config test/.mocharc.json",
     "benchmark": "ts-node test/bench/worker.bench.ts",
     "cover": "nyc mocha --config test/.mocharc.json && nyc report --reporter=cobertura",
+    "cover:ci": "nyc mocha --config test/.mocharc.json --reporter mocha-junit-reporter && nyc report --reporter=cobertura",
     "lint": "eslint src/ --ignore-pattern three",
     "size": "size-limit",
     "clean": "shx rm -rf ./dist && shx rm -rf ./docs/out",
