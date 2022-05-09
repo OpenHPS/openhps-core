@@ -170,7 +170,6 @@ jobs:
     needs:
       - build
       - test
-      - coverage
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/dev'
     steps:
@@ -204,7 +203,6 @@ jobs:
     needs:
       - build
       - test
-      - coverage
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
