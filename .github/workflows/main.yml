@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: ahmadnassri/action-dependabot-auto-merge@v2
+        if: github.event_name == 'push'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Load dependency cache
         uses: actions/cache@v2
         with:
