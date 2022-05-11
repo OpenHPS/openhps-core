@@ -91,6 +91,7 @@ jobs:
     name: Build documentation
     needs: build
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v3
       - name: Load dependency cache
@@ -122,6 +123,7 @@ jobs:
       - documentation
       - quality
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     steps:
       - uses: actions/checkout@v3
       - name: Load document cache
@@ -147,6 +149,7 @@ jobs:
     name: Publish unit tests and coverage
     needs: test_coverage
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     steps:
       - uses: actions/checkout@v3
       - name: Load test and coverage cache
@@ -174,7 +177,7 @@ jobs:
       - quality
       - test_coverage
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/dev'
+    if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
     steps:
       - uses: actions/checkout@v3
       - name: Load dependency cache
@@ -214,7 +217,7 @@ jobs:
       - quality
       - test_coverage
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     steps:
       - uses: actions/checkout@v3
       - name: Load dependency cache
