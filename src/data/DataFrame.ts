@@ -85,6 +85,7 @@ export class DataFrame {
         if (data instanceof DataFrame) {
             // Copy data frame
             this.createdTimestamp = data.createdTimestamp;
+            this.phenomenonTimestamp = data.phenomenonTimestamp;
             this.uid = data.uid;
             this._objects = data._objects;
             this.source = data.source;
