@@ -52,6 +52,13 @@ export class DataFrame {
         index: true,
     })
     createdTimestamp: number;
+    /**
+     * Data frame sensor data pheonomenon timestamp (ISO 8601)
+     */
+    @SerializableMember({
+        index: true,
+    })
+    phenomenonTimestamp?: number;
     @SerializableMember({
         name: 'source',
     })
@@ -84,6 +91,7 @@ export class DataFrame {
         } else if (data instanceof DataObject) {
             this.source = data;
         }
+        this.phenomenonTimestamp = this.phenomenonTimestamp ?? this.createdTimestamp;
     }
 
     /**
