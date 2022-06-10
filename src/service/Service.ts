@@ -82,7 +82,7 @@ export abstract class Service extends AsyncEventEmitter {
      */
     once(name: 'ready', listener: () => void | Promise<void>): this;
     once(name: string | symbol, listener: (...args: any[]) => void): this {
-        if (name === 'ready' && this.isReady) {
+        if (name === 'ready' && this.isReady()) {
             listener();
             return this;
         }

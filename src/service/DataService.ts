@@ -39,12 +39,16 @@ export abstract class DataService<I, T> extends Service {
             this.uid = this.driver.dataType.name;
         }
 
-        this.once('build', () => {
+        this.once('build', this._buildDriver.bind(this));
+        this.once('destroy', () => this.driver.emitAsync('destroy'));
+    }
+
+    private _buildDriver(): Promise<boolean> {
+        return new Promise((resolve, reject) => {
             this.driver.model = this.model;
             this.driver.logger = this.logger;
-            return this.driver.emitAsync('build');
+            this.driver.emitAsync('build').then(resolve).catch(reject);
         });
-        this.once('destroy', () => this.driver.emitAsync('destroy'));
     }
 
     get dataType(): Serializable<T> {
