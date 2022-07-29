@@ -4,7 +4,7 @@ import { GraphNode } from './graph/_internal/GraphNode';
 import { SerializableMember, SerializableObject } from './data';
 
 /**
- * The graph node has an input and output [[DataFrame]]
+ * The graph node has an input and output {@link DataFrame}
  *
  * ## Usage
  *
@@ -18,7 +18,7 @@ import { SerializableMember, SerializableObject } from './data';
  *     // ...
  * }
  * ```
- * Abstract implementations such as a [[SourceNode]] and [[SinkNode]] only take one input or output
+ * Abstract implementations such as a {@link SourceNode} and {@link SinkNode} only take one input or output
  * data frame type as they do not process or change the frame.
  *
  * @category Node

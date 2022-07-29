@@ -7,10 +7,10 @@ import { GraphShape } from './graph/_internal/implementations/GraphShape';
 import { Service, NodeData, TimeService, DataObjectService, MemoryDataService, NodeDataService } from './service';
 
 /**
- * Model builder to construct and build a [[Model]] consisting of graph shapes and services.
+ * Model builder to construct and build a {@link Model} consisting of graph shapes and services.
  *
  * ## Usage
- * Models can be created using the [[ModelBuilder]]. Once you have added all services and constructed the graph, you can build the model using the ```build()``` function. A promise will be returned with the created model.
+ * Models can be created using the {@link ModelBuilder}. Once you have added all services and constructed the graph, you can build the model using the ```build()``` function. A promise will be returned with the created model.
  *
  * ```typescript
  * import { ModelBuilder } from '@openhps/core';

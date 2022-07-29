@@ -6,16 +6,16 @@ import { Graph } from './graph/Graph';
 import { Serializable } from './data/decorators';
 
 /**
- * This model contains multiple [[Node]]s, [[Service]]s to sample
- * [[DataFrame]]s that are pushed or pulled from this model.
+ * This model contains multiple {@link Node}s, {@link Service}s to sample
+ * {@link DataFrame}s that are pushed or pulled from this model.
  *
  * ## Usage
  * ### Creation
- * Please refer to [[ModelBuilder]] for creating a new model
+ * Please refer to {@link ModelBuilder} for creating a new model
  *
  * ### Pushing and Pulling
  * Pushing or pulling on a model is possible, but only recommended for prototyping.
- * Instead, developers should use a [[SourceNode]] that automatically pushes new [[DataFrame]]s
+ * Instead, developers should use a {@link SourceNode} that automatically pushes new {@link DataFrame}s
  * or pushes new frames when receiving a pull.
  */
 export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame> extends Graph<In, Out> {
@@ -47,7 +47,7 @@ export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame =
     /**
      * Find all data services by data type
      *
-     * @param {typeof Service} [serviceClass] data type class
+     * @param {Serializable} [dataType] data type class
      * @returns {Service[]} Array of all services
      */
     findAllDataServices<T, S extends DataService<any, T>>(dataType?: Serializable<T>): S[];

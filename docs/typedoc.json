@@ -8,13 +8,8 @@
     "media": "media",
     "entryPointStrategy": "Expand",
     "umlClassDiagram": {
-        "type": "detailed",
+        "type": "simple",
         "location": "local",
         "format": "svg"
-    },
-    "pluginPages": {
-		"pages": [
-            { "title": "Security", "source": "./SECURITY.md" }
-        ]
-	}
+    }
 }

@@ -1,7 +1,7 @@
 import { FilterQuery, QuerySelector } from './FilterQuery';
 
 /**
- * Query evaluator for [[FilterQuery]]s with [[MemoryDataService]].
+ * Query evaluator for {@link FilterQuery}s with {@link MemoryDataService}.
  */
 export class MemoryQueryEvaluator {
     private static isRegexQuery(query: any): boolean {

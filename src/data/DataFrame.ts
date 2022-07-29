@@ -13,14 +13,14 @@ import { DataSerializer } from './DataSerializer';
  * ## Usage
  *
  * ### Creation
- * A data frame can be created with an optional source [[DataObject]] that represents
+ * A data frame can be created with an optional source {@link DataObject} that represents
  * the object responsible for generating the frame.
  * ```typescript
  * const dataFrame = new DataFrame(new DataObject("phone"));
  * ```
  *
  * ### Creating a custom DataFrame
- * Custom data frames can be created by extending the default [[DataFrame]] class. Important when handling
+ * Custom data frames can be created by extending the default {@link DataFrame} class. Important when handling
  * data frames (and objects) is to add serializable decorators.
  * ```typescript
  * import { DataFrame, SerializableObject, SerializableArrayMember } from '@openhps/core';
@@ -32,7 +32,7 @@ import { DataSerializer } from './DataSerializer';
  * }
  * ```
  *
- * ### Adding [[DataObject]]s
+ * ### Adding {@link DataObject}s
  * Adding data object will clone the data objects to the data frame. Any changes made to the object after cloning will not
  * be applied to the data frame.
  */

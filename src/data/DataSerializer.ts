@@ -43,12 +43,12 @@ JsonObjectMetadata.getFromConstructor = function (ctor) {
 };
 
 /**
- * Allows the serialization and deserialization of objects using the [[SerializableObject]] decorator.
+ * Allows the serialization and deserialization of objects using the {@link SerializableObject} decorator.
  *
  * ## Usage
  *
  * ### Registration
- * Objects are registered upon loading with the [[SerializableObject]] decorator.
+ * Objects are registered upon loading with the {@link SerializableObject} decorator.
  * Manual registration is possible using:
  * ```typescript
  * DataSerializer.registerType(MyObjectClass);
@@ -128,7 +128,7 @@ export class DataSerializer {
     /**
      * Get the TypedJSON metadata
      *
-     * @deprecated use [[DataSerializerUtils.getMetadata]]
+     * @deprecated use {@link DataSerializerUtils.getMetadata}
      * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
      * @param {any} proto Prototype of target
      * @returns {ObjectMetadata} Root object metadata
@@ -140,7 +140,7 @@ export class DataSerializer {
     /**
      * Get the root TypedJSON metadata
      *
-     * @deprecated use [[DataSerializerUtils.getRootMetadata.getRootMetadata]]
+     * @deprecated use {@link DataSerializerUtils.getRootMetadata}
      * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
      * @param {any} proto Prototype of target
      * @returns {ObjectMetadata} Root object metadata
@@ -152,7 +152,7 @@ export class DataSerializer {
     /**
      * Find the root TypedJSON metadata
      *
-     * @deprecated use [[DataSerializerUtils.getRootMetadata.getRootMetadata]]
+     * @deprecated use {@link DataSerializerUtils.getRootMetadata}
      * @param {any} proto Prototype of target
      * @returns {ObjectMetadata} Root object metadata
      */

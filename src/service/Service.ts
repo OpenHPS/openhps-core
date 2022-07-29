@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { SerializableMember, SerializableObject } from '../data/decorators';
 
 /**
- * Service is accessible by each [[Node]] inside the [[Model]]
+ * Service is accessible by each {@link Node} inside the {@link Model}
  */
 @SerializableObject()
 export abstract class Service extends AsyncEventEmitter {

@@ -106,7 +106,6 @@
     "@babel/preset-env": "^7.18.9",
     "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",
-    "@knodes/typedoc-plugin-pages": "^0.23.1",
     "@size-limit/preset-small-lib": "^7.0.8",
     "@types/benchmark": "^2.1.1",
     "@types/chai": "^4.3.1",
