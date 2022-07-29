@@ -59,6 +59,9 @@ describe('WorkerNode', () => {
                     if (count === 3) {
                         const end = new Date().getTime();
                         const diff = end - start;
+                        if (diff >= 30 + overhead) {
+                            done(new Error(`Timeout!`));
+                        }
                         expect(diff).to.be.lessThan(30 + overhead);
                         model.emitAsync('destroy').then(() => {
                             done();
@@ -74,8 +77,8 @@ describe('WorkerNode', () => {
                 done(ex);
             });
     })
-        .slow(5000)
-        .timeout(60000);
+        .slow(20000)
+        .timeout(80000);
 
     it('should take 20ms with 3 workers', (done) => {
         let model;
@@ -118,6 +121,9 @@ describe('WorkerNode', () => {
                     if (count === 3) {
                         const end = new Date().getTime();
                         const diff = end - start;
+                        if (diff >= 20 + overhead) {
+                            done(new Error(`Timeout!`));
+                        }
                         expect(diff).to.be.lessThan(20 + overhead);
                         model.emitAsync('destroy').then(() => {
                             done();
@@ -133,8 +139,8 @@ describe('WorkerNode', () => {
                 done(ex);
             });
     })
-        .slow(5000)
-        .timeout(60000);
+        .slow(20000)
+        .timeout(80000);
 
     it('should be able to access data services', (done) => {
         let model;
