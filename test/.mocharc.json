@@ -10,5 +10,6 @@
     "spec": "test/specs/**/*.spec.ts",
     "slow": 1500,
     "timeout": 20000,
-    "recursive": true
+    "recursive": true,
+    "reporterEnabled": "spec, mocha-junit-reporter"
 }

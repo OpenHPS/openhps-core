@@ -60,8 +60,9 @@ describe('WorkerNode', () => {
                         const end = new Date().getTime();
                         const diff = end - start;
                         expect(diff).to.be.lessThan(30 + overhead);
-                        model.emit('destroy');
-                        done();
+                        model.emitAsync('destroy').then(() => {
+                            done();
+                        }).catch(done);
                     }
                 });
 
@@ -118,8 +119,9 @@ describe('WorkerNode', () => {
                         const end = new Date().getTime();
                         const diff = end - start;
                         expect(diff).to.be.lessThan(20 + overhead);
-                        model.emit('destroy');
-                        done();
+                        model.emitAsync('destroy').then(() => {
+                            done();
+                        }).catch(done);
                     }
                 });
 
