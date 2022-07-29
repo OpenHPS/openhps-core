@@ -17,7 +17,7 @@ describe('WorkerNode', () => {
     // Overhead in ms
     const overhead = 50;
 
-    it('should take 30ms with 1 worker', (done) => {
+    it('should take 30ms with 2 worker', (done) => {
         let model;
         let start;
         ModelBuilder.create()
@@ -34,7 +34,7 @@ describe('WorkerNode', () => {
                     },
                     {
                         directory: __dirname,
-                        poolSize: 1,
+                        poolSize: 2,
                     },
                 ),
             )
@@ -77,7 +77,7 @@ describe('WorkerNode', () => {
         .slow(5000)
         .timeout(60000);
 
-    it('should take 20ms with 2 workers', (done) => {
+    it('should take 20ms with 3 workers', (done) => {
         let model;
         let start;
         ModelBuilder.create()
@@ -93,7 +93,7 @@ describe('WorkerNode', () => {
                     },
                     {
                         directory: __dirname,
-                        poolSize: 2,
+                        poolSize: 3,
                     },
                 ),
             )
