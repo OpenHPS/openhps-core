@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="276px" preserveAspectRatio="none" style="width:483px;height:276px;background:#00000000;" version="1.1" viewBox="0 0 483 276" width="483px" zoomAndPan="magnify"><defs><filter height="300%" id="fzn78ehahnde2" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[7183395f106fe9f17d6415420f8540f1]
+class SpaceConversionOptions--><rect codeLine="4" fill="#FEFECE" filter="url(#fzn78ehahnde2)" height="104.0234" id="SpaceConversionOptions" style="stroke:#A80036;stroke-width:1.5;" width="185" x="146.5" y="158"/><ellipse cx="161.5" cy="174" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M157.4219,169.7656 L157.4219,167.6094 L164.8125,167.6094 L164.8125,169.7656 L162.3438,169.7656 L162.3438,177.8438 L164.8125,177.8438 L164.8125,180 L157.4219,180 L157.4219,177.8438 L159.8906,177.8438 L159.8906,169.7656 L157.4219,169.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="153" x="175.5" y="178.1543">SpaceConversionOptions</text><line style="stroke:#A80036;stroke-width:1.5;" x1="147.5" x2="330.5" y1="190" y2="190"/><ellipse cx="157.5" cy="201" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="121" x="166.5" y="204.2104">frameFilter : Function</text><ellipse cx="157.5" cy="213.8047" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="99" x="166.5" y="217.0151">inverse : boolean</text><ellipse cx="157.5" cy="226.6094" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="77" x="166.5" y="229.8198">name : string</text><ellipse cx="157.5" cy="239.4141" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="121" x="166.5" y="242.6245">objectFilter : Function</text><ellipse cx="157.5" cy="252.2188" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="62" x="166.5" y="255.4292">uid : string</text><!--MD5=[b53bc0b3a71be57c62241e847c2a99d4]
+class ObjectProcessingNodeOptions--><rect codeLine="11" fill="#FEFECE" filter="url(#fzn78ehahnde2)" height="91.2188" id="ObjectProcessingNodeOptions" style="stroke:#A80036;stroke-width:1.5;" width="216" x="7" y="7"/><ellipse cx="22" cy="23" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M17.9219,18.7656 L17.9219,16.6094 L25.3125,16.6094 L25.3125,18.7656 L22.8438,18.7656 L22.8438,26.8438 L25.3125,26.8438 L25.3125,29 L17.9219,29 L17.9219,26.8438 L20.3906,26.8438 L20.3906,18.7656 L17.9219,18.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="184" x="36" y="27.1543">ObjectProcessingNodeOptions</text><line style="stroke:#A80036;stroke-width:1.5;" x1="8" x2="222" y1="39" y2="39"/><ellipse cx="18" cy="50" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="121" x="27" y="53.2104">frameFilter : Function</text><ellipse cx="18" cy="62.8047" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="77" x="27" y="66.0151">name : string</text><ellipse cx="18" cy="75.6094" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="121" x="27" y="78.8198">objectFilter : Function</text><ellipse cx="18" cy="88.4141" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="62" x="27" y="91.6245">uid : string</text><!--MD5=[24d0e048b4218bad33f3e10ff46ead90]
+class SpaceTransformationOptions--><rect codeLine="18" fill="#FEFECE" filter="url(#fzn78ehahnde2)" height="52.8047" id="SpaceTransformationOptions" style="stroke:#A80036;stroke-width:1.5;" width="211" x="258.5" y="26"/><ellipse cx="273.5" cy="42" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M269.4219,37.7656 L269.4219,35.6094 L276.8125,35.6094 L276.8125,37.7656 L274.3438,37.7656 L274.3438,45.8438 L276.8125,45.8438 L276.8125,48 L269.4219,48 L269.4219,45.8438 L271.8906,45.8438 L271.8906,37.7656 L269.4219,37.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="179" x="287.5" y="46.1543">SpaceTransformationOptions</text><line style="stroke:#A80036;stroke-width:1.5;" x1="259.5" x2="468.5" y1="58" y2="58"/><ellipse cx="269.5" cy="69" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="99" x="278.5" y="72.2104">inverse : boolean</text><!--MD5=[e70c1b9e5e4417c063a1a8777c6611ed]
+reverse link ObjectProcessingNodeOptions to SpaceConversionOptions--><path codeLine="17" d="M163.21,113.96 C174.78,128.47 187.02,143.82 198.22,157.85 " fill="none" id="ObjectProcessingNodeOptions-backto-SpaceConversionOptions" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="157.53,118.06,150.53,98.06,168.48,109.33,157.53,118.06" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[bd3382aeb0c1aec283666640ccc23e50]
+reverse link SpaceTransformationOptions to SpaceConversionOptions--><path codeLine="21" d="M330.66,94.98 C315.14,114.28 296.54,137.42 280.17,157.79 " fill="none" id="SpaceTransformationOptions-backto-SpaceConversionOptions" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="325.37,90.38,343.36,79.18,336.28,99.15,325.37,90.38" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[f106a658f1a9da0fc404572b4f5b03bc]
+@startuml
+skinparam BackgroundColor transparent
+hide empty methods
+hide empty fields
+interface "SpaceConversionOptions" {
+    +frameFilter : Function
+    +inverse : boolean
+    +name : string
+    +objectFilter : Function
+    +uid : string
+}
+interface "ObjectProcessingNodeOptions" {
+    +frameFilter : Function
+    +name : string
+    +objectFilter : Function
+    +uid : string
+}
+"ObjectProcessingNodeOptions" <|- - "SpaceConversionOptions"
+interface "SpaceTransformationOptions" {
+    +inverse : boolean
+}
+"SpaceTransformationOptions" <|- - "SpaceConversionOptions"
+@enduml
+
+PlantUML version 1.2021.14(Fri Nov 12 16:46:50 UTC 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>

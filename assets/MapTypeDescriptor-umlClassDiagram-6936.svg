@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="242px" preserveAspectRatio="none" style="width:250px;height:242px;background:#00000000;" version="1.1" viewBox="0 0 250 242" width="250px" zoomAndPan="magnify"><defs><filter height="300%" id="f7kxwzd5jxcxu" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[87fe2f8e03dd94bc5aa60e083c3e624d]
+class MapTypeDescriptor--><rect codeLine="4" fill="#FEFECE" filter="url(#f7kxwzd5jxcxu)" height="137.6328" id="MapTypeDescriptor" style="stroke:#A80036;stroke-width:1.5;" width="229" x="7" y="91"/><ellipse cx="57.25" cy="107" fill="#ADD1B2" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M60.2188,112.6406 Q59.6406,112.9375 59,113.0781 Q58.3594,113.2344 57.6563,113.2344 Q55.1563,113.2344 53.8281,111.5938 Q52.5156,109.9375 52.5156,106.8125 Q52.5156,103.6875 53.8281,102.0313 Q55.1563,100.375 57.6563,100.375 Q58.3594,100.375 59,100.5313 Q59.6563,100.6875 60.2188,100.9844 L60.2188,103.7031 Q59.5938,103.125 59,102.8594 Q58.4063,102.5781 57.7813,102.5781 Q56.4375,102.5781 55.75,103.6563 Q55.0625,104.7188 55.0625,106.8125 Q55.0625,108.9063 55.75,109.9844 Q56.4375,111.0469 57.7813,111.0469 Q58.4063,111.0469 59,110.7813 Q59.5938,110.5 60.2188,109.9219 L60.2188,112.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="120" x="77.75" y="111.1543">MapTypeDescriptor</text><line style="stroke:#A80036;stroke-width:1.5;" x1="8" x2="235" y1="123" y2="123"/><ellipse cx="18" cy="134" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="81" x="27" y="137.2104">ctor : Function</text><ellipse cx="18" cy="146.8047" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="144" x="27" y="150.0151">keyType : TypeDescriptor</text><ellipse cx="18" cy="159.6094" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="175" x="27" y="162.8198">options : Partial&lt;MapOptions&gt;</text><ellipse cx="18" cy="172.4141" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="155" x="27" y="175.6245">valueType : TypeDescriptor</text><line style="stroke:#A80036;stroke-width:1.5;" x1="8" x2="235" y1="182.2188" y2="182.2188"/><ellipse cx="18" cy="193.2188" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="203" x="27" y="196.4292">getCompleteOptions() : MapOptions</text><ellipse cx="18" cy="206.0234" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="127" x="27" y="209.2339">getTypes() : Function[]</text><ellipse cx="18" cy="218.8281" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="163" x="27" y="222.0386">hasFriendlyName() : boolean</text><!--MD5=[ecb97c93c596d050d884ecf15662f594]
+class GenericTypeDescriptor--><rect codeLine="13" fill="#FEFECE" filter="url(#f7kxwzd5jxcxu)" height="23.9688" id="GenericTypeDescriptor" style="stroke:#A80036;stroke-width:1.5;" width="148" x="47.5" y="7"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="142" x="50.5" y="23.1387">GenericTypeDescriptor</text><!--MD5=[f13bb7413cbf3310018d4d719e2194e9]
+reverse link GenericTypeDescriptor to MapTypeDescriptor--><path codeLine="15" d="M121.5,51.76 C121.5,63.41 121.5,77.09 121.5,90.71 " fill="none" id="GenericTypeDescriptor-backto-MapTypeDescriptor" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="114.5,51.37,121.5,31.37,128.5,51.37,114.5,51.37" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[18583f79f6583327f5a9c76176474823]
+@startuml
+skinparam BackgroundColor transparent
+hide empty methods
+hide empty fields
+class "MapTypeDescriptor" {
+    +ctor : Function
+    +keyType : TypeDescriptor
+    +options : Partial<MapOptions>
+    +valueType : TypeDescriptor
+    +getCompleteOptions() : MapOptions
+    +getTypes() : Function[]
+    +hasFriendlyName() : boolean
+}
+class "GenericTypeDescriptor"
+hide "GenericTypeDescriptor" circle
+"GenericTypeDescriptor" <|- - "MapTypeDescriptor"
+@enduml
+
+PlantUML version 1.2021.14(Fri Nov 12 16:46:50 UTC 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>

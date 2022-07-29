@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="281px" preserveAspectRatio="none" style="width:884px;height:281px;background:#00000000;" version="1.1" viewBox="0 0 884 281" width="884px" zoomAndPan="magnify"><defs><filter height="300%" id="fxobderf8vlbi" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[0e2e915064bf2e2ee735763ff21e6466]
+class Serializer--><rect codeLine="4" fill="#FEFECE" filter="url(#fxobderf8vlbi)" height="176.0469" id="Serializer" style="stroke:#A80036;stroke-width:1.5;" width="861" x="9" y="91"/><ellipse cx="407.25" cy="107" fill="#ADD1B2" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M410.2188,112.6406 Q409.6406,112.9375 409,113.0781 Q408.3594,113.2344 407.6563,113.2344 Q405.1563,113.2344 403.8281,111.5938 Q402.5156,109.9375 402.5156,106.8125 Q402.5156,103.6875 403.8281,102.0313 Q405.1563,100.375 407.6563,100.375 Q408.3594,100.375 409,100.5313 Q409.6563,100.6875 410.2188,100.9844 L410.2188,103.7031 Q409.5938,103.125 409,102.8594 Q408.4063,102.5781 407.7813,102.5781 Q406.4375,102.5781 405.75,103.6563 Q405.0625,104.7188 405.0625,106.8125 Q405.0625,108.9063 405.75,109.9844 Q406.4375,111.0469 407.7813,111.0469 Q408.4063,111.0469 409,110.7813 Q409.5938,110.5 410.2188,109.9219 L410.2188,112.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="56" x="427.75" y="111.1543">Serializer</text><line style="stroke:#A80036;stroke-width:1.5;" x1="10" x2="869" y1="123" y2="123"/><ellipse cx="20" cy="134" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="150" x="29" y="137.2104">getErrorHandler : Function</text><ellipse cx="20" cy="146.8047" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="167" x="29" y="150.0151">getTypeHintEmitter : Function</text><ellipse cx="20" cy="159.6094" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="175" x="29" y="162.8198">retrievePreserveNull : Function</text><ellipse cx="20" cy="172.4141" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="150" x="29" y="175.6245">setErrorHandler : Function</text><ellipse cx="20" cy="185.2188" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="194" x="29" y="188.4292">setSerializationStrategy : Function</text><ellipse cx="20" cy="198.0234" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="167" x="29" y="201.2339">setTypeHintEmitter : Function</text><polygon fill="none" points="20,205.8281,24,209.8281,20,213.8281,16,209.8281" style="stroke:#B38D22;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="132" x="29" y="214.0386">errorHandler : Function</text><polygon fill="none" points="20,218.6328,24,222.6328,20,226.6328,16,222.6328" style="stroke:#B38D22;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="506" x="29" y="226.8433">serializationStrategy : Map&lt;Serializable&lt;any&gt;, SerializerFn&lt;any, TypeDescriptor, any&gt;&gt;</text><polygon fill="none" points="20,231.4375,24,235.4375,20,239.4375,16,235.4375" style="stroke:#B38D22;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="189" x="29" y="239.6479">typeHintEmitter : TypeHintEmitter</text><line style="stroke:#A80036;stroke-width:1.5;" x1="10" x2="869" y1="246.2422" y2="246.2422"/><ellipse cx="20" cy="257.2422" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="835" x="29" y="260.4526">convertSingleValue(sourceObject: any, typeDescriptor: TypeDescriptor, memberName: string, memberOptions: MemberOptionsBase, _: any) : any</text><!--MD5=[b686c8024f66d07b04e17e899087e6a0]
+class unknown--><rect codeLine="16" fill="#FEFECE" filter="url(#fxobderf8vlbi)" height="23.9688" id="unknown" style="stroke:#A80036;stroke-width:1.5;" width="62" x="408.5" y="7"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="56" x="411.5" y="23.1387">unknown</text><!--MD5=[4f825545bf577012a626dafc9b895680]
+reverse link unknown to Serializer--><path codeLine="18" d="M439.5,51.21 C439.5,62.78 439.5,76.56 439.5,90.69 " fill="none" id="unknown-backto-Serializer" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="432.5,51.11,439.5,31.11,446.5,51.11,432.5,51.11" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[e179c1a48d61b431e67f49945e5d6924]
+@startuml
+skinparam BackgroundColor transparent
+hide empty methods
+hide empty fields
+class "Serializer" {
+    +getErrorHandler : Function
+    +getTypeHintEmitter : Function
+    +retrievePreserveNull : Function
+    +setErrorHandler : Function
+    +setSerializationStrategy : Function
+    +setTypeHintEmitter : Function
+    #errorHandler : Function
+    #serializationStrategy : Map<Serializable<any>, SerializerFn<any, TypeDescriptor, any>>
+    #typeHintEmitter : TypeHintEmitter
+    +convertSingleValue(sourceObject: any, typeDescriptor: TypeDescriptor, memberName: string, memberOptions: MemberOptionsBase, _: any) : any
+}
+class "unknown"
+hide "unknown" circle
+"unknown" <|- - "Serializer"
+@enduml
+
+PlantUML version 1.2021.14(Fri Nov 12 16:46:50 UTC 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>

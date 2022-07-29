@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="204px" preserveAspectRatio="none" style="width:218px;height:204px;background:#00000000;" version="1.1" viewBox="0 0 218 204" width="218px" zoomAndPan="magnify"><defs><filter height="300%" id="fwlcfy22a20uu" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[3d8b5084ed20d7b7e27b2f170b1e7da1]
+class SetTypeDescriptor--><rect codeLine="4" fill="#FEFECE" filter="url(#fwlcfy22a20uu)" height="99.2188" id="SetTypeDescriptor" style="stroke:#A80036;stroke-width:1.5;" width="197" x="7" y="91"/><ellipse cx="44.5" cy="107" fill="#ADD1B2" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M47.4688,112.6406 Q46.8906,112.9375 46.25,113.0781 Q45.6094,113.2344 44.9063,113.2344 Q42.4063,113.2344 41.0781,111.5938 Q39.7656,109.9375 39.7656,106.8125 Q39.7656,103.6875 41.0781,102.0313 Q42.4063,100.375 44.9063,100.375 Q45.6094,100.375 46.25,100.5313 Q46.9063,100.6875 47.4688,100.9844 L47.4688,103.7031 Q46.8438,103.125 46.25,102.8594 Q45.6563,102.5781 45.0313,102.5781 Q43.6875,102.5781 43,103.6563 Q42.3125,104.7188 42.3125,106.8125 Q42.3125,108.9063 43,109.9844 Q43.6875,111.0469 45.0313,111.0469 Q45.6563,111.0469 46.25,110.7813 Q46.8438,110.5 47.4688,109.9219 L47.4688,112.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="115" x="63.5" y="111.1543">SetTypeDescriptor</text><line style="stroke:#A80036;stroke-width:1.5;" x1="8" x2="203" y1="123" y2="123"/><ellipse cx="18" cy="134" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="81" x="27" y="137.2104">ctor : Function</text><ellipse cx="18" cy="146.8047" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="171" x="27" y="150.0151">elementType : TypeDescriptor</text><line style="stroke:#A80036;stroke-width:1.5;" x1="8" x2="203" y1="156.6094" y2="156.6094"/><ellipse cx="18" cy="167.6094" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="127" x="27" y="170.8198">getTypes() : Function[]</text><ellipse cx="18" cy="180.4141" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="163" x="27" y="183.6245">hasFriendlyName() : boolean</text><!--MD5=[ecb97c93c596d050d884ecf15662f594]
+class GenericTypeDescriptor--><rect codeLine="10" fill="#FEFECE" filter="url(#fwlcfy22a20uu)" height="23.9688" id="GenericTypeDescriptor" style="stroke:#A80036;stroke-width:1.5;" width="148" x="31.5" y="7"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="142" x="34.5" y="23.1387">GenericTypeDescriptor</text><!--MD5=[8de2c744ea3562f57b15957c4660b104]
+reverse link GenericTypeDescriptor to SetTypeDescriptor--><path codeLine="12" d="M105.5,51.05 C105.5,63.18 105.5,77.38 105.5,90.81 " fill="none" id="GenericTypeDescriptor-backto-SetTypeDescriptor" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="98.5,51.03,105.5,31.03,112.5,51.03,98.5,51.03" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[ed70cdcadcad93bd3a48671b6d566590]
+@startuml
+skinparam BackgroundColor transparent
+hide empty methods
+hide empty fields
+class "SetTypeDescriptor" {
+    +ctor : Function
+    +elementType : TypeDescriptor
+    +getTypes() : Function[]
+    +hasFriendlyName() : boolean
+}
+class "GenericTypeDescriptor"
+hide "GenericTypeDescriptor" circle
+"GenericTypeDescriptor" <|- - "SetTypeDescriptor"
+@enduml
+
+PlantUML version 1.2021.14(Fri Nov 12 16:46:50 UTC 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>

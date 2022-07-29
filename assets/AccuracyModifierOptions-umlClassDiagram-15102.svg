@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="327px" preserveAspectRatio="none" style="width:237px;height:327px;background:#00000000;" version="1.1" viewBox="0 0 237 327" width="237px" zoomAndPan="magnify"><defs><filter height="300%" id="f9cdovzfru79r" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[55474b353eeff7ab16250fb690321adf]
+class AccuracyModifierOptions--><rect codeLine="4" fill="#FEFECE" filter="url(#f9cdovzfru79r)" height="155.2422" id="AccuracyModifierOptions" style="stroke:#A80036;stroke-width:1.5;" width="184" x="23" y="158"/><ellipse cx="38" cy="174" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M33.9219,169.7656 L33.9219,167.6094 L41.3125,167.6094 L41.3125,169.7656 L38.8438,169.7656 L38.8438,177.8438 L41.3125,177.8438 L41.3125,180 L33.9219,180 L33.9219,177.8438 L36.3906,177.8438 L36.3906,169.7656 L33.9219,169.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="152" x="52" y="178.1543">AccuracyModifierOptions</text><line style="stroke:#A80036;stroke-width:1.5;" x1="24" x2="206" y1="190" y2="190"/><ellipse cx="34" cy="201" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="126" x="43" y="204.2104">defaultValue : number</text><ellipse cx="34" cy="213.8047" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="121" x="43" y="217.0151">frameFilter : Function</text><ellipse cx="34" cy="226.6094" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="116" x="43" y="229.8198">magnitude : number</text><ellipse cx="34" cy="239.4141" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="77" x="43" y="242.6245">name : string</text><ellipse cx="34" cy="252.2188" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="121" x="43" y="255.4292">objectFilter : Function</text><ellipse cx="34" cy="265.0234" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="89" x="43" y="268.2339">offset : number</text><ellipse cx="34" cy="277.8281" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="127" x="43" y="281.0386">offsetUnit : LengthUnit</text><ellipse cx="34" cy="290.6328" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="62" x="43" y="293.8433">uid : string</text><ellipse cx="34" cy="303.4375" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="86" x="43" y="306.6479">value : number</text><!--MD5=[b53bc0b3a71be57c62241e847c2a99d4]
+class ObjectProcessingNodeOptions--><rect codeLine="15" fill="#FEFECE" filter="url(#f9cdovzfru79r)" height="91.2188" id="ObjectProcessingNodeOptions" style="stroke:#A80036;stroke-width:1.5;" width="216" x="7" y="7"/><ellipse cx="22" cy="23" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M17.9219,18.7656 L17.9219,16.6094 L25.3125,16.6094 L25.3125,18.7656 L22.8438,18.7656 L22.8438,26.8438 L25.3125,26.8438 L25.3125,29 L17.9219,29 L17.9219,26.8438 L20.3906,26.8438 L20.3906,18.7656 L17.9219,18.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="184" x="36" y="27.1543">ObjectProcessingNodeOptions</text><line style="stroke:#A80036;stroke-width:1.5;" x1="8" x2="222" y1="39" y2="39"/><ellipse cx="18" cy="50" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="121" x="27" y="53.2104">frameFilter : Function</text><ellipse cx="18" cy="62.8047" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="77" x="27" y="66.0151">name : string</text><ellipse cx="18" cy="75.6094" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="121" x="27" y="78.8198">objectFilter : Function</text><ellipse cx="18" cy="88.4141" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="62" x="27" y="91.6245">uid : string</text><!--MD5=[6eb700add1db1bb88e45709b6a493fc9]
+reverse link ObjectProcessingNodeOptions to AccuracyModifierOptions--><path codeLine="21" d="M115,118.26 C115,131.1 115,144.68 115,157.86 " fill="none" id="ObjectProcessingNodeOptions-backto-AccuracyModifierOptions" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="108,118.24,115,98.24,122,118.24,108,118.24" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[5095a994ae77d7ee64219c36227a3a37]
+@startuml
+skinparam BackgroundColor transparent
+hide empty methods
+hide empty fields
+interface "AccuracyModifierOptions" {
+    +defaultValue : number
+    +frameFilter : Function
+    +magnitude : number
+    +name : string
+    +objectFilter : Function
+    +offset : number
+    +offsetUnit : LengthUnit
+    +uid : string
+    +value : number
+}
+interface "ObjectProcessingNodeOptions" {
+    +frameFilter : Function
+    +name : string
+    +objectFilter : Function
+    +uid : string
+}
+"ObjectProcessingNodeOptions" <|- - "AccuracyModifierOptions"
+@enduml
+
+PlantUML version 1.2021.14(Fri Nov 12 16:46:50 UTC 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>

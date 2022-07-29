@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="253px" preserveAspectRatio="none" style="width:230px;height:253px;background:#00000000;" version="1.1" viewBox="0 0 230 253" width="230px" zoomAndPan="magnify"><defs><filter height="300%" id="fii6xmarbh0ms" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[d0d74a0ef018a354baff84d8a539eadf]
+class TypeDescriptor--><rect codeLine="4" fill="#FEFECE" filter="url(#fii6xmarbh0ms)" height="86.4141" id="TypeDescriptor" style="stroke:#A80036;stroke-width:1.5;" width="209" x="7" y="7"/><ellipse cx="60.25" cy="23" fill="#A9DCDF" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M60.3594,18.3438 L59.2031,23.4219 L61.5313,23.4219 L60.3594,18.3438 Z M58.875,16.1094 L61.8594,16.1094 L65.2188,28.5 L62.7656,28.5 L62,25.4375 L58.7188,25.4375 L57.9688,28.5 L55.5313,28.5 L58.875,16.1094 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="94" x="80.75" y="27.1543">TypeDescriptor</text><line style="stroke:#A80036;stroke-width:1.5;" x1="8" x2="215" y1="39" y2="39"/><ellipse cx="18" cy="50" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="137" x="27" y="53.2104">ctor : Serializable&lt;any&gt;</text><line style="stroke:#A80036;stroke-width:1.5;" x1="8" x2="215" y1="59.8047" y2="59.8047"/><ellipse cx="18" cy="70.8047" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="183" x="27" y="74.0151">getTypes() : Serializable&lt;any&gt;[]</text><ellipse cx="18" cy="83.6094" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="163" x="27" y="86.8198">hasFriendlyName() : boolean</text><!--MD5=[0abc0aa8cc68735f9ca6afc0dff1e258]
+class ConcreteTypeDescriptor--><rect codeLine="9" fill="#FEFECE" filter="url(#fii6xmarbh0ms)" height="86.4141" id="ConcreteTypeDescriptor" style="stroke:#A80036;stroke-width:1.5;" width="209" x="7" y="153"/><ellipse cx="33.7" cy="169" fill="#ADD1B2" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M36.6688,174.6406 Q36.0906,174.9375 35.45,175.0781 Q34.8094,175.2344 34.1063,175.2344 Q31.6063,175.2344 30.2781,173.5938 Q28.9656,171.9375 28.9656,168.8125 Q28.9656,165.6875 30.2781,164.0313 Q31.6063,162.375 34.1063,162.375 Q34.8094,162.375 35.45,162.5313 Q36.1063,162.6875 36.6688,162.9844 L36.6688,165.7031 Q36.0438,165.125 35.45,164.8594 Q34.8563,164.5781 34.2313,164.5781 Q32.8875,164.5781 32.2,165.6563 Q31.5125,166.7188 31.5125,168.8125 Q31.5125,170.9063 32.2,171.9844 Q32.8875,173.0469 34.2313,173.0469 Q34.8563,173.0469 35.45,172.7813 Q36.0438,172.5 36.6688,171.9219 L36.6688,174.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="151" x="50.3" y="173.1543">ConcreteTypeDescriptor</text><line style="stroke:#A80036;stroke-width:1.5;" x1="8" x2="215" y1="185" y2="185"/><ellipse cx="18" cy="196" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="137" x="27" y="199.2104">ctor : Serializable&lt;any&gt;</text><line style="stroke:#A80036;stroke-width:1.5;" x1="8" x2="215" y1="205.8047" y2="205.8047"/><ellipse cx="18" cy="216.8047" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="183" x="27" y="220.0151">getTypes() : Serializable&lt;any&gt;[]</text><ellipse cx="18" cy="229.6094" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="163" x="27" y="232.8198">hasFriendlyName() : boolean</text><!--MD5=[72d5417b6e6945e87c9425dc0eede0c5]
+reverse link TypeDescriptor to ConcreteTypeDescriptor--><path codeLine="14" d="M111.5,113.29 C111.5,126.58 111.5,140.33 111.5,152.66 " fill="none" id="TypeDescriptor-backto-ConcreteTypeDescriptor" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="104.5,113.04,111.5,93.04,118.5,113.04,104.5,113.04" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[4a9ca85e8c215dbe6faaa31491dc42d3]
+@startuml
+skinparam BackgroundColor transparent
+hide empty methods
+hide empty fields
+abstract class "TypeDescriptor" {
+    +ctor : Serializable<any>
+    +getTypes() : Serializable<any>[]
+    +hasFriendlyName() : boolean
+}
+class "ConcreteTypeDescriptor" {
+    +ctor : Serializable<any>
+    +getTypes() : Serializable<any>[]
+    +hasFriendlyName() : boolean
+}
+"TypeDescriptor" <|- - "ConcreteTypeDescriptor"
+@enduml
+
+PlantUML version 1.2021.14(Fri Nov 12 16:46:50 UTC 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>

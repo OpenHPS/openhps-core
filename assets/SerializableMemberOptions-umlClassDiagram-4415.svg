@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="379px" preserveAspectRatio="none" style="width:220px;height:379px;background:#00000000;" version="1.1" viewBox="0 0 220 379" width="220px" zoomAndPan="magnify"><defs><filter height="300%" id="fid3ggdei60ch" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[50a4a531bdd975bfe0683fb9bf772d86]
+class SerializableMemberOptions--><rect codeLine="4" fill="#FEFECE" filter="url(#fid3ggdei60ch)" height="168.0469" id="SerializableMemberOptions" style="stroke:#A80036;stroke-width:1.5;" width="199" x="7" y="197"/><ellipse cx="22" cy="213" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M17.9219,208.7656 L17.9219,206.6094 L25.3125,206.6094 L25.3125,208.7656 L22.8438,208.7656 L22.8438,216.8438 L25.3125,216.8438 L25.3125,219 L17.9219,219 L17.9219,216.8438 L20.3906,216.8438 L20.3906,208.7656 L17.9219,208.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="167" x="36" y="217.1543">SerializableMemberOptions</text><line style="stroke:#A80036;stroke-width:1.5;" x1="8" x2="205" y1="229" y2="229"/><ellipse cx="18" cy="240" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="123" x="27" y="243.2104">constructor : Typelike</text><ellipse cx="18" cy="252.8047" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="125" x="27" y="256.0151">deserializer : Function</text><ellipse cx="18" cy="265.6094" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="153" x="27" y="268.8198">emitDefaultValue : boolean</text><ellipse cx="18" cy="278.4141" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="132" x="27" y="281.6245">index : string | boolean</text><ellipse cx="18" cy="291.2188" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="117" x="27" y="294.4292">isRequired : boolean</text><ellipse cx="18" cy="304.0234" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="77" x="27" y="307.2339">name : string</text><ellipse cx="18" cy="316.8281" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="129" x="27" y="320.0386">preserveNull : boolean</text><ellipse cx="18" cy="329.6328" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="121" x="27" y="332.8433">primaryKey : boolean</text><ellipse cx="18" cy="342.4375" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="111" x="27" y="345.6479">serializer : Function</text><ellipse cx="18" cy="355.2422" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="95" x="27" y="358.4526">unique : boolean</text><!--MD5=[f627c81427830b5190d21a5c6a35de66]
+class MemberOptionsBase--><rect codeLine="16" fill="#FEFECE" filter="url(#fid3ggdei60ch)" height="129.6328" id="MemberOptionsBase" style="stroke:#A80036;stroke-width:1.5;" width="179" x="17" y="7"/><ellipse cx="41.45" cy="23" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M37.3719,18.7656 L37.3719,16.6094 L44.7625,16.6094 L44.7625,18.7656 L42.2938,18.7656 L42.2938,26.8438 L44.7625,26.8438 L44.7625,29 L37.3719,29 L37.3719,26.8438 L39.8406,26.8438 L39.8406,18.7656 L37.3719,18.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="126" x="57.55" y="27.1543">MemberOptionsBase</text><line style="stroke:#A80036;stroke-width:1.5;" x1="18" x2="195" y1="39" y2="39"/><ellipse cx="28" cy="50" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="123" x="37" y="53.2104">constructor : Typelike</text><ellipse cx="28" cy="62.8047" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="125" x="37" y="66.0151">deserializer : Function</text><ellipse cx="28" cy="75.6094" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="153" x="37" y="78.8198">emitDefaultValue : boolean</text><ellipse cx="28" cy="88.4141" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="117" x="37" y="91.6245">isRequired : boolean</text><ellipse cx="28" cy="101.2188" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="77" x="37" y="104.4292">name : string</text><ellipse cx="28" cy="114.0234" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="129" x="37" y="117.2339">preserveNull : boolean</text><ellipse cx="28" cy="126.8281" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;fill:none;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="111" x="37" y="130.0386">serializer : Function</text><!--MD5=[581d9fdb0df57ddeb08c4e654dd5b0ca]
+reverse link MemberOptionsBase to SerializableMemberOptions--><path codeLine="25" d="M106.5,157.15 C106.5,170.23 106.5,183.73 106.5,196.79 " fill="none" id="MemberOptionsBase-backto-SerializableMemberOptions" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="99.5,157.08,106.5,137.08,113.5,157.08,99.5,157.08" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[53a90ed2e915ebf52727eddb48a00797]
+@startuml
+skinparam BackgroundColor transparent
+hide empty methods
+hide empty fields
+interface "SerializableMemberOptions" {
+    +constructor : Typelike
+    +deserializer : Function
+    +emitDefaultValue : boolean
+    +index : string | boolean
+    +isRequired : boolean
+    +name : string
+    +preserveNull : boolean
+    +primaryKey : boolean
+    +serializer : Function
+    +unique : boolean
+}
+interface "MemberOptionsBase" {
+    +constructor : Typelike
+    +deserializer : Function
+    +emitDefaultValue : boolean
+    +isRequired : boolean
+    +name : string
+    +preserveNull : boolean
+    +serializer : Function
+}
+"MemberOptionsBase" <|- - "SerializableMemberOptions"
+@enduml
+
+PlantUML version 1.2021.14(Fri Nov 12 16:46:50 UTC 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
