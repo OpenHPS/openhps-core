@@ -30,4 +30,8 @@ export interface WorkerOptions {
      * @default model.findAllServices()
      */
     services?: Service[];
+    /**
+     * Timeout spawning
+     */
+    timeout?: number;
 }

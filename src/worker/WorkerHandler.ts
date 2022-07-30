@@ -29,6 +29,7 @@ export class WorkerHandler extends AsyncEventEmitter {
         this.model = model;
         this.config = config;
         this.options = options;
+        this.options.timeout = this.options.timeout ?? 10000;
     }
 
     build(): Promise<void> {
@@ -59,7 +60,14 @@ export class WorkerHandler extends AsyncEventEmitter {
                 return resolve();
             }
             const timeout = setTimeout(() => {
-                this._pool.terminate(true);
+                this._pool
+                    .terminate(true)
+                    .then(() => {
+                        resolve();
+                    })
+                    .catch((ex) => {
+                        reject(ex);
+                    });
             }, 2500);
             this._pool
                 .terminate()
@@ -111,42 +119,47 @@ export class WorkerHandler extends AsyncEventEmitter {
         return new Promise((resolve, reject) => {
             // NOTE: We can not use a conditional expression as this breaks the webpack threads plugin
             const worker = new Worker(this.options.worker);
-            spawn(worker).then((thread: Thread) => {
-                const init: (workerData: WorkerData) => Promise<void> = (thread as any).init;
-                const pushOutput: () => Observable<any> = (thread as any).pushOutput;
-                const pullOutput: () => Observable<void> = (thread as any).pullOutput;
-                const serviceOutputCall: () => Observable<WorkerServiceCall> = (thread as any).serviceOutputCall;
-                const serviceInputCall: (call: WorkerServiceCall) => Promise<WorkerServiceResponse> = (thread as any)
-                    .serviceInputCall;
-                const eventOutput: () => Observable<any> = (thread as any).eventOutput;
-                const findAllServices: () => Promise<any[]> = (thread as any).findAllServices;
+            spawn(worker, {
+                timeout: this.options.timeout,
+            })
+                .then((thread: Thread) => {
+                    const init: (workerData: WorkerData) => Promise<void> = (thread as any).init;
+                    const pushOutput: () => Observable<any> = (thread as any).pushOutput;
+                    const pullOutput: () => Observable<void> = (thread as any).pullOutput;
+                    const serviceOutputCall: () => Observable<WorkerServiceCall> = (thread as any).serviceOutputCall;
+                    const serviceInputCall: (call: WorkerServiceCall) => Promise<WorkerServiceResponse> = (
+                        thread as any
+                    ).serviceInputCall;
+                    const eventOutput: () => Observable<any> = (thread as any).eventOutput;
+                    const findAllServices: () => Promise<any[]> = (thread as any).findAllServices;
 
-                const threadId = (worker as any).threadId;
-                this._serviceOutputResponse.set(threadId, (thread as any).serviceOutputResponse);
+                    const threadId = (worker as any).threadId;
+                    this._serviceOutputResponse.set(threadId, (thread as any).serviceOutputResponse);
 
-                // Subscribe to the workers pull, push and service functions
-                pullOutput().subscribe(this._onWorkerPull.bind(this));
-                pushOutput().subscribe(this._onWorkerPush.bind(this));
-                serviceOutputCall().subscribe(this._onWorkerService.bind(this, threadId));
-                eventOutput().subscribe(this._onWorkerEvent.bind(this));
+                    // Subscribe to the workers pull, push and service functions
+                    pullOutput().subscribe(this._onWorkerPull.bind(this));
+                    pushOutput().subscribe(this._onWorkerPush.bind(this));
+                    serviceOutputCall().subscribe(this._onWorkerService.bind(this, threadId));
+                    eventOutput().subscribe(this._onWorkerEvent.bind(this));
 
-                // Initialize the worker
-                init({
-                    directory: this.options.directory || __dirname,
-                    services: this._getServices(),
-                    imports: this.options.imports || [],
-                    args: this.options.args || {},
-                    ...this.config,
+                    // Initialize the worker
+                    init({
+                        directory: this.options.directory || __dirname,
+                        services: this._getServices(),
+                        imports: this.options.imports || [],
+                        args: this.options.args || {},
+                        ...this.config,
+                    })
+                        .then(() => {
+                            return findAllServices();
+                        })
+                        .then((services: any[]) => {
+                            this._addServices(services, serviceInputCall);
+                            resolve(thread);
+                        })
+                        .catch(reject);
                 })
-                    .then(() => {
-                        return findAllServices();
-                    })
-                    .then((services: any[]) => {
-                        this._addServices(services, serviceInputCall);
-                        resolve(thread);
-                    })
-                    .catch(reject);
-            });
+                .catch(reject);
         });
     }
 
