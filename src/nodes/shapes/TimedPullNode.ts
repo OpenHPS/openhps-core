@@ -54,7 +54,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
                     this._pullFinished = true;
                 })
                 .catch((ex) => {
-                    this.logger('error', ex);
+                    this.logger('error', ex.message, ex);
                 });
         }
     }

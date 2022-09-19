@@ -147,7 +147,7 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
      * @param {Function} logger Logging function
      * @returns {ModelBuilder} Model builder instance
      */
-    public withLogger(logger: (level: string, log: any) => void): this {
+    public withLogger(logger: (level: string, message: string, data?: any) => void): this {
         this.graph.logger = logger;
         return this;
     }
@@ -202,9 +202,6 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
 
     public build(): Promise<Model<In, Out>> {
         return new Promise((resolve, reject) => {
-            (this.graph as ModelGraph<In, Out>).findAllServices().forEach((service) => {
-                service.logger = this.graph.logger;
-            });
             GraphValidator.validate(this.graph);
             this.graph.once('ready', () => {
                 resolve(this.graph as Model<In, Out>);

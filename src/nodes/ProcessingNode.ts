@@ -76,9 +76,7 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
                 })
                 .catch((ex) => {
                     if (ex === undefined) {
-                        this.logger('warning', {
-                            message: `Exception thrown in processing node ${this.uid} but no exception given!`,
-                        });
+                        this.logger('warn', `Exception thrown in processing node ${this.uid} but no exception given!`);
                     }
                     reject(ex);
                 });

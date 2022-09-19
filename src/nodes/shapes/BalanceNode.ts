@@ -15,11 +15,7 @@ export class BalanceNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
     public push(frame: InOut | InOut[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this.logger('debug', {
-                node: this.uid,
-                message: `Received data`,
-                frame,
-            });
+            this.logger('debug', `Received a data frame in the balance node ${this.uid}`, frame);
 
             let assigned = false;
             for (const outlet of this.outlets) {
