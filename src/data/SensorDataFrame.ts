@@ -1,5 +1,3 @@
-import { DataFrame } from "./DataFrame";
+import { DataFrame } from './DataFrame';
 
-export class SensorDataFrame extends DataFrame {
-
-}
+export class SensorDataFrame extends DataFrame {}
