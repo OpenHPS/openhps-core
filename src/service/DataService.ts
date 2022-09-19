@@ -46,7 +46,6 @@ export abstract class DataService<I, T> extends Service {
     private _buildDriver(): Promise<boolean> {
         return new Promise((resolve, reject) => {
             this.driver.model = this.model;
-            this.driver.logger = this.logger;
             this.driver.emitAsync('build').then(resolve).catch(reject);
         });
     }

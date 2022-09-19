@@ -25,7 +25,6 @@ export class RemoteSourceNode<Out extends DataFrame, S extends RemoteService> ex
     private _onRemoteBuild(graphBuilder: ModelBuilder<any, any>): Promise<boolean> {
         // Add a remote node before this node
         this.remoteNode.graph = this.graph;
-        this.remoteNode.logger = this.logger;
         graphBuilder.addNode(this.remoteNode);
         graphBuilder.addEdge(new Edge(this.remoteNode, this));
         return this.remoteNode.emitAsync('build', graphBuilder);

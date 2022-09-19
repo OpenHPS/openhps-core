@@ -68,7 +68,7 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
  * @param {any} item Item to check for object
  * @returns {boolean} Is an object
  */
-function isObject(item) {
+function isObject(item: any): boolean {
     return item && typeof item === 'object' && !Array.isArray(item);
 }
 
@@ -96,7 +96,7 @@ export function mergeMemberOptions(target: unknown, propertyKey: string, options
  * @param {any} source Source object
  * @returns {any} Merged object
  */
-function mergeDeep(target, source) {
+function mergeDeep(target: any, source: any): any {
     const output = Object.assign({}, target);
     if (isObject(target) && isObject(source)) {
         Object.keys(source).forEach((key) => {

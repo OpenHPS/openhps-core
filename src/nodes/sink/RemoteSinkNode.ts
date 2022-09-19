@@ -24,7 +24,6 @@ export class RemoteSinkNode<In extends DataFrame, S extends RemoteService> exten
 
     private _onRemoteBuild(graphBuilder: ModelBuilder<any, any>): Promise<boolean> {
         this.remoteNode.graph = this.graph;
-        this.remoteNode.logger = this.logger;
         graphBuilder.addNode(this.remoteNode);
         graphBuilder.addEdge(new Edge(this, this.remoteNode));
         return this.remoteNode.emitAsync('build', graphBuilder);

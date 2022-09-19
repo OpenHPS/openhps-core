@@ -145,9 +145,9 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
     /**
      * Graph logger
      *
-     * @returns {(level: string, log: any) => void} logger function
+     * @returns {(level: string, message: string, data?: any) => void} logger function
      */
-    logger: (level: string, log: any) => void = () => undefined;
+    logger: (level: string, message: string, data?: any) => void = () => undefined;
 
     /**
      * Send a pull request to the graph

@@ -155,9 +155,7 @@ export abstract class RemoteService extends Service {
     registerNode(node: Node<any, any> | string): this {
         const existingNode = node instanceof Node ? node : (this.model.findNodeByUID(node) as Node<any, any>);
         this.nodes.add(existingNode.uid);
-        this.logger('debug', {
-            message: `Registered remote server node ${existingNode.uid}`,
-        });
+        this.logger('debug', `Registered remote server node ${existingNode.uid}`);
         return this;
     }
 
