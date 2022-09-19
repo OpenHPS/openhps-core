@@ -38,14 +38,29 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
         this.on('completed', this._onCompleted.bind(this));
     }
 
+    logger(level: 'debug', message: string, data?: any): void;
+    logger(level: 'info', message: string, data?: any): void;
+    logger(level: 'warn', message: string, data?: any): void;
+    logger(level: 'error', message: string, error?: Error): void;
+    /**
+     * @deprecated
+     * @param {string} level Logging level
+     * @param {any} log Logging data or message
+     */
+    logger(level: string, log: any): void;
     /**
      * Graph logger
      *
      * @param {string} level Logging level
-     * @param {any} log Message
+     * @param {string} message Message
+     * @param {any} data Data to include in log
      */
-    logger(level: string, log: any): void {
-        this.graph.logger(level, log);
+    logger(level: string, message: string, data?: any): void {
+        if (typeof message === 'object') {
+            this.graph.logger(level, JSON.stringify(message));
+        } else {
+            this.graph.logger(level, message, data);
+        }
     }
 
     isReady(): boolean {

@@ -1,6 +1,6 @@
 import { jsonSetMember, Constructor } from 'typedjson';
 import { SerializableSetMemberOptions } from './options';
-import { updateSerializableMember } from './utils';
+import { mergeMemberOptions, updateSerializableMember } from './utils';
 
 /**
  * @param {Constructor} elementConstructor Element constructor
@@ -12,7 +12,8 @@ export function SerializableSetMember<T>(
     options?: SerializableSetMemberOptions,
 ): PropertyDecorator {
     return (target: unknown, propertyKey: string) => {
-        jsonSetMember(elementConstructor, options)(target, propertyKey);
-        updateSerializableMember(target, propertyKey, options);
+        const finalOptions = mergeMemberOptions(target, propertyKey, options);
+        jsonSetMember(elementConstructor, finalOptions)(target, propertyKey);
+        updateSerializableMember(target, propertyKey, finalOptions);
     };
 }

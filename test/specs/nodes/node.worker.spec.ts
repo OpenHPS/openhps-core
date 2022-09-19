@@ -15,7 +15,11 @@ import { TimeConsumingNode } from '../../mock/nodes/TimeConsumingNode';
 
 describe('WorkerNode', () => {
     // Overhead in ms
-    const overhead = 25;
+    const overhead = 50;
+
+    before((done) => {
+        done();
+    });
 
     it('should take 30ms with 1 worker', (done) => {
         let model;
@@ -59,9 +63,13 @@ describe('WorkerNode', () => {
                     if (count === 3) {
                         const end = new Date().getTime();
                         const diff = end - start;
+                        if (diff >= 30 + overhead) {
+                            done(new Error(`Timeout!`));
+                        }
                         expect(diff).to.be.lessThan(30 + overhead);
-                        model.emit('destroy');
-                        done();
+                        model.emitAsync('destroy').then(() => {
+                            done();
+                        }).catch(done);
                     }
                 });
 
@@ -73,8 +81,8 @@ describe('WorkerNode', () => {
                 done(ex);
             });
     })
-        .slow(5000)
-        .timeout(60000);
+        .slow(20000)
+        .timeout(80000);
 
     it('should take 20ms with 2 workers', (done) => {
         let model;
@@ -117,9 +125,13 @@ describe('WorkerNode', () => {
                     if (count === 3) {
                         const end = new Date().getTime();
                         const diff = end - start;
+                        if (diff >= 20 + overhead) {
+                            done(new Error(`Timeout!`));
+                        }
                         expect(diff).to.be.lessThan(20 + overhead);
-                        model.emit('destroy');
-                        done();
+                        model.emitAsync('destroy').then(() => {
+                            done();
+                        }).catch(done);
                     }
                 });
 
@@ -131,8 +143,8 @@ describe('WorkerNode', () => {
                 done(ex);
             });
     })
-        .slow(5000)
-        .timeout(60000);
+        .slow(20000)
+        .timeout(80000);
 
     it('should be able to access data services', (done) => {
         let model;
@@ -157,8 +169,9 @@ describe('WorkerNode', () => {
                 new CallbackSinkNode((data: DataFrame) => {
                     expect(data.getObjects()[0].uid).to.equal('abc456');
                     expect(data.getObjects()[0].displayName).to.equal('hello world');
-                    model.emit('destroy');
-                    done();
+                    model.emitAsync('destroy').then(() => {
+                        done();
+                    }).catch(done);
                 }),
             )
             .build()
@@ -197,8 +210,9 @@ describe('WorkerNode', () => {
                     const dataService: NodeDataService<NodeData> = model.findDataService(NodeData);
                     dataService.findData('x123', 'mvdewync').then((data) => {
                         expect(data.test).to.equal('abc');
-                        model.emit('destroy');
-                        done();
+                        model.emitAsync('destroy').then(() => {
+                            done();
+                        }).catch(done);
                     });
                 }),
             )
@@ -235,8 +249,9 @@ describe('WorkerNode', () => {
             .then((m) => {
                 model = m;
                 model.once('error', (event) => {
-                    model.destroy();
-                    done();
+                    model.emitAsync('destroy').then(() => {
+                        done();
+                    }).catch(done);
                 });
                 model.push(new DataFrame(new DataObject('mvdewync')));
             });
@@ -268,8 +283,9 @@ describe('WorkerNode', () => {
             .then((m) => {
                 model = m;
                 model.once('completed', (event) => {
-                    model.destroy();
-                    done();
+                    model.emitAsync('destroy').then(() => {
+                        done();
+                    }).catch(done);
                 });
                 model.push(new DataFrame(new DataObject('mvdewync')));
             });
@@ -301,8 +317,9 @@ describe('WorkerNode', () => {
             .then((m) => {
                 model = m;
                 model.once('completed', (event) => {
-                    model.destroy();
-                    done();
+                    model.emitAsync('destroy').then(() => {
+                        done();
+                    }).catch(done);
                 });
                 model.push(new DataFrame(new DataObject('mvdewync')));
             });
@@ -327,8 +344,9 @@ describe('worker graph', () => {
                     expect(frame).to.not.be.undefined;
                     expect(frame.source).to.not.be.undefined;
                     expect(frame.source.uid).to.be.equal('mvdewync');
-                    this.model.destroy();
-                    done();
+                    this.model.emitAsync('destroy').then(() => {
+                        done();
+                    }).catch(done);
                 }),
             )
             .build()
@@ -361,8 +379,9 @@ describe('worker graph', () => {
                     expect(frame.source).to.not.be.undefined;
                     expect(frame.source.uid).to.be.equal('mvdewync');
                     expect(frame.source.displayName).to.equal('abc');
-                    this.model.destroy();
-                    done();
+                    this.model.emitAsync('destroy').then(() => {
+                        done();
+                    }).catch(done);
                 }),
             )
             .build()
@@ -395,8 +414,9 @@ describe('worker graph', () => {
                     expect(frame.source).to.not.be.undefined;
                     expect(frame.source.uid).to.be.equal('mvdewync');
                     expect(frame.source.displayName).to.equal('maxim');
-                    this.model.destroy();
-                    done();
+                    this.model.emitAsync('destroy').then(() => {
+                        done();
+                    }).catch(done);
                 }),
             )
             .build()

@@ -10,7 +10,7 @@ import { DataService } from '../../service/DataService';
 
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
- * a more abstract object such as a Wi-Fi access point or [[Space]].
+ * a more abstract object such as a Wi-Fi access point or {@link ReferenceSpace}.
  *
  * ## Usage
  *
@@ -21,7 +21,7 @@ import { DataService } from '../../service/DataService';
  * ```
  *
  * ### Service binding
- * Data objects can be bounded to a service. Persistence is handled in [[DataObjectService]]s
+ * Data objects can be bounded to a service. Persistence is handled in {@link DataObjectService}s
  * that store and load data objects.
  * ```typescript
  * myObject.bind(myModel).save();
@@ -117,6 +117,17 @@ export class DataObject {
                   inverse: false,
               })
             : position;
+        return this;
+    }
+
+    /**
+     * Set the unique identifier of this object
+     *
+     * @param {string} uid Unique Identifier
+     * @returns {DataObject} Data object instance
+     */
+    setUID(uid: string): this {
+        this.uid = uid;
         return this;
     }
 

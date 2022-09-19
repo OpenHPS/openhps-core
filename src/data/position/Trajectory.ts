@@ -1,6 +1,7 @@
 import { SerializableArrayMember, SerializableMember, SerializableObject } from '../decorators';
 import { v4 as uuidv4 } from 'uuid';
 import { AbsolutePosition } from './AbsolutePosition';
+import { TimeService } from '../../service/TimeService';
 
 @SerializableObject()
 export class Trajectory {
@@ -14,6 +15,13 @@ export class Trajectory {
     objectUID: string;
     @SerializableArrayMember(AbsolutePosition)
     positions: AbsolutePosition[] = [];
+    /**
+     * Created timestamp
+     */
+    @SerializableMember({
+        index: true,
+    })
+    createdTimestamp: number;
 
     get trajectoryStart(): number {
         if (!this.positions || this.positions.length === 0) return -1;
@@ -27,5 +35,6 @@ export class Trajectory {
 
     constructor(objectUID?: string) {
         this.objectUID = objectUID;
+        this.createdTimestamp = TimeService.now();
     }
 }

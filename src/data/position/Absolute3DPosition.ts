@@ -3,7 +3,7 @@ import { LengthUnit, Vector3 } from '../../utils';
 import { Absolute2DPosition } from './Absolute2DPosition';
 
 /**
- * Absolute cartesian 3D position. This class uses a [[Vector3]]. This location can be used both as
+ * Absolute cartesian 3D position. This class uses a {@link Vector3}. This location can be used both as
  * an absolute location or relative location.
  *
  * @category Position

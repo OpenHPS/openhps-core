@@ -20,7 +20,7 @@ export class LoggingSinkNode<In extends DataFrame> extends CallbackSinkNode<In> 
         super(loggingFn, options);
         if (loggingFn === undefined) {
             this.callback = (frame: In | In[]) => {
-                this.logger('info', frame);
+                this.logger('debug', `Received a data frame in node ${this.uid}`, frame);
             };
         }
     }

@@ -66,7 +66,7 @@ describe('quaternion', () => {
 
         it('convert from vector3', () => {
             const euler = new Euler(45, 90, 0, 'XYZ', AngleUnit.DEGREE);
-            const orientation = Quaternion.fromEuler(euler.toVector3());
+            const orientation = Quaternion.fromEuler(euler.toVector());
             expect(Matrix4.round(orientation.toRotationMatrix(), 5)).to.eql(
                 Matrix4.fromArray([
                     [0, 0, 1, 0],

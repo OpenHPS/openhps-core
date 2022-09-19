@@ -59,6 +59,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                     // Accuracy is radius + accuracy of the position that we are using
                     position.accuracy = new Accuracy1D(
                         spheres[0].radius + position.accuracy.valueOf() + spheres[0].accuracy,
+                        position.unit,
                     );
                     dataObject.setPosition(position);
                     return resolve(dataObject);
@@ -74,6 +75,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                     position.timestamp = dataFrame.createdTimestamp;
                     position.accuracy = new Accuracy1D(
                         spheres.map((s) => s.accuracy).reduce((a, b) => a.valueOf() + b.valueOf()) / spheres.length,
+                        position.unit,
                     );
                     dataObject.setPosition(position);
                     return resolve(dataObject);
@@ -86,6 +88,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                                     position.accuracy = new Accuracy1D(
                                         spheres.map((s) => s.accuracy).reduce((a, b) => a.valueOf() + b.valueOf()) /
                                             spheres.length,
+                                        position.unit,
                                     );
                                     dataObject.setPosition(position);
                                 }
@@ -100,6 +103,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                     position.timestamp = dataFrame.createdTimestamp;
                     position.accuracy = new Accuracy1D(
                         spheres.map((s) => s.accuracy).reduce((a, b) => a.valueOf() + b.valueOf()) / spheres.length,
+                        position.unit,
                     );
                     dataObject.setPosition(position);
                     resolve(dataObject);
@@ -323,7 +327,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                 new Sphere(C, 1, C.accuracy.valueOf()),
                 new Sphere(D, 1, D.accuracy.valueOf()),
             );
-            midpoint.accuracy = new Accuracy1D(Math.round((C.distanceTo(D) / 2) * 100) / 100);
+            midpoint.accuracy = new Accuracy1D(Math.round((C.distanceTo(D) / 2) * 100) / 100, midpoint.unit);
             return midpoint;
         }
     }

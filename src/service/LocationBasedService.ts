@@ -39,13 +39,14 @@ export class LocationBasedService<
     model: Model;
     protected service: DataObjectService<T>;
     protected watchers: Map<number, Watcher> = new Map();
-    protected watchedObjects: Map<string, number> = new Map();
+    protected watchedObjects: Map<string, number[]> = new Map();
     protected watchIndex = 1;
 
     constructor(options?: LBSOptions) {
         super();
         this.options = options || {};
         this.once('build', this._initLBS.bind(this));
+        this.once('destroy', this._destroy.bind(this));
     }
 
     private _initLBS(): void {
@@ -55,14 +56,22 @@ export class LocationBasedService<
 
         this.service = this.model.findDataService(this.options.dataService);
         this.service.on('insert', (uid: string, storedObject: T) => {
-            const watchId = this.watchedObjects.get(uid);
-            if (watchId) {
+            const watchIds = this.watchedObjects.get(uid);
+            if (watchIds) {
                 const position = storedObject.position as P;
-                const watcher = this.watchers.get(watchId);
-                if (position) {
-                    watcher.callback(position);
-                }
+                watchIds.forEach((watchId) => {
+                    const watcher = this.watchers.get(watchId);
+                    if (position) {
+                        watcher.callback(position);
+                    }
+                });
             }
+        });
+    }
+
+    private _destroy(): void {
+        Array.from(this.watchers.keys()).forEach((watcher) => {
+            this.clearWatch(watcher);
         });
     }
 
@@ -101,36 +110,61 @@ export class LocationBasedService<
             const maximumAge = options.maximumAge || Infinity;
             options.timeout = options.timeout || 10000;
             const uid = object instanceof DataObject ? object.uid : object;
-            this.service
-                .findByUID(uid)
-                .then((storedObj) => {
-                    const position = storedObj.position;
-                    const time = TimeService.getUnit().convert(TimeService.now(), TimeUnit.MILLISECOND);
-                    if (position && position.timestamp >= time - maximumAge) {
-                        // Stored position satisfies maximum age
-                        resolve(position as P);
-                    } else {
-                        const timeout = setTimeout(() => {
-                            this.clearWatch(watchId);
-                            reject(new Error('Timeout error for getting current position!'));
-                        }, options.timeout);
-                        this.model.findNodeByUID(this.options.pullNode).pull({
-                            requestedObjects: [uid],
-                        });
-                        const watchId = this.watchPosition(object, (pos, err) => {
-                            this.clearWatch(watchId);
-                            clearTimeout(timeout);
-                            if (err) {
-                                return reject(err);
-                            }
-                            resolve(pos);
-                        });
-                    }
-                })
-                .catch(reject);
+            // Force update
+            if (options.forceUpdate) {
+                this.model.findNodeByUID(this.options.pullNode).pull({
+                    requestedObjects: [uid],
+                });
+                const timeout = setTimeout(() => {
+                    this.clearWatch(watchId);
+                    reject(new Error('Timeout error for getting current position!'));
+                }, options.timeout);
+                const watchId = this.watchPosition(
+                    object,
+                    (pos, err) => {
+                        this.clearWatch(watchId);
+                        clearTimeout(timeout);
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve(pos);
+                    },
+                    {
+                        ...options,
+                        interval: -1,
+                        forceUpdate: false,
+                    },
+                );
+            } else {
+                this.service
+                    .findByUID(uid)
+                    .then((storedObj) => {
+                        const position = storedObj.position;
+                        const time = TimeService.getUnit().convert(TimeService.now(), TimeUnit.MILLISECOND);
+                        if (position && position.timestamp >= time - maximumAge) {
+                            // Stored position satisfies maximum age
+                            resolve(position as P);
+                        } else {
+                            return this.getCurrentPosition(object, {
+                                ...options,
+                                forceUpdate: true,
+                            });
+                        }
+                    })
+                    .then(resolve)
+                    .catch(reject);
+            }
         });
     }
 
+    /**
+     * Watch for position changes
+     *
+     * @param {DataObject | string} object Data object to watch for position changes for
+     * @param {(position: AbsolutePosition, err?: Error) => void} callback Callback function
+     * @param {GeoWatchOptions} [options] Watch options
+     * @returns {number} Watch number
+     */
     watchPosition(
         object: T | string,
         callback: (position: P, err?: Error) => void,
@@ -138,22 +172,40 @@ export class LocationBasedService<
     ): number {
         const uid = object instanceof DataObject ? object.uid : object;
         const watchId = this.watchIndex++;
-        const timer = options.interval
-            ? (setInterval(() => {
-                  this.getCurrentPosition(object, options)
-                      .then(callback)
-                      .catch((ex) => {
-                          callback(undefined, ex);
-                      });
-              }, options.interval) as unknown as number)
-            : undefined;
+        const interval = options.interval ?? 1000;
+        const timer =
+            interval !== -1
+                ? (setInterval(() => {
+                      this.getCurrentPosition(object, options)
+                          .then(callback)
+                          .catch((ex) => {
+                              callback(undefined, ex);
+                          });
+                  }, interval) as unknown as number)
+                : undefined;
         this.watchers.set(watchId, {
             timer,
             uid,
             callback,
         });
-        this.watchedObjects.set(uid, watchId);
+        this.watchObject(uid, watchId);
         return watchId;
+    }
+
+    protected watchObject(uid: string, watchId: number): void {
+        const existingIds = this.watchedObjects.get(uid) ?? [];
+        existingIds.push(watchId);
+        this.watchedObjects.set(uid, existingIds);
+    }
+
+    protected unwatchObject(uid: string, watchId: number): void {
+        const existingIds = this.watchedObjects.get(uid) ?? [];
+        existingIds.splice(existingIds.indexOf(watchId), 1);
+        if (existingIds.length === 0) {
+            this.watchedObjects.delete(uid);
+        } else {
+            this.watchedObjects.set(uid, existingIds);
+        }
     }
 
     /**
@@ -163,8 +215,11 @@ export class LocationBasedService<
      */
     clearWatch(watchId: number): void {
         const watcher = this.watchers.get(watchId);
-        if (watcher.timer) clearInterval(watcher.timer);
+        if (watcher.timer !== undefined) {
+            clearInterval(watcher.timer);
+        }
         this.watchers.delete(watchId);
+        this.unwatchObject(watcher.uid, watchId);
     }
 }
 

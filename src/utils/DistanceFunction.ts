@@ -3,7 +3,7 @@ import { AngleUnit, GCS } from './unit';
 /**
  * Haversine formulate to calculate distance of two geographical points
  *
- * @param {number[]} pointA Point a
+ * @param {number[]} pointA Point A
  * @param {number[]} pointB Point B
  * @returns {number} distance
  */
@@ -16,7 +16,7 @@ export function HAVERSINE(pointA: number[], pointB: number[]): number {
         Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
         Math.cos(latRadA) * Math.cos(latRadB) * Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return GCS.EARTH_RADIUS * c;
+    return GCS.EARTH_RADIUS_MEAN * c;
 }
 
 /**

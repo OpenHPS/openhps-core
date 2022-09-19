@@ -13,14 +13,14 @@ import { DataSerializer } from './DataSerializer';
  * ## Usage
  *
  * ### Creation
- * A data frame can be created with an optional source [[DataObject]] that represents
+ * A data frame can be created with an optional source {@link DataObject} that represents
  * the object responsible for generating the frame.
  * ```typescript
  * const dataFrame = new DataFrame(new DataObject("phone"));
  * ```
  *
  * ### Creating a custom DataFrame
- * Custom data frames can be created by extending the default [[DataFrame]] class. Important when handling
+ * Custom data frames can be created by extending the default {@link DataFrame} class. Important when handling
  * data frames (and objects) is to add serializable decorators.
  * ```typescript
  * import { DataFrame, SerializableObject, SerializableArrayMember } from '@openhps/core';
@@ -32,7 +32,7 @@ import { DataSerializer } from './DataSerializer';
  * }
  * ```
  *
- * ### Adding [[DataObject]]s
+ * ### Adding {@link DataObject}s
  * Adding data object will clone the data objects to the data frame. Any changes made to the object after cloning will not
  * be applied to the data frame.
  */
@@ -52,6 +52,13 @@ export class DataFrame {
         index: true,
     })
     createdTimestamp: number;
+    /**
+     * Data frame sensor data pheonomenon timestamp (ISO 8601)
+     */
+    @SerializableMember({
+        index: true,
+    })
+    phenomenonTimestamp?: number;
     @SerializableMember({
         name: 'source',
     })
@@ -78,12 +85,14 @@ export class DataFrame {
         if (data instanceof DataFrame) {
             // Copy data frame
             this.createdTimestamp = data.createdTimestamp;
+            this.phenomenonTimestamp = data.phenomenonTimestamp;
             this.uid = data.uid;
             this._objects = data._objects;
             this.source = data.source;
         } else if (data instanceof DataObject) {
             this.source = data;
         }
+        this.phenomenonTimestamp = this.phenomenonTimestamp ?? this.createdTimestamp;
     }
 
     /**

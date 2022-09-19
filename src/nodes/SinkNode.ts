@@ -14,7 +14,7 @@ import { DataObjectService } from '../service';
  * ### Creating a SinkNode
  * When creating a sink node, you have to implement an ```onPush``` method that provides you with the pushed data frame.
  * Sink nodes are the final nodes in the model and have no outlets. Once the onPush is resolved, data objects in that frame
- * are stored in a [[DataObjectService]].
+ * are stored in a {@link DataObjectService}.
  * ```typescript
  * import { DataFrame, SinkNode } from '@openhps/core';
  *

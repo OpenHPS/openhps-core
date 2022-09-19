@@ -24,6 +24,9 @@ export abstract class RemoteService extends Service {
 
     private _registerServices(): Promise<void> {
         return new Promise((resolve) => {
+            if (!this.model) {
+                resolve(); // No services to add when not added to model
+            }
             this.model.once('ready', () => {
                 this.model.findAllServices().forEach((service) => {
                     this.registerService(service);
@@ -152,9 +155,7 @@ export abstract class RemoteService extends Service {
     registerNode(node: Node<any, any> | string): this {
         const existingNode = node instanceof Node ? node : (this.model.findNodeByUID(node) as Node<any, any>);
         this.nodes.add(existingNode.uid);
-        this.logger('debug', {
-            message: `Registered remote server node ${existingNode.uid}`,
-        });
+        this.logger('debug', `Registered remote server node ${existingNode.uid}`);
         return this;
     }
 

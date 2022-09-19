@@ -4,12 +4,12 @@ import { DataObjectService } from '../service';
 import { GraphOptions } from '../graph/options';
 
 /**
- * Processing node that processes each [[DataObject]] in a [[DataFrame]] individually
+ * Processing node that processes each {@link DataObject} in a {@link DataFrame} individually
  *
  * ## Usage
  *
  * ### Creating an ObjectProcessingNode
- * Extended on a [[ProcessingNode]] is an object processing node that processes individual objects in each frame.
+ * Extended on a {@link ProcessingNode} is an object processing node that processes individual objects in each frame.
  * ```typescript
  * import { DataFrame, DataObject, ObjectProcessingNode } from '@openhps/core';
  *

@@ -14,7 +14,7 @@ import { SerializableObject } from '../data/decorators';
  * When creating a source node, you have to implement a promise based ```onPull``` method that expects a data
  * frame.
  *
- * As mentioned in the [[Node]] class, pulling normally does not require you to return
+ * As mentioned in the {@link Node} class, pulling normally does not require you to return
  * a data frame. The source node implementation provides an abstraction on top of this. If your source node can generate
  * data frames, you can resolve to a data frame. The data frame will then be pushed to outgoing nodes.
  * If not, you can simply resolve nothing or a null object.

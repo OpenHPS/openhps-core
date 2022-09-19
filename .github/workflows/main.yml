@@ -8,36 +8,163 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_and_test:
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Build
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      - name: Load dependency cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('package-lock.json') }}
+      - name: Load build cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/dist
+            **/src/three
+          key: ${{ runner.os }}-build-v1-${{ github.run_number }}
+      - name: Installing dependencies
         run: |
           npm install
+      - name: Build
+        run: |
           npm run build
           npm run size
-      - name: Quality
-        run: |
-          npm run lint
-      - name: Test
-        run: |
-          npm run test -- --reporter mocha-junit-reporter
-          npm run cover
-      - name: Publish Web Artifacts
+      - name: Upload web artifacts
         uses: actions/upload-artifact@v2
         with:
           name: web
           path: |
             dist/web/*
             !dist/web/*.txt
+
+  quality:
+    name: Code quality
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Load dependency cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('package-lock.json') }}
+      - name: Quality
+        run: |
+          npm run lint
+
+  test_coverage:
+    name: Unit tests
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Load dependency cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('package-lock.json') }}
+      - name: Load build cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/dist
+            **/src/three
+          key: ${{ runner.os }}-build-v1-${{ github.run_number }}
+      - name: Load test and coverage cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/test-results.xml
+            **/coverage
+          key: ${{ runner.os }}-test-v1-${{ github.run_number }}
+      - name: Test
+        run: |
+          npm run cover:ci
+
+  documentation:
+    name: Build documentation
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Graphviz
+        uses: ts-graphviz/setup-graphviz@v1
+      - name: Load dependency cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('package-lock.json') }}
+      - name: Load build cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/dist
+            **/src/three
+          key: ${{ runner.os }}-build-v1-${{ github.run_number }}
+      - name: Load document cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/docs/out
+          key: ${{ runner.os }}-docs-v1-${{ github.run_number }}
+      - name: Build documentation
+        run: |
+          npm run build:typedoc
+
+  publish_documentation:
+    name: Publish documentation
+    needs:
+      - documentation
+      - quality
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Load document cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/docs/out
+          key: ${{ runner.os }}-docs-v1-${{ github.run_number }}
       - name: Publish Documentation
         uses: actions/upload-artifact@v2
         with:
           name: docs
           path: |
             docs/out/*
-      - name: Publish Unit Test Results
+      - name: Deploy site to GitHub
+        if: github.ref == 'refs/heads/master' && success()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/out
+
+  publish_test_coverage:
+    name: Publish unit tests and coverage
+    needs: test_coverage
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Load test and coverage cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/test-results.xml
+            **/coverage
+          key: ${{ runner.os }}-test-v1-${{ github.run_number }}
+      - name: Publish unit test results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
@@ -47,30 +174,82 @@ jobs:
         with:
           files: coverage/cobertura-coverage.xml
           verbose: true
+    
+  release_dev:
+    name: Release DEV
+    needs:
+      - build
+      - quality
+      - test_coverage
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Load dependency cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('package-lock.json') }}
+      - name: Load build cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/dist
+            **/src/three
+          key: ${{ runner.os }}-build-v1-${{ github.run_number }}
       - name: Configure Publish
         run: |
           git config --global user.name 'CI'
           git config --global user.email 'ci@openhps.org'
       - name: Bump version development
-        if: github.ref == 'refs/heads/dev'
         run: |
           npm run bump:development
+      - name: Publish to NPM (dev)
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: dev
+      - name: Publish to GitHub
+        if: success()
+        run: |
+          git push
+  
+  release_master:
+    name: Release MASTER
+    needs:
+      - build
+      - quality
+      - test_coverage
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Load dependency cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('package-lock.json') }}
+      - name: Load build cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/dist
+            **/src/three
+          key: ${{ runner.os }}-build-v1-${{ github.run_number }}
+      - name: Configure Publish
+        run: |
+          git config --global user.name 'CI'
+          git config --global user.email 'ci@openhps.org'
       - name: Bump version release
-        if: github.ref == 'refs/heads/master'
         run: |
           npm run bump:release
       - name: Publish to NPM (master)
         uses: JS-DevTools/npm-publish@v1
-        if: github.ref == 'refs/heads/master'
         with:
           token: ${{ secrets.NPM_TOKEN }}
           tag: latest
-      - name: Publish to NPM (dev)
-        uses: JS-DevTools/npm-publish@v1
-        if: github.ref == 'refs/heads/dev'
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          tag: dev
       - name: Publish to GitHub
         if: success()
         run: |

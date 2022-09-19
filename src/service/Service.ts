@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { SerializableMember, SerializableObject } from '../data/decorators';
 
 /**
- * Service is accessible by each [[Node]] inside the [[Model]]
+ * Service is accessible by each {@link Node} inside the {@link Model}
  */
 @SerializableObject()
 export abstract class Service extends AsyncEventEmitter {
@@ -12,7 +12,6 @@ export abstract class Service extends AsyncEventEmitter {
      */
     @SerializableMember()
     uid: string;
-    logger: (level: string, log: any) => void = () => true;
     private _ready = false;
     /**
      * Model shape
@@ -82,6 +81,33 @@ export abstract class Service extends AsyncEventEmitter {
      */
     once(name: 'ready', listener: () => void | Promise<void>): this;
     once(name: string | symbol, listener: (...args: any[]) => void): this {
+        if (name === 'ready' && this.isReady()) {
+            listener();
+            return this;
+        }
         return super.once(name, listener);
+    }
+
+    logger(level: 'debug', message: string, data?: any): void;
+    logger(level: 'info', message: string, data?: any): void;
+    logger(level: 'warn', message: string, data?: any): void;
+    logger(level: 'error', message: string, error?: Error): void;
+    /**
+     * @deprecated
+     * @param {string} level Logging level
+     * @param {any} log Logging data or message
+     */
+    logger(level: string, log: any): void;
+    /**
+     * Graph logger
+     *
+     * @param {string} level Logging level
+     * @param {string} message Message
+     * @param {any} data Data to include in log
+     */
+    logger(level: string, message: string, data?: any): void {
+        if (this.model) {
+            this.model.logger(level, message, data);
+        }
     }
 }

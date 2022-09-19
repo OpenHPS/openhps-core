@@ -14,6 +14,7 @@ import {
     CallbackNode,
     RelativeDistance,
     TimeService,
+    TimeUnit,
 } from '../../../../src';
 import { Quaternion } from '../../../../src/utils/math/';
 
@@ -406,4 +407,59 @@ describe('FrameMergeNode', () => {
                 done(ex);
             });
     });
+
+    it('should merge relative positions of the same object', (done) => {
+        function createFrame(beacon: string, distance: number) {
+            const frame = new DataFrame(new DataObject("phone"));
+            frame.source.addRelativePosition(new RelativeDistance(new DataObject(beacon), distance));
+            return frame;
+        }
+
+        ModelBuilder.create()
+            .from("input")
+            .via(new FrameMergeNode((frame) => frame.source.uid, (frame) => frame.uid, {
+                timeout: 1000,                      // After 1000ms, push the frame
+                timeoutUnit: TimeUnit.MILLISECOND,
+                minCount: 1,                        // Minimum amount of frames to receive
+                maxCount: 9                         // Max count can be as big as you want
+                // if exceeded, frame will be pushed. If left out, it will take the amount of 
+                // incomming nodes as the maxCount (which is 1, meaning the frame merge node is useless)
+            }))
+            .to(
+                new CallbackSinkNode((frame: DataFrame) => {
+                    // We expect 3 relative positions
+                    const relativePositions = frame.source.getRelativePositions();
+                    expect(relativePositions.length).to.eq(3);
+                    expect(relativePositions[0].referenceObjectUID).to.eq("a");
+                    expect(relativePositions[1].referenceObjectUID).to.eq("b");
+                    expect(relativePositions[2].referenceObjectUID).to.eq("c");
+
+                    expect(relativePositions[0].referenceValue).to.eq(1);
+                    expect(relativePositions[1].referenceValue).to.eq(2);
+                    expect(relativePositions[2].referenceValue).to.eq(3);
+                    done();
+                }),
+            )
+            .build()
+            .then((model) => {
+                const input = model.findNodeByName("input");
+
+                // Code to stop test if sink throws error
+                input.once('error', done);
+
+                Promise.all([
+                    input.push(createFrame("a", 1)),
+                    input.push(createFrame("b", 2)),
+                    input.push(createFrame("c", 3))
+                ]);
+                
+                setTimeout(() => {
+                    model.emit('destroy');
+                }, 1000);
+            })
+            .catch((ex) => {
+                done(ex);
+            });
+    });
+
 });

@@ -5,5 +5,11 @@
     "excludePrivate": true,
     "hideGenerator": true,
     "categorizeByGroup": true,
-    "media": "media"
+    "media": "media",
+    "entryPointStrategy": "Expand",
+    "umlClassDiagram": {
+        "type": "simple",
+        "location": "local",
+        "format": "svg"
+    }
 }

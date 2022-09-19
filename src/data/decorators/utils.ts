@@ -1,5 +1,6 @@
 import { AnyT, Constructor, JsonObjectMetadata, Serializable } from 'typedjson';
 import { DataSerializer } from '../DataSerializer';
+import { DataSerializerUtils } from '../DataSerializerUtils';
 import { MemberOptionsBase, SerializableObjectOptions } from './options';
 
 /**
@@ -13,7 +14,7 @@ export function updateSerializableMember(target: unknown, propertyKey: string, o
     // Inject additional options if available
     if (options) {
         const ownMeta = JsonObjectMetadata.ensurePresentInPrototype(target);
-        const rootMeta = DataSerializer.getRootMetadata(target.constructor);
+        const rootMeta = DataSerializerUtils.getRootMetadata(target.constructor);
         const ownMemberMetadata = ownMeta.dataMembers.get(propertyKey) || ownMeta.dataMembers.get(options.name);
         const rootMemberMetadata = rootMeta.dataMembers.get(propertyKey) || rootMeta.dataMembers.get(options.name);
 
@@ -44,8 +45,8 @@ export function updateSerializableMember(target: unknown, propertyKey: string, o
  * @param {SerializableObjectOptions} options Options to inject
  */
 export function updateSerializableObject<T>(target: Serializable<T>, options: SerializableObjectOptions<T>): void {
-    const ownMeta = DataSerializer.getMetadata(target);
-    const rootMeta = DataSerializer.getRootMetadata(target.prototype);
+    const ownMeta = DataSerializerUtils.getMetadata(target);
+    const rootMeta = DataSerializerUtils.getRootMetadata(target.prototype);
     rootMeta.knownTypes.add(target);
     if (rootMeta.initializerCallback) {
         ownMeta.initializerCallback = rootMeta.initializerCallback;
@@ -69,6 +70,23 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
  */
 function isObject(item) {
     return item && typeof item === 'object' && !Array.isArray(item);
+}
+
+/**
+ * Deep merge member options
+ *
+ * @param {unknown} target Target object
+ * @param {string} propertyKey Property key in target
+ * @param {any} options Member options
+ * @returns {any} Merged objects
+ */
+export function mergeMemberOptions(target: unknown, propertyKey: string, options: any): any {
+    if (typeof options === 'function') {
+        return options;
+    }
+    const memberOptions =
+        DataSerializerUtils.getMemberOptions(target.constructor as Constructor<any>, propertyKey) ?? {};
+    return mergeDeep(options, memberOptions);
 }
 
 /**

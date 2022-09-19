@@ -12,7 +12,7 @@ import { Accuracy1D } from '../values/Accuracy1D';
 import { DistanceFn, EUCLIDEAN } from '../../utils';
 
 /**
- * An absolute position of a [[DataObject]].
+ * An absolute position of a {@link DataObject}.
  *
  * @category Position
  */

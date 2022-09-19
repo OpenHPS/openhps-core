@@ -14,9 +14,9 @@ import { ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
 /**
  * Triangulation processing node
  * Supported position types:
- * - [[Absolute2DPosition]]
- * - [[Absolute3DPosition]]
- * - [[GeographicalPosition]]
+ * - {@link Absolute2DPosition}
+ * - {@link Absolute3DPosition}
+ * - {@link GeographicalPosition}
  *
  * @category Processing node
  */

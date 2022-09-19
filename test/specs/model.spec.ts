@@ -392,7 +392,7 @@ describe('Model', () => {
                 .via(new PlaceholderNode('1'), new PlaceholderNode('2'))
                 .to()
                 .build()
-                .then((m1) => {
+                .then((m1: Model) => {
                     ModelBuilder.create()
                         .addShape(m1)
                         .build()
@@ -743,5 +743,34 @@ describe('Model', () => {
                 })
                 .build();
         });
+    });
+
+    describe('onceCompleted()', () => {
+        it('should support a completed event', (done) => {
+            ModelBuilder.create()
+                .from()
+                .store()
+                .build().then(model => {
+                    const frame = new DataFrame();
+                    model.onceCompleted(frame.uid).then(() => {
+                        done();
+                    }).catch(done);
+                    model.push(frame);
+                });
+        }).timeout(2000);
+
+        it('should support a completed event on a graph shape', (done) => {
+            ModelBuilder.create()
+                .addShape(GraphBuilder.create()
+                    .from("input")
+                    .store())
+                .build().then(model => {
+                    const frame = new DataFrame();
+                    model.findNodeByName("input").onceCompleted(frame.uid).then(() => {
+                        done();
+                    }).catch(done);
+                    model.findNodeByName("input").push(frame);
+                });
+        }).timeout(2000);
     });
 });

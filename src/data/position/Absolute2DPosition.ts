@@ -4,7 +4,7 @@ import { LengthUnit } from '../../utils';
 import { Vector3, Vector2 } from '../../utils/math';
 
 /**
- * Absolute cartesian 2D position. This class uses a [[Vector2]]. This location can be used both as
+ * Absolute cartesian 2D position. This class uses a {@link Vector2}. This location can be used both as
  * an absolute location or relative location.
  *
  * @category Position

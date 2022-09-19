@@ -52,13 +52,22 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
      *
      * @param {TransformationSpace} space Parent space
      */
-    public set parent(space: TransformationSpace) {
+    set parent(space: TransformationSpace) {
         if (!space) {
             return;
         } else {
             this.parentUID = space.uid;
             this._parent = space;
         }
+    }
+
+    /**
+     * Get the parent space if loaded
+     *
+     * @returns {TransformationSpace | undefined} Transformation space or undefined
+     */
+    get parent(): TransformationSpace {
+        return this._parent;
     }
 
     /**
@@ -215,8 +224,12 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
         return newPosition as unknown as Out;
     }
 
-    public get transformationMatrix(): Matrix4 {
+    get transformationMatrix(): Matrix4 {
         return this._transformationMatrix;
+    }
+
+    protected set transformationMatrix(matrix: Matrix4) {
+        this._transformationMatrix = matrix;
     }
 
     /**
@@ -228,7 +241,15 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
         return this._scaleMatrix;
     }
 
+    protected set scaleMatrix(matrix: Matrix4) {
+        this._scaleMatrix = matrix;
+    }
+
     public get rotationQuaternion(): Quaternion {
         return this._rotation;
+    }
+
+    protected set rotationQuaternion(quaternion: Quaternion) {
+        this._rotation = quaternion;
     }
 }

@@ -15,6 +15,7 @@ import {
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 import { expect } from 'chai';
 import 'mocha';
+import { SlowMemoryDataService } from '../../mock/services/SlowMemoryDataService';
 
 describe('DataObjectService', () => {
     let objectDataService: DataObjectService<DataObject>;
@@ -423,6 +424,25 @@ describe('DataObjectService', () => {
                 .catch((ex) => {
                     done(ex);
                 });
+        });
+    });
+
+    describe('slow driver', () => {
+        let objectDataService: DataObjectService<DataObject>;
+
+        before((done) => {
+            objectDataService = new DataObjectService(new SlowMemoryDataService(DataObject, {
+                timeout: 2000
+            }));
+            objectDataService.emitAsync('build').then(() => {
+                done();
+            }).catch(done);
+        });
+
+        it('should wait for the driver to be ready', (done) => {
+            objectDataService.findAll().then(() => {
+                done();
+            }).catch(done);
         });
     });
 });

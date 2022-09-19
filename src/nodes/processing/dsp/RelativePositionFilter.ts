@@ -2,6 +2,9 @@ import { DataFrame, DataObject, RelativePosition } from '../../../data';
 import { TimeService } from '../../../service/TimeService';
 import { BKFilterNode, KalmanFilterOptions } from './BKFilterNode';
 
+/**
+ * Relative position filter to filter the relative positions of an object depending on criteria
+ */
 export class RelativePositionFilter<InOut extends DataFrame, R extends RelativePosition> extends BKFilterNode<InOut> {
     protected options: RelativePositionFilterOptions;
     private _relativePositionType: new () => R;
@@ -50,7 +53,18 @@ export class RelativePositionFilter<InOut extends DataFrame, R extends RelativeP
 }
 
 export interface RelativePositionFilterOptions extends KalmanFilterOptions {
+    /**
+     * Minimum value of a relative position. If the value is not reached,
+     * it is removed from the object.
+     */
     minValue?: number;
+    /**
+     * Maximum value of a relative position
+     */
     maxValue?: number;
+    /**
+     * Maximum time different between the current time and the timestamp
+     * of the relative position.
+     */
     maxTimeDifference?: number;
 }

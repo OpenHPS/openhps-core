@@ -34,7 +34,8 @@ describe('GeographicalPosition', () => {
     });
 
     it('should calculate the destination from a point in a direction', () => {
-        const destination = new GeographicalPosition(1, 1).destination(100, 20, AngleUnit.DEGREE);
+        const destination = new GeographicalPosition(1, 1, 2).destination(100, 20, AngleUnit.DEGREE);
+        expect(destination.altitude).to.equal(2);
     });
 
     it('should convert the geographic position to EPSG3857', () => {
@@ -48,11 +49,21 @@ describe('GeographicalPosition', () => {
         expect(pos2.longitude).to.equal(4.392123);
     });
 
-    it('should convert the geographic position to ECER when requesting in meters', () => {
+    it('should convert the geographical position to a vector in meters', () => {
         const pos = new GeographicalPosition(50.820548, 4.392123, 1);
         const vector = pos.toVector3(LengthUnit.METER);
-        expect(Math.round(vector.x)).to.equal(4013073);
-        expect(Math.round(vector.y)).to.equal(308234);
-        expect(Math.round(vector.z)).to.equal(4938621);
+        const pos2 = new GeographicalPosition();
+        pos2.fromVector(vector, LengthUnit.METER);
+        expect(Math.round(pos.x * 1000) / 1000).to.equal(Math.round(pos2.x * 1000) / 1000);
+        expect(Math.round(pos.y * 1000) / 1000).to.equal(Math.round(pos2.y * 1000) / 1000);
+        expect(Math.round(pos.z * 1000) / 1000).to.equal(Math.round(pos2.z * 1000) / 1000);
+    });
+
+    it('should convert the geographic position to ECEF when requesting in meters', () => {
+        const pos = new GeographicalPosition(50.820548, 4.392123, 1);
+        const vector = pos.toVector3(LengthUnit.METER);
+        expect(Math.round(vector.x)).to.equal(4025669);
+        expect(Math.round(vector.y)).to.equal(309202);
+        expect(Math.round(vector.z)).to.equal(4920958);
     });
 });

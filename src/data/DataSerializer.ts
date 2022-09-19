@@ -1,11 +1,11 @@
 import { EventEmitter } from 'events';
 import { JsonObjectMetadata, Constructor, Serializable } from 'typedjson';
 import type { MappedTypeConverters } from 'typedjson/lib/types/parser';
+import { DataSerializerUtils, TypeDescriptor } from './DataSerializerUtils';
 import { ObjectMetadata } from './decorators/metadata';
 import { Deserializer } from './Deserializer';
 import { Serializer } from './Serializer';
 
-const META_FIELD = '__typedJsonJsonObjectMetadataInformation__';
 JsonObjectMetadata.getFromConstructor = function (ctor) {
     if (!ctor) {
         return;
@@ -17,9 +17,9 @@ JsonObjectMetadata.getFromConstructor = function (ctor) {
     }
 
     let metadata: JsonObjectMetadata | undefined;
-    if (Object.prototype.hasOwnProperty.call(prototype, META_FIELD)) {
+    if (Object.prototype.hasOwnProperty.call(prototype, DataSerializerUtils.META_FIELD)) {
         // The class prototype contains own jsonObject metadata
-        metadata = prototype[META_FIELD];
+        metadata = prototype[DataSerializerUtils.META_FIELD];
     } else {
         const parent = Object.getPrototypeOf(ctor.prototype);
         if (!parent) {
@@ -43,12 +43,12 @@ JsonObjectMetadata.getFromConstructor = function (ctor) {
 };
 
 /**
- * Allows the serialization and deserialization of objects using the [[SerializableObject]] decorator.
+ * Allows the serialization and deserialization of objects using the {@link SerializableObject} decorator.
  *
  * ## Usage
  *
  * ### Registration
- * Objects are registered upon loading with the [[SerializableObject]] decorator.
+ * Objects are registered upon loading with the {@link SerializableObject} decorator.
  * Manual registration is possible using:
  * ```typescript
  * DataSerializer.registerType(MyObjectClass);
@@ -84,7 +84,7 @@ export class DataSerializer {
             if (type.name !== 'Object') {
                 const objectMetadata = new JsonObjectMetadata(type);
                 objectMetadata.isExplicitlyMarked = true;
-                type.prototype[META_FIELD] = objectMetadata;
+                type.prototype[DataSerializerUtils.META_FIELD] = objectMetadata;
             }
         }
         this.eventEmitter.emit('registerType', type, converters);
@@ -128,38 +128,36 @@ export class DataSerializer {
     /**
      * Get the TypedJSON metadata
      *
+     * @deprecated use {@link DataSerializerUtils.getMetadata}
      * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
      * @param {any} proto Prototype of target
      * @returns {ObjectMetadata} Root object metadata
      */
     static getMetadata(proto: any): ObjectMetadata {
-        return JsonObjectMetadata.getFromConstructor(proto instanceof Function ? proto : proto.constructor);
+        return DataSerializerUtils.getMetadata(proto);
     }
 
     /**
      * Get the root TypedJSON metadata
      *
+     * @deprecated use {@link DataSerializerUtils.getRootMetadata}
      * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
      * @param {any} proto Prototype of target
      * @returns {ObjectMetadata} Root object metadata
      */
     static getRootMetadata(proto: any): ObjectMetadata {
-        const protoProto = proto instanceof Function ? proto.prototype : Object.getPrototypeOf(proto);
-        if (!protoProto || !protoProto[META_FIELD]) {
-            return proto[META_FIELD];
-        }
-        return DataSerializer.getRootMetadata(protoProto);
+        return DataSerializerUtils.getRootMetadata(proto);
     }
 
     /**
      * Find the root TypedJSON metadata
      *
-     * @deprecated use [[DataSerializer.findRootMetadata]]
+     * @deprecated use {@link DataSerializerUtils.getRootMetadata}
      * @param {any} proto Prototype of target
      * @returns {ObjectMetadata} Root object metadata
      */
     static findRootMetaInfo(proto: any): ObjectMetadata {
-        return this.getRootMetadata(proto);
+        return DataSerializerUtils.getRootMetadata(proto);
     }
 
     /**
@@ -209,15 +207,11 @@ export class DataSerializer {
         const serializer = config.serializer ?? this.serializer;
         return serializer.convertSingleValue(
             data,
-            this.ensureTypeDescriptor(globalDataType),
+            DataSerializerUtils.ensureTypeDescriptor(globalDataType),
             undefined,
             undefined,
             config,
         );
-    }
-
-    protected static ensureTypeDescriptor(type: Typelike): TypeDescriptor {
-        return type instanceof TypeDescriptor ? type : new ConcreteTypeDescriptor(type);
     }
 
     /**
@@ -242,7 +236,7 @@ export class DataSerializer {
         const finalType = dataType ?? deserializer.getTypeResolver()(serializedData, this.knownTypes);
         return deserializer.convertSingleValue(
             serializedData,
-            this.ensureTypeDescriptor(finalType),
+            DataSerializerUtils.ensureTypeDescriptor(finalType),
             this.knownTypes,
             undefined,
             undefined,
@@ -265,28 +259,3 @@ export interface DataSerializerConfig {
      */
     deserializer?: Deserializer;
 }
-
-export { MappedTypeConverters };
-
-export abstract class TypeDescriptor {
-    protected constructor(readonly ctor: Serializable<any>) {}
-
-    getTypes(): Array<Serializable<any>> {
-        return [this.ctor];
-    }
-
-    hasFriendlyName(): boolean {
-        return this.ctor.name !== 'Object';
-    }
-}
-
-export type Typelike = TypeDescriptor | Serializable<any>;
-
-export class ConcreteTypeDescriptor extends TypeDescriptor {
-    // eslint-disable-next-line @typescript-eslint/no-useless-constructor
-    constructor(ctor: Serializable<any>) {
-        super(ctor);
-    }
-}
-
-export type { ArrayTypeDescriptor, MapTypeDescriptor, SetTypeDescriptor } from 'typedjson/lib/types/type-descriptor';
