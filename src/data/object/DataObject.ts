@@ -1,6 +1,6 @@
 import { AbsolutePosition } from '../position/AbsolutePosition';
 import { RelativePosition } from '../position/RelativePosition';
-import { SerializableObject, SerializableMember, SerializableArrayMember } from '../decorators';
+import { SerializableObject, SerializableMember, SerializableArrayMember, NumberType } from '../decorators';
 import { v4 as uuidv4 } from 'uuid';
 import { DataSerializer } from '../DataSerializer';
 import { TimeService } from '../../service/TimeService';
@@ -41,6 +41,7 @@ export class DataObject {
      */
     @SerializableMember({
         index: true,
+        numberType: NumberType.LONG,
     })
     createdTimestamp: number;
     /**

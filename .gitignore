@@ -9,6 +9,7 @@ src/three/
 test-results.xml
 examples/**/public/*openhps-core*
 examples/**/package-lock.json
+xunit.xml
 
 # Linked Software Dependencies
 components/**/*.jsonld

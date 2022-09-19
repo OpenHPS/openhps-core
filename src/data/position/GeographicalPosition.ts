@@ -1,6 +1,6 @@
 import { AngleUnit } from '../../utils/unit/AngleUnit';
 import { LengthUnit } from '../../utils/unit/LengthUnit';
-import { SerializableObject, SerializableMember } from '../decorators';
+import { SerializableObject, SerializableMember, NumberType } from '../decorators';
 import { Absolute3DPosition } from './Absolute3DPosition';
 import { GCS, HAVERSINE, Unit, Vector3 } from '../../utils';
 
@@ -23,7 +23,9 @@ export class GeographicalPosition extends Absolute3DPosition {
      *
      * @returns {number} Latitude
      */
-    @SerializableMember()
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
     get latitude(): number {
         return this.y;
     }
@@ -37,7 +39,9 @@ export class GeographicalPosition extends Absolute3DPosition {
      *
      * @returns {number} Longitude
      */
-    @SerializableMember()
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
     get longitude(): number {
         return this.x;
     }
@@ -51,7 +55,9 @@ export class GeographicalPosition extends Absolute3DPosition {
      *
      * @returns {number} Altitude
      */
-    @SerializableMember()
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
     get altitude(): number {
         return this.z;
     }

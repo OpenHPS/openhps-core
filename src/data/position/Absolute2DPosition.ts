@@ -1,5 +1,5 @@
 import { AbsolutePosition } from './AbsolutePosition';
-import { SerializableMember, SerializableObject } from '../decorators';
+import { NumberType, SerializableMember, SerializableObject } from '../decorators';
 import { LengthUnit } from '../../utils';
 import { Vector3, Vector2 } from '../../utils/math';
 
@@ -19,7 +19,9 @@ export class Absolute2DPosition extends AbsolutePosition {
         this.vector.y = unit.convert(y ? y : 0, LengthUnit.METER);
     }
 
-    @SerializableMember()
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
     get x(): number {
         if (!this.vector) {
             return undefined;
@@ -34,7 +36,9 @@ export class Absolute2DPosition extends AbsolutePosition {
         this.vector.x = value;
     }
 
-    @SerializableMember()
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
     get y(): number {
         if (!this.vector) {
             return undefined;

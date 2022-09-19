@@ -1,4 +1,4 @@
-import { SerializableObject, SerializableMember } from '../../data/decorators';
+import { SerializableObject, SerializableMember, NumberType } from '../../data/decorators';
 import * as THREE from './_internal';
 import { Euler, EulerOrder } from './Euler';
 import { Matrix4 } from './Matrix4';
@@ -11,16 +11,24 @@ import { AngleUnit } from '../unit';
  */
 @SerializableObject()
 export class Quaternion extends THREE.Quaternion {
-    @SerializableMember()
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
     x: number;
 
-    @SerializableMember()
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
     y: number;
 
-    @SerializableMember()
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
     z: number;
 
-    @SerializableMember()
+    @SerializableMember({
+        type: NumberType.DECIMAL,
+    })
     w: number;
 
     /**

@@ -10,6 +10,8 @@ import {
     SerializableMember,
     TimeService,
     SerializableMemberFunction,
+    DataSerializerUtils,
+    Absolute3DPosition,
 } from '../../../src';
 import { BroadcastNode } from '../../../src/nodes/shapes/BroadcastNode';
 import { ServiceProxy } from '../../../src/service/_internal';
@@ -56,7 +58,7 @@ describe('DataSerializer', () => {
             const meta = DataSerializer.getRootMetadata(AbsolutePosition);
             expect(meta.dataMembers).to.not.be.undefined;
         });
-
+        
         it('should not crash on null or undefined objects in an array', () => {
             DataSerializer.deserialize([null, undefined]);
         });

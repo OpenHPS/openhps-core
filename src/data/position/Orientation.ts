@@ -1,5 +1,5 @@
 import { Quaternion } from '../../utils/math';
-import { SerializableMember, SerializableObject } from '../decorators';
+import { NumberType, SerializableMember, SerializableObject } from '../decorators';
 import * as THREE from '../../utils/math/_internal';
 import { TimeService } from '../../service/TimeService';
 import { Accuracy } from '../values/Accuracy';
@@ -15,6 +15,7 @@ import { Accuracy1D } from '../values/Accuracy1D';
 export class Orientation extends Quaternion {
     @SerializableMember({
         isRequired: false,
+        numberType: NumberType.LONG,
     })
     timestamp: number;
     @SerializableMember({

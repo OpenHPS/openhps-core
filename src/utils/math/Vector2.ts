@@ -1,4 +1,4 @@
-import { SerializableObject, SerializableMember } from '../../data/decorators';
+import { SerializableObject, SerializableMember, NumberType } from '../../data/decorators';
 import * as THREE from './_internal';
 
 /**
@@ -6,17 +6,21 @@ import * as THREE from './_internal';
  */
 @SerializableObject()
 export class Vector2 extends THREE.Vector2 {
-    @SerializableMember()
-    public x: number;
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
+    x: number;
 
-    @SerializableMember()
-    public y: number;
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
+    y: number;
 
-    public static fromArray(array: number[]): Vector2 {
+    static fromArray(array: number[]): Vector2 {
         return new this().fromArray(array);
     }
 
-    public clone(): this {
+    clone(): this {
         return new (this.constructor as new () => this)().copy(this) as this;
     }
 }

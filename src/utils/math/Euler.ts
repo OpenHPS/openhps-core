@@ -1,4 +1,4 @@
-import { SerializableObject, SerializableMember } from '../../data/decorators';
+import { SerializableObject, SerializableMember, NumberType } from '../../data/decorators';
 import * as THREE from './_internal';
 import { Matrix4 } from './Matrix4';
 import { AngleUnit } from '../unit/AngleUnit';
@@ -18,13 +18,19 @@ export class Euler extends THREE.Euler {
         }
     }
 
-    @SerializableMember()
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
     public x: number;
 
-    @SerializableMember()
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
     public y: number;
 
-    @SerializableMember()
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
     public z: number;
 
     /**

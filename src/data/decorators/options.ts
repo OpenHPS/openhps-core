@@ -25,6 +25,10 @@ export interface SerializableMemberOptions extends MemberOptionsBase {
      * as part of multiple attributes in an index.
      */
     index?: string | boolean;
+    /**
+     * Experimental number type
+     */
+    numberType?: NumberType;
 }
 
 export interface MemberOptionsBase extends IJsonMemberOptions {}
@@ -32,3 +36,12 @@ export interface MemberOptionsBase extends IJsonMemberOptions {}
 export interface SerializableSetMemberOptions extends MemberOptionsBase, IJsonSetMemberOptions {}
 
 export interface SerializableMapMemberOptions extends MemberOptionsBase, IJsonMapMemberOptions {}
+
+export enum NumberType {
+    INTEGER,
+    FLOAT,
+    DOUBLE,
+    DECIMAL,
+    LONG,
+    SHORT,
+}
