@@ -21,6 +21,70 @@ describe('WorkerNode', () => {
         done();
     });
 
+    it('should take 30ms with 1 worker', (done) => {
+        let model;
+        let start;
+        ModelBuilder.create()
+            .from()
+            .via(
+                new WorkerNode(
+                    (builder) => {
+                        // eslint-ignore-next-line
+                        const { TimeConsumingNode } = require(path.join(
+                            __dirname,
+                            '../../mock/nodes/TimeConsumingNode',
+                        ));
+                        builder.via(new TimeConsumingNode());
+                    },
+                    {
+                        directory: __dirname,
+                        poolSize: 1,
+                        timeout: 60000
+                    },
+                ),
+            )
+            .to(
+                new CallbackSinkNode((data: DataFrame) => {
+                    expect(data.getObjects()[0].uid).to.equal('time object');
+                }),
+            )
+            .build()
+            .then((m) => {
+                model = m;
+
+                // Warm-up
+                return model.push(new DataFrame());
+            })
+            .then(() => {
+                // Push three frames and wait for them to finish
+                start = new Date().getTime();
+                let count = 0;
+                model.on('completed', () => {
+                    count++;
+                    if (count === 3) {
+                        const end = new Date().getTime();
+                        const diff = end - start;
+                        if (diff >= 30 + overhead) {
+                            done(new Error(`Timeout!`));
+                        }
+                        expect(diff).to.be.lessThan(30 + overhead);
+                        model.emitAsync('destroy').then(() => {
+                            done();
+                        }).catch(done);
+                    }
+                });
+
+                for (let i = 0; i < 3; i++) {
+                    model.push(new DataFrame());
+                }
+            })
+            .catch((ex) => {
+                done(ex);
+            });
+    })
+        .slow(20000)
+        .timeout(80000);
+
     it('should take 20ms with 2 workers', (done) => {
         let model;
         let start;
