@@ -87,8 +87,6 @@ jobs:
             **/coverage
           key: ${{ runner.os }}-test-v1-${{ github.run_number }}
       - name: Test
-        env:
-          THREADS_WORKER_INIT_TIMEOUT: 60000
         run: |
           npm run cover:ci
 
