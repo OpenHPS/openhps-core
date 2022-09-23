@@ -15,9 +15,11 @@ import { DataSerializer } from '../data/DataSerializer';
 export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends RemoteService> extends Node<In, Out> {
     protected service: S;
     protected options: RemoteNodeOptions<S>;
+    proxyNode: Node<any, any>;
 
-    constructor(options?: RemoteNodeOptions<S>) {
+    constructor(options?: RemoteNodeOptions<S>, node?: Node<any, any>) {
         super(options);
+        this.proxyNode = node;
         this.options.service = this.options.service || (RemoteService as unknown as Serializable<S>);
         this.options.serialize = this.options.serialize ?? ((object: DataFrame) => DataSerializer.serialize(object));
         this.options.deserialize = this.options.deserialize ?? ((object: any) => DataSerializer.deserialize(object));

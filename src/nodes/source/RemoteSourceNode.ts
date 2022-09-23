@@ -14,7 +14,7 @@ export class RemoteSourceNode<Out extends DataFrame, S extends RemoteService> ex
 
     constructor(options?: SourceNodeOptions & RemoteNodeOptions<S>) {
         super(options);
-        this.remoteNode = new RemoteNode<Out, Out, S>(options);
+        this.remoteNode = new RemoteNode<Out, Out, S>(options, this);
         this.uid = `${this.uid}-source`;
 
         this.once('build', this._onRemoteBuild.bind(this));

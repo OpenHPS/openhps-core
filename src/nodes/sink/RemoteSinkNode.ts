@@ -15,7 +15,7 @@ export class RemoteSinkNode<In extends DataFrame, S extends RemoteService> exten
 
     constructor(options?: SinkNodeOptions & RemoteNodeOptions<S>) {
         super(options);
-        this.remoteNode = new RemoteNode<In, In, S>(options);
+        this.remoteNode = new RemoteNode<In, In, S>(options, this);
         this.uid = `${this.uid}-sink`;
 
         this.once('build', this._onRemoteBuild.bind(this));
