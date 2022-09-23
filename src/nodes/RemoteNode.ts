@@ -35,8 +35,7 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
             if (this.service === undefined || this.service === null) {
                 return reject(new Error(`Remote service was not added to model!`));
             }
-            this.service.registerNode(this);
-            resolve();
+            this.service.registerNode(this).then(resolve).catch(reject);
         });
     }
 

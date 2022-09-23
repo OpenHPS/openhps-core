@@ -23,16 +23,19 @@ export abstract class RemoteService extends Service {
     }
 
     private _registerServices(): Promise<void> {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             if (!this.model) {
                 resolve(); // No services to add when not added to model
             }
             this.model.once('ready', () => {
-                this.model.findAllServices().forEach((service) => {
-                    this.registerService(service);
-                });
+                Promise.all(
+                    this.model.findAllServices().map((service) => {
+                        this.registerService(service);
+                    }),
+                )
+                    .then(() => resolve())
+                    .catch(reject);
             });
-            resolve();
         });
     }
 
@@ -150,28 +153,32 @@ export abstract class RemoteService extends Service {
      * Register a node as a remotely available node
      *
      * @param {Node<any, any> | string} node Node to register
-     * @returns {RemoteService} Service instance
+     * @returns {Promise<void>} Promise of registration
      */
-    registerNode(node: Node<any, any> | string): this {
-        const existingNode = node instanceof Node ? node : (this.model.findNodeByUID(node) as Node<any, any>);
-        this.nodes.add(existingNode.uid);
-        this.logger('debug', `Registered remote server node ${existingNode.uid}`);
-        return this;
+    registerNode(node: Node<any, any> | string): Promise<void> {
+        return new Promise((resolve) => {
+            const existingNode = node instanceof Node ? node : (this.model.findNodeByUID(node) as Node<any, any>);
+            this.nodes.add(existingNode.uid);
+            this.logger('debug', `Registered remote server node ${existingNode.uid}`);
+            resolve();
+        });
     }
 
     /**
      * Register a service to be remotely available
      *
      * @param {Service} service Service to register
-     * @returns {RemoteService} Service instance
+     * @returns {Promise<void>} Promise of registration
      */
-    registerService(service: Service): this {
-        if (!(service instanceof RemoteServiceProxy)) {
-            this.localServices.add(service.uid);
-        } else {
-            this.remoteServices.add(service.uid);
-        }
-        return this;
+    registerService(service: Service): Promise<void> {
+        return new Promise((resolve) => {
+            if (!(service instanceof RemoteServiceProxy)) {
+                this.localServices.add(service.uid);
+            } else {
+                this.remoteServices.add(service.uid);
+            }
+            resolve();
+        });
     }
 }
 
