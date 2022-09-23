@@ -37,8 +37,8 @@ export abstract class RemoteService extends Service {
         });
     }
 
-    protected registerPromise(resolve: (data?: any) => void, reject: (ex?: any) => void): string {
-        const uuid = this.generateUUID();
+    protected registerPromise(resolve: (data?: any) => void, reject: (ex?: any) => void, id?: string): string {
+        const uuid = id ?? this.generateUUID();
         this.promises.set(uuid, { resolve, reject });
         return uuid;
     }
