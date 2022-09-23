@@ -23,19 +23,18 @@ export abstract class RemoteService extends Service {
     }
 
     private _registerServices(): Promise<void> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             if (!this.model) {
-                resolve(); // No services to add when not added to model
+                return resolve(); // No services to add when not added to model
             }
             this.model.once('ready', () => {
-                Promise.all(
-                    this.model.findAllServices().map((service) => {
-                        this.registerService(service);
-                    }),
-                )
-                    .then(() => resolve())
-                    .catch(reject);
+                // Only register services after the model is ready
+                // this is why we resolve the promise before this is completed
+                this.model.findAllServices().forEach((service) => {
+                    this.registerService(service);
+                });
             });
+            resolve();
         });
     }
 
