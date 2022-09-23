@@ -5,6 +5,7 @@ import { Model } from '../Model';
 import { Node, NodeOptions } from '../Node';
 import { RemoteService, RemotePushOptions, RemotePullOptions } from '../service/RemoteService';
 import { Serializable } from '../data/decorators';
+import { DataSerializer } from '../data/DataSerializer';
 
 /**
  * A remote node connects to a service in order to provide a remote connection.
@@ -18,6 +19,8 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
     constructor(options?: RemoteNodeOptions<S>) {
         super(options);
         this.options.service = this.options.service || (RemoteService as unknown as Serializable<S>);
+        this.options.serialize = this.options.serialize ?? ((object: DataFrame) => DataSerializer.serialize(object));
+        this.options.deserialize = this.options.deserialize ?? ((object: any) => DataSerializer.deserialize(object));
 
         this.on('push', this._onPush.bind(this));
         this.on('pull', this._onPull.bind(this));
@@ -58,9 +61,10 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
         });
     }
 
-    private _onLocalPush(frame: In | In[], options?: RemotePushOptions): Promise<void> {
+    private _onLocalPush(frame: any, options?: RemotePushOptions): Promise<void> {
         return new Promise<void>((resolve) => {
-            this.outlets.forEach((outlet) => outlet.push(frame as any, options));
+            const frameDeserialized = frame instanceof DataFrame ? frame : this.options.deserialize(frame, options);
+            this.outlets.forEach((outlet) => outlet.push(frameDeserialized as any, options));
             resolve();
         });
     }
@@ -97,4 +101,6 @@ export interface RemoteNodeOptions<S extends RemoteService> extends NodeOptions 
      * @default RemoteService any remote service
      */
     service?: Serializable<S>;
+    serialize?: (obj: DataFrame, options?: RemotePushOptions) => any;
+    deserialize?: (obj: any, options?: RemotePushOptions) => DataFrame;
 }
