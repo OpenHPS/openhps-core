@@ -50,5 +50,5 @@ export interface RemoteSinkNodeOptions<S extends RemoteService> extends SinkNode
      *
      * @default RemoteNode a normal remote node
      */
-    type?: Constructor<S>;
+    type?: Constructor<RemoteNode<any, any, S>>;
 }
