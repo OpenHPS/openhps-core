@@ -15,6 +15,10 @@ export abstract class RemoteService extends Service {
     protected localServices: Set<string> = new Set();
     protected remoteServices: Set<string> = new Set();
     protected promises: Map<string, { resolve: (data?: any) => void; reject: (ex?: any) => void }> = new Map();
+    protected deserialize: (object: any, options?: RemotePushOptions) => DataFrame = (object) =>
+        DataSerializer.deserialize(object);
+    protected serialize: (object: any, options?: RemotePushOptions) => DataFrame = (object) =>
+        DataSerializer.serialize(object);
     model: Model;
 
     constructor() {
@@ -63,7 +67,7 @@ export abstract class RemoteService extends Service {
         options = options || {};
         if (this.nodes.has(uid)) {
             // Parse frame and options
-            const frameDeserialized = frame instanceof DataFrame ? frame : DataSerializer.deserialize(frame);
+            const frameDeserialized = frame instanceof DataFrame ? frame : this.deserialize(frame, options);
             this.model.findNodeByUID(uid).emit('localpush', frameDeserialized, options);
         }
     }
