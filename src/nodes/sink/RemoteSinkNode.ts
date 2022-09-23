@@ -6,16 +6,21 @@ import { RemoteService } from '../../service/RemoteService';
 import { ModelBuilder } from '../../ModelBuilder';
 import { Edge } from '../../graph/Edge';
 import { PushOptions } from '../../graph/options/PushOptions';
+import { Constructor } from '../../data/decorators';
 
 /**
  * Remote sink node
  */
-export class RemoteSinkNode<In extends DataFrame, S extends RemoteService> extends SinkNode<In> {
-    protected remoteNode: RemoteNode<In, In, S>;
+export class RemoteSinkNode<
+    In extends DataFrame,
+    S extends RemoteService,
+    N extends RemoteNode<In, In, S> = RemoteNode<In, In, S>,
+> extends SinkNode<In> {
+    protected remoteNode: N;
 
-    constructor(options?: SinkNodeOptions & RemoteNodeOptions<S>) {
+    constructor(options?: RemoteSinkNodeOptions<S>) {
         super(options);
-        this.remoteNode = new RemoteNode<In, In, S>(options, this);
+        this.remoteNode = new (options.type ?? RemoteNode)(options, this) as N;
         this.uid = `${this.uid}-sink`;
 
         this.once('build', this._onRemoteBuild.bind(this));
@@ -37,4 +42,13 @@ export class RemoteSinkNode<In extends DataFrame, S extends RemoteService> exten
         // Force push to remote node, sink nodes do not push by default
         return this.remoteNode.push(data, options);
     }
+}
+
+export interface RemoteSinkNodeOptions<S extends RemoteService> extends SinkNodeOptions, RemoteNodeOptions<S> {
+    /**
+     * Node type to use
+     *
+     * @default RemoteNode a normal remote node
+     */
+    type?: Constructor<S>;
 }

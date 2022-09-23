@@ -5,16 +5,21 @@ import { ModelBuilder } from '../../ModelBuilder';
 import { RemoteService } from '../../service/RemoteService';
 import { SourceNode, SourceNodeOptions } from '../SourceNode';
 import { PushCompletedEvent, PushError } from '../../graph/events';
+import { Constructor } from '../../data/decorators';
 
 /**
  * Remote source node
  */
-export class RemoteSourceNode<Out extends DataFrame, S extends RemoteService> extends SourceNode<Out> {
-    protected remoteNode: RemoteNode<Out, Out, S>;
+export class RemoteSourceNode<
+    Out extends DataFrame,
+    S extends RemoteService,
+    N extends RemoteNode<Out, Out, S> = RemoteNode<Out, Out, S>,
+> extends SourceNode<Out> {
+    protected remoteNode: N;
 
-    constructor(options?: SourceNodeOptions & RemoteNodeOptions<S>) {
+    constructor(options?: RemoteSourceNodeOptions<S>) {
         super(options);
-        this.remoteNode = new RemoteNode<Out, Out, S>(options, this);
+        this.remoteNode = new (options.type ?? RemoteNode)(options, this) as N;
         this.uid = `${this.uid}-source`;
 
         this.once('build', this._onRemoteBuild.bind(this));
@@ -48,4 +53,13 @@ export class RemoteSourceNode<Out extends DataFrame, S extends RemoteService> ex
     private _onDownstreamCompleted(event: PushCompletedEvent): void {
         this.remoteNode.emit('completed', event);
     }
+}
+
+export interface RemoteSourceNodeOptions<S extends RemoteService> extends SourceNodeOptions, RemoteNodeOptions<S> {
+    /**
+     * Node type to use
+     *
+     * @default RemoteNode a normal remote node
+     */
+    type?: Constructor<S>;
 }
