@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="145px" preserveAspectRatio="none" style="width:380px;height:145px;background:#00000000;" version="1.1" viewBox="0 0 380 145" width="380px" zoomAndPan="magnify"><defs><filter height="300%" id="f4j4y66a6feco" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[f265a7252ead12bb689f64c8e31db9a1]
+class RemoteSinkNodeOptions<S>--><rect codeLine="4" fill="#FEFECE" filter="url(#f4j4y66a6feco)" height="32" id="RemoteSinkNodeOptions&lt;S&gt;" style="stroke:#A80036;stroke-width:1.5;" width="213" x="67" y="99"/><ellipse cx="82" cy="115" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M77.9219,110.7656 L77.9219,108.6094 L85.3125,108.6094 L85.3125,110.7656 L82.8438,110.7656 L82.8438,118.8438 L85.3125,118.8438 L85.3125,121 L77.9219,121 L77.9219,118.8438 L80.3906,118.8438 L80.3906,110.7656 L77.9219,110.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="181" x="96" y="119.1543">RemoteSinkNodeOptions&lt;S&gt;</text><!--MD5=[3a45af97e6b535177081653004ae69d4]
+class SinkNodeOptions--><rect codeLine="6" fill="#FEFECE" filter="url(#f4j4y66a6feco)" height="32" id="SinkNodeOptions" style="stroke:#A80036;stroke-width:1.5;" width="137" x="7" y="7"/><ellipse cx="22" cy="23" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M17.9219,18.7656 L17.9219,16.6094 L25.3125,16.6094 L25.3125,18.7656 L22.8438,18.7656 L22.8438,26.8438 L25.3125,26.8438 L25.3125,29 L17.9219,29 L17.9219,26.8438 L20.3906,26.8438 L20.3906,18.7656 L17.9219,18.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="105" x="36" y="27.1543">SinkNodeOptions</text><!--MD5=[27233f9f0dbea12209f7bde4d6298590]
+class RemoteNodeOptions<S>--><rect codeLine="9" fill="#FEFECE" filter="url(#f4j4y66a6feco)" height="32" id="RemoteNodeOptions&lt;S&gt;" style="stroke:#A80036;stroke-width:1.5;" width="187" x="179" y="7"/><ellipse cx="194" cy="23" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M189.9219,18.7656 L189.9219,16.6094 L197.3125,16.6094 L197.3125,18.7656 L194.8438,18.7656 L194.8438,26.8438 L197.3125,26.8438 L197.3125,29 L189.9219,29 L189.9219,26.8438 L192.3906,26.8438 L192.3906,18.7656 L189.9219,18.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="155" x="208" y="27.1543">RemoteNodeOptions&lt;S&gt;</text><!--MD5=[430bce2b6df8335557a51f43f929cf99]
+reverse link SinkNodeOptions to RemoteSinkNodeOptions<S>--><path codeLine="8" d="M106.88,52.81 C123.59,68.16 143.46,86.41 157.12,98.96 " fill="none" id="SinkNodeOptions-backto-RemoteSinkNodeOptions&lt;S&gt;" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="102.12,57.95,92.12,39.27,111.59,47.64,102.12,57.95" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[4beb1e0374de0ce57d3ba192be8fcceb]
+reverse link RemoteNodeOptions<S> to RemoteSinkNodeOptions<S>--><path codeLine="11" d="M240.8,52.81 C223.92,68.16 203.85,86.41 190.05,98.96 " fill="none" id="RemoteNodeOptions&lt;S&gt;-backto-RemoteSinkNodeOptions&lt;S&gt;" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="236.2,47.54,255.71,39.27,245.62,57.9,236.2,47.54" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[8daa8176929d7bfde588b72e03053e61]
+@startuml
+skinparam BackgroundColor transparent
+hide empty methods
+hide empty fields
+interface "RemoteSinkNodeOptions<S>" {
+}
+interface "SinkNodeOptions" {
+}
+"SinkNodeOptions" <|- - "RemoteSinkNodeOptions<S>"
+interface "RemoteNodeOptions<S>" {
+}
+"RemoteNodeOptions<S>" <|- - "RemoteSinkNodeOptions<S>"
+@enduml
+
+PlantUML version 1.2021.14(Fri Nov 12 16:46:50 UTC 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
