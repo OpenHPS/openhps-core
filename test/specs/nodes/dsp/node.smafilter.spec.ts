@@ -28,7 +28,13 @@ describe('SMAFilterNode', () => {
             .via(
                 new SMAFilterNode(
                     (object: DummyDataFilterObject) => {
-                        return [object, 'reading'];
+                        return [{
+                            key: 'reading',
+                            value: object.reading
+                        }];
+                    },
+                    (key: string, value: number, object: DummyDataFilterObject) => {
+                        object[key] = value;
                     },
                     {
                         objectFilter: (object: DataObject) => object instanceof DummyDataFilterObject,

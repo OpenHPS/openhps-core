@@ -1,4 +1,4 @@
-import { PropertyFilterProcessingNode } from './PropertyFilterProcessingNode';
+import { PropertyFilterProcessingNode, PropertyModifier, PropertySelector } from './PropertyFilterProcessingNode';
 import { FilterProcessingOptions } from './FilterProcessingNode';
 import { DataFrame, DataObject } from '../../../data';
 import { Vector } from '../../../utils';
@@ -8,10 +8,11 @@ import { Vector } from '../../../utils';
  */
 export class SMAFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
     constructor(
-        propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey],
+        propertySelector: PropertySelector<InOut>,
+        propertyModifier: PropertyModifier<InOut>,
         options: SMAFilterOptions,
     ) {
-        super(propertySelector, options);
+        super(propertySelector, propertyModifier, options);
     }
 
     initFilter(object: DataObject, value: number | Vector, options: SMAFilterOptions): Promise<any> {

@@ -2,41 +2,52 @@ import { FilterProcessingOptions } from './FilterProcessingNode';
 import { DataFrame, DataObject } from '../../../data';
 import { ObjectProcessingNode } from '../../ObjectProcessingNode';
 import { Vector3 } from '../../../utils';
+import { TimeService } from '../../../service/TimeService';
+
+export type PropertyType = { key: string; value: number | Vector3 };
+export type PropertySelector<T> = (object: DataObject, frame?: T) => Array<PropertyType>;
+export type PropertyModifier<T> = (key: string, value: number | Vector3, object: DataObject, frame?: T) => void;
 
 /**
  * @category Processing node
  */
 export abstract class PropertyFilterProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
-    private _propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey];
+    private _propertySelector: PropertySelector<InOut>;
+    private _propertyModifier: PropertyModifier<InOut>;
+    protected options: FilterProcessingOptions;
 
     constructor(
-        propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey],
+        propertySelector: PropertySelector<InOut>,
+        propertyModifier: PropertyModifier<InOut>,
         options?: FilterProcessingOptions,
     ) {
         super(options);
         this._propertySelector = propertySelector;
+        this._propertyModifier = propertyModifier;
     }
 
     processObject(object: DataObject, frame: InOut): Promise<DataObject> {
         return new Promise((resolve, reject) => {
             // Extract all sensor values from the frame
-            const [obj, propertyKey] = this._propertySelector(object, frame);
-            const property = obj[propertyKey];
-            this.filterValue(object, obj, propertyKey, property)
-                .then((result: [any, number]) => {
-                    result[0][propertyKey] = result[1];
+            const types = this._propertySelector(object, frame);
+            Promise.all(
+                types.map((type) => {
+                    return this.filterValue(object, type.value, type.key);
+                }),
+            )
+                .then((results: Array<number | Vector3>) => {
+                    for (let i = 0; i < results.length; i++) {
+                        const result = results[i];
+                        const type = types[i];
+                        this._propertyModifier(type.key, result, object, frame);
+                    }
                     resolve(object);
                 })
                 .catch(reject);
         });
     }
 
-    protected filterValue<T extends number | Vector3>(
-        object: DataObject,
-        obj: any,
-        key: PropertyKey,
-        value: T,
-    ): Promise<[any, T]> {
+    protected filterValue<T extends number | Vector3>(object: DataObject, value: T, key = 'default'): Promise<T> {
         return new Promise((resolve, reject) => {
             // Get existing filter data
             this.getNodeData(object)
@@ -44,12 +55,32 @@ export abstract class PropertyFilterProcessingNode<InOut extends DataFrame> exte
                     if (nodeData === undefined) {
                         nodeData = {};
                     }
+
+                    const currentTimestamp = TimeService.now();
                     if (nodeData[key] === undefined) {
-                        nodeData[key] = await this.initFilter(object, value, this.options);
+                        nodeData[key] = {
+                            timestamp: currentTimestamp,
+                            ...(await this.initFilter(object, value, this.options)),
+                        };
+                    }
+
+                    if (this.options.expire) {
+                        const deleteData = [];
+                        Object.keys(nodeData).forEach((key) => {
+                            const data = nodeData[key];
+                            if (data['timestamp']) {
+                                if (data.timestamp + this.options.expire < currentTimestamp) {
+                                    deleteData.push(key);
+                                }
+                            }
+                        });
+                        deleteData.forEach((key) => {
+                            delete nodeData[key];
+                        });
                     }
 
                     this.filter(object, value, nodeData[key], this.options)
-                        .then((value) => resolve([obj, value]))
+                        .then(resolve)
                         .catch(reject)
                         .finally(() => {
                             this.setNodeData(object, nodeData);

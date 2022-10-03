@@ -1,4 +1,4 @@
-import { PropertyFilterProcessingNode } from './PropertyFilterProcessingNode';
+import { PropertyFilterProcessingNode, PropertyModifier, PropertySelector } from './PropertyFilterProcessingNode';
 import { DataFrame, DataObject } from '../../../data';
 import { Vector } from '../../../utils';
 import { FilterProcessingOptions } from './FilterProcessingNode';
@@ -7,8 +7,12 @@ import { FilterProcessingOptions } from './FilterProcessingNode';
  * @category Processing node
  */
 export class LPFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
-    constructor(propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey], options: LPFilterOptions) {
-        super(propertySelector, options);
+    constructor(
+        propertySelector: PropertySelector<InOut>,
+        propertyModifier: PropertyModifier<InOut>,
+        options: LPFilterOptions,
+    ) {
+        super(propertySelector, propertyModifier, options);
     }
 
     initFilter<T extends number | Vector>(object: DataObject, value: T, options: LPFilterOptions): Promise<any> {

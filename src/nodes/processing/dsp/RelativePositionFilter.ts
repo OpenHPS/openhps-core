@@ -1,5 +1,6 @@
 import { DataFrame, DataObject, RelativePosition } from '../../../data';
 import { TimeService } from '../../../service/TimeService';
+import { Vector3 } from '../../../utils';
 import { BKFilterNode, KalmanFilterOptions } from './BKFilterNode';
 
 /**
@@ -10,7 +11,7 @@ export class RelativePositionFilter<InOut extends DataFrame, R extends RelativeP
     private _relativePositionType: new () => R;
 
     constructor(relativePositionType: new () => R, options: RelativePositionFilterOptions) {
-        super(undefined, options);
+        super(undefined, undefined, options);
         this._relativePositionType = relativePositionType;
         this.options.minValue = this.options.minValue || 0;
         this.options.maxValue = this.options.maxValue || 100;
@@ -23,15 +24,10 @@ export class RelativePositionFilter<InOut extends DataFrame, R extends RelativeP
                 object.relativePositions
                     .filter((x) => x instanceof this._relativePositionType)
                     .map((relPos: RelativePosition) => {
-                        return this.filterValue(
-                            object,
-                            relPos,
-                            `relativePositions.[${relPos.referenceObjectUID}]`,
-                            relPos.referenceValue,
-                        );
+                        return this.filterValue(object, relPos.referenceValue);
                     }),
             )
-                .then((results: Array<[any, number]>) => {
+                .then((results: Array<number | Vector3>) => {
                     results.forEach((result) => {
                         const value = result[1];
                         const relativePosition = result[0];

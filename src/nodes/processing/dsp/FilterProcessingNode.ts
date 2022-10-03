@@ -1,4 +1,5 @@
 import { DataFrame, DataObject } from '../../../data';
+import { TimeService } from '../../../service/TimeService';
 import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../../ObjectProcessingNode';
 
 /**
@@ -17,7 +18,17 @@ export abstract class FilterProcessingNode<InOut extends DataFrame> extends Obje
             this.getNodeData(object)
                 .then(async (nodeData) => {
                     if (nodeData === undefined) {
-                        nodeData = await this.initFilter(object, frame, this.options);
+                        nodeData = {
+                            timestamp: TimeService.now(),
+                            ...(await this.initFilter(object, frame, this.options)),
+                        };
+                    } else if (nodeData['timestamp']) {
+                        if (nodeData.timestamp + this.options.expire < TimeService.now()) {
+                            nodeData = {
+                                timestamp: TimeService.now(),
+                                ...(await this.initFilter(object, frame, this.options)),
+                            };
+                        }
                     }
 
                     this.filter(object, frame, nodeData, this.options)
@@ -47,7 +58,6 @@ export abstract class FilterProcessingNode<InOut extends DataFrame> extends Obje
     ): Promise<DataObject>;
 }
 
-// eslint-disable-next-line
 export interface FilterProcessingOptions extends ObjectProcessingNodeOptions {
-    
+    expire?: number;
 }

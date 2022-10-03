@@ -1,4 +1,4 @@
-import { PropertyFilterProcessingNode } from './PropertyFilterProcessingNode';
+import { PropertyFilterProcessingNode, PropertyModifier, PropertySelector } from './PropertyFilterProcessingNode';
 import { FilterProcessingOptions } from './FilterProcessingNode';
 import { DataObject, DataFrame } from '../../../data';
 import { Vector3 } from '../../../utils';
@@ -10,10 +10,11 @@ import { Vector3 } from '../../../utils';
  */
 export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
     constructor(
-        propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey],
+        propertySelector: PropertySelector<InOut>,
+        propertyModifier: PropertyModifier<InOut>,
         options: KalmanFilterOptions,
     ) {
-        super(propertySelector, options);
+        super(propertySelector, propertyModifier, options);
     }
 
     initFilter<T extends number | Vector3>(object: DataObject, value: T, options: KalmanFilterOptions): Promise<any> {
@@ -71,7 +72,7 @@ export interface KalmanFilterOptions extends FilterProcessingOptions {
  * @copyright Copyright 2015-2018 Wouter Bulten
  * @license MIT
  */
-class KalmanFilter<T extends Vector3> {
+export class KalmanFilter<T extends Vector3> {
     /** Process noise */
     private _R: T;
     /** Measurement noise */

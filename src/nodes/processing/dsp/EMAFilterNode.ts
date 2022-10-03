@@ -1,6 +1,6 @@
 import { DataFrame, DataObject } from '../../../data';
 import { Vector } from '../../../utils';
-import { PropertyFilterProcessingNode } from './PropertyFilterProcessingNode';
+import { PropertyFilterProcessingNode, PropertyModifier, PropertySelector } from './PropertyFilterProcessingNode';
 import { FilterProcessingOptions } from './FilterProcessingNode';
 
 /**
@@ -8,10 +8,11 @@ import { FilterProcessingOptions } from './FilterProcessingNode';
  */
 export class EMAFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
     constructor(
-        propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey],
+        propertySelector: PropertySelector<InOut>,
+        propertyModifier: PropertyModifier<InOut>,
         options: EMAFilterOptions,
     ) {
-        super(propertySelector, options);
+        super(propertySelector, propertyModifier, options);
     }
 
     initFilter<T extends number | Vector>(object: DataObject, value: T, options: EMAFilterOptions): Promise<any> {

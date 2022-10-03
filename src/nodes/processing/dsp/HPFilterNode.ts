@@ -1,14 +1,18 @@
 import { FilterProcessingOptions } from './FilterProcessingNode';
 import { DataFrame, DataObject } from '../../../data';
 import { Vector } from '../../../utils';
-import { PropertyFilterProcessingNode } from './PropertyFilterProcessingNode';
+import { PropertyFilterProcessingNode, PropertyModifier, PropertySelector } from './PropertyFilterProcessingNode';
 
 /**
  * @category Processing node
  */
 export class HPFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
-    constructor(propertySelector: (object: DataObject, frame?: InOut) => [any, PropertyKey], options: HPFilterOptions) {
-        super(propertySelector, options);
+    constructor(
+        propertySelector: PropertySelector<InOut>,
+        propertyModifier: PropertyModifier<InOut>,
+        options: HPFilterOptions,
+    ) {
+        super(propertySelector, propertyModifier, options);
     }
 
     initFilter<T extends number | Vector>(
