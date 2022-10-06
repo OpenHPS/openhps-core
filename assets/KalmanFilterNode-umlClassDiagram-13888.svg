@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="237px" preserveAspectRatio="none" style="width:289px;height:237px;background:#00000000;" version="1.1" viewBox="0 0 289 237" width="289px" zoomAndPan="magnify"><defs><filter height="300%" id="f12a1vgqolr2fy" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[a7de8954e936adfc73f7ef3c8b732e5a]
+class KalmanFilterNode<InOut>--><rect codeLine="4" fill="#FEFECE" filter="url(#f12a1vgqolr2fy)" height="32" id="KalmanFilterNode&lt;InOut&gt;" style="stroke:#A80036;stroke-width:1.5;" width="194" x="44" y="99"/><ellipse cx="59" cy="115" fill="#ADD1B2" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M61.9688,120.6406 Q61.3906,120.9375 60.75,121.0781 Q60.1094,121.2344 59.4063,121.2344 Q56.9063,121.2344 55.5781,119.5938 Q54.2656,117.9375 54.2656,114.8125 Q54.2656,111.6875 55.5781,110.0313 Q56.9063,108.375 59.4063,108.375 Q60.1094,108.375 60.75,108.5313 Q61.4063,108.6875 61.9688,108.9844 L61.9688,111.7031 Q61.3438,111.125 60.75,110.8594 Q60.1563,110.5781 59.5313,110.5781 Q58.1875,110.5781 57.5,111.6563 Q56.8125,112.7188 56.8125,114.8125 Q56.8125,116.9063 57.5,117.9844 Q58.1875,119.0469 59.5313,119.0469 Q60.1563,119.0469 60.75,118.7813 Q61.3438,118.5 61.9688,117.9219 L61.9688,120.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="162" x="73" y="119.1543">KalmanFilterNode&lt;InOut&gt;</text><!--MD5=[5c1e6fce4365e56468cf60e0107291cc]
+class PropertyFilterProcessingNode<InOut>--><rect codeLine="6" fill="#FEFECE" filter="url(#f12a1vgqolr2fy)" height="32" id="PropertyFilterProcessingNode&lt;InOut&gt;" style="stroke:#A80036;stroke-width:1.5;" width="268" x="7" y="7"/><ellipse cx="22" cy="23" fill="#A9DCDF" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M22.1094,18.3438 L20.9531,23.4219 L23.2813,23.4219 L22.1094,18.3438 Z M20.625,16.1094 L23.6094,16.1094 L26.9688,28.5 L24.5156,28.5 L23.75,25.4375 L20.4688,25.4375 L19.7188,28.5 L17.2813,28.5 L20.625,16.1094 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="236" x="36" y="27.1543">PropertyFilterProcessingNode&lt;InOut&gt;</text><!--MD5=[e791293e6a23e29d3166a720fa3d59a9]
+class RelativePositionFilter<InOut, R>--><rect codeLine="9" fill="#FEFECE" filter="url(#f12a1vgqolr2fy)" height="32" id="RelativePositionFilter&lt;InOut, R&gt;" style="stroke:#A80036;stroke-width:1.5;" width="231" x="25.5" y="191"/><ellipse cx="40.5" cy="207" fill="#ADD1B2" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M43.4688,212.6406 Q42.8906,212.9375 42.25,213.0781 Q41.6094,213.2344 40.9063,213.2344 Q38.4063,213.2344 37.0781,211.5938 Q35.7656,209.9375 35.7656,206.8125 Q35.7656,203.6875 37.0781,202.0313 Q38.4063,200.375 40.9063,200.375 Q41.6094,200.375 42.25,200.5313 Q42.9063,200.6875 43.4688,200.9844 L43.4688,203.7031 Q42.8438,203.125 42.25,202.8594 Q41.6563,202.5781 41.0313,202.5781 Q39.6875,202.5781 39,203.6563 Q38.3125,204.7188 38.3125,206.8125 Q38.3125,208.9063 39,209.9844 Q39.6875,211.0469 41.0313,211.0469 Q41.6563,211.0469 42.25,210.7813 Q42.8438,210.5 43.4688,209.9219 L43.4688,212.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="199" x="54.5" y="211.1543">RelativePositionFilter&lt;InOut, R&gt;</text><!--MD5=[e27baa27dcbf77b23c8d73bac5a8edaa]
+reverse link PropertyFilterProcessingNode<InOut> to KalmanFilterNode<InOut>--><path codeLine="8" d="M141,59.61 C141,73.31 141,88.22 141,98.96 " fill="none" id="PropertyFilterProcessingNode&lt;InOut&gt;-backto-KalmanFilterNode&lt;InOut&gt;" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="134,59.27,141,39.27,148,59.27,134,59.27" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[f30a6b230a85eb751dfac664875ee2cb]
+reverse link KalmanFilterNode<InOut> to RelativePositionFilter<InOut, R>--><path codeLine="11" d="M141,151.61 C141,165.31 141,180.22 141,190.96 " fill="none" id="KalmanFilterNode&lt;InOut&gt;-backto-RelativePositionFilter&lt;InOut, R&gt;" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="134,151.27,141,131.27,148,151.27,134,151.27" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[f365253826ba5477b7db9bd921c6fd35]
+@startuml
+skinparam BackgroundColor transparent
+hide empty methods
+hide empty fields
+class "KalmanFilterNode<InOut>" {
+}
+abstract class "PropertyFilterProcessingNode<InOut>" {
+}
+"PropertyFilterProcessingNode<InOut>" <|- - "KalmanFilterNode<InOut>"
+class "RelativePositionFilter<InOut, R>" {
+}
+"KalmanFilterNode<InOut>" <|- - "RelativePositionFilter<InOut, R>"
+@enduml
+
+PlantUML version 1.2021.14(Fri Nov 12 16:46:50 UTC 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
