@@ -7,8 +7,8 @@ import {
     DataFrame,
     DataObject,
     ListSourceNode,
-    BKFilterNode,
     RelativeDistance,
+    KalmanFilterNode,
 } from '../../../../src';
 import { DummyDataFilterObject } from '../../../mock/data/object/DummyDataFilterObject';
 
@@ -28,7 +28,7 @@ describe('node', () => {
                     ]),
                 )
                 .via(
-                    new BKFilterNode(
+                    new KalmanFilterNode(
                         (object: DummyDataFilterObject) => {
                             return object.getRelativePositions().map(rel => {
                                 return {
@@ -81,7 +81,7 @@ describe('node', () => {
                     ]),
                 )
                 .via(
-                    new BKFilterNode(
+                    new KalmanFilterNode(
                         (object: DummyDataFilterObject) => {
                             return [{
                                 key: 'reading',

@@ -29,6 +29,11 @@ export abstract class FilterProcessingNode<InOut extends DataFrame> extends Obje
                                 ...(await this.initFilter(object, frame, this.options)),
                             };
                         }
+                    } else {
+                        nodeData = {
+                            timestamp: TimeService.now(),
+                            ...nodeData,
+                        };
                     }
 
                     this.filter(object, frame, nodeData, this.options)

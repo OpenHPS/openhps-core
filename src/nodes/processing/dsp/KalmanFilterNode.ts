@@ -4,11 +4,11 @@ import { DataObject, DataFrame } from '../../../data';
 import { Vector3 } from '../../../utils';
 
 /**
- * Basic Kalman Filter processing node
+ * Kalman Filter processing node
  *
  * @category Processing node
  */
-export class BKFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
+export class KalmanFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
     constructor(
         propertySelector: PropertySelector<InOut>,
         propertyModifier: PropertyModifier<InOut>,
@@ -103,9 +103,9 @@ export class KalmanFilter<T extends Vector3> {
     /**
      * Filter a new value
      *
-     * @param  {number} z Measurement
-     * @param  {number} u Control
-     * @returns {number} Filtered value
+     * @param  {Vector3} z Measurement
+     * @param  {Vector3} u Control
+     * @returns {Vector3} Filtered value
      */
     filter(z: Vector3, u?: Vector3): Vector3 {
         if (this._x === undefined) {
@@ -136,8 +136,8 @@ export class KalmanFilter<T extends Vector3> {
     /**
      * Predict next value
      *
-     * @param  {number} [u] Control
-     * @returns {number} Predicted value
+     * @param  {Vector3} [u] Control
+     * @returns {Vector3} Predicted value
      */
     predict(u?: Vector3): Vector3 {
         return this._A
@@ -158,12 +158,17 @@ export class KalmanFilter<T extends Vector3> {
     /**
      * Return the last filtered measurement
      *
-     * @returns {number} Last measurement
+     * @returns {Vector3} Last measurement
      */
     get measurement(): T {
         return this._x;
     }
 
+    /**
+     * Get covariance
+     *
+     * @returns {Vector3} covariance vector
+     */
     get covariance(): T {
         return this._cov;
     }

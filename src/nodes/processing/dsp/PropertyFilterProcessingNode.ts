@@ -62,6 +62,11 @@ export abstract class PropertyFilterProcessingNode<InOut extends DataFrame> exte
                             timestamp: currentTimestamp,
                             ...(await this.initFilter(object, value, this.options)),
                         };
+                    } else {
+                        nodeData[key] = {
+                            timestamp: currentTimestamp,
+                            ...nodeData[key],
+                        };
                     }
 
                     if (this.options.expire) {

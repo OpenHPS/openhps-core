@@ -1,6 +1,6 @@
 export * from './FilterProcessingNode';
 export * from './PropertyFilterProcessingNode';
-export * from './BKFilterNode';
+export * from './KalmanFilterNode';
 export * from './LPFilterNode';
 export * from './HPFilterNode';
 export * from './SMAFilterNode';
