@@ -4,9 +4,9 @@
         <title>Example - OpenHPS Browser</title>
     </head>
     <body>
-        <script src="https://cdn.jsdelivr.net/npm/d3-require@1"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-require@1.3.0/dist/d3-require.min.js"></script>
         <script>
-            d3.require('./openhps-core.min.js').then(core => {
+            d3.require('../common/openhps-core.min.js').then(core => {
                 console.log(core);
                 core.ModelBuilder.create()
                     .from()
@@ -16,7 +16,7 @@
                     .build().then(model => {
                         model.push(new core.DataFrame());
                     });
-                return d3.require('./openhps-geospatial.min.js');
+                return d3.require('../common/openhps-geospatial.min.js');
             }).then(geospatial => {
                 console.log(geospatial);
             }).catch(console.error);

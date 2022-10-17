@@ -57,6 +57,7 @@
     }
   ],
   "scripts": {
+    "examples": "shx cp node_modules/@openhps/*/dist/web/*.* examples/common/ && shx cp dist/web/*.* examples/common/ && serve ./examples",
     "test": "mocha --config test/.mocharc.json",
     "benchmark": "ts-node test/bench/worker.bench.ts",
     "cover": "nyc mocha --config test/.mocharc.json && nyc report --reporter=cobertura",
@@ -106,6 +107,8 @@
     "@babel/preset-env": "^7.19.1",
     "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^17.1.0",
+    "@openhps/geospatial": "^0.1.12",
+    "@openhps/video": "^0.1.11",
     "@size-limit/preset-small-lib": "^8.1.0",
     "@types/benchmark": "^2.1.2",
     "@types/chai": "^4.3.3",
@@ -135,6 +138,7 @@
     "npm-run-all": "^4.1.5",
     "nyc": "^15.1.0",
     "prettier": "^2.7.1",
+    "serve": "^14.0.1",
     "shx": "^0.3.4",
     "size-limit": "^8.1.0",
     "standard-version": "^9.5.0",

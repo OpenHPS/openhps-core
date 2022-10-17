@@ -4,8 +4,8 @@
         <title>Example - OpenHPS Browser</title>
     </head>
     <body>
-        <script src="./openhps-core.min.js"></script>
-        <script src="./openhps-geospatial.min.js"></script>
+        <script src="../common/openhps-core.js"></script>
+        <script src="../common/openhps-geospatial.js"></script>
         <script>
         console.log(window.OpenHPS);
         OpenHPS.core.ModelBuilder.create()
@@ -16,12 +16,13 @@
                 }))
             },
             {
-                worker: 'worker.openhps-core.js',
+                worker: '../common/worker.openhps-core.js',
                 poolSize: 2,
             }))
             .to()
             .build().then(model => {
                 console.log(model);
+                console.log(OpenHPS.core.DataSerializer.serialize(new OpenHPS.core.ReferenceSpace()));
                 model.push(new OpenHPS.core.DataFrame())
             });
         </script>
