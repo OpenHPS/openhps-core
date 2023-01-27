@@ -1,6 +1,6 @@
+import { Unit } from './Unit';
 import { SerializableMember, SerializableObject } from '../../data/decorators';
 import { Vector3 } from '../math/Vector3';
-import { Unit } from './Unit';
 
 /**
  * Unit value

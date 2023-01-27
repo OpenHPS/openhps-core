@@ -17,7 +17,9 @@ export function updateSerializableMember(target: unknown, propertyKey: string, o
         const rootMeta = DataSerializerUtils.getRootMetadata(target.constructor);
         const ownMemberMetadata = ownMeta.dataMembers.get(propertyKey) || ownMeta.dataMembers.get(options.name);
         const rootMemberMetadata = rootMeta.dataMembers.get(propertyKey) || rootMeta.dataMembers.get(options.name);
-
+        if (!ownMemberMetadata) {
+            throw new Error(`Unable to get member metadata for ${target}!`);
+        }
         ownMemberMetadata.options = mergeDeep(ownMemberMetadata.options ?? {}, options);
         if (rootMemberMetadata) {
             ownMemberMetadata.options = mergeDeep(rootMemberMetadata.options ?? {}, ownMemberMetadata.options);
@@ -51,14 +53,21 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
     if (rootMeta.initializerCallback) {
         ownMeta.initializerCallback = rootMeta.initializerCallback;
     }
+
     // Merge options
     if (options) {
         ownMeta.options = mergeDeep(ownMeta.options ?? {}, options);
         if (ownMeta !== rootMeta) {
             ownMeta.options = mergeDeep(rootMeta.options ?? {}, ownMeta.options);
         }
-        // Merge known types as well
-        
+        // Merge known sub types as well
+        rootMeta.knownTypes.forEach((otherType) => {
+            if (otherType === target || target.prototype instanceof otherType) {
+                return;
+            }
+            const otherMeta = DataSerializerUtils.getMetadata(otherType);
+            otherMeta.options = mergeDeep(ownMeta.options ?? {}, otherMeta.options);
+        });
     }
     // (Re)register type
     DataSerializer.registerType(target);

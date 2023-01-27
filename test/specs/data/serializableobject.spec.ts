@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataSerializer, SerializableObject } from '../../../src';
+import { DataSerializer, DataSerializerUtils, SerializableObject } from '../../../src';
 
 declare module "../../../src/data/decorators/options" {
     interface SerializableObjectOptions<T> {
@@ -24,12 +24,22 @@ describe('SerializableObject', () => {
 
         }
 
+        @SerializableObject({
+            
+        })
+        class TestTest extends Test {
+
+        }
+
         it('should be possible to update the options', () => {
-            expect(DataSerializer.getMetadata(Test).options.anArray).to.be.undefined;
+            expect(DataSerializerUtils.getMetadata(Test).options.anArray).to.be.undefined;
+            expect(DataSerializerUtils.getRootMetadata(Test).knownTypes.size).to.equal(2);
+            expect(DataSerializerUtils.getMetadata(TestTest).options.anArray).to.be.undefined;
             SerializableObject({
                 anArray: ["abc"]
             })(Test);
-            expect(DataSerializer.getMetadata(Test).options.anArray).to.not.undefined;
+            expect(DataSerializerUtils.getMetadata(Test).options.anArray).to.not.undefined;
+            expect(DataSerializerUtils.getMetadata(TestTest).options.anArray).to.not.be.undefined;
         })
     });
 
