@@ -1,11 +1,13 @@
 <!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>DataFrame | @openhps/core</title><meta name="description" content="Documentation for @openhps/core"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base="..">
-<div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
 <ul class="results">
 <li class="state loading">Preparing search index...</li>
 <li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">@openhps/core</a></div>
-<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
 <div class="container container-main">
 <div class="col-8 col-content">
 <div class="tsd-page-title">
@@ -26,7 +28,7 @@
 </a>
 <p>A data frame can be created with an optional source <a href="DataObject.html">DataObject</a> that represents
 the object responsible for generating the frame.</p>
-<pre><code class="language-typescript"><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-7">dataFrame</span><span class="hl-0"> = </span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-4">DataFrame</span><span class="hl-0">(</span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-4">DataObject</span><span class="hl-0">(</span><span class="hl-3">&quot;phone&quot;</span><span class="hl-0">));</span>
+<pre><code class="language-typescript"><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-7">dataFrame</span><span class="hl-0"> = </span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-4">DataFrame</span><span class="hl-0">(</span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-4">DataObject</span><span class="hl-0">(</span><span class="hl-1">&quot;phone&quot;</span><span class="hl-0">));</span>
 </code></pre>
 
 <a href="#creating-a-custom-dataframe" id="creating-a-custom-dataframe" style="color: inherit; text-decoration: none;">
@@ -34,7 +36,7 @@ the object responsible for generating the frame.</p>
 </a>
 <p>Custom data frames can be created by extending the default <a href="DataFrame.html">DataFrame</a> class. Important when handling
 data frames (and objects) is to add serializable decorators.</p>
-<pre><code class="language-typescript"><span class="hl-1">import</span><span class="hl-0"> { </span><span class="hl-2">DataFrame</span><span class="hl-0">, </span><span class="hl-2">SerializableObject</span><span class="hl-0">, </span><span class="hl-2">SerializableArrayMember</span><span class="hl-0"> } </span><span class="hl-1">from</span><span class="hl-0"> </span><span class="hl-3">&#39;@openhps/core&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-0">@</span><span class="hl-4">SerializableObject</span><span class="hl-0">()</span><br/><span class="hl-1">export</span><span class="hl-0"> </span><span class="hl-5">class</span><span class="hl-0"> </span><span class="hl-9">CustomDataFrame</span><span class="hl-0"> </span><span class="hl-5">extends</span><span class="hl-0"> </span><span class="hl-9">DataFrame</span><span class="hl-0"> {</span><br/><span class="hl-0">    @</span><span class="hl-4">SerialisableArrayMember</span><span class="hl-0">(</span><span class="hl-2">Number</span><span class="hl-0">)</span><br/><span class="hl-0">    </span><span class="hl-5">public</span><span class="hl-0"> </span><span class="hl-2">customFrameAttribute</span><span class="hl-0">: </span><span class="hl-9">number</span><span class="hl-0">[];</span><br/><span class="hl-0">}</span>
+<pre><code class="language-typescript"><span class="hl-2">import</span><span class="hl-0"> { </span><span class="hl-3">DataFrame</span><span class="hl-0">, </span><span class="hl-3">SerializableObject</span><span class="hl-0">, </span><span class="hl-3">SerializableArrayMember</span><span class="hl-0"> } </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&#39;@openhps/core&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-0">@</span><span class="hl-4">SerializableObject</span><span class="hl-0">()</span><br/><span class="hl-2">export</span><span class="hl-0"> </span><span class="hl-5">class</span><span class="hl-0"> </span><span class="hl-9">CustomDataFrame</span><span class="hl-0"> </span><span class="hl-5">extends</span><span class="hl-0"> </span><span class="hl-9">DataFrame</span><span class="hl-0"> {</span><br/><span class="hl-0">    @</span><span class="hl-4">SerialisableArrayMember</span><span class="hl-0">(</span><span class="hl-3">Number</span><span class="hl-0">)</span><br/><span class="hl-0">    </span><span class="hl-5">public</span><span class="hl-0"> </span><span class="hl-3">customFrameAttribute</span><span class="hl-0">: </span><span class="hl-9">number</span><span class="hl-0">[];</span><br/><span class="hl-0">}</span>
 </code></pre>
 
 <a href="#adding-dataobjects" id="adding-dataobjects" style="color: inherit; text-decoration: none;">
@@ -45,8 +47,8 @@ be applied to the data frame.</p>
 </div></section>
 <section class="tsd-panel tsd-hierarchy-diagram">
                 <h4>Hierarchy-Diagram</h4>
-                <a class="diagram" href="../assets/DataFrame-umlClassDiagram-3171.svg" title="Click to enlarge">
-                    <img src="../assets/DataFrame-umlClassDiagram-3171.svg"
+                <a class="diagram" href="../assets/DataFrame-umlClassDiagram-3194.svg" title="Click to enlarge">
+                    <img src="../assets/DataFrame-umlClassDiagram-3194.svg"
                             alt="UML class diagram of DataFrame" />
                 </a>
                 <h5>Legend</h5>
@@ -62,7 +64,7 @@ be applied to the data frame.</p>
 <ul class="tsd-hierarchy">
 <li><a href="SensorDataFrame.html" class="tsd-signature-type" data-tsd-kind="Class">SensorDataFrame</a></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/591c67a/src/data/DataFrame.ts#L40">src/data/DataFrame.ts:40</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/aef649e/src/data/DataFrame.ts#L40">src/data/DataFrame.ts:40</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -110,7 +112,7 @@ be applied to the data frame.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="DataFrame.html" class="tsd-signature-type" data-tsd-kind="Class">DataFrame</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/591c67a/src/data/DataFrame.ts#L76">src/data/DataFrame.ts:76</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/aef649e/src/data/DataFrame.ts#L76">src/data/DataFrame.ts:76</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="constructor.new_DataFrame-1">new <wbr/>Data<wbr/>Frame<span class="tsd-signature-symbol">(</span>source<span class="tsd-signature-symbol">?: </span><a href="DataObject.html" class="tsd-signature-type" data-tsd-kind="Class">DataObject</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="DataFrame.html" class="tsd-signature-type" data-tsd-kind="Class">DataFrame</a><a href="#constructor.new_DataFrame-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Create a new data frame</p>
@@ -124,7 +126,7 @@ be applied to the data frame.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="DataFrame.html" class="tsd-signature-type" data-tsd-kind="Class">DataFrame</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/591c67a/src/data/DataFrame.ts#L82">src/data/DataFrame.ts:82</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/aef649e/src/data/DataFrame.ts#L82">src/data/DataFrame.ts:82</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="createdTimestamp" class="tsd-anchor"></a>
@@ -133,21 +135,21 @@ be applied to the data frame.</p>
 <div class="tsd-comment tsd-typography"><p>Data frame created timestamp (ISO 8601)</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/591c67a/src/data/DataFrame.ts#L54">src/data/DataFrame.ts:54</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/aef649e/src/data/DataFrame.ts#L54">src/data/DataFrame.ts:54</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="phenomenonTimestamp" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>phenomenon<wbr/>Timestamp</span><a href="#phenomenonTimestamp" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">phenomenon<wbr/>Timestamp<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Data frame sensor data pheonomenon timestamp (ISO 8601)</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/591c67a/src/data/DataFrame.ts#L61">src/data/DataFrame.ts:61</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/aef649e/src/data/DataFrame.ts#L61">src/data/DataFrame.ts:61</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="uid" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>uid</span><a href="#uid" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">uid<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = ...</span></div>
 <div class="tsd-comment tsd-typography"><p>Data frame unique identifier</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/591c67a/src/data/DataFrame.ts#L47">src/data/DataFrame.ts:47</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/aef649e/src/data/DataFrame.ts#L47">src/data/DataFrame.ts:47</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Accessors</h2>
 <section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class"><a id="source" class="tsd-anchor"></a>
@@ -161,7 +163,7 @@ be applied to the data frame.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <a href="DataObject.html" class="tsd-signature-type" data-tsd-kind="Class">DataObject</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/591c67a/src/data/DataFrame.ts#L103">src/data/DataFrame.ts:103</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/aef649e/src/data/DataFrame.ts#L103">src/data/DataFrame.ts:103</a></li></ul></aside></li>
 <li class="tsd-signature" id="source.source-2"><span class="tsd-signature-symbol">set</span> source<span class="tsd-signature-symbol">(</span>object<span class="tsd-signature-symbol">: </span><a href="DataObject.html" class="tsd-signature-type" data-tsd-kind="Class">DataObject</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Set the source object clone that captured the data frame</p>
@@ -175,7 +177,7 @@ be applied to the data frame.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/591c67a/src/data/DataFrame.ts#L112">src/data/DataFrame.ts:112</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/aef649e/src/data/DataFrame.ts#L112">src/data/DataFrame.ts:112</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="addObject" class="tsd-anchor"></a>
@@ -194,7 +196,7 @@ be applied to the data frame.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/591c67a/src/data/DataFrame.ts#L165">src/data/DataFrame.ts:165</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/aef649e/src/data/DataFrame.ts#L165">src/data/DataFrame.ts:165</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="addReferenceSpace" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>add<wbr/>Reference<wbr/>Space</span><a href="#addReferenceSpace" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -213,7 +215,7 @@ be applied to the data frame.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/591c67a/src/data/DataFrame.ts#L176">src/data/DataFrame.ts:176</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/aef649e/src/data/DataFrame.ts#L176">src/data/DataFrame.ts:176</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="clone" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>clone</span><a href="#clone" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -225,7 +227,7 @@ be applied to the data frame.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <a href="DataFrame.html" class="tsd-signature-type" data-tsd-kind="Class">DataFrame</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/591c67a/src/data/DataFrame.ts#L194">src/data/DataFrame.ts:194</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/aef649e/src/data/DataFrame.ts#L194">src/data/DataFrame.ts:194</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getObjectByUID" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Object<wbr/>ByUID</span><a href="#getObjectByUID" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -249,7 +251,7 @@ be applied to the data frame.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/591c67a/src/data/DataFrame.ts#L146">src/data/DataFrame.ts:146</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/aef649e/src/data/DataFrame.ts#L146">src/data/DataFrame.ts:146</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getObjects" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Objects</span><a href="#getObjects" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -279,7 +281,7 @@ be applied to the data frame.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4></li></ul></li></ul></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/591c67a/src/data/DataFrame.ts#L124">src/data/DataFrame.ts:124</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/aef649e/src/data/DataFrame.ts#L124">src/data/DataFrame.ts:124</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="hasObject" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>has<wbr/>Object</span><a href="#hasObject" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -298,7 +300,7 @@ be applied to the data frame.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/591c67a/src/data/DataFrame.ts#L156">src/data/DataFrame.ts:156</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/aef649e/src/data/DataFrame.ts#L156">src/data/DataFrame.ts:156</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="removeObject" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove<wbr/>Object</span><a href="#removeObject" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -315,7 +317,7 @@ be applied to the data frame.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/591c67a/src/data/DataFrame.ts#L185">src/data/DataFrame.ts:185</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/aef649e/src/data/DataFrame.ts#L185">src/data/DataFrame.ts:185</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
