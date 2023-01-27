@@ -120,7 +120,7 @@ export class TrajectoryService<T extends Trajectory = Trajectory> extends DataSe
             const position = object.getPosition();
             if (position) {
                 Promise.resolve(uid ? this.findOne({ uid }) : this.findCurrentTrajectory(object))
-                    .then((trajectory) => {
+                    .then((trajectory: T) => {
                         if (!trajectory) {
                             trajectory = new this.driver.dataType();
                             trajectory.objectUID = object.uid;

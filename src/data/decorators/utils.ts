@@ -57,6 +57,8 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
         if (ownMeta !== rootMeta) {
             ownMeta.options = mergeDeep(rootMeta.options ?? {}, ownMeta.options);
         }
+        // Merge known types as well
+        
     }
     // (Re)register type
     DataSerializer.registerType(target);
