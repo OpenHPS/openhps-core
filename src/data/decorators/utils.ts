@@ -24,6 +24,19 @@ export function updateSerializableMember(target: unknown, propertyKey: string, o
         if (rootMemberMetadata) {
             ownMemberMetadata.options = mergeDeep(rootMemberMetadata.options ?? {}, ownMemberMetadata.options);
         }
+        // Merge known sub types as well
+        rootMeta.knownTypes.forEach((otherType) => {
+            if (otherType === target || target instanceof otherType) {
+                return;
+            }
+            const otherMeta =
+                DataSerializerUtils.getMetadata(otherType) ?? JsonObjectMetadata.ensurePresentInPrototype(otherType);
+            const otherMemberMetadata =
+                otherMeta.dataMembers.get(propertyKey) || otherMeta.dataMembers.get(options.name);
+            if (otherMemberMetadata) {
+                otherMemberMetadata.options = mergeDeep(ownMemberMetadata.options ?? {}, otherMemberMetadata.options);
+            }
+        });
     }
 
     // Detect generic types that have no deserialization or constructor specified

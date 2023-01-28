@@ -5,6 +5,7 @@ import { DataSerializerUtils, SerializableMember, SerializableMemberOptions, Ser
 declare module "../../../src/data/decorators/options" {
     interface MemberOptionsBase {
         abc?: string;
+        xyz?: string;
     }
 }
 
@@ -46,9 +47,25 @@ describe('SerializableMember', () => {
             })(Test.prototype, 'member1');
 
             const obj = new Test();
-            const meta = DataSerializerUtils.getRootMetadata(obj);
+            const meta = DataSerializerUtils.getMetadata(obj);
             expect(meta.dataMembers.get('member1').options.abc).to.equal("hello");
             expect((meta.dataMembers.get('member1').options as SerializableMemberOptions).primaryKey).to.equal(true);
+
+            @SerializableObject()
+            class TestTest extends Test {
+
+            }
+            
+            SerializableMember({
+                xyz: "abc"
+            })(Test.prototype, 'member1');
+
+            const obj2 = new TestTest();
+            const meta2 = DataSerializerUtils.getMetadata(obj2);
+            expect(meta2.dataMembers.get('member1').options.abc).to.equal("hello");
+            expect(meta2.dataMembers.get('member1').options.xyz).to.equal("abc");
+            expect((meta2.dataMembers.get('member1').options as SerializableMemberOptions).primaryKey).to.equal(true);
+
         });
     });
 

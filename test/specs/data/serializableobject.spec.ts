@@ -87,8 +87,8 @@ describe('SerializableObject', () => {
 
             }
             const obj = new Class2();
-            const meta = DataSerializer.getMetadata(obj);
-            const rootMeta = DataSerializer.getMetadata(Class1);
+            const meta = DataSerializerUtils.getMetadata(obj);
+            const rootMeta = DataSerializerUtils.getMetadata(Class1);
             
             expect(meta.options.abc).to.equal("class2");
             expect(meta.options.anArray.length).to.equal(2);
