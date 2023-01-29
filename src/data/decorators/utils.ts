@@ -69,13 +69,14 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
 
     // Merge options
     if (options) {
-        ownMeta.options = mergeDeep(ownMeta.options ?? {}, options);
-        if (ownMeta !== rootMeta) {
-            ownMeta.options = mergeDeep(rootMeta.options ?? {}, ownMeta.options);
-        }
+        ownMeta.options = mergeDeep(
+            ownMeta === rootMeta ? ownMeta.options ?? {} : ownMeta.options ?? rootMeta.options,
+            options,
+        );
+
         // Merge known sub types as well
         rootMeta.knownTypes.forEach((otherType) => {
-            if (otherType === target || target.prototype instanceof otherType) {
+            if (otherType === target || !(otherType.prototype instanceof target)) {
                 return;
             }
             const otherMeta = DataSerializerUtils.getMetadata(otherType);

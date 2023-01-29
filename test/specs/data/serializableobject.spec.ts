@@ -31,15 +31,33 @@ describe('SerializableObject', () => {
 
         }
 
+        @SerializableObject({
+            
+        })
+        class TestAbc extends Test {
+
+        }
+
         it('should be possible to update the options', () => {
             expect(DataSerializerUtils.getMetadata(Test).options.anArray).to.be.undefined;
-            expect(DataSerializerUtils.getRootMetadata(Test).knownTypes.size).to.equal(2);
+            expect(DataSerializerUtils.getRootMetadata(Test).knownTypes.size).to.equal(3);
             expect(DataSerializerUtils.getMetadata(TestTest).options.anArray).to.be.undefined;
             SerializableObject({
                 anArray: ["abc"]
             })(Test);
             expect(DataSerializerUtils.getMetadata(Test).options.anArray).to.not.undefined;
             expect(DataSerializerUtils.getMetadata(TestTest).options.anArray).to.not.be.undefined;
+            expect(DataSerializerUtils.getMetadata(Test).options.anArray.length).to.equal(1);
+
+            SerializableObject({
+                anArray: ["123"]
+            })(TestAbc);
+            console.log((DataSerializerUtils.getMetadata(Test).options.anArray));
+            console.log((DataSerializerUtils.getMetadata(TestAbc).options.anArray));
+            console.log((DataSerializerUtils.getMetadata(TestTest).options.anArray));
+            expect(DataSerializerUtils.getMetadata(TestAbc).options.anArray).to.not.undefined;
+            expect(DataSerializerUtils.getMetadata(TestTest).options.anArray.length).to.equal(1);
+            expect(DataSerializerUtils.getMetadata(TestAbc).options.anArray.length).to.equal(2);
         })
     });
 
@@ -52,7 +70,7 @@ describe('SerializableObject', () => {
 
             }
             const obj = new Test();
-            const meta = DataSerializer.getRootMetadata(obj);
+            const meta = DataSerializerUtils.getMetadata(obj);
             expect(meta.options.abc).to.equal("hello");
         });
 
