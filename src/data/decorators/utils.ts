@@ -70,7 +70,7 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
     // Merge options
     if (options) {
         ownMeta.options = mergeDeep(
-            ownMeta === rootMeta ? ownMeta.options ?? {} : ownMeta.options ?? rootMeta.options,
+            ownMeta === rootMeta ? rootMeta.options ?? {} : ownMeta.options ?? rootMeta.options ?? {},
             options,
         );
 

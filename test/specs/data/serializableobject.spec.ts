@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataSerializer, DataSerializerUtils, SerializableObject } from '../../../src';
+import { DataSerializer, DataSerializerUtils, Orientation, SerializableObject } from '../../../src';
 
 declare module "../../../src/data/decorators/options" {
     interface SerializableObjectOptions<T> {
@@ -37,6 +37,13 @@ describe('SerializableObject', () => {
         class TestAbc extends Test {
 
         }
+
+        it('should correct register on non-root objects', () => {
+            SerializableObject({
+                anArray: ["abc"]
+            })(Orientation);
+            expect(DataSerializerUtils.getMetadata(Orientation).options.anArray).to.not.be.undefined;
+        });
 
         it('should be possible to update the options', () => {
             expect(DataSerializerUtils.getMetadata(Test).options.anArray).to.be.undefined;
