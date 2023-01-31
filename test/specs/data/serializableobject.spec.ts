@@ -10,7 +10,8 @@ declare module "../../../src/data/decorators/options" {
             abc?: string;
             anArray?: string[];
             record?: Record<string, string[]>;
-        }
+            override?: string;
+        },
     }
 }
 
@@ -18,21 +19,28 @@ describe('SerializableObject', () => {
 
     describe('registration', () => {
         @SerializableObject({
-            abc: "hello"
+            abc: "hello",
+            nested: {
+                override: "test"
+            }
         })
         class Test {
 
         }
 
         @SerializableObject({
-            
+            nested: {
+                override: "testtest"
+            }
         })
         class TestTest extends Test {
 
         }
 
         @SerializableObject({
-            
+            nested: {
+                override: "testabc"
+            }
         })
         class TestAbc extends Test {
 
@@ -48,6 +56,9 @@ describe('SerializableObject', () => {
         it('should be possible to update the options', () => {
             expect(DataSerializerUtils.getMetadata(Test).options.anArray).to.be.undefined;
             expect(DataSerializerUtils.getRootMetadata(Test).knownTypes.size).to.equal(3);
+            expect(DataSerializerUtils.getMetadata(Test).options.nested.override).to.equal("test");
+            expect(DataSerializerUtils.getMetadata(TestAbc).options.nested.override).to.equal("testabc");
+            expect(DataSerializerUtils.getMetadata(TestTest).options.nested.override).to.equal("testtest");
             expect(DataSerializerUtils.getMetadata(TestTest).options.anArray).to.be.undefined;
             SerializableObject({
                 anArray: ["abc"]
