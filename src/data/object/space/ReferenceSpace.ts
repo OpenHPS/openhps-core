@@ -17,6 +17,10 @@ import { DataService } from '../../../service/DataService';
  */
 @SerializableObject()
 export class ReferenceSpace extends DataObject implements TransformationSpace {
+    @SerializableMember({
+        name: 'translationMatrix',
+    })
+    private _translationMatrix: Matrix4;
     // Raw transformation matrix
     @SerializableMember({
         name: 'transformationMatrix',
@@ -44,6 +48,7 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
 
         this._scaleMatrix = new Matrix4();
         this._transformationMatrix = new Matrix4().identity();
+        this._translationMatrix = new Matrix4().identity();
         this._rotation = new Quaternion();
     }
 
@@ -145,7 +150,8 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
     }
 
     public translation(dX: number, dY: number, dZ = 0): ReferenceSpace {
-        this._transformationMatrix.multiply(new Matrix4().makeTranslation(dX, dY, dZ));
+        this._translationMatrix.multiply(new Matrix4().makeTranslation(dX, dY, dZ));
+        this._transformationMatrix.multiply(this._translationMatrix);
         return this;
     }
 
@@ -251,5 +257,13 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
 
     protected set rotationQuaternion(quaternion: Quaternion) {
         this._rotation = quaternion;
+    }
+
+    public get translationMatrix(): Matrix4 {
+        return this._translationMatrix;
+    }
+
+    protected set translationMatrix(matrix: Matrix4) {
+        this._translationMatrix = matrix;
     }
 }
