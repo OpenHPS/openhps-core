@@ -37,6 +37,11 @@
       "require": "./dist/cjs/index.internal.js",
       "import": "./dist/esm5/index.internal.js",
       "types": "./dist/types/index.internal.d.ts"
+    },
+    "./lite": {
+      "require": "./dist/cjs/index.lite.js",
+      "import": "./dist/esm5/index.lite.js",
+      "types": "./dist/types/index.lite.d.ts"
     }
   },
   "files": [

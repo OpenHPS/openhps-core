@@ -63,6 +63,7 @@ OpenHPS is a data processing positioning framework. It is designed to support ma
 - **[@openhps/react-native](https://github.com/OpenHPS/openhps-react-native)** - Provides nodes for retrieving sensor data in react-native.
 - **[@openhps/nativescript](https://github.com/OpenHPS/openhps-nativescript)** - Provides nodes for retrieving sensor data in NativeScript.
 - **[@openhps/cordova](https://github.com/OpenHPS/openhps-cordova)** - Provides nodes for retrieving sensor data in Cordova/Phonegap.
+- **[@openhps/capacitor](https://github.com/OpenHPS/openhps-capacitor)** - Provides nodes for retrieving sensor data in Ionic Capacitor.
 
 ### Misc
 - **[@openhps/sphero](https://github.com/OpenHPS/openhps-sphero)** - Example implementation for controlling and receiving sensor data from Sphero toys.
@@ -90,6 +91,7 @@ ModelBuilder.create()
 - `openhps-core.js`: UMD
 - `openhps-core.es.js`: ES6 import
 - `worker.openhps-core.js`: UMD worker
+- `openhps-core-lite.js`: UMD lite version for embedded systems
 
 ## Contributors
 The framework is open source and is mainly developed by PhD Student Maxim Van de Wynckel as part of his research towards *Hybrid Positioning and Implicit Human-Computer Interaction* under the supervision of Prof. Dr. Beat Signer.

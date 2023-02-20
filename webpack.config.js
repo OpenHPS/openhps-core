@@ -80,5 +80,23 @@ module.exports = env => [
       })
     ],
     ...defaultConfig(env)
+  },
+  {
+    name: PROJECT_NAME,
+    entry: `./dist/esm5/index.lite.js`,
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: `web/${PROJECT_NAME}-lite${env.prod ? ".min" : ""}.js`,
+      library: ['OpenHPS', 'core'],
+      libraryTarget: "umd",
+      umdNamedDefine: true,
+      globalObject: `(typeof self !== 'undefined' ? self : this)`,
+    },
+    experiments: {
+      outputModule: false,
+    },
+    externals: [],
+    plugins: [],
+    ...defaultConfig(env)
   }
 ];
