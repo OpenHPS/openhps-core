@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="229px" preserveAspectRatio="none" style="width:1003px;height:229px;background:#00000000;" version="1.1" viewBox="0 0 1003 229" width="1003px" zoomAndPan="magnify"><defs><filter height="300%" id="f10zg3ooilhr7m" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[f627c81427830b5190d21a5c6a35de66]
+class MemberOptionsBase--><rect codeLine="4" fill="#FEFECE" filter="url(#f10zg3ooilhr7m)" height="32" id="MemberOptionsBase" style="stroke:#A80036;stroke-width:1.5;" width="158" x="408.5" y="91"/><ellipse cx="423.5" cy="107" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M419.4219,102.7656 L419.4219,100.6094 L426.8125,100.6094 L426.8125,102.7656 L424.3438,102.7656 L424.3438,110.8438 L426.8125,110.8438 L426.8125,113 L419.4219,113 L419.4219,110.8438 L421.8906,110.8438 L421.8906,102.7656 L419.4219,102.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="126" x="437.5" y="111.1543">MemberOptionsBase</text><!--MD5=[3e9ee27bdb7ccd981e1e9f8141a9c290]
+class IJsonMemberOptions--><rect codeLine="6" fill="#FEFECE" filter="url(#f10zg3ooilhr7m)" height="23.9688" id="IJsonMemberOptions" style="stroke:#A80036;stroke-width:1.5;" width="133" x="421" y="7"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="127" x="424" y="23.1387">IJsonMemberOptions</text><!--MD5=[50a4a531bdd975bfe0683fb9bf772d86]
+class SerializableMemberOptions--><rect codeLine="9" fill="#FEFECE" filter="url(#f10zg3ooilhr7m)" height="32" id="SerializableMemberOptions" style="stroke:#A80036;stroke-width:1.5;" width="199" x="7" y="183"/><ellipse cx="22" cy="199" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M17.9219,194.7656 L17.9219,192.6094 L25.3125,192.6094 L25.3125,194.7656 L22.8438,194.7656 L22.8438,202.8438 L25.3125,202.8438 L25.3125,205 L17.9219,205 L17.9219,202.8438 L20.3906,202.8438 L20.3906,194.7656 L17.9219,194.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="167" x="36" y="203.1543">SerializableMemberOptions</text><!--MD5=[15176c50841b0f7b3aa98c1fc2094eb3]
+class SerializableArrayMemberOptions--><rect codeLine="12" fill="#FEFECE" filter="url(#f10zg3ooilhr7m)" height="32" id="SerializableArrayMemberOptions" style="stroke:#A80036;stroke-width:1.5;" width="232" x="241.5" y="183"/><ellipse cx="256.5" cy="199" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M252.4219,194.7656 L252.4219,192.6094 L259.8125,192.6094 L259.8125,194.7656 L257.3438,194.7656 L257.3438,202.8438 L259.8125,202.8438 L259.8125,205 L252.4219,205 L252.4219,202.8438 L254.8906,202.8438 L254.8906,194.7656 L252.4219,194.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="200" x="270.5" y="203.1543">SerializableArrayMemberOptions</text><!--MD5=[2c1de09005861cd8df4de94b5de21751]
+class SerializableSetMemberOptions--><rect codeLine="15" fill="#FEFECE" filter="url(#f10zg3ooilhr7m)" height="32" id="SerializableSetMemberOptions" style="stroke:#A80036;stroke-width:1.5;" width="220" x="508.5" y="183"/><ellipse cx="523.5" cy="199" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M519.4219,194.7656 L519.4219,192.6094 L526.8125,192.6094 L526.8125,194.7656 L524.3438,194.7656 L524.3438,202.8438 L526.8125,202.8438 L526.8125,205 L519.4219,205 L519.4219,202.8438 L521.8906,202.8438 L521.8906,194.7656 L519.4219,194.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="188" x="537.5" y="203.1543">SerializableSetMemberOptions</text><!--MD5=[4b0ad9c60814c904e6f8592720812c13]
+class SerializableMapMemberOptions--><rect codeLine="18" fill="#FEFECE" filter="url(#f10zg3ooilhr7m)" height="32" id="SerializableMapMemberOptions" style="stroke:#A80036;stroke-width:1.5;" width="225" x="764" y="183"/><ellipse cx="779" cy="199" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M774.9219,194.7656 L774.9219,192.6094 L782.3125,192.6094 L782.3125,194.7656 L779.8438,194.7656 L779.8438,202.8438 L782.3125,202.8438 L782.3125,205 L774.9219,205 L774.9219,202.8438 L777.3906,202.8438 L777.3906,194.7656 L774.9219,194.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="193" x="793" y="203.1543">SerializableMapMemberOptions</text><!--MD5=[37665f69ab5d268dea0377456b7be17d]
+reverse link IJsonMemberOptions to MemberOptionsBase--><path codeLine="8" d="M487.5,51.39 C487.5,64.91 487.5,80.08 487.5,91 " fill="none" id="IJsonMemberOptions-backto-MemberOptionsBase" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="480.5,51.24,487.5,31.24,494.5,51.24,480.5,51.24" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[581d9fdb0df57ddeb08c4e654dd5b0ca]
+reverse link MemberOptionsBase to SerializableMemberOptions--><path codeLine="11" d="M404.23,127.67 C333.8,144.31 234.37,167.8 170.16,182.96 " fill="none" id="MemberOptionsBase-backto-SerializableMemberOptions" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="402.66,120.85,423.73,123.06,405.87,134.47,402.66,120.85" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[62883e92593202d4a97ec02fdc9c0dd8]
+reverse link MemberOptionsBase to SerializableArrayMemberOptions--><path codeLine="14" d="M449.24,134.49 C426.46,150.26 398.38,169.7 379.33,182.89 " fill="none" id="MemberOptionsBase-backto-SerializableArrayMemberOptions" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="445.31,128.69,465.74,123.06,453.28,140.2,445.31,128.69" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[71ff86877cfbba666467c3038d9ff7e6]
+reverse link MemberOptionsBase to SerializableSetMemberOptions--><path codeLine="17" d="M526.05,134.49 C549.01,150.26 577.3,169.7 596.5,182.89 " fill="none" id="MemberOptionsBase-backto-SerializableSetMemberOptions" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="521.95,140.16,509.43,123.06,529.87,128.62,521.95,140.16" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[0519664a9a78d9d76f96373fece0e826]
+reverse link MemberOptionsBase to SerializableMapMemberOptions--><path codeLine="20" d="M572.51,127.67 C644.42,144.31 745.95,167.8 811.5,182.96 " fill="none" id="MemberOptionsBase-backto-SerializableMapMemberOptions" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="570.52,134.39,552.61,123.06,573.67,120.75,570.52,134.39" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[faed13dac274ff766a80c4720eceb252]
+@startuml
+skinparam BackgroundColor transparent
+hide empty methods
+hide empty fields
+interface "MemberOptionsBase" {
+}
+class "IJsonMemberOptions"
+hide "IJsonMemberOptions" circle
+"IJsonMemberOptions" <|- - "MemberOptionsBase"
+interface "SerializableMemberOptions" {
+}
+"MemberOptionsBase" <|- - "SerializableMemberOptions"
+interface "SerializableArrayMemberOptions" {
+}
+"MemberOptionsBase" <|- - "SerializableArrayMemberOptions"
+interface "SerializableSetMemberOptions" {
+}
+"MemberOptionsBase" <|- - "SerializableSetMemberOptions"
+interface "SerializableMapMemberOptions" {
+}
+"MemberOptionsBase" <|- - "SerializableMapMemberOptions"
+@enduml
+
+PlantUML version 1.2021.14(Fri Nov 12 16:46:50 UTC 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
