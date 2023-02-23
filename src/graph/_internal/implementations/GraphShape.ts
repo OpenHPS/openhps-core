@@ -6,18 +6,26 @@ import { PushCompletedEvent, PushError } from '../../events';
 import { Edge } from '../../Edge';
 import { Graph } from '../../Graph';
 import { Node } from '../../../Node';
-import {
-    SerializableArrayMember,
-    SerializableMapMember,
-    SerializableMember,
-    SerializableObject,
-} from '../../../data/decorators';
+import { SerializableMapMember, SerializableMember, SerializableObject } from '../../../data/decorators';
 
 /**
  * @category Graph
  */
-@SerializableObject()
+@SerializableObject({
+    initializer: (sourceObject: GraphShape<any, any>, raw: any) => {
+        raw.edges.forEach((edge) => {
+            sourceObject._edges.set(
+                edge.input + edge.output,
+                new Edge(sourceObject._nodes.get(edge.input), sourceObject._nodes.get(edge.output)),
+            );
+        });
+        return sourceObject;
+    },
+})
 export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> implements Graph<In, Out> {
+    @SerializableMapMember(String, GraphNode, {
+        name: 'nodes',
+    })
     private _nodes: Map<string, GraphNode<any, any>> = new Map();
     @SerializableMapMember(String, Edge, {
         serializer: (edges: Map<string, Edge<any>>) => {
@@ -26,6 +34,7 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
                 output: edge.outputNode.uid,
             }));
         },
+        name: 'edges',
     })
     private _edges: Map<string, Edge<any>> = new Map();
 
@@ -90,7 +99,6 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
         edges.forEach(this.addEdge);
     }
 
-    @SerializableArrayMember(GraphNode)
     get nodes(): Array<GraphNode<any, any>> {
         return this._nodes ? Array.from(this._nodes.values()) : [];
     }

@@ -4,9 +4,28 @@ import {
     IJsonMemberOptions,
     IJsonObjectOptions,
     IJsonSetMemberOptions,
+    Serializable,
 } from 'typedjson';
+import type { TypeDescriptor } from 'typedjson/lib/types/type-descriptor';
 
-export interface SerializableArrayMemberOptions extends MemberOptionsBase, IJsonArrayMemberOptions {}
+export interface CustomDeserializerParams {
+    fallback: (sourceObject: any, constructor: Serializable<any> | TypeDescriptor) => any;
+}
+
+export interface CustomSerializerParams {
+    fallback: (sourceObject: any, constructor: Serializable<any> | TypeDescriptor) => any;
+}
+
+export interface MemberOptionsBase extends IJsonMemberOptions {
+    /**
+     * Custom deserializer for member
+     */
+    deserializer?: ((json: any, params: CustomDeserializerParams) => any) | null;
+    /**
+     * Custom serialized for member
+     */
+    serializer?: ((value: any, params: CustomSerializerParams) => any) | null;
+}
 
 export interface SerializableObjectOptions<T> extends IJsonObjectOptions<T> {}
 
@@ -31,7 +50,7 @@ export interface SerializableMemberOptions extends MemberOptionsBase {
     numberType?: NumberType;
 }
 
-export interface MemberOptionsBase extends IJsonMemberOptions {}
+export interface SerializableArrayMemberOptions extends MemberOptionsBase, IJsonArrayMemberOptions {}
 
 export interface SerializableSetMemberOptions extends MemberOptionsBase, IJsonSetMemberOptions {}
 

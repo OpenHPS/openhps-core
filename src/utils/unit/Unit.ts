@@ -293,9 +293,9 @@ export class Unit {
      * Find unit specifier by name or alias
      *
      * @param {string} name Unit name
-     * @returns {Unit} Unit if found
+     * @returns {Unit | undefined} Unit if found
      */
-    protected findByName(name: string): Unit {
+    protected findByName(name: string): Unit | undefined {
         // Check all aliases in those units
         for (const alias of this.aliases.concat(this.name)) {
             if (name === alias) {
@@ -311,6 +311,7 @@ export class Unit {
                 }
             }
         }
+        return undefined;
     }
 
     /**
@@ -318,9 +319,9 @@ export class Unit {
      *
      * @param {string} name Unit name
      * @param {string} baseName Optional base name to specific result
-     * @returns {Unit} Unit if found
+     * @returns {Unit | undefined} Unit if found
      */
-    static findByName(name: string, baseName?: string): Unit {
+    static findByName(name: string, baseName?: string): Unit | undefined {
         if (name === undefined) {
             return undefined;
         } else if (Unit.UNITS.has(name)) {

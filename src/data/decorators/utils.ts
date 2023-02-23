@@ -37,6 +37,7 @@ export function updateSerializableMember(target: unknown, propertyKey: string, o
                 otherMemberMetadata.options = mergeDeep(ownMemberMetadata.options ?? {}, otherMemberMetadata.options);
             }
         });
+        // TODO: Possibly need to sync super types as well
     }
 
     // Detect generic types that have no deserialization or constructor specified
@@ -63,7 +64,7 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
     const ownMeta = DataSerializerUtils.getMetadata(target);
     const rootMeta = DataSerializerUtils.getRootMetadata(target.prototype);
     rootMeta.knownTypes.add(target);
-    if (rootMeta.initializerCallback) {
+    if (rootMeta.initializerCallback && !ownMeta.initializerCallback) {
         ownMeta.initializerCallback = rootMeta.initializerCallback;
     }
 
@@ -81,8 +82,25 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
             }
             const otherMeta = DataSerializerUtils.getMetadata(otherType);
             otherMeta.options = mergeDeep(ownMeta.options ?? {}, otherMeta.options);
+            if (!otherMeta.initializerCallback && ownMeta.initializerCallback) {
+                console.log(otherMeta, ownMeta);
+                otherMeta.initializerCallback = ownMeta.initializerCallback;
+            }
         });
     }
+
+    // Sync settings from super types
+    rootMeta.knownTypes.forEach((otherType) => {
+        if (otherType === target || !(target.prototype instanceof otherType)) {
+            return;
+        }
+
+        const otherMeta = DataSerializerUtils.getMetadata(otherType);
+        if (otherMeta.initializerCallback && !ownMeta.initializerCallback) {
+            ownMeta.initializerCallback = otherMeta.initializerCallback;
+        }
+    });
+
     // (Re)register type
     DataSerializer.registerType(target);
 }

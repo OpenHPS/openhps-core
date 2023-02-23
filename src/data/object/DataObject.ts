@@ -180,7 +180,7 @@ export class DataObject {
      */
     addRelativePosition(relativePosition: RelativePosition<any>): this {
         if (!relativePosition || relativePosition.referenceObjectUID === undefined) {
-            return;
+            return this;
         }
 
         if (!this._relativePositions.has(relativePosition.referenceObjectUID)) {

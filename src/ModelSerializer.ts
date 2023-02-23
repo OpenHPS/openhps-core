@@ -19,7 +19,11 @@ export class ModelSerializer {
     }
 
     static deserialize<In extends DataFrame, Out extends DataFrame>(model: SerializedModel): Model<In, Out> {
-        return this.deserializeNode(model) as ModelGraph<In, Out> as Model<In, Out>;
+        const deserializedModel = this.deserializeNode(model) as ModelGraph<In, Out> as Model<In, Out>;
+        deserializedModel.nodes.forEach((node) => {
+            node.graph = deserializedModel;
+        });
+        return deserializedModel;
     }
 
     static deserializeNode<In extends DataFrame, Out extends DataFrame>(node: any): Node<In, Out> {

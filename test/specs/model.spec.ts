@@ -35,10 +35,12 @@ describe('Model', () => {
                 .to()
                 .build()
                 .then((model) => {
-                    // const serialized = ModelSerializer.serialize(model);
-                    // console.log(serialized)
+                    const serialized = ModelSerializer.serialize(model);
                     // const deserialized = ModelSerializer.deserialize(serialized);
-                    // console.log(deserialized)
+                    // expect(model.uid).to.equal(deserialized.uid);
+                    // expect(model.nodes.length).to.equal(deserialized.nodes.length);
+                    // expect(model.edges.length).to.equal(deserialized.edges.length);
+                    // expect(model.nodes).to.eql(deserialized.nodes);
                     done();
                 }).catch(done);
         }).timeout(60000);
