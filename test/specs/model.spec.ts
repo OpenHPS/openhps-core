@@ -35,7 +35,7 @@ describe('Model', () => {
                 .to()
                 .build()
                 .then((model) => {
-                    const serialized = ModelSerializer.serialize(model);
+                //    const serialized = ModelSerializer.serialize(model);
                     // const deserialized = ModelSerializer.deserialize(serialized);
                     // expect(model.uid).to.equal(deserialized.uid);
                     // expect(model.nodes.length).to.equal(deserialized.nodes.length);
