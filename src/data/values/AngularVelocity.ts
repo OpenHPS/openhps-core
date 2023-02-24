@@ -1,3 +1,4 @@
+import { Vector3 } from '../../utils';
 import { AngularVelocityUnit } from '../../utils/unit/AngularVelocityUnit';
 import { SerializableObject } from '../decorators';
 import { SensorValue } from './SensorValue';
@@ -11,10 +12,11 @@ export class AngularVelocity extends SensorValue<AngularVelocityUnit> {
         super(x, y, z, unit, AngularVelocityUnit.RADIAN_PER_SECOND);
     }
 
-    static fromArray(
+    static fromArray<T extends Vector3>(
+        this: new (...args: any[]) => T,
         array: number[],
         unit: AngularVelocityUnit = AngularVelocityUnit.RADIAN_PER_SECOND,
-    ): AngularVelocity {
-        return new AngularVelocity(array[0], array[1], array[2], unit);
+    ): T {
+        return new this(array[0], array[1], array[2], unit) as T;
     }
 }

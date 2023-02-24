@@ -21,8 +21,12 @@ export class Vector3 extends THREE.Vector3 {
     })
     z: number;
 
-    static fromArray(array: number[]): Vector3 {
-        return new this().fromArray(array);
+    static fromArray<T extends Vector3>(this: new (...args: any[]) => T, array: number[]): T {
+        return new this().fromArray(array) as T;
+    }
+
+    static fromVector<T extends Vector3>(this: new (...args: any[]) => T, vector: Vector3): T {
+        return new this(vector.x, vector.y, vector.z) as T;
     }
 
     clone(): this {
