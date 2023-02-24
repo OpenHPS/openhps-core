@@ -20,7 +20,7 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
     @SerializableMember()
     frequency: number;
 
-    constructor(uid?: string, value?: T, displayName?: string, frequency?: number) {
+    constructor(uid?: string, value?: T, frequency?: number, displayName?: string) {
         super(uid, displayName);
         this.value = value ?? ({} as T);
         this.frequency = frequency;
