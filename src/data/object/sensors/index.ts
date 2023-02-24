@@ -5,3 +5,4 @@ export * from './LinearAccelerationSensor';
 export * from './AbsoluteOrientationSensor';
 export * from './RelativeOrientationSensor';
 export * from './Magnetometer';
+export * from './LinearVelocitySensor';

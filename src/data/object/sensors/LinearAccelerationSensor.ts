@@ -1,5 +1,5 @@
 import { SerializableObject } from '../../decorators';
-import { LinearVelocity } from '../../values';
+import { Acceleration } from '../../values';
 import { SensorObject } from '../SensorObject';
 
 /**
@@ -9,5 +9,5 @@ import { SensorObject } from '../SensorObject';
  */
 @SerializableObject()
 export class LinearAccelerationSensor extends SensorObject {
-    value: LinearVelocity = new LinearVelocity();
+    value: Acceleration = new Acceleration();
 }
