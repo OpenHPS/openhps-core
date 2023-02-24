@@ -7,22 +7,22 @@ import { DataObject } from './DataObject';
  * A sensor object is a {@link DataObject} that is a sensor with a value.
  */
 @SerializableObject()
-export abstract class SensorObject extends DataObject {
+// eslint-disable-next-line
+export abstract class SensorObject<T = SensorValue | Object | Orientation> extends DataObject {
     /**
      * Value of the sensor
      */
     @SerializableMember()
-    // eslint-disable-next-line
-    value: SensorValue | Object | Orientation;
+    value: T;
     /**
      * Frequency of the sensor
      */
     @SerializableMember()
     frequency: number;
 
-    constructor(uid?: string, displayName?: string) {
+    constructor(uid?: string, value?: T, displayName?: string) {
         super(uid, displayName);
-        this.value = this.value ?? {};
+        this.value = value ?? this.value ?? ({} as T);
     }
 
     /**

@@ -120,10 +120,16 @@ export class DataFrame {
      * Get known sensor objects used in this data frame
      *
      * @param {typeof SensorObject} type Sensor type
+     * @param {string} [defaultUID] Default UID. When sensor is not added, it will be created
      * @returns {SensorObject} Found data objects
      */
-    getSensor<T extends SensorObject>(type: new () => T): T {
-        return this.getObjects(type).filter[0];
+    getSensor<T extends SensorObject>(type: new (uid?: string) => T, defaultUID?: string): T {
+        let sensor = this.getObjects(type).filter[0];
+        if (!sensor && defaultUID !== undefined) {
+            sensor = new type(defaultUID);
+            this.addObject(sensor);
+        }
+        return sensor;
     }
 
     /**
