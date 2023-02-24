@@ -4,6 +4,7 @@ import { SerializableObject, SerializableMember, SerializableMapMember } from '.
 import { ReferenceSpace } from './object/space';
 import { TimeService } from '../service/TimeService';
 import { DataSerializer } from './DataSerializer';
+import { SensorType, SensorObject } from './object';
 
 /**
  * A data frame is information that is passed through each node in a positioning model.
@@ -116,6 +117,16 @@ export class DataFrame {
     }
 
     /**
+     * Get known sensor objects used in this data frame
+     *
+     * @param {SensorType} type Sensor type
+     * @returns {SensorObject} Found data objects
+     */
+    getSensor<T extends SensorType, K extends SensorObject<T>>(type: T): K {
+        return this.getObjects(SensorObject).find((obj: SensorObject<T>) => obj.type === type) as K;
+    }
+
+    /**
      * Get known objects used in this data frame
      *
      * @param {typeof DataObject} dataType Data object type
@@ -161,10 +172,22 @@ export class DataFrame {
      * Add a new object relevant to this data frame
      *
      * @param {DataObject} object Relevant object
+     * @returns {DataFrame} instance
      */
-    addObject(object: DataObject): void {
-        if (object === undefined) return;
+    addObject(object: DataObject): this {
+        if (object === undefined) return this;
         this._objects.set(object.uid, object);
+        return this;
+    }
+
+    /**
+     * Add a new sensor relevant to this data frame
+     *
+     * @param {SensorObject} object Relevant sensor
+     * @returns {DataFrame} instance
+     */
+    addSensor(object: SensorObject<any>): this {
+        return this.addObject(object);
     }
 
     /**

@@ -20,6 +20,8 @@ export class SensorValue<U extends Unit = Unit> extends Vector3 {
     })
     accuracy!: Accuracy<U, Vector3 | number>;
     private _defaultUnit?: U;
+    @SerializableMember()
+    unit!: U;
 
     constructor(
         x?: number,
@@ -39,6 +41,7 @@ export class SensorValue<U extends Unit = Unit> extends Vector3 {
         } else {
             super(x, y, z);
         }
+        this.unit = defaultUnit ?? (unit as U) ?? (Unit.UNKNOWN as U);
         this.timestamp = TimeService.now();
         this.accuracy = accuracy || new Accuracy1D(1, this._defaultUnit || (Unit.UNKNOWN as U));
     }

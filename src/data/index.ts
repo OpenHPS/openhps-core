@@ -1,5 +1,4 @@
 export * from './DataFrame';
-export * from './SensorDataFrame';
 
 export * from './object';
 export * from './position';
