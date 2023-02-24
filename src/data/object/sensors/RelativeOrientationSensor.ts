@@ -1,5 +1,5 @@
-import { Quaternion } from '../../../utils';
 import { SerializableObject } from '../../decorators';
+import { Orientation } from '../../position';
 import { SensorObject } from '../SensorObject';
 
 /**
@@ -9,5 +9,5 @@ import { SensorObject } from '../SensorObject';
  */
 @SerializableObject()
 export class RelativeOrientationSensor extends SensorObject {
-    value: Quaternion = new Quaternion();
+    value: Orientation = new Orientation();
 }

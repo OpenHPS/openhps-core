@@ -1,4 +1,5 @@
 import { SerializableMember, SerializableObject } from '../decorators';
+import { Orientation } from '../position';
 import { SensorValue } from '../values';
 import { DataObject } from './DataObject';
 
@@ -12,7 +13,7 @@ export abstract class SensorObject extends DataObject {
      */
     @SerializableMember()
     // eslint-disable-next-line
-    value: SensorValue | Object;
+    value: SensorValue | Object | Orientation;
     /**
      * Frequency of the sensor
      */
@@ -22,5 +23,16 @@ export abstract class SensorObject extends DataObject {
     constructor(uid?: string, displayName?: string) {
         super(uid, displayName);
         this.value = this.value ?? {};
+    }
+
+    /**
+     * Get the sensor timestamp
+     *
+     * @returns {number} timestamp
+     */
+    get timestamp(): number {
+        return this.value instanceof SensorValue || this.value instanceof Orientation
+            ? this.value.timestamp
+            : this.createdTimestamp;
     }
 }
