@@ -124,7 +124,7 @@ export class DataFrame {
      * @returns {SensorObject} Found data objects
      */
     getSensor<T extends SensorObject>(type: new (uid?: string) => T, defaultUID?: string): T {
-        let sensor = this.getObjects(type).filter[0];
+        let sensor = this.getObjects(type)[0];
         if (!sensor && defaultUID !== undefined) {
             sensor = new type(defaultUID);
             this.addObject(sensor);

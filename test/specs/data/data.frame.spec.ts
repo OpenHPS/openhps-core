@@ -8,6 +8,8 @@ import {
     AngularVelocity,
     LinearVelocity,
     AngularVelocityUnit,
+    AbsoluteOrientationSensor,
+    Orientation,
 } from '../../../src';
 import { DummyDataFrame } from '../../mock/data/DummyDataFrame';
 import { DummyDataObject } from '../../mock/data/object/DummyDataObject';
@@ -48,5 +50,29 @@ describe('DataFrame', () => {
         const imuFrame = new DataFrame();
         const frame = new DataFrame(imuFrame);
         expect(frame.createdTimestamp).to.equal(imuFrame.createdTimestamp);
+    });
+
+    it('should add a sensor', () => {
+        const frame = new DataFrame();
+        frame.addSensor(new AbsoluteOrientationSensor("test", Orientation.fromEuler({
+            x: 0,
+            y: 0,
+            z: 0
+        }), 50));
+        expect(frame.getObjects().length).to.equal(1);
+    });
+
+    it('should get a sensor', () => {
+        const frame = new DataFrame();
+        frame.addSensor(new AbsoluteOrientationSensor("test", Orientation.fromEuler({
+            x: 0,
+            y: 0,
+            z: 0
+        }), 50));
+        expect(frame.getObjects().length).to.equal(1);
+        const objects = frame.getObjects(AbsoluteOrientationSensor);
+        expect(objects.length).to.equal(1);
+        const sensor = frame.getSensor(AbsoluteOrientationSensor);
+        expect(sensor).not.to.be.undefined;
     });
 });
