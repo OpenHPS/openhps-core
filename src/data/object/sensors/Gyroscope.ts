@@ -8,6 +8,8 @@ import { SensorObject } from '../SensorObject';
  * @category data
  */
 @SerializableObject()
-export class Gyroscope extends SensorObject {
-    value: AngularVelocity = new AngularVelocity();
+export class Gyroscope extends SensorObject<AngularVelocity> {
+    constructor(uid?: string, value?: AngularVelocity, frequency?: number, displayName?: string) {
+        super(uid, value ?? new AngularVelocity(), frequency, displayName);
+    }
 }

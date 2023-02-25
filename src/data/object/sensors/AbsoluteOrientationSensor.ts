@@ -8,6 +8,8 @@ import { SensorObject } from '../SensorObject';
  * @category data
  */
 @SerializableObject()
-export class AbsoluteOrientationSensor extends SensorObject {
-    value: Orientation = new Orientation();
+export class AbsoluteOrientationSensor extends SensorObject<Orientation> {
+    constructor(uid?: string, value?: Orientation, frequency?: number, displayName?: string) {
+        super(uid, value ?? new Orientation(), frequency, displayName);
+    }
 }

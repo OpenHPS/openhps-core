@@ -8,6 +8,8 @@ import { SensorObject } from '../SensorObject';
  * @category data
  */
 @SerializableObject()
-export class Accelerometer extends SensorObject {
-    value: Acceleration = new Acceleration();
+export class Accelerometer extends SensorObject<Acceleration> {
+    constructor(uid?: string, value?: Acceleration, frequency?: number, displayName?: string) {
+        super(uid, value ?? new Acceleration(), frequency, displayName);
+    }
 }

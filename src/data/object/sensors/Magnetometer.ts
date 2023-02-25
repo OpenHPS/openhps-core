@@ -8,6 +8,8 @@ import { SensorObject } from '../SensorObject';
  * @category data
  */
 @SerializableObject()
-export class Magnetometer extends SensorObject {
-    value: Magnetism = new Magnetism();
+export class Magnetometer extends SensorObject<Magnetism> {
+    constructor(uid?: string, value?: Magnetism, frequency?: number, displayName?: string) {
+        super(uid, value ?? new Magnetism(), frequency, displayName);
+    }
 }
