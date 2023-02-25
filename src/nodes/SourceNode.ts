@@ -1,9 +1,9 @@
 import { DataFrame } from '../data/DataFrame';
 import { DataObject } from '../data/object/DataObject';
+import { SensorType } from '../data/object/SensorObject';
 import { Node, NodeOptions } from '../Node';
 import { GraphOptions, PullOptions, PushOptions } from '../graph/options';
-import { SerializableMember } from '../data';
-import { SerializableObject } from '../data/decorators';
+import { SerializableObject, SerializableMember } from '../data/decorators';
 
 /**
  * Source node
@@ -287,6 +287,10 @@ export interface SourceNodeOptions extends NodeOptions {
 
 export interface SensorSourceOptions extends SourceNodeOptions {
     /**
+     * Sensor types
+     */
+    sensors?: SensorType[];
+    /**
      * Push interval
      */
     interval?: number;
@@ -294,4 +298,8 @@ export interface SensorSourceOptions extends SourceNodeOptions {
      * Auto start the sensor
      */
     autoStart?: boolean;
+    /**
+     * Stopping the source will halt the pushing of frames but not stop the data collection.
+     */
+    softStop?: boolean;
 }

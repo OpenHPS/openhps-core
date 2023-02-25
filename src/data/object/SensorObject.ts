@@ -37,3 +37,5 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
             : this.createdTimestamp;
     }
 }
+
+export type SensorType = new (uid?: string) => SensorObject;
