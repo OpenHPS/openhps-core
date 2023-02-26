@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataSerializer, DataSerializerUtils, Orientation, SerializableObject } from '../../../src';
+import { Acceleration, DataObject, DataSerializerUtils, Orientation, ReferenceSpace, SensorObject, SensorValue, SerializableObject } from '../../../src';
 
 declare module "../../../src/data/decorators/options" {
     interface SerializableObjectOptions<T> {
@@ -98,6 +98,30 @@ describe('SerializableObject', () => {
     });
 
     describe('augmentation', () => {
+
+        it('should augment a super class of a vector', () => {
+            SerializableObject({
+                anArray: ["123"],
+            })(SensorValue);
+            expect(DataSerializerUtils.getMetadata(Acceleration).options.anArray).to.not.undefined;
+        });
+
+        it('should not augment subclasses of the root', () => {
+            SerializableObject({
+                nested: {
+                    anArray: [],
+                }
+            })(DataObject);
+            SerializableObject({
+                nested: {
+                    anArray: ["sensor"],
+                }
+            })(SensorObject);
+            expect(DataSerializerUtils.getMetadata(DataObject).options.nested.anArray.length).to.equal(0);
+            expect(DataSerializerUtils.getMetadata(ReferenceSpace).options.nested.anArray.length).to.equal(0);
+            expect(DataSerializerUtils.getMetadata(SensorObject).options.nested.anArray.length).to.equal(1);
+        });
+
         it('should be able to inject additional options', () => {
             @SerializableObject({
                 abc: "hello"

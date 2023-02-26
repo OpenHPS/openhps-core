@@ -2,6 +2,7 @@ import { AnyT, Constructor, JsonObjectMetadata, Serializable } from 'typedjson';
 import { DataSerializer } from '../DataSerializer';
 import { DataSerializerUtils } from '../DataSerializerUtils';
 import { MemberOptionsBase, SerializableObjectOptions } from './options';
+import cloneDeep = require('lodash.clonedeep');
 
 /**
  * Inject member options into object
@@ -80,8 +81,10 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
             if (otherType === target || !(otherType.prototype instanceof target)) {
                 return;
             }
+
             const otherMeta = DataSerializerUtils.getMetadata(otherType);
             otherMeta.options = mergeDeep(ownMeta.options ?? {}, otherMeta.options);
+
             if (!otherMeta.initializerCallback && ownMeta.initializerCallback) {
                 otherMeta.initializerCallback = ownMeta.initializerCallback;
             }
@@ -139,7 +142,7 @@ export function mergeMemberOptions(target: unknown, propertyKey: string, options
  * @returns {any} Merged object
  */
 function mergeDeep(target: any, source: any): any {
-    const output = Object.assign({}, target);
+    const output = cloneDeep(target);
     if (isObject(target) && isObject(source)) {
         Object.keys(source).forEach((key) => {
             if (Array.isArray(source[key])) {

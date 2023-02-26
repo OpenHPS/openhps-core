@@ -98,6 +98,7 @@
     "dead reckoning"
   ],
   "dependencies": {
+    "lodash.clonedeep": "^4.5.0",
     "reflect-metadata": ">=0.1.13",
     "threads": "^1.7.0",
     "typedjson": "^1.8.0",
@@ -115,6 +116,7 @@
     "@types/benchmark": "^2.1.2",
     "@types/chai": "^4.3.4",
     "@types/deasync": "^0.1.2",
+    "@types/lodash.clonedeep": "^4.5.7",
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.18",
     "@types/three": "^0.148.1",
