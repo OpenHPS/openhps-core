@@ -2,7 +2,8 @@ import { AnyT, Constructor, JsonObjectMetadata, Serializable } from 'typedjson';
 import { DataSerializer } from '../DataSerializer';
 import { DataSerializerUtils } from '../DataSerializerUtils';
 import { MemberOptionsBase, SerializableObjectOptions } from './options';
-import cloneDeep from 'lodash.clonedeep';
+// eslint-disable-next-line
+const cloneDeep = require('lodash.clonedeep');
 
 /**
  * Inject member options into object

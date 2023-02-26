@@ -5,7 +5,6 @@
         "moduleResolution": "node",
         "noImplicitAny": false,
         "noEmitHelpers": true,
-        "esModuleInterop": true,
         "importHelpers": true,
         "removeComments": false,
         "preserveConstEnums": true,
