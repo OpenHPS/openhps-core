@@ -21,7 +21,8 @@ describe('SerializableObject', () => {
         @SerializableObject({
             abc: "hello",
             nested: {
-                override: "test"
+                override: "test",
+                anArray: ["1"]
             }
         })
         class Test {
@@ -30,7 +31,8 @@ describe('SerializableObject', () => {
 
         @SerializableObject({
             nested: {
-                override: "testtest"
+                override: "testtest",
+                anArray: ["2"]
             }
         })
         class TestTest extends Test {
@@ -39,7 +41,8 @@ describe('SerializableObject', () => {
 
         @SerializableObject({
             nested: {
-                override: "testabc"
+                override: "testabc",
+                anArray: ["3"]
             }
         })
         class TestAbc extends Test {
@@ -60,22 +63,37 @@ describe('SerializableObject', () => {
             expect(DataSerializerUtils.getMetadata(TestAbc).options.nested.override).to.equal("testabc");
             expect(DataSerializerUtils.getMetadata(TestTest).options.nested.override).to.equal("testtest");
             expect(DataSerializerUtils.getMetadata(TestTest).options.anArray).to.be.undefined;
+            expect(DataSerializerUtils.getMetadata(Test).options.nested.anArray.length).to.equal(1);
+            expect(DataSerializerUtils.getMetadata(TestTest).options.nested.anArray.length).to.equal(2);
+            expect(DataSerializerUtils.getMetadata(TestAbc).options.nested.anArray.length).to.equal(2);
             SerializableObject({
-                anArray: ["abc"]
+                anArray: ["abc"],
+                nested: {
+                    anArray: ["4"]
+                }
             })(Test);
+            console.log((DataSerializerUtils.getMetadata(Test).options.nested.anArray));
+            console.log((DataSerializerUtils.getMetadata(TestAbc).options.nested.anArray));
+            console.log((DataSerializerUtils.getMetadata(TestTest).options.nested.anArray));
             expect(DataSerializerUtils.getMetadata(Test).options.anArray).to.not.undefined;
             expect(DataSerializerUtils.getMetadata(TestTest).options.anArray).to.not.be.undefined;
             expect(DataSerializerUtils.getMetadata(Test).options.anArray.length).to.equal(1);
+            expect(DataSerializerUtils.getMetadata(Test).options.nested.anArray.length).to.equal(2);
+            expect(DataSerializerUtils.getMetadata(TestTest).options.nested.anArray.length).to.equal(3);
+            expect(DataSerializerUtils.getMetadata(TestAbc).options.nested.anArray.length).to.equal(3);
 
             SerializableObject({
-                anArray: ["123"]
+                anArray: ["123"],
+                nested: {
+                    anArray: ["5"]
+                }
             })(TestAbc);
-            console.log((DataSerializerUtils.getMetadata(Test).options.anArray));
-            console.log((DataSerializerUtils.getMetadata(TestAbc).options.anArray));
-            console.log((DataSerializerUtils.getMetadata(TestTest).options.anArray));
             expect(DataSerializerUtils.getMetadata(TestAbc).options.anArray).to.not.undefined;
             expect(DataSerializerUtils.getMetadata(TestTest).options.anArray.length).to.equal(1);
             expect(DataSerializerUtils.getMetadata(TestAbc).options.anArray.length).to.equal(2);
+            expect(DataSerializerUtils.getMetadata(Test).options.nested.anArray.length).to.equal(2);
+            expect(DataSerializerUtils.getMetadata(TestTest).options.nested.anArray.length).to.equal(3);
+            expect(DataSerializerUtils.getMetadata(TestAbc).options.nested.anArray.length).to.equal(4);
         })
     });
 

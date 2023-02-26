@@ -71,7 +71,7 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
     // Merge options
     if (options) {
         ownMeta.options = mergeDeep(
-            ownMeta === rootMeta ? rootMeta.options ?? {} : ownMeta.options ?? rootMeta.options ?? {},
+            ownMeta === rootMeta ? ownMeta.options ?? {} : ownMeta.options ?? rootMeta.options ?? {},
             options,
         );
 
@@ -83,7 +83,6 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
             const otherMeta = DataSerializerUtils.getMetadata(otherType);
             otherMeta.options = mergeDeep(ownMeta.options ?? {}, otherMeta.options);
             if (!otherMeta.initializerCallback && ownMeta.initializerCallback) {
-                console.log(otherMeta, ownMeta);
                 otherMeta.initializerCallback = ownMeta.initializerCallback;
             }
         });
@@ -145,7 +144,7 @@ function mergeDeep(target: any, source: any): any {
         Object.keys(source).forEach((key) => {
             if (Array.isArray(source[key])) {
                 output[key] = source[key];
-                output[key].push(...(target[key] || []));
+                output[key].push(...(target[key] || []).filter((val: any) => !source[key].includes(val)));
             } else if (isObject(source[key])) {
                 if (!(key in target)) Object.assign(output, { [key]: source[key] });
                 else output[key] = mergeDeep(target[key], source[key]);
