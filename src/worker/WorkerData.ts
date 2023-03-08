@@ -9,4 +9,5 @@ export interface WorkerData {
     imports?: string[];
     directory?: string;
     args?: any;
+    type?: string;
 }

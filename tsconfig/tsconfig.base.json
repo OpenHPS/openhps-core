@@ -13,5 +13,9 @@
         "declaration": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
+        "lib": [
+            "DOM",
+            "WebWorker"
+        ]
     },
 }

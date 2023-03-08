@@ -20,9 +20,9 @@ export interface WorkerOptions {
      */
     imports?: string[];
     /**
-     * Specify if the worker is written in TypeScript
+     * Worker type
      */
-    typescript?: boolean;
+    type?: 'classic' | 'typescript' | 'module';
     args?: any;
     /**
      * Services to clone from main thread. When not specified it will clone all services

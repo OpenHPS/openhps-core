@@ -4,9 +4,9 @@ import { CameraObject } from '../common/openhps-video.es.js';
 
 ModelBuilder.create()
     .from()
-    .via(new WorkerNode('../browser-es6/worker.js',
+    .via(new WorkerNode(undefined,
     {
-        worker: '../common/worker.openhps-core.es.js',
+        worker: './worker.js',
         poolSize: 4,
         type: 'module'
     }))

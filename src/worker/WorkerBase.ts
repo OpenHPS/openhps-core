@@ -40,15 +40,22 @@ export class WorkerBase {
     }
 
     init(config: WorkerData): Promise<void> {
-        return new Promise((resolve, reject) => {
+        // eslint-disable-next-line no-async-promise-executor
+        return new Promise(async (resolve, reject) => {
             this.config = config;
+            const importFn: (file: string) => Promise<any> =
+                typeof process !== 'object'
+                    ? config.type === 'module'
+                        ? (file: string) => import(/* webpackIgnore: true */ file) // ES6
+                        : (file: string) => Promise.resolve(importScripts(/* webpackIgnore: true */ file)) // CJS
+                    : // eslint-disable-next-line @typescript-eslint/no-var-requires
+                      (file: string) => Promise.resolve(require(/* webpackIgnore: true */ file)); // NodeJS
 
             // Set global dir name
             // eslint-disable-next-line no-global-assign
             __dirname = config.directory;
             // Load external scripts
             if (config.imports && config.imports.length > 0) {
-                const importFn = require === undefined ? importScripts : require;
                 config.imports.forEach((importFile) => {
                     importFn(importFile);
                 });
@@ -83,7 +90,7 @@ export class WorkerBase {
             this._initModel(modelBuilder);
 
             // eslint-disable-next-line
-            const path = this.config.imports.length > 0 ? undefined : require('path');
+            const path = this.config.imports.length > 0 ? undefined : (typeof process !== 'object' ? undefined : require('path'));
 
             if (this.config.serialized) {
                 const traversalBuilder = modelBuilder.from();
@@ -98,7 +105,7 @@ export class WorkerBase {
                 traversalBuilder.to();
             } else if (this.config.shape) {
                 // eslint-disable-next-line
-                const graph = require(path ? path.join(__dirname, this.config.shape) : this.config.shape);
+                const graph = await importFn(path ? path.join(__dirname, this.config.shape) : this.config.shape);
                 if (graph) {
                     modelBuilder.addShape(graph.default);
                 }

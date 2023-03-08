@@ -12,7 +12,7 @@
             .from()
             .via(new OpenHPS.core.WorkerNode((builder) => {
                 builder.via(new OpenHPS.core.CallbackNode(frame => {
-                    console.log(frame);
+                    console.log("worker", frame);
                 }))
             },
             {

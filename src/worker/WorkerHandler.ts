@@ -118,7 +118,9 @@ export class WorkerHandler extends AsyncEventEmitter {
     private _spawnWorker(): Promise<Thread> {
         return new Promise((resolve, reject) => {
             // NOTE: We can not use a conditional expression as this breaks the webpack threads plugin
-            const worker = new Worker(this.options.worker);
+            const worker = new Worker(this.options.worker, {
+                type: this.options.type === 'typescript' ? 'classic' : this.options.type,
+            });
             spawn(worker, {
                 timeout: this.options.timeout,
             })
@@ -148,6 +150,7 @@ export class WorkerHandler extends AsyncEventEmitter {
                         services: this._getServices(),
                         imports: this.options.imports || [],
                         args: this.options.args || {},
+                        type: this.options.type || 'classic',
                         ...this.config,
                     })
                         .then(() => {

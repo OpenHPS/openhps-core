@@ -59,13 +59,14 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
     constructor(worker: ((...args: any[]) => void) | string | Node<In, Out>, options?: WorkerNodeOptions) {
         super(options);
         this.options.worker = this.options.worker || '../worker/WorkerRunner';
+        this.options.type = this.options.type || 'classic';
         if (worker instanceof Node) {
             // Serializable node
             this.config.serialized = DataSerializer.serialize(worker);
         } else if (worker instanceof Function) {
             // Code
             this.config.builder = worker.toString();
-            if (this.options.typescript) {
+            if (this.options.type === 'typescript') {
                 // eslint-disable-next-line
                 this.config.builder = require('typescript').transpile(this.config.builder);
             }

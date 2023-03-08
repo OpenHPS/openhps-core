@@ -12,6 +12,8 @@ const defaultConfig = env => ({
   resolve: {
     alias: {
       typescript: false,
+      'threads/observable': path.join(__dirname, "node_modules", '/threads/observable.js'),
+      'threads': path.join(__dirname, "node_modules", '/threads/dist/index.js'),
     },
     fallback: {
       path: false,
@@ -79,6 +81,22 @@ module.exports = env => [
         return `importScripts('${PROJECT_NAME}${env.prod ? ".min" : ""}.js'); __WEBPACK_EXTERNAL_MODULE____ = self.OpenHPS.core;`
       })
     ],
+    ...defaultConfig(env)
+  },
+  {
+    name:`${PROJECT_NAME}-worker`,
+    entry: `./dist/esm5/worker/WorkerRunner.js`,
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: `web/worker.${PROJECT_NAME}.es${env.prod ? ".min" : ""}.js`,
+      libraryTarget: 'module',
+      umdNamedDefine: false,
+    },
+    externals: {'..': `./openhps-core${env.prod ? ".min" : ""}.es.js`},
+    plugins: [],
+    experiments: {
+      outputModule: true,
+    },
     ...defaultConfig(env)
   },
   {
