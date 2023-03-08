@@ -37,6 +37,11 @@
       "import": "./dist/esm5/index.internal.js",
       "types": "./dist/types/index.internal.d.ts"
     },
+    "./worker": {
+      "require": "./dist/cjs/worker/WorkerRunner.js",
+      "import": "./dist/esm5/worker/WorkerRunner.js",
+      "types": "./dist/types/worker/WorkerRunner.d.ts"
+    },
     "./lite": {
       "require": "./dist/cjs/index.lite.js",
       "import": "./dist/esm5/index.lite.js",
