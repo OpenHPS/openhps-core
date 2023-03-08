@@ -83,3 +83,5 @@ expose({
         return worker.findAllServices();
     },
 });
+
+export default worker;

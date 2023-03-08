@@ -18,10 +18,12 @@ import {
     DummyService,
     Node,
     ModelSerializer,
+    GraphBuilder,
 } from '..'; // external @openhps/core
 import { WorkerData } from './WorkerData';
 
 export class WorkerBase {
+    shape: GraphBuilder<any, any>;
     model: Model<any, any>;
     pullOutput: Subject<any> = new Subject();
     pushOutput: Subject<any> = new Subject();
@@ -32,6 +34,10 @@ export class WorkerBase {
         event: any;
     }> = new Subject();
     protected config: WorkerData;
+
+    setShape(shape: GraphBuilder<any, any>): void {
+        this.shape = shape;
+    }
 
     init(config: WorkerData): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -90,12 +96,14 @@ export class WorkerBase {
                 const builderCallback = eval(this.config.builder);
                 builderCallback(traversalBuilder, modelBuilder, this.config.args);
                 traversalBuilder.to();
-            } else {
+            } else if (this.config.shape) {
                 // eslint-disable-next-line
                 const graph = require(path ? path.join(__dirname, this.config.shape) : this.config.shape);
                 if (graph) {
                     modelBuilder.addShape(graph.default);
                 }
+            } else if (this.shape) {
+                modelBuilder.addShape(this.shape);
             }
 
             modelBuilder

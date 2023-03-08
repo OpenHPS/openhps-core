@@ -363,6 +363,40 @@ describe('worker graph', () => {
         .slow(8000)
         .timeout(60000);
 
+    it('should build a graph or node from a file that acts as a worker', (done) => {
+        ModelBuilder.create()
+            .addNode(
+                new WorkerNode(undefined, {
+                    name: 'output',
+                    directory: __dirname,
+                    poolSize: 2,
+                    worker: '../../test/mock/ExampleWorker'
+                }),
+            )
+            .from('output')
+            .to(
+                new CallbackSinkNode(function (frame) {
+                    expect(frame).to.not.be.undefined;
+                    expect(frame.source).to.not.be.undefined;
+                    expect(frame.source.uid).to.be.equal('mvdewync');
+                    this.model.emitAsync('destroy').then(() => {
+                        done();
+                    }).catch(done);
+                }),
+            )
+            .build()
+            .then((model) => {
+                model.once('error', (ex) => {
+                    model.destroy();
+                    done(ex);
+                });
+                model.pull();
+            })
+            .catch(done);
+    })
+        .slow(8000)
+        .timeout(60000);
+
     it('should build a model from a file using a main service', (done) => {
         ModelBuilder.create()
             .addService(new KeyValueDataService('abc123'))
