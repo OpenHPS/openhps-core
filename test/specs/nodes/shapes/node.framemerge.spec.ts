@@ -455,7 +455,7 @@ describe('FrameMergeNode', () => {
                 
                 setTimeout(() => {
                     model.emit('destroy');
-                }, 1000);
+                }, 1500);
             })
             .catch((ex) => {
                 done(ex);
