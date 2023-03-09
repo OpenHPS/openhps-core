@@ -92,7 +92,7 @@ module.exports = env => [
       libraryTarget: 'module',
       umdNamedDefine: false,
     },
-    externals: {'..': `./openhps-core${env.prod ? ".min" : ""}.es.js`},
+    externals: {'..': `./openhps-core.es${env.prod ? ".min" : ""}.js`},
     plugins: [],
     experiments: {
       outputModule: true,
