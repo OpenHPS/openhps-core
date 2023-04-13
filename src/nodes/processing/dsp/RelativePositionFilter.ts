@@ -38,6 +38,7 @@ export class RelativePositionFilter<
                         const value = result;
                         const relativePosition = relativePositions[idx];
                         if (
+                            typeof value === 'number' &&
                             value <= this.options.maxValue &&
                             value >= this.options.minValue &&
                             TimeService.now() - this.options.maxTimeDifference <= relativePosition.timestamp

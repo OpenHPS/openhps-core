@@ -64,7 +64,8 @@ export class UnitValue<U extends Unit = Unit, T extends number | Vector3 = numbe
      * @returns {string} Unit value as string
      */
     toString(): string {
-        return this.valueOf().toString();
+        const value = this.valueOf();
+        return value ? value.toString() : undefined;
     }
 
     /**

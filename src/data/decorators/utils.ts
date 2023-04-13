@@ -20,7 +20,7 @@ export function updateSerializableMember(target: unknown, propertyKey: string, o
         const ownMemberMetadata = ownMeta.dataMembers.get(propertyKey) || ownMeta.dataMembers.get(options.name);
         const rootMemberMetadata = rootMeta.dataMembers.get(propertyKey) || rootMeta.dataMembers.get(options.name);
         if (!ownMemberMetadata) {
-            throw new Error(`Unable to get member metadata for ${target}!`);
+            throw new Error(`Unable to get member metadata for ${target} on property ${propertyKey}!`);
         }
         ownMemberMetadata.options = mergeDeep(ownMemberMetadata.options ?? {}, options);
         if (rootMemberMetadata) {

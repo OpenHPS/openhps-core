@@ -1,6 +1,12 @@
 import { AbsolutePosition } from '../position/AbsolutePosition';
 import { RelativePosition } from '../position/RelativePosition';
-import { SerializableObject, SerializableMember, SerializableArrayMember, NumberType } from '../decorators';
+import {
+    SerializableObject,
+    SerializableMember,
+    SerializableArrayMember,
+    NumberType,
+    Constructor,
+} from '../decorators';
 import { v4 as uuidv4 } from 'uuid';
 import { DataSerializer } from '../DataSerializer';
 import { TimeService } from '../../service/TimeService';
@@ -246,10 +252,11 @@ export class DataObject {
     /**
      * Clone the data object
      *
+     * @param {Constructor<DataObject>} [dataType] Data type to clone to
      * @returns {DataObject} Cloned data object
      */
-    clone(): this {
-        return DataSerializer.clone(this);
+    clone<T extends this | this>(dataType?: Constructor<T>): T {
+        return DataSerializer.clone(this, dataType) as T;
     }
 }
 

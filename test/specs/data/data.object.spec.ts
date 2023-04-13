@@ -122,6 +122,21 @@ describe('DataObject', () => {
         expect(clone.getPosition()).to.not.be.undefined;
     });
 
+    it('should clone to a super type', () => {
+        const dataObject = new DataObject('123');
+        dataObject.displayName = 'abc';
+        dataObject.setPosition(new Absolute2DPosition(2, 2));
+        dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_a'), 1));
+        dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_b'), 2));
+        dataObject.addRelativePosition(new RelativeDistance(new DataObject('ref_c'), 3));
+        const clone = dataObject.clone(DummySensorObject);
+        dataObject.displayName = '123';
+        dataObject.getPosition().linearVelocity = new LinearVelocity(10, 0);
+        expect(clone.displayName).to.equal('abc');
+        expect(clone.getPosition()).to.not.be.undefined;
+        expect(clone).to.be.instanceOf(DummySensorObject);
+    });
+
     it('should support listeners', (done) => {
         const dataObject = new DataObject('123');
         ModelBuilder.create()

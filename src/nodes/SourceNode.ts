@@ -285,11 +285,7 @@ export interface SourceNodeOptions extends NodeOptions {
     source?: DataObject;
 }
 
-export interface SensorSourceOptions extends SourceNodeOptions {
-    /**
-     * Sensor types
-     */
-    sensors?: SensorType[];
+export interface ActiveSourceOptions extends SourceNodeOptions {
     /**
      * Push interval
      */
@@ -302,4 +298,11 @@ export interface SensorSourceOptions extends SourceNodeOptions {
      * Stopping the source will halt the pushing of frames but not stop the data collection.
      */
     softStop?: boolean;
+}
+
+export interface SensorSourceOptions extends ActiveSourceOptions {
+    /**
+     * Sensor types
+     */
+    sensors?: SensorType[];
 }

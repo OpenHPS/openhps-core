@@ -178,10 +178,11 @@ export class DataSerializer {
      * Clone a serializable object
      *
      * @param {any} object Serializable object
+     * @param {Constructor<any>} [dataType] Data type to clone to
      * @returns {any} Cloned object
      */
-    static clone<T>(object: T): T {
-        return this.deserialize(this.serialize(object));
+    static clone<T, D = T>(object: T, dataType?: Constructor<D>): D {
+        return this.deserialize(this.serialize(object), dataType);
     }
 
     /**
