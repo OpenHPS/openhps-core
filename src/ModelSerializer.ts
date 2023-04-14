@@ -4,10 +4,20 @@ import { Model } from './Model';
 import { Node } from './Node';
 import { Service } from './service';
 
+/**
+ * Model serializer allows you to serialize a positioning model to JSON.
+ */
 export class ModelSerializer {
     static NODES: Map<string, ClassDeclaration<Node<any, any>>> = new Map();
     static SERVICES: Map<string, ClassDeclaration<Service>> = new Map();
     private static _modules = new Set();
+
+    protected static get options(): ModelSerializerConfig {
+        return {
+            serialize: DataSerializer.serialize,
+            deserialize: DataSerializer.deserialize,
+        };
+    }
 
     static serialize(model: Model): SerializedModel & any {
         return this.serializeNode(model as ModelGraph<any, any>);
@@ -15,7 +25,7 @@ export class ModelSerializer {
 
     static serializeNode(node: Node<any, any>): any {
         this._initialize();
-        return DataSerializer.serialize(node);
+        return this.options.serialize(node);
     }
 
     static deserialize<In extends DataFrame, Out extends DataFrame>(model: SerializedModel): Model<In, Out> {
@@ -28,7 +38,7 @@ export class ModelSerializer {
 
     static deserializeNode<In extends DataFrame, Out extends DataFrame>(node: any): Node<In, Out> {
         this._initialize();
-        return DataSerializer.deserialize(node) as Node<any, Out>;
+        return this.options.deserialize(node) as Node<any, Out>;
     }
 
     private static _loadClasses(module: NodeModule = require.main): void {
@@ -78,4 +88,9 @@ interface SerializedDependency {
 
 interface ClassDeclaration<T> {
     constructor: Serializable<T>;
+}
+
+export interface ModelSerializerConfig<T = any> {
+    serialize?: (obj: T) => any;
+    deserialize?: (obj: any) => T;
 }

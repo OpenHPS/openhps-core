@@ -32,15 +32,22 @@ describe('Model', () => {
              
             ModelBuilder.create()
                 .from()
-                .to()
+                .via(new CallbackNode(frame => {
+                    frame.addObject(new DataObject("test"));
+                }))
+                .to(new CallbackSinkNode(frame => {
+                    console.log("yes");
+                }, {
+                    uid: "end"
+                }))
                 .build()
                 .then((model) => {
-                //    const serialized = ModelSerializer.serialize(model);
-                    // const deserialized = ModelSerializer.deserialize(serialized);
-                    // expect(model.uid).to.equal(deserialized.uid);
-                    // expect(model.nodes.length).to.equal(deserialized.nodes.length);
-                    // expect(model.edges.length).to.equal(deserialized.edges.length);
-                    // expect(model.nodes).to.eql(deserialized.nodes);
+                    const serialized = ModelSerializer.serialize(model);
+                    const deserialized = ModelSerializer.deserialize(serialized);
+                    expect(model.uid).to.equal(deserialized.uid);
+                    expect(model.nodes.length).to.equal(deserialized.nodes.length);
+                    expect(model.edges.length).to.equal(deserialized.edges.length);
+                    deserialized.push(new DataFrame())
                     done();
                 }).catch(done);
         }).timeout(60000);

@@ -6,20 +6,24 @@ import { PushCompletedEvent, PushError } from '../../events';
 import { Edge } from '../../Edge';
 import { Graph } from '../../Graph';
 import { Node } from '../../../Node';
-import { SerializableMapMember, SerializableMember, SerializableObject } from '../../../data/decorators';
+import { Constructor, SerializableMapMember, SerializableMember, SerializableObject } from '../../../data/decorators';
+import { DataSerializer } from '../../../data';
 
 /**
  * @category Graph
  */
 @SerializableObject({
-    initializer: (sourceObject: GraphShape<any, any>, raw: any) => {
-        raw.edges.forEach((edge) => {
-            sourceObject._edges.set(
+    initializer: (sourceObject: any, raw: any) => {
+        const expectedType = DataSerializer.findTypeByName(raw.__type);
+        const targetObject = new (expectedType as Constructor<any>)();
+        Object.assign(targetObject, sourceObject);
+        raw.edges.forEach((edge: any) => {
+            targetObject._edges.set(
                 edge.input + edge.output,
                 new Edge(sourceObject._nodes.get(edge.input), sourceObject._nodes.get(edge.output)),
             );
         });
-        return sourceObject;
+        return targetObject;
     },
 })
 export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> implements Graph<In, Out> {
