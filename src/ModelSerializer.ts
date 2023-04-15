@@ -48,24 +48,28 @@ export class ModelSerializer {
             return;
         }
         this._modules.add(module.id);
-        Object.keys(module.exports).forEach((key) => {
-            const childModule = module.exports[key];
+        if (module.exports) {
+            Object.keys(module.exports).forEach((key) => {
+                const childModule = module.exports[key];
 
-            if (childModule && childModule.prototype instanceof Node) {
-                this.NODES.set(key, {
-                    constructor: childModule,
-                });
-            } else if (childModule && childModule.prototype instanceof Service) {
-                this.SERVICES.set(key, {
-                    constructor: childModule,
-                });
-            }
-        });
-        module.children.forEach((module) => {
-            if (!this._modules.has(module.id)) {
-                this._loadClasses(module);
-            }
-        });
+                if (childModule && childModule.prototype instanceof Node) {
+                    this.NODES.set(key, {
+                        constructor: childModule,
+                    });
+                } else if (childModule && childModule.prototype instanceof Service) {
+                    this.SERVICES.set(key, {
+                        constructor: childModule,
+                    });
+                }
+            });
+        }
+        if (module.children) {
+            module.children.forEach((module) => {
+                if (!this._modules.has(module.id)) {
+                    this._loadClasses(module);
+                }
+            });
+        }
     }
 
     private static _initialize(): void {
