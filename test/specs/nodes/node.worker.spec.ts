@@ -317,13 +317,14 @@ describe('WorkerNode', () => {
             .build()
             .then((m) => {
                 model = m;
+                model.once('error', done);
                 model.once('completed', (event) => {
                     model.emitAsync('destroy').then(() => {
                         done();
                     }).catch(done);
                 });
                 model.push(new DataFrame(new DataObject('mvdewync')));
-            });
+            }).catch(done);
     })
         .slow(5000)
         .timeout(60000);

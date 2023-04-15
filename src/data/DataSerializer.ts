@@ -68,17 +68,21 @@ export class DataSerializer {
      * @param {MappedTypeConverters} [converters] Optional converters
      */
     static registerType<T>(type: Serializable<T>, converters?: MappedTypeConverters<T>): void {
-        this.knownTypes.set(type.name, type);
+        DataSerializer.knownTypes.set(type.name, type);
         if (converters) {
-            this.serializer.setSerializationStrategy(type, (value) => {
+            DataSerializer.serializer.setSerializationStrategy(type, (value) => {
                 return converters.serializer(value, {
-                    fallback: (so, td) => this.serializer.convertSingleValue(so, td as TypeDescriptor),
+                    fallback: (so, td) => DataSerializer.serializer.convertSingleValue(so, td as TypeDescriptor),
                 });
             });
-            this.deserializer.setDeserializationStrategy(type, (value) => {
+            DataSerializer.deserializer.setDeserializationStrategy(type, (value) => {
                 return converters.deserializer(value, {
                     fallback: (so, td) =>
-                        this.deserializer.convertSingleValue(so, td as TypeDescriptor, this.knownTypes),
+                        DataSerializer.deserializer.convertSingleValue(
+                            so,
+                            td as TypeDescriptor,
+                            DataSerializer.knownTypes,
+                        ),
                 });
             });
             if (type.name !== 'Object') {
@@ -87,11 +91,11 @@ export class DataSerializer {
                 type.prototype[DataSerializerUtils.META_FIELD] = objectMetadata;
             }
         }
-        this.eventEmitter.emit('registerType', type, converters);
+        DataSerializer.eventEmitter.emit('registerType', type, converters);
     }
 
     static {
-        this.registerType(Object, {
+        DataSerializer.registerType(Object, {
             serializer: (object) => ({
                 ...Object.keys(object)
                     .map((key) => {
@@ -166,12 +170,12 @@ export class DataSerializer {
      * @param {typeof any} type Type to unregister
      */
     static unregisterType(type: Serializable<any>): void {
-        this.knownTypes.delete(type.name);
-        this.eventEmitter.emit('unregisterType', type);
+        DataSerializer.knownTypes.delete(type.name);
+        DataSerializer.eventEmitter.emit('unregisterType', type);
     }
 
     static findTypeByName(name: string): Serializable<any> {
-        return this.knownTypes.get(name);
+        return DataSerializer.knownTypes.get(name);
     }
 
     /**
@@ -182,7 +186,7 @@ export class DataSerializer {
      * @returns {any} Cloned object
      */
     static clone<T, D = T>(object: T, dataType?: Constructor<D>): D {
-        return this.deserialize(this.serialize(object), dataType);
+        return DataSerializer.deserialize(DataSerializer.serialize(object), dataType);
     }
 
     /**
@@ -202,10 +206,10 @@ export class DataSerializer {
         // First check if it is a registered type
         // this is important as some serializable classes
         // may extend an array
-        if (!this.findTypeByName(globalDataType.name) && Array.isArray(data)) {
-            return data.map(this.serialize.bind(this));
+        if (!DataSerializer.findTypeByName(globalDataType.name) && Array.isArray(data)) {
+            return data.map(DataSerializer.serialize.bind(DataSerializer));
         }
-        const serializer = config.serializer ?? this.serializer;
+        const serializer = config.serializer ?? DataSerializer.serializer;
         return serializer.convertSingleValue(
             data,
             DataSerializerUtils.ensureTypeDescriptor(globalDataType),
@@ -230,15 +234,15 @@ export class DataSerializer {
         }
 
         if (Array.isArray(serializedData)) {
-            return serializedData.map((serializedObject) => this.deserialize(serializedObject));
+            return serializedData.map((serializedObject) => DataSerializer.deserialize(serializedObject));
         }
 
-        const deserializer = config.deserializer ?? this.deserializer;
-        const finalType = dataType ?? deserializer.getTypeResolver()(serializedData, this.knownTypes);
+        const deserializer = config.deserializer ?? DataSerializer.deserializer;
+        const finalType = dataType ?? deserializer.getTypeResolver()(serializedData, DataSerializer.knownTypes);
         return deserializer.convertSingleValue(
             serializedData,
             DataSerializerUtils.ensureTypeDescriptor(finalType),
-            this.knownTypes,
+            DataSerializer.knownTypes,
             undefined,
             undefined,
             config,

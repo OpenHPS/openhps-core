@@ -93,10 +93,15 @@ export class WorkerBase {
             const path = this.config.imports.length > 0 ? undefined : (typeof process !== 'object' ? undefined : require('path'));
 
             if (this.config.serialized) {
-                const traversalBuilder = modelBuilder.from();
-                const modelOrNode = ModelSerializer.deserializeNode(this.config.serialized);
-                traversalBuilder.via(modelOrNode as Node<any, any>);
-                traversalBuilder.to();
+                try {
+                    const traversalBuilder = modelBuilder.from();
+                    const modelOrNode = ModelSerializer.deserializeNode(this.config.serialized);
+                    traversalBuilder.via(modelOrNode as Node<any, any>);
+                    traversalBuilder.to();
+                } catch (ex) {
+                    // Error deserializing, did you import the nodes?
+                    reject(ex);
+                }
             } else if (this.config.builder) {
                 const traversalBuilder = modelBuilder.from();
                 // eslint-disable-next-line
