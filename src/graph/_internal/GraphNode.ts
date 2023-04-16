@@ -82,7 +82,7 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
      * @returns {Array<Outlet<DataFrame>>} Outgoing edges
      */
     get outlets(): Array<Outlet<Out>> {
-        return this.graph.edges.filter((edge) => edge.inputNode === this);
+        return this.graph.edges.filter((edge) => edge.inputNode.uid === this.uid);
     }
 
     /**
@@ -91,7 +91,7 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
      * @returns {Array<Inlet<DataFrame>>} Incoming edges
      */
     get inlets(): Array<Inlet<In>> {
-        return this.graph.edges.filter((edge) => edge.outputNode === this);
+        return this.graph.edges.filter((edge) => edge.outputNode.uid === this.uid);
     }
 
     emit(name: string | symbol, ...args: any[]): boolean;
