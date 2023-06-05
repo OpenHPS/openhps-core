@@ -5,7 +5,6 @@ import { Vector3 } from '../../../utils';
 
 /**
  * Kalman Filter processing node
- *
  * @category Processing node
  */
 export class KalmanFilterNode<InOut extends DataFrame> extends PropertyFilterProcessingNode<InOut> {
@@ -66,7 +65,6 @@ export interface KalmanFilterOptions extends FilterProcessingOptions {
 
 /**
  * Basic Kalman Filter
- *
  * @author Wouter Bulten
  * @see {@link http://github.com/wouterbulten/kalmanjs}
  * @copyright Copyright 2015-2018 Wouter Bulten
@@ -102,7 +100,6 @@ export class KalmanFilter<T extends Vector3> {
 
     /**
      * Filter a new value
-     *
      * @param  {Vector3} z Measurement
      * @param  {Vector3} u Control
      * @returns {Vector3} Filtered value
@@ -135,7 +132,6 @@ export class KalmanFilter<T extends Vector3> {
 
     /**
      * Predict next value
-     *
      * @param  {Vector3} [u] Control
      * @returns {Vector3} Predicted value
      */
@@ -148,7 +144,6 @@ export class KalmanFilter<T extends Vector3> {
 
     /**
      * Return uncertainty of filter
-     *
      * @returns {number} Uncertainty
      */
     uncertainty(): T {
@@ -157,7 +152,6 @@ export class KalmanFilter<T extends Vector3> {
 
     /**
      * Return the last filtered measurement
-     *
      * @returns {Vector3} Last measurement
      */
     get measurement(): T {
@@ -166,7 +160,6 @@ export class KalmanFilter<T extends Vector3> {
 
     /**
      * Get covariance
-     *
      * @returns {Vector3} covariance vector
      */
     get covariance(): T {

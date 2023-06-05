@@ -6,7 +6,6 @@ import { v5 as uuidv5 } from 'uuid';
 export class NodeDataService<T extends NodeData | NodeData> extends DataService<string, T> {
     /**
      * Find node data
-     *
      * @param {string} nodeUID Node identifier
      * @param {DataObject} dataObject Data object to get node data for
      * @returns {Promise<any>} Promise of node data for data object

@@ -5,7 +5,6 @@ import { ReferenceSpace, DataFrame, DataObject, SpaceTransformationOptions } fro
 /**
  * This node converts the positions of data objects inside the frame
  * to another reference space.
- *
  * @category Processing node
  */
 export class ReferenceSpaceConversionNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {

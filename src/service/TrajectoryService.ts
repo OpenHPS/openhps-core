@@ -45,7 +45,6 @@ export class TrajectoryService<T extends Trajectory = Trajectory> extends DataSe
 
     /**
      * Find the latest trajectory
-     *
      * @param {DataObject | string} object Data object to get trajectories for
      * @returns {Promise<Trajectory>} Trajectory promise if found
      */
@@ -66,7 +65,6 @@ export class TrajectoryService<T extends Trajectory = Trajectory> extends DataSe
 
     /**
      * Find the trajectory of an object from start to end date
-     *
      * @param {DataObject | string} object Data object to get trajectory for
      * @param {Date | number} start Start time or date
      * @param {Date | number} end End time or date
@@ -94,7 +92,6 @@ export class TrajectoryService<T extends Trajectory = Trajectory> extends DataSe
 
     /**
      * Find all trajectories of an object
-     *
      * @param {DataObject | string} object Data object to get trajectories for
      * @returns {Promise<string[]>} List of trajectory UIDs
      */
@@ -110,7 +107,6 @@ export class TrajectoryService<T extends Trajectory = Trajectory> extends DataSe
 
     /**
      * Append a position to the trajectory service
-     *
      * @param {DataObject} object Data object to store
      * @param {string} uid Trajectory uid
      * @returns {Promise<Trajectory>} Stored trajectory
@@ -145,13 +141,11 @@ export interface TrajectoryServiceOptions extends DataServiceOptions {
     dataService?: Constructor<DataObject>;
     /**
      * Automatically bind to the data object service
-     *
      * @default true
      */
     autoBind?: boolean;
     /**
      * Default UID of a trajectory with autoBind = true
-     *
      * @default (object) => object.uid
      */
     defaultUID?: (object: DataObject) => string;

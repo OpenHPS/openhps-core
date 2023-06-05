@@ -19,6 +19,8 @@ import {
     DataService,
     DataSerializer,
     ModelSerializer,
+    WorkerHandler,
+    SourceNode,
 } from '../../src';
 import { BroadcastNode } from '../../src/nodes/shapes/BroadcastNode';
 import { PlaceholderNode } from '../../src/nodes/_internal/PlaceholderNode';
@@ -781,5 +783,21 @@ describe('Model', () => {
                     model.findNodeByName("input").push(frame);
                 });
         }).timeout(2000);
+
+        it('should work with proxy nodes', (done) => {
+            const source = new CallbackSourceNode(() => {
+                return new DataFrame();
+            });
+            const sourceProxy = new Proxy(source, new (class x implements ProxyHandler<SourceNode> {
+
+            })());
+            ModelBuilder.create()
+                .from(sourceProxy)
+                .to()
+                .build().then(() => {
+                    expect(sourceProxy.outlets.length).to.eql(1);
+                    done();
+                }).catch(done);
+        });
     });
 });

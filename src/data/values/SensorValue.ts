@@ -48,7 +48,6 @@ export class SensorValue<U extends Unit = Unit> extends Vector3 {
 
     /**
      * Set the accuracy of the absolute position
-     *
      * @param {number | Accuracy} accuracy Accuracy object or number
      * @returns {SensorValue} instance
      */

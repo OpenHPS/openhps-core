@@ -13,7 +13,6 @@ export class Accuracy2D<U extends Unit = Unit> extends Accuracy<U, Vector3> {
 
     /**
      * Convert the value to another unit
-     *
      * @param {Unit} unit Target unit
      * @returns {Accuracy2D} Converted value
      */

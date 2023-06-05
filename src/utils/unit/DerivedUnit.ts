@@ -5,7 +5,6 @@ import { UnitFunctionDefinition } from './UnitDefinition';
 
 /**
  * Derived Unit
- *
  * @category Unit
  */
 @SerializableObject()

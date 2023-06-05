@@ -13,7 +13,6 @@ export class DataSerializerUtils {
 
     /**
      * Get the own TypedJSON metadata of the prototype
-     *
      * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
      * @param {any} proto Prototype of target
      * @returns {ObjectMetadata} Root object metadata
@@ -24,7 +23,6 @@ export class DataSerializerUtils {
 
     /**
      * Get the TypedJSON metadata
-     *
      * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
      * @param {any} proto Prototype of target
      * @returns {ObjectMetadata} Root object metadata
@@ -35,7 +33,6 @@ export class DataSerializerUtils {
 
     /**
      * Get the root TypedJSON metadata
-     *
      * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
      * @param {any} proto Prototype of target
      * @returns {ObjectMetadata} Root object metadata
@@ -54,7 +51,6 @@ export class DataSerializerUtils {
 
     /**
      * Get member options of a property in a data type
-     *
      * @param {Constructor} dataType Data type
      * @param {string} propertyKey Property key
      * @returns {SerializableMemberOptions} member options
@@ -73,7 +69,6 @@ export class DataSerializerUtils {
 
     /**
      * Get member options of an identifier property in a data type
-     *
      * @param {Constructor} dataType Data type
      * @returns {SerializableMemberOptions} identifier member options
      */

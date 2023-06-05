@@ -15,7 +15,6 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
 
     /**
      * Insert a new data object
-     *
      * @param {DataObject} object Data object to insert
      * @returns {DataObject} Inserted object
      */
@@ -36,7 +35,6 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
 
     /**
      * Find a data object by its display name
-     *
      * @param {string} displayName Name to search for
      * @returns {DataObject[]} Array of data objects that match the display name
      */
@@ -48,7 +46,6 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
 
     /**
      * Find a data object by its current absolute position
-     *
      * @param {AbsolutePosition} position Current absolute position
      * @returns {DataObject[]} Array of data objects that match the position
      */
@@ -72,7 +69,6 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
 
     /**
      * Find all data objects with a parent UID
-     *
      * @param {string} parentUID string Parent UID
      * @returns {DataObject[]} Array of data objects that match the parent UID
      */
@@ -84,7 +80,6 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
 
     /**
      * Find data objects created before a certain timestamp
-     *
      * @param {number} timestamp Timestamp
      * @returns {DataObject[]} Array of data objects before the specified timestamp
      */
@@ -94,7 +89,6 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
 
     /**
      * Find data objects created after a certain timestamp
-     *
      * @param {number} timestamp Timestamp
      * @returns {DataObject[]} Array of data objects after the specified timestamp
      */

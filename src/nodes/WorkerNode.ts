@@ -15,16 +15,16 @@ import { WorkerHandler } from '../worker';
  * ### Absolute Imports
  * ```typescript
  * const workerNode = new WorkerNode((builder) => {
- *      const TimeConsumingNode = require('@openhps/abc');
- *      builder.to(new TimeConsumingNode());
+ * const TimeConsumingNode = require('@openhps/abc');
+ * builder.to(new TimeConsumingNode());
  * });
  * ```
  *
  * ### Relative Imports
  * ```typescript
  * const workerNode = new WorkerNode((builder) => {
- *      const TimeConsumingNode = require(path.join(__dirname, '../TimeConsumingNode'));
- *      builder.to(new TimeConsumingNode());
+ * const TimeConsumingNode = require(path.join(__dirname, '../TimeConsumingNode'));
+ * builder.to(new TimeConsumingNode());
  * }, { directory: __dirname });
  * ```
  *
@@ -32,13 +32,12 @@ import { WorkerHandler } from '../worker';
  * Web workers can be used by specifying the worker file.
  * ```typescript
  * const workerNode = new WorkerNode((builder) => {
- *      const TimeConsumingNode = require(path.join(__dirname, '../TimeConsumingNode'));
- *      builder.to(new TimeConsumingNode());
+ * const TimeConsumingNode = require(path.join(__dirname, '../TimeConsumingNode'));
+ * builder.to(new TimeConsumingNode());
  * }, {
- *      worker: 'worker.openhps-core.min.js'    // Worker JS file
+ * worker: 'worker.openhps-core.min.js'    // Worker JS file
  * });
  * ```
- *
  * @category Node
  */
 export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
@@ -121,7 +120,6 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
 
     /**
      * Triggered for each worker that requests a pull
-     *
      * @param {PullOptions} options Pull options
      */
     private _onWorkerPull(options?: PullOptions): void {
@@ -130,7 +128,6 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
 
     /**
      * Triggered for each worker that pushes data
-     *
      * @param {DataFrame} frame Deserialized frame
      * @param {PushOptions} options Push options
      */
