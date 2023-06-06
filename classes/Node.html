@@ -27,7 +27,7 @@
 </a>
 <p>Default nodes require you to specify the input and output data frame type. In general, nodes have the ability
 to process an input data frame and output a different (processed) data frame.</p>
-<pre><code class="language-typescript"><span class="hl-2">import</span><span class="hl-0"> { </span><span class="hl-3">DataFrame</span><span class="hl-0">, </span><span class="hl-3">Node</span><span class="hl-0"> } </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&#39;@openhps/core&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-2">export</span><span class="hl-0"> </span><span class="hl-5">class</span><span class="hl-0"> </span><span class="hl-9">CustomNode</span><span class="hl-0">&lt;</span><span class="hl-9">In</span><span class="hl-0"> </span><span class="hl-5">extends</span><span class="hl-0"> </span><span class="hl-9">DataFrame</span><span class="hl-0">, </span><span class="hl-9">Out</span><span class="hl-0"> </span><span class="hl-5">extends</span><span class="hl-0"> </span><span class="hl-9">DataFrame</span><span class="hl-0">&gt; </span><span class="hl-5">extends</span><span class="hl-0"> </span><span class="hl-9">Node</span><span class="hl-0">&lt;</span><span class="hl-9">In</span><span class="hl-0">, </span><span class="hl-9">Out</span><span class="hl-0">&gt; {</span><br/><span class="hl-0">    </span><span class="hl-6">// ...</span><br/><span class="hl-0">}</span>
+<pre><code class="language-typescript"><span class="hl-2">import</span><span class="hl-0"> { </span><span class="hl-3">DataFrame</span><span class="hl-0">, </span><span class="hl-3">Node</span><span class="hl-0"> } </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&#39;@openhps/core&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-2">export</span><span class="hl-0"> </span><span class="hl-5">class</span><span class="hl-0"> </span><span class="hl-9">CustomNode</span><span class="hl-0">&lt;</span><span class="hl-9">In</span><span class="hl-0"> </span><span class="hl-5">extends</span><span class="hl-0"> </span><span class="hl-9">DataFrame</span><span class="hl-0">, </span><span class="hl-9">Out</span><span class="hl-0"> </span><span class="hl-5">extends</span><span class="hl-0"> </span><span class="hl-9">DataFrame</span><span class="hl-0">&gt; </span><span class="hl-5">extends</span><span class="hl-0"> </span><span class="hl-9">Node</span><span class="hl-0">&lt;</span><span class="hl-9">In</span><span class="hl-0">, </span><span class="hl-9">Out</span><span class="hl-0">&gt; {</span><br/><span class="hl-6">// ...</span><br/><span class="hl-0">}</span>
 </code></pre>
 <p>Abstract implementations such as a <a href="SourceNode.html">SourceNode</a> and <a href="SinkNode.html">SinkNode</a> only take one input or output
 data frame type as they do not process or change the frame.</p>
@@ -41,8 +41,8 @@ data frame type as they do not process or change the frame.</p>
 <h4>Out<span class="tsd-signature-symbol"> extends </span><a href="DataFrame.html" class="tsd-signature-type" data-tsd-kind="Class">DataFrame</a></h4></li></ul></section> 
 <section class="tsd-panel tsd-hierarchy-diagram">
                 <h4>Hierarchy-Diagram</h4>
-                <a class="diagram" href="../assets/Node-umlClassDiagram-3116.svg" title="Click to enlarge">
-                    <img src="../assets/Node-umlClassDiagram-3116.svg"
+                <a class="diagram" href="../assets/Node-umlClassDiagram-3119.svg" title="Click to enlarge">
+                    <img src="../assets/Node-umlClassDiagram-3119.svg"
                             alt="UML class diagram of Node" />
                 </a>
                 <h5>Legend</h5>
@@ -75,7 +75,7 @@ data frame type as they do not process or change the frame.</p>
 <li><a href="RemoteNode.html" class="tsd-signature-type" data-tsd-kind="Class">RemoteNode</a></li>
 <li><a href="GraphShapeNode.html" class="tsd-signature-type" data-tsd-kind="Class">GraphShapeNode</a></li></ul></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f5fb99b/src/Node.ts#L27">src/Node.ts:27</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f2b8750/src/Node.ts#L26">src/Node.ts:26</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -141,7 +141,7 @@ data frame type as they do not process or change the frame.</p>
 <h4 class="tsd-returns-title">Returns <a href="Node.html" class="tsd-signature-type" data-tsd-kind="Class">Node</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">In</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">Out</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides GraphNode&lt;In, Out&gt;.constructor</p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f5fb99b/src/Node.ts#L34">src/Node.ts:34</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f2b8750/src/Node.ts#L33">src/Node.ts:33</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a id="options" class="tsd-anchor"></a>
@@ -150,7 +150,7 @@ data frame type as they do not process or change the frame.</p>
 <div class="tsd-comment tsd-typography"><p>Node options</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f5fb99b/src/Node.ts#L32">src/Node.ts:32</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f2b8750/src/Node.ts#L31">src/Node.ts:31</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="captureRejectionSymbol" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>capture<wbr/>Rejection<wbr/>Symbol</span><a href="#captureRejectionSymbol" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">capture<wbr/>Rejection<wbr/>Symbol<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="Edge.html#captureRejectionSymbol" class="tsd-signature-type" data-tsd-kind="Property">captureRejectionSymbol</a></div><aside class="tsd-sources">
@@ -197,7 +197,7 @@ regular <code>&#39;error&#39;</code> listener is installed.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/Model.html" class="tsd-signature-type" data-tsd-kind="Interface">Model</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f5fb99b/src/Node.ts#L72">src/Node.ts:72</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f2b8750/src/Node.ts#L68">src/Node.ts:68</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="addListener" class="tsd-anchor"></a>
@@ -246,7 +246,7 @@ listeners. The values in the array are strings or <code>Symbol</code>s.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <p>Inherited from GraphNode.eventNames</p>
 <ul>
-<li>Defined in node_modules/@types/node/ts4.8/events.d.ts:669</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@types/node/ts4.8/events.d.ts:673</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="getMaxListeners" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Max<wbr/>Listeners</span><a href="#getMaxListeners" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -272,13 +272,15 @@ set by <code>emitter.setMaxListeners(n)</code> or defaults to <a href="Node.html
 </div>
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/NodeOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">NodeOptions</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f5fb99b/src/Node.ts#L63">src/Node.ts:63</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f2b8750/src/Node.ts#L60">src/Node.ts:60</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="listenerCount" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>listener<wbr/>Count</span><a href="#listenerCount" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="listenerCount.listenerCount-1">listener<wbr/>Count<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#listenerCount.listenerCount-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="listenerCount.listenerCount-1">listener<wbr/>Count<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span>, listener<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#listenerCount.listenerCount-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Returns the number of listeners listening to the event named <code>eventName</code>.</p>
+<p>If <code>listener</code> is provided, it will return how many times the listener
+is found in the list of the listeners of the event.</p>
 
 <h3>Since</h3><p>v3.2.0</p>
 </div>
@@ -288,11 +290,15 @@ set by <code>emitter.setMaxListeners(n)</code> or defaults to <a href="Node.html
 <li>
 <h5>eventName: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span></h5>
 <div class="tsd-comment tsd-typography"><p>The name of the event being listened for</p>
+</div></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> listener: <span class="tsd-signature-type">Function</span></h5>
+<div class="tsd-comment tsd-typography"><p>The event handler function</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <p>Inherited from GraphNode.listenerCount</p>
 <ul>
-<li>Defined in node_modules/@types/node/ts4.8/events.d.ts:616</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@types/node/ts4.8/events.d.ts:620</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="listeners" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>listeners</span><a href="#listeners" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -384,7 +390,7 @@ times.</p>
 <h4 class="tsd-returns-title">Returns <a href="Node.html" class="tsd-signature-type" data-tsd-kind="Class">Node</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">In</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">Out</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from GraphNode.prependListener</p>
 <ul>
-<li>Defined in node_modules/@types/node/ts4.8/events.d.ts:634</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@types/node/ts4.8/events.d.ts:638</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="prependOnceListener" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>prepend<wbr/>Once<wbr/>Listener</span><a href="#prependOnceListener" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -423,7 +429,7 @@ listener is removed, and then invoked.</p>
 <h4 class="tsd-returns-title">Returns <a href="Node.html" class="tsd-signature-type" data-tsd-kind="Class">Node</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">In</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">Out</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from GraphNode.prependOnceListener</p>
 <ul>
-<li>Defined in node_modules/@types/node/ts4.8/events.d.ts:650</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@types/node/ts4.8/events.d.ts:654</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="rawListeners" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>raw<wbr/>Listeners</span><a href="#rawListeners" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -560,7 +566,7 @@ modified for this specific <code>EventEmitter</code> instance. The value can be 
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="Node.html" class="tsd-signature-type" data-tsd-kind="Class">Node</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">In</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">Out</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f5fb99b/src/Node.ts#L48">src/Node.ts:48</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f2b8750/src/Node.ts#L46">src/Node.ts:46</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="getEventListeners" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>get<wbr/>Event<wbr/>Listeners</span><a href="#getEventListeners" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
