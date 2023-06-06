@@ -77,7 +77,6 @@ export class LocationBasedService<
 
     /**
      * Set the current position of an object
-     *
      * @param {DataObject | string} object Data object to get the current position of or uid
      * @param {AbsolutePosition} position Position to update
      * @returns {Promise<void>} Promise of updating
@@ -100,7 +99,6 @@ export class LocationBasedService<
 
     /**
      * Get the current position of a specific data object.
-     *
      * @param {DataObject | string} object Data object to get the current position of or uid
      * @param {GeoOptions} [options] Current position options
      * @returns {Promise<AbsolutePosition>} Promise of latest absolute position
@@ -159,7 +157,6 @@ export class LocationBasedService<
 
     /**
      * Watch for position changes
-     *
      * @param {DataObject | string} object Data object to watch for position changes for
      * @param {(position: AbsolutePosition, err?: Error) => void} callback Callback function
      * @param {GeoWatchOptions} [options] Watch options
@@ -210,7 +207,6 @@ export class LocationBasedService<
 
     /**
      * Clear a running position watch
-     *
      * @param {number} watchId Watch identifier
      */
     clearWatch(watchId: number): void {
@@ -245,7 +241,6 @@ interface GeoOptions {
 interface GeoWatchOptions extends GeoOptions {
     /**
      * Refresh interval in milliseconds
-     *
      * @default 1000
      */
     interval?: number;
@@ -254,7 +249,6 @@ interface GeoWatchOptions extends GeoOptions {
 export interface LBSOptions {
     /**
      * Node to pull for pull-based position updates
-     *
      * @default internalOutput
      */
     pullNode?: string;

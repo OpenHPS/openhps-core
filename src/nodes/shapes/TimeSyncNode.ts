@@ -6,7 +6,6 @@ import { MemoryBufferNode } from './MemoryBufferNode';
 
 /**
  * Time synchronization node.
- *
  * @category Flow shape
  */
 export class TimeSyncNode<InOut extends DataFrame> extends MemoryBufferNode<InOut> {

@@ -17,7 +17,6 @@ import { ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
  * - {@link Absolute2DPosition}
  * - {@link Absolute3DPosition}
  * - {@link GeographicalPosition}
- *
  * @category Processing node
  */
 export class TriangulationNode<InOut extends DataFrame> extends RelativePositionProcessing<InOut, RelativeAngle> {
@@ -68,7 +67,6 @@ export class TriangulationNode<InOut extends DataFrame> extends RelativePosition
 
     /**
      * Triangulate a absolute 3d location
-     *
      * @see {@link https://ieeexplore.ieee.org/document/6693716?tp=&arnumber=6693716}
      * @param {AbsolutePosition[]} points Points to triangulate
      * @param {number[]} angles Angles

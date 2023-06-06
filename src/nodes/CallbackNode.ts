@@ -71,7 +71,6 @@ export interface CallbackNodeOptions extends NodeOptions {
     /**
      * Automatically push data frames. If set to false it is expected that the
      * callback handles the pushing.
-     *
      * @default true
      */
     autoPush?: boolean;

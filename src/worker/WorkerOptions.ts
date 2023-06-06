@@ -26,7 +26,6 @@ export interface WorkerOptions {
     args?: any;
     /**
      * Services to clone from main thread. When not specified it will clone all services
-     *
      * @default model.findAllServices()
      */
     services?: Service[];

@@ -50,7 +50,6 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
     logger(level: string, log: any): void;
     /**
      * Graph logger
-     *
      * @param {string} level Logging level
      * @param {string} message Message
      * @param {any} data Data to include in log
@@ -69,7 +68,6 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
 
     /**
      * Check if the node is available for accepting push requests
-     *
      * @returns {boolean} Is the node available to push
      */
     isAvailable(): boolean {
@@ -78,7 +76,6 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
 
     /**
      * Get the outgoing edges
-     *
      * @returns {Array<Outlet<DataFrame>>} Outgoing edges
      */
     get outlets(): Array<Outlet<Out>> {
@@ -87,7 +84,6 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
 
     /**
      * Get the incoming edges
-     *
      * @returns {Array<Inlet<DataFrame>>} Incoming edges
      */
     get inlets(): Array<Inlet<In>> {
@@ -97,31 +93,26 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
     emit(name: string | symbol, ...args: any[]): boolean;
     /**
      * Emit available event
-     *
      * @param {string} event available
      */
     emit(event: 'available'): boolean;
     /**
      * Emit completed event
-     *
      * @param {string} name completed
      */
     emit(name: 'completed', e: PushCompletedEvent): boolean;
     /**
      * Emit error
-     *
      * @param {string} name error
      */
     emit(name: 'error', e: PushError): boolean;
     /**
      * Node ready
-     *
      * @param {string} name ready
      */
     emit(name: 'ready'): boolean;
     /**
      * Destroy the node
-     *
      * @param {string} name destroy
      */
     emit(name: 'destroy'): boolean;
@@ -132,35 +123,30 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
     on(name: string | symbol, listener: (...args: any[]) => void): this;
     /**
      * Event when a node is available
-     *
      * @param {string} event available
      * @param {Function} listener Event callback
      */
     on(event: 'available', listener: () => Promise<void> | void): this;
     /**
      * Event when a push is completed
-     *
      * @param {string} name error
      * @param {Function} listener Event callback
      */
     on(name: 'completed', listener: (event: PushCompletedEvent) => Promise<void> | void): this;
     /**
      * Event when an error is triggered
-     *
      * @param {string} name error
      * @param {Function} listener Error event callback
      */
     on(name: 'error', listener: (event: PushError) => Promise<void> | void): this;
     /**
      * Event when a data frame is pulled
-     *
      * @param {string} name receive
      * @param {Function} listener Event callback
      */
     on(name: 'pull', listener: (options?: PullOptions) => Promise<void> | void): this;
     /**
      * Event when a data frame is push to the node
-     *
      * @param {string} name receive
      * @param {Function} listener Event callback
      */
@@ -172,35 +158,30 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
     once(name: string | symbol, listener: (...args: any[]) => void): this;
     /**
      * Event when a node is available
-     *
      * @param {string} event available
      * @param {Function} listener Event callback
      */
     once(event: 'available', listener: () => Promise<void> | void): this;
     /**
      * Event when a push is completed
-     *
      * @param {string} name error
      * @param {Function} listener Event callback
      */
     once(name: 'completed', listener: (event: PushCompletedEvent) => Promise<void> | void): this;
     /**
      * Event called when node is destroyed
-     *
      * @param {string} name destroy
      * @param {Function} listener Event callback
      */
     once(name: 'destroy', listener: () => void | Promise<void>): this;
     /**
      * Event called when node is build
-     *
      * @param {string} name build
      * @param {Function} listener Event callback
      */
     once(name: 'build', listener: (builder: any) => void | Promise<void>): this;
     /**
      * Event called when node is ready
-     *
      * @param {string} name ready
      * @param {Function} listener Event callback
      */
@@ -211,7 +192,6 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
 
     /**
      * Send a pull request to the node
-     *
      * @param {PullOptions} [options] Pull options
      * @returns {Promise<void>} Pull promise
      */
@@ -238,7 +218,6 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
 
     /**
      * Push data to the node
-     *
      * @param {DataFrame | DataFrame[]} data Data frame to push
      * @param {PushOptions} [options] Push options
      * @returns {Promise<void>} Push promise
@@ -269,7 +248,6 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
 
     /**
      * Promise once the node is available
-     *
      * @returns {Promise} Promise when the node is available
      */
     onceAvailable(): Promise<void> {
@@ -286,7 +264,6 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
 
     /**
      * Promise once the frame is completed
-     *
      * @param {string} frameUID Frame UID
      * @returns {Promise} Promise when the frame is completed
      */

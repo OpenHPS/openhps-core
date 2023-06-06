@@ -63,7 +63,6 @@ export class DataSerializer {
 
     /**
      * Manually register a new type
-     *
      * @param {typeof any} type Type to register
      * @param {MappedTypeConverters} [converters] Optional converters
      */
@@ -131,7 +130,6 @@ export class DataSerializer {
 
     /**
      * Get the TypedJSON metadata
-     *
      * @deprecated use {@link DataSerializerUtils.getMetadata}
      * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
      * @param {any} proto Prototype of target
@@ -143,7 +141,6 @@ export class DataSerializer {
 
     /**
      * Get the root TypedJSON metadata
-     *
      * @deprecated use {@link DataSerializerUtils.getRootMetadata}
      * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
      * @param {any} proto Prototype of target
@@ -155,7 +152,6 @@ export class DataSerializer {
 
     /**
      * Find the root TypedJSON metadata
-     *
      * @deprecated use {@link DataSerializerUtils.getRootMetadata}
      * @param {any} proto Prototype of target
      * @returns {ObjectMetadata} Root object metadata
@@ -166,7 +162,6 @@ export class DataSerializer {
 
     /**
      * Unregister a type
-     *
      * @param {typeof any} type Type to unregister
      */
     static unregisterType(type: Serializable<any>): void {
@@ -180,7 +175,6 @@ export class DataSerializer {
 
     /**
      * Clone a serializable object
-     *
      * @param {any} object Serializable object
      * @param {Constructor<any>} [dataType] Data type to clone to
      * @returns {any} Cloned object
@@ -191,7 +185,6 @@ export class DataSerializer {
 
     /**
      * Serialize data
-     *
      * @param {any} data Data to serialize
      * @param {DataSerializerConfig} [config] Data serializer configuration
      * @returns {any} Serialized data
@@ -221,7 +214,6 @@ export class DataSerializer {
 
     /**
      * Deserialize data
-     *
      * @param serializedData Data to deserialze
      * @param dataType Optional data type to specify deserialization type
      * @param config Data serializer configuration
@@ -253,13 +245,11 @@ export class DataSerializer {
 export interface DataSerializerConfig {
     /**
      * Set the serializer used for serializing.
-     *
      * @default TypedJSON JSON serializer
      */
     serializer?: Serializer;
     /**
      * Set the deserializer used for deserializing.
-     *
      * @default TypedJSON JSON deserializer
      */
     deserializer?: Deserializer;

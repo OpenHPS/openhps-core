@@ -30,7 +30,6 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
 
     /**
      * Create a new OpenHPS model
-     *
      * @param {string} name Model name
      */
     constructor(name = 'model') {
@@ -127,7 +126,6 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
 
     /**
      * Find service
-     *
      * @returns {Service} Found service
      */
     findService<S extends Service>(uid: string): S;
@@ -144,7 +142,6 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
 
     /**
      * Find data service
-     *
      * @returns {DataService} Found data service
      */
     findDataService<D, F extends DataService<any, D> = DataService<any, D>>(uid: string): F;
@@ -176,7 +173,6 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
 
     /**
      * Find all services and data services
-     *
      * @param {typeof Service} [q] Service class
      * @returns {Service[]} Array of all services
      */
@@ -190,7 +186,6 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
 
     /**
      * Find all data services by data type
-     *
      * @param {typeof Service} [q] data type class
      * @returns {Service[]} Array of all services
      */
@@ -224,7 +219,6 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
 
     /**
      * Add service to model
-     *
      * @param {Service} service Service to add
      * @param {ProxyHandler} [proxy] Proxy handler
      */

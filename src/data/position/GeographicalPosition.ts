@@ -6,7 +6,6 @@ import { GCS, HAVERSINE, Unit, Vector3 } from '../../utils';
 
 /**
  * Geographical WGS 84 position stored as an 3D vector in ISO 6709.
- *
  * @category Position
  */
 @SerializableObject()
@@ -20,7 +19,6 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Geographical Latitude
-     *
      * @returns {number} Latitude
      */
     @SerializableMember({
@@ -36,7 +34,6 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Geographical Longitude
-     *
      * @returns {number} Longitude
      */
     @SerializableMember({
@@ -52,7 +49,6 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Altitude above mean sea level
-     *
      * @returns {number} Altitude
      */
     @SerializableMember({
@@ -68,7 +64,6 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Get the distance from this location to a destination
-     *
      * @param {GeographicalPosition} destination Destination location
      * @returns {number} Distance between this point and destination
      */
@@ -78,7 +73,6 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Get the bearing in degrees from this location to a destination
-     *
      * @param {GeographicalPosition} destination Destination location
      * @returns {number} Bearing in degrees from this position to destination
      */
@@ -88,7 +82,6 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Get the bearing in radians from this location to a destination
-     *
      * @param {GeographicalPosition} destination Destination location
      * @returns {number} Bearing in radians from this position to destination
      */
@@ -157,14 +150,12 @@ export class GeographicalPosition extends Absolute3DPosition {
     /**
      * Convert the geographical position to a vector
      * with geographical coordinate system ECEF.
-     *
      * @param {LengthUnit} [unit] Metric length unit
      * @returns {Vector3} Vector of the position
      */
     toVector3(unit?: LengthUnit): Vector3;
     /**
      * Convert the geographical position to a vector
-     *
      * @param {GCS} [unit=GCS.WGS84] coordinate system
      * @returns {Vector3} Vector of the position
      */
@@ -186,7 +177,6 @@ export class GeographicalPosition extends Absolute3DPosition {
 
     /**
      * Clone the position
-     *
      * @returns {GeographicalPosition} Cloned geographical position
      */
     clone(): this {

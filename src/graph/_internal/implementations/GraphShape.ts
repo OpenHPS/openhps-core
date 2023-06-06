@@ -145,7 +145,6 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
 
     /**
      * Find an edge by the identifiers of its inlet and outlet
-     *
      * @param {string} inlet Node uid of inlet
      * @param {string} outlet Node uid of outlet
      * @returns {Edge<any>} Edge
@@ -156,14 +155,12 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
 
     /**
      * Graph logger
-     *
      * @returns {(level: string, message: string, data?: any) => void} logger function
      */
     logger: (level: string, message: string, data?: any) => void = () => undefined;
 
     /**
      * Send a pull request to the graph
-     *
      * @param {PullOptions} [options] Pull options
      * @returns {Promise<void>} Pull promise
      */
@@ -173,7 +170,6 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
 
     /**
      * Push data to the graph
-     *
      * @param {DataFrame | DataFrame[]} frame Data frame to push
      * @param {PushOptions} [options] Push options
      * @returns {Promise<void>} Push promise

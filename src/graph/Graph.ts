@@ -9,21 +9,18 @@ export interface Graph<In extends DataFrame, Out extends DataFrame> extends Grap
     nodes: Array<GraphNode<any, any>>;
     /**
      * Find a node by its identifier
-     *
      * @param {string} uid Node identifier
      * @returns {GraphNode<any, any>} Graph node
      */
     findNodeByUID(uid: string): GraphNode<any, any>;
     /**
      * Find a node by its name
-     *
      * @param {string} name Node name
      * @returns {GraphNode<any, any>} Graph node
      */
     findNodeByName(name: string): GraphNode<any, any>;
     /**
      * Find an edge by the identifiers of its inlet and outlet
-     *
      * @param {string} inlet Node uid of inlet
      * @param {string} outlet Node uid of outlet
      */

@@ -4,7 +4,6 @@ import { SensorValue } from './SensorValue';
 
 /**
  * Acceleration sensor value
- *
  * @category Sensor Value
  */
 @SerializableObject()

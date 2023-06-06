@@ -14,17 +14,16 @@ import { GraphOptions } from '../graph/options';
  * import { DataFrame, DataObject, ObjectProcessingNode } from '@openhps/core';
  *
  * export class CustomObjectProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
- *    // ...
- *    public processObject(object: DataObject, frame?: DataFrame): Promise<DataObject> {
- *        return new Promise<DataObject>((resolve, reject) => {
- *            // Manipulate the object
- *            object.displayName = "test";
- *            resolve(object);
- *        });
- *    }
+ * // ...
+ * public processObject(object: DataObject, frame?: DataFrame): Promise<DataObject> {
+ * return new Promise<DataObject>((resolve, reject) => {
+ * // Manipulate the object
+ * object.displayName = "test";
+ * resolve(object);
+ * });
+ * }
  * }
  * ```
- *
  * @category Processing node
  */
 export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> extends ProcessingNode<InOut, InOut> {
@@ -57,7 +56,6 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
 
     /**
      * Process an individual data object
-     *
      * @param {DataObject} dataObject Data object to process
      * @param {DataFrame} dataFrame Data frame this object belongs to
      * @param {GraphOptions} options Graph options
@@ -71,7 +69,6 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
 
     /**
      * Find an object by its uid
-     *
      * @param {string} uid Unique identifier of object to find
      * @param {DataFrame} dataFrame Optional data frame to look in
      * @param {string} type Optional type of the object to find

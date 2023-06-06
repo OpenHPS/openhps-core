@@ -22,7 +22,6 @@ export class FrameDebounceNode<InOut extends DataFrame> extends ProcessingNode<I
 
     /**
      * Start the timeout timer
-     *
      * @returns {Promise<void>} Timer promise
      */
     private _start(): Promise<void> {

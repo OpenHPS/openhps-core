@@ -111,8 +111,7 @@ export class WorkerHandler extends AsyncEventEmitter {
 
     /**
      * Spawn a single worker
-     *  This method can be called multiple times in a pool
-     *
+     * This method can be called multiple times in a pool
      * @returns {Promise<Thread>} Thread spawn promise
      */
     private _spawnWorker(): Promise<Thread> {
@@ -168,7 +167,6 @@ export class WorkerHandler extends AsyncEventEmitter {
 
     /**
      * Serialize the services of this model
-     *
      * @returns {any[]} Services array
      */
     private _getServices(): any[] {
@@ -256,7 +254,6 @@ export class WorkerHandler extends AsyncEventEmitter {
 
     /**
      * Triggered for each worker that requests a pull
-     *
      * @param {PullOptions} options Pull options
      */
     private _onWorkerPull(options?: PullOptions): void {
@@ -265,7 +262,6 @@ export class WorkerHandler extends AsyncEventEmitter {
 
     /**
      * Triggered for each worker that pushes data
-     *
      * @param {any} value Serialized data
      * @param {PushOptions} options Push options
      */

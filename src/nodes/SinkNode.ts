@@ -19,15 +19,14 @@ import { DataObjectService } from '../service';
  * import { DataFrame, SinkNode } from '@openhps/core';
  *
  * export class CustomSink<In extends DataFrame> extends SinkNode<In> {
- *     // ...
- *     public onPush(data: In, options?: GraphOptions): Promise<void> {
- *         return new Promise<void>((resolve, reject) => {
+ * // ...
+ * public onPush(data: In, options?: GraphOptions): Promise<void> {
+ * return new Promise<void>((resolve, reject) => {
  *
- *         });
- *     }
+ * });
+ * }
  * }
  * ```
- *
  * @category Sink node
  */
 @SerializableObject()
@@ -112,13 +111,11 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In
 export interface SinkNodeOptions extends NodeOptions {
     /**
      * Store objects in data services
-     *
      * @default true
      */
     persistence?: boolean;
     /**
      * Emit a completed event for this sink
-     *
      * @default true
      */
     completedEvent?: boolean;

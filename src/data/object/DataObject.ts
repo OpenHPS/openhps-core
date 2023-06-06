@@ -32,7 +32,6 @@ import { DataService } from '../../service/DataService';
  * ```typescript
  * myObject.bind(myModel).save();
  * ```
- *
  * @category data
  */
 @SerializableObject()
@@ -52,7 +51,6 @@ export class DataObject {
     createdTimestamp: number;
     /**
      * Object identifier
-     *
      * @returns {string} Unique object identifier
      */
     @SerializableMember({
@@ -66,7 +64,6 @@ export class DataObject {
 
     /**
      * Create a new data object
-     *
      * @param {string} uid Optional unique identifier
      * @param {string} displayName Optional display name
      */
@@ -79,7 +76,6 @@ export class DataObject {
     /**
      * Get the current absolute position of the object
      * relative to the global reference space
-     *
      * @returns {AbsolutePosition} Absolute position of data object
      */
     @SerializableMember()
@@ -97,7 +93,6 @@ export class DataObject {
 
     /**
      * Get the current absolute position of the object
-     *
      * @param {TransformationSpace} [referenceSpace] Reference space to transform it to
      * @returns {AbsolutePosition} Position of the data object
      */
@@ -113,7 +108,6 @@ export class DataObject {
 
     /**
      * Set the current absolute position of the object
-     *
      * @param {AbsolutePosition} position Position to set
      * @param {TransformationSpace} [referenceSpace] Reference space
      * @returns {DataObject} Data object instance
@@ -129,7 +123,6 @@ export class DataObject {
 
     /**
      * Set the unique identifier of this object
-     *
      * @param {string} uid Unique Identifier
      * @returns {DataObject} Data object instance
      */
@@ -140,7 +133,6 @@ export class DataObject {
 
     /**
      * Get relative positions
-     *
      * @returns {RelativePosition[]} Array of relative positions
      */
     @SerializableArrayMember(RelativePosition)
@@ -165,7 +157,6 @@ export class DataObject {
 
     /**
      * Set a parent object to the data object
-     *
      * @param {DataObject | string | undefined} object Data object or UID to add as parent
      * @returns {DataObject} instance
      */
@@ -180,7 +171,6 @@ export class DataObject {
 
     /**
      * Add a relative position to this data object
-     *
      * @param {RelativePosition} relativePosition Relative position to add
      * @returns {DataObject} Data object instance
      */
@@ -201,7 +191,6 @@ export class DataObject {
 
     /**
      * Get relative positions for a different target
-     *
      * @param {string} [referenceObjectUID] Reference object identifier
      * @returns {RelativePosition[]} Array of relative positions for the reference object
      */
@@ -217,7 +206,6 @@ export class DataObject {
 
     /**
      * Get relative position of a specified object
-     *
      * @param {string} referenceObjectUID Reference object identifier
      * @param {string} type Constructor type of the relative position
      * @returns {RelativePosition} Relative position to reference object
@@ -241,7 +229,6 @@ export class DataObject {
 
     /**
      * Bind the data object to a service
-     *
      * @param {DataService<string, DataObject>} service Service to bind it to
      * @returns {DataObjectBinding<DataObject>} Data object binding with a service
      */
@@ -251,7 +238,6 @@ export class DataObject {
 
     /**
      * Clone the data object
-     *
      * @param {Constructor<DataObject>} [dataType] Data type to clone to
      * @returns {DataObject} Cloned data object
      */
@@ -281,7 +267,6 @@ class DataObjectBinding<T extends DataObject> extends EventEmitter {
     on(name: string | symbol, listener: (...args: any[]) => void): this;
     /**
      * Event when a data object is updated
-     *
      * @param {string} name update
      * @param {Function} listener Event callback
      */
@@ -292,7 +277,6 @@ class DataObjectBinding<T extends DataObject> extends EventEmitter {
 
     /**
      * Save the data object
-     *
      * @returns {Promise<DataObject>} Promise of stored data object
      */
     save(): Promise<T> {
@@ -301,7 +285,6 @@ class DataObjectBinding<T extends DataObject> extends EventEmitter {
 
     /**
      * Destroy the data object
-     *
      * @returns {Promise<void>} Destroy promise
      */
     delete(): Promise<void> {

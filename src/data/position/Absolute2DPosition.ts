@@ -6,7 +6,6 @@ import { Vector3, Vector2 } from '../../utils/math';
 /**
  * Absolute cartesian 2D position. This class uses a {@link Vector2}. This location can be used both as
  * an absolute location or relative location.
- *
  * @category Position
  */
 @SerializableObject()
@@ -55,7 +54,6 @@ export class Absolute2DPosition extends AbsolutePosition {
 
     /**
      * Get the angle in radians from this position to a destination
-     *
      * @param {Absolute2DPosition} destination Destination position
      * @returns {number} Bearing in radians from this position to destination
      */
@@ -84,7 +82,6 @@ export class Absolute2DPosition extends AbsolutePosition {
 
     /**
      * Clone the position
-     *
      * @returns {Absolute2DPosition} Cloned position
      */
     clone(): this {

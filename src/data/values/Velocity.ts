@@ -4,7 +4,6 @@ import { LinearVelocity } from './LinearVelocity';
 
 /**
  * Velocity of the object at the recorded position
- *
  * @category Sensor Value
  */
 @SerializableObject()
@@ -28,7 +27,6 @@ export class Velocity {
 
     /**
      * Clone the velocity
-     *
      * @returns {Velocity} Cloned velocity object
      */
     clone(): this {
