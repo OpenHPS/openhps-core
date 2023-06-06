@@ -148,7 +148,9 @@ function mergeDeep(target: any, source: any): any {
         Object.keys(source).forEach((key) => {
             if (Array.isArray(source[key])) {
                 output[key] = source[key];
-                output[key].push(...(target[key] || []).filter((val: any) => !source[key].includes(val)));
+                const targetProperty =
+                    target[key] !== undefined ? (Array.isArray(target[key]) ? target[key] : [target[key]]) : [];
+                output[key].push(...targetProperty.filter((val: any) => !source[key].includes(val)));
             } else if (isObject(source[key])) {
                 if (!(key in target)) Object.assign(output, { [key]: source[key] });
                 else output[key] = mergeDeep(target[key], source[key]);
