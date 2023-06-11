@@ -11,6 +11,7 @@ export class Accuracy3D<U extends Unit = Unit> extends Accuracy2D<U> {
 
     /**
      * Convert the value to another unit
+     *
      * @param {Unit} unit Target unit
      * @returns {Accuracy3D} Converted value
      */

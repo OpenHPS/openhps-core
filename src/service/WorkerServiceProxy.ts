@@ -64,6 +64,7 @@ export class WorkerServiceProxy extends ServiceProxy<Service> {
 
     /**
      * Create handler function for a specific property key
+     *
      * @param {Service} target Target service
      * @param {string|number|symbol} p Property
      * @returns {Function} Handler function

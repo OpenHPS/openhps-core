@@ -11,6 +11,7 @@ export class Matrix3 extends THREE.Matrix3 {
 
     /**
      * Create a matrix from array
+     *
      * @param {number[][]} array Array
      * @returns {Matrix3} Matrix3
      */

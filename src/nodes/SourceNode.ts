@@ -43,6 +43,7 @@ import { SerializableObject, SerializableMember } from '../data/decorators';
  * }
  * }
  * ```
+ *
  * @category Source node
  */
 @SerializableObject()
@@ -52,6 +53,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
 
     /**
      * Construct a new source node
+     *
      * @param {SourceNodeOptions} [options=undefined] Source node options
      */
     constructor(options?: SourceNodeOptions) {
@@ -70,6 +72,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
 
     /**
      * Get the source data object
+     *
      * @returns {DataObject} Source data object
      */
     protected get source(): DataObject {
@@ -166,6 +169,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
 
     /**
      * Merge an object
+     *
      * @param {DataObject} newObject New object
      * @param {DataObject} oldObject Existing object
      * @returns {DataObject} Existing object
@@ -271,6 +275,7 @@ export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node
 export interface SourceNodeOptions extends NodeOptions {
     /**
      * Merge objects from persisted source
+     *
      * @default true
      */
     persistence?: boolean;

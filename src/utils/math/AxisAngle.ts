@@ -29,6 +29,7 @@ export class AxisAngle extends Vector3 {
 
     /**
      * Convert quaternion to axis angles
+     *
      * @param {THREE.Quaternion} quat Quaternion
      * @returns {AxisAngle} Axis angle instance
      */
@@ -51,6 +52,7 @@ export class AxisAngle extends Vector3 {
 
     /**
      * Convert axis angle to rotation matrix
+     *
      * @returns {Matrix4} Rotation matrix
      */
     public toRotationMatrix(): Matrix4 {

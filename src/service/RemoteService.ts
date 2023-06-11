@@ -53,6 +53,7 @@ export abstract class RemoteService extends Service {
 
     /**
      * Local positioning model push
+     *
      * @param {string} uid UID of the node
      * @param {DataFrame | any} frame Data frame
      * @param {RemotePushOptions} options Push options
@@ -68,6 +69,7 @@ export abstract class RemoteService extends Service {
 
     /**
      * Local positioning model pull
+     *
      * @param {string} uid UID of the node
      * @param {RemotePullOptions} options Pull options
      */
@@ -80,6 +82,7 @@ export abstract class RemoteService extends Service {
 
     /**
      * Local positioning model event
+     *
      * @param {string} uid UID of the node
      * @param {string} event Event name
      * @param {any[]} [args] Argument
@@ -92,6 +95,7 @@ export abstract class RemoteService extends Service {
 
     /**
      * Local service call
+     *
      * @param {string} uid Service uid
      * @param {string} method Method name
      * @param {any[]} [args] optional arguments
@@ -106,6 +110,7 @@ export abstract class RemoteService extends Service {
 
     /**
      * Send a push to a specific remote node
+     *
      * @param {string} uid Remote Node UID
      * @param {DataFrame} frame Data frame to push
      * @param {RemotePushOptions} [options] Push options
@@ -118,6 +123,7 @@ export abstract class RemoteService extends Service {
 
     /**
      * Send a pull request to a specific remote node
+     *
      * @param {string} uid Remote Node UID
      * @param {PullOptions} [options] Pull options
      */
@@ -125,6 +131,7 @@ export abstract class RemoteService extends Service {
 
     /**
      * Send an error to a remote node
+     *
      * @param {string} uid Remote Node UID
      * @param {string} event Event to send
      * @param {any[]} [args] Event argument
@@ -133,6 +140,7 @@ export abstract class RemoteService extends Service {
 
     /**
      * Send a remote service call
+     *
      * @param {string} uid Service uid
      * @param {string} method Method to call
      * @param {any[]} [args] Optional set of arguments
@@ -141,6 +149,7 @@ export abstract class RemoteService extends Service {
 
     /**
      * Register a node as a remotely available node
+     *
      * @param {Node<any, any> | string} node Node to register
      * @returns {Promise<void>} Promise of registration
      */
@@ -155,6 +164,7 @@ export abstract class RemoteService extends Service {
 
     /**
      * Register a service to be remotely available
+     *
      * @param {Service} service Service to register
      * @returns {Promise<void>} Promise of registration
      */
@@ -198,6 +208,7 @@ export class RemoteServiceProxy<T extends Service = Service, S extends RemoteSer
 
     /**
      * Create handler function for a specific property key
+     *
      * @param {Service} target Target service
      * @param {string|number|symbol} p Property
      * @returns {Function} Handler function
@@ -233,6 +244,7 @@ export interface RemotePushOptions extends PushOptions {
     clientId?: string;
     /**
      * Broadcast the pushed data frame to all clients
+     *
      * @default true
      */
     broadcast?: boolean;

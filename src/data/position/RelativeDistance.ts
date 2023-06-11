@@ -4,6 +4,7 @@ import { RelativePosition } from './RelativePosition';
 
 /**
  * Relative location to another reference object in distance.
+ *
  * @category Position
  */
 @SerializableObject()
@@ -21,6 +22,7 @@ export class RelativeDistance extends RelativePosition<number, LengthUnit> {
 
     /**
      * Distance to reference object
+     *
      * @returns {number} Distance
      */
     get distance(): number {

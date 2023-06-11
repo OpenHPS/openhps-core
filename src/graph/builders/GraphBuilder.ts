@@ -11,6 +11,7 @@ import { GraphValidator } from '../_internal/implementations';
 
 /**
  * Graph builder
+ *
  * @category Graph
  */
 export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
@@ -27,18 +28,21 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
 
     /**
      * Event when graph is ready
+     *
      * @param {string} name ready
      * @param {Function} listener Event callback
      */
     public on(name: 'ready', listener: () => Promise<void> | void): this;
     /**
      * Event before building the graph
+     *
      * @param {string} name prebuild
      * @param {Function} listener Event callback
      */
     public on(name: 'prebuild', listener: () => Promise<void> | void): this;
     /**
      * Event after building the graph
+     *
      * @param {string} name postbuild
      * @param {Function} listener Event callback
      */
@@ -98,6 +102,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
 
     /**
      * Add graph shape to graph
+     *
      * @param {GraphBuilder | GraphShape} shape Graph builder or abstract graph
      * @returns {GraphBuilder} Current graph builder instance
      */
@@ -212,6 +217,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     /**
      * Insert a new node in the existing graph
+     *
      * @param {Node} node Node to insert
      */
     private _insertNode(node: GraphNode<any, any>): void {
@@ -234,6 +240,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     /**
      * Filter frames based on function
+     *
      * @param {Function} filterFn Filter function (true to keep, false to remove)
      * @returns {GraphShapeBuilder} Current graph builder instance
      */
@@ -245,6 +252,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     /**
      * Filter objects inside frames
+     *
      * @param {Function} filterFn Filter function (true to keep, false to remove)
      * @returns {GraphShapeBuilder} Current graph builder instance
      */
@@ -254,6 +262,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     /**
      * Merge objects
+     *
      * @param {Function} by Merge key
      * @param {number} timeout Timeout
      * @param {TimeUnit} timeoutUnit Timeout unit
@@ -277,6 +286,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     /**
      * Clone frames
+     *
      * @returns {GraphShapeBuilder} Current graph shape builder
      */
     public clone(): this {
@@ -285,6 +295,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     /**
      * Convert positions of all objects to a certain reference space
+     *
      * @param {ReferenceSpace | string} referenceSpace Reference space to convert to
      * @returns {GraphShapeBuilder} Current graph shape builder
      */
@@ -294,6 +305,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     /**
      * Convert positions of all objects from a certain reference space
+     *
      * @param {ReferenceSpace | string} referenceSpace Reference space to convert from
      * @returns {GraphShapeBuilder} Current graph shape builder
      */
@@ -303,6 +315,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     /**
      * Buffer pushed objects
+     *
      * @returns {GraphShapeBuilder} Current graph shape builder
      */
     public buffer(): this {
@@ -311,6 +324,7 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
 
     /**
      * Storage as sink node
+     *
      * @returns {GraphBuilder} Graph builder
      */
     public store(): Builder {

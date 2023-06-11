@@ -4,6 +4,7 @@ import { SourceNode, SourceNodeOptions } from '../SourceNode';
 /**
  * This source node is initialized with an array of data. This data
  * is popped when pulling from this node.
+ *
  * @category Source node
  */
 export class ListSourceNode<Out extends DataFrame> extends SourceNode<Out> {

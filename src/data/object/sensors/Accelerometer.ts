@@ -4,6 +4,7 @@ import { SensorObject } from '../SensorObject';
 
 /**
  * Accelerometer sensor provides on each reading the acceleration applied to the device along all three axes including gravity.
+ *
  * @category data
  */
 @SerializableObject()

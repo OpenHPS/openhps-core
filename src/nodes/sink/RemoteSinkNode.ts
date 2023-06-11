@@ -47,6 +47,7 @@ export class RemoteSinkNode<
 export interface RemoteSinkNodeOptions<S extends RemoteService> extends SinkNodeOptions, RemoteNodeOptions<S> {
     /**
      * Node type to use
+     *
      * @default RemoteNode a normal remote node
      */
     type?: Constructor<RemoteNode<any, any, S>>;

@@ -21,6 +21,7 @@ export class KeyValueDataService extends DataService<string, any> {
 
     /**
      * Get the value of a key
+     *
      * @param {string} key Key
      * @returns {Promise<any>} Promise of the value
      */
@@ -30,6 +31,7 @@ export class KeyValueDataService extends DataService<string, any> {
 
     /**
      * Set a value
+     *
      * @param {string} key Key to use
      * @param {any} value Value to store
      * @returns {Promise<void>} Promise of setting the value

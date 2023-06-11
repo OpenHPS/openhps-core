@@ -5,6 +5,7 @@ import { LengthUnit } from '../../utils';
 /**
  * This node converts the positions of data objects inside the frame
  * to another unit.
+ *
  * @category Flow shape
  */
 export class UnitConversionNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {

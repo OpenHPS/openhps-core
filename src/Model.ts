@@ -21,6 +21,7 @@ import { Serializable } from './data/decorators';
 export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame = DataFrame> extends Graph<In, Out> {
     /**
      * Find service
+     *
      * @returns {Service} Found service
      */
     findService<S extends Service>(uid: string): S;
@@ -28,6 +29,7 @@ export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame =
 
     /**
      * Find data service
+     *
      * @returns {DataService} Found data service
      */
     findDataService<D, F extends DataService<any, D> = DataService<any, D>>(uid: string): F;
@@ -36,6 +38,7 @@ export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame =
 
     /**
      * Find all services and data services
+     *
      * @param {typeof Service} [serviceClass] Service class
      * @returns {Service[]} Array of all services
      */
@@ -43,6 +46,7 @@ export interface Model<In extends DataFrame = DataFrame, Out extends DataFrame =
 
     /**
      * Find all data services by data type
+     *
      * @param {Serializable} [dataType] data type class
      * @returns {Service[]} Array of all services
      */

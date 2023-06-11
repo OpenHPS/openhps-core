@@ -66,6 +66,7 @@ export class TimeService extends Service {
 
     /**
      * Get the current time
+     *
      * @returns {number} Current time
      */
     public getTime(): number {
@@ -74,6 +75,7 @@ export class TimeService extends Service {
 
     /**
      * Get the time unit
+     *
      * @returns {TimeUnit} Unit of time service
      */
     public getUnit(): TimeUnit {
@@ -82,6 +84,7 @@ export class TimeService extends Service {
 
     /**
      * Get the current time
+     *
      * @returns {number} Current time in a specific unit
      */
     public static now(): number {

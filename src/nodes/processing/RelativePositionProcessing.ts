@@ -3,6 +3,7 @@ import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../ObjectProc
 
 /**
  * Relative position processing node.
+ *
  * @category Processing node
  */
 export abstract class RelativePositionProcessing<

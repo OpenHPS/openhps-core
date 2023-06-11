@@ -8,6 +8,7 @@ import { PushError } from '../../graph/events';
 /**
  * Merge data frames from two or more sources
  * using a certain merge key (e.g. source uid, parent uid, node uid).
+ *
  * @category Flow shape
  */
 export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
@@ -39,6 +40,7 @@ export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode
 
     /**
      * Start the timeout timer
+     *
      * @returns {Promise<void>} Timer promise
      */
     private _start(): Promise<void> {
@@ -139,6 +141,7 @@ export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode
 
     /**
      * Merge the data frames
+     *
      * @param {DataFrame[]} frames Data frames to merge
      * @param {string} [key=undefined] Key to merge on
      * @returns {Promise<DataFrame>} Promise of merged data frame
@@ -166,12 +169,14 @@ export interface MergeShapeOptions extends ProcessingNodeOptions {
     timeoutUnit?: TimeUnit;
     /**
      * Check interval for timeout
+     *
      * @default timeout Same as timeout
      */
     checkInterval?: number;
     minCount?: number;
     /**
      * Maximum number of frames to merge
+     *
      * @default inlets.length Based on the amount of inlets
      */
     maxCount?: number;

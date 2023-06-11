@@ -54,6 +54,7 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
 
     /**
      * Set the parent space
+     *
      * @param {TransformationSpace} space Parent space
      */
     set parent(space: TransformationSpace) {
@@ -67,6 +68,7 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
 
     /**
      * Get the parent space if loaded
+     *
      * @returns {TransformationSpace | undefined} Transformation space or undefined
      */
     get parent(): TransformationSpace {
@@ -75,6 +77,7 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
 
     /**
      * Update parent reference spaces
+     *
      * @param {DataService} service Service to use for updating
      * @returns {Promise<void>} Update promise
      */
@@ -113,6 +116,7 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
 
     /**
      * Transform perspective
+     *
      * @param {number} left Farthest left on the x-axis
      * @param {number} right Farthest right on the x-axis
      * @param {number} bottom Farthest down on the y-axis
@@ -182,6 +186,7 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
 
     /**
      * Transform a position
+     *
      * @param {AbsolutePosition} position Position to transform
      * @param {SpaceTransformationOptions} [options] Transformation options
      * @returns {AbsolutePosition} Transformed position
@@ -235,6 +240,7 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
 
     /**
      * Get the transformation matrix for scaling
+     *
      * @returns {Matrix4} Transformation matrix
      */
     public get scaleMatrix(): Matrix4 {

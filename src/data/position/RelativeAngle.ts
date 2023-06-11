@@ -5,6 +5,7 @@ import { RelativePosition } from './RelativePosition';
 
 /**
  * Relative location to another reference object measured in the angle.
+ *
  * @category Position
  */
 @SerializableObject()
@@ -30,6 +31,7 @@ export class RelativeAngle extends RelativePosition<number, AngleUnit> {
 
     /**
      * Angle to reference object
+     *
      * @returns {number} Angle
      */
     get angle(): number {

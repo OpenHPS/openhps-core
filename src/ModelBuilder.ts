@@ -143,6 +143,7 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
 
     /**
      * Model logger
+     *
      * @param {Function} logger Logging function
      * @returns {ModelBuilder} Model builder instance
      */
@@ -158,6 +159,7 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
 
     /**
      * Add a service to the model
+     *
      * @param {Service} service Service to add
      * @param {ProxyHandler} [proxy] Proxy handler
      * @returns {ModelBuilder} Model builder instance
@@ -169,6 +171,7 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
 
     /**
      * Add multiple services to the model
+     *
      * @param {Service[]} services Services to add
      * @returns {ModelBuilder} Model builder instance
      */
@@ -179,6 +182,7 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
 
     /**
      * Add graph shape to graph
+     *
      * @param {GraphBuilder | GraphShape | Model} shape Graph builder or abstract graph
      * @returns {GraphBuilder} Current graph builder instance
      */

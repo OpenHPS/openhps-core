@@ -9,6 +9,7 @@ import { DataSerializer } from '../data/DataSerializer';
 
 /**
  * A remote node connects to a service in order to provide a remote connection.
+ *
  * @category Node
  */
 export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends RemoteService> extends Node<In, Out> {
@@ -98,6 +99,7 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
 export interface RemoteNodeOptions<S extends RemoteService> extends NodeOptions {
     /**
      * Service to use for the remote note
+     *
      * @default RemoteService any remote service
      */
     service?: Serializable<S>;

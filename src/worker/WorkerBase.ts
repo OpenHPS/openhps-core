@@ -130,6 +130,7 @@ export class WorkerBase {
 
     /**
      * Pull from this work
+     *
      * @param {PullOptions} [options] Pull options
      * @returns {Promise<void>} Pull promise
      */
@@ -139,6 +140,7 @@ export class WorkerBase {
 
     /**
      * Push to this worker
+     *
      * @param {DataFrame} frame Data frame
      * @param {PushOptions} [options] Push options
      * @returns {Promise<void>} Push promise
@@ -149,6 +151,7 @@ export class WorkerBase {
 
     /**
      * Init the model internal input and internal output
+     *
      * @param {ModelBuilder} modelBuilder Model builder
      */
     private _initModel(modelBuilder: ModelBuilder<any, any>): void {

@@ -71,11 +71,13 @@ export class DataFrame {
 
     /**
      * Create a new data frame
+     *
      * @param {DataFrame} frame Data frame to copy
      */
     constructor(frame?: DataFrame);
     /**
      * Create a new data frame
+     *
      * @param {DataObject} source Source data object
      */
     constructor(source?: DataObject);
@@ -96,6 +98,7 @@ export class DataFrame {
 
     /**
      * Source object clone that captured the data frame
+     *
      * @returns {DataObject} Source data object
      */
     get source(): DataObject {
@@ -104,6 +107,7 @@ export class DataFrame {
 
     /**
      * Set the source object clone that captured the data frame
+     *
      * @param {DataObject} object Source data object
      */
     set source(object: DataObject) {
@@ -114,6 +118,7 @@ export class DataFrame {
 
     /**
      * Get known sensor objects used in this data frame
+     *
      * @param {typeof SensorObject} type Sensor type
      * @param {string} [defaultUID] Default UID. When sensor is not added, it will be created
      * @returns {SensorObject} Found data objects
@@ -129,6 +134,7 @@ export class DataFrame {
 
     /**
      * Get known objects used in this data frame
+     *
      * @param {typeof DataObject} dataType Data object type
      * @returns {DataObject[]} Array of found data objects
      */
@@ -150,6 +156,7 @@ export class DataFrame {
 
     /**
      * Get a specific object by its identifier
+     *
      * @param {string} uid Object UID
      * @returns {DataObject} Data object if found
      */
@@ -159,6 +166,7 @@ export class DataFrame {
 
     /**
      * Check if the data frame has an object
+     *
      * @param {DataObject} object Data object to find
      * @returns {boolean} Object exist
      */
@@ -168,6 +176,7 @@ export class DataFrame {
 
     /**
      * Add a new object relevant to this data frame
+     *
      * @param {DataObject} object Relevant object
      * @returns {DataFrame} instance
      */
@@ -179,6 +188,7 @@ export class DataFrame {
 
     /**
      * Add a new sensor relevant to this data frame
+     *
      * @param {SensorObject} object Relevant sensor
      * @returns {DataFrame} instance
      */
@@ -188,6 +198,7 @@ export class DataFrame {
 
     /**
      * Add a new reference space relevant to this data frame.
+     *
      * @alias addObject Alias for addObject
      * @param {ReferenceSpace} referenceSpace Relevant reference space
      */
@@ -197,6 +208,7 @@ export class DataFrame {
 
     /**
      * Remove an object from the data frame
+     *
      * @param {DataObject} object Object to remove
      */
     removeObject(object: DataObject): void {
@@ -205,6 +217,7 @@ export class DataFrame {
 
     /**
      * Clone the data frame
+     *
      * @returns {DataFrame} Cloned data frame
      */
     clone(): this {

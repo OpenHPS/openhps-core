@@ -24,6 +24,7 @@ import { GraphOptions } from '../graph/options';
  * }
  * }
  * ```
+ *
  * @category Processing node
  */
 export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> extends ProcessingNode<InOut, InOut> {
@@ -56,6 +57,7 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
 
     /**
      * Process an individual data object
+     *
      * @param {DataObject} dataObject Data object to process
      * @param {DataFrame} dataFrame Data frame this object belongs to
      * @param {GraphOptions} options Graph options
@@ -69,6 +71,7 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
 
     /**
      * Find an object by its uid
+     *
      * @param {string} uid Unique identifier of object to find
      * @param {DataFrame} dataFrame Optional data frame to look in
      * @param {string} type Optional type of the object to find

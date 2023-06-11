@@ -59,6 +59,7 @@ export class SMAFilterNode<InOut extends DataFrame> extends PropertyFilterProces
 export interface SMAFilterOptions extends FilterProcessingOptions {
     /**
      * Minimum number of taps to use
+     *
      * @default 1
      */
     minTaps?: number;

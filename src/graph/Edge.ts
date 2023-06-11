@@ -13,6 +13,7 @@ import { EventEmitter } from 'events';
  *
  * As a part of the graph that can not be modified, this object
  * has the ability to perform error handling.
+ *
  * @category Graph
  */
 export class Edge<InOut extends DataFrame> extends EventEmitter implements Inlet<InOut>, Outlet<InOut> {
@@ -39,6 +40,7 @@ export class Edge<InOut extends DataFrame> extends EventEmitter implements Inlet
 
     /**
      * Push data to the output node
+     *
      * @param {DataFrame | DataFrame[]} data Data frame to push
      * @param {PushOptions} [options] Push options
      * @returns {Promise<void>} Push promise
@@ -71,6 +73,7 @@ export class Edge<InOut extends DataFrame> extends EventEmitter implements Inlet
 
     /**
      * Pull data from the input node
+     *
      * @param {PullOptions} [options] Pull options
      * @returns {Promise<void>} Pull promise
      */
@@ -93,12 +96,14 @@ export class Edge<InOut extends DataFrame> extends EventEmitter implements Inlet
 
     /**
      * Event when a data frame is pulled
+     *
      * @param {string} name receive
      * @param {Function} listener Event callback
      */
     on(name: 'pull', listener: (options?: PullOptions) => Promise<void> | void): this;
     /**
      * Event when a data frame is push to the node
+     *
      * @param {string} name receive
      * @param {Function} listener Event callback
      */

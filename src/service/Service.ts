@@ -44,11 +44,13 @@ export abstract class Service extends AsyncEventEmitter {
     emit(name: string | symbol, ...args: any[]): boolean;
     /**
      * Service ready
+     *
      * @param {string} name ready
      */
     emit(name: 'ready'): boolean;
     /**
      * Destroy the service
+     *
      * @param {string} name destroy
      */
     emit(name: 'destroy'): boolean;
@@ -59,18 +61,21 @@ export abstract class Service extends AsyncEventEmitter {
     once(name: string | symbol, listener: (...args: any[]) => void): this;
     /**
      * Event called when service is destroyed
+     *
      * @param {string} name destroy
      * @param {Function} listener Event callback
      */
     once(name: 'destroy', listener: () => void | Promise<void>): this;
     /**
      * Event called when service is build
+     *
      * @param {string} name build
      * @param {Function} listener Event callback
      */
     once(name: 'build', listener: () => void | Promise<void>): this;
     /**
      * Event called when service is ready
+     *
      * @param {string} name ready
      * @param {Function} listener Event callback
      */
@@ -95,6 +100,7 @@ export abstract class Service extends AsyncEventEmitter {
     logger(level: string, log: any): void;
     /**
      * Graph logger
+     *
      * @param {string} level Logging level
      * @param {string} message Message
      * @param {any} data Data to include in log

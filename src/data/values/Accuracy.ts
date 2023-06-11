@@ -18,6 +18,7 @@ export abstract class Accuracy<U extends Unit = Unit, T extends number | Vector3
 
     /**
      * Convert the value to another unit
+     *
      * @param {Unit} unit Target unit
      * @returns {Accuracy} Converted value
      */
@@ -35,6 +36,7 @@ export abstract class Accuracy<U extends Unit = Unit, T extends number | Vector3
 
     /**
      * Unit this value is in
+     *
      * @returns {Unit} Unit this value is in
      */
     get unit(): U {
@@ -43,12 +45,14 @@ export abstract class Accuracy<U extends Unit = Unit, T extends number | Vector3
 
     /**
      * Get a one dimensional primitive value
+     *
      * @returns {number} Primitive value
      */
     abstract valueOf(): number;
 
     /**
      * Returns a string representation of an object.
+     *
      * @returns {string} Unit value as string
      */
     abstract toString(): string;

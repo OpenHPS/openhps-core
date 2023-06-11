@@ -5,6 +5,7 @@ import { AngularVelocityUnit } from '../../utils';
 
 /**
  * Relative angular velocity to another reference object
+ *
  * @category Position
  */
 @SerializableObject()

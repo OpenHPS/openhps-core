@@ -5,6 +5,7 @@ import { LinearVelocityUnit } from '../../utils';
 
 /**
  * Relative linear velocity to another reference object
+ *
  * @category Position
  */
 @SerializableObject()

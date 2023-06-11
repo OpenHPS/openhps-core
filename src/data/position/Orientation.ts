@@ -8,6 +8,7 @@ import { Accuracy1D } from '../values/Accuracy1D';
 
 /**
  * Orientation quaternion with accuracy
+ *
  * @category Position
  */
 @SerializableObject()

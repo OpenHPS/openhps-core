@@ -5,6 +5,7 @@ import { Absolute2DPosition } from './Absolute2DPosition';
 /**
  * Absolute cartesian 3D position. This class uses a {@link Vector3}. This location can be used both as
  * an absolute location or relative location.
+ *
  * @category Position
  */
 @SerializableObject()
@@ -35,11 +36,11 @@ export class Absolute3DPosition extends Absolute2DPosition {
         if (unit) {
             this.x = unit.convert(vector.x, this.unit);
             this.y = unit.convert(vector.y, this.unit);
-            this.z = unit.convert(vector.z, this.unit);
+            this.z = unit.convert(vector.z ?? 0, this.unit);
         } else {
             this.x = vector.x;
             this.y = vector.y;
-            this.z = vector.z;
+            this.z = vector.z ?? 0;
         }
         return this;
     }
@@ -58,6 +59,7 @@ export class Absolute3DPosition extends Absolute2DPosition {
 
     /**
      * Clone the position
+     *
      * @returns {Absolute3DPosition} Cloned position
      */
     clone(): this {

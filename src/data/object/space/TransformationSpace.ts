@@ -11,12 +11,14 @@ export interface TransformationSpace {
     uid: string;
     /**
      * Set the parent space
+     *
      * @param {TransformationSpace} space Parent space
      */
     parent: TransformationSpace;
 
     /**
      * Update parent reference spaces
+     *
      * @param {DataService} service Service to use for updating
      * @returns {Promise<void>} Update promise
      */
@@ -24,6 +26,7 @@ export interface TransformationSpace {
 
     /**
      * Transform a position
+     *
      * @param {AbsolutePosition} position Position to transform
      * @param {SpaceTransformationOptions} [options] Transformation options
      * @returns {AbsolutePosition} Transformed position

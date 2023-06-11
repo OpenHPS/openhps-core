@@ -2,6 +2,7 @@ import { AngleUnit, GCS } from './unit';
 
 /**
  * Haversine formulate to calculate distance of two geographical points
+ *
  * @param {number[]} pointA Point A
  * @param {number[]} pointB Point B
  * @returns {number} distance
@@ -20,6 +21,7 @@ export function HAVERSINE(pointA: number[], pointB: number[]): number {
 
 /**
  * Euclidean distance function
+ *
  * @param {number[]} pointA n-dimensional point
  * @param {number[]} pointB n-dimensional point
  * @returns {number} distance
@@ -35,6 +37,7 @@ export function EUCLIDEAN(pointA: number[], pointB: number[]): number {
 
 /**
  * Manhattan distance function
+ *
  * @param {number[]} pointA n-dimensional point
  * @param {number[]} pointB n-dimensional point
  * @returns {number} distance
@@ -49,6 +52,7 @@ export function MANHATTAN(pointA: number[], pointB: number[]): number {
 
 /**
  * Canberra distance function
+ *
  * @param {number[]} pointA n-dimensional point
  * @param {number[]} pointB n-dimensional point
  * @returns {number} distance
@@ -63,6 +67,7 @@ export function CANBERRA(pointA: number[], pointB: number[]): number {
 
 /**
  * Chebyshev distance function
+ *
  * @param {number[]} pointA n-dimensional point
  * @param {number[]} pointB n-dimensional point
  * @returns {number} distance

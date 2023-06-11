@@ -2,6 +2,7 @@ import { GraphOptions } from './GraphOptions';
 
 /**
  * Provides options for pull requests to nodes
+ *
  * @category Graph
  */
 export interface PullOptions extends GraphOptions {
@@ -16,6 +17,7 @@ export interface PullOptions extends GraphOptions {
     /**
      * Sequential pulling. If set to true, the pulling will be done sequentially where
      * the next pull is only performed after the push is completed.
+     *
      * @default true
      */
     sequentialPull?: boolean;

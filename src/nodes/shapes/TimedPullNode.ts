@@ -61,6 +61,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
     /**
      * Start the timed pull
+     *
      * @returns {Promise<void>} Start promise
      */
     public start(): Promise<void> {
@@ -89,6 +90,7 @@ export interface TimedPullOptions extends NodeOptions {
     pullOptions?: PullOptions;
     /**
      * Auto start timed pull
+     *
      * @default true
      */
     autoStart?: boolean;

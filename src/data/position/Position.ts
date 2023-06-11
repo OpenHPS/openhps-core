@@ -3,6 +3,7 @@ import { Accuracy } from '../values/Accuracy';
 
 /**
  * General abstract position class consisting of orientation, velocity, position unit and an accuracy.
+ *
  * @category Position
  */
 export interface Position<U extends Unit> {
@@ -28,6 +29,7 @@ export interface Position<U extends Unit> {
 
     /**
      * Check if this position equals another position
+     *
      * @param position Other position
      */
     equals(position: this): boolean;

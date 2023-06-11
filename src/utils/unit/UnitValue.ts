@@ -16,6 +16,7 @@ import { Vector3 } from '../math/Vector3';
  * const value = new UnitValue(5, LengthUnit.METER);
  * const converted = value.to(LengthUnit.CENTIMETER);
  * ```
+ *
  * @category Unit
  */
 @SerializableObject()
@@ -36,6 +37,7 @@ export class UnitValue<U extends Unit = Unit, T extends number | Vector3 = numbe
 
     /**
      * Convert the value to another unit
+     *
      * @param {Unit} unit Target unit
      * @returns {UnitValue} Converted value
      */
@@ -49,6 +51,7 @@ export class UnitValue<U extends Unit = Unit, T extends number | Vector3 = numbe
 
     /**
      * Unit this value is in
+     *
      * @returns {Unit} Unit this value is in
      */
     get unit(): U {
@@ -57,6 +60,7 @@ export class UnitValue<U extends Unit = Unit, T extends number | Vector3 = numbe
 
     /**
      * Returns a string representation of an object.
+     *
      * @returns {string} Unit value as string
      */
     toString(): string {
@@ -66,6 +70,7 @@ export class UnitValue<U extends Unit = Unit, T extends number | Vector3 = numbe
 
     /**
      * Returns the primitive value
+     *
      * @returns {number} Primitive value
      */
     valueOf(): T {

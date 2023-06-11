@@ -4,6 +4,7 @@ import { ProcessingNode } from '../ProcessingNode';
 
 /**
  * Frame delay node to delay pushing of frames.
+ *
  * @category Flow shape
  */
 export class FrameDelayNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {

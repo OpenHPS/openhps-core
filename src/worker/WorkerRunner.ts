@@ -9,6 +9,7 @@ const worker: WorkerBase = new WorkerBase();
 expose({
     /**
      * Worker initialization
+     *
      * @param {WorkerData} config Worker data containing model information
      * @returns {Promise<void>} Initialize promise
      */
@@ -17,6 +18,7 @@ expose({
     },
     /**
      * Pull from this work
+     *
      * @param {PullOptions} [options] Pull options
      * @returns {Promise<void>} Pull promise
      */
@@ -25,6 +27,7 @@ expose({
     },
     /**
      * Push to this worker
+     *
      * @param {DataFrame} frame Data frame
      * @param {PushOptions} [options] Push options
      * @returns {Promise<void>} Push promise
@@ -34,6 +37,7 @@ expose({
     },
     /**
      * Input observable for pull requests
+     *
      * @returns {Observable<void>} Observable input
      */
     pullOutput(): Observable<void> {
@@ -41,6 +45,7 @@ expose({
     },
     /**
      * Output observable for push events
+     *
      * @returns {Observable<any>} Observable output
      */
     pushOutput(): Observable<any> {
@@ -57,6 +62,7 @@ expose({
     },
     /**
      * Outgoing call to a service on the main thread
+     *
      * @returns {Observable<WorkerServiceCall>} Observable of outgoing service calls
      */
     serviceOutputCall(): Observable<WorkerServiceCall> {
@@ -64,6 +70,7 @@ expose({
     },
     /**
      * Response to an outgoing service call from the main thread
+     *
      * @param {WorkerServiceResponse} input Service response
      */
     serviceOutputResponse(input: WorkerServiceResponse) {

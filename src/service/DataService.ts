@@ -60,6 +60,7 @@ export abstract class DataService<I, T> extends Service {
     /**
      * Set the priority of the data service
      * a higher number means a higher priority.
+     *
      * @param {number} value Priority value
      * @returns {DataService} data service instance
      */

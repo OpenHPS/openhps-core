@@ -12,6 +12,7 @@ import { Position } from './Position';
  * Position and orientation.
  *
  * In computer vision and robotics, a typical task is to identify specific objects in an image and to determine each object's position and orientation relative to some coordinate system. This information can then be used, for example, to allow a robot to manipulate an object or to avoid moving into the object. The combination of position and orientation is referred to as the pose of an object, even though this concept is sometimes used only to describe the orientation. Exterior orientation and translation are also used as synonyms of pose.
+ *
  * @see {@link https://en.wikipedia.org/wiki/Pose_(computer_vision)}
  */
 @SerializableObject()
@@ -36,6 +37,7 @@ export class Pose extends Matrix4 implements Position<LengthUnit> {
 
     /**
      * Get the position probability
+     *
      * @returns {number} Probability between 0 and 1
      */
     @SerializableMember()
@@ -52,6 +54,7 @@ export class Pose extends Matrix4 implements Position<LengthUnit> {
 
     /**
      * Position accuracy
+     *
      * @returns {Accuracy} Position accuracy
      */
     get accuracy(): Accuracy<LengthUnit, any> {
@@ -67,6 +70,7 @@ export class Pose extends Matrix4 implements Position<LengthUnit> {
 
     /**
      * Get a pose from a 4d matrix
+     *
      * @param {Matrix4} matrix 4x4 Matrix
      * @returns {Pose} Pose instance
      */
@@ -78,6 +82,7 @@ export class Pose extends Matrix4 implements Position<LengthUnit> {
 
     /**
      * Create a pose from a position
+     *
      * @param {Absolute3DPosition} position 3D position
      * @returns {Pose} Output pose
      */
@@ -97,6 +102,7 @@ export class Pose extends Matrix4 implements Position<LengthUnit> {
 
     /**
      * Extract the orientation from the pose
+     *
      * @returns {Orientation} Orientation
      */
     get orientation(): Orientation {
@@ -108,6 +114,7 @@ export class Pose extends Matrix4 implements Position<LengthUnit> {
 
     /**
      * Extract the 3d position from the pose
+     *
      * @returns {Absolute3DPosition} 3D position
      */
     get position(): Absolute3DPosition {

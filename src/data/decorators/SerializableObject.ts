@@ -5,6 +5,7 @@ import { updateSerializableObject } from './utils';
 
 /**
  * Serializable object
+ *
  * @param {SerializableObjectOptions} [options] Object serialization options
  * @returns {ClassDecorator} Class decorator
  */

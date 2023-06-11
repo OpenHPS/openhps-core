@@ -5,6 +5,7 @@ import { RelativePositionProcessing } from './RelativePositionProcessing';
 
 /**
  * Cell identification processing node
+ *
  * @category Processing node
  */
 export class CellIdentificationNode<InOut extends DataFrame> extends RelativePositionProcessing<

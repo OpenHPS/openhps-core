@@ -28,6 +28,7 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
 
     /**
      * Get the sensor timestamp
+     *
      * @returns {number} timestamp
      */
     get timestamp(): number {
