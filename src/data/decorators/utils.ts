@@ -99,7 +99,7 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
         }
 
         const otherMeta = DataSerializerUtils.getMetadata(otherType);
-        if (otherMeta.initializerCallback && !ownMeta.initializerCallback) {
+        if (otherMeta && otherMeta.initializerCallback && !ownMeta.initializerCallback) {
             ownMeta.initializerCallback = otherMeta.initializerCallback;
         }
     });
