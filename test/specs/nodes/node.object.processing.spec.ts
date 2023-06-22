@@ -18,12 +18,15 @@ describe('ObjectProcessingNode', () => {
 
                 })())
                 .to(new CallbackSinkNode((frame: DataFrame) => {
-                    expect(frame.getObjects().length).to.equal(1);
+                    expect(frame.getObjects().length).to.equal(2);
                     expect(frame.source.uid).to.eql("123abc");
                     done();
                 })).build().then(model => {
+                    const frame = new DataFrame(new DataObject("123"));
+                    frame.addObject(new DataObject("x"));
+
                     model.once('error', done);
-                    model.push(new DataFrame(new DataObject("123")));
+                    model.push(frame);
                 }).catch(done);
         });
     });

@@ -217,9 +217,17 @@ export class DataFrame {
 
     /**
      * Clear all objects
+     *
+     * @param {Function} object object filter
+     * @param objectFilter
      */
-    clearObjects(): void {
-        this._objects.clear();
+    clearObjects(objectFilter?: (object: DataObject) => boolean): void {
+        const filter = objectFilter ?? ((object: DataObject) => true);
+        this._objects.forEach((obj, key) => {
+            if (filter(obj)) {
+                this._objects.delete(key);
+            }
+        });
     }
 
     /**
