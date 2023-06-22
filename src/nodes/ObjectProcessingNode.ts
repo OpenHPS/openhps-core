@@ -38,16 +38,22 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
     public process(frame: InOut, options?: GraphOptions): Promise<InOut> {
         return new Promise<InOut>((resolve, reject) => {
             const processObjectPromises: Array<Promise<DataObject>> = [];
+            const uids = [];
             frame
                 .getObjects()
                 .filter((value) => this.options.objectFilter(value, frame))
                 .forEach((object) => {
+                    uids.push(object.uid);
                     processObjectPromises.push(this.processObject(object, frame, options));
                 });
             Promise.all(processObjectPromises)
                 .then((objects) => {
-                    objects.forEach((object) => {
+                    objects.forEach((object, index) => {
+                        const oldUID = uids[index];
                         frame.addObject(object);
+                        if (object.uid !== oldUID) {
+                            frame.removeObject(oldUID);
+                        }
                     });
                     resolve(frame);
                 })
