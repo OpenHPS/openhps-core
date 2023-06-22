@@ -39,6 +39,7 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
         return new Promise<InOut>((resolve, reject) => {
             const processObjectPromises: Array<Promise<DataObject>> = [];
             const uids = [];
+            const sourceUID = frame.source ? frame.source.uid : undefined;
             frame
                 .getObjects()
                 .filter((value) => this.options.objectFilter(value, frame))
@@ -48,11 +49,12 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
                 });
             Promise.all(processObjectPromises)
                 .then((objects) => {
+                    frame.clearObjects();
                     objects.forEach((object, index) => {
                         const oldUID = uids[index];
                         frame.addObject(object);
-                        if (object.uid !== oldUID) {
-                            frame.removeObject(oldUID);
+                        if (oldUID === sourceUID) {
+                            frame.source = object;
                         }
                     });
                     resolve(frame);

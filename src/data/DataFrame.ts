@@ -216,6 +216,13 @@ export class DataFrame {
     }
 
     /**
+     * Clear all objects
+     */
+    clearObjects(): void {
+        this._objects.clear();
+    }
+
+    /**
      * Clone the data frame
      *
      * @returns {DataFrame} Cloned data frame
