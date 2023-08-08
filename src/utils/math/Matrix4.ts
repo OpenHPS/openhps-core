@@ -19,7 +19,6 @@ export class Matrix4 extends THREE.Matrix4 {
 
     /**
      * Create a matrix from array
-     *
      * @param {number[][]} array Array
      * @returns {Matrix4} Matrix4
      */
@@ -32,7 +31,6 @@ export class Matrix4 extends THREE.Matrix4 {
 
     /**
      * Create a rotation matrix from quaternion
-     *
      * @param {THREE.Quaternion} quat Quaternion
      * @returns {Matrix4} Rotation matrix
      */
@@ -44,7 +42,6 @@ export class Matrix4 extends THREE.Matrix4 {
 
     /**
      * Create a rotation matrix from euler angles
-     *
      * @param {THREE.Euler} euler Euler angles
      * @returns {Matrix4} Rotation matrix
      */
@@ -56,7 +53,6 @@ export class Matrix4 extends THREE.Matrix4 {
 
     /**
      * Create a rotation matrix from euler angles
-     *
      * @param {THREE.Vector3} vector Vector
      * @param {number} angle Angle
      * @returns {Matrix4} Rotation matrix

@@ -7,7 +7,6 @@ import { RelativePositionProcessing } from './RelativePositionProcessing';
 
 /**
  * Multilateration processing node
- *
  * @category Processing node
  */
 export class MultilaterationNode<InOut extends DataFrame> extends RelativePositionProcessing<InOut, RelativeDistance> {
@@ -113,7 +112,6 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
 
     /**
      * Nonlinear least squares using nelder mead
-     *
      * @see {@link https://github.com/benfred/fmin}
      * @author Ben Frederickson, Qingrong Ke
      * @param {Array<Sphere<any>>} spheres Spheres with position and radius
@@ -265,7 +263,6 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
 
     /**
      * Midpoint to another location
-     *
      * @param {Sphere<any>} sphereA sphere A
      * @param {Sphere<any>} sphereB sphere B
      * @returns {AbsolutePosition} Calculated midpoint
@@ -286,7 +283,6 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
 
     /**
      * Get the midpoint of two geographical locations
-     *
      * @param {Sphere<GeographicalPosition>} sphereA First position to get midpoint from
      * @param {Sphere<GeographicalPosition>} sphereB Other position to get midpoint from
      * @returns {GeographicalPosition} Calculated midpoint
@@ -425,19 +421,16 @@ export interface MultilaterationOptions extends ObjectProcessingNodeOptions {
     incrementStep?: number;
     /**
      * Minimum amount of references
-     *
      * @default 1
      */
     minReferences?: number;
     /**
      * Maximum amount of references
-     *
      * @default undefined
      */
     maxReferences?: number;
     /**
      * Nonlinear Least Squares function
-     *
      * @default nelder-mead
      */
     nlsFunction?: (spheres: Array<Sphere<any>>) => AbsolutePosition;

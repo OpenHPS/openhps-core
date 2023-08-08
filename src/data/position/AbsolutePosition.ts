@@ -13,7 +13,6 @@ import { DistanceFn, EUCLIDEAN } from '../../utils';
 
 /**
  * An absolute position of a {@link DataObject}.
- *
  * @category Position
  */
 @SerializableObject()
@@ -58,7 +57,6 @@ export abstract class AbsolutePosition implements Position<LengthUnit> {
 
     /**
      * Get the position probability
-     *
      * @returns {number} Probability between 0 and 1
      */
     get probability(): number {
@@ -77,7 +75,6 @@ export abstract class AbsolutePosition implements Position<LengthUnit> {
 
     /**
      * Position accuracy
-     *
      * @returns {Accuracy} Position accuracy
      */
     get accuracy(): Accuracy<LengthUnit, any> {
@@ -96,7 +93,6 @@ export abstract class AbsolutePosition implements Position<LengthUnit> {
 
     /**
      * Get the linear velocity
-     *
      * @returns {LinearVelocity} Linear velocity
      */
     get linearVelocity(): LinearVelocity {
@@ -118,7 +114,6 @@ export abstract class AbsolutePosition implements Position<LengthUnit> {
 
     /**
      * Get the angular velocity
-     *
      * @returns {AngularVelocity} Angular velocity
      */
     get angularVelocity(): AngularVelocity {
@@ -140,7 +135,6 @@ export abstract class AbsolutePosition implements Position<LengthUnit> {
 
     /**
      * Set the accuracy of the absolute position
-     *
      * @param {number | Accuracy} accuracy Accuracy object or number
      * @param {Unit} [unit] Optional unit
      * @returns {AbsolutePosition} instance
@@ -160,7 +154,6 @@ export abstract class AbsolutePosition implements Position<LengthUnit> {
 
     /**
      * Get the angle in radians from this position to a destination
-     *
      * @param {AbsolutePosition} destination Destination position
      * @returns {number} Bearing in radians from this position to destination
      */
@@ -168,7 +161,6 @@ export abstract class AbsolutePosition implements Position<LengthUnit> {
 
     /**
      * Get the distance from this location to a destination
-     *
      * @param {AbsolutePosition} destination Destination location
      * @param {DistanceFn} [distanceFunction] Distance function to use (default EUCLIDEAN distance)
      * @returns {number} Distance between this point and destination
@@ -183,7 +175,6 @@ export abstract class AbsolutePosition implements Position<LengthUnit> {
 
     /**
      * Clone the position
-     *
      * @returns {AbsolutePosition} Cloned position
      */
     clone(): this {

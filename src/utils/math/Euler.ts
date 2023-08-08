@@ -35,9 +35,8 @@ export class Euler extends THREE.Euler {
 
     /**
      * Convert quaternion to euler
-     *
      * @param {THREE.Quaternion} quat Quaternion
-     * @param {string} [order='XYZ'] Euler order
+     * @param {string} [order] Euler order
      * @returns {Euler} Euler instance
      */
     public static fromQuaternion(quat: THREE.Quaternion, order: EulerOrder = 'XYZ'): Euler {
@@ -48,9 +47,8 @@ export class Euler extends THREE.Euler {
 
     /**
      * Convert rotation matrix to euler
-     *
      * @param {Matrix4} matrix Rotation matrix
-     * @param {string} [order='XYZ'] Euler order
+     * @param {string} [order] Euler order
      * @returns {Euler} Euler instance
      */
     public static fromRotationMatrix(matrix: Matrix4, order: EulerOrder = 'XYZ'): Euler {
@@ -61,7 +59,6 @@ export class Euler extends THREE.Euler {
 
     /**
      * Convert the Euler angles to a vector
-     *
      * @param {AngleUnit} [unit] Angle unit to use in vector
      * @returns {Vector3} Vector output of Euler angles
      */
@@ -75,7 +72,6 @@ export class Euler extends THREE.Euler {
 
     /**
      * Convert the Euler angles to a vector
-     *
      * @deprecated use {@link Euler.toVector}
      * @param {AngleUnit} [unit] Angle unit to use in vector
      * @returns {Vector3} Vector output of Euler angles
@@ -86,7 +82,6 @@ export class Euler extends THREE.Euler {
 
     /**
      * Convert quaternion to rotation matrix
-     *
      * @returns {Matrix4} Rotation matrix
      */
     public toRotationMatrix(): Matrix4 {
@@ -95,7 +90,6 @@ export class Euler extends THREE.Euler {
 
     /**
      * Get pitch in degrees
-     *
      * @returns {number} Pitch in degrees
      */
     public get pitch(): number {
@@ -104,7 +98,6 @@ export class Euler extends THREE.Euler {
 
     /**
      * Get roll in degrees
-     *
      * @returns {number} Roll in degrees
      */
     public get roll(): number {
@@ -113,7 +106,6 @@ export class Euler extends THREE.Euler {
 
     /**
      * Get yaw in degrees
-     *
      * @returns {number} Yaw in degrees
      */
     public get yaw(): number {

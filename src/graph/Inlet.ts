@@ -4,13 +4,11 @@ import { PullOptions, PushOptions } from './options';
 
 /**
  * Inlet of a node that supports pulling and events.
- *
  * @category Graph
  */
 export interface Inlet<In extends DataFrame> {
     /**
      * Pull data from the inlet
-     *
      * @param {PullOptions} [options] Pull options
      * @returns {Promise<void>} Pull promise
      */
@@ -18,27 +16,23 @@ export interface Inlet<In extends DataFrame> {
 
     /**
      * Emit unknown event
-     *
      * @param {string} name completed
      * @param {any} arg Argument
      */
     emit(name: string, arg: any): boolean;
     /**
      * Emit completed event
-     *
      * @param {string} name completed
      */
     emit(name: 'completed', event: PushCompletedEvent): boolean;
     /**
      * Emit error
-     *
      * @param {string} name error
      */
     emit(name: 'error', event: PushError): boolean;
 
     /**
      * Event when a data frame is push to the node
-     *
      * @param {string} name receive
      * @param {Function} listener Event callback
      */

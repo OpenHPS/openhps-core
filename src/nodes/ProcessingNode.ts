@@ -27,7 +27,6 @@ import { SerializableObject } from '../data/decorators';
  * }
  * }
  * ```
- *
  * @category Processing node
  */
 @SerializableObject()
@@ -89,7 +88,6 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
 
     /**
      * Get node data
-     *
      * @param {DataObject} dataObject Data object to get node data from
      * @param {any} [defaultData] Default data
      * @returns {Promise<any>} Promise with node data
@@ -111,7 +109,6 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
 
     /**
      * Set node data
-     *
      * @param {DataObject} dataObject Data object to store data for
      * @param {any} data Data to store
      * @returns {Promise<any>} Promise with stored node data

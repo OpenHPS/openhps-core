@@ -10,13 +10,11 @@ import { MergeShape } from './MergeShape';
  * ```typescript
  * new FrameMergeNode();
  * ```
- *
  * @category Flow shape
  */
 export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
     /**
      * Merge multiple data objects together
-     *
      * @param {DataObject[]} objects Data objects
      * @returns {DataObject} Merged data object
      */
@@ -115,7 +113,6 @@ export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {
 
     /**
      * Merge the data frames
-     *
      * @param {DataFrame[]} frames Data frames to merge
      * @returns {Promise<DataFrame>} Promise of merged data frame
      */

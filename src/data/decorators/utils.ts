@@ -7,7 +7,6 @@ const cloneDeep = require('lodash.clonedeep');
 
 /**
  * Inject member options into object
- *
  * @param {any} target Prototype
  * @param {PropertyKey} propertyKey Property key
  * @param {any} options Options to inject
@@ -58,7 +57,6 @@ export function updateSerializableMember(target: unknown, propertyKey: string, o
 
 /**
  * Inject object members
- *
  * @param {Serializable} target Target to update
  * @param {SerializableObjectOptions} options Options to inject
  */
@@ -110,7 +108,6 @@ export function updateSerializableObject<T>(target: Serializable<T>, options: Se
 
 /**
  * Check if something is an object
- *
  * @param {any} item Item to check for object
  * @returns {boolean} Is an object
  */
@@ -120,7 +117,6 @@ function isObject(item: any): boolean {
 
 /**
  * Deep merge member options
- *
  * @param {unknown} target Target object
  * @param {string} propertyKey Property key in target
  * @param {any} options Member options
@@ -137,7 +133,6 @@ export function mergeMemberOptions(target: unknown, propertyKey: string, options
 
 /**
  * Deep merge objects
- *
  * @param {any} target Target object
  * @param {any} source Source object
  * @returns {any} Merged object

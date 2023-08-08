@@ -1,6 +1,5 @@
 /**
  * Filter Query based on MongoDB
- *
  * @see {@link https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/mongodb/index.d.ts}
  */
 

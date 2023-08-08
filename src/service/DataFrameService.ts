@@ -14,7 +14,6 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
 
     /**
      * Insert a new data frame
-     *
      * @param {DataFrame} frame Data frame to insert
      * @returns {DataFrame} Inserted frame
      */
@@ -24,7 +23,6 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
 
     /**
      * Find data frames created before a certain timestamp
-     *
      * @param {number} timestamp Timestamp
      * @param {FindOptions} [options] Find options
      * @returns {DataFrame[]} Array of data frames before the specified timestamp
@@ -35,7 +33,6 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
 
     /**
      * Find data frames created after a certain timestamp
-     *
      * @param {number} timestamp Timestamp
      * @param {FindOptions} [options] Find options
      * @returns {DataFrame[]} Array of data frames after the specified timestamp
@@ -46,7 +43,6 @@ export class DataFrameService<T extends DataFrame> extends DataService<string, T
 
     /**
      * Find data frames by data object
-     *
      * @param {DataObject | string} dataObject Data object to get frames for
      * @param {FindOptions} [options] Find options. By default sorted by createdTimestamp in descending order
      * @returns {DataFrame[]} Array of data frames that contain the specified object

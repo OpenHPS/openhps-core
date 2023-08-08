@@ -24,7 +24,7 @@ export class ModelSerializer {
     }
 
     static serializeNode(node: Node<any, any>): any {
-        this._initialize();
+        this.initialize();
         return this.options.serialize(node);
     }
 
@@ -37,14 +37,14 @@ export class ModelSerializer {
     }
 
     static deserializeNode<In extends DataFrame, Out extends DataFrame>(node: any): Node<In, Out> {
-        this._initialize();
+        this.initialize();
         return this.options.deserialize(node) as Node<any, Out>;
     }
 
-    private static _loadClasses(module: NodeModule = require.main): void {
+    protected static loadClasses(module: NodeModule = require.main): void {
         if (module === undefined) {
             // Use cache instead
-            Object.values(require.cache).map((m) => this._loadClasses(m));
+            Object.values(require.cache).map((m) => this.loadClasses(m));
             return;
         }
         this._modules.add(module.id);
@@ -66,15 +66,15 @@ export class ModelSerializer {
         if (module.children) {
             module.children.forEach((module) => {
                 if (!this._modules.has(module.id)) {
-                    this._loadClasses(module);
+                    this.loadClasses(module);
                 }
             });
         }
     }
 
-    private static _initialize(): void {
+    protected static initialize(): void {
         if (this.SERVICES.size === 0 || this.NODES.size === 0) {
-            this._loadClasses();
+            this.loadClasses();
             this._modules.clear();
             this.SERVICES.forEach((service) => DataSerializer.registerType(service.constructor));
             this.NODES.forEach((node) => DataSerializer.registerType(node.constructor));

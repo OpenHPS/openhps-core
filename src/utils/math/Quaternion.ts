@@ -33,7 +33,6 @@ export class Quaternion extends THREE.Quaternion {
 
     /**
      * Convert a threejs quaternion to serializable quaternion
-     *
      * @param {THREE.Quaternion} threeQuaternion ThreeJS created quaternion
      * @returns {Quaternion} Serializable quaternion
      */
@@ -48,7 +47,6 @@ export class Quaternion extends THREE.Quaternion {
 
     /**
      * Convert euler angles to quaternion
-     *
      * @param {Vector3 | Euler} euler Euler vector
      * @returns {Quaternion} Serializable quaternion
      */
@@ -92,7 +90,6 @@ export class Quaternion extends THREE.Quaternion {
 
     /**
      * Convert axis angle rotation to quaternion
-     *
      * @param {any} axis Axis-angle rotation
      * @returns {Quaternion} Serializable quaternion
      */
@@ -124,7 +121,6 @@ export class Quaternion extends THREE.Quaternion {
 
     /**
      * Convert rotation matrix to quaternion
-     *
      * @param {Quaternion} this This type
      * @param {Matrix4} matrix Rotation matrix
      * @returns {Quaternion} Serializable quaternion
@@ -137,7 +133,6 @@ export class Quaternion extends THREE.Quaternion {
 
     /**
      * Convert the quaternion to euler angles
-     *
      * @param {EulerOrder} order Euler order
      * @returns {Euler} Converted euler
      */
@@ -147,7 +142,6 @@ export class Quaternion extends THREE.Quaternion {
 
     /**
      * Convert the quaternion to axis angles
-     *
      * @returns {AxisAngle} Converted axis angle
      */
     toAxisAngle(): AxisAngle {
@@ -156,7 +150,6 @@ export class Quaternion extends THREE.Quaternion {
 
     /**
      * Convert quaternion to rotation matrix
-     *
      * @returns {Matrix4} Rotation matrix
      */
     toRotationMatrix(): Matrix4 {

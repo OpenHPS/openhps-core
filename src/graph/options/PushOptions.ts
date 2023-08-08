@@ -2,7 +2,6 @@ import { GraphOptions } from './GraphOptions';
 
 /**
  * Provides options of push actions to nodes.
- *
  * @category Graph
  */
 export interface PushOptions extends GraphOptions {

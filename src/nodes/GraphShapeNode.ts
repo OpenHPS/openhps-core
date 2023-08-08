@@ -45,7 +45,6 @@ export abstract class GraphShapeNode<In extends DataFrame = DataFrame, Out exten
 
     /**
      * Send a pull request to the node
-     *
      * @param {PullOptions} [options] Pull options
      * @returns {Promise<void>} Pull promise
      */
@@ -55,7 +54,6 @@ export abstract class GraphShapeNode<In extends DataFrame = DataFrame, Out exten
 
     /**
      * Push data to the node
-     *
      * @param {DataFrame | DataFrame[]} data Data frame to push
      * @param {PushOptions} [options] Push options
      * @returns {Promise<void>} Push promise

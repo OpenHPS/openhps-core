@@ -8,7 +8,6 @@ import { Position } from './Position';
 
 /**
  * Relative position to another reference object or space.
- *
  * @category Position
  */
 @SerializableObject()
@@ -41,7 +40,6 @@ export class RelativePosition<T = number, U extends Unit = Unit> implements Posi
 
     /**
      * Get the position probability
-     *
      * @returns {number} Probability between 0 and 1
      */
     get probability(): number {
@@ -60,7 +58,6 @@ export class RelativePosition<T = number, U extends Unit = Unit> implements Posi
 
     /**
      * Position accuracy
-     *
      * @returns {Accuracy} Position accuracy
      */
     get accuracy(): Accuracy<U, any> {
@@ -92,7 +89,6 @@ export class RelativePosition<T = number, U extends Unit = Unit> implements Posi
 
     /**
      * Set the accuracy of the absolute position
-     *
      * @param {number | Accuracy} accuracy Accuracy object or number
      * @param {Unit} [unit] Optional unit
      * @returns {RelativePosition} instance
@@ -112,7 +108,6 @@ export class RelativePosition<T = number, U extends Unit = Unit> implements Posi
 
     /**
      * Clone the position
-     *
      * @returns {RelativePosition} Cloned relative position
      */
     clone(): this {

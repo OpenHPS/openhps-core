@@ -58,7 +58,6 @@ export class RemoteSourceNode<
 export interface RemoteSourceNodeOptions<S extends RemoteService> extends SourceNodeOptions, RemoteNodeOptions<S> {
     /**
      * Node type to use
-     *
      * @default RemoteNode a normal remote node
      */
     type?: Constructor<RemoteNode<any, any, S>>;

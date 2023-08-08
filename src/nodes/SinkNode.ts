@@ -27,7 +27,6 @@ import { DataObjectService } from '../service';
  * }
  * }
  * ```
- *
  * @category Sink node
  */
 @SerializableObject()
@@ -112,13 +111,11 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In
 export interface SinkNodeOptions extends NodeOptions {
     /**
      * Store objects in data services
-     *
      * @default true
      */
     persistence?: boolean;
     /**
      * Emit a completed event for this sink
-     *
      * @default true
      */
     completedEvent?: boolean;

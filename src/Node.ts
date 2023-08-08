@@ -20,7 +20,6 @@ import { SerializableMember, SerializableObject } from './data';
  * ```
  * Abstract implementations such as a {@link SourceNode} and {@link SinkNode} only take one input or output
  * data frame type as they do not process or change the frame.
- *
  * @category Node
  */
 @SerializableObject()
@@ -41,7 +40,6 @@ export class Node<In extends DataFrame, Out extends DataFrame> extends GraphNode
 
     /**
      * Set the node options
-     *
      * @param {NodeOptions} options Node options to set
      * @returns {Node} Node instance
      */
@@ -57,7 +55,6 @@ export class Node<In extends DataFrame, Out extends DataFrame> extends GraphNode
 
     /**
      * Get the node options
-     *
      * @returns {NodeOptions} Node options
      */
     getOptions(): NodeOptions {
@@ -66,7 +63,6 @@ export class Node<In extends DataFrame, Out extends DataFrame> extends GraphNode
 
     /**
      * Graph this model is part of
-     *
      * @returns {Model} Positioning model
      */
     get model(): Model<any, any> {

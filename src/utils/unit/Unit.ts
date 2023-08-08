@@ -23,7 +23,6 @@ import { Vector3 } from '../math/Vector3';
  * ```typescript
  * const nanoUnit = myUnit.specifier(UnitPrefix.NANO);
  * ```
- *
  * @category Unit
  */
 @SerializableObject({
@@ -45,7 +44,6 @@ export class Unit {
 
     /**
      * Create a new unit
-     *
      * @param {string} name Unit name
      * @param {UnitOptions} options Unit options
      */
@@ -71,7 +69,6 @@ export class Unit {
 
     /**
      * Get a unit from JSON
-     *
      * @param {any} json JSON object
      * @returns {Unit} Unit if found
      */
@@ -134,7 +131,6 @@ export class Unit {
 
     /**
      * Unit name
-     *
      * @returns {string} Name
      */
     @SerializableMember()
@@ -155,7 +151,6 @@ export class Unit {
 
     /**
      * Unit aliases
-     *
      * @returns {string[]} Alias names as array
      */
     get aliases(): string[] {
@@ -185,7 +180,6 @@ export class Unit {
 
     /**
      * Get or create a definition from this unit to the base
-     *
      * @returns {UnitFunctionDefinition} Definition to base
      */
     createBaseDefinition(): UnitFunctionDefinition<any, any> {
@@ -255,7 +249,6 @@ export class Unit {
 
     /**
      * Get the unit specifier
-     *
      * @param {UnitPrefix} prefix Unit prefix
      * @returns {Unit} Unit with specifier
      */
@@ -291,7 +284,6 @@ export class Unit {
 
     /**
      * Find unit specifier by name or alias
-     *
      * @param {string} name Unit name
      * @returns {Unit | undefined} Unit if found
      */
@@ -316,7 +308,6 @@ export class Unit {
 
     /**
      * Find a unit by its name
-     *
      * @param {string} name Unit name
      * @param {string} baseName Optional base name to specific result
      * @returns {Unit | undefined} Unit if found
@@ -344,7 +335,6 @@ export class Unit {
 
     /**
      * Convert a value in the current unit to a target unit
-     *
      * @param {UnitValueType} value Value to convert
      * @param {string | Unit} target Target unit
      * @returns {number} Converted unit
@@ -367,7 +357,6 @@ export class Unit {
 
     /**
      * Convert a value from a specific unit to a target unit
-     *
      * @param {UnitValueType} value Value to convert
      * @param {string | Unit} from Source unit
      * @param {string | Unit} to Target unit
@@ -380,7 +369,6 @@ export class Unit {
 
     /**
      * Register a new unit
-     *
      * @param {Unit} unit Unit to register
      * @param {boolean} override Override an existing unit with the same name
      * @returns {Unit} Registered unit

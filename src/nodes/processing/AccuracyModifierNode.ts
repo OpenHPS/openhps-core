@@ -4,7 +4,6 @@ import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../ObjectProc
 
 /**
  * Accuracy modifier node. Apply an offset of magnitude to the position accuracy.
- *
  * @category Processing node
  */
 export class AccuracyModifierNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
@@ -42,7 +41,6 @@ export interface AccuracyModifierOptions extends ObjectProcessingNodeOptions {
     offset?: number;
     /**
      * Offset unit to use for the offset
-     *
      * @default LengthUnit.METER
      */
     offsetUnit?: LengthUnit;

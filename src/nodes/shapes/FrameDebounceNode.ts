@@ -22,14 +22,16 @@ export class FrameDebounceNode<InOut extends DataFrame> extends ProcessingNode<I
 
     /**
      * Start the timeout timer
-     *
      * @returns {Promise<void>} Timer promise
      */
     private _start(): Promise<void> {
         return new Promise((resolve) => {
-            this._timer = setInterval(() => {
-                this._accept = true;
-            }, this._timeoutUnit.convert(this._timeout, TimeUnit.MILLISECOND));
+            this._timer = setInterval(
+                () => {
+                    this._accept = true;
+                },
+                this._timeoutUnit.convert(this._timeout, TimeUnit.MILLISECOND),
+            );
             resolve();
             this.emit('ready');
         });

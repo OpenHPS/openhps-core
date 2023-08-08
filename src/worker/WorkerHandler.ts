@@ -1,4 +1,4 @@
-import { Pool, spawn, Thread, Worker } from 'threads';
+import { BlobWorker, Pool, spawn, Thread, Worker } from 'threads';
 import { PoolEvent } from 'threads/dist/master/pool';
 import { Observable } from 'threads/observable';
 import { DataFrame } from '../data/DataFrame';
@@ -14,6 +14,7 @@ import { DummyService } from '../service/DummyService';
 import { ModelGraph } from '../graph/_internal/implementations/ModelGraph';
 import { WorkerOptions } from './WorkerOptions';
 import { Model } from '../Model';
+import path = require('path');
 
 declare const __non_webpack_require__: typeof require;
 
@@ -38,7 +39,17 @@ export class WorkerHandler extends AsyncEventEmitter {
                 // eslint-disable-next-line
                 const NativeWorker = typeof __non_webpack_require__ === "function" ? __non_webpack_require__("worker_threads").Worker : eval("require")("worker_threads").Worker;
                 if (NativeWorker) {
+                    // NodeJS
                     NativeWorker.defaultMaxListeners = 0;
+                    const resolvedPath = require.resolve(this.options.worker);
+                    if (resolvedPath.match(/\.tsx?$/i)) {
+                        // Transpile
+                        this.options.worker = `
+                            require('ts-node').register();
+                            require(${JSON.stringify(resolvedPath)});
+                        `;
+                        this.options.blob = true;
+                    }
                 }
             }
 
@@ -109,18 +120,28 @@ export class WorkerHandler extends AsyncEventEmitter {
         });
     }
 
+    protected createWorker(): Worker {
+        if (this.options.blob) {
+            const worker = new BlobWorker(this.options.worker as any, {
+                type: this.options.type === 'typescript' ? 'classic' : this.options.type,
+            });
+            return worker;
+        } else {
+            const worker = new Worker(this.options.worker, {
+                type: this.options.type === 'typescript' ? 'classic' : this.options.type,
+            });
+            return worker;
+        }
+    }
+
     /**
      * Spawn a single worker
      * This method can be called multiple times in a pool
-     *
      * @returns {Promise<Thread>} Thread spawn promise
      */
     private _spawnWorker(): Promise<Thread> {
         return new Promise((resolve, reject) => {
-            // NOTE: We can not use a conditional expression as this breaks the webpack threads plugin
-            const worker = new Worker(this.options.worker, {
-                type: this.options.type === 'typescript' ? 'classic' : this.options.type,
-            });
+            const worker = this.createWorker();
             spawn(worker, {
                 timeout: this.options.timeout,
             })
@@ -168,7 +189,6 @@ export class WorkerHandler extends AsyncEventEmitter {
 
     /**
      * Serialize the services of this model
-     *
      * @returns {any[]} Services array
      */
     private _getServices(): any[] {
@@ -256,7 +276,6 @@ export class WorkerHandler extends AsyncEventEmitter {
 
     /**
      * Triggered for each worker that requests a pull
-     *
      * @param {PullOptions} options Pull options
      */
     private _onWorkerPull(options?: PullOptions): void {
@@ -265,7 +284,6 @@ export class WorkerHandler extends AsyncEventEmitter {
 
     /**
      * Triggered for each worker that pushes data
-     *
      * @param {any} value Serialized data
      * @param {PushOptions} options Push options
      */

@@ -38,7 +38,6 @@ import { WorkerHandler } from '../worker';
  * worker: 'worker.openhps-core.min.js'    // Worker JS file
  * });
  * ```
- *
  * @category Node
  */
 export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Node<In, Out> {
@@ -121,7 +120,6 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
 
     /**
      * Triggered for each worker that requests a pull
-     *
      * @param {PullOptions} options Pull options
      */
     private _onWorkerPull(options?: PullOptions): void {
@@ -130,7 +128,6 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
 
     /**
      * Triggered for each worker that pushes data
-     *
      * @param {DataFrame} frame Deserialized frame
      * @param {PushOptions} options Push options
      */

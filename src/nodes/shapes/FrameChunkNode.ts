@@ -57,7 +57,6 @@ export class FrameChunkNode<InOut extends DataFrame> extends Node<InOut, InOut> 
 
     /**
      * Start the timeout timer
-     *
      * @returns {Promise<void>} Start promise
      */
     private _start(): Promise<void> {

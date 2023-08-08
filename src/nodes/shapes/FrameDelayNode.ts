@@ -4,7 +4,6 @@ import { ProcessingNode } from '../ProcessingNode';
 
 /**
  * Frame delay node to delay pushing of frames.
- *
  * @category Flow shape
  */
 export class FrameDelayNode<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {
@@ -19,9 +18,12 @@ export class FrameDelayNode<InOut extends DataFrame> extends ProcessingNode<InOu
 
     public process(frame: InOut): Promise<InOut> {
         return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(frame);
-            }, this._timeoutUnit.convert(this._timeout, TimeUnit.MILLISECOND));
+            setTimeout(
+                () => {
+                    resolve(frame);
+                },
+                this._timeoutUnit.convert(this._timeout, TimeUnit.MILLISECOND),
+            );
         });
     }
 }
