@@ -75,7 +75,7 @@
     "build": "npm run clean && npm run build:three && npm-run-all --parallel build:ts:* && npm run build:webpack",
     "build:components": "componentsjs-generator",
     "build:quick": "npm-run-all --parallel build:ts:* && npm run build:webpack",
-    "build:typedoc": "typedoc --options docs/typedoc.json",
+    "build:typedoc": "typedoc --options docs/typedoc.json --plugin typedoc-umlclass",
     "build:three": "node ./scripts/build.three.js",
     "build:ts:cjs": "tsc --build ./tsconfig/tsconfig.bundle.cjs.json",
     "build:ts:esm": "tsc --build ./tsconfig/tsconfig.bundle.esm.json && babel --config-file ./babel/babel.esm.config.js --out-dir ./dist/esm ./dist/esm",
