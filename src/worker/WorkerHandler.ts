@@ -14,7 +14,6 @@ import { DummyService } from '../service/DummyService';
 import { ModelGraph } from '../graph/_internal/implementations/ModelGraph';
 import { WorkerOptions } from './WorkerOptions';
 import { Model } from '../Model';
-import path = require('path');
 
 declare const __non_webpack_require__: typeof require;
 
