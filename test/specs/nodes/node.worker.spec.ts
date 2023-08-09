@@ -371,7 +371,8 @@ describe('worker graph', () => {
                     name: 'output',
                     directory: __dirname,
                     poolSize: 2,
-                    worker: '../../test/mock/ExampleWorker'
+                    worker: '../../test/mock/ExampleWorker',
+                    timeout: 60000
                 }),
             )
             .from('output')
@@ -405,7 +406,8 @@ describe('worker graph', () => {
                 new WorkerNode('../../mock/ExampleModel', {
                     name: 'output',
                     directory: __dirname,
-                    poolSize: 2,
+                    poolSize: 2,,
+                    timeout: 60000
                 }),
             )
             .from('output')
