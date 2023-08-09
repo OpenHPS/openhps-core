@@ -406,7 +406,7 @@ describe('worker graph', () => {
                 new WorkerNode('../../mock/ExampleModel', {
                     name: 'output',
                     directory: __dirname,
-                    poolSize: 2,,
+                    poolSize: 2,
                     timeout: 60000
                 }),
             )
