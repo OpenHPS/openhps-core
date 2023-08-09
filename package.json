@@ -51,7 +51,10 @@
   "files": [
     "dist/**/*",
     "src/**/*",
-    "LICENSE"
+    "LICENSE",
+    "internal.js",
+    "internal.ts",
+    "internal.d.ts"
   ],
   "size-limit": [
     {
