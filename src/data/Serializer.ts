@@ -1,6 +1,11 @@
 import { Serializer as JSONSerializer } from 'typedjson/lib/cjs/serializer';
 import type { ConcreteTypeDescriptor, TypeDescriptor } from 'typedjson/lib/types/type-descriptor';
-import { ensureTypeDescriptor } from 'typedjson/lib/cjs/type-descriptor';
+import {
+    ensureTypeDescriptor,
+    ArrayTypeDescriptor,
+    MapTypeDescriptor,
+    SetTypeDescriptor,
+} from 'typedjson/lib/cjs/type-descriptor';
 import { IndexedObject, JsonObjectMetadata, Serializable, TypeHintEmitter } from 'typedjson';
 import { MemberOptionsBase } from './decorators/options';
 import { ObjectMemberMetadata } from './decorators/metadata';
@@ -29,6 +34,13 @@ export class Serializer extends JSONSerializer {
     declare setErrorHandler: (errorHandlerCallback: (error: Error) => void) => void;
     declare getErrorHandler: () => (error: Error) => void;
     declare retrievePreserveNull: (memberOptions?: MemberOptionsBase) => boolean;
+
+    constructor() {
+        super();
+        this.setSerializationStrategy(Map, this.convertAsMap);
+        this.setSerializationStrategy(Array, this.convertAsArray);
+        this.setSerializationStrategy(Set, this.convertAsSet);
+    }
 
     convertSingleValue(
         sourceObject: any,
@@ -195,6 +207,196 @@ export class Serializer extends JSONSerializer {
         typeHintEmitter(targetObject, sourceObject, typeDescriptor.ctor, sourceTypeMetadata);
 
         return targetObject;
+    }
+
+    /**
+     * Performs the conversion of an array of typed objects (or primitive values) to an array of simple
+     * javascript objects
+     * (or primitive values) for serialization.
+     * @param sourceObject
+     * @param typeDescriptor
+     * @param memberName
+     * @param serializer
+     * @param memberOptions
+     * @param serializerOptions
+     */
+    convertAsArray(
+        sourceObject: Array<any>,
+        typeDescriptor: ArrayTypeDescriptor,
+        memberName: string,
+        serializer: Serializer,
+        memberOptions?: ObjectMemberMetadata,
+        serializerOptions?: any,
+    ): Array<any> {
+        if (!(typeDescriptor instanceof ArrayTypeDescriptor)) {
+            throw new TypeError(
+                `Could not serialize ${memberName} as Array: incorrect TypeDescriptor detected, please` +
+                    ' use proper annotation or function for this type',
+            );
+        }
+        if ((typeDescriptor.elementType as any) == null) {
+            throw new TypeError(`Could not serialize ${memberName} as Array: missing element type definition.`);
+        }
+
+        // Check the type of each element, individually.
+        // If at least one array element type is incorrect, we return undefined, which results in no
+        // value emitted during serialization. This is so that invalid element types don't unexpectedly
+        // alter the ordering of other, valid elements, and that no unexpected undefined values are in
+        // the emitted array.
+        sourceObject.forEach((element, i) => {
+            if (
+                !(serializer.retrievePreserveNull(memberOptions) && element === null) &&
+                !isInstanceOf(element, typeDescriptor.elementType.ctor)
+            ) {
+                const expectedTypeName = nameof(typeDescriptor.elementType.ctor);
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                const actualTypeName = element && nameof(element.constructor);
+                throw new TypeError(
+                    `Could not serialize ${memberName}[${i}]:` +
+                        ` expected '${expectedTypeName}', got '${actualTypeName}'.`,
+                );
+            }
+        });
+
+        return sourceObject.map((element, i) => {
+            return serializer.convertSingleValue(
+                element,
+                typeDescriptor.elementType,
+                `${memberName}[${i}]`,
+                memberOptions,
+                serializerOptions,
+            );
+        });
+    }
+
+    /**
+     * Performs the conversion of a set of typed objects (or primitive values) into an array
+     * of simple javascript objects.
+     * @param sourceObject
+     * @param typeDescriptor
+     * @param memberName
+     * @param serializer
+     * @param memberOptions
+     * @param serializerOptions
+     * @returns
+     */
+    convertAsSet(
+        sourceObject: Set<any>,
+        typeDescriptor: SetTypeDescriptor,
+        memberName: string,
+        serializer: Serializer,
+        memberOptions?: ObjectMemberMetadata,
+        serializerOptions?: any,
+    ): Array<any> {
+        if (!(typeDescriptor instanceof SetTypeDescriptor)) {
+            throw new TypeError(
+                `Could not serialize ${memberName} as Set: incorrect TypeDescriptor detected, please` +
+                    ' use proper annotation or function for this type',
+            );
+        }
+        if ((typeDescriptor.elementType as any) == null) {
+            throw new TypeError(`Could not serialize ${memberName} as Set: missing element type definition.`);
+        }
+
+        memberName += '[]';
+        const resultArray: Array<any> = [];
+
+        // Convert each element of the set, and put it into an output array.
+        // The output array is the one serialized, as JSON.stringify does not support Set serialization.
+        // (TODO: clarification needed)
+        sourceObject.forEach((element) => {
+            const resultElement = serializer.convertSingleValue(
+                element,
+                typeDescriptor.elementType,
+                memberName,
+                memberOptions,
+                serializerOptions,
+            );
+
+            // Add to output if the source element was undefined, OR the converted element is defined.
+            // This will add intentionally undefined values to output, but not values that became
+            // undefined DURING serializing (usually because of a type-error).
+            if (!isValueDefined(element) || isValueDefined(resultElement)) {
+                resultArray.push(resultElement);
+            }
+        });
+
+        return resultArray;
+    }
+
+    /**
+     * Performs the conversion of a map of typed objects (or primitive values) into an array
+     * of simple javascript objects with `key` and `value` properties.
+     * @param sourceObject
+     * @param typeDescriptor
+     * @param memberName
+     * @param serializer
+     * @param memberOptions
+     * @param serializerOptions
+     */
+    convertAsMap(
+        sourceObject: Map<any, any>,
+        typeDescriptor: MapTypeDescriptor,
+        memberName: string,
+        serializer: Serializer,
+        memberOptions?: ObjectMemberMetadata,
+        serializerOptions?: any,
+    ): IndexedObject | Array<{ key: any; value: any }> {
+        if (!(typeDescriptor instanceof MapTypeDescriptor)) {
+            throw new TypeError(
+                `Could not serialize ${memberName} as Map: incorrect TypeDescriptor detected, please` +
+                    ' use proper annotation or function for this type',
+            );
+        }
+        if ((typeDescriptor.valueType as any) == null) {
+            // @todo Check type
+            throw new TypeError(`Could not serialize ${memberName} as Map: missing value type definition.`);
+        }
+
+        if ((typeDescriptor.keyType as any) == null) {
+            // @todo Check type
+            throw new TypeError(`Could not serialize ${memberName} as Map: missing key type definition.`);
+        }
+
+        const keyMemberName = `${memberName}[].key`;
+        const valueMemberName = `${memberName}[].value`;
+        const resultShape = typeDescriptor.getCompleteOptions().shape;
+        const result = resultShape.name === 'OBJECT' ? ({} as IndexedObject) : [];
+        const preserveNull = serializer.retrievePreserveNull(memberOptions);
+
+        // Convert each *entry* in the map to a simple javascript object with key and value properties.
+        sourceObject.forEach((value, key) => {
+            const resultKeyValuePairObj = {
+                key: serializer.convertSingleValue(
+                    key,
+                    typeDescriptor.keyType,
+                    keyMemberName,
+                    memberOptions,
+                    serializerOptions,
+                ),
+                value: serializer.convertSingleValue(
+                    value,
+                    typeDescriptor.valueType,
+                    valueMemberName,
+                    memberOptions,
+                    serializerOptions,
+                ),
+            };
+
+            // We are not going to emit entries with undefined keys OR undefined values.
+            const keyDefined = isValueDefined(resultKeyValuePairObj.key);
+            const valueDefined =
+                (resultKeyValuePairObj.value === null && preserveNull) || isValueDefined(resultKeyValuePairObj.value);
+            if (keyDefined && valueDefined) {
+                if (resultShape.name === 'OBJECT') {
+                    result[resultKeyValuePairObj.key] = resultKeyValuePairObj.value;
+                } else {
+                    result.push(resultKeyValuePairObj);
+                }
+            }
+        });
+
+        return result;
     }
 }
 
