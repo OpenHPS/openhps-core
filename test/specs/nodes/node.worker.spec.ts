@@ -102,6 +102,7 @@ describe('WorkerNode', () => {
                     {
                         directory: __dirname,
                         poolSize: 2,
+                        timeout: 60000
                     },
                 ),
             )
@@ -163,6 +164,7 @@ describe('WorkerNode', () => {
                     {
                         directory: __dirname,
                         poolSize: 1,
+                        timeout: 60000
                     },
                 ),
             )
@@ -203,6 +205,7 @@ describe('WorkerNode', () => {
                     {
                         directory: __dirname,
                         poolSize: 1,
+                        timeout: 60000
                     },
                 ),
             )
@@ -242,6 +245,7 @@ describe('WorkerNode', () => {
                     {
                         directory: __dirname,
                         poolSize: 1,
+                        timeout: 60000
                     },
                 ),
             )
@@ -276,6 +280,7 @@ describe('WorkerNode', () => {
                     {
                         directory: __dirname,
                         poolSize: 1,
+                        timeout: 60000
                     },
                 ),
             )
@@ -309,7 +314,8 @@ describe('WorkerNode', () => {
                                 __dirname,
                                 '../../mock/nodes/TimeConsumingNode',
                             )
-                        ]
+                        ],
+                        timeout: 60000
                     },
                 ),
             )
@@ -443,6 +449,7 @@ describe('worker graph', () => {
                     name: 'output',
                     directory: __dirname,
                     poolSize: 1,
+                    timeout: 60000
                 }),
             )
             .from('output')
