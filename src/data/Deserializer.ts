@@ -61,7 +61,7 @@ export class Deserializer extends JSONDeserializer {
         memberOptions?: ObjectMemberMetadata,
         serializerOptions?: any,
     ): any {
-        return this._convertSingleValue(
+        return this._convertSingleValue.bind(this)(
             sourceObject,
             typeDescriptor,
             knownTypes,

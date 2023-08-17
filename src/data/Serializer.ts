@@ -49,7 +49,7 @@ export class Serializer extends JSONSerializer {
         memberOptions?: ObjectMemberMetadata,
         serializerOptions?: any,
     ): any {
-        const targetObject = this._convertSingleValue(
+        const targetObject = this._convertSingleValue.bind(this)(
             sourceObject,
             typeDescriptor,
             memberName,
