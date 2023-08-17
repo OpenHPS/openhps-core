@@ -344,6 +344,7 @@ describe('worker graph', () => {
                     name: 'output',
                     directory: __dirname,
                     poolSize: 2,
+                    timeout: 60000
                 }),
             )
             .from('output')
