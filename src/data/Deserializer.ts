@@ -1,9 +1,14 @@
 import { Deserializer as JSONDeserializer } from 'typedjson/lib/cjs/deserializer';
 import type { TypeDescriptor } from 'typedjson/lib/types/type-descriptor';
-import { IndexedObject, Serializable, TypeResolver } from 'typedjson';
+import { ensureTypeDescriptor, ConcreteTypeDescriptor } from 'typedjson/lib/cjs/type-descriptor';
+import { IndexedObject, JsonObjectMetadata, Serializable, TypeResolver } from 'typedjson';
 import { ObjectMemberMetadata } from './decorators/metadata';
+import type { OptionsBase } from 'typedjson/lib/types/options-base';
+import { mergeOptions } from 'typedjson/lib/cjs/options-base';
+import { isSubtypeOf, isValueDefined, nameof } from 'typedjson/lib/cjs/helpers';
 
 export class Deserializer extends JSONDeserializer {
+    protected declare options?: OptionsBase;
     protected declare deserializationStrategy: Map<Serializable<any>, DeserializerFn<any, TypeDescriptor, any>>;
     protected errorHandler: (error: Error) => void = (e: Error) => {
         e.message = e.message.replace('@jsonObject', '@SerializableObject()');
@@ -43,7 +48,209 @@ export class Deserializer extends JSONDeserializer {
         memberOptions?: ObjectMemberMetadata,
         _?: any, // eslint-disable-line @typescript-eslint/no-unused-vars
     ): any {
-        return super.convertSingleValue(sourceObject, typeDescriptor, knownTypes, memberName, memberOptions);
+        return this._convertSingleValue(sourceObject, typeDescriptor, knownTypes, memberName, memberOptions);
+    }
+
+    private _convertSingleValue(
+        sourceObject: any,
+        typeDescriptor: TypeDescriptor,
+        knownTypes: Map<string, Serializable<any>>,
+        memberName = 'object',
+        memberOptions?: ObjectMemberMetadata,
+    ): any {
+        if (this.retrievePreserveNull(memberOptions) && sourceObject === null) {
+            return null;
+        } else if (!isValueDefined(sourceObject)) {
+            return;
+        }
+
+        const deserializer = this.deserializationStrategy.get(typeDescriptor.ctor);
+        if (deserializer !== undefined) {
+            return deserializer(sourceObject, typeDescriptor, knownTypes, memberName, this, memberOptions);
+        }
+
+        if (typeof sourceObject === 'object') {
+            return this.convertAsObject(sourceObject, typeDescriptor, knownTypes, memberName, this);
+        }
+
+        let error = `Could not deserialize '${memberName}'; don't know how to deserialize type`;
+
+        if (typeDescriptor.hasFriendlyName()) {
+            error += ` '${typeDescriptor.ctor.name}'`;
+        }
+
+        this.errorHandler(new TypeError(`${error}.`));
+    }
+
+    convertAsObject<T>(
+        sourceObject: IndexedObject,
+        typeDescriptor: ConcreteTypeDescriptor,
+        knownTypes: Map<string, Serializable<any>>,
+        memberName: string,
+        deserializer: Deserializer,
+    ): IndexedObject | T | undefined {
+        if ((typeof sourceObject as any) !== 'object' || (sourceObject as any) === null) {
+            deserializer.getErrorHandler()(
+                new TypeError(`Cannot deserialize ${memberName}: 'sourceObject' must be a defined object.`),
+            );
+            return undefined;
+        }
+
+        let expectedSelfType = typeDescriptor.ctor;
+        let sourceObjectMetadata = JsonObjectMetadata.getFromConstructor(expectedSelfType);
+        let knownTypeConstructors = knownTypes;
+        let typeResolver = deserializer.getTypeResolver();
+
+        if (sourceObjectMetadata !== undefined) {
+            sourceObjectMetadata.processDeferredKnownTypes();
+
+            // Merge known types received from "above" with known types defined on the current type.
+            knownTypeConstructors = deserializer.mergeKnownTypes(
+                knownTypeConstructors,
+                deserializer.createKnownTypesMap(sourceObjectMetadata.knownTypes),
+            );
+            if (sourceObjectMetadata.typeResolver != null) {
+                typeResolver = sourceObjectMetadata.typeResolver;
+            }
+        }
+
+        // Check if a type-hint is available from the source object.
+        const typeFromTypeHint = typeResolver(sourceObject, knownTypeConstructors);
+
+        if (typeFromTypeHint != null) {
+            // Check if type hint is a valid subtype of the expected source type.
+            if (isSubtypeOf(typeFromTypeHint, expectedSelfType)) {
+                // Hell yes.
+                expectedSelfType = typeFromTypeHint;
+                sourceObjectMetadata = JsonObjectMetadata.getFromConstructor(typeFromTypeHint);
+
+                if (sourceObjectMetadata !== undefined) {
+                    // Also merge new known types from subtype.
+                    knownTypeConstructors = deserializer.mergeKnownTypes(
+                        knownTypeConstructors,
+                        deserializer.createKnownTypesMap(sourceObjectMetadata.knownTypes),
+                    );
+                }
+            }
+        }
+
+        if (sourceObjectMetadata?.isExplicitlyMarked === true) {
+            const sourceMetadata = sourceObjectMetadata;
+            // Strong-typed deserialization available, get to it.
+            // First deserialize properties into a temporary object.
+            const sourceObjectWithDeserializedProperties = {} as IndexedObject;
+
+            const classOptions = mergeOptions(deserializer.options, sourceMetadata.options);
+
+            // Deserialize by expected properties.
+            sourceMetadata.dataMembers.forEach((objMemberMetadata, propKey) => {
+                const objMemberValue = sourceObject[propKey];
+                const objMemberDebugName = `${nameof(sourceMetadata.classType)}.${propKey}`;
+                const objMemberOptions = mergeOptions(classOptions, objMemberMetadata.options);
+
+                let revivedValue;
+                if (objMemberMetadata.deserializer != null) {
+                    revivedValue = objMemberMetadata.deserializer(objMemberValue, {
+                        fallback: (so, td) => deserializer.convertSingleValue(so, ensureTypeDescriptor(td), knownTypes),
+                    });
+                } else if (objMemberMetadata.type == null) {
+                    throw new TypeError(
+                        `Cannot deserialize ${objMemberDebugName} there is` +
+                            ` no constructor nor deserialization function to use.`,
+                    );
+                } else {
+                    revivedValue = deserializer.convertSingleValue(
+                        objMemberValue,
+                        objMemberMetadata.type(),
+                        knownTypeConstructors,
+                        objMemberDebugName,
+                        objMemberOptions,
+                    );
+                }
+
+                // @todo revivedValue will never be null in RHS of ||
+                if (
+                    isValueDefined(revivedValue) ||
+                    (deserializer.retrievePreserveNull(objMemberOptions) && (revivedValue as any) === null)
+                ) {
+                    sourceObjectWithDeserializedProperties[objMemberMetadata.key] = revivedValue;
+                } else if (objMemberMetadata.isRequired === true) {
+                    deserializer.getErrorHandler()(new TypeError(`Missing required member '${objMemberDebugName}'.`));
+                }
+            });
+
+            // Next, instantiate target object.
+            let targetObject: IndexedObject;
+
+            if (typeof sourceObjectMetadata.initializerCallback === 'function') {
+                try {
+                    targetObject = sourceObjectMetadata.initializerCallback(
+                        sourceObjectWithDeserializedProperties,
+                        sourceObject,
+                    );
+
+                    // Check the validity of user-defined initializer callback.
+                    if ((targetObject as any) == null) {
+                        throw new TypeError(
+                            `Cannot deserialize ${memberName}:` +
+                                ` 'initializer' function returned undefined/null` +
+                                `, but '${nameof(sourceObjectMetadata.classType)}' was expected.`,
+                        );
+                    } else if (!(targetObject instanceof sourceObjectMetadata.classType)) {
+                        throw new TypeError(
+                            `Cannot deserialize ${memberName}:` +
+                                `'initializer' returned '${nameof(targetObject.constructor)}'` +
+                                `, but '${nameof(sourceObjectMetadata.classType)}' was expected` +
+                                `, and '${nameof(targetObject.constructor)}' is not a subtype of` +
+                                ` '${nameof(sourceObjectMetadata.classType)}'`,
+                        );
+                    }
+                } catch (e) {
+                    deserializer.getErrorHandler()(e);
+                    return undefined;
+                }
+            } else {
+                targetObject = deserializer.instantiateType(expectedSelfType);
+            }
+
+            // Finally, assign deserialized properties to target object.
+            Object.assign(targetObject, sourceObjectWithDeserializedProperties);
+
+            // Call onDeserialized method (if any).
+            const methodName = sourceObjectMetadata.onDeserializedMethodName;
+            if (methodName != null) {
+                if (typeof (targetObject as any)[methodName] === 'function') {
+                    // check for member first
+                    (targetObject as any)[methodName]();
+                } else if (typeof (targetObject.constructor as any)[methodName] === 'function') {
+                    // check for static
+                    (targetObject.constructor as any)[methodName]();
+                } else {
+                    deserializer.getErrorHandler()(
+                        new TypeError(
+                            `onDeserialized callback` +
+                                `'${nameof(sourceObjectMetadata.classType)}.${methodName}' is not a method.`,
+                        ),
+                    );
+                }
+            }
+
+            return targetObject;
+        } else {
+            // Untyped deserialization into Object instance.
+            const targetObject = {} as IndexedObject;
+
+            Object.keys(sourceObject).forEach((sourceKey) => {
+                targetObject[sourceKey] = deserializer.convertSingleValue(
+                    sourceObject[sourceKey],
+                    new ConcreteTypeDescriptor(sourceObject[sourceKey].constructor),
+                    knownTypes,
+                    sourceKey,
+                );
+            });
+
+            return targetObject;
+        }
     }
 }
 
