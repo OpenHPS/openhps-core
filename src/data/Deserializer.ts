@@ -46,9 +46,16 @@ export class Deserializer extends JSONDeserializer {
         knownTypes: Map<string, Serializable<any>>,
         memberName?: string,
         memberOptions?: ObjectMemberMetadata,
-        _?: any, // eslint-disable-line @typescript-eslint/no-unused-vars
+        serializerOptions?: any,
     ): any {
-        return this._convertSingleValue(sourceObject, typeDescriptor, knownTypes, memberName, memberOptions);
+        return this._convertSingleValue(
+            sourceObject,
+            typeDescriptor,
+            knownTypes,
+            memberName,
+            memberOptions,
+            serializerOptions,
+        );
     }
 
     private _convertSingleValue(
@@ -57,6 +64,7 @@ export class Deserializer extends JSONDeserializer {
         knownTypes: Map<string, Serializable<any>>,
         memberName = 'object',
         memberOptions?: ObjectMemberMetadata,
+        serializerOptions?: any,
     ): any {
         if (this.retrievePreserveNull(memberOptions) && sourceObject === null) {
             return null;
@@ -66,11 +74,27 @@ export class Deserializer extends JSONDeserializer {
 
         const deserializer = this.deserializationStrategy.get(typeDescriptor.ctor);
         if (deserializer !== undefined) {
-            return deserializer(sourceObject, typeDescriptor, knownTypes, memberName, this, memberOptions);
+            return deserializer(
+                sourceObject,
+                typeDescriptor,
+                knownTypes,
+                memberName,
+                this,
+                memberOptions,
+                serializerOptions,
+            );
         }
 
         if (typeof sourceObject === 'object') {
-            return this.convertAsObject(sourceObject, typeDescriptor, knownTypes, memberName, this);
+            return this.convertAsObject(
+                sourceObject,
+                typeDescriptor,
+                knownTypes,
+                memberName,
+                this,
+                memberOptions,
+                serializerOptions,
+            );
         }
 
         let error = `Could not deserialize '${memberName}'; don't know how to deserialize type`;
@@ -88,6 +112,8 @@ export class Deserializer extends JSONDeserializer {
         knownTypes: Map<string, Serializable<any>>,
         memberName: string,
         deserializer: Deserializer,
+        memberOptions?: ObjectMemberMetadata,
+        serializerOptions?: any,
     ): IndexedObject | T | undefined {
         if ((typeof sourceObject as any) !== 'object' || (sourceObject as any) === null) {
             deserializer.getErrorHandler()(
@@ -165,6 +191,7 @@ export class Deserializer extends JSONDeserializer {
                         knownTypeConstructors,
                         objMemberDebugName,
                         objMemberOptions,
+                        serializerOptions,
                     );
                 }
 
@@ -246,6 +273,8 @@ export class Deserializer extends JSONDeserializer {
                     new ConcreteTypeDescriptor(sourceObject[sourceKey].constructor),
                     knownTypes,
                     sourceKey,
+                    memberOptions,
+                    serializerOptions,
                 );
             });
 

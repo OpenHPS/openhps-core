@@ -35,9 +35,15 @@ export class Serializer extends JSONSerializer {
         typeDescriptor: TypeDescriptor,
         memberName?: string,
         memberOptions?: ObjectMemberMetadata,
-        _?: any, // eslint-disable-line @typescript-eslint/no-unused-vars
+        serializerOptions?: any,
     ): any {
-        const targetObject = this._convertSingleValue(sourceObject, typeDescriptor, memberName, memberOptions);
+        const targetObject = this._convertSingleValue(
+            sourceObject,
+            typeDescriptor,
+            memberName,
+            memberOptions,
+            serializerOptions,
+        );
         if (memberName === undefined && typeof targetObject === 'object') {
             targetObject.__type = typeDescriptor.ctor.name;
         }
@@ -49,7 +55,7 @@ export class Serializer extends JSONSerializer {
         typeDescriptor: TypeDescriptor,
         memberName?: string,
         memberOptions?: ObjectMemberMetadata,
-        _?: any, // eslint-disable-line @typescript-eslint/no-unused-vars
+        serializerOptions?: any,
     ): any {
         if (this.retrievePreserveNull(memberOptions) && sourceObject === null) {
             return null;
@@ -72,11 +78,18 @@ export class Serializer extends JSONSerializer {
 
         const serializer = this.serializationStrategy.get(typeDescriptor.ctor);
         if (serializer !== undefined) {
-            return serializer(sourceObject, typeDescriptor, memberName, this, memberOptions);
+            return serializer(sourceObject, typeDescriptor, memberName, this, memberOptions, serializerOptions);
         }
         // if not present in the strategy do property by property serialization
         if (typeof sourceObject === 'object') {
-            return this.convertAsObject(sourceObject, typeDescriptor, memberName, this, memberOptions);
+            return this.convertAsObject(
+                sourceObject,
+                typeDescriptor,
+                memberName,
+                this,
+                memberOptions,
+                serializerOptions,
+            );
         }
 
         let error = `Could not serialize '${memberName}'; don't know how to serialize type`;
@@ -94,6 +107,7 @@ export class Serializer extends JSONSerializer {
         memberName: string,
         serializer: Serializer,
         memberOptions?: ObjectMemberMetadata,
+        serializerOptions?: any,
     ) {
         let sourceTypeMetadata: JsonObjectMetadata | undefined;
         let targetObject: IndexedObject;
@@ -164,6 +178,7 @@ export class Serializer extends JSONSerializer {
                         objMemberMetadata.type(),
                         `${nameof(sourceMeta.classType)}.${objMemberMetadata.key}`,
                         objMemberOptions,
+                        serializerOptions,
                     );
                 }
 
