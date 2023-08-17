@@ -141,8 +141,6 @@ export class Deserializer extends JSONDeserializer {
         let typeResolver = deserializer.getTypeResolver();
 
         if (sourceObjectMetadata !== undefined) {
-            sourceObjectMetadata.processDeferredKnownTypes();
-
             // Merge known types received from "above" with known types defined on the current type.
             knownTypeConstructors = deserializer.mergeKnownTypes(
                 knownTypeConstructors,

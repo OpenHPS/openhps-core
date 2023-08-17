@@ -12,6 +12,7 @@ import {
     SerializableMemberFunction,
     DataSerializerUtils,
     Absolute3DPosition,
+    Velocity,
 } from '../../../src';
 import { BroadcastNode } from '../../../src/nodes/shapes/BroadcastNode';
 import { ServiceProxy } from '../../../src/service/_internal';
@@ -232,6 +233,12 @@ describe('DataSerializer', () => {
             } catch (ex) {
                 done();
             }
+        });
+
+        it('should not break knownTypes', () => {
+            expect(DataSerializerUtils.getOwnMetadata(Velocity).knownTypes.size).to.eql(1);
+            DataSerializer.deserialize(DataSerializer.serialize(new Absolute3DPosition()));
+            expect(DataSerializerUtils.getOwnMetadata(Velocity).knownTypes.size).to.eql(1);
         });
     });
 });
