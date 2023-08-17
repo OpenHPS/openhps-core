@@ -1,5 +1,5 @@
 import { LengthUnit } from '../../utils';
-import { SerializableObject, SerializableMember } from '../decorators';
+import { SerializableObject, SerializableMember, NumberType } from '../decorators';
 import { RelativePosition } from './RelativePosition';
 
 /**
@@ -11,7 +11,9 @@ export class RelativeDistance extends RelativePosition<number, LengthUnit> {
     /**
      * Distance unit
      */
-    @SerializableMember()
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
     distanceUnit: LengthUnit;
 
     constructor(referenceObject?: any, distance?: number, distanceUnit?: LengthUnit) {

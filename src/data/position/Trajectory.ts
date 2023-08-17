@@ -1,4 +1,4 @@
-import { SerializableArrayMember, SerializableMember, SerializableObject } from '../decorators';
+import { SerializableArrayMember, SerializableMember, SerializableObject, NumberType } from '../decorators';
 import { v4 as uuidv4 } from 'uuid';
 import { AbsolutePosition } from './AbsolutePosition';
 import { TimeService } from '../../service/TimeService';
@@ -20,6 +20,7 @@ export class Trajectory {
      */
     @SerializableMember({
         index: true,
+        numberType: NumberType.LONG,
     })
     createdTimestamp: number;
 

@@ -1,7 +1,7 @@
 import { TimeService } from '../../service/TimeService';
 import { Unit } from '../../utils';
 import { DataSerializer } from '../DataSerializer';
-import { SerializableMember, SerializableObject } from '../decorators';
+import { SerializableMember, SerializableObject, NumberType } from '../decorators';
 import { Accuracy } from '../values/Accuracy';
 import { Accuracy1D } from '../values/Accuracy1D';
 import { Position } from './Position';
@@ -17,6 +17,7 @@ export class RelativePosition<T = number, U extends Unit = Unit> implements Posi
      */
     @SerializableMember({
         index: true,
+        numberType: NumberType.LONG,
     })
     timestamp: number = TimeService.now();
     /**
