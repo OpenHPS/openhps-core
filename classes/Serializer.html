@@ -34,7 +34,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">Serializer</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d2e703b/src/data/Serializer.ts#L7">src/data/Serializer.ts:7</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d924ec8/src/data/Serializer.ts#L11">src/data/Serializer.ts:11</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -49,6 +49,7 @@
 <div class="tsd-index-list"><a href="Serializer.html#errorHandler" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-1024"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)"></path></g></svg><span>error<wbr/>Handler</span></a>
 <a href="Serializer.html#getErrorHandler" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>get<wbr/>Error<wbr/>Handler</span></a>
 <a href="Serializer.html#getTypeHintEmitter" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>get<wbr/>Type<wbr/>Hint<wbr/>Emitter</span></a>
+<a href="Serializer.html#options" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>options?</span></a>
 <a href="Serializer.html#retrievePreserveNull" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>retrieve<wbr/>Preserve<wbr/>Null</span></a>
 <a href="Serializer.html#serializationStrategy" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>serialization<wbr/>Strategy</span></a>
 <a href="Serializer.html#setErrorHandler" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>set<wbr/>Error<wbr/>Handler</span></a>
@@ -58,7 +59,8 @@
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
-<div class="tsd-index-list"><a href="Serializer.html#convertSingleValue" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-2048"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)"></path></g></svg><span>convert<wbr/>Single<wbr/>Value</span></a>
+<div class="tsd-index-list"><a href="Serializer.html#convertAsObject" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-2048"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)"></path></g></svg><span>convert<wbr/>As<wbr/>Object</span></a>
+<a href="Serializer.html#convertSingleValue" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>convert<wbr/>Single<wbr/>Value</span></a>
 </div></section></div></details></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Constructors</h2>
@@ -88,7 +90,7 @@
 <h5><span class="tsd-kind-parameter">error</span>: <span class="tsd-signature-type ">Error</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d2e703b/src/data/Serializer.ts#L10">src/data/Serializer.ts:10</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d924ec8/src/data/Serializer.ts#L15">src/data/Serializer.ts:15</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="getErrorHandler" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Error<wbr/>Handler</span><a href="#getErrorHandler" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">get<wbr/>Error<wbr/>Handler</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">error</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">)</span></div>
@@ -112,7 +114,7 @@
 <h5><span class="tsd-kind-parameter">error</span>: <span class="tsd-signature-type ">Error</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></li></ul></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d2e703b/src/data/Serializer.ts#L25">src/data/Serializer.ts:25</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d924ec8/src/data/Serializer.ts#L30">src/data/Serializer.ts:30</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="getTypeHintEmitter" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Type<wbr/>Hint<wbr/>Emitter</span><a href="#getTypeHintEmitter" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">get<wbr/>Type<wbr/>Hint<wbr/>Emitter</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type ">TypeHintEmitter</span><span class="tsd-signature-symbol">)</span></div>
@@ -125,7 +127,12 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">TypeHintEmitter</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d2e703b/src/data/Serializer.ts#L23">src/data/Serializer.ts:23</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d924ec8/src/data/Serializer.ts#L28">src/data/Serializer.ts:28</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-protected"><a id="options" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <code class="tsd-tag ts-flagOptional">Optional</code> <span>options</span><a href="#options" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">options</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">OptionsBase</span></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d924ec8/src/data/Serializer.ts#L12">src/data/Serializer.ts:12</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="retrievePreserveNull" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>retrieve<wbr/>Preserve<wbr/>Null</span><a href="#retrievePreserveNull" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">retrieve<wbr/>Preserve<wbr/>Null</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">memberOptions</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span></div>
@@ -143,12 +150,12 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">memberOptions</span>: <a href="../interfaces/MemberOptionsBase.html" class="tsd-signature-type tsd-kind-interface">MemberOptionsBase</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d2e703b/src/data/Serializer.ts#L26">src/data/Serializer.ts:26</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d924ec8/src/data/Serializer.ts#L31">src/data/Serializer.ts:31</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-protected"><a id="serializationStrategy" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>serialization<wbr/>Strategy</span><a href="#serializationStrategy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">serialization<wbr/>Strategy</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type ">Map</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/Serializable.html" class="tsd-signature-type tsd-kind-type-alias">Serializable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><a href="../types/SerializerFn.html" class="tsd-signature-type tsd-kind-type-alias">SerializerFn</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type ">TypeDescriptor</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d2e703b/src/data/Serializer.ts#L9">src/data/Serializer.ts:9</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d924ec8/src/data/Serializer.ts#L14">src/data/Serializer.ts:14</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="setErrorHandler" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Error<wbr/>Handler</span><a href="#setErrorHandler" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">set<wbr/>Error<wbr/>Handler</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">errorHandlerCallback</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span></div>
@@ -177,7 +184,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d2e703b/src/data/Serializer.ts#L24">src/data/Serializer.ts:24</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d924ec8/src/data/Serializer.ts#L29">src/data/Serializer.ts:29</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="setSerializationStrategy" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Serialization<wbr/>Strategy</span><a href="#setSerializationStrategy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">set<wbr/>Serialization<wbr/>Strategy</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">type</span>, <span class="tsd-kind-parameter">serializer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span></div>
@@ -197,7 +204,7 @@
 <h5><span class="tsd-kind-parameter">serializer</span>: <a href="../types/SerializerFn.html" class="tsd-signature-type tsd-kind-type-alias">SerializerFn</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type ">TypeDescriptor</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d2e703b/src/data/Serializer.ts#L18">src/data/Serializer.ts:18</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d924ec8/src/data/Serializer.ts#L23">src/data/Serializer.ts:23</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="setTypeHintEmitter" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Type<wbr/>Hint<wbr/>Emitter</span><a href="#setTypeHintEmitter" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">set<wbr/>Type<wbr/>Hint<wbr/>Emitter</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">typeEmitterCallback</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span></div>
@@ -215,14 +222,35 @@
 <h5><span class="tsd-kind-parameter">typeEmitterCallback</span>: <span class="tsd-signature-type ">TypeHintEmitter</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d2e703b/src/data/Serializer.ts#L22">src/data/Serializer.ts:22</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d924ec8/src/data/Serializer.ts#L27">src/data/Serializer.ts:27</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-protected"><a id="typeHintEmitter" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>type<wbr/>Hint<wbr/>Emitter</span><a href="#typeHintEmitter" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">type<wbr/>Hint<wbr/>Emitter</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type ">TypeHintEmitter</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d2e703b/src/data/Serializer.ts#L8">src/data/Serializer.ts:8</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d924ec8/src/data/Serializer.ts#L13">src/data/Serializer.ts:13</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
+<section class="tsd-panel tsd-member"><a id="convertAsObject" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>convert<wbr/>As<wbr/>Object</span><a href="#convertAsObject" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="convertAsObject.convertAsObject-1"><span class="tsd-kind-call-signature">convert<wbr/>As<wbr/>Object</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">sourceObject</span>, <span class="tsd-kind-parameter">typeDescriptor</span>, <span class="tsd-kind-parameter">memberName</span>, <span class="tsd-kind-parameter">serializer</span>, <span class="tsd-kind-parameter">memberOptions</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/IndexedObject.html" class="tsd-signature-type tsd-kind-type-alias">IndexedObject</a><a href="#convertAsObject.convertAsObject-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">sourceObject</span>: <a href="../types/IndexedObject.html" class="tsd-signature-type tsd-kind-type-alias">IndexedObject</a></h5></li>
+<li>
+<h5><span class="tsd-kind-parameter">typeDescriptor</span>: <span class="tsd-signature-type ">ConcreteTypeDescriptor</span></h5></li>
+<li>
+<h5><span class="tsd-kind-parameter">memberName</span>: <span class="tsd-signature-type">string</span></h5></li>
+<li>
+<h5><span class="tsd-kind-parameter">serializer</span>: <a href="Serializer.html" class="tsd-signature-type tsd-kind-class">Serializer</a></h5></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">memberOptions</span>: <a href="../interfaces/ObjectMemberMetadata.html" class="tsd-signature-type tsd-kind-interface">ObjectMemberMetadata</a></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="../types/IndexedObject.html" class="tsd-signature-type tsd-kind-type-alias">IndexedObject</a></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d924ec8/src/data/Serializer.ts#L91">src/data/Serializer.ts:91</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="convertSingleValue" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>convert<wbr/>Single<wbr/>Value</span><a href="#convertSingleValue" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -238,12 +266,12 @@
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">memberName</span>: <span class="tsd-signature-type">string</span></h5></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">memberOptions</span>: <a href="../interfaces/MemberOptionsBase.html" class="tsd-signature-type tsd-kind-interface">MemberOptionsBase</a></h5></li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">memberOptions</span>: <a href="../interfaces/ObjectMemberMetadata.html" class="tsd-signature-type tsd-kind-interface">ObjectMemberMetadata</a></h5></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">_</span>: <span class="tsd-signature-type">any</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d2e703b/src/data/Serializer.ts#L28">src/data/Serializer.ts:28</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/d924ec8/src/data/Serializer.ts#L33">src/data/Serializer.ts:33</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -266,12 +294,14 @@
 <li><a href="#errorHandler" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>error<wbr/>Handler</span></a></li>
 <li><a href="#getErrorHandler" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>get<wbr/>Error<wbr/>Handler</span></a></li>
 <li><a href="#getTypeHintEmitter" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>get<wbr/>Type<wbr/>Hint<wbr/>Emitter</span></a></li>
+<li><a href="#options" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>options</span></a></li>
 <li><a href="#retrievePreserveNull" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>retrieve<wbr/>Preserve<wbr/>Null</span></a></li>
 <li><a href="#serializationStrategy" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>serialization<wbr/>Strategy</span></a></li>
 <li><a href="#setErrorHandler" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>set<wbr/>Error<wbr/>Handler</span></a></li>
 <li><a href="#setSerializationStrategy" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>set<wbr/>Serialization<wbr/>Strategy</span></a></li>
 <li><a href="#setTypeHintEmitter" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>set<wbr/>Type<wbr/>Hint<wbr/>Emitter</span></a></li>
 <li><a href="#typeHintEmitter" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>type<wbr/>Hint<wbr/>Emitter</span></a></li>
+<li><a href="#convertAsObject" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>convert<wbr/>As<wbr/>Object</span></a></li>
 <li><a href="#convertSingleValue" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>convert<wbr/>Single<wbr/>Value</span></a></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../modules.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-4"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)"></path></g></svg><span>@openhps/core</span></a>
