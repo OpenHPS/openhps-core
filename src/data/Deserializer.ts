@@ -48,9 +48,9 @@ export class Deserializer extends JSONDeserializer {
 
     constructor() {
         super();
-        this.setDeserializationStrategy(Map, this.convertAsMap);
-        this.setDeserializationStrategy(Array, this.convertAsArray);
-        this.setDeserializationStrategy(Set, this.convertAsSet);
+        this.setDeserializationStrategy(Map, this.convertAsMap.bind(this));
+        this.setDeserializationStrategy(Array, this.convertAsArray.bind(this));
+        this.setDeserializationStrategy(Set, this.convertAsSet.bind(this));
     }
 
     convertSingleValue(
@@ -422,7 +422,7 @@ export class Deserializer extends JSONDeserializer {
         }
         const expectedShape = typeDescriptor.getCompleteOptions().shape;
         if (!this.isExpectedMapShape(sourceObject, expectedShape)) {
-            const expectedType = expectedShape.name === 'ARRAY' ? Array : Object;
+            const expectedType = expectedShape === 0 ? Array : Object;
             deserializer.getErrorHandler()(
                 new TypeError(this.makeTypeErrorMessage(expectedType, sourceObject.constructor, memberName)),
             );
@@ -515,10 +515,7 @@ export class Deserializer extends JSONDeserializer {
     }
 
     protected isExpectedMapShape(source: any, expectedShape: any): boolean {
-        return (
-            (expectedShape.name === 'ARRAY' && Array.isArray(source)) ||
-            (expectedShape.name === 'OBJECT' && typeof source === 'object')
-        );
+        return (expectedShape === 0 && Array.isArray(source)) || (expectedShape === 1 && typeof source === 'object');
     }
 
     protected makeTypeErrorMessage(

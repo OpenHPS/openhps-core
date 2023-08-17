@@ -498,6 +498,7 @@ describe('Model', () => {
                         expect(frames).to.equal(1);
                         done();
                     });
+                    model.once('error', done);
                     model.findNodeByName('in-b').push(frame);
                 });
         });

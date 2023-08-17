@@ -37,9 +37,9 @@ export class Serializer extends JSONSerializer {
 
     constructor() {
         super();
-        this.setSerializationStrategy(Map, this.convertAsMap);
-        this.setSerializationStrategy(Array, this.convertAsArray);
-        this.setSerializationStrategy(Set, this.convertAsSet);
+        this.setSerializationStrategy(Map, this.convertAsMap.bind(this));
+        this.setSerializationStrategy(Array, this.convertAsArray.bind(this));
+        this.setSerializationStrategy(Set, this.convertAsSet.bind(this));
     }
 
     convertSingleValue(
@@ -361,7 +361,7 @@ export class Serializer extends JSONSerializer {
         const keyMemberName = `${memberName}[].key`;
         const valueMemberName = `${memberName}[].value`;
         const resultShape = typeDescriptor.getCompleteOptions().shape;
-        const result = resultShape.name === 'OBJECT' ? ({} as IndexedObject) : [];
+        const result = resultShape === 1 ? ({} as IndexedObject) : [];
         const preserveNull = serializer.retrievePreserveNull(memberOptions);
 
         // Convert each *entry* in the map to a simple javascript object with key and value properties.
@@ -388,7 +388,7 @@ export class Serializer extends JSONSerializer {
             const valueDefined =
                 (resultKeyValuePairObj.value === null && preserveNull) || isValueDefined(resultKeyValuePairObj.value);
             if (keyDefined && valueDefined) {
-                if (resultShape.name === 'OBJECT') {
+                if (resultShape === 1) {
                     result[resultKeyValuePairObj.key] = resultKeyValuePairObj.value;
                 } else {
                     result.push(resultKeyValuePairObj);
