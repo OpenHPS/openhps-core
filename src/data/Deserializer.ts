@@ -75,7 +75,7 @@ export class Deserializer extends JSONDeserializer {
         sourceObject: any,
         typeDescriptor: TypeDescriptor,
         knownTypes: Map<string, Serializable<any>>,
-        memberName = 'object',
+        memberName: string,
         memberOptions?: ObjectMemberMetadata,
         serializerOptions?: any,
     ): any {
