@@ -13,6 +13,9 @@ import {
     DataSerializerUtils,
     Absolute3DPosition,
     Velocity,
+    LengthUnit,
+    DerivedUnit,
+    AngularVelocityUnit,
 } from '../../../src';
 import { BroadcastNode } from '../../../src/nodes/shapes/BroadcastNode';
 import { ServiceProxy } from '../../../src/service/_internal';
@@ -236,9 +239,12 @@ describe('DataSerializer', () => {
         });
 
         it('should not break knownTypes', () => {
+            new AngularVelocityUnit()
             expect(DataSerializerUtils.getOwnMetadata(Velocity).knownTypes.size).to.eql(1);
             DataSerializer.deserialize(DataSerializer.serialize(new Absolute3DPosition()));
             expect(DataSerializerUtils.getOwnMetadata(Velocity).knownTypes.size).to.eql(1);
+            expect(DataSerializerUtils.getOwnMetadata(LengthUnit).knownTypes.size).to.eql(0);
+            expect(DataSerializerUtils.getOwnMetadata(DerivedUnit).knownTypes.size).to.eql(3);
         });
     });
 });

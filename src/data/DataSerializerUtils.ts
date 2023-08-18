@@ -1,4 +1,4 @@
-import { Constructor, JsonObjectMetadata, Serializable } from 'typedjson';
+import { Constructor, IndexedObject, JsonObjectMetadata, Serializable } from 'typedjson';
 import type { MappedTypeConverters } from 'typedjson/lib/types/parser';
 import { ObjectMetadata } from './decorators/metadata';
 import { SerializableMemberOptions } from './decorators/options';
@@ -29,6 +29,42 @@ export class DataSerializerUtils {
      */
     static getMetadata(proto: any): ObjectMetadata {
         return DataSerializerUtils.getOwnMetadata(proto) ?? DataSerializerUtils.getRootMetadata(proto);
+    }
+
+    static createMetadata(proto: IndexedObject): ObjectMetadata {
+        if (Object.prototype.hasOwnProperty.call(proto, this.META_FIELD)) {
+            return proto[this.META_FIELD];
+        }
+        // Target has no JsonObjectMetadata associated with it yet, create it now.
+        const objectMetadata = new JsonObjectMetadata(proto.constructor);
+
+        // Inherit json members and known types from parent @jsonObject (if any).
+        const parentMetadata: JsonObjectMetadata | undefined = proto[this.META_FIELD];
+
+        if (parentMetadata !== undefined) {
+            parentMetadata.dataMembers.forEach((memberMetadata, propKey) => {
+                objectMetadata.dataMembers.set(propKey, memberMetadata);
+            });
+            parentMetadata.knownTypes.forEach((knownType) => {
+                // Only add if sub type
+                if (knownType === proto.constructor || !(knownType.prototype instanceof proto.constructor)) {
+                    return;
+                }
+                objectMetadata.knownTypes.add(knownType);
+            });
+            // Add sub class to parent
+            parentMetadata.knownTypes.add(objectMetadata.classType);
+            objectMetadata.typeResolver = parentMetadata.typeResolver;
+            objectMetadata.typeHintEmitter = parentMetadata.typeHintEmitter;
+        }
+
+        Object.defineProperty(proto, this.META_FIELD, {
+            enumerable: false,
+            configurable: false,
+            writable: false,
+            value: objectMetadata,
+        });
+        return objectMetadata;
     }
 
     /**
