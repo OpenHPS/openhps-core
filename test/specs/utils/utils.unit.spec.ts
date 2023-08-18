@@ -7,6 +7,7 @@ import {
     AngularVelocityUnit,
     UnitValue,
     GCS,
+    Accuracy1D,
 } from '../../../src';
 import { expect } from 'chai';
 import 'mocha';
@@ -90,6 +91,15 @@ describe('Unit', () => {
             const serialized = DataSerializer.serialize(u1);
             const deserialized = DataSerializer.deserialize(serialized, Unit);
             expect(deserialized).to.eql(u1);
+        });
+    });
+
+    describe('deserializing', () => {
+        it('should deserialize a unit', () => {
+            const accuracy = new Accuracy1D(10, AngleUnit.DEGREE);
+            const serialized = DataSerializer.serialize(accuracy);
+            const deserialized = DataSerializer.deserialize(serialized) as any;
+            expect(deserialized._unit).to.be.instanceOf(AngleUnit);
         });
     });
 

@@ -137,22 +137,16 @@ export class Deserializer extends JSONDeserializer {
 
         let expectedSelfType = typeDescriptor.ctor;
         let sourceObjectMetadata = JsonObjectMetadata.getFromConstructor(expectedSelfType);
-        let knownTypeConstructors = knownTypes;
         let typeResolver = deserializer.getTypeResolver();
 
         if (sourceObjectMetadata !== undefined) {
-            // Merge known types received from "above" with known types defined on the current type.
-            knownTypeConstructors = deserializer.mergeKnownTypes(
-                knownTypeConstructors,
-                deserializer.createKnownTypesMap(sourceObjectMetadata.knownTypes),
-            );
             if (sourceObjectMetadata.typeResolver != null) {
                 typeResolver = sourceObjectMetadata.typeResolver;
             }
         }
 
         // Check if a type-hint is available from the source object.
-        const typeFromTypeHint = typeResolver(sourceObject, knownTypeConstructors);
+        const typeFromTypeHint = typeResolver(sourceObject, knownTypes);
 
         if (typeFromTypeHint != null) {
             // Check if type hint is a valid subtype of the expected source type.
@@ -160,14 +154,6 @@ export class Deserializer extends JSONDeserializer {
                 // Hell yes.
                 expectedSelfType = typeFromTypeHint;
                 sourceObjectMetadata = JsonObjectMetadata.getFromConstructor(typeFromTypeHint);
-
-                if (sourceObjectMetadata !== undefined) {
-                    // Also merge new known types from subtype.
-                    knownTypeConstructors = deserializer.mergeKnownTypes(
-                        knownTypeConstructors,
-                        deserializer.createKnownTypesMap(sourceObjectMetadata.knownTypes),
-                    );
-                }
             }
         }
 
@@ -199,7 +185,7 @@ export class Deserializer extends JSONDeserializer {
                     revivedValue = deserializer.convertSingleValue(
                         objMemberValue,
                         objMemberMetadata.type(),
-                        knownTypeConstructors,
+                        knownTypes,
                         objMemberDebugName,
                         objMemberOptions,
                         serializerOptions,

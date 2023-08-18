@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import 'mocha';
-import { JsonObjectMetadata } from 'typedjson';
 import {
     DataSerializer,
     DataObject,
@@ -13,6 +12,7 @@ import {
     DataSerializerUtils,
     Absolute3DPosition,
     Velocity,
+    Orientation,
 } from '../../../src';
 import { BroadcastNode } from '../../../src/nodes/shapes/BroadcastNode';
 import { ServiceProxy } from '../../../src/service/_internal';
@@ -239,6 +239,7 @@ describe('DataSerializer', () => {
             expect(DataSerializerUtils.getOwnMetadata(Velocity).knownTypes.size).to.eql(1);
             DataSerializer.deserialize(DataSerializer.serialize(new Absolute3DPosition()));
             expect(DataSerializerUtils.getOwnMetadata(Velocity).knownTypes.size).to.eql(1);
+            expect(DataSerializerUtils.getOwnMetadata(Orientation).knownTypes.size).to.eql(1);
         });
     });
 });
