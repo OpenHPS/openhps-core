@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { DataSerializerUtils, SerializableMember, SerializableMemberOptions, SerializableObject } from '../../../src';
+import { DataSerializerUtils, RelativeDistance, SerializableMember, SerializableMemberOptions, SerializableObject } from '../../../src';
 
 declare module "../../../src/data/decorators/options" {
     interface MemberOptionsBase {
@@ -67,6 +67,16 @@ describe('SerializableMember', () => {
             expect((meta2.dataMembers.get('member1').options as SerializableMemberOptions).primaryKey).to.equal(true);
 
         });
+    });
+
+    describe('datamembers' , () => {
+
+        it('should update information', () => {
+            const meta = DataSerializerUtils.getOwnMetadata(RelativeDistance);
+            const member = meta.dataMembers.get('referenceValue');
+            expect(member.type().ctor).to.eql(Number);
+        });
+
     });
 
 });

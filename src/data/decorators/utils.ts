@@ -1,6 +1,6 @@
 import { AnyT, Constructor, JsonObjectMetadata, Serializable } from 'typedjson';
 import { DataSerializer } from '../DataSerializer';
-import { DataSerializerUtils } from '../DataSerializerUtils';
+import { DataSerializerUtils, ConcreteTypeDescriptor } from '../DataSerializerUtils';
 import { MemberOptionsBase, SerializableObjectOptions } from './options';
 // eslint-disable-next-line
 const cloneDeep = require('lodash.clonedeep');
@@ -12,6 +12,8 @@ const cloneDeep = require('lodash.clonedeep');
  * @param {any} options Options to inject
  */
 export function updateSerializableMember(target: unknown, propertyKey: string, options: MemberOptionsBase) {
+    const reflectPropCtor: Constructor<any> = Reflect.getMetadata('design:type', target, propertyKey);
+
     // Inject additional options if available
     if (options) {
         const ownMeta = JsonObjectMetadata.ensurePresentInPrototype(target);
@@ -42,7 +44,6 @@ export function updateSerializableMember(target: unknown, propertyKey: string, o
     }
 
     // Detect generic types that have no deserialization or constructor specified
-    const reflectPropCtor: Constructor<any> = Reflect.getMetadata('design:type', target, propertyKey);
     if (
         reflectPropCtor === Object &&
         (!options || (!options.deserializer && !Object.keys(options).includes('constructor')))
@@ -52,6 +53,10 @@ export function updateSerializableMember(target: unknown, propertyKey: string, o
         existingOptions.serializer = (object) => DataSerializer.serialize(object);
         existingOptions.deserializer = (objectJson) => DataSerializer.deserialize(objectJson);
         existingOptions.type = () => AnyT;
+    } else {
+        const meta = JsonObjectMetadata.ensurePresentInPrototype(target);
+        const existingOptions = meta.dataMembers.get(options ? options.name || propertyKey : propertyKey);
+        existingOptions.type = () => new ConcreteTypeDescriptor(reflectPropCtor);
     }
 }
 
