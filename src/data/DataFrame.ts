@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DataObject } from './object/DataObject';
-import { SerializableObject, SerializableMember, SerializableMapMember } from './decorators';
+import { SerializableObject, SerializableMember, SerializableMapMember, NumberType } from './decorators';
 import { ReferenceSpace } from './object/space';
 import { TimeService } from '../service/TimeService';
 import { DataSerializer } from './DataSerializer';
@@ -51,6 +51,7 @@ export class DataFrame {
      */
     @SerializableMember({
         index: true,
+        numberType: NumberType.LONG,
     })
     createdTimestamp: number;
     /**
@@ -58,6 +59,7 @@ export class DataFrame {
      */
     @SerializableMember({
         index: true,
+        numberType: NumberType.LONG,
     })
     phenomenonTimestamp?: number;
     @SerializableMember({

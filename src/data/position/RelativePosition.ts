@@ -35,6 +35,7 @@ export class RelativePosition<T = number, U extends Unit = Unit> implements Posi
     private _accuracy: Accuracy<U, any>;
     @SerializableMember({
         name: 'probability',
+        numberType: NumberType.DECIMAL,
     })
     private _probability: number;
     private _defaultUnit: U;

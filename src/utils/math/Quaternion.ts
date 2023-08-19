@@ -27,7 +27,7 @@ export class Quaternion extends THREE.Quaternion {
     z: number;
 
     @SerializableMember({
-        type: NumberType.DECIMAL,
+        numberType: NumberType.DECIMAL,
     })
     w: number;
 

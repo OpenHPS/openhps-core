@@ -53,6 +53,7 @@ export abstract class AbsolutePosition implements Position<LengthUnit> {
     private _accuracy: Accuracy<LengthUnit, any>;
     @SerializableMember({
         name: 'probability',
+        numberType: NumberType.DECIMAL,
     })
     private _probability: number;
 

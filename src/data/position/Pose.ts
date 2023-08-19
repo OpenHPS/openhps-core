@@ -1,7 +1,7 @@
 import { TimeService } from '../../service/TimeService';
 import { LengthUnit } from '../../utils';
 import { Matrix4 } from '../../utils/math/';
-import { SerializableMember, SerializableObject } from '../decorators';
+import { SerializableMember, SerializableObject, NumberType } from '../decorators';
 import { Accuracy } from '../values/Accuracy';
 import { Accuracy1D } from '../values/Accuracy1D';
 import { Absolute3DPosition } from './Absolute3DPosition';
@@ -21,6 +21,7 @@ export class Pose extends Matrix4 implements Position<LengthUnit> {
      */
     @SerializableMember({
         index: true,
+        numberType: NumberType.LONG,
     })
     timestamp: number = TimeService.now();
     /**

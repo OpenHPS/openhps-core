@@ -1,4 +1,4 @@
-import { SerializableObject } from '../decorators';
+import { SerializableObject, SerializableMember } from '../decorators';
 import { LinearVelocityUnit, Vector3 } from '../../utils';
 import { SensorValue } from './SensorValue';
 
@@ -7,6 +7,9 @@ import { SensorValue } from './SensorValue';
  */
 @SerializableObject()
 export class LinearVelocity extends SensorValue<LinearVelocityUnit> {
+    @SerializableMember()
+    unit!: LinearVelocityUnit;
+
     constructor(x?: number, y?: number, z?: number, unit = LinearVelocityUnit.METER_PER_SECOND) {
         super(x, y, z, unit, LinearVelocityUnit.METER_PER_SECOND);
     }
