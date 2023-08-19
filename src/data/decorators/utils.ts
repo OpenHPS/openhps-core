@@ -44,18 +44,16 @@ export function updateSerializableMember(target: unknown, propertyKey: string, o
     }
 
     // Detect generic types that have no deserialization or constructor specified
+    const meta = JsonObjectMetadata.ensurePresentInPrototype(target);
+    const existingOptions = meta.dataMembers.get(options ? options.name || propertyKey : propertyKey);
     if (
         reflectPropCtor === Object &&
         (!options || (!options.deserializer && !Object.keys(options).includes('constructor')))
     ) {
-        const meta = JsonObjectMetadata.ensurePresentInPrototype(target);
-        const existingOptions = meta.dataMembers.get(options ? options.name || propertyKey : propertyKey);
         existingOptions.serializer = (object) => DataSerializer.serialize(object);
         existingOptions.deserializer = (objectJson) => DataSerializer.deserialize(objectJson);
         existingOptions.type = () => AnyT;
-    } else {
-        const meta = JsonObjectMetadata.ensurePresentInPrototype(target);
-        const existingOptions = meta.dataMembers.get(options ? options.name || propertyKey : propertyKey);
+    } else if (existingOptions && existingOptions.type() instanceof ConcreteTypeDescriptor) {
         existingOptions.type = () => new ConcreteTypeDescriptor(reflectPropCtor);
     }
 }

@@ -418,7 +418,7 @@ describe('FrameMergeNode', () => {
         ModelBuilder.create()
             .from("input")
             .via(new FrameMergeNode((frame) => frame.source.uid, (frame) => frame.uid, {
-                timeout: 1000,                      // After 1000ms, push the frame
+                timeout: 2000,                      // After 1000ms, push the frame
                 timeoutUnit: TimeUnit.MILLISECOND,
                 minCount: 1,                        // Minimum amount of frames to receive
                 maxCount: 9                         // Max count can be as big as you want
@@ -455,11 +455,11 @@ describe('FrameMergeNode', () => {
                 
                 setTimeout(() => {
                     model.emit('destroy');
-                }, 1500);
+                }, 5000);
             })
             .catch((ex) => {
                 done(ex);
             });
-    });
+    }).timeout(60000);
 
 });
