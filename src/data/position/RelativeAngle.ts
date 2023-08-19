@@ -1,5 +1,5 @@
 import { AngleUnit } from '../../utils';
-import { SerializableObject, SerializableMember } from '../decorators';
+import { SerializableObject, SerializableMember, NumberType } from '../decorators';
 import { Orientation } from './Orientation';
 import { RelativePosition } from './RelativePosition';
 
@@ -19,6 +19,10 @@ export class RelativeAngle extends RelativePosition<number, AngleUnit> {
      */
     @SerializableMember()
     angleUnit: AngleUnit;
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
+    referenceValue: number;
 
     constructor(referenceObject?: any, angle?: number, angleUnit?: AngleUnit, orientation?: Orientation) {
         super(referenceObject, angle, angleUnit || AngleUnit.RADIAN);

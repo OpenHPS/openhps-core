@@ -15,6 +15,10 @@ export class RelativeDistance extends RelativePosition<number, LengthUnit> {
         numberType: NumberType.DECIMAL,
     })
     distanceUnit: LengthUnit;
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
+    referenceValue: number;
 
     constructor(referenceObject?: any, distance?: number, distanceUnit?: LengthUnit) {
         super(referenceObject, distance, LengthUnit.METER);

@@ -1,5 +1,5 @@
 import { RelativePosition } from './RelativePosition';
-import { SerializableObject } from '../decorators';
+import { SerializableObject, SerializableMember } from '../decorators';
 import { AngularVelocity } from '../values';
 import { AngularVelocityUnit } from '../../utils';
 
@@ -9,6 +9,9 @@ import { AngularVelocityUnit } from '../../utils';
  */
 @SerializableObject()
 export class RelativeAngularVelocity extends RelativePosition<AngularVelocity, AngularVelocityUnit> {
+    @SerializableMember()
+    referenceValue: AngularVelocity;
+
     constructor(referenceObject?: any, velocity?: AngularVelocity) {
         super(referenceObject, velocity, AngularVelocityUnit.RADIAN_PER_MINUTE);
     }

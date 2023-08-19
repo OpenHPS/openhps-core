@@ -1,5 +1,5 @@
 import { RelativePosition } from './RelativePosition';
-import { SerializableObject } from '../decorators';
+import { SerializableObject, SerializableMember } from '../decorators';
 import { LinearVelocity } from '../values';
 import { LinearVelocityUnit } from '../../utils';
 
@@ -9,6 +9,9 @@ import { LinearVelocityUnit } from '../../utils';
  */
 @SerializableObject()
 export class RelativeLinearVelocity extends RelativePosition<LinearVelocity, LinearVelocityUnit> {
+    @SerializableMember()
+    referenceValue: LinearVelocity;
+
     constructor(referenceObject?: any, velocity?: LinearVelocity) {
         super(referenceObject, velocity, LinearVelocityUnit.METER_PER_SECOND);
     }

@@ -16,6 +16,9 @@ import {
     AngularVelocityUnit,
     LengthUnit,
     DerivedUnit,
+    LinearVelocity,
+    LinearVelocityUnit,
+    Accuracy2D,
 } from '../../../src';
 import { BroadcastNode } from '../../../src/nodes/shapes/BroadcastNode';
 import { ServiceProxy } from '../../../src/service/_internal';
@@ -226,6 +229,14 @@ describe('DataSerializer', () => {
             expect(deserialized).to.be.instanceOf(Array);
             expect(deserialized.length).to.equal(2);
             expect(deserialized[0]).to.be.instanceOf(DataObject);
+        });
+
+        it('should deserialize generic types' , () => {
+            const velocity = new LinearVelocity(1, 2, 3, LinearVelocityUnit.METER_PER_SECOND);
+            velocity.setAccuracy(new Accuracy2D(1, 1, LinearVelocityUnit.CENTIMETER_PER_SECOND));
+            const serialized = DataSerializer.serialize(velocity);
+            const deserialized = DataSerializer.deserialize(serialized);
+            expect(velocity).to.eql(deserialized);
         });
 
         it('should throw an error when deserializing fails', (done) => {
