@@ -1,10 +1,13 @@
 import { Unit } from '../../utils';
 import { Vector3 } from '../../utils/math/';
-import { SerializableObject } from '../decorators';
+import { SerializableObject, SerializableMember } from '../decorators';
 import { Accuracy } from './Accuracy';
 
 @SerializableObject()
 export class Accuracy2D<U extends Unit = Unit> extends Accuracy<U, Vector3> {
+    @SerializableMember()
+    value: Vector3;
+
     constructor(x?: number, y?: number, unit?: U) {
         super(new Vector3(), unit);
         this.value.x = x;

@@ -1,9 +1,14 @@
 import { Unit } from '../../utils';
-import { SerializableObject } from '../decorators';
+import { SerializableObject, SerializableMember, NumberType } from '../decorators';
 import { Accuracy } from './Accuracy';
 
 @SerializableObject()
 export class Accuracy1D<U extends Unit = Unit> extends Accuracy<U, number> {
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
+    value: number;
+
     constructor(value?: number, unit?: U) {
         super(value, unit);
     }
