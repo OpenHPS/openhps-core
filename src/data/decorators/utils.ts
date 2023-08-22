@@ -1,7 +1,7 @@
-import { AnyT, Constructor, JsonObjectMetadata, Serializable } from 'typedjson';
+import { AnyT, Constructor, IndexedObject, JsonObjectMetadata, Serializable } from 'typedjson';
+import { SerializableMemberOptions, SerializableObjectOptions } from './options';
 import { DataSerializer } from '../DataSerializer';
 import { DataSerializerUtils, ConcreteTypeDescriptor } from '../DataSerializerUtils';
-import { MemberOptionsBase, SerializableObjectOptions } from './options';
 // eslint-disable-next-line
 const cloneDeep = require('lodash.clonedeep');
 
@@ -11,7 +11,11 @@ const cloneDeep = require('lodash.clonedeep');
  * @param {PropertyKey} propertyKey Property key
  * @param {any} options Options to inject
  */
-export function updateSerializableMember(target: unknown, propertyKey: string, options: MemberOptionsBase) {
+export function updateSerializableMember(
+    target: unknown,
+    propertyKey: string,
+    options: SerializableMemberOptions | IndexedObject,
+) {
     const reflectPropCtor: Constructor<any> = Reflect.getMetadata('design:type', target, propertyKey);
 
     // Inject additional options if available
@@ -53,7 +57,11 @@ export function updateSerializableMember(target: unknown, propertyKey: string, o
         existingOptions.serializer = (object) => DataSerializer.serialize(object);
         existingOptions.deserializer = (objectJson) => DataSerializer.deserialize(objectJson);
         existingOptions.type = () => AnyT;
-    } else if (existingOptions && existingOptions.type() instanceof ConcreteTypeDescriptor) {
+    } else if (
+        existingOptions &&
+        typeof options !== 'object' &&
+        existingOptions.type() instanceof ConcreteTypeDescriptor
+    ) {
         existingOptions.type = () => new ConcreteTypeDescriptor(reflectPropCtor);
     }
 }

@@ -77,6 +77,21 @@ describe('SerializableMember', () => {
             expect(member.type().ctor).to.eql(Number);
         });
 
+
+        it('should support unintialized types', () => {
+            
+            @SerializableObject()
+            class MyNewClass {
+    
+            }
+
+            @SerializableObject()
+            class MyTestClass {
+                @SerializableMember(() => MyNewClass)
+                abc: any;
+            }
+            
+        });
     });
 
 });
