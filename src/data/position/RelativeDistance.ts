@@ -11,10 +11,8 @@ export class RelativeDistance extends RelativePosition<number, LengthUnit> {
     /**
      * Distance unit
      */
-    @SerializableMember({
-        numberType: NumberType.DECIMAL,
-    })
-    distanceUnit: LengthUnit;
+    @SerializableMember()
+    unit: LengthUnit;
     @SerializableMember({
         numberType: NumberType.DECIMAL,
     })
@@ -22,7 +20,20 @@ export class RelativeDistance extends RelativePosition<number, LengthUnit> {
 
     constructor(referenceObject?: any, distance?: number, distanceUnit?: LengthUnit) {
         super(referenceObject, distance, LengthUnit.METER);
-        this.distanceUnit = distanceUnit;
+        this.unit = distanceUnit;
+    }
+
+    /**
+     * Distance unit
+     * @deprecated Use [[unit]] instead
+     * @returns {AngleUnit} unit
+     */
+    get distanceUnit(): LengthUnit {
+        return this.unit;
+    }
+
+    set distanceUnit(unit: LengthUnit) {
+        this.unit = unit;
     }
 
     /**

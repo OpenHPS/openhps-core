@@ -19,6 +19,8 @@ import {
     LinearVelocity,
     LinearVelocityUnit,
     Accuracy2D,
+    SensorValue,
+    Vector3,
 } from '../../../src';
 import { BroadcastNode } from '../../../src/nodes/shapes/BroadcastNode';
 import { ServiceProxy } from '../../../src/service/_internal';
@@ -255,6 +257,7 @@ describe('DataSerializer', () => {
             expect(DataSerializerUtils.getOwnMetadata(Velocity).knownTypes.size).to.eql(1);
             expect(DataSerializerUtils.getOwnMetadata(LengthUnit).knownTypes.size).to.eql(0);
             expect(DataSerializerUtils.getOwnMetadata(DerivedUnit).knownTypes.size).to.eql(3);
+            //expect(DataSerializerUtils.getOwnMetadata(SensorValue).knownTypes).to.not.contain(Vector3);
         });
     });
 });

@@ -14,11 +14,8 @@ export class RelativeAngle extends RelativePosition<number, AngleUnit> {
      */
     @SerializableMember()
     orientation: Orientation = new Orientation();
-    /**
-     * Angle unit
-     */
     @SerializableMember()
-    angleUnit: AngleUnit;
+    unit: AngleUnit;
     @SerializableMember({
         numberType: NumberType.DECIMAL,
     })
@@ -26,10 +23,23 @@ export class RelativeAngle extends RelativePosition<number, AngleUnit> {
 
     constructor(referenceObject?: any, angle?: number, angleUnit?: AngleUnit, orientation?: Orientation) {
         super(referenceObject, angle, angleUnit || AngleUnit.RADIAN);
-        this.angleUnit = angleUnit;
+        this.unit = angleUnit;
         if (orientation) {
             this.orientation = orientation;
         }
+    }
+
+    /**
+     * Angle unit
+     * @deprecated Use [[unit]] instead
+     * @returns {AngleUnit} unit
+     */
+    get angleUnit(): AngleUnit {
+        return this.unit;
+    }
+
+    set angleUnit(unit: AngleUnit) {
+        this.unit = unit;
     }
 
     /**

@@ -21,9 +21,6 @@ export class GeographicalPosition extends Absolute3DPosition {
      * Geographical Latitude
      * @returns {number} Latitude
      */
-    @SerializableMember({
-        numberType: NumberType.DECIMAL,
-    })
     get latitude(): number {
         return this.y;
     }
@@ -36,9 +33,6 @@ export class GeographicalPosition extends Absolute3DPosition {
      * Geographical Longitude
      * @returns {number} Longitude
      */
-    @SerializableMember({
-        numberType: NumberType.DECIMAL,
-    })
     get longitude(): number {
         return this.x;
     }

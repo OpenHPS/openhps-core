@@ -167,3 +167,8 @@ function mergeDeep(target: any, source: any): any {
     }
     return output;
 }
+
+export const SerializationUtils = {
+    cloneDeep,
+    mergeDeep,
+};
