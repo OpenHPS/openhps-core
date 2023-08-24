@@ -1,4 +1,4 @@
-import { SerializableMember, SerializableObject } from '../decorators';
+import { NumberType, SerializableMember, SerializableObject } from '../decorators';
 import { Orientation } from '../position';
 import { SensorValue } from '../values';
 import { DataObject } from './DataObject';
@@ -17,7 +17,9 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
     /**
      * Frequency of the sensor
      */
-    @SerializableMember()
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
     frequency: number;
 
     constructor(uid?: string, value?: T, frequency?: number, displayName?: string) {

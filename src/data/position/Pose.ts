@@ -39,7 +39,9 @@ export class Pose extends Matrix4 implements Position<LengthUnit> {
      * Get the position probability
      * @returns {number} Probability between 0 and 1
      */
-    @SerializableMember()
+    @SerializableMember({
+        numberType: NumberType.DECIMAL,
+    })
     get probability(): number {
         return this._probability;
     }
