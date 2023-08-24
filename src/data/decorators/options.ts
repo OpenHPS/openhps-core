@@ -50,11 +50,34 @@ export interface SerializableMemberOptions extends MemberOptionsBase {
     numberType?: NumberType;
 }
 
-export interface SerializableArrayMemberOptions extends MemberOptionsBase, IJsonArrayMemberOptions {}
+export interface SerializableArrayMemberOptions extends MemberOptionsBase, IJsonArrayMemberOptions {
+    /**
+     * Experimental number type
+     */
+    numberType?: NumberType;
+}
 
-export interface SerializableSetMemberOptions extends MemberOptionsBase, IJsonSetMemberOptions {}
+export interface SerializableSetMemberOptions extends MemberOptionsBase, IJsonSetMemberOptions {
+    /**
+     * Experimental number type
+     */
+    numberType?: NumberType;
+}
 
-export interface SerializableMapMemberOptions extends MemberOptionsBase, IJsonMapMemberOptions {}
+export interface SerializableMapMemberOptions extends MemberOptionsBase, IJsonMapMemberOptions {
+    key?: {
+        /**
+         * Experimental number type
+         */
+        numberType?: NumberType;
+    };
+    value?: {
+        /**
+         * Experimental number type
+         */
+        numberType?: NumberType;
+    };
+}
 
 export enum NumberType {
     INTEGER,
