@@ -20,7 +20,7 @@ export class SensorValue<U extends Unit = Unit> extends Vector3 {
     })
     accuracy!: Accuracy<U, Vector3 | number>;
     private _defaultUnit?: U;
-    @SerializableMember()
+    @SerializableMember(() => Unit)
     unit!: U;
 
     constructor(

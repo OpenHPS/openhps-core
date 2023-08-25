@@ -39,7 +39,7 @@ export class RelativePosition<T = number, U extends Unit = Unit> implements Posi
     })
     private _probability: number;
     private _defaultUnit: U;
-    @SerializableMember()
+    @SerializableMember(() => Unit)
     unit: U;
 
     /**

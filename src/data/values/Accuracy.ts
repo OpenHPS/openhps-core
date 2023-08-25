@@ -8,6 +8,7 @@ export abstract class Accuracy<U extends Unit = Unit, T extends number | Vector3
     value: T;
     @SerializableMember({
         name: 'unit',
+        constructor: () => Unit
     })
     protected _unit!: U;
 

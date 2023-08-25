@@ -1,6 +1,6 @@
 import { AngleUnit } from '../../utils/unit/AngleUnit';
 import { LengthUnit } from '../../utils/unit/LengthUnit';
-import { SerializableObject, SerializableMember, NumberType } from '../decorators';
+import { SerializableObject } from '../decorators';
 import { Absolute3DPosition } from './Absolute3DPosition';
 import { GCS, HAVERSINE, Unit, Vector3 } from '../../utils';
 
@@ -45,9 +45,6 @@ export class GeographicalPosition extends Absolute3DPosition {
      * Altitude above mean sea level
      * @returns {number} Altitude
      */
-    @SerializableMember({
-        numberType: NumberType.DECIMAL,
-    })
     get altitude(): number {
         return this.z;
     }

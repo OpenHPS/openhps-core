@@ -1,4 +1,4 @@
-import { SerializableArrayMember, SerializableObject } from '../../data/decorators';
+import { SerializableArrayMember, SerializableObject, NumberType } from '../../data/decorators';
 import * as THREE from './_internal';
 
 /**
@@ -6,7 +6,9 @@ import * as THREE from './_internal';
  */
 @SerializableObject()
 export class Matrix3 extends THREE.Matrix3 {
-    @SerializableArrayMember(Number)
+    @SerializableArrayMember(Number, {
+        numberType: NumberType.DECIMAL
+    })
     public elements: number[];
 
     /**

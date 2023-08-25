@@ -1,5 +1,5 @@
 import { AngleUnit } from '../unit/AngleUnit';
-import { SerializableObject, SerializableMember } from '../../data/decorators';
+import { SerializableObject, SerializableMember, NumberType } from '../../data/decorators';
 import { Matrix4 } from './Matrix4';
 import { Vector3 } from './Vector3';
 import * as THREE from './_internal';
@@ -9,7 +9,9 @@ import * as THREE from './_internal';
  */
 @SerializableObject()
 export class AxisAngle extends Vector3 {
-    @SerializableMember()
+    @SerializableMember({
+        numberType: NumberType.DOUBLE
+    })
     angle: number;
 
     constructor(x?: number, y?: number, z?: number, angle: number = null, unit: AngleUnit = AngleUnit.RADIAN) {
