@@ -8,9 +8,8 @@ export abstract class Accuracy<U extends Unit = Unit, T extends number | Vector3
     value: T;
     @SerializableMember({
         name: 'unit',
-        constructor: () => Unit
     })
-    protected _unit!: U;
+    protected _unit!: Unit;
 
     constructor(value?: T, unit?: U) {
         this.value = value;
@@ -39,7 +38,7 @@ export abstract class Accuracy<U extends Unit = Unit, T extends number | Vector3
      * @returns {Unit} Unit this value is in
      */
     get unit(): U {
-        return this._unit;
+        return this._unit as U;
     }
 
     /**

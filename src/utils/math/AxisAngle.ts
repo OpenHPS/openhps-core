@@ -10,7 +10,7 @@ import * as THREE from './_internal';
 @SerializableObject()
 export class AxisAngle extends Vector3 {
     @SerializableMember({
-        numberType: NumberType.DOUBLE
+        numberType: NumberType.DOUBLE,
     })
     angle: number;
 

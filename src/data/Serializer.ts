@@ -12,6 +12,7 @@ import { ObjectMemberMetadata } from './decorators/metadata';
 import { isInstanceOf, isValueDefined, nameof } from 'typedjson/lib/cjs/helpers';
 import { mergeOptions } from 'typedjson/lib/cjs/options-base';
 import type { OptionsBase } from 'typedjson/lib/types/options-base';
+import { BufferUtils } from '../utils/BufferUtils';
 
 export class Serializer extends JSONSerializer {
     protected declare options?: OptionsBase;
@@ -40,6 +41,7 @@ export class Serializer extends JSONSerializer {
         this.setSerializationStrategy(Map, this.convertAsMap.bind(this));
         this.setSerializationStrategy(Array, this.convertAsArray.bind(this));
         this.setSerializationStrategy(Set, this.convertAsSet.bind(this));
+        this.setSerializationStrategy(Uint8Array, BufferUtils.toHexString);
     }
 
     convertSingleValue(

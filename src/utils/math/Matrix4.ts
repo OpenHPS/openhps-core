@@ -7,7 +7,7 @@ import * as THREE from './_internal';
 @SerializableObject()
 export class Matrix4 extends THREE.Matrix4 {
     @SerializableArrayMember(Number, {
-        numberType: NumberType.DECIMAL
+        numberType: NumberType.DECIMAL,
     })
     public elements: number[];
 

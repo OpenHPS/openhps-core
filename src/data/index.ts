@@ -12,3 +12,4 @@ export * from './DataSerializerUtils';
 export * from './types';
 
 export * from './decorators/utils';
+export * from './UUID';
