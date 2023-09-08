@@ -25,7 +25,7 @@ export class TimeSyncNode<InOut extends DataFrame> extends MemoryBufferNode<InOu
     }
 
     private _stopTimer(): void {
-        clearInterval(this._timer);
+        clearInterval(this._timer as any);
     }
 
     public onPush(frame: InOut, options?: PushOptions): Promise<void> {

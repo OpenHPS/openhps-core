@@ -4,6 +4,18 @@ import { SensorValue } from '../values';
 import { DataObject } from './DataObject';
 
 /**
+ * Sensor calibration data
+ */
+@SerializableObject()
+// eslint-disable-next-line
+export class SensorCalibrationData<T = SensorValue | Object | Orientation> {
+    @SerializableMember()
+    offset?: T;
+    @SerializableMember()
+    multipler?: T;
+}
+
+/**
  * A sensor object is a {@link DataObject} that is a sensor with a value.
  */
 @SerializableObject()
@@ -22,10 +34,10 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
     })
     frequency: number;
     /**
-     * Value offset
+     * Sensor calibration data
      */
     @SerializableMember()
-    offset?: T;
+    calibrationData?: SensorCalibrationData;
 
     constructor(uid?: string, value?: T, frequency?: number, displayName?: string) {
         super(uid, displayName);
