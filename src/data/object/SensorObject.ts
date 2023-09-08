@@ -21,6 +21,11 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
         numberType: NumberType.DECIMAL,
     })
     frequency: number;
+    /**
+     * Value offset
+     */
+    @SerializableMember()
+    offset?: T;
 
     constructor(uid?: string, value?: T, frequency?: number, displayName?: string) {
         super(uid, displayName);
