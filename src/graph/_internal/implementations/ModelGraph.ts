@@ -131,13 +131,18 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
     findService<S extends Service>(uid: string): S;
     findService<S extends Service>(serviceClass: Serializable<S>): S;
     findService<S extends Service>(q: any): S {
+        let result: S = undefined;
         if (!q) {
             return undefined;
         } else if (typeof q === 'string') {
-            return this._services.get(q) as S;
+            result = this._services.get(q) as S;
         } else {
-            return Array.from(this._services.values()).filter((s) => s instanceof q)[0] as S;
+            result = Array.from(this._services.values()).filter((s) => s instanceof q)[0] as S;
         }
+        if (!result) {
+            result = this.findDataService(q) as unknown as S;
+        }
+        return result;
     }
 
     /**
