@@ -14,7 +14,7 @@
 <ul class="tsd-breadcrumb">
 <li><a href="../modules.html">@openhps/core</a></li>
 <li><a href="CalibrationService.html">CalibrationService</a></li></ul>
-<h1>Class CalibrationService<code class="tsd-tag ts-flagAbstract">Abstract</code> </h1></div>
+<h1>Class CalibrationService&lt;T&gt;<code class="tsd-tag ts-flagAbstract">Abstract</code> </h1></div>
 <section class="tsd-panel tsd-comment">
 <div class="tsd-comment tsd-typography"><p>Calibration service. This service has to be used together with a [[CalibrationNode]]
 that is placed behind the source node that is used for calibration.</p>
@@ -22,15 +22,23 @@ that is placed behind the source node that is used for calibration.</p>
 <a id="md:usage" class="tsd-anchor"></a><h2><a href="#md:usage">Usage</a></h2><pre><code class="language-typescript"><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-7">model</span><span class="hl-0"> = </span><span class="hl-2">await</span><span class="hl-0"> </span><span class="hl-3">ModelBuilder</span><span class="hl-0">.</span><span class="hl-4">create</span><span class="hl-0">()</span><br/><span class="hl-0"> .</span><span class="hl-4">addService</span><span class="hl-0">(</span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-4">MyCalibrationService</span><span class="hl-0">())</span><br/><span class="hl-0"> .</span><span class="hl-4">from</span><span class="hl-0">(</span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-4">MyUncalibratedSensor</span><span class="hl-0">())</span><br/><span class="hl-0"> .</span><span class="hl-4">via</span><span class="hl-0">(</span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-4">CalibrationNode</span><span class="hl-0">({</span><br/><span class="hl-0">     </span><span class="hl-3">service:</span><span class="hl-0"> </span><span class="hl-3">MyCalibrationService</span><br/><span class="hl-0"> }))</span><br/><span class="hl-0"> .</span><span class="hl-4">via</span><span class="hl-0">(...)</span><br/><span class="hl-0"> .</span><span class="hl-4">to</span><span class="hl-0">(...).</span><span class="hl-4">build</span><span class="hl-0">();</span><br/><br/><span class="hl-5">function</span><span class="hl-0"> </span><span class="hl-4">whenUserClicksCalibrate</span><span class="hl-0">() {</span><br/><span class="hl-0"> </span><span class="hl-3">model</span><span class="hl-0">.</span><span class="hl-4">findService</span><span class="hl-0">(</span><span class="hl-3">MyCalibrationService</span><span class="hl-0">).</span><span class="hl-4">calibrate</span><span class="hl-0">();</span><br/><span class="hl-0">}</span>
 </code><button>Copy</button></pre>
 </div>
-<div class="tsd-comment tsd-typography"></div></section>
+<div class="tsd-comment tsd-typography"></div></section> 
+<section class="tsd-panel">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameter-list">
+<li>
+<h4><span class="tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol"> extends </span><a href="DataObject.html" class="tsd-signature-type tsd-kind-class">DataObject</a> = <span class="tsd-signature-type">any</span></h4></li></ul></section> 
 <section class="tsd-panel tsd-hierarchy-diagram">
                 <h4>Hierarchy-Diagram</h4>
-                <a class="diagram" href="../assets/CalibrationService-umlClassDiagram-11823.svg" title="Click to enlarge">
-                    <img src="../assets/CalibrationService-umlClassDiagram-11823.svg"
+                <a class="diagram" href="../assets/CalibrationService-umlClassDiagram-11825.svg" title="Click to enlarge">
+                    <img src="../assets/CalibrationService-umlClassDiagram-11825.svg"
                             alt="UML class diagram of CalibrationService" />
                 </a>
                 <h5>Legend</h5>
                       <div class="legend"><div>
+                           <span class="dt"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgY29udGVudFN0eWxlVHlwZT0idGV4dC9jc3MiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiIHpvb21BbmRQYW49Im1hZ25pZnkiIHdpZHRoPSIyM3B4IiBoZWlnaHQ9IjIzcHgiIHN0eWxlPSJ3aWR0aDoyM3B4O2hlaWdodDoyM3B4OyIgdmlld0JveD0iMCAwIDIzIDIzIj4NCjxnPg0KPGVsbGlwc2UgY3g9IjExLjUiIGN5PSIxMS41IiByeD0iMTEiIHJ5PSIxMSIgZmlsbD0iI0FERDFCMiIgc3R5bGU9InN0cm9rZTogI0E4MDAzNjsgc3Ryb2tlLXdpZHRoOiAxLjA7Ii8+DQo8dGV4dCB4PSI3IiB5PSIxMS41IiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IkNvdXJpZXIiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSJib2xkIj5DPC90ZXh0Pg0KPC9nPg0KPC9zdmc+" alt="icon for a class in the UML class diagram" /></span>
+                           <span class="dd">class</span>
+                       </div><div>
                            <span class="dt"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgY29udGVudFN0eWxlVHlwZT0idGV4dC9jc3MiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiIHpvb21BbmRQYW49Im1hZ25pZnkiIHdpZHRoPSIyM3B4IiBoZWlnaHQ9IjIzcHgiIHN0eWxlPSJ3aWR0aDoyM3B4O2hlaWdodDoyM3B4OyIgdmlld0JveD0iMCAwIDIzIDIzIj4NCjxnPg0KPGVsbGlwc2UgY3g9IjExLjUiIGN5PSIxMS41IiByeD0iMTEiIHJ5PSIxMSIgZmlsbD0iI0E5RENERiIgc3R5bGU9InN0cm9rZTogI0E4MDAzNjsgc3Ryb2tlLXdpZHRoOiAxLjA7Ii8+DQo8dGV4dCB4PSI3IiB5PSIxMS41IiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IkNvdXJpZXIiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSJib2xkIj5BPC90ZXh0Pg0KPC9nPg0KPC9zdmc+" alt="icon for an abstract class in the UML class diagram" /></span>
                            <span class="dd">abstract class</span>
                        </div></div>
@@ -38,11 +46,11 @@ that is placed behind the source node that is used for calibration.</p>
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
-<li><a href="Service.html" class="tsd-signature-type tsd-kind-class">Service</a>
+<li><a href="DataObjectService.html" class="tsd-signature-type tsd-kind-class">DataObjectService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span>
 <ul class="tsd-hierarchy">
 <li><span class="target">CalibrationService</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/CalibrationService.ts#L27">src/service/CalibrationService.ts:27</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/CalibrationService.ts#L27">src/service/CalibrationService.ts:27</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -54,8 +62,10 @@ that is placed behind the source node that is used for calibration.</p>
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Properties</h3>
-<div class="tsd-index-list"><a href="CalibrationService.html#model" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-1024"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)"></path></g></svg><span>model</span></a>
+<div class="tsd-index-list"><a href="CalibrationService.html#driver" class="tsd-index-link tsd-is-protected tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-1024"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)"></path></g></svg><span>driver</span></a>
+<a href="CalibrationService.html#model" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>model</span></a>
 <a href="CalibrationService.html#node" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>node</span></a>
+<a href="CalibrationService.html#priority" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>priority</span></a>
 <a href="CalibrationService.html#uid" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>uid</span></a>
 <a href="CalibrationService.html#captureRejectionSymbol" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>capture<wbr/>Rejection<wbr/>Symbol</span></a>
 <a href="CalibrationService.html#captureRejections" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>capture<wbr/>Rejections</span></a>
@@ -63,13 +73,30 @@ that is placed behind the source node that is used for calibration.</p>
 <a href="CalibrationService.html#errorMonitor" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>error<wbr/>Monitor</span></a>
 </div></section>
 <section class="tsd-index-section">
+<h3 class="tsd-index-heading">Accessors</h3>
+<div class="tsd-index-list"><a href="CalibrationService.html#dataType" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-262144"><rect fill="var(--color-icon-background)" stroke="#FF4D4D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M8.85 16L11.13 7.24H12.582L14.85 16H13.758L13.182 13.672H10.53L9.954 16H8.85ZM10.746 12.76H12.954L12.282 10.06C12.154 9.548 12.054 9.12 11.982 8.776C11.91 8.432 11.866 8.208 11.85 8.104C11.834 8.208 11.79 8.432 11.718 8.776C11.646 9.12 11.546 9.544 11.418 10.048L10.746 12.76Z" fill="var(--color-text)"></path></g></svg><span>data<wbr/>Type</span></a>
+</div></section>
+<section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
 <div class="tsd-index-list"><a href="CalibrationService.html#addListener" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-2048"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)"></path></g></svg><span>add<wbr/>Listener</span></a>
 <a href="CalibrationService.html#calibrate" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>calibrate</span></a>
+<a href="CalibrationService.html#count" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>count</span></a>
+<a href="CalibrationService.html#delete" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>delete</span></a>
+<a href="CalibrationService.html#deleteAll" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>delete<wbr/>All</span></a>
 <a href="CalibrationService.html#emit" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>emit</span></a>
 <a href="CalibrationService.html#eventNames" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>event<wbr/>Names</span></a>
+<a href="CalibrationService.html#findAfter" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>After</span></a>
+<a href="CalibrationService.html#findAll" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>All</span></a>
+<a href="CalibrationService.html#findBefore" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>Before</span></a>
+<a href="CalibrationService.html#findByDisplayName" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>By<wbr/>Display<wbr/>Name</span></a>
+<a href="CalibrationService.html#findByParentUID" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>By<wbr/>ParentUID</span></a>
+<a href="CalibrationService.html#findByPosition" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>By<wbr/>Position</span></a>
+<a href="CalibrationService.html#findByUID" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>ByUID</span></a>
+<a href="CalibrationService.html#findOne" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>One</span></a>
 <a href="CalibrationService.html#generateUUID" class="tsd-index-link tsd-is-protected tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>generateUUID</span></a>
 <a href="CalibrationService.html#getMaxListeners" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Max<wbr/>Listeners</span></a>
+<a href="CalibrationService.html#insert" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>insert</span></a>
+<a href="CalibrationService.html#insertObject" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>insert<wbr/>Object</span></a>
 <a href="CalibrationService.html#isReady" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Ready</span></a>
 <a href="CalibrationService.html#listenerCount" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>listener<wbr/>Count</span></a>
 <a href="CalibrationService.html#listeners" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>listeners</span></a>
@@ -83,9 +110,11 @@ that is placed behind the source node that is used for calibration.</p>
 <a href="CalibrationService.html#removeAllListeners" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>remove<wbr/>All<wbr/>Listeners</span></a>
 <a href="CalibrationService.html#removeListener" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>remove<wbr/>Listener</span></a>
 <a href="CalibrationService.html#setMaxListeners" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Max<wbr/>Listeners</span></a>
+<a href="CalibrationService.html#setPriority" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Priority</span></a>
 <a href="CalibrationService.html#setUID" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>setUID</span></a>
 <a href="CalibrationService.html#start" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>start</span></a>
 <a href="CalibrationService.html#stop" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>stop</span></a>
+<a href="CalibrationService.html#suspend" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>suspend</span></a>
 <a href="CalibrationService.html#addAbortListener" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>add<wbr/>Abort<wbr/>Listener</span></a>
 <a href="CalibrationService.html#getEventListeners" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Event<wbr/>Listeners</span></a>
 <a href="CalibrationService.html#getMaxListeners-2" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Max<wbr/>Listeners</span></a>
@@ -99,37 +128,59 @@ that is placed behind the source node that is used for calibration.</p>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="constructor" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>constructor</span><a href="#constructor" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><g stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" id="icon-anchor"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path></g></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="constructor.new_CalibrationService"><span class="tsd-kind-constructor-signature">new <wbr/>Calibration<wbr/>Service</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><a href="#constructor.new_CalibrationService" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="constructor.new_CalibrationService"><span class="tsd-kind-constructor-signature">new <wbr/>Calibration<wbr/>Service</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">dataServiceDriver</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#constructor.new_CalibrationService" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a></h4><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#constructor">constructor</a></p>
+<section class="tsd-panel">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameter-list">
+<li>
+<h4><span class="tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol"> extends </span><a href="DataObject.html" class="tsd-signature-type tsd-kind-class">DataObject</a> = <span class="tsd-signature-type">any</span></h4></li></ul></section>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">dataServiceDriver</span>: <a href="DataServiceDriver.html" class="tsd-signature-type tsd-kind-class">DataServiceDriver</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#constructor">constructor</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L21">src/service/Service.ts:21</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataObjectService.ts#L12">src/service/DataObjectService.ts:12</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
+<section class="tsd-panel tsd-member tsd-is-protected tsd-is-inherited"><a id="driver" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>driver</span><a href="#driver" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">driver</span><span class="tsd-signature-symbol">:</span> <a href="DataServiceDriver.html" class="tsd-signature-type tsd-kind-class">DataServiceDriver</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#driver">driver</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataService.ts#L30">src/service/DataService.ts:30</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="model" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>model</span><a href="#model" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">model</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 <div class="tsd-comment tsd-typography"><p>Model shape</p>
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#model">model</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#model">model</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L19">src/service/Service.ts:19</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L19">src/service/Service.ts:19</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-protected"><a id="node" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>node</span><a href="#node" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">node</span><span class="tsd-signature-symbol">:</span> <a href="CalibrationNode.html" class="tsd-signature-type tsd-kind-class">CalibrationNode</a><span class="tsd-signature-symbol">&lt;</span><a href="DataObject.html" class="tsd-signature-type tsd-kind-class">DataObject</a><span class="tsd-signature-symbol">&gt;</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/CalibrationService.ts#L29">src/service/CalibrationService.ts:29</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/CalibrationService.ts#L29">src/service/CalibrationService.ts:29</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="priority" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>priority</span><a href="#priority" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">priority</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = -1</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#priority">priority</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataService.ts#L32">src/service/DataService.ts:32</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="uid" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>uid</span><a href="#uid" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">uid</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 <div class="tsd-comment tsd-typography"><p>Service name</p>
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#uid">uid</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#uid">uid</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L14">src/service/Service.ts:14</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L14">src/service/Service.ts:14</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="captureRejectionSymbol" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>capture<wbr/>Rejection<wbr/>Symbol</span><a href="#captureRejectionSymbol" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">capture<wbr/>Rejection<wbr/>Symbol</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="Edge.html#captureRejectionSymbol" class="tsd-signature-type tsd-kind-property">captureRejectionSymbol</a></div>
@@ -139,7 +190,7 @@ that is placed behind the source node that is used for calibration.</p>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v13.4.0, v12.16.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#captureRejectionSymbol">captureRejectionSymbol</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#captureRejectionSymbol">captureRejectionSymbol</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:390</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="captureRejections" class="tsd-anchor"></a>
@@ -151,7 +202,7 @@ that is placed behind the source node that is used for calibration.</p>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v13.4.0, v12.16.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#captureRejections">captureRejections</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#captureRejections">captureRejections</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:397</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="defaultMaxListeners" class="tsd-anchor"></a>
@@ -182,7 +233,7 @@ Its <code>name</code> property is set to <code>&#39;MaxListenersExceededWarning&
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v0.11.2</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#defaultMaxListeners">defaultMaxListeners</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#defaultMaxListeners">defaultMaxListeners</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:434</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="errorMonitor" class="tsd-anchor"></a>
@@ -195,15 +246,26 @@ regular <code>&#39;error&#39;</code> listener is installed.</p>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v13.6.0, v12.17.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#errorMonitor">errorMonitor</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#errorMonitor">errorMonitor</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:383</li></ul></aside></section></section>
+<section class="tsd-panel-group tsd-member-group">
+<h2>Accessors</h2>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="dataType" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>data<wbr/>Type</span><a href="#dataType" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature" id="dataType.dataType-1"><span class="tsd-signature-symbol">get</span> dataType<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/Serializable.html" class="tsd-signature-type tsd-kind-type-alias">Serializable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+<li class="tsd-description">
+<h4 class="tsd-returns-title">Returns <a href="../types/Serializable.html" class="tsd-signature-type tsd-kind-type-alias">Serializable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Inherited from DataObjectService.dataType</p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataService.ts#L73">src/service/DataService.ts:73</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="addListener" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>add<wbr/>Listener</span><a href="#addListener" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="addListener.addListener-1"><span class="tsd-kind-call-signature">add<wbr/>Listener</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">eventName</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><a href="#addListener.addListener-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="addListener.addListener-1"><span class="tsd-kind-call-signature">add<wbr/>Listener</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">eventName</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#addListener.addListener-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Alias for <code>emitter.on(eventName, listener)</code>.</p>
 </div>
@@ -225,11 +287,11 @@ regular <code>&#39;error&#39;</code> listener is installed.</p>
 <li>
 <h5><code class="tsd-tag ts-flagRest">Rest</code> <span class="tsd-signature-symbol">...</span><span class="tsd-kind-parameter">args</span>: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a></h4>
+<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v0.1.26</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#addListener">addListener</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#addListener">addListener</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:454</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="calibrate" class="tsd-anchor"></a>
@@ -254,7 +316,49 @@ with the appropriate arguments and response.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/CalibrationService.ts#L43">src/service/CalibrationService.ts:43</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/CalibrationService.ts#L43">src/service/CalibrationService.ts:43</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="count" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>count</span><a href="#count" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="count.count-1"><span class="tsd-kind-call-signature">count</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">query</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#count.count-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">query</span>: <a href="../types/FilterQuery.html" class="tsd-signature-type tsd-kind-type-alias">FilterQuery</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#count">count</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataService.ts#L107">src/service/DataService.ts:107</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="delete" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>delete</span><a href="#delete" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="delete.delete-1"><span class="tsd-kind-call-signature">delete</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">id</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#delete.delete-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">id</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#delete">delete</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataService.ts#L111">src/service/DataService.ts:111</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="deleteAll" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>delete<wbr/>All</span><a href="#deleteAll" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="deleteAll.deleteAll-1"><span class="tsd-kind-call-signature">delete<wbr/>All</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">filter</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#deleteAll.deleteAll-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">filter</span>: <a href="../types/FilterQuery.html" class="tsd-signature-type tsd-kind-type-alias">FilterQuery</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#deleteAll">deleteAll</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataService.ts#L115">src/service/DataService.ts:115</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="emit" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>emit</span><a href="#emit" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
@@ -268,9 +372,9 @@ with the appropriate arguments and response.</p>
 <li>
 <h5><code class="tsd-tag ts-flagRest">Rest</code> <span class="tsd-signature-symbol">...</span><span class="tsd-kind-parameter">args</span>: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#emit">emit</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#emit">emit</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L44">src/service/Service.ts:44</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L44">src/service/Service.ts:44</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="emit.emit-2"><span class="tsd-kind-call-signature">emit</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">name</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#emit.emit-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Service ready</p>
@@ -285,9 +389,9 @@ with the appropriate arguments and response.</p>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#emit">emit</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#emit">emit</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L49">src/service/Service.ts:49</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L49">src/service/Service.ts:49</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="emit.emit-3"><span class="tsd-kind-call-signature">emit</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">name</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#emit.emit-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Destroy the service</p>
@@ -302,9 +406,9 @@ with the appropriate arguments and response.</p>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#emit">emit</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#emit">emit</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L54">src/service/Service.ts:54</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L54">src/service/Service.ts:54</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="eventNames" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>event<wbr/>Names</span><a href="#eventNames" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
@@ -319,18 +423,169 @@ listeners. The values in the array are strings or <code>Symbol</code>s.</p>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v6.0.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#eventNames">eventNames</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#eventNames">eventNames</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:779</li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="findAfter" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>find<wbr/>After</span><a href="#findAfter" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="findAfter.findAfter-1"><span class="tsd-kind-call-signature">find<wbr/>After</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">timestamp</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#findAfter.findAfter-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Find data objects created after a certain timestamp</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">timestamp</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>Timestamp</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><p>Array of data objects after the specified timestamp</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#findAfter">findAfter</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataObjectService.ts#L95">src/service/DataObjectService.ts:95</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="findAll" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>find<wbr/>All</span><a href="#findAll" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="findAll.findAll-1"><span class="tsd-kind-call-signature">find<wbr/>All</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">query</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#findAll.findAll-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">query</span>: <a href="../types/FilterQuery.html" class="tsd-signature-type tsd-kind-type-alias">FilterQuery</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h5></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">options</span>: <a href="../interfaces/FindOptions.html" class="tsd-signature-type tsd-kind-interface">FindOptions</a></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#findAll">findAll</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataService.ts#L99">src/service/DataService.ts:99</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="findBefore" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>find<wbr/>Before</span><a href="#findBefore" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="findBefore.findBefore-1"><span class="tsd-kind-call-signature">find<wbr/>Before</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">timestamp</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#findBefore.findBefore-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Find data objects created before a certain timestamp</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">timestamp</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>Timestamp</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><p>Array of data objects before the specified timestamp</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#findBefore">findBefore</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataObjectService.ts#L86">src/service/DataObjectService.ts:86</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="findByDisplayName" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>find<wbr/>By<wbr/>Display<wbr/>Name</span><a href="#findByDisplayName" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="findByDisplayName.findByDisplayName-1"><span class="tsd-kind-call-signature">find<wbr/>By<wbr/>Display<wbr/>Name</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">displayName</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#findByDisplayName.findByDisplayName-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Find a data object by its display name</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">displayName</span>: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>Name to search for</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><p>Array of data objects that match the display name</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#findByDisplayName">findByDisplayName</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataObjectService.ts#L41">src/service/DataObjectService.ts:41</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="findByParentUID" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>find<wbr/>By<wbr/>ParentUID</span><a href="#findByParentUID" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="findByParentUID.findByParentUID-1"><span class="tsd-kind-call-signature">find<wbr/>By<wbr/>ParentUID</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">parentUID</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#findByParentUID.findByParentUID-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Find all data objects with a parent UID</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">parentUID</span>: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>string Parent UID</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><p>Array of data objects that match the parent UID</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#findByParentUID">findByParentUID</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataObjectService.ts#L75">src/service/DataObjectService.ts:75</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="findByPosition" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>find<wbr/>By<wbr/>Position</span><a href="#findByPosition" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="findByPosition.findByPosition-1"><span class="tsd-kind-call-signature">find<wbr/>By<wbr/>Position</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">position</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#findByPosition.findByPosition-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Find a data object by its current absolute position</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">position</span>: <a href="AbsolutePosition.html" class="tsd-signature-type tsd-kind-class">AbsolutePosition</a></h5>
+<div class="tsd-comment tsd-typography"><p>Current absolute position</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><p>Array of data objects that match the position</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#findByPosition">findByPosition</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataObjectService.ts#L52">src/service/DataObjectService.ts:52</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="findByUID" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>find<wbr/>ByUID</span><a href="#findByUID" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="findByUID.findByUID-1"><span class="tsd-kind-call-signature">find<wbr/>ByUID</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">uid</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#findByUID.findByUID-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">uid</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#findByUID">findByUID</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataService.ts#L91">src/service/DataService.ts:91</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="findOne" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>find<wbr/>One</span><a href="#findOne" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="findOne.findOne-1"><span class="tsd-kind-call-signature">find<wbr/>One</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">query</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#findOne.findOne-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">query</span>: <a href="../types/FilterQuery.html" class="tsd-signature-type tsd-kind-type-alias">FilterQuery</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h5></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">options</span>: <a href="../interfaces/FindOptions.html" class="tsd-signature-type tsd-kind-interface">FindOptions</a></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#findOne">findOne</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataService.ts#L95">src/service/DataService.ts:95</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-protected tsd-is-inherited"><a id="generateUUID" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>generateUUID</span><a href="#generateUUID" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-protected tsd-is-inherited">
 <li class="tsd-signature tsd-anchor-link" id="generateUUID.generateUUID-1"><span class="tsd-kind-call-signature">generateUUID</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><a href="#generateUUID.generateUUID-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#generateUUID">generateUUID</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#generateUUID">generateUUID</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L31">src/service/Service.ts:31</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L31">src/service/Service.ts:31</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="getMaxListeners" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Max<wbr/>Listeners</span><a href="#getMaxListeners" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
@@ -343,18 +598,55 @@ set by <code>emitter.setMaxListeners(n)</code> or defaults to <a href="Calibrati
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v1.0.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#getMaxListeners">getMaxListeners</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#getMaxListeners">getMaxListeners</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:631</li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="insert" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>insert</span><a href="#insert" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="insert.insert-1"><span class="tsd-kind-call-signature">insert</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">id</span>, <span class="tsd-kind-parameter">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#insert.insert-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">id</span>: <span class="tsd-signature-type">string</span></h5></li>
+<li>
+<h5><span class="tsd-kind-parameter">object</span>: <span class="tsd-signature-type tsd-kind-type-parameter">T</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#insert">insert</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataObjectService.ts#L25">src/service/DataObjectService.ts:25</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="insertObject" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>insert<wbr/>Object</span><a href="#insertObject" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="insertObject.insertObject-1"><span class="tsd-kind-call-signature">insert<wbr/>Object</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#insertObject.insertObject-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Insert a new data object</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">object</span>: <span class="tsd-signature-type tsd-kind-type-parameter">T</span></h5>
+<div class="tsd-comment tsd-typography"><p>Data object to insert</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><p>Inserted object</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#insertObject">insertObject</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataObjectService.ts#L21">src/service/DataObjectService.ts:21</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="isReady" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>is<wbr/>Ready</span><a href="#isReady" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
 <li class="tsd-signature tsd-anchor-link" id="isReady.isReady-1"><span class="tsd-kind-call-signature">is<wbr/>Ready</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#isReady.isReady-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#isReady">isReady</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#isReady">isReady</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L40">src/service/Service.ts:40</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L40">src/service/Service.ts:40</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="listenerCount" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>listener<wbr/>Count</span><a href="#listenerCount" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
@@ -381,7 +673,7 @@ in the list of the listeners of the event.</p>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v3.2.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#listenerCount">listenerCount</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#listenerCount">listenerCount</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:725</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="listeners" class="tsd-anchor"></a>
@@ -402,7 +694,7 @@ in the list of the listeners of the event.</p>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v0.1.26</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#listeners">listeners</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#listeners">listeners</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:644</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="logger" class="tsd-anchor"></a>
@@ -432,9 +724,9 @@ in the list of the listeners of the event.</p>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#logger">logger</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#logger">logger</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L86">src/service/Service.ts:86</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L86">src/service/Service.ts:86</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="logger.logger-2"><span class="tsd-kind-call-signature">logger</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">level</span>, <span class="tsd-kind-parameter">message</span>, <span class="tsd-kind-parameter">data</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#logger.logger-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Graph logger</p>
@@ -459,9 +751,9 @@ in the list of the listeners of the event.</p>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#logger">logger</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#logger">logger</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L87">src/service/Service.ts:87</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L87">src/service/Service.ts:87</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="logger.logger-3"><span class="tsd-kind-call-signature">logger</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">level</span>, <span class="tsd-kind-parameter">message</span>, <span class="tsd-kind-parameter">data</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#logger.logger-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Graph logger</p>
@@ -486,9 +778,9 @@ in the list of the listeners of the event.</p>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#logger">logger</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#logger">logger</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L88">src/service/Service.ts:88</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L88">src/service/Service.ts:88</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="logger.logger-4"><span class="tsd-kind-call-signature">logger</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">level</span>, <span class="tsd-kind-parameter">message</span>, <span class="tsd-kind-parameter">error</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#logger.logger-4" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Graph logger</p>
@@ -510,9 +802,9 @@ in the list of the listeners of the event.</p>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">error</span>: <span class="tsd-signature-type ">Error</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#logger">logger</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#logger">logger</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L89">src/service/Service.ts:89</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L89">src/service/Service.ts:89</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="logger.logger-5"><span class="tsd-kind-call-signature">logger</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">level</span>, <span class="tsd-kind-parameter">log</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#logger.logger-5" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -531,13 +823,13 @@ in the list of the listeners of the event.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography">
 <h4>Deprecated</h4></div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#logger">logger</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#logger">logger</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L95">src/service/Service.ts:95</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L95">src/service/Service.ts:95</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="off" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>off</span><a href="#off" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="off.off-1"><span class="tsd-kind-call-signature">off</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">eventName</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><a href="#off.off-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="off.off-1"><span class="tsd-kind-call-signature">off</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">eventName</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#off.off-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Alias for <code>emitter.removeListener()</code>.</p>
 </div>
@@ -559,17 +851,17 @@ in the list of the listeners of the event.</p>
 <li>
 <h5><code class="tsd-tag ts-flagRest">Rest</code> <span class="tsd-signature-symbol">...</span><span class="tsd-kind-parameter">args</span>: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a></h4>
+<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v10.0.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#off">off</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#off">off</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:604</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="on" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>on</span><a href="#on" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="on.on-1"><span class="tsd-kind-call-signature">on</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">eventName</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><a href="#on.on-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="on.on-1"><span class="tsd-kind-call-signature">on</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">eventName</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#on.on-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Adds the <code>listener</code> function to the end of the listeners array for the
 event named <code>eventName</code>. No checks are made to see if the <code>listener</code> has
@@ -607,17 +899,17 @@ event listener to the beginning of the listeners array.</p>
 <li>
 <h5><code class="tsd-tag ts-flagRest">Rest</code> <span class="tsd-signature-symbol">...</span><span class="tsd-kind-parameter">args</span>: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a></h4>
+<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v0.1.101</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#on">on</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#on">on</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:486</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="once" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>once</span><a href="#once" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="once.once-1"><span class="tsd-kind-call-signature">once</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">name</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><a href="#once.once-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="once.once-1"><span class="tsd-kind-call-signature">once</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">name</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#once.once-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -637,11 +929,11 @@ event listener to the beginning of the listeners array.</p>
 <li>
 <h5><code class="tsd-tag ts-flagRest">Rest</code> <span class="tsd-signature-symbol">...</span><span class="tsd-kind-parameter">args</span>: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a></h4><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#once">once</a></p>
+<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#once">once</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L59">src/service/Service.ts:59</a></li></ul></aside></li>
-<li class="tsd-signature tsd-anchor-link" id="once.once-2"><span class="tsd-kind-call-signature">once</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">name</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><a href="#once.once-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L59">src/service/Service.ts:59</a></li></ul></aside></li>
+<li class="tsd-signature tsd-anchor-link" id="once.once-2"><span class="tsd-kind-call-signature">once</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">name</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#once.once-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Event called when service is destroyed</p>
 </div>
@@ -664,12 +956,12 @@ event listener to the beginning of the listeners array.</p>
 <li class="tsd-signature"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a></h4>
+<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#once">once</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#once">once</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L65">src/service/Service.ts:65</a></li></ul></aside></li>
-<li class="tsd-signature tsd-anchor-link" id="once.once-3"><span class="tsd-kind-call-signature">once</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">name</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><a href="#once.once-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L65">src/service/Service.ts:65</a></li></ul></aside></li>
+<li class="tsd-signature tsd-anchor-link" id="once.once-3"><span class="tsd-kind-call-signature">once</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">name</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#once.once-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Event called when service is build</p>
 </div>
@@ -692,12 +984,12 @@ event listener to the beginning of the listeners array.</p>
 <li class="tsd-signature"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a></h4>
+<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#once">once</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#once">once</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L71">src/service/Service.ts:71</a></li></ul></aside></li>
-<li class="tsd-signature tsd-anchor-link" id="once.once-4"><span class="tsd-kind-call-signature">once</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">name</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><a href="#once.once-4" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L71">src/service/Service.ts:71</a></li></ul></aside></li>
+<li class="tsd-signature tsd-anchor-link" id="once.once-4"><span class="tsd-kind-call-signature">once</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">name</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#once.once-4" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Event called when service is ready</p>
 </div>
@@ -720,15 +1012,15 @@ event listener to the beginning of the listeners array.</p>
 <li class="tsd-signature"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a></h4>
+<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#once">once</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#once">once</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L77">src/service/Service.ts:77</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L77">src/service/Service.ts:77</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="prependListener" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>prepend<wbr/>Listener</span><a href="#prependListener" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="prependListener.prependListener-1"><span class="tsd-kind-call-signature">prepend<wbr/>Listener</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">eventName</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><a href="#prependListener.prependListener-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="prependListener.prependListener-1"><span class="tsd-kind-call-signature">prepend<wbr/>Listener</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">eventName</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#prependListener.prependListener-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Adds the <code>listener</code> function to the <em>beginning</em> of the listeners array for the
 event named <code>eventName</code>. No checks are made to see if the <code>listener</code> has
@@ -762,17 +1054,17 @@ times.</p>
 <li>
 <h5><code class="tsd-tag ts-flagRest">Rest</code> <span class="tsd-signature-symbol">...</span><span class="tsd-kind-parameter">args</span>: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a></h4>
+<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v6.0.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#prependListener">prependListener</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#prependListener">prependListener</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:743</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="prependOnceListener" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>prepend<wbr/>Once<wbr/>Listener</span><a href="#prependOnceListener" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="prependOnceListener.prependOnceListener-1"><span class="tsd-kind-call-signature">prepend<wbr/>Once<wbr/>Listener</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">eventName</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><a href="#prependOnceListener.prependOnceListener-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="prependOnceListener.prependOnceListener-1"><span class="tsd-kind-call-signature">prepend<wbr/>Once<wbr/>Listener</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">eventName</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#prependOnceListener.prependOnceListener-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Adds a <strong>one-time</strong><code>listener</code> function for the event named <code>eventName</code> to the <em>beginning</em> of the listeners array. The next time <code>eventName</code> is triggered, this
 listener is removed, and then invoked.</p>
@@ -804,11 +1096,11 @@ listener is removed, and then invoked.</p>
 <li>
 <h5><code class="tsd-tag ts-flagRest">Rest</code> <span class="tsd-signature-symbol">...</span><span class="tsd-kind-parameter">args</span>: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a></h4>
+<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v6.0.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#prependOnceListener">prependOnceListener</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#prependOnceListener">prependOnceListener</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:759</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="rawListeners" class="tsd-anchor"></a>
@@ -830,13 +1122,13 @@ including any wrappers (such as those created by <code>.once()</code>).</p>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v9.4.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#rawListeners">rawListeners</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#rawListeners">rawListeners</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:675</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="removeAllListeners" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove<wbr/>All<wbr/>Listeners</span><a href="#removeAllListeners" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="removeAllListeners.removeAllListeners-1"><span class="tsd-kind-call-signature">remove<wbr/>All<wbr/>Listeners</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">event</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><a href="#removeAllListeners.removeAllListeners-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="removeAllListeners.removeAllListeners-1"><span class="tsd-kind-call-signature">remove<wbr/>All<wbr/>Listeners</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">event</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#removeAllListeners.removeAllListeners-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Removes all listeners, or those of the specified <code>eventName</code>.</p>
 <p>It is bad practice to remove listeners added elsewhere in the code,
@@ -849,17 +1141,17 @@ component or module (e.g. sockets or file streams).</p>
 <ul class="tsd-parameter-list">
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">event</span>: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a></h4>
+<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v0.1.26</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#removeAllListeners">removeAllListeners</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#removeAllListeners">removeAllListeners</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:615</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="removeListener" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove<wbr/>Listener</span><a href="#removeListener" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="removeListener.removeListener-1"><span class="tsd-kind-call-signature">remove<wbr/>Listener</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">eventName</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><a href="#removeListener.removeListener-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="removeListener.removeListener-1"><span class="tsd-kind-call-signature">remove<wbr/>Listener</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">eventName</span>, <span class="tsd-kind-parameter">listener</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#removeListener.removeListener-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Removes the specified <code>listener</code> from the listener array for the event named<code>eventName</code>.</p>
 <pre><code class="language-js"><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-4">callback</span><span class="hl-0"> = (</span><span class="hl-3">stream</span><span class="hl-0">) </span><span class="hl-5">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">  </span><span class="hl-3">console</span><span class="hl-0">.</span><span class="hl-4">log</span><span class="hl-0">(</span><span class="hl-1">&#39;someone connected!&#39;</span><span class="hl-0">);</span><br/><span class="hl-0">};</span><br/><span class="hl-3">server</span><span class="hl-0">.</span><span class="hl-4">on</span><span class="hl-0">(</span><span class="hl-1">&#39;connection&#39;</span><span class="hl-0">, </span><span class="hl-3">callback</span><span class="hl-0">);</span><br/><span class="hl-6">// ...</span><br/><span class="hl-3">server</span><span class="hl-0">.</span><span class="hl-4">removeListener</span><span class="hl-0">(</span><span class="hl-1">&#39;connection&#39;</span><span class="hl-0">, </span><span class="hl-3">callback</span><span class="hl-0">);</span>
@@ -903,17 +1195,17 @@ recently added instance. In the example the <code>once(&#39;ping&#39;)</code>lis
 <li>
 <h5><code class="tsd-tag ts-flagRest">Rest</code> <span class="tsd-signature-symbol">...</span><span class="tsd-kind-parameter">args</span>: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a></h4>
+<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v0.1.26</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#removeListener">removeListener</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#removeListener">removeListener</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:599</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="setMaxListeners" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Max<wbr/>Listeners</span><a href="#setMaxListeners" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="setMaxListeners.setMaxListeners-1"><span class="tsd-kind-call-signature">set<wbr/>Max<wbr/>Listeners</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">n</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><a href="#setMaxListeners.setMaxListeners-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="setMaxListeners.setMaxListeners-1"><span class="tsd-kind-call-signature">set<wbr/>Max<wbr/>Listeners</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">n</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#setMaxListeners.setMaxListeners-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>By default <code>EventEmitter</code>s will print a warning if more than <code>10</code> listeners are
 added for a particular event. This is a useful default that helps finding
@@ -926,31 +1218,53 @@ modified for this specific <code>EventEmitter</code> instance. The value can be 
 <ul class="tsd-parameter-list">
 <li>
 <h5><span class="tsd-kind-parameter">n</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a></h4>
+<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v0.3.5</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#setMaxListeners">setMaxListeners</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#setMaxListeners">setMaxListeners</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:625</li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="setPriority" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>set<wbr/>Priority</span><a href="#setPriority" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="setPriority.setPriority-1"><span class="tsd-kind-call-signature">set<wbr/>Priority</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">value</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#setPriority.setPriority-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Set the priority of the data service
+a higher number means a higher priority.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">value</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>Priority value</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><p>data service instance</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#setPriority">setPriority</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/DataService.ts#L86">src/service/DataService.ts:86</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="setUID" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>setUID</span><a href="#setUID" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="setUID.setUID-1"><span class="tsd-kind-call-signature">setUID</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">uid</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><a href="#setUID.setUID-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="setUID.setUID-1"><span class="tsd-kind-call-signature">setUID</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">uid</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#setUID.setUID-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5><span class="tsd-kind-parameter">uid</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a></h4><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#setUID">setUID</a></p>
+<h4 class="tsd-returns-title">Returns <a href="CalibrationService.html" class="tsd-signature-type tsd-kind-class">CalibrationService</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#setUID">setUID</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/Service.ts#L35">src/service/Service.ts:35</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/Service.ts#L35">src/service/Service.ts:35</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-protected"><a id="start" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>start</span><a href="#start" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-protected">
-<li class="tsd-signature tsd-anchor-link" id="start.start-1"><span class="tsd-kind-call-signature">start</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">objectCallback</span>, <span class="tsd-kind-parameter">frameCallback</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#start.start-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="start.start-1"><span class="tsd-kind-call-signature">start</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">objectCallback</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">frameCallback</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#start.start-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Start the calibration interception. Make sure to enable
 any passive sources.</p>
@@ -959,7 +1273,7 @@ any passive sources.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">objectCallback</span>: <a href="../types/CalibrationObjectCallback.html" class="tsd-signature-type tsd-kind-type-alias">CalibrationObjectCallback</a></h5>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">objectCallback</span>: <a href="../types/CalibrationObjectCallback.html" class="tsd-signature-type tsd-kind-type-alias">CalibrationObjectCallback</a></h5>
 <div class="tsd-comment tsd-typography"><p>Object callback</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li>
@@ -971,7 +1285,7 @@ any passive sources.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/CalibrationService.ts#L51">src/service/CalibrationService.ts:51</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/CalibrationService.ts#L51">src/service/CalibrationService.ts:51</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-protected"><a id="stop" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>stop</span><a href="#stop" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-protected">
@@ -982,7 +1296,19 @@ any passive sources.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/service/CalibrationService.ts#L61">src/service/CalibrationService.ts:61</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/CalibrationService.ts#L61">src/service/CalibrationService.ts:61</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-protected"><a id="suspend" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>suspend</span><a href="#suspend" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-protected">
+<li class="tsd-signature tsd-anchor-link" id="suspend.suspend-1"><span class="tsd-kind-call-signature">suspend</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#suspend.suspend-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Suspend the calibration interception. This will still intercept data frames, but the
+callbacks will be cleared.</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f4602c4/src/service/CalibrationService.ts#L72">src/service/CalibrationService.ts:72</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="addAbortListener" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>add<wbr/>Abort<wbr/>Listener</span><a href="#addAbortListener" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
@@ -1024,7 +1350,7 @@ not prevent the listener from running.</p>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v20.5.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#addAbortListener">addAbortListener</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#addAbortListener">addAbortListener</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:375</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="getEventListeners" class="tsd-anchor"></a>
@@ -1051,7 +1377,7 @@ event target. This is useful for debugging and diagnostic purposes.</p>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v15.2.0, v14.17.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#getEventListeners">getEventListeners</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#getEventListeners">getEventListeners</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:296</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="getMaxListeners-2" class="tsd-anchor"></a>
@@ -1077,7 +1403,7 @@ the max set, the EventTarget will print a warning.</p>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v19.9.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#getMaxListeners-2">getMaxListeners</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#getMaxListeners-2">getMaxListeners</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:325</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="listenerCount-2" class="tsd-anchor"></a>
@@ -1108,7 +1434,7 @@ the max set, the EventTarget will print a warning.</p>
 
 <h4>Deprecated</h4><p>Since v3.2.0 - Use <code>listenerCount</code> instead.</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#listenerCount-2">listenerCount</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#listenerCount-2">listenerCount</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:268</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="on-2" class="tsd-anchor"></a>
@@ -1143,7 +1469,7 @@ composed of the emitted event arguments.</p>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v13.6.0, v12.16.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#on-2">on</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#on-2">on</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:250</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="once-5" class="tsd-anchor"></a>
@@ -1181,7 +1507,7 @@ special handling:</p>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v11.13.0, v10.16.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#once-5">once</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#once-5">once</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:189</li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="once-5.once-7"><span class="tsd-kind-call-signature">once</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">emitter</span>, <span class="tsd-kind-parameter">eventName</span>, <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#once-5.once-7" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
@@ -1196,7 +1522,7 @@ special handling:</p>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">options</span>: <span class="tsd-signature-type ">StaticEventEmitterOptions</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#once-5">once</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#once-5">once</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:190</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="setMaxListeners-2" class="tsd-anchor"></a>
@@ -1221,7 +1547,7 @@ special handling:</p>
 <div class="tsd-comment tsd-typography">
 <h4>Since</h4><p>v15.4.0</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="Service.html">Service</a>.<a href="Service.html#setMaxListeners-2">setMaxListeners</a></p>
+<p>Inherited from <a href="DataObjectService.html">DataObjectService</a>.<a href="DataObjectService.html#setMaxListeners-2">setMaxListeners</a></p>
 <ul>
 <li>Defined in node_modules/@types/node/events.d.ts:340</li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
@@ -1246,19 +1572,35 @@ special handling:</p>
 <ul>
 <li><a href="#md:usage"><span>Usage</span></a></li></ul></li>
 <li><a href="#constructor" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-512"></use></svg><span>constructor</span></a></li>
+<li><a href="#driver" class="tsd-is-protected tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>driver</span></a></li>
 <li><a href="#model" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>model</span></a></li>
 <li><a href="#node" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>node</span></a></li>
+<li><a href="#priority" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>priority</span></a></li>
 <li><a href="#uid" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>uid</span></a></li>
 <li><a href="#captureRejectionSymbol" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>capture<wbr/>Rejection<wbr/>Symbol</span></a></li>
 <li><a href="#captureRejections" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>capture<wbr/>Rejections</span></a></li>
 <li><a href="#defaultMaxListeners" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>default<wbr/>Max<wbr/>Listeners</span></a></li>
 <li><a href="#errorMonitor" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>error<wbr/>Monitor</span></a></li>
+<li><a href="#dataType" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-262144"></use></svg><span>data<wbr/>Type</span></a></li>
 <li><a href="#addListener" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>add<wbr/>Listener</span></a></li>
 <li><a href="#calibrate" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>calibrate</span></a></li>
+<li><a href="#count" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>count</span></a></li>
+<li><a href="#delete" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>delete</span></a></li>
+<li><a href="#deleteAll" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>delete<wbr/>All</span></a></li>
 <li><a href="#emit" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>emit</span></a></li>
 <li><a href="#eventNames" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>event<wbr/>Names</span></a></li>
+<li><a href="#findAfter" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>After</span></a></li>
+<li><a href="#findAll" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>All</span></a></li>
+<li><a href="#findBefore" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>Before</span></a></li>
+<li><a href="#findByDisplayName" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>By<wbr/>Display<wbr/>Name</span></a></li>
+<li><a href="#findByParentUID" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>By<wbr/>ParentUID</span></a></li>
+<li><a href="#findByPosition" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>By<wbr/>Position</span></a></li>
+<li><a href="#findByUID" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>ByUID</span></a></li>
+<li><a href="#findOne" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>find<wbr/>One</span></a></li>
 <li><a href="#generateUUID" class="tsd-is-protected tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>generateUUID</span></a></li>
 <li><a href="#getMaxListeners" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Max<wbr/>Listeners</span></a></li>
+<li><a href="#insert" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>insert</span></a></li>
+<li><a href="#insertObject" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>insert<wbr/>Object</span></a></li>
 <li><a href="#isReady" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>is<wbr/>Ready</span></a></li>
 <li><a href="#listenerCount" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>listener<wbr/>Count</span></a></li>
 <li><a href="#listeners" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>listeners</span></a></li>
@@ -1272,9 +1614,11 @@ special handling:</p>
 <li><a href="#removeAllListeners" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>remove<wbr/>All<wbr/>Listeners</span></a></li>
 <li><a href="#removeListener" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>remove<wbr/>Listener</span></a></li>
 <li><a href="#setMaxListeners" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Max<wbr/>Listeners</span></a></li>
+<li><a href="#setPriority" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Priority</span></a></li>
 <li><a href="#setUID" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>setUID</span></a></li>
 <li><a href="#start" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>start</span></a></li>
 <li><a href="#stop" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>stop</span></a></li>
+<li><a href="#suspend" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>suspend</span></a></li>
 <li><a href="#addAbortListener" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>add<wbr/>Abort<wbr/>Listener</span></a></li>
 <li><a href="#getEventListeners" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Event<wbr/>Listeners</span></a></li>
 <li><a href="#getMaxListeners-2" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Max<wbr/>Listeners</span></a></li>
