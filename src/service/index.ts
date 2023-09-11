@@ -16,3 +16,4 @@ export * from './RemoteService';
 export * from './MemoryQueryEvaluator';
 export * from './DummyDataService';
 export * from './DummyService';
+export * from './CalibrationService';
