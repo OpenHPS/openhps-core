@@ -51,6 +51,8 @@ export abstract class DataService<I, T> extends Service {
                     .emitAsync('build')
                     .then(() => resolve())
                     .catch(reject);
+            } else {
+                resolve();
             }
         });
     }
@@ -62,6 +64,8 @@ export abstract class DataService<I, T> extends Service {
                     .emitAsync('destroy')
                     .then(() => resolve())
                     .catch(reject);
+            } else {
+                resolve();
             }
         });
     }
