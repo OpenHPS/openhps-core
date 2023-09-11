@@ -156,7 +156,7 @@
     "terser-webpack-plugin": "^5.3.9",
     "three": "^0.156.1",
     "ts-node": "^10.9.1",
-    "typedoc": "^0.25.x",
+    "typedoc": "^0.24.x",
     "typedoc-umlclass": "^0.7.1",
     "typescript": "5.2.2",
     "webpack": "^5.88.2",
