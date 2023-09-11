@@ -41,7 +41,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/6410ef0/src/data/decorators/SerializableMapMember.ts#L11">src/data/decorators/SerializableMapMember.ts:11</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/93f0870/src/data/decorators/SerializableMapMember.ts#L11">src/data/decorators/SerializableMapMember.ts:11</a></li></ul></aside></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -79,6 +79,8 @@
 <li><a href="../classes/AxisAngle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Axis<wbr/>Angle</span></a></li>
 <li><a href="../classes/BalanceNode.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Balance<wbr/>Node</span></a></li>
 <li><a href="../classes/BufferNode.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Buffer<wbr/>Node</span></a></li>
+<li><a href="../classes/CalibrationNode.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Calibration<wbr/>Node</span></a></li>
+<li><a href="../classes/CalibrationService.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Calibration<wbr/>Service</span></a></li>
 <li><a href="../classes/CallbackNode.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Callback<wbr/>Node</span></a></li>
 <li><a href="../classes/CallbackSinkNode.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Callback<wbr/>Sink<wbr/>Node</span></a></li>
 <li><a href="../classes/CallbackSourceNode.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Callback<wbr/>Source<wbr/>Node</span></a></li>
@@ -207,6 +209,7 @@
 <li><a href="../interfaces/AccuracyModifierOptions.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-256"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)"></path></g></svg><span>Accuracy<wbr/>Modifier<wbr/>Options</span></a></li>
 <li><a href="../interfaces/ActiveSourceOptions.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>Active<wbr/>Source<wbr/>Options</span></a></li>
 <li><a href="../interfaces/BufferOptions.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>Buffer<wbr/>Options</span></a></li>
+<li><a href="../interfaces/CalibrationOptions.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>Calibration<wbr/>Options</span></a></li>
 <li><a href="../interfaces/CallbackNodeOptions.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>Callback<wbr/>Node<wbr/>Options</span></a></li>
 <li><a href="../interfaces/CellIdentificationOptions.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>Cell<wbr/>Identification<wbr/>Options</span></a></li>
 <li><a href="../interfaces/CustomDeserializerParams.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>Custom<wbr/>Deserializer<wbr/>Params</span></a></li>
@@ -273,7 +276,9 @@
 <li><a href="../interfaces/WorkerOptions.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>Worker<wbr/>Options</span></a></li>
 <li><a href="../interfaces/WorkerServiceCall.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>Worker<wbr/>Service<wbr/>Call</span></a></li>
 <li><a href="../interfaces/WorkerServiceResponse.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>Worker<wbr/>Service<wbr/>Response</span></a></li>
-<li><a href="../types/Constructor.html" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-4194304"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-type-alias)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)"></path></g></svg><span>Constructor</span></a></li>
+<li><a href="../types/CalibrationFrameCallback.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-4194304"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-type-alias)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)"></path></g></svg><span>Calibration<wbr/>Frame<wbr/>Callback</span></a></li>
+<li><a href="../types/CalibrationObjectCallback.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>Calibration<wbr/>Object<wbr/>Callback</span></a></li>
+<li><a href="../types/Constructor.html" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>Constructor</span></a></li>
 <li><a href="../types/DeserializerFn.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>Deserializer<wbr/>Fn</span></a></li>
 <li><a href="../types/DistanceFn.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>Distance<wbr/>Fn</span></a></li>
 <li><a href="../types/EulerOrder.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>Euler<wbr/>Order</span></a></li>
