@@ -7,7 +7,7 @@ import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../ObjectProc
  * performing user-aided calibration.
  */
 export class CalibrationNode<T extends DataObject = DataObject> extends ObjectProcessingNode {
-    protected running: boolean = false;
+    protected state: CalibrationState = CalibrationState.IDLE;
     protected service: CalibrationService;
     protected options: CalibrationOptions;
     protected frameCallback: CalibrationFrameCallback;
@@ -29,23 +29,27 @@ export class CalibrationNode<T extends DataObject = DataObject> extends ObjectPr
 
     public processObject(dataObject: T): Promise<T> {
         return new Promise((resolve, reject) => {
-            if (!this.running) {
+            if (this.state !== CalibrationState.RUNNING) {
                 resolve(dataObject);
-                return;
-            } else {
+            } else if (this.objectCallback) {
                 // Forward to service
                 Promise.resolve(this.objectCallback(dataObject))
                     .then((object) => {
                         resolve(object as T);
                     })
                     .catch(reject);
+            } else {
+                resolve(dataObject);
             }
         });
     }
 
     process(dataFrame: DataFrame): Promise<DataFrame> {
         return new Promise((resolve, reject) => {
-            if (this.running) {
+            if (this.state === CalibrationState.SUSPENDED) {
+                // Do not invoke callback but do not forward either
+                resolve(undefined);
+            } else if (this.state === CalibrationState.RUNNING) {
                 if (this.frameCallback) {
                     Promise.resolve(this.frameCallback(dataFrame))
                         .then((frame) => {
@@ -69,14 +73,24 @@ export class CalibrationNode<T extends DataObject = DataObject> extends ObjectPr
     start(objectCallback: CalibrationObjectCallback, frameCallback?: CalibrationFrameCallback): void {
         this.objectCallback = objectCallback;
         this.frameCallback = frameCallback;
-        this.running = true;
+        this.state = CalibrationState.RUNNING;
+    }
+
+    suspend(): void {
+        this.state = CalibrationState.SUSPENDED;
     }
 
     stop(): void {
-        this.running = false;
+        this.state = CalibrationState.IDLE;
     }
 }
 
 export interface CalibrationOptions extends ObjectProcessingNodeOptions {
     service: Constructor<CalibrationService>;
+}
+
+enum CalibrationState {
+    IDLE,
+    SUSPENDED,
+    RUNNING,
 }

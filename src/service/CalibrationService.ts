@@ -1,6 +1,6 @@
 import { DataFrame, DataObject } from '../data';
 import type { CalibrationNode } from '../nodes';
-import { Service } from './Service';
+import { DataObjectService } from './DataObjectService';
 
 /**
  * Calibration service. This service has to be used together with a [[CalibrationNode]]
@@ -24,7 +24,7 @@ import { Service } from './Service';
  * }
  * ```
  */
-export abstract class CalibrationService extends Service {
+export abstract class CalibrationService<T extends DataObject = any> extends DataObjectService<T> {
     // Registered node
     protected node: CalibrationNode;
 
@@ -45,10 +45,10 @@ export abstract class CalibrationService extends Service {
     /**
      * Start the calibration interception. Make sure to enable
      * any passive sources.
-     * @param {CalibrationObjectCallback} objectCallback Object callback
+     * @param {CalibrationObjectCallback} [objectCallback] Object callback
      * @param {CalibrationFrameCallback} [frameCallback] Frame callback
      */
-    protected start(objectCallback: CalibrationObjectCallback, frameCallback?: CalibrationFrameCallback): void {
+    protected start(objectCallback?: CalibrationObjectCallback, frameCallback?: CalibrationFrameCallback): void {
         if (!this.node) {
             throw new Error(`Calibration node did not register itself to the calibration service!`);
         }
@@ -63,6 +63,17 @@ export abstract class CalibrationService extends Service {
             throw new Error(`Calibration node did not register itself to the calibration service!`);
         }
         this.node.stop();
+    }
+
+    /**
+     * Suspend the calibration interception. This will still intercept data frames, but the
+     * callbacks will be cleared.
+     */
+    protected suspend(): void {
+        if (!this.node) {
+            throw new Error(`Calibration node did not register itself to the calibration service!`);
+        }
+        this.node.suspend();
     }
 }
 

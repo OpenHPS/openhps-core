@@ -76,4 +76,33 @@ describe('CalibrationService', () => {
             model.push(new DataFrame());  
         }, 10);
     });
+
+    
+    it('should stop triggering callbacks when suspended', (done) => {
+        let running = true;
+        let suspended = false;
+        sink.callback = () => {
+            if (running) {
+                done(new Error(`Message not intercepted!`));
+            } else {
+                done();
+            }
+        };
+        service.calibrate(1000).then((count) => {
+            running = false;
+            expect(count).to.eql(3);
+            return model.push(new DataFrame());
+        }).catch(done);
+
+        setTimeout(() => {
+            model.push(new DataFrame(new DataObject("test")));  
+            model.push(new DataFrame(new DataObject("test")));  
+            model.push(new DataFrame(new DataObject("test")));  
+            setTimeout(() => {
+                suspended = true;
+                (service as any).suspend();
+                model.push(new DataFrame(new DataObject("test")));  
+            }, 10);
+        }, 10);
+    });
 });

@@ -40,13 +40,29 @@ export abstract class DataService<I, T> extends Service {
         }
 
         this.once('build', this._buildDriver.bind(this));
-        this.once('destroy', () => this.driver.emitAsync('destroy'));
+        this.once('destroy', this._destroyDriver.bind(this));
     }
 
-    private _buildDriver(): Promise<boolean> {
+    private _buildDriver(): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.driver.model = this.model;
-            this.driver.emitAsync('build').then(resolve).catch(reject);
+            if (this.driver) {
+                this.driver.model = this.model;
+                this.driver
+                    .emitAsync('build')
+                    .then(() => resolve())
+                    .catch(reject);
+            }
+        });
+    }
+
+    private _destroyDriver(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (this.driver) {
+                this.driver
+                    .emitAsync('destroy')
+                    .then(() => resolve())
+                    .catch(reject);
+            }
         });
     }
 
