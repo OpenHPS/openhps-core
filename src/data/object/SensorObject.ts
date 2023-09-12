@@ -1,3 +1,4 @@
+import { Unit } from '../../utils';
 import { NumberType, SerializableMember, SerializableObject } from '../decorators';
 import { Orientation } from '../position';
 import { SensorValue } from '../values';
@@ -9,6 +10,8 @@ import { DataObject } from './DataObject';
 @SerializableObject()
 // eslint-disable-next-line
 export class SensorCalibrationData<T = SensorValue | Object | Orientation> {
+    @SerializableMember(() => Unit)
+    unit?: Unit;
     @SerializableMember()
     offset?: T;
     @SerializableMember()
