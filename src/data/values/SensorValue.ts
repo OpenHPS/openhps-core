@@ -1,4 +1,5 @@
 import { TimeService } from '../../service/TimeService';
+import { Vector3Tuple } from '../../three/Three';
 import { Unit } from '../../utils';
 import { Vector3 } from '../../utils/math';
 import { SerializableMember, SerializableObject, NumberType } from '../decorators';
@@ -58,6 +59,19 @@ export class SensorValue<U extends Unit = Unit> extends Vector3 {
             this.accuracy = accuracy;
         }
         return this;
+    }
+
+    /**
+     * Convert sensor value to tuple
+     * @param {Unit} [unit] Conversion unit
+     * @returns {Vector3Tuple} Tuple of three numbers
+     */
+    toTuple(unit?: U): Vector3Tuple {
+        if (unit) {
+            return this.unit.convert(this, unit).toArray();
+        } else {
+            return this.toArray();
+        }
     }
 
     clone(): this {
