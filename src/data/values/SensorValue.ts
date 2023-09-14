@@ -68,7 +68,7 @@ export class SensorValue<U extends Unit = Unit> extends Vector3 {
      */
     toTuple(unit?: U): Vector3Tuple {
         if (unit) {
-            return this.unit.convert(this, unit).toArray();
+            return [this.unit.convert(this.x, unit), this.unit.convert(this.y, unit), this.unit.convert(this.z, unit)];
         } else {
             return this.toArray();
         }

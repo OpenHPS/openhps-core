@@ -373,7 +373,7 @@ export class Unit {
      * @param {boolean} override Override an existing unit with the same name
      * @returns {Unit} Registered unit
      */
-    static registerUnit(unit: Unit, override = false): Unit {
+    static registerUnit(unit: Unit, override: boolean = false): Unit {
         if (!unit.name) {
             return unit;
         }
