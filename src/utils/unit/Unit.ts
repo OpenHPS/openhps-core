@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { SerializableObject, SerializableMember } from '../../data/decorators';
 import { UnitOptions } from './UnitOptions';
-import { UnitBasicDefinition, UnitDefinition, UnitFunctionDefinition } from './UnitDefinition';
+import { UnitBasicDefinition, UnitDefinition, UnitFunctionDefinition, UnitValueType } from './UnitDefinition';
 import { UnitPrefix, UnitPrefixType } from './UnitPrefix';
 import { Vector3 } from '../math/Vector3';
 
@@ -224,6 +224,8 @@ export class Unit {
             // Reverse conversion
             const definition = targetUnit._definitions.get(this.name);
             newDefinition = {
+                inputType: definition.inputType,
+                outputType: definition.outputType,
                 unit: targetUnit.name,
                 toUnit: definition.fromUnit,
                 fromUnit: definition.toUnit,
@@ -237,9 +239,11 @@ export class Unit {
             // Convert unit if definitions are found
             if (currentToBase && baseToTarget) {
                 newDefinition = {
+                    inputType: currentToBase.inputType,
+                    outputType: currentToBase.outputType,
                     unit: targetUnit.name,
-                    toUnit: (value: any) => baseToTarget.toUnit(currentToBase.toUnit(value)),
-                    fromUnit: (value: any) => currentToBase.fromUnit(baseToTarget.fromUnit(value)),
+                    toUnit: (value: UnitValueType) => baseToTarget.toUnit(currentToBase.toUnit(value)),
+                    fromUnit: (value: UnitValueType) => currentToBase.fromUnit(baseToTarget.fromUnit(value)),
                 };
                 this._definitions.set(targetUnit.name, newDefinition);
             }
@@ -351,7 +355,8 @@ export class Unit {
         if (!definition) {
             throw new Error(`No conversion definition found from '${this.name}' to '${targetUnit.name}'!`);
         } else {
-            if (value instanceof Vector3) {
+            if (value instanceof Vector3 && definition.inputType !== Vector3) {
+                // Convert vector individually when definition only supports atomic data
                 return value
                     .clone()
                     .fromArray([
@@ -410,5 +415,3 @@ export class Unit {
         return unit;
     }
 }
-
-export type UnitValueType = number | Vector3 | number;

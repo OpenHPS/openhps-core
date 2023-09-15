@@ -31,6 +31,8 @@ export class GCS extends Unit {
         aliases: ['earth-centered, earth-fixed', 'ECR', 'earth centered rotational'],
         definitions: [
             {
+                inputType: Vector3,
+                outputType: Vector3,
                 unit: 'EPSG:4326',
                 toUnit: (input: Vector3) => {
                     /* @see {@link https://gis.stackexchange.com/questions/265909/converting-from-ecef-to-geodetic-coordinates} */
@@ -86,6 +88,8 @@ export class GCS extends Unit {
         aliases: ['pseudo mercator', 'web mercator'],
         definitions: [
             {
+                inputType: Vector3,
+                outputType: Vector3,
                 unit: 'EPSG:4326',
                 fromUnit: (input: Vector3) => {
                     return new Vector3(

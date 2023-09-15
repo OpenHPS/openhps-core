@@ -64,7 +64,7 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
     get value(): T {
         if (this.calibrationData) {
             if (this.raw instanceof SensorValue) {
-                let result = this.raw.clone();
+                let result = this.raw.clone() as SensorValue;
                 const offset = this.calibrationData.offset as unknown as SensorValue;
                 const multiplier = this.calibrationData.multiplier as unknown as SensorValue;
                 if (offset) {
@@ -73,7 +73,7 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
                 if (multiplier) {
                     result = result.multiply(multiplier);
                 }
-                return result;
+                return result as unknown as T;
             } else {
                 return this.raw;
             }

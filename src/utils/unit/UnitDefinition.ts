@@ -1,3 +1,7 @@
+import { Vector3 } from '../../three/Three';
+
+export type UnitValueType = Vector3 | number;
+
 /**
  * @category Unit
  */
@@ -26,6 +30,8 @@ export type UnitBasicDefinition = {
  * @category Unit
  */
 export type UnitFunctionDefinition<In, Out> = {
+    inputType?: new (...args: any[]) => UnitValueType;
+    outputType?: new (...args: any[]) => UnitValueType;
     /**
      * Target unit
      */
