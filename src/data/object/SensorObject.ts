@@ -15,7 +15,7 @@ export class SensorCalibrationData<T = SensorValue | Object | Orientation> {
     @SerializableMember()
     offset?: T;
     @SerializableMember()
-    multipler?: T;
+    multiplier?: T;
 }
 
 /**
@@ -25,10 +25,10 @@ export class SensorCalibrationData<T = SensorValue | Object | Orientation> {
 // eslint-disable-next-line
 export abstract class SensorObject<T = SensorValue | Object | Orientation> extends DataObject {
     /**
-     * Value of the sensor
+     * Raw uncalibrated value of the sensor
      */
     @SerializableMember()
-    value: T;
+    raw: T;
     /**
      * Frequency of the sensor
      */
@@ -40,11 +40,11 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
      * Sensor calibration data
      */
     @SerializableMember()
-    calibrationData?: SensorCalibrationData;
+    calibrationData?: SensorCalibrationData<T>;
 
     constructor(uid?: string, value?: T, frequency?: number, displayName?: string) {
         super(uid, displayName);
-        this.value = value ?? ({} as T);
+        this.raw = value ?? ({} as T);
         this.frequency = frequency;
     }
 
@@ -53,9 +53,37 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
      * @returns {number} timestamp
      */
     get timestamp(): number {
-        return this.value instanceof SensorValue || this.value instanceof Orientation
-            ? this.value.timestamp
+        return this.raw instanceof SensorValue || this.raw instanceof Orientation
+            ? this.raw.timestamp
             : this.createdTimestamp;
+    }
+
+    /**
+     * Get value after calibration
+     */
+    get value(): T {
+        if (this.calibrationData) {
+            if (this.raw instanceof SensorValue) {
+                let result = this.raw.clone();
+                const offset = this.calibrationData.offset as unknown as SensorValue;
+                const multiplier = this.calibrationData.multiplier as unknown as SensorValue;
+                if (offset) {
+                    result = result.add(offset);
+                }
+                if (multiplier) {
+                    result = result.multiply(multiplier);
+                }
+                return result;
+            } else {
+                return this.raw;
+            }
+        } else if (typeof this.raw === 'number') {
+            const offset = this.calibrationData.offset as unknown as number;
+            const multiplier = this.calibrationData.multiplier as unknown as number;
+            return ((this.raw + (offset ?? 0)) * (multiplier ?? 1)) as unknown as T;
+        } else {
+            return this.raw;
+        }
     }
 }
 

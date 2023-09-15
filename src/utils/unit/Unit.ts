@@ -351,7 +351,17 @@ export class Unit {
         if (!definition) {
             throw new Error(`No conversion definition found from '${this.name}' to '${targetUnit.name}'!`);
         } else {
-            return definition.toUnit(value) as T;
+            if (value instanceof Vector3) {
+                return value
+                    .clone()
+                    .fromArray([
+                        definition.toUnit(value.x),
+                        definition.toUnit(value.y),
+                        definition.toUnit(value.z),
+                    ]) as T;
+            } else {
+                return definition.toUnit(value) as T;
+            }
         }
     }
 
