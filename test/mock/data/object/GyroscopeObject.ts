@@ -2,5 +2,5 @@ import { AngularVelocityUnit, SensorObject, SensorValue, SerializableObject } fr
 
 @SerializableObject()
 export class GyroscopeObject extends SensorObject {
-    raw: SensorValue<AngularVelocityUnit> = new SensorValue();
+    value: SensorValue<AngularVelocityUnit> = new SensorValue();
 }
