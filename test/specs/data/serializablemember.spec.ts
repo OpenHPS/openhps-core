@@ -6,6 +6,10 @@ declare module "../../../src/data/decorators/options" {
     interface MemberOptionsBase {
         abc?: string;
         xyz?: string;
+        xxx?: {
+            anArray?: string[];
+            anArrayOrAtomicValue?: string[] | string;
+        }
     }
 }
 
@@ -37,19 +41,27 @@ describe('SerializableMember', () => {
             @SerializableObject()
             class Test {
                 @SerializableMember({
-                    primaryKey: true
+                    primaryKey: true,
+                    xxx: {
+                        anArray: ['1'],
+                        anArrayOrAtomicValue: '1'
+                    }
                 })
                 member1: string;
             }
 
             SerializableMember({
-                abc: "hello"
+                abc: "hello",
+                xxx: {
+                    anArray: ['2'],
+                }
             })(Test.prototype, 'member1');
 
             const obj = new Test();
             const meta = DataSerializerUtils.getMetadata(obj);
             expect(meta.dataMembers.get('member1').options.abc).to.equal("hello");
             expect((meta.dataMembers.get('member1').options as SerializableMemberOptions).primaryKey).to.equal(true);
+            expect((meta.dataMembers.get('member1').options as SerializableMemberOptions).xxx.anArray.length).to.equal(2);
 
             @SerializableObject()
             class TestTest extends Test {
@@ -59,13 +71,20 @@ describe('SerializableMember', () => {
             SerializableMember({
                 xyz: "abc"
             })(Test.prototype, 'member1');
+            SerializableMember({
+                xxx: {
+                    anArray: ['3'],
+                    anArrayOrAtomicValue: '2'
+                }
+            })(TestTest.prototype, 'member1');
 
             const obj2 = new TestTest();
             const meta2 = DataSerializerUtils.getMetadata(obj2);
             expect(meta2.dataMembers.get('member1').options.abc).to.equal("hello");
             expect(meta2.dataMembers.get('member1').options.xyz).to.equal("abc");
             expect((meta2.dataMembers.get('member1').options as SerializableMemberOptions).primaryKey).to.equal(true);
-
+            expect((meta2.dataMembers.get('member1').options as SerializableMemberOptions).xxx.anArray.length).to.equal(3);
+            expect((meta2.dataMembers.get('member1').options as SerializableMemberOptions).xxx.anArrayOrAtomicValue).to.equal('2');
         });
     });
 

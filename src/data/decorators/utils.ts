@@ -137,9 +137,11 @@ export function mergeMemberOptions(target: unknown, propertyKey: string, options
     if (typeof options === 'function') {
         return options;
     }
-    const memberOptions =
-        DataSerializerUtils.getMemberOptions(target.constructor as Constructor<any>, propertyKey) ?? {};
-    return mergeDeep(options, memberOptions);
+    const memberOptions = DataSerializerUtils.getMemberOptions(target.constructor as Constructor<any>, propertyKey);
+    if (!memberOptions) {
+        return options;
+    }
+    return mergeDeep(memberOptions, options);
 }
 
 /**

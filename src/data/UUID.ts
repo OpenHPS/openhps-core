@@ -3,6 +3,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 const UUID_PADDING = '-0000-1000-8000-00805f9b34fb';
 
+/**
+ * Unique identifier
+ */
 @SerializableObject()
 export class UUID {
     @SerializableMember({
