@@ -157,7 +157,7 @@
     "three": "^0.156.1",
     "ts-node": "^10.9.1",
     "typedoc": "^0.24.x",
-    "typedoc-umlclass": "^0.7.1",
+    "typedoc-umlclass": "^0.8.0",
     "typescript": "5.1.x",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
