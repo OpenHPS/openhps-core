@@ -25,10 +25,10 @@ export class SensorCalibrationData<T = SensorValue | Object | Orientation> {
 // eslint-disable-next-line
 export abstract class SensorObject<T = SensorValue | Object | Orientation> extends DataObject {
     /**
-     * Raw uncalibrated value of the sensor
+     * Value of the sensor
      */
     @SerializableMember()
-    raw: T;
+    value: T;
     /**
      * Frequency of the sensor
      */
@@ -44,7 +44,7 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
 
     constructor(uid?: string, value?: T, frequency?: number, displayName?: string) {
         super(uid, displayName);
-        this.raw = value ?? ({} as T);
+        this.value = value ?? ({} as T);
         this.frequency = frequency;
     }
 
@@ -53,18 +53,42 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
      * @returns {number} timestamp
      */
     get timestamp(): number {
-        return this.raw instanceof SensorValue || this.raw instanceof Orientation
-            ? this.raw.timestamp
+        return this.value instanceof SensorValue || this.value instanceof Orientation
+            ? this.value.timestamp
             : this.createdTimestamp;
     }
 
     /**
-     * Get value after calibration
+     * Raw value before calibration
      */
-    get value(): T {
+    get raw(): T {
         if (this.calibrationData) {
-            if (this.raw instanceof SensorValue) {
-                let result = this.raw.clone() as SensorValue;
+            if (this.value instanceof SensorValue) {
+                let result = this.value.clone() as SensorValue;
+                const offset = this.calibrationData.offset as unknown as SensorValue;
+                const multiplier = this.calibrationData.multiplier as unknown as SensorValue;
+                if (multiplier) {
+                    result = result.divide(multiplier);
+                }
+                if (offset) {
+                    result = result.sub(offset);
+                }
+                return result as unknown as T;
+            } else {
+                return this.value;
+            }
+        } else if (typeof this.value === 'number') {
+            const offset = this.calibrationData.offset as unknown as number;
+            const multiplier = this.calibrationData.multiplier as unknown as number;
+            return (this.value / (multiplier ?? 1) - (offset ?? 0)) as unknown as T;
+        } else {
+            return this.value;
+        }
+    }
+    set raw(value: T) {
+        if (this.calibrationData) {
+            if (value instanceof SensorValue) {
+                let result = value.clone() as SensorValue;
                 const offset = this.calibrationData.offset as unknown as SensorValue;
                 const multiplier = this.calibrationData.multiplier as unknown as SensorValue;
                 if (offset) {
@@ -73,16 +97,16 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
                 if (multiplier) {
                     result = result.multiply(multiplier);
                 }
-                return result as unknown as T;
+                this.value = result as unknown as T;
             } else {
-                return this.raw;
+                this.value = value;
             }
-        } else if (typeof this.raw === 'number') {
+        } else if (typeof value === 'number') {
             const offset = this.calibrationData.offset as unknown as number;
             const multiplier = this.calibrationData.multiplier as unknown as number;
-            return ((this.raw + (offset ?? 0)) * (multiplier ?? 1)) as unknown as T;
+            this.value = ((value + (offset ?? 0)) * (multiplier ?? 1)) as unknown as T;
         } else {
-            return this.raw;
+            this.value = value;
         }
     }
 }

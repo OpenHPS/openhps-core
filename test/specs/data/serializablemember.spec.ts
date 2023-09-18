@@ -8,6 +8,7 @@ declare module "../../../src/data/decorators/options" {
         xyz?: string;
         xxx?: {
             anArray?: string[];
+            anotherArray?: string[];
             anArrayOrAtomicValue?: string[] | string;
         }
     }
@@ -54,6 +55,7 @@ describe('SerializableMember', () => {
                 abc: "hello",
                 xxx: {
                     anArray: ['2'],
+                    anotherArray: ['1']
                 }
             })(Test.prototype, 'member1');
 
@@ -69,12 +71,16 @@ describe('SerializableMember', () => {
             }
             
             SerializableMember({
-                xyz: "abc"
+                xyz: "abc",
+                xxx: {
+                    anArray: ['3'],
+                }
             })(Test.prototype, 'member1');
             SerializableMember({
                 xxx: {
-                    anArray: ['3'],
-                    anArrayOrAtomicValue: '2'
+                    anArray: ['4'],
+                    anArrayOrAtomicValue: '2',
+                    anotherArray: ['2']
                 }
             })(TestTest.prototype, 'member1');
 
@@ -83,7 +89,8 @@ describe('SerializableMember', () => {
             expect(meta2.dataMembers.get('member1').options.abc).to.equal("hello");
             expect(meta2.dataMembers.get('member1').options.xyz).to.equal("abc");
             expect((meta2.dataMembers.get('member1').options as SerializableMemberOptions).primaryKey).to.equal(true);
-            expect((meta2.dataMembers.get('member1').options as SerializableMemberOptions).xxx.anArray.length).to.equal(3);
+            expect((meta2.dataMembers.get('member1').options as SerializableMemberOptions).xxx.anArray.length).to.equal(4);
+            expect((meta2.dataMembers.get('member1').options as SerializableMemberOptions).xxx.anotherArray.length).to.equal(2);
             expect((meta2.dataMembers.get('member1').options as SerializableMemberOptions).xxx.anArrayOrAtomicValue).to.equal('2');
         });
     });
