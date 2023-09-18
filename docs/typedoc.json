@@ -5,8 +5,9 @@
     "excludePrivate": true,
     "hideGenerator": true,
     "categorizeByGroup": true,
+    "tsconfig": "../tsconfig/tsconfig.app.json",
     "media": "media",
-    "entryPointStrategy": "Expand",
+    "entryPointStrategy": "expand",
     "umlClassDiagram": {
         "type": "simple",
         "location": "local",
