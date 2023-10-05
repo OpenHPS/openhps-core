@@ -207,8 +207,7 @@ export class DataFrame {
 
     /**
      * Clear all objects
-     * @param {Function} object object filter
-     * @param objectFilter
+     * @param {Function} objectFilter object filter
      */
     clearObjects(objectFilter?: (object: DataObject) => boolean): void {
         const filter = objectFilter ?? ((object: DataObject) => true);

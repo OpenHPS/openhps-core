@@ -23,7 +23,9 @@ export function updateSerializableMember(
         const ownMeta = JsonObjectMetadata.ensurePresentInPrototype(target);
         const rootMeta = DataSerializerUtils.getRootMetadata(target.constructor);
         const ownMemberMetadata = ownMeta.dataMembers.get(propertyKey) || ownMeta.dataMembers.get(options.name);
-        const rootMemberMetadata = rootMeta.dataMembers.get(propertyKey) || rootMeta.dataMembers.get(options.name);
+        const rootMemberMetadata = rootMeta
+            ? rootMeta.dataMembers.get(propertyKey) || rootMeta.dataMembers.get(options.name)
+            : undefined;
         if (!ownMemberMetadata) {
             throw new Error(`Unable to get member metadata for ${target} on property ${propertyKey}!`);
         }

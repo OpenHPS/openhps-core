@@ -215,12 +215,12 @@ export class Serializer extends JSONSerializer {
      * Performs the conversion of an array of typed objects (or primitive values) to an array of simple
      * javascript objects
      * (or primitive values) for serialization.
-     * @param sourceObject
-     * @param typeDescriptor
-     * @param memberName
-     * @param serializer
-     * @param memberOptions
-     * @param serializerOptions
+     * @param sourceObject Source object to convert
+     * @param typeDescriptor Type descriptor of source object
+     * @param memberName Member name to convert
+     * @param serializer Serializer
+     * @param memberOptions Member options of memberName
+     * @param serializerOptions Custom serializer options
      */
     convertAsArray(
         sourceObject: Array<any>,

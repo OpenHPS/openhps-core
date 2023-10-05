@@ -60,6 +60,7 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
 
     /**
      * Raw value before calibration
+     * @returns {SensorValue | object | Orientation} raw sensor value
      */
     get raw(): T {
         if (this.calibrationData) {
