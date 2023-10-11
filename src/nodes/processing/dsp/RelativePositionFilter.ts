@@ -16,8 +16,6 @@ export class RelativePositionFilter<
     constructor(relativePositionType: new () => R, options: RelativePositionFilterOptions) {
         super(undefined, undefined, options);
         this._relativePositionType = relativePositionType;
-        this.options.minValue = this.options.minValue || 0;
-        this.options.maxValue = this.options.maxValue || 100;
         this.options.maxTimeDifference = this.options.maxTimeDifference || Infinity;
     }
 
@@ -39,7 +37,9 @@ export class RelativePositionFilter<
                         const relativePosition = relativePositions[idx];
                         if (
                             typeof value === 'number' &&
+                            this.options.maxValue &&
                             value <= this.options.maxValue &&
+                            this.options.minValue &&
                             value >= this.options.minValue &&
                             TimeService.now() - this.options.maxTimeDifference <= relativePosition.timestamp
                         ) {

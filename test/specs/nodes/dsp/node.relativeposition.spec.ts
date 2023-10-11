@@ -15,6 +15,11 @@ describe('RelativePositionFilter', () => {
                 maxValue: 100,
                 maxTimeDifference: 20000
             }))
+            .via(new RelativePositionFilter(RelativeDistance, {
+                minValue: Number.MIN_VALUE, maxValue: Number.MIN_VALUE,
+                R: 1, A: 1, B: 1, C: 1, Q: 1,
+                maxTimeDifference: 20000
+            }))
             .to(sink)
             .build().then(m => {
                 model = m;
