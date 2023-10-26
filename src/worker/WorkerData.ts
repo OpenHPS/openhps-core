@@ -1,3 +1,8 @@
+export interface SerializedWorkerMethod {
+    name: string;
+    handlerFn: string;
+}
+
 export interface WorkerData {
     services?: Array<{
         uid: string;
@@ -10,4 +15,5 @@ export interface WorkerData {
     directory?: string;
     args?: any;
     type?: string;
+    methods?: SerializedWorkerMethod[];
 }

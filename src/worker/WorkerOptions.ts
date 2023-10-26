@@ -1,3 +1,5 @@
+import { Serializable } from 'typedjson';
+import { Model } from '../Model';
 import { Service } from '../service';
 
 export interface WorkerOptions {
@@ -34,4 +36,10 @@ export interface WorkerOptions {
      */
     timeout?: number;
     blob?: boolean;
+    methods?: WorkerMethod[];
+}
+
+export interface WorkerMethod {
+    name: string;
+    handler: (model: Model<any, any>, ...args: any[]) => Promise<any> | void;
 }

@@ -14,6 +14,7 @@ import { DummyService } from '../service/DummyService';
 import { ModelGraph } from '../graph/_internal/implementations/ModelGraph';
 import { WorkerOptions } from './WorkerOptions';
 import { Model } from '../Model';
+import { Serializable } from '../data/decorators';
 
 declare const __non_webpack_require__: typeof require;
 
@@ -119,6 +120,27 @@ export class WorkerHandler extends AsyncEventEmitter {
         });
     }
 
+    invokeMethod<T>(methodName: string, ...args: any[]): Promise<Serializable<T> | Serializable<T>[] | void> {
+        return new Promise((resolve, reject) => {
+            this._pool
+                .queue((worker: any) => {
+                    const invokeMethod: (
+                        methodName: string,
+                        ...args: any[]
+                    ) => Promise<Serializable<T> | Serializable<T>[] | void> = worker.invokeMethod;
+                    return invokeMethod(methodName, ...args.map((a) => DataSerializer.serialize(a)));
+                })
+                .then((result) => {
+                    if (result !== undefined) {
+                        resolve(DataSerializer.deserialize(result));
+                    } else {
+                        resolve(result);
+                    }
+                })
+                .catch(reject);
+        });
+    }
+
     protected createWorker(): Worker {
         if (this.options.blob) {
             const worker = new BlobWorker(this.options.worker as any, {
@@ -171,6 +193,14 @@ export class WorkerHandler extends AsyncEventEmitter {
                         imports: this.options.imports || [],
                         args: this.options.args || {},
                         type: this.options.type || 'classic',
+                        methods: this.options.methods
+                            ? this.options.methods.map((method) => {
+                                  return {
+                                      name: method.name,
+                                      handlerFn: method.handler.toString(),
+                                  };
+                              })
+                            : [],
                         ...this.config,
                     })
                         .then(() => {

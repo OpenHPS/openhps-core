@@ -8,6 +8,9 @@ import {
     DataObject,
     NodeDataService,
     NodeData,
+    Model,
+    ReferenceSpace,
+    GraphBuilder,
 } from '../../../src';
 import * as path from 'path';
 import { KeyValueDataService } from '../../../src/service/KeyValueDataService';
@@ -315,7 +318,7 @@ describe('WorkerNode', () => {
                                 '../../mock/nodes/TimeConsumingNode',
                             )
                         ],
-                        timeout: 60000
+                        timeout: 60000,
                     },
                 ),
             )
@@ -326,6 +329,109 @@ describe('WorkerNode', () => {
                 model.once('error', done);
                 model.once('completed', (event) => {
                     model.emitAsync('destroy').then(() => {
+                        done();
+                    }).catch(done);
+                });
+                model.push(new DataFrame(new DataObject('mvdewync')));
+            }).catch(done);
+    })
+        .slow(5000)
+        .timeout(60000);
+
+    // it('should support node workerserialization on a graph', (done) => {
+    //     let model;
+    //     ModelBuilder.create()
+    //         .from()
+    //         .via(
+    //             new WorkerNode(
+    //                 GraphBuilder.create()
+    //                     .from()
+    //                     .via(new TimeConsumingNode())
+    //                     .to(),
+    //                 {
+    //                     directory: __dirname,
+    //                     poolSize: 1,
+    //                     imports: [
+    //                         path.join(
+    //                             __dirname,
+    //                             '../../mock/nodes/TimeConsumingNode',
+    //                         )
+    //                     ],
+    //                     timeout: 60000,
+    //                 },
+    //             ),
+    //         )
+    //         .to(new CallbackSinkNode((data: DataFrame) => {}))
+    //         .build()
+    //         .then((m) => {
+    //             model = m;
+    //             model.once('error', done);
+    //             model.once('completed', (event) => {
+    //                 model.emitAsync('destroy').then(() => {
+    //                     done();
+    //                 }).catch(done);
+    //             });
+    //             model.push(new DataFrame(new DataObject('mvdewync')));
+    //         }).catch(done);
+    // })
+    //     .slow(5000)
+    //     .timeout(60000);
+
+    it('should support custom methods', (done) => {
+        let model;
+        ModelBuilder.create()
+            .from()
+            .via(
+                new WorkerNode(
+                    new TimeConsumingNode(),
+                    {
+                        uid: "worker",
+                        directory: __dirname,
+                        poolSize: 1,
+                        imports: [
+                            path.join(
+                                __dirname,
+                                '../../mock/nodes/TimeConsumingNode',
+                            )
+                        ],
+                        timeout: 60000,
+                        methods: [{
+                            name: "test1",
+                            handler: (model: Model, ...args: any[]) => {
+                                model.logger("info", "test1");
+                            }
+                        },
+                        {
+                            name: "test2",
+                            handler: (model: Model, ...args: any[]) => {
+                                return model.referenceSpace;
+                            }
+                        },
+                        {
+                            name: "test3",
+                            handler: (model: Model, object: DataObject) => {
+                                return object.uid === "maxim";
+                            }
+                        }]
+                    },
+                ),
+            )
+            .to(new CallbackSinkNode((data: DataFrame) => {}))
+            .build()
+            .then((m) => {
+                model = m;
+                model.once('error', done);
+                model.once('completed', () => {
+                    const worker: WorkerNode<any, any> = model.findNodeByUID("worker");
+                    worker.invokeMethod("test1").then(() => {
+                        return worker.invokeMethod("test2");
+                    }).then(data => {
+                        expect(data).to.be.instanceOf(ReferenceSpace);
+                        return worker.invokeMethod("test3", new DataObject("maxim"));
+                    }).then((data) => {
+                        expect(data).to.be.true;
+                        return model.emitAsync('destroy');
+                    }).then(() => {
                         done();
                     }).catch(done);
                 });

@@ -8,6 +8,7 @@ import { SourceNode } from '../../nodes/SourceNode';
 import { Edge } from '../Edge';
 import { Graph } from '../Graph';
 import { GraphValidator } from '../_internal/implementations';
+import { WorkerOptions } from '../../worker';
 
 /**
  * Graph builder
@@ -140,6 +141,17 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
         return this;
     }
 
+    // worker(options?: WorkerOptions): Promise<Graph<In, Out>> {
+    //     return new Promise((resolve, reject) => {
+    //         this.build()
+    //             .then((graph) => {
+    //                 const worker = new WorkerNode(graph, options);
+    //                 resolve(GraphBuilder.create().from().via(worker).to());
+    //             })
+    //             .catch(reject);
+    //     });
+    // }
+
     public build(): Promise<Graph<In, Out>> {
         return new Promise((resolve, reject) => {
             GraphValidator.validate(this.graph);
@@ -237,7 +249,6 @@ export class GraphShapeBuilder<Builder extends GraphBuilder<any, any>> {
      * @param {Function} filterFn Filter function (true to keep, false to remove)
      * @returns {GraphShapeBuilder} Current graph builder instance
      */
-    public filter(filterFn: (object: DataObject, frame?: DataFrame) => boolean): this;
     public filter(filterFn: (frame: DataFrame) => boolean): this;
     public filter(filterFn: (_?: any) => boolean): this {
         return this.via(GraphShapeBuilder.shapes.get('filter')(filterFn));

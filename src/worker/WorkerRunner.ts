@@ -75,6 +75,9 @@ expose({
     findAllServices(): Promise<any[]> {
         return worker.findAllServices();
     },
+    invokeMethod(methodName: string, ...args: any[]): Promise<any> {
+        return worker.invokeMethod(methodName, ...args);
+    },
 });
 
 export default worker;

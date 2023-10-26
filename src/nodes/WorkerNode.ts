@@ -1,6 +1,6 @@
-import { DataFrame, DataSerializer } from '../data';
+import { DataFrame, DataSerializer, Serializable } from '../data';
 import { Node, NodeOptions } from '../Node';
-import { GraphShapeBuilder } from '../graph/builders/GraphBuilder';
+import { GraphBuilder, GraphShapeBuilder } from '../graph/builders/GraphBuilder';
 import { ModelBuilder } from '../ModelBuilder';
 import { PullOptions, PushOptions } from '../graph/options';
 import { WorkerOptions } from '../worker/WorkerOptions';
@@ -59,7 +59,10 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
         super(options);
         this.options.worker = this.options.worker || '../worker/WorkerRunner';
         this.options.type = this.options.type || 'classic';
-        if (worker instanceof Node) {
+        if (worker instanceof GraphBuilder) {
+            // Serializable node
+            this.config.serialized = DataSerializer.serialize(worker.graph);
+        } else if (worker instanceof Node) {
             // Serializable node
             this.config.serialized = DataSerializer.serialize(worker);
         } else if (worker instanceof Function) {
@@ -133,6 +136,16 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
      */
     private _onWorkerPush(frame: DataFrame, options?: PushOptions): void {
         this.outlets.forEach((outlet) => outlet.push(frame as any, options));
+    }
+
+    /**
+     * Invoke a worker method
+     * @param {string} methodName Method name
+     * @param {any[]} args Arguments
+     * @returns {Promise<any>} Promise with result(s)
+     */
+    invokeMethod<T>(methodName: string, ...args: any[]): Promise<Serializable<T>[] | Serializable<T> | void> {
+        return this.handler.invokeMethod(methodName, ...args);
     }
 }
 

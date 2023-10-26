@@ -34,6 +34,7 @@ export class WorkerBase {
         event: any;
     }> = new Subject();
     protected config: WorkerData;
+    customMethods: Map<string, (model: Model<any, any>, ...args: any[]) => Promise<any>> = new Map();
 
     setShape(shape: GraphBuilder<any, any>): void {
         this.shape = shape;
@@ -122,7 +123,30 @@ export class WorkerBase {
                 .build()
                 .then((m) => {
                     this.model = m;
+                    // Load methods
+                    this.config.methods.forEach((serializedMethod) => {
+                        this.customMethods.set(
+                            serializedMethod.name,
+                            (model: Model<any, any>, ...args: any[]): Promise<any> => {
+                                return Promise.resolve(eval(serializedMethod.handlerFn)(model, ...args)) as Promise<any>; // eslint-disable-line
+                            },
+                        );
+                    });
                     resolve();
+                })
+                .catch(reject);
+        });
+    }
+
+    invokeMethod(methodName: string, ...args: any[]): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const method = this.customMethods.get(methodName);
+            if (!method) {
+                return reject(new Error(`Unable to invoke unknown method '${methodName}'!`));
+            }
+            method(this.model, ...args)
+                .then((result) => {
+                    resolve(DataSerializer.serialize(result));
                 })
                 .catch(reject);
         });
