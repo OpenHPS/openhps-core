@@ -1,5 +1,6 @@
 import { SerializableMember, SerializableObject } from './decorators';
 import { v4 as uuidv4 } from 'uuid';
+import { BufferUtils } from '../utils/BufferUtils';
 
 const UUID_PADDING = '-0000-1000-8000-00805f9b34fb';
 
@@ -22,25 +23,31 @@ export class UUID {
         return UUID.fromString(uuidString);
     }
 
-    static fromBuffer(buffer: Uint8Array): UUID {
-        return new this(buffer);
+    static fromBuffer(buffer: Uint8Array, littleEndian?: boolean): UUID {
+        if (littleEndian) {
+            let swappedBuffer = new Uint8Array();
+            for (let i = buffer.length - 1; i >= 0; i--) {
+                swappedBuffer = BufferUtils.concatBuffer(swappedBuffer, new Uint8Array([buffer[i]]));
+            }
+            return new this(swappedBuffer);
+        } else {
+            return new this(buffer);
+        }
     }
 
     static fromString(uuid: string): UUID {
-        const hexArray: number[] = uuid
-            .replace(UUID_PADDING, '')
-            .replace(/-/g, '')
-            .split(/(..)/)
-            .filter((a) => {
-                return a !== '';
-            })
-            .map((hex) => {
-                return Number(`0x${hex}`);
-            });
-        if (hexArray.includes(NaN)) {
-            return undefined;
-        }
-        let array = Uint8Array.from(hexArray);
+        let array = Uint8Array.from(
+            uuid
+                .replace(UUID_PADDING, '')
+                .replace(/-/g, '')
+                .split(/(..)/)
+                .filter((a) => {
+                    return a !== '';
+                })
+                .map((hex) => {
+                    return Number(`0x${hex}`);
+                }),
+        );
         if (uuid.startsWith('0000')) {
             array = array.slice(2);
         }
@@ -51,12 +58,18 @@ export class UUID {
         return this._raw;
     }
 
-    toString(): string {
+    to128bit(): UUID {
+        return UUID.fromString(this.toString(8));
+    }
+
+    toString(byteLength?: number, padding: boolean = true): string {
+        byteLength = byteLength ?? this._raw.byteLength;
         const bytes = [];
         for (const [, value] of this._raw.entries()) {
             bytes.push(value);
         }
-        if (this._raw.byteLength === 2) {
+        const PADDING = padding ? UUID_PADDING : '';
+        if (byteLength === 2) {
             // 16 bit
             return (
                 '0000' +
@@ -65,18 +78,18 @@ export class UUID {
                         return byte.toString(16).padStart(2, '0');
                     })
                     .join('') +
-                UUID_PADDING
+                PADDING
             );
-        } else if (this._raw.byteLength === 4) {
+        } else if (byteLength === 4) {
             // 32 bit
             return (
                 bytes
                     .map((byte: number) => {
                         return byte.toString(16).padStart(2, '0');
                     })
-                    .join('') + UUID_PADDING
+                    .join('') + PADDING
             );
-        } else {
+        } else if (byteLength === 16) {
             // 128 bit
             const hex = bytes.map((byte: number) => {
                 return byte.toString(16).padStart(2, '0');
@@ -92,6 +105,12 @@ export class UUID {
                 '-' +
                 hex.join('')
             );
+        } else {
+            // Strange
+            const hex = bytes.map((byte: number) => {
+                return byte.toString(16).padStart(2, '0');
+            });
+            return hex.join('');
         }
     }
 }
