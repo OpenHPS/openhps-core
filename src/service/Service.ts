@@ -18,10 +18,10 @@ export abstract class Service extends AsyncEventEmitter {
      */
     model: any;
 
-    constructor() {
+    constructor(options: ServiceOptions = {}) {
         super();
 
-        this.uid = this.constructor.name;
+        this.uid = options.uid ?? this.constructor.name;
 
         this.prependOnceListener('ready', () => {
             this._ready = true;
@@ -104,4 +104,8 @@ export abstract class Service extends AsyncEventEmitter {
             this.model.logger(level, message, data);
         }
     }
+}
+
+export interface ServiceOptions {
+    uid?: string;
 }
