@@ -1,4 +1,4 @@
-import { Service } from './Service';
+import { Service, ServiceOptions } from './Service';
 import { FilterQuery } from './FilterQuery';
 import { FindOptions } from './FindOptions';
 import { DataSerializer } from '../data/DataSerializer';
@@ -46,7 +46,7 @@ export abstract class DataServiceDriver<I, T> extends Service {
     abstract deleteAll(query?: FilterQuery<T>): Promise<void>;
 }
 
-export interface DataServiceOptions<T = any> {
+export interface DataServiceOptions<T = any> extends ServiceOptions {
     serialize?: (obj: T) => any;
     deserialize?: (obj: any) => T;
 }
