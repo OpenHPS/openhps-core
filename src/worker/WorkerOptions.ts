@@ -1,4 +1,3 @@
-import { Serializable } from 'typedjson';
 import { Model } from '../Model';
 import { Service } from '../service';
 

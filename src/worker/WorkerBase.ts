@@ -125,10 +125,11 @@ export class WorkerBase {
                     this.model = m;
                     // Load methods
                     this.config.methods.forEach((serializedMethod) => {
+                        const method = eval(serializedMethod.handlerFn); // eslint-disable-line
                         this.customMethods.set(
                             serializedMethod.name,
                             (model: Model<any, any>, ...args: any[]): Promise<any> => {
-                                return Promise.resolve(eval(serializedMethod.handlerFn)(model, ...args)) as Promise<any>; // eslint-disable-line
+                                return Promise.resolve(method(model, ...args)) as Promise<any>;
                             },
                         );
                     });
@@ -144,7 +145,7 @@ export class WorkerBase {
             if (!method) {
                 return reject(new Error(`Unable to invoke unknown method '${methodName}'!`));
             }
-            method(this.model, ...args)
+            method(this.model, ...args.map((a) => DataSerializer.deserialize(a)))
                 .then((result) => {
                     resolve(DataSerializer.serialize(result));
                 })
