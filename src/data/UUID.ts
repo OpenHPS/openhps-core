@@ -36,18 +36,20 @@ export class UUID {
     }
 
     static fromString(uuid: string): UUID {
-        let array = Uint8Array.from(
-            uuid
-                .replace(UUID_PADDING, '')
-                .replace(/-/g, '')
-                .split(/(..)/)
-                .filter((a) => {
-                    return a !== '';
-                })
-                .map((hex) => {
-                    return Number(`0x${hex}`);
-                }),
-        );
+        const hexArray: number[] = uuid
+            .replace(UUID_PADDING, '')
+            .replace(/-/g, '')
+            .split(/(..)/)
+            .filter((a) => {
+                return a !== '';
+            })
+            .map((hex) => {
+                return Number(`0x${hex}`);
+            });
+        if (hexArray.includes(NaN)) {
+            return undefined;
+        }
+        let array = Uint8Array.from(hexArray);
         if (uuid.startsWith('0000')) {
             array = array.slice(2);
         }

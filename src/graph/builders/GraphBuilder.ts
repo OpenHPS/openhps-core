@@ -8,7 +8,7 @@ import { SourceNode } from '../../nodes/SourceNode';
 import { Edge } from '../Edge';
 import { Graph } from '../Graph';
 import { GraphValidator } from '../_internal/implementations';
-import { WorkerOptions } from '../../worker';
+import { Model } from '../../Model';
 
 /**
  * Graph builder
@@ -31,7 +31,7 @@ export class GraphBuilder<In extends DataFrame, Out extends DataFrame> {
      * @param {string} name ready
      * @param {Function} listener Event callback
      */
-    public on(name: 'ready', listener: () => Promise<void> | void): this;
+    public on(name: 'ready', listener: (model: Model) => Promise<void> | void): this;
     /**
      * Event before building the graph
      * @param {string} name prebuild

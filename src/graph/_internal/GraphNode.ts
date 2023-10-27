@@ -117,6 +117,9 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
      */
     emit(name: 'destroy'): boolean;
     emit(name: string | symbol, ...args: any[]): boolean {
+        if (name === 'ready') {
+            return super.emit('ready', this);
+        }
         return super.emit(name, ...args);
     }
 
