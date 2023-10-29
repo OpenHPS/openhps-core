@@ -93,30 +93,31 @@ export class WorkerBase {
             // eslint-disable-next-line
             const path = this.config.imports.length > 0 ? undefined : (typeof process !== 'object' ? undefined : require('path'));
 
-            if (this.config.serialized) {
-                try {
+            try {
+                if (this.config.serialized) {
                     const traversalBuilder = modelBuilder.from();
                     const modelOrNode = ModelSerializer.deserializeNode(this.config.serialized);
                     traversalBuilder.via(modelOrNode as Node<any, any>);
                     traversalBuilder.to();
-                } catch (ex) {
-                    // Error deserializing, did you import the nodes?
-                    reject(ex);
+                } else if (this.config.builder) {
+                    const traversalBuilder = modelBuilder.from();
+                    // eslint-disable-next-line
+                    const builderCallback = eval(this.config.builder);
+                    builderCallback(traversalBuilder, modelBuilder, this.config.args);
+                    traversalBuilder.to();
+                } else if (this.config.shape) {
+                    // eslint-disable-next-line
+                    const graph = await importFn(path ? path.join(__dirname, this.config.shape) : this.config.shape);
+                    if (graph) {
+                        modelBuilder.addShape(graph.default);
+                    }
+                } else if (this.shape) {
+                    modelBuilder.addShape(this.shape);
                 }
-            } else if (this.config.builder) {
-                const traversalBuilder = modelBuilder.from();
-                // eslint-disable-next-line
-                const builderCallback = eval(this.config.builder);
-                builderCallback(traversalBuilder, modelBuilder, this.config.args);
-                traversalBuilder.to();
-            } else if (this.config.shape) {
-                // eslint-disable-next-line
-                const graph = await importFn(path ? path.join(__dirname, this.config.shape) : this.config.shape);
-                if (graph) {
-                    modelBuilder.addShape(graph.default);
-                }
-            } else if (this.shape) {
-                modelBuilder.addShape(this.shape);
+            } catch (ex) {
+                // Error deserializing, did you import the nodes?
+                reject(ex);
+                return;
             }
 
             modelBuilder

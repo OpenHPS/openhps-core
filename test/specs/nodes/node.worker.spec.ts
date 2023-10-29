@@ -232,6 +232,39 @@ describe('WorkerNode', () => {
         .slow(5000)
         .timeout(60000);
 
+        // it('should throw an error when missing an import', (done) => {
+        //     let model;
+        //     ModelBuilder.create()
+        //         .from()
+        //         .via(
+        //             new WorkerNode(
+        //                 (builder) => {
+        //                     const { NodeDataServiceTestNode } = require(path.join(
+        //                         __dirname,
+        //                         '../../mock/nodes/NodeDataServiceTestNodeDOESNOTEXIST',
+        //                     ));
+        //                 },
+        //                 {
+        //                     directory: __dirname,
+        //                     poolSize: 1,
+        //                     timeout: 60000
+        //                 },
+        //             ),
+        //         )
+        //         .to(
+        //             new CallbackSinkNode(() => {
+        //                 done();
+        //             }),
+        //         )
+        //         .build()
+        //         .then((m) => {
+        //             model = m;
+        //             model.push(new DataFrame(new DataObject('mvdewync')));
+        //         }).catch(() => done());
+        // })
+        //     .slow(5000)
+        //     .timeout(60000);
+
     it('should support error events', (done) => {
         let model;
         ModelBuilder.create()
