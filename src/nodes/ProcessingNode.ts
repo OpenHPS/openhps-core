@@ -44,14 +44,10 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
 
     private _onPush(frame: In | In[], options?: PushOptions): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const processPromises: Array<Promise<Out>> = [];
+            const processPromises: Array<Promise<Out | Out[]>> = [];
 
             if (Array.isArray(frame)) {
-                frame
-                    .filter((frame) => this.options.frameFilter(frame))
-                    .forEach((f) => {
-                        processPromises.push(this.process(f, options));
-                    });
+                processPromises.push(this.processBulk(frame.filter((frame) => this.options.frameFilter(frame))));
                 frame
                     .filter((frame) => !this.options.frameFilter(frame))
                     .forEach((f) => {
@@ -65,7 +61,14 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
 
             Promise.all(processPromises)
                 .then((results) => {
-                    const output = results.filter((res) => res !== undefined);
+                    const output: Out[] = [];
+                    results.forEach((res) => {
+                        if (Array.isArray(res)) {
+                            output.push(...res.filter((res) => res !== undefined));
+                        } else if (res !== undefined) {
+                            output.push(res);
+                        }
+                    });
                     if (output.length > 0) {
                         this.outlets.forEach((outlet) =>
                             outlet.push(output.length === 1 ? output[0] : output, options),
@@ -117,6 +120,10 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
         return new Promise((resolve, reject) => {
             this.findNodeDataService().insertData(this.uid, dataObject, data).then(resolve).catch(reject);
         });
+    }
+
+    processBulk(frames: In[]): Promise<Out[]> {
+        return Promise.all(frames.map((frame) => this.process(frame)));
     }
 
     public abstract process(frame: In, options?: PushOptions): Promise<Out>;
