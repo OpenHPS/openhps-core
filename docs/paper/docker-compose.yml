@@ -1,0 +1,9 @@
+version: "2"
+services:
+  app:
+    image: openjournals/inara
+    user: $UID:$GID
+    environment:
+      journal: JOSS
+    volumes:
+    - ./:/data

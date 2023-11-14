@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Publishing DTD v1.2 20190208//EN"
+                  "JATS-publishing1.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" dtd-version="1.2" article-type="other">
+<front>
+<journal-meta>
+<journal-id></journal-id>
+<journal-title-group>
+<journal-title>Journal of Open Source Software</journal-title>
+<abbrev-journal-title>JOSS</abbrev-journal-title>
+</journal-title-group>
+<issn publication-format="electronic">2475-9066</issn>
+<publisher>
+<publisher-name>Open Journals</publisher-name>
+</publisher>
+</journal-meta>
+<article-meta>
+<article-id pub-id-type="publisher-id">0</article-id>
+<article-id pub-id-type="doi">N/A</article-id>
+<title-group>
+<article-title>OpenHPS: A Modular Framework to Facilitate the
+Development and Sharing of Positioning Systems and
+Algorithms</article-title>
+</title-group>
+<contrib-group>
+<contrib contrib-type="author">
+<contrib-id contrib-id-type="orcid">https://orcid.org/0000-0003-0314-7107</contrib-id>
+<name>
+<surname>Van de Wynckel</surname>
+<given-names>Maxim</given-names>
+</name>
+<xref ref-type="aff" rid="aff-1"/>
+</contrib>
+<contrib contrib-type="author">
+<contrib-id contrib-id-type="orcid">https://orcid.org/0000-0001-9916-0837</contrib-id>
+<name>
+<surname>Signer</surname>
+<given-names>Beat</given-names>
+</name>
+<xref ref-type="aff" rid="aff-1"/>
+</contrib>
+<aff id="aff-1">
+<institution-wrap>
+<institution>Vrije Universiteit Brussel, Belgium</institution>
+</institution-wrap>
+</aff>
+</contrib-group>
+<pub-date date-type="pub" publication-format="electronic" iso-8601-date="2023-11-13">
+<day>13</day>
+<month>11</month>
+<year>2023</year>
+</pub-date>
+<volume>¿VOL?</volume>
+<issue>¿ISSUE?</issue>
+<fpage>¿PAGE?</fpage>
+<permissions>
+<copyright-statement>Authors of papers retain copyright and release the
+work under a Creative Commons Attribution 4.0 International License (CC
+BY 4.0)</copyright-statement>
+<copyright-year>2022</copyright-year>
+<copyright-holder>The article authors</copyright-holder>
+<license license-type="open-access" xlink:href="https://creativecommons.org/licenses/by/4.0/">
+<license-p>Authors of papers retain copyright and release the work under
+a Creative Commons Attribution 4.0 International License (CC BY
+4.0)</license-p>
+</license>
+</permissions>
+<kwd-group kwd-group-type="author">
+<kwd>TypeScript</kwd>
+<kwd>Hybrid positioning</kwd>
+</kwd-group>
+</article-meta>
+</front>
+<body>
+<sec id="summary">
+  <title>Summary</title>
+  <p>Positioning systems are a collection of technologies and algorithms
+  that can help to determine the location of people and objects. While
+  outdoor positioning systems mainly use satellites such as GPS to
+  perform the tracking, many different technologies exist that can offer
+  better latency, accuracy or battery efficiency depending on the use
+  case. These use cases can range from indoor positioning systems where
+  there is no standardised technology to smaller scale positioning
+  systems such as tracking the location of a pen on a piece of paper. In
+  the research domain of positioning and tracking, these novel types of
+  positioning systems are often implemented as single use protypes with
+  no common data format, making it difficult to expand. OpenHPS was
+  created as a framework to enable to creation of positioning systems
+  for a wide range of use cases and to also allow a wide range of
+  algorithms. The creation of a positioning system using our framework
+  is graph based, allowing developers to share <italic>nodes</italic>
+  that implement new algorithms or combine various technologies.</p>
+</sec>
+<sec id="statement-of-need">
+  <title>Statement of Need</title>
+  <sec id="context">
+    <title>Context</title>
+    <p><monospace>OpenHPS</monospace> is an open source hybrid
+    positioning system framework written in TypeScript. It can be run on
+    the server using NodeJS, the browser or even hybrid mobile
+    applications such as NativeScript, React-Native and CapacitorJS. The
+    general design of a positioning system created using our framework
+    consists of a graph with a set of nodes that process data.</p>
+    <p>All concepts, ranging from positions to sensor values can be
+    expressed in various ways with varying units, allowing OpenHPS to be
+    used for small scale use cases such as tracking a pen on a paper to
+    larger use cases such as tracking airplanes across the globe.</p>
+  </sec>
+  <sec id="related-work">
+    <title>Related Work</title>
+  </sec>
+</sec>
+<sec id="framework">
+  <title>Framework</title>
+  <sec id="data-frames-and-objects">
+    <title>Data Frames and Objects</title>
+    <p>Our framework uses stream based processing of
+    <monospace>DataFrame</monospace>s which contain all time-sensitive
+    information. Inside these frames can be one or more
+    <monospace>DataObject</monospace>s which indicate the spatial
+    objects that are relevant for the information within the data
+    frame.</p>
+    <p>Both this information can be serialised to JSON or semantic RDF
+    data, enabling the interoperability between systems.</p>
+  </sec>
+  <sec id="nodes">
+    <title>Nodes</title>
+    <p>Each node in the graph represent a step in the processing of data
+    frames from source to sink. A <monospace>SourceNode</monospace>
+    generates information, such as a sensor that .</p>
+    <sec id="communication">
+      <title>Communication</title>
+    </sec>
+  </sec>
+  <sec id="modules">
+    <title>Modules</title>
+    <p>OpenHPS is modular by design, mainly due to the ability to extend
+    data frames and objects. These extensions allow for different data
+    objects such as different sensors such as cameras and IMU sensors or
+    spatial landmarks such as Bluetooth beacons.</p>
+    <p>Each node in a positioning model can be extended as well,
+    allowing the creation of custom algorithms that can be added or
+    removed from a positioning system with ease.</p>
+  </sec>
+  <sec id="performance">
+    <title>Performance</title>
+    <p>Since our framework uses TypeScript, it uses JavaScript at
+    runtime, which is single-threaded by default. To overcome the
+    challenges associated with this when creating real time stream
+    processing systems, our graphs or portions of the graph can be run
+    with the help of web workers. All data transmitted through our graph
+    is serialisable, which prevents the need for developers to handle
+    this serialisation or the communication between web workers
+    themselves.</p>
+    <p>In addition to the ability to run graphs on multiple workers, our
+    communication nodes such as MQTT, combined with the serialisability
+    of data, allows developers to offload the processing of complicated
+    tasks to other servers or dedicated processors. For more
+    high-demanding algorithms such as computer vision and visual SLAM,
+    modules such as
+    <ext-link ext-link-type="uri" xlink:href="https://github.com/OpenHPS/openhps-opencv">(<xref alt="openhps/opencv?" rid="ref-openhpsU002Fopencv" ref-type="bibr"><bold>openhps/opencv?</bold></xref>)</ext-link>
+    and
+    <ext-link ext-link-type="uri" xlink:href="https://github.com/OpenHPS/openhps-openvslam">(<xref alt="openhps/openvslam?" rid="ref-openhpsU002Fopenvslam" ref-type="bibr"><bold>openhps/openvslam?</bold></xref>)</ext-link>
+    create C++ bindings in NodeJS.</p>
+  </sec>
+</sec>
+<sec id="examples-of-rearch-work">
+  <title>Examples of Rearch Work</title>
+  <p>OpenHPS has been a building block for various research such as its
+  use within indoor positioning systems
+  (<xref alt="Van de Wynckel &amp; Signer, 2021" rid="ref-vandewynckel2021" ref-type="bibr">Van
+  de Wynckel &amp; Signer, 2021</xref>), its ability to serialise
+  location data to RDF in a demonstrator application that aims to
+  preserve privacy and transparency using Solid-pods
+  (<xref alt="Van de Wynckel &amp; Signer, 2022" rid="ref-vandewynckel2022" ref-type="bibr">Van
+  de Wynckel &amp; Signer, 2022</xref>) and its use within the SemBeacon
+  demonstrator application
+  (<xref alt="Van de Wynckel &amp; Signer, 2023" rid="ref-vandewynckel2023" ref-type="bibr">Van
+  de Wynckel &amp; Signer, 2023</xref>) that is written in CapacitorJS
+  and uses OpenHPS to deserialise positioning data and positioning
+  systems. However, with the ability for OpenHPS to contain modular
+  nodes, its use within the domain of positioning systems can allow for
+  easier sharing of algorithms and findings, as well as the rapid
+  creation of prototypes and demonstrators that make use of location
+  data.</p>
+</sec>
+</body>
+<back>
+<ref-list>
+  <ref id="ref-vandewynckel2021">
+    <element-citation publication-type="paper-conference">
+      <person-group person-group-type="author">
+        <name><surname>Van de Wynckel</surname><given-names>Maxim</given-names></name>
+        <name><surname>Signer</surname><given-names>Beat</given-names></name>
+      </person-group>
+      <article-title>Indoor Positioning Using the OpenHPS Framework</article-title>
+      <source>Proceedings of IPIN 2021, The 11th International Conference on Indoor Positioning and Indoor Navigation</source>
+      <year iso-8601-date="2021">2021</year>
+      <pub-id pub-id-type="doi">10.1109/IPIN51156.2021.9662569</pub-id>
+      <fpage>1</fpage>
+      <lpage>8</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-vandewynckel2023">
+    <element-citation publication-type="paper-conference">
+      <person-group person-group-type="author">
+        <name><surname>Van de Wynckel</surname><given-names>Maxim</given-names></name>
+        <name><surname>Signer</surname><given-names>Beat</given-names></name>
+      </person-group>
+      <article-title>SemBeacon: A Semantic Proximity Beacon Solution for Discovering and Detecting the Position of Physical Things</article-title>
+      <source>Proceedings of IoT 2023, The 13th International Conference on the Internet of Things</source>
+      <year iso-8601-date="2023">2023</year>
+      <fpage>1</fpage>
+      <lpage>8</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-vandewynckel2022">
+    <element-citation publication-type="paper-conference">
+      <person-group person-group-type="author">
+        <name><surname>Van de Wynckel</surname><given-names>Maxim</given-names></name>
+        <name><surname>Signer</surname><given-names>Beat</given-names></name>
+      </person-group>
+      <article-title>A Solid-based Architecture for Decentralised Interoperable Location Data</article-title>
+      <source>Proceedings of IPIN 2022, The 12th International Conference on Indoor Positioning and Indoor Navigation, CEUR Workshop Proceedings</source>
+      <year iso-8601-date="2022">2022</year>
+      <fpage>1</fpage>
+      <lpage>15</lpage>
+    </element-citation>
+  </ref>
+</ref-list>
+</back>
+</article>

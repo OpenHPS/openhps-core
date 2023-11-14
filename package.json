@@ -89,7 +89,8 @@
     "build:webpack:dev": "webpack --env dev --",
     "bump:development": "standard-version --prerelease alpha --skip.changelog",
     "bump:beta": "standard-version --prerelease beta --skip.changelog",
-    "bump:release": "standard-version --skip.changelog"
+    "bump:release": "standard-version --skip.changelog",
+    "build:paper": "docker run --rm --volume docs/paper:/data --env JOURNAL=joss openjournals/inara"
   },
   "keywords": [
     "vrije universiteit brussel",
