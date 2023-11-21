@@ -6,6 +6,7 @@ export * from './Absolute2DPosition';
 export * from './Absolute3DPosition';
 export * from './Relative2DPosition';
 export * from './Relative3DPosition';
+export * from './RelativeOrientation';
 export * from './RelativeAngle';
 export * from './RelativeDistance';
 export * from './RelativeAngularVelocity';

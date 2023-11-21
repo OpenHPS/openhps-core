@@ -3,7 +3,7 @@ import { NumberType, SerializableMember, SerializableObject } from '../decorator
 import { Relative2DPosition } from './Relative2DPosition';
 
 /**
- * Relative 3D Position relative to another object. This indicates the translation and rotation
+ * Relative 3D Position relative to another object. This indicates the translation
  * relative to another reference object.
  */
 @SerializableObject()
