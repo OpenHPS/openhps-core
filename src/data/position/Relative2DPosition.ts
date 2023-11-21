@@ -10,7 +10,7 @@ import { RelativePosition } from './RelativePosition';
 @SerializableObject()
 export class Relative2DPosition extends RelativePosition<Vector3, LengthUnit> {
     constructor(referenceObject?: any, x?: number, y?: number, unit: LengthUnit = LengthUnit.METER) {
-        super(referenceObject, new Vector3());
+        super(referenceObject, new Vector3(), unit);
         this.referenceValue.x = unit.convert(x ? x : 0, LengthUnit.METER);
         this.referenceValue.y = unit.convert(y ? y : 0, LengthUnit.METER);
     }
