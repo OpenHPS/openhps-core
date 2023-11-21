@@ -54,8 +54,7 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
 
     /**
      * Create a reference space from another object
-     *
-     * @param {DataObject} object Reference space 
+     * @param {DataObject} object Reference space
      */
     static fromDataObject(object: DataObject): ReferenceSpace {
         const space = new ReferenceSpace();
