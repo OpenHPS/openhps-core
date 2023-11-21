@@ -10,6 +10,7 @@ import {
     LengthUnit,
     LinearVelocity,
     Orientation,
+    ReferenceSpace,
 } from '../../../src';
 
 describe('AbsolutePosition', () => {

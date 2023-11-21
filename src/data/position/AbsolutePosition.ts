@@ -136,6 +136,16 @@ export abstract class AbsolutePosition implements Position<LengthUnit> {
     }
 
     /**
+     * Set the orientation of the position
+     * @param {Orientation} orientation orientation
+     * @returns {AbsolutePosition} instance
+     */
+    setOrientation(orientation: Orientation): this {
+        this.orientation = orientation;
+        return this;
+    }
+
+    /**
      * Set the accuracy of the absolute position
      * @param {number | Accuracy} accuracy Accuracy object or number
      * @param {Unit} [unit] Optional unit

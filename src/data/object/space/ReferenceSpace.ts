@@ -53,6 +53,24 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
     }
 
     /**
+     * Create a reference space from another object
+     *
+     * @param {DataObject} object Reference space 
+     */
+    static fromDataObject(object: DataObject): ReferenceSpace {
+        const space = new ReferenceSpace();
+        space.uid = object.uid;
+        space.displayName = object.displayName;
+        if (object.getPosition()) {
+            space.translation(...object.getPosition().toVector3(LengthUnit.METER).toArray());
+            if (object.getPosition().orientation) {
+                space.rotation(object.getPosition().orientation);
+            }
+        }
+        return space;
+    }
+
+    /**
      * Set the parent space
      * @param {TransformationSpace} space Parent space
      */
