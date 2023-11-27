@@ -48,7 +48,11 @@ export abstract class ObjectProcessingNode<InOut extends DataFrame = DataFrame> 
                 });
             Promise.all(processObjectPromises)
                 .then((objects) => {
-                    frame.clearObjects(this.options.objectFilter);
+                    objects.forEach((object, index) => {
+                        const oldUID = uids[index];
+                        frame.removeObject(oldUID);
+                        frame.removeObject(object.uid);
+                    });
                     objects.forEach((object, index) => {
                         const oldUID = uids[index];
                         frame.addObject(object);

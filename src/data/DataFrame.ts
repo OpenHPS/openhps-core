@@ -199,10 +199,10 @@ export class DataFrame {
 
     /**
      * Remove an object from the data frame
-     * @param {DataObject} object Object to remove
+     * @param {DataObject | string} object Object to remove
      */
-    removeObject(object: DataObject): void {
-        this._objects.delete(object.uid);
+    removeObject(object: DataObject | string): void {
+        this._objects.delete(typeof object === 'string' ? object : object.uid);
     }
 
     /**
