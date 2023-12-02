@@ -75,7 +75,7 @@ export class RelativePosition<T = number, U extends Unit = Unit> implements Posi
         if (!value) {
             throw new Error(`Accuracy can not be undefined!`);
         }
-        this.accuracy = value;
+        this._accuracy = value;
     }
 
     constructor(referenceObject?: any, value?: T, unit?: U) {

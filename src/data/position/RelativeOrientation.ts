@@ -1,8 +1,8 @@
 import { Orientation } from './Orientation';
-import { Accuracy, Accuracy1D } from '../values';
 import { AngleUnit, Quaternion } from '../../utils';
 import { SerializableObject } from '../decorators';
 import { RelativePosition } from './RelativePosition';
+import { Accuracy } from '../values';
 
 /**
  * Relative orientation relative to another object. This indicates the rotation
@@ -10,20 +10,23 @@ import { RelativePosition } from './RelativePosition';
  */
 @SerializableObject()
 export class RelativeOrientation extends RelativePosition<Orientation, AngleUnit> {
-    constructor(
-        referenceObject?: any,
-        x?: number,
-        y?: number,
-        z?: number,
-        w?: number,
-        accuracy?: Accuracy<AngleUnit, number>,
-    ) {
-        super(referenceObject, new Orientation(), AngleUnit.DEGREE);
-        this.referenceValue.x = x;
-        this.referenceValue.y = y;
-        this.referenceValue.z = z;
-        this.referenceValue.w = w;
-        this.accuracy = accuracy || new Accuracy1D(0, AngleUnit.RADIAN);
+    constructor(referenceObject?: any, orientation?: Orientation) {
+        super(referenceObject, orientation, AngleUnit.DEGREE);
+    }
+
+    /**
+     * Orientation accuracy
+     * @returns {Accuracy} Position accuracy
+     */
+    get accuracy(): Accuracy<AngleUnit, any> {
+        return this.referenceValue.accuracy;
+    }
+
+    set accuracy(value: Accuracy<AngleUnit, any>) {
+        if (!value) {
+            throw new Error(`Accuracy can not be undefined!`);
+        }
+        this.referenceValue.accuracy = value;
     }
 
     static fromQuaternion(quat: Quaternion | THREE.Quaternion): Orientation {
