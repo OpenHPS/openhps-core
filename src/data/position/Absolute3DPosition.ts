@@ -11,7 +11,7 @@ import { Absolute2DPosition } from './Absolute2DPosition';
 export class Absolute3DPosition extends Absolute2DPosition {
     constructor(x?: number, y?: number, z?: number, unit: LengthUnit = LengthUnit.METER) {
         super(x, y, unit);
-        this.vector.z = unit.convert(z ? z : 0, LengthUnit.METER);
+        this.vector.z = z ? z : 0;
     }
 
     @SerializableMember({

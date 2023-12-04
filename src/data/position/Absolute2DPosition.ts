@@ -14,8 +14,9 @@ export class Absolute2DPosition extends AbsolutePosition {
 
     constructor(x?: number, y?: number, unit: LengthUnit = LengthUnit.METER) {
         super();
-        this.vector.x = unit.convert(x ? x : 0, LengthUnit.METER);
-        this.vector.y = unit.convert(y ? y : 0, LengthUnit.METER);
+        this.vector.x = x ? x : 0;
+        this.vector.y = y ? y : 0;
+        this.unit = unit;
     }
 
     @SerializableMember({
