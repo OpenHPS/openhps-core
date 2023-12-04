@@ -88,6 +88,7 @@ export class RelativePosition<T = number, U extends Unit = Unit> implements Posi
             }
         }
         this._defaultUnit = unit || (Unit.UNKNOWN as U);
+        this.unit = unit;
         this.referenceValue = value;
     }
 
