@@ -11,8 +11,8 @@ import { Constructor, SerializableMember, SerializableObject } from '../data/dec
 @SerializableObject()
 export abstract class DataServiceDriver<I, T> extends Service {
     @SerializableMember({
-        serializer: (dataType) => dataType.name,
-        deserializer: (dataTypeString) => DataSerializer.findTypeByName(dataTypeString),
+        serializer: (dataType) => (dataType ? dataType.name : undefined),
+        deserializer: (dataTypeString) => (dataTypeString ? DataSerializer.findTypeByName(dataTypeString) : undefined),
     })
     dataType: Constructor<T>;
     @SerializableMember()

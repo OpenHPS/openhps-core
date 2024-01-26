@@ -33,6 +33,9 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
     private _nodes: Map<string, GraphNode<any, any>> = new Map();
     @SerializableMapMember(String, Edge, {
         serializer: (edges: Map<string, Edge<any>>) => {
+            if (!edges) {
+                return [];
+            }
             return Array.from(edges.values()).map((edge: Edge<any>) => ({
                 input: edge.inputNode.uid,
                 output: edge.outputNode.uid,
@@ -43,14 +46,14 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
     private _edges: Map<string, Edge<any>> = new Map();
 
     @SerializableMember({
-        serializer: (node) => node.uid,
+        serializer: (node) => (node ? node.uid : undefined),
         deserializer: () => {
             return undefined;
         },
     })
     internalSource: GraphNode<any, In> = new BroadcastNode<In>();
     @SerializableMember({
-        serializer: (node) => node.uid,
+        serializer: (node) => (node ? node.uid : undefined),
         deserializer: () => {
             return undefined;
         },

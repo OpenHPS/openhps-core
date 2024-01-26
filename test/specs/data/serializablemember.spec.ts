@@ -17,6 +17,66 @@ declare module "../../../src/data/decorators/options" {
 describe('SerializableMember', () => {
 
     describe('augmentation', () => {
+        it('should be able to inject additional members', () => {
+            @SerializableObject()
+            class Test {
+                @SerializableMember({
+                    abc: "hello"
+                })
+                member1: string;
+            }
+
+            interface Test {
+                member2: string;
+            }
+
+            Test.prototype.member2 = undefined;
+            Reflect.defineMetadata("design:type", String, Test.prototype, "member2");
+            SerializableMember({
+                abc: "hello2"
+            })(Test.prototype, 'member2');
+            const obj = new Test();
+            const meta = DataSerializerUtils.getMetadata(obj);
+            expect(meta.dataMembers.get('member1').options.abc).to.equal("hello");
+            expect(meta.dataMembers.get('member2').options.abc).to.equal("hello2");
+        });
+
+        it('should be able to inject additional members in extended classes', () => {
+            @SerializableObject()
+            class Test {
+                @SerializableMember({
+                    abc: "hello"
+                })
+                member1: string;
+            }
+
+            @SerializableObject()
+            class Test2 extends Test {
+                
+            }
+
+            interface Test {
+                member2: Object;
+            }
+
+            Test.prototype.member2 = undefined;
+            Reflect.defineMetadata("design:type", Object, Test.prototype, "member2");
+            SerializableMember({
+                abc: "hello2"
+            })(Test.prototype, 'member2');
+            const obj = new Test();
+            const meta = DataSerializerUtils.getMetadata(obj);
+            expect(meta.dataMembers.get('member1').options.abc).to.equal("hello");
+            expect(meta.dataMembers.get('member2').options.abc).to.equal("hello2");
+
+            const obj2 = new Test2();
+            const meta2 = DataSerializerUtils.getMetadata(obj2);
+            expect(meta2.dataMembers.get('member1').options.abc).to.equal("hello");
+            expect(meta2.dataMembers.get('member2').options.abc).to.equal("hello2");
+
+        });
+
+        
         it('should be able to inject additional options', () => {
             @SerializableObject()
             class Test {

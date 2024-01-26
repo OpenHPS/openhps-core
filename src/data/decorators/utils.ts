@@ -44,6 +44,8 @@ export function updateSerializableMember(
                 otherMeta.dataMembers.get(propertyKey) || otherMeta.dataMembers.get(options.name);
             if (otherMemberMetadata) {
                 otherMemberMetadata.options = mergeDeep(ownMemberMetadata.options ?? {}, otherMemberMetadata.options);
+            } else {
+                otherMeta.dataMembers.set(options.name ?? propertyKey, cloneDeep(ownMemberMetadata));
             }
         });
         // TODO: Possibly need to sync super types as well
