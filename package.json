@@ -134,7 +134,7 @@
     "@typescript-eslint/parser": "^6.19.1",
     "babel-plugin-replace-imports": "^1.0.2",
     "benchmark": "^2.1.4",
-    "chai": "^4.3.10",
+    "chai": "^5.1.0",
     "csv-parser": "^3.0.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
