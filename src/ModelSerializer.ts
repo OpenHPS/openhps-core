@@ -28,6 +28,11 @@ export class ModelSerializer {
         return this.options.serialize(node);
     }
 
+    /**
+     * Deserialize a model
+     * @param model
+     * @returns
+     */
     static deserialize<In extends DataFrame, Out extends DataFrame>(model: SerializedModel): Model<In, Out> {
         const deserializedModel = this.deserializeNode(model) as ModelGraph<In, Out> as Model<In, Out>;
         deserializedModel.nodes.forEach((node) => {
@@ -36,11 +41,21 @@ export class ModelSerializer {
         return deserializedModel;
     }
 
+    /**
+     * Deserialize a node
+     * @param node
+     * @returns
+     */
     static deserializeNode<In extends DataFrame, Out extends DataFrame>(node: any): Node<In, Out> {
         this.initialize();
         return this.options.deserialize(node) as Node<any, Out>;
     }
 
+    /**
+     * Load all classes from the module
+     * @param module
+     * @returns
+     */
     protected static loadClasses(module: NodeModule = require.main): void {
         if (module === undefined) {
             // Use cache instead
@@ -72,6 +87,9 @@ export class ModelSerializer {
         }
     }
 
+    /**
+     * Initialize the serializer
+     */
     protected static initialize(): void {
         if (this.SERVICES.size === 0 || this.NODES.size === 0) {
             this.loadClasses();

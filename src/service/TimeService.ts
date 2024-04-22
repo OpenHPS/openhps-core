@@ -52,7 +52,6 @@ export class TimeService extends Service {
         TimeService._defaultUnit = TimeUnit.MILLISECOND;
         // Specify the default time callback used by class initializers
         try {
-            // eslint-disable-next-line
             const microtime = require('microtime');
             // Check if function exists, needed for webpack
             if (microtime.now) {

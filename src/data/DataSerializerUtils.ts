@@ -136,7 +136,6 @@ export abstract class TypeDescriptor {
 export type Typelike = TypeDescriptor | Serializable<any>;
 
 export class ConcreteTypeDescriptor extends TypeDescriptor {
-    // eslint-disable-next-line @typescript-eslint/no-useless-constructor
     constructor(ctor: Serializable<any>) {
         super(ctor);
     }

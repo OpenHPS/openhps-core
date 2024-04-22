@@ -1,6 +1,6 @@
 import { FilterProcessingOptions } from './FilterProcessingNode';
 import { DataFrame, DataObject } from '../../../data';
-import { Vector } from '../../../utils';
+import { Vector2, Vector3 } from '../../../utils';
 import { PropertyFilterProcessingNode, PropertyModifier, PropertySelector } from './PropertyFilterProcessingNode';
 
 /**
@@ -15,7 +15,7 @@ export class HPFilterNode<InOut extends DataFrame> extends PropertyFilterProcess
         super(propertySelector, propertyModifier, options);
     }
 
-    initFilter<T extends number | Vector>(
+    initFilter<T extends number | Vector2 | Vector3>(
         object: DataObject,
         value: T,
         options: HPFilterOptions,
@@ -33,7 +33,7 @@ export class HPFilterNode<InOut extends DataFrame> extends PropertyFilterProcess
         });
     }
 
-    filter<T extends number | Vector>(
+    filter<T extends number | Vector2 | Vector3>(
         object: DataObject,
         value: T,
         filter: { x: any; y: any; alpha: number },

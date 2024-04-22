@@ -1,4 +1,4 @@
-import { Vector3 } from '../../three/Three';
+import { Vector3 } from '../math/Vector3';
 
 export type UnitValueType = Vector3 | number;
 

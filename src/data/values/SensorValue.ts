@@ -1,5 +1,5 @@
 import { TimeService } from '../../service/TimeService';
-import { Vector3Tuple } from '../../three/Three';
+import * as THREE from '../../utils/math/_internal';
 import { Unit } from '../../utils';
 import { Vector3 } from '../../utils/math';
 import { SerializableMember, SerializableObject, NumberType } from '../decorators';
@@ -66,7 +66,7 @@ export class SensorValue<U extends Unit = Unit> extends Vector3 {
      * @param {Unit} [unit] Conversion unit
      * @returns {Vector3Tuple} Tuple of three numbers
      */
-    toTuple(unit?: U): Vector3Tuple {
+    toTuple(unit?: U): THREE.Vector3Tuple {
         if (unit) {
             return [this.unit.convert(this.x, unit), this.unit.convert(this.y, unit), this.unit.convert(this.z, unit)];
         } else {

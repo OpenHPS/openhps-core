@@ -8,7 +8,6 @@ import { DataObject } from './DataObject';
  * Sensor calibration data
  */
 @SerializableObject()
-// eslint-disable-next-line
 export class SensorCalibrationData<T = SensorValue | Object | Orientation> {
     @SerializableMember(() => Unit)
     unit?: Unit;
@@ -22,7 +21,6 @@ export class SensorCalibrationData<T = SensorValue | Object | Orientation> {
  * A sensor object is a {@link DataObject} that is a sensor with a value.
  */
 @SerializableObject()
-// eslint-disable-next-line
 export abstract class SensorObject<T = SensorValue | Object | Orientation> extends DataObject {
     /**
      * Value of the sensor

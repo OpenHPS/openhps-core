@@ -2,7 +2,7 @@ import { AnyT, Constructor, IndexedObject, JsonObjectMetadata, Serializable } fr
 import { SerializableMemberOptions, SerializableObjectOptions } from './options';
 import { DataSerializer } from '../DataSerializer';
 import { DataSerializerUtils, ConcreteTypeDescriptor } from '../DataSerializerUtils';
-// eslint-disable-next-line
+
 const cloneDeep = require('lodash.clonedeep');
 
 /**

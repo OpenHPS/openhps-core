@@ -16,6 +16,15 @@
         "lib": [
             "DOM",
             "WebWorker"
-        ]
+        ],
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+              "src/*"
+            ],
+            "@": [
+              "src"
+            ]
+        }
     },
 }

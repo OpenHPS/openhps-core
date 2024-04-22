@@ -3,6 +3,7 @@ import { AngleUnit, Quaternion } from '../../utils';
 import { SerializableObject } from '../decorators';
 import { RelativePosition } from './RelativePosition';
 import { Accuracy } from '../values';
+import * as THREE from '../../utils/math/_internal';
 
 /**
  * Relative orientation relative to another object. This indicates the rotation

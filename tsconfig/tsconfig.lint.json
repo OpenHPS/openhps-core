@@ -3,5 +3,9 @@
     "include": [
       "../test/specs/**/*.ts",
       "../src/**/*.ts"
+    ],
+    "exclude": [
+      "../node_modules",
+      "../src/three"
     ]
 }

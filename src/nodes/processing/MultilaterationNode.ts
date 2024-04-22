@@ -96,7 +96,7 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
                             .catch(reject);
                         break;
                     }
-                // eslint-disable-next-line
+
                 default:
                     position = this.options.nlsFunction(spheres) as P;
                     position.timestamp = dataFrame.createdTimestamp;

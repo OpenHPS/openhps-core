@@ -100,7 +100,7 @@ The framework is open source and is mainly developed by PhD Student Maxim Van de
 Use of OpenHPS, contributions and feedback is highly appreciated. Please read our [contributing guidelines](CONTRIBUTING.md) for more information.
 
 ## License
-Copyright (C) 2019-2023 Maxim Van de Wynckel & Vrije Universiteit Brussel
+Copyright (C) 2019-2024 Maxim Van de Wynckel & Vrije Universiteit Brussel
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 

@@ -7,7 +7,6 @@ import { EventEmitter } from 'events';
 export class AsyncEventEmitter extends EventEmitter {
     public emitAsync(type: string | symbol, ...args: any[]): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            // eslint-disable-next-line
             const handlers: Function[] = this.listeners(type);
             if (handlers.length === 0) {
                 return resolve(false);

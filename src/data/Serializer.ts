@@ -251,7 +251,7 @@ export class Serializer extends JSONSerializer {
                 !isInstanceOf(element, typeDescriptor.elementType.ctor)
             ) {
                 const expectedTypeName = nameof(typeDescriptor.elementType.ctor);
-                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+
                 const actualTypeName = element && nameof(element.constructor);
                 throw new TypeError(
                     `Could not serialize ${memberName}[${i}]:` +

@@ -1,7 +1,7 @@
 import { PropertyFilterProcessingNode, PropertyModifier, PropertySelector } from './PropertyFilterProcessingNode';
 import { FilterProcessingOptions } from './FilterProcessingNode';
 import { DataFrame, DataObject } from '../../../data';
-import { Vector } from '../../../utils';
+import { Vector2, Vector3 } from '../../../utils';
 
 /**
  * @category Processing node
@@ -15,7 +15,7 @@ export class SMAFilterNode<InOut extends DataFrame> extends PropertyFilterProces
         super(propertySelector, propertyModifier, options);
     }
 
-    initFilter(object: DataObject, value: number | Vector, options: SMAFilterOptions): Promise<any> {
+    initFilter(object: DataObject, value: number | Vector2 | Vector3, options: SMAFilterOptions): Promise<any> {
         return new Promise<any>((resolve) => {
             if (options.taps < 1) {
                 throw new Error(`Filter taps needs to be higher than 1!`);
@@ -28,7 +28,7 @@ export class SMAFilterNode<InOut extends DataFrame> extends PropertyFilterProces
         });
     }
 
-    filter<T extends number | Vector>(
+    filter<T extends number | Vector2 | Vector3>(
         object: DataObject,
         value: T,
         filter: { x: any[]; taps: number },
@@ -46,7 +46,7 @@ export class SMAFilterNode<InOut extends DataFrame> extends PropertyFilterProces
                 const sum = filter.x.reduce((a, b) => a + b);
                 resolve((sum / filter.taps) as T);
             } else {
-                const sum: Vector = filter.x[0].clone();
+                const sum: Vector2 | Vector3 = filter.x[0].clone();
                 for (let i = 1; i < filter.x.length; i++) {
                     sum.add(filter.x[i]);
                 }

@@ -41,7 +41,6 @@ export class WorkerBase {
     }
 
     init(config: WorkerData): Promise<void> {
-        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             this.config = config;
             const importFn: (file: string) => Promise<any> =
@@ -49,11 +48,10 @@ export class WorkerBase {
                     ? config.type === 'module'
                         ? (file: string) => import(/* webpackIgnore: true */ file) // ES6
                         : (file: string) => Promise.resolve(importScripts(/* webpackIgnore: true */ file)) // CJS
-                    : // eslint-disable-next-line @typescript-eslint/no-var-requires
-                      (file: string) => Promise.resolve(require(/* webpackIgnore: true */ file)); // NodeJS
+                    : (file: string) => Promise.resolve(require(/* webpackIgnore: true */ file)); // NodeJS
 
             // Set global dir name
-            // eslint-disable-next-line no-global-assign
+
             __dirname = config.directory;
             // Load external scripts
             if (config.imports && config.imports.length > 0) {
@@ -101,12 +99,11 @@ export class WorkerBase {
                     traversalBuilder.to();
                 } else if (this.config.builder) {
                     const traversalBuilder = modelBuilder.from();
-                    // eslint-disable-next-line
+
                     const builderCallback = eval(this.config.builder);
                     builderCallback(traversalBuilder, modelBuilder, this.config.args);
                     traversalBuilder.to();
                 } else if (this.config.shape) {
-                    // eslint-disable-next-line
                     const graph = await importFn(path ? path.join(__dirname, this.config.shape) : this.config.shape);
                     if (graph) {
                         modelBuilder.addShape(graph.default);
@@ -126,7 +123,7 @@ export class WorkerBase {
                     this.model = m;
                     // Load methods
                     this.config.methods.forEach((serializedMethod) => {
-                        const method = eval(serializedMethod.handlerFn); // eslint-disable-line
+                        const method = eval(serializedMethod.handlerFn);
                         this.customMethods.set(
                             serializedMethod.name,
                             (model: Model<any, any>, ...args: any[]): Promise<any> => {
