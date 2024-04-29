@@ -41,18 +41,18 @@ export class WorkerBase {
     }
 
     init(config: WorkerData): Promise<void> {
-        return new Promise(async (resolve, reject) => {
+        return new Promise(async (resolve, reject) => { // eslint-disable-line
             this.config = config;
             const importFn: (file: string) => Promise<any> =
                 typeof process !== 'object'
                     ? config.type === 'module'
                         ? (file: string) => import(/* webpackIgnore: true */ file) // ES6
                         : (file: string) => Promise.resolve(importScripts(/* webpackIgnore: true */ file)) // CJS
-                    : (file: string) => Promise.resolve(require(/* webpackIgnore: true */ file)); // NodeJS
+                    : (file: string) => Promise.resolve(require(/* webpackIgnore: true */ file)); // eslint-disable-line
 
             // Set global dir name
 
-            __dirname = config.directory;
+            __dirname = config.directory; // eslint-disable-line
             // Load external scripts
             if (config.imports && config.imports.length > 0) {
                 config.imports.forEach((importFile) => {

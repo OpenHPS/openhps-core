@@ -46,7 +46,7 @@ export class LPFilterNode<InOut extends DataFrame> extends PropertyFilterProcess
             } else {
                 const vector = (value as Vector2 | Vector3).clone();
                 const filterVector = filter.x as Vector2 | Vector3;
-                filter.x = filterVector.add(vector.sub(filter.x).multiplyScalar(filter.alpha) as Vector3);
+                filter.x = filterVector.add(vector.sub(filter.x).multiplyScalar(filter.alpha) as Vector2 & Vector3);
             }
             resolve(filter.x);
         });

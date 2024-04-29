@@ -329,7 +329,9 @@ describe('data', () => {
 
         describe('conversion', () => {
             it('should convert translation to the first parent', async () => {
-                const service = new DataObjectService(new MemoryDataService(ReferenceSpace));
+                const service = new DataObjectService(new MemoryDataService(ReferenceSpace, {
+                    keepChangelog: false
+                }));
                 let ref1 = new ReferenceSpace();
                 ref1 = await service.insertObject(ref1);
                 let ref2 = new ReferenceSpace(ref1);

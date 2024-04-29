@@ -128,11 +128,29 @@ export class ModelBuilder<In extends DataFrame, Out extends DataFrame> extends G
         super(new ModelGraph<In, Out>());
         this.graph.name = 'model';
         // Store data objects
-        this.graph.addService(new DataObjectService(new MemoryDataService(DataObject)));
+        this.graph.addService(
+            new DataObjectService(
+                new MemoryDataService(DataObject, {
+                    keepChangelog: false,
+                }),
+            ),
+        );
         // Store spaces in their own memory data object service
-        this.graph.addService(new DataObjectService(new MemoryDataService(ReferenceSpace)));
+        this.graph.addService(
+            new DataObjectService(
+                new MemoryDataService(ReferenceSpace, {
+                    keepChangelog: false,
+                }),
+            ),
+        );
         // Store node data
-        this.graph.addService(new NodeDataService(new MemoryDataService(NodeData)));
+        this.graph.addService(
+            new NodeDataService(
+                new MemoryDataService(NodeData, {
+                    keepChangelog: false,
+                }),
+            ),
+        );
         // Default time service using system time
         this.graph.addService(new TimeService());
     }

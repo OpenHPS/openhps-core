@@ -3,7 +3,7 @@ import { SerializableMemberOptions, SerializableObjectOptions } from './options'
 import { DataSerializer } from '../DataSerializer';
 import { DataSerializerUtils, ConcreteTypeDescriptor } from '../DataSerializerUtils';
 
-const cloneDeep = require('lodash.clonedeep');
+const cloneDeep = require('lodash.clonedeep'); // eslint-disable-line
 
 /**
  * Inject member options into object

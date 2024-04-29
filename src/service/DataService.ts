@@ -1,5 +1,11 @@
-import { Serializable, SerializableMember, SerializableObject } from '../data/decorators';
-import { DataServiceDriver } from './DataServiceDriver';
+import {
+    Serializable,
+    SerializableChangelog,
+    SerializableMember,
+    SerializableObject,
+    createChangeLog,
+} from '../data/decorators';
+import { DataServiceDriver, DataServiceOptions } from './DataServiceDriver';
 import { FilterQuery } from './FilterQuery';
 import { FindOptions } from './FindOptions';
 import { Service } from './Service';
@@ -30,7 +36,6 @@ export abstract class DataService<I, T> extends Service {
     protected driver: DataServiceDriver<I, T>;
     @SerializableMember()
     priority = -1;
-
     constructor(dataServiceDriver?: DataServiceDriver<I, T>) {
         super();
         this.driver = dataServiceDriver;
@@ -77,6 +82,13 @@ export abstract class DataService<I, T> extends Service {
         return undefined;
     }
 
+    get driverOptions(): DataServiceOptions {
+        if (this.driver) {
+            return this.driver['options'];
+        }
+        return undefined;
+    }
+
     /**
      * Set the priority of the data service
      * a higher number means a higher priority.
@@ -88,20 +100,64 @@ export abstract class DataService<I, T> extends Service {
         return this;
     }
 
-    findByUID(uid: I): Promise<T> {
-        return this.driver.findByUID(uid);
+    findByUID(uid: I): Promise<T | (T & SerializableChangelog)> {
+        return new Promise((resolve, reject) => {
+            this.driver
+                .findByUID(uid)
+                .then((object) => {
+                    if (this.driver && this.driverOptions.keepChangelog) {
+                        resolve(typeof object === 'object' ? createChangeLog(object) : object);
+                    } else {
+                        resolve(object);
+                    }
+                })
+                .catch(reject);
+        });
     }
 
-    findOne(query?: FilterQuery<T>, options?: FindOptions): Promise<T> {
-        return this.driver.findOne(query, options);
+    findOne(query?: FilterQuery<T>, options?: FindOptions): Promise<T | (T & SerializableChangelog)> {
+        return new Promise((resolve, reject) => {
+            this.driver
+                .findOne(query, options)
+                .then((object) => {
+                    if (this.driver && this.driverOptions.keepChangelog) {
+                        resolve(typeof object === 'object' ? createChangeLog(object) : object);
+                    } else {
+                        resolve(object);
+                    }
+                })
+                .catch(reject);
+        });
     }
 
-    findAll(query?: FilterQuery<T>, options?: FindOptions): Promise<T[]> {
-        return this.driver.findAll(query, options);
+    findAll(query?: FilterQuery<T>, options?: FindOptions): Promise<(T | (T & SerializableChangelog))[]> {
+        return new Promise((resolve, reject) => {
+            this.driver
+                .findAll(query, options)
+                .then((objects) => {
+                    if (this.driver && this.driverOptions.keepChangelog) {
+                        resolve(objects.map((o) => (typeof o === 'object' ? createChangeLog(o) : o)));
+                    } else {
+                        resolve(objects);
+                    }
+                })
+                .catch(reject);
+        });
     }
 
-    insert(id: I, object: T): Promise<T> {
-        return this.driver.insert(id, object);
+    insert(id: I, object: T | (T & SerializableChangelog)): Promise<T | (T & SerializableChangelog)> {
+        return new Promise((resolve, reject) => {
+            this.driver
+                .insert(id, object)
+                .then((object) => {
+                    if (this.driver && this.driverOptions.keepChangelog) {
+                        resolve(typeof object === 'object' ? createChangeLog(object) : object);
+                    } else {
+                        resolve(object);
+                    }
+                })
+                .catch(reject);
+        });
     }
 
     count(query?: FilterQuery<T>): Promise<number> {

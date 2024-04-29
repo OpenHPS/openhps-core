@@ -13,6 +13,8 @@ import {
     Model,
     Absolute3DPosition,
     SerializableMember,
+    createChangeLog,
+    CHANGELOG_METADATA_KEY,
 } from '../../../src';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 
@@ -226,5 +228,86 @@ describe('DataObject', () => {
 
     it('should support multiple positions', () => {
         const object = new DataObject('test');
+    });
+
+    describe('changelog', () => {
+        it('should keep a changelog', () => {
+            const object = new DataObject('test', 'Maxim');
+            object.setPosition(new Absolute2DPosition(123, 45));
+            const objectWithChangelog = createChangeLog(object);
+            objectWithChangelog.displayName = 'Maxim Van de Wynckel';
+            expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getLatestChanges().length).to.equal(1);
+        });
+
+        it('should filter changes that do not modify the initial state', () => {
+            const object = new DataObject('test', 'Maxim');
+            object.setPosition(new Absolute2DPosition(123, 45));
+            const objectWithChangelog = createChangeLog(object);
+            objectWithChangelog.displayName = 'Maxim Van de Wynckel';
+            objectWithChangelog.displayName = 'Maxim';
+            expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getLatestChanges().length).to.equal(0);
+        });
+
+        it('should not log changes that do not modify the value', () => {
+            const object = new DataObject('test', 'Maxim');
+            object.setPosition(new Absolute2DPosition(123, 45));
+            const objectWithChangelog = createChangeLog(object);
+            objectWithChangelog.displayName = 'Maxim';
+            expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getLatestChanges().length).to.equal(0);
+        });
+
+        it('should get the latest changes', () => {
+            const object = new DataObject('test', 'Maxim');
+            object.setPosition(new Absolute2DPosition(123, 45));
+            const objectWithChangelog = createChangeLog(object);
+            objectWithChangelog.displayName = 'Maxim1';
+            objectWithChangelog.displayName = 'Maxim2';
+            objectWithChangelog.displayName = 'Maxim3';
+            expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getLatestChanges().length).to.equal(1);
+            expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getLatestChanges()[0].newValue).to.equal('Maxim3');
+        });
+
+        it('should create a changelog for subobjects', () => {
+            const object = new DataObject('test', 'Maxim');
+            object.setPosition(new Absolute2DPosition(123, 45));
+            const objectWithChangelog = createChangeLog(object);
+            objectWithChangelog.displayName = 'Maxim Van de Wynckel';
+            expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getLatestChanges().length).to.equal(1);
+            (objectWithChangelog.position as Absolute2DPosition).x = 10;
+            expect(objectWithChangelog.position[CHANGELOG_METADATA_KEY].getLatestChanges().length).to.equal(1);
+        });
+
+        it('should merge changes', () => {
+            const object = new DataObject('test', 'Maxim');
+            object.setPosition(new Absolute2DPosition(123, 45));
+            const objectWithChangelog = createChangeLog(object);
+            objectWithChangelog.displayName = 'Maxim1';
+            objectWithChangelog.displayName = 'Maxim2';
+            objectWithChangelog.displayName = undefined;
+            expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getLatestChanges().length).to.equal(1);
+            expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getLatestChanges()[0].oldValue).to.equal('Maxim');
+            expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getLatestChanges()[0].newValue).to.equal(undefined);
+        });
+
+        it('should get deleted properties', () => {
+            const object = new DataObject('test', 'Maxim');
+            object.setPosition(new Absolute2DPosition(123, 45));
+            const objectWithChangelog = createChangeLog(object);
+            objectWithChangelog.displayName = 'Maxim1';
+            objectWithChangelog.displayName = 'Maxim2';
+            objectWithChangelog.displayName = undefined;
+            expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getLatestChanges().length).to.equal(1);
+            expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getDeletedProperties().length).to.equal(1);
+        });
+
+        it('should get added properties', () => {
+            const object = new DataObject('test');
+            object.setPosition(new Absolute2DPosition(123, 45));
+            const objectWithChangelog = createChangeLog(object);
+            objectWithChangelog.displayName = 'Maxim1';
+            expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getLatestChanges().length).to.equal(1);
+            expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getDeletedProperties().length).to.equal(0);
+            expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getAddedProperties().length).to.equal(1);
+        });
     });
 });
