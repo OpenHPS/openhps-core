@@ -133,7 +133,7 @@
     "@typescript-eslint/parser": "^7.7.0",
     "babel-plugin-replace-imports": "^1.0.2",
     "benchmark": "^2.1.4",
-    "chai": "^4",
+    "chai": "^5",
     "csv-parser": "^3.0.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
