@@ -35,7 +35,7 @@ export function updateSerializableMember(
         }
         // Merge known sub types as well
         rootMeta.knownTypes.forEach((otherType) => {
-            if (otherType === target || target instanceof otherType) {
+            if (otherType === target.constructor || !(otherType.prototype instanceof target.constructor)) {
                 return;
             }
             const otherMeta =

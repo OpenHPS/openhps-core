@@ -73,7 +73,6 @@ describe('SerializableMember', () => {
             const meta2 = DataSerializerUtils.getMetadata(obj2);
             expect(meta2.dataMembers.get('member1').options.abc).to.equal("hello");
             expect(meta2.dataMembers.get('member2').options.abc).to.equal("hello2");
-
         });
 
         
@@ -156,6 +155,34 @@ describe('SerializableMember', () => {
     });
 
     describe('datamembers' , () => {
+        @SerializableObject()
+        class BugA {
+            @SerializableMember({})
+            x: number;
+        }
+        @SerializableObject()
+        class BugAA extends BugA {
+            @SerializableMember({})
+            y: number;
+        }
+
+        @SerializableObject()
+        class BugAB extends BugA {
+            @SerializableMember({})
+            z: number;
+        }
+
+        @SerializableObject()
+        class BugAAA extends BugAA {
+            @SerializableMember({})
+            w: number;
+        }
+
+        @SerializableObject()
+        class BugABA extends BugAB {
+            @SerializableMember({})
+            t: number;
+        }
 
         it('should update information', () => {
             const meta = DataSerializerUtils.getOwnMetadata(RelativeDistance);
@@ -178,6 +205,36 @@ describe('SerializableMember', () => {
             }
             
         });
+
+        it('should not update the members of siblings', () => {
+            let meta = DataSerializerUtils.getMetadata(BugAB);
+            expect(meta.dataMembers.get('y')).to.be.undefined;
+            SerializableMember({
+                xyz: "abc",
+            })(BugAA.prototype, 'y');
+            meta = DataSerializerUtils.getMetadata(BugAB);
+            expect(meta.dataMembers.get('y')).to.be.undefined;
+
+            meta = DataSerializerUtils.getMetadata(BugABA);
+            expect(meta.dataMembers.get('y')).to.be.undefined;
+
+            SerializableMember({
+                xyz: "abc",
+            })(BugAAA.prototype, 'w');
+
+            meta = DataSerializerUtils.getMetadata(BugAB);
+            expect(meta.dataMembers.get('y')).to.be.undefined;
+
+            meta = DataSerializerUtils.getMetadata(BugABA);
+            expect(meta.dataMembers.get('y')).to.be.undefined;
+
+            meta = DataSerializerUtils.getMetadata(BugAB);
+            expect(meta.dataMembers.get('w')).to.be.undefined;
+
+            meta = DataSerializerUtils.getMetadata(BugABA);
+            expect(meta.dataMembers.get('w')).to.be.undefined;
+        });
+
     });
 
 });
