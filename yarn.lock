@@ -2998,6 +2998,11 @@ decamelize@^4.0.0:
   resolved "https://registry.npmjs.org/decamelize/-/decamelize-4.0.0.tgz"
   integrity sha512-9iE1PgSik9HeIIw2JO94IidnE3eBoQrFJ3w7sFuzSX4DpmZ3v5sZpUiV5Swcf6mQEF+Y0ru8Neo+p+nyh2J+hQ==
 
+decorator-cache-getter@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/decorator-cache-getter/-/decorator-cache-getter-1.0.0.tgz"
+  integrity sha512-yB49c5qi0govRjpe18vutEkkKzosIt2XggYSs1Qyev1TJYTh2WmLgDp0dV6VJ/6yNBRlKG+qMG80Vy4Bg0mLJw==
+
 deep-eql@^4.1.3:
   version "4.1.3"
   resolved "https://registry.npmjs.org/deep-eql/-/deep-eql-4.1.3.tgz"
@@ -5666,7 +5671,7 @@ plantuml-encoder@^1.4.0:
   resolved "https://registry.npmjs.org/plantuml-encoder/-/plantuml-encoder-1.4.0.tgz"
   integrity sha512-sxMwpDw/ySY1WB2CE3+IdMuEcWibJ72DDOsXLkSmEaSzwEUaYBT6DWgOfBiHGCux4q433X6+OEFWjlVqp7gL6g==
 
-plantuml-pipe@^1.5.0:
+plantuml-pipe@^1.6.0:
   version "1.6.0"
   resolved "https://registry.npmjs.org/plantuml-pipe/-/plantuml-pipe-1.6.0.tgz"
   integrity sha512-TsEBors7XBhcejh0uVEFPxGWC+94jvGcPhNEs3cwhwgFSFNQaOuoA83X5sH2t5JBUnrGgL/hMHE/kcdKZBa5vw==
@@ -6982,13 +6987,14 @@ typedjson@^1.8.0:
   dependencies:
     tslib "^2.0.1"
 
-typedoc-umlclass@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.npmjs.org/typedoc-umlclass/-/typedoc-umlclass-0.8.0.tgz"
-  integrity sha512-/eIepI69TE1f26myUCN7aBc3LVp6wAW9hkMotoRWSSI2saTw4qNjQX6pLXJ0EorX1UD/boA9IBDE7A7tTHFMyg==
+typedoc-umlclass@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.npmjs.org/typedoc-umlclass/-/typedoc-umlclass-0.9.0.tgz"
+  integrity sha512-kW2xvjRjudAj/0M8StiWowh+//IZwAb9X9tAj9KwRM+gC+6ilJa64ok9ZkO1884XTKEAFY3ys/YaeQ3QKpDprA==
   dependencies:
+    decorator-cache-getter "^1.0.0"
     plantuml-encoder "^1.4.0"
-    plantuml-pipe "^1.5.0"
+    plantuml-pipe "^1.6.0"
     progress "^2.0.3"
     queue-fifo "^0.2.6"
 
