@@ -25,7 +25,7 @@ module.exports = {
         "import/no-cycle": ["error", { "maxDepth": 15 }],
         "import/no-unresolved": "off",
         "prettier/prettier": ["error"],
-        "jsdoc/check-tag-names": ["error", { "definedTags": ["category"] }],
+        "jsdoc/check-tag-names": ["error", { "definedTags": ["category", "rdf"] }],
     },
     "extends": [
         "eslint:recommended",
