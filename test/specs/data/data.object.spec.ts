@@ -15,6 +15,8 @@ import {
     SerializableMember,
     createChangeLog,
     CHANGELOG_METADATA_KEY,
+    SerializableObject,
+    SerializableMapMember,
 } from '../../../src';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 
@@ -309,5 +311,21 @@ describe('DataObject', () => {
             expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getDeletedProperties().length).to.equal(0);
             expect(objectWithChangelog[CHANGELOG_METADATA_KEY].getAddedProperties().length).to.equal(1);
         });
+
+        it('should not break maps', () => {
+            @SerializableObject()
+            class MyObject {
+                @SerializableMapMember(String, String)
+                features: Map<string, string>;
+            }
+
+            const object = new MyObject();
+            object.features = new Map();
+            object.features.set('test', '123');
+            const objectWithChangelog = createChangeLog(object);
+            objectWithChangelog.features.forEach((value, key) => {
+            });
+        });
+
     });
 });

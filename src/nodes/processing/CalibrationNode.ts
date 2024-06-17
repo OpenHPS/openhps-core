@@ -5,6 +5,7 @@ import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../ObjectProc
 /**
  * Calibration node for sensors. This node allows intercepts data frames when
  * performing user-aided calibration.
+ * @type {@link http://purl.org/poso/CalibrationProcedure}
  */
 export class CalibrationNode<T extends DataObject = DataObject> extends ObjectProcessingNode {
     protected state: CalibrationState = CalibrationState.IDLE;

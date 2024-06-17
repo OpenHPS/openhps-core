@@ -138,8 +138,22 @@ export function createChangeLog<T extends Object>(target: T): T & SerializableCh
     const metadata = DataSerializerUtils.getOwnMetadata(target.constructor);
     if (metadata) {
         metadata.dataMembers.forEach((member) => {
-            if (target[member.key] && target[member.key] instanceof Object) {
-                target[member.key] = createChangeLog(target[member.key]);
+            if (target[member.key]) {
+                if (Array.isArray(target[member.key])) {
+                    target[member.key].forEach((element) => {
+                        if (element instanceof Object) {
+                            element = createChangeLog(element);
+                        }
+                    });
+                } else if (target[member.key] instanceof Map || target[member.key] instanceof Set) {
+                    target[member.key].forEach((element) => {
+                        if (element instanceof Object) {
+                            element = createChangeLog(element);
+                        }
+                    });
+                } else if (target[member.key] instanceof Object) {
+                    target[member.key] = createChangeLog(target[member.key]);
+                }
             }
         });
     }
