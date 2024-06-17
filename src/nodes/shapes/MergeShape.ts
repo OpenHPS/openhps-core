@@ -8,6 +8,7 @@ import { PushError } from '../../graph/events';
 /**
  * Merge data frames from two or more sources
  * using a certain merge key (e.g. source uid, parent uid, node uid).
+ * @type {@link http://purl.org/poso/HighLevelFusion}
  * @category Flow shape
  */
 export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode<InOut, InOut> {

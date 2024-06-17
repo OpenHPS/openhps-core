@@ -27,6 +27,14 @@ import { SerializableObject } from '../data/decorators';
  * }
  * }
  * ```
+ * 
+ * 
+<script type="application/ld+json">
+{
+    "@context": "http://purl.org/poso/",
+    "@type": "PositioningTechnique",
+}
+</script>
  * @category Processing node
  */
 @SerializableObject()

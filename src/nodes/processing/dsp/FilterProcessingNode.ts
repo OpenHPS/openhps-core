@@ -3,6 +3,7 @@ import { TimeService } from '../../../service/TimeService';
 import { ObjectProcessingNode, ObjectProcessingNodeOptions } from '../../ObjectProcessingNode';
 
 /**
+ * Filter processing node for filtering a stream of data.
  * @category Processing node
  */
 export abstract class FilterProcessingNode<InOut extends DataFrame> extends ObjectProcessingNode<InOut> {
