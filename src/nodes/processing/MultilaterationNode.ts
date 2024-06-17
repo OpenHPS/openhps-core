@@ -7,7 +7,7 @@ import { RelativePositionProcessing } from './RelativePositionProcessing';
 
 /**
  * Multilateration processing node
- * @type {@link http://purl.org/poso/Multilateration}
+ * @rdf {@link http://purl.org/poso/Multilateration}
  * @category Processing node
  */
 export class MultilaterationNode<InOut extends DataFrame> extends RelativePositionProcessing<InOut, RelativeDistance> {

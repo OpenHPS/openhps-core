@@ -17,7 +17,7 @@ import { ObjectProcessingNodeOptions } from '../ObjectProcessingNode';
  * - {@link Absolute2DPosition}
  * - {@link Absolute3DPosition}
  * - {@link GeographicalPosition}
- * @type {@link http://purl.org/poso/Triangulation}
+ * @rdf {@link http://purl.org/poso/Triangulation}
  * @category Processing node
  */
 export class TriangulationNode<InOut extends DataFrame> extends RelativePositionProcessing<InOut, RelativeAngle> {

@@ -10,7 +10,7 @@ import { MergeShape } from './MergeShape';
  * ```typescript
  * new FrameMergeNode();
  * ```
- * @type {@link http://purl.org/poso/HighLevelFusion}
+ * @rdf {@link http://purl.org/poso/HighLevelFusion}
  * @category Flow shape
  */
 export class FrameMergeNode<InOut extends DataFrame> extends MergeShape<InOut> {

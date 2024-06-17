@@ -12,6 +12,7 @@ import { MergeShapeOptions } from './MergeShape';
  * It is possible to set a timeout, when this timeout is reached the frames that are received are merged and pushed.
  *
  * When frames of the same source are received they are overridden.
+ * @rdf {@link http://purl.org/poso/HighLevelFusion}
  * @category Flow shape
  */
 export class SourceMergeNode<InOut extends DataFrame> extends FrameMergeNode<InOut> {

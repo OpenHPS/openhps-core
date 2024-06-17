@@ -5,7 +5,7 @@ import { FrameMergeNode } from './FrameMergeNode';
 import { MergeShapeOptions } from './MergeShape';
 
 /**
- * @type {@link http://purl.org/poso/HighLevelFusion}
+ * @rdf {@link http://purl.org/poso/HighLevelFusion}
  * @category Flow shape
  */
 export class ObjectMergeNode<InOut extends DataFrame> extends FrameMergeNode<InOut> {

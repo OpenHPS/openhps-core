@@ -5,7 +5,7 @@ import { RelativePositionProcessing } from './RelativePositionProcessing';
 
 /**
  * Cell identification processing node
- * @type {@link http://purl.org/poso/CellIdentification}
+ * @rdf {@link http://purl.org/poso/CellIdentification}
  * @category Processing node
  */
 export class CellIdentificationNode<InOut extends DataFrame> extends RelativePositionProcessing<
