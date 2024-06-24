@@ -129,6 +129,14 @@ export interface Change {
 }
 
 /**
+ * Get the change log of an object
+ * @param target Target object
+ */
+export function getChangeLog<T extends Object>(target: T & SerializableChangelog): ChangeLog { // eslint-disable-line
+    return target[CHANGELOG_METADATA_KEY];
+}
+
+/**
  * Create a change log for an object
  * @param target Target object
  */
