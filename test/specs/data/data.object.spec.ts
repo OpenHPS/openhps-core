@@ -17,6 +17,7 @@ import {
     CHANGELOG_METADATA_KEY,
     SerializableObject,
     SerializableMapMember,
+    GeographicalPosition,
 } from '../../../src';
 import { DummySensorObject } from '../../mock/data/object/DummySensorObject';
 
@@ -327,5 +328,14 @@ describe('DataObject', () => {
             });
         });
 
+        it('should detect changes with setters', () => {
+            const object = new DataObject('test', 'Maxim');
+            object.setPosition(new GeographicalPosition(123, 45));
+            const objectWithChangelog = createChangeLog(object);
+            (object.position as GeographicalPosition).latitude = 456;
+            expect(objectWithChangelog.position[CHANGELOG_METADATA_KEY].getLatestChanges().length).to.equal(1);
+            expect(objectWithChangelog.position[CHANGELOG_METADATA_KEY].getLatestChanges()[0].property).to.not.equal("latitude");
+            expect(objectWithChangelog.position[CHANGELOG_METADATA_KEY].getLatestChanges()[0].property).to.equal("y");
+        });
     });
 });

@@ -145,7 +145,9 @@ export function createChangeLog<T extends Object>(target: T): T & SerializableCh
     // Wrap all data members with a changelog to track deep changes
     const metadata = DataSerializerUtils.getOwnMetadata(target.constructor);
     if (metadata) {
+        const watchedProperties: string[] = [];
         metadata.dataMembers.forEach((member) => {
+            watchedProperties.push(member.key);
             if (target[member.key]) {
                 if (Array.isArray(target[member.key])) {
                     target[member.key].forEach((element) => {
@@ -164,16 +166,36 @@ export function createChangeLog<T extends Object>(target: T): T & SerializableCh
                 }
             }
         });
+        // Wrap the target in a proxy to track changes
+        const proxy = new Proxy(target, {
+            set: (obj, prop, value) => {
+                if (watchedProperties.includes(prop.toString())) {
+                    if (obj[prop] !== value) {
+                        obj[CHANGELOG_METADATA_KEY].addChange(prop.toString(), obj[prop], value);
+                    }
+                    obj[prop] = value;
+                } else {
+                    // Get the current state of watched properties
+                    const currentState = {};
+                    watchedProperties.forEach((watchedProperty) => {
+                        currentState[watchedProperty] = obj[watchedProperty];
+                    });
+                    obj[prop] = value;
+                    // Determine if a setter modified another variable
+                    watchedProperties.forEach((watchedProperty) => {
+                        if (currentState[watchedProperty] !== obj[watchedProperty]) {
+                            obj[CHANGELOG_METADATA_KEY].addChange(
+                                watchedProperty,
+                                currentState[watchedProperty],
+                                obj[watchedProperty],
+                            );
+                        }
+                    });
+                }
+                return true;
+            },
+        }) as T & SerializableChangelog;
+        return proxy;
     }
-    // Wrap the target in a proxy to track changes
-    const proxy = new Proxy(target, {
-        set: (obj, prop, value) => {
-            if (obj[prop] !== value) {
-                obj[CHANGELOG_METADATA_KEY].addChange(prop.toString(), obj[prop], value);
-            }
-            obj[prop] = value;
-            return true;
-        },
-    }) as T & SerializableChangelog;
-    return proxy;
+    return target;
 }
