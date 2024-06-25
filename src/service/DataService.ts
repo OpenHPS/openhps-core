@@ -40,7 +40,7 @@ export abstract class DataService<I, T> extends Service {
         super();
         this.driver = dataServiceDriver;
 
-        if (this.driver) {
+        if (this.driver && this.driver.dataType) {
             this.uid = this.driver.dataType.name;
         }
 
