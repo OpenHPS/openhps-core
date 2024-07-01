@@ -6,6 +6,9 @@ export interface SerializableChangelog {
     [CHANGELOG_METADATA_KEY]?: ChangeLog;
 }
 
+/**
+ * Change log for tracking changes on an object
+ */
 export class ChangeLog {
     /**
      * Changes
@@ -136,6 +139,8 @@ export function getChangeLog<T extends Object>(target: T & SerializableChangelog
     return target[CHANGELOG_METADATA_KEY];
 }
 
+const IGNORED_TYPES = [Uint8Array, Date];
+
 /**
  * Create a change log for an object
  * @param target Target object
@@ -162,7 +167,10 @@ export function createChangeLog<T extends Object>(target: T): T & SerializableCh
                         }
                     });
                 } else if (target[member.key] instanceof Object) {
-                    target[member.key] = createChangeLog(target[member.key]);
+                    // Only wrap objects that are not ignored
+                    if (!IGNORED_TYPES.includes(target[member.key].constructor)) {
+                        target[member.key] = createChangeLog(target[member.key]);
+                    }
                 }
             }
         });

@@ -328,6 +328,18 @@ describe('DataObject', () => {
             });
         });
 
+        it('should not break dates', () => {
+            @SerializableObject()
+            class MyObject {
+                @SerializableMember()
+                date: Date;
+            }
+            const object = new MyObject();
+            object.date = new Date();
+            const objectWithChangelog = createChangeLog(object);
+            console.log(object)
+        });
+
         it('should detect changes with setters', () => {
             const object = new DataObject('test', 'Maxim');
             object.setPosition(new GeographicalPosition(123, 45));
