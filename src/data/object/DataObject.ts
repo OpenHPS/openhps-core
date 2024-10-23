@@ -13,10 +13,20 @@ import { TimeService } from '../../service/TimeService';
 import { TransformationSpace } from './space/TransformationSpace';
 import { EventEmitter } from 'events';
 import { DataService } from '../../service/DataService';
+import { Orientation } from '../position';
+import { AngularVelocity, LinearVelocity, Velocity } from '../values';
 
+@SerializableObject()
 /**
  * A data object is an instance that can be anything ranging from a person or asset to
  * a more abstract object such as a Wi-Fi access point or {@link ReferenceSpace}.
+ * @example
+ * ```typescript
+ * const dataObject = new DataObject();
+ * dataObject.displayName = "Sample Object";
+ * dataObject.position = new AbsolutePosition(1, 2, 3);
+ * dataObject.setParent("parentUID");
+ * ```
  *
  * ## Usage
  *
@@ -32,9 +42,9 @@ import { DataService } from '../../service/DataService';
  * ```typescript
  * myObject.bind(myModel).save();
  * ```
+ * @public
  * @category data
  */
-@SerializableObject()
 export class DataObject {
     /**
      * Object display name
@@ -89,6 +99,54 @@ export class DataObject {
      */
     set position(position: AbsolutePosition) {
         this.setPosition(position);
+    }
+
+    /**
+     * Get the orientation of the object
+     * relative to the global reference space
+     */
+    get orientation(): Orientation {
+        return this._position ? this.getPosition().orientation : undefined;
+    }
+
+    /**
+     * Set the orientation of the object
+     * relative to the global reference space
+     */
+    set orientation(orientation: Orientation) {
+        if (this._position) {
+            this.getPosition().orientation = orientation;
+        }
+    }
+
+    get velocity(): Velocity {
+        return this._position ? this.getPosition().velocity : undefined;
+    }
+
+    set velocity(velocity: Velocity) {
+        if (this._position) {
+            this.getPosition().velocity = velocity;
+        }
+    }
+
+    get linearVelocity(): LinearVelocity {
+        return this._position ? this.getPosition().linearVelocity : undefined;
+    }
+
+    set linearVelocity(velocity: LinearVelocity) {
+        if (this._position) {
+            this.getPosition().linearVelocity = velocity;
+        }
+    }
+
+    get angularVelocity(): AngularVelocity {
+        return this._position ? this.getPosition().angularVelocity : undefined;
+    }
+
+    set angularVelocity(velocity: AngularVelocity) {
+        if (this._position) {
+            this.getPosition().angularVelocity = velocity;
+        }
     }
 
     /**

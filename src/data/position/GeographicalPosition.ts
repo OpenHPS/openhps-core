@@ -10,11 +10,9 @@ import { GCS, HAVERSINE, Unit, Vector3 } from '../../utils';
  */
 @SerializableObject()
 export class GeographicalPosition extends Absolute3DPosition {
-    constructor(lat?: number, lng?: number, amsl?: number) {
+    constructor(lat?: number, lng?: number, amsl?: number, gcs: GCS = GCS.WGS84) {
         super();
-        this.latitude = lat;
-        this.longitude = lng;
-        this.z = amsl;
+        this.fromVector(new Vector3(lng, lat, amsl), gcs);
     }
 
     /**
@@ -130,7 +128,7 @@ export class GeographicalPosition extends Absolute3DPosition {
                 GCS.WGS84,
             );
         } else if (unit instanceof GCS) {
-            converted = unit.convert(vector, GCS.WGS84);
+            converted = unit !== GCS.WGS84 ? unit.convert(vector, GCS.WGS84) : vector;
         }
         this.x = converted.x;
         this.y = converted.y;

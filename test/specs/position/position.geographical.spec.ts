@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { GeographicalPosition, AngleUnit, GCS, LengthUnit } from '../../../src';
+import { GeographicalPosition, AngleUnit, GCS, LengthUnit, Orientation, Accuracy2D } from '../../../src';
 
 describe('GeographicalPosition', () => {
     it('should convert latitude and latittude to XYZ coordinates', () => {
@@ -65,5 +65,9 @@ describe('GeographicalPosition', () => {
         expect(Math.round(vector.x)).to.equal(4025669);
         expect(Math.round(vector.y)).to.equal(309202);
         expect(Math.round(vector.z)).to.equal(4920958);
+
+        const position = new GeographicalPosition(50.820548, 4.392123, 53, GCS.WGS84)
+            .setOrientation(Orientation.fromBearing(180))
+            .setAccuracy(new Accuracy2D(5, 5, LengthUnit.METER));
     });
 });

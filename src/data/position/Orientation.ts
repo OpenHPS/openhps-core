@@ -1,4 +1,4 @@
-import { Quaternion } from '../../utils/math';
+import { Quaternion, Vector3 } from '../../utils/math';
 import { NumberType, SerializableMember, SerializableObject } from '../decorators';
 import * as THREE from '../../utils/math/_internal';
 import { TimeService } from '../../service/TimeService';
@@ -26,6 +26,16 @@ export class Orientation extends Quaternion {
         super(x, y, z, w);
         this.accuracy = accuracy || new Accuracy1D(0, AngleUnit.RADIAN);
         this.timestamp = TimeService.now();
+    }
+
+    static fromBearing(bearing: number, unit: AngleUnit = AngleUnit.DEGREE): Orientation {
+        return Orientation.fromEuler({
+            x: 0,
+            y: 0,
+            z: bearing,
+            order: 'ZYX',
+            unit,
+        });
     }
 
     static fromQuaternion(quat: Quaternion | THREE.Quaternion): Orientation {
