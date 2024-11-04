@@ -1,4 +1,5 @@
 import { DataFrame } from '../data';
+import type { GraphNode } from './_internal/GraphNode';
 import { PullOptions, PushOptions } from './options';
 
 /**
@@ -20,4 +21,9 @@ export interface Outlet<Out extends DataFrame> {
      * @param {Function} listener Event callback
      */
     on(name: 'pull', listener: (options?: PullOptions) => Promise<void> | void): this;
+
+    /**
+     * Get the node of the outlet
+     */
+    get outletNode(): GraphNode<Out, any>;
 }

@@ -1,6 +1,6 @@
 import { PullOptions, PushOptions } from './options';
 import { DataFrame } from '../data';
-import { GraphNode } from './_internal/GraphNode';
+import type { GraphNode } from './_internal/GraphNode';
 import { PushCompletedEvent, PushError } from './events';
 import { Inlet } from './Inlet';
 import { Outlet } from './Outlet';
@@ -106,5 +106,13 @@ export class Edge<InOut extends DataFrame> extends EventEmitter implements Inlet
     on(name: string | symbol, listener: (...args: any[]) => void): this {
         this.removeAllListeners(name);
         return super.on(name, listener);
+    }
+
+    get inletNode(): GraphNode<any, InOut> {
+        return this.inputNode;
+    }
+
+    get outletNode(): GraphNode<InOut, any> {
+        return this.outputNode;
     }
 }

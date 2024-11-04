@@ -38,6 +38,14 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
         this.on('completed', this._onCompleted.bind(this));
     }
 
+    get inletNode(): GraphNode<any, Out> {
+        return this;
+    }
+
+    get outletNode(): GraphNode<In, any> {
+        return this;
+    }
+
     logger(level: 'debug', message: string, data?: any): void;
     logger(level: 'info', message: string, data?: any): void;
     logger(level: 'warn', message: string, data?: any): void;

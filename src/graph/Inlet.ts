@@ -1,4 +1,5 @@
 import { DataFrame } from '../data';
+import type { GraphNode } from './_internal/GraphNode';
 import { PushCompletedEvent, PushError } from './events';
 import { PullOptions, PushOptions } from './options';
 
@@ -37,4 +38,9 @@ export interface Inlet<In extends DataFrame> {
      * @param {Function} listener Event callback
      */
     on(name: 'push', listener: (frame: In, options?: PushOptions) => Promise<void> | void): this;
+
+    /**
+     * Get the node of the inlet
+     */
+    get inletNode(): GraphNode<any, In>;
 }
