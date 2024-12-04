@@ -45,6 +45,8 @@ export class LocationBasedService<
     constructor(options?: LBSOptions) {
         super();
         this.options = options || {};
+
+        this.addDependency(TimeService);
         this.once('build', this._initLBS.bind(this));
         this.once('destroy', this._destroy.bind(this));
     }

@@ -88,7 +88,9 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
                     }
                 });
                 await Promise.all(dependencyPromises);
-                return await service.emitAsync('build');
+                const result = await service.emitAsync('build');
+                service.emit('ready');
+                return result;
             };
 
             this._services.forEach((service) => {
