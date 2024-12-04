@@ -74,16 +74,30 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
     private _buildServices(): Promise<void> {
         return new Promise((resolve, reject) => {
             const buildPromises: Array<Promise<boolean>> = [];
-            this._services.forEach((service) => {
-                if (!service.isReady()) {
-                    buildPromises.push(service.emitAsync('build'));
+            const loadService = async (service: Service): Promise<boolean> => {
+                if (service.isReady()) {
+                    return Promise.resolve(true);
                 }
+                const dependencies = service.dependencies || [];
+                const dependencyPromises = dependencies.map((dep) => {
+                    const depService = this.findService(dep);
+                    if (depService) {
+                        return loadService(depService);
+                    } else {
+                        return Promise.resolve(true);
+                    }
+                });
+                await Promise.all(dependencyPromises);
+                return await service.emitAsync('build');
+            };
+
+            this._services.forEach((service) => {
+                buildPromises.push(loadService(service));
             });
             this._dataServices.forEach((service) => {
-                if (!service.isReady()) {
-                    buildPromises.push(service.emitAsync('build'));
-                }
+                buildPromises.push(loadService(service));
             });
+
             Promise.all(buildPromises)
                 .then(() => resolve())
                 .catch(reject);

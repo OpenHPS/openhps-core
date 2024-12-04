@@ -17,6 +17,10 @@ export abstract class Service extends AsyncEventEmitter {
      * Model shape
      */
     model: any;
+    /**
+     * Dependencies that need to be resolved before the service is ready
+     */
+    dependencies?: (new (...args: any[]) => Service)[] = [];
 
     constructor(options: ServiceOptions = {}) {
         super();
@@ -26,6 +30,16 @@ export abstract class Service extends AsyncEventEmitter {
         this.prependOnceListener('ready', () => {
             this._ready = true;
         });
+    }
+
+    /**
+     * Add a dependency to the service
+     * @param dependency Service dependency
+     * @returns {this} Service instance
+     */
+    addDependency(dependency: new (...args: any[]) => Service): this {
+        this.dependencies.push(dependency);
+        return this;
     }
 
     protected generateUUID(): string {
