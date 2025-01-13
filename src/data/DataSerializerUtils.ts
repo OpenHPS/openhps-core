@@ -1,7 +1,7 @@
-import { Constructor, IndexedObject, JsonObjectMetadata, Serializable } from 'typedjson';
-import type { MappedTypeConverters } from 'typedjson/lib/types/parser';
+import { AnyT, Constructor, IndexedObject, JsonObjectMetadata, Serializable } from 'typedjson';
 import { ObjectMetadata } from './decorators/metadata';
-import { SerializableMemberOptions } from './decorators/options';
+import { SerializableMemberOptions, SerializableObjectOptions } from './decorators/options';
+import { cloneDeep, isObject } from './decorators/utils';
 
 /**
  * Data serializer utilities for managing the ORM mapping
@@ -117,9 +117,135 @@ export class DataSerializerUtils {
             return member && (member as SerializableMemberOptions).primaryKey;
         })[0];
     }
-}
 
-export { MappedTypeConverters };
+    /**
+     * Deep merge member options
+     * @param {unknown} target Target object
+     * @param {string} propertyKey Property key in target
+     * @param {any} options Member options
+     * @returns {any} Merged objects
+     */
+    static mergeMemberOptions(target: unknown, propertyKey: string, options: any): any {
+        if (typeof options === 'function') {
+            return options;
+        }
+        const memberOptions = DataSerializerUtils.getMemberOptions(target.constructor as Constructor<any>, propertyKey);
+        if (!memberOptions) {
+            return options;
+        }
+        return mergeDeep(memberOptions, options);
+    }
+
+    static updateMemberOptions(
+        target: unknown,
+        propertyKey: string,
+        options: SerializableMemberOptions | IndexedObject,
+    ) {
+        const reflectPropCtor: Constructor<any> = Reflect.getMetadata('design:type', target, propertyKey);
+
+        // Inject additional options if available
+        if (options) {
+            const ownMeta = JsonObjectMetadata.ensurePresentInPrototype(target);
+            const rootMeta = DataSerializerUtils.getRootMetadata(target.constructor);
+            const ownMemberMetadata = ownMeta.dataMembers.get(propertyKey) || ownMeta.dataMembers.get(options.name);
+            const rootMemberMetadata = rootMeta
+                ? rootMeta.dataMembers.get(propertyKey) || rootMeta.dataMembers.get(options.name)
+                : undefined;
+            if (!ownMemberMetadata) {
+                throw new Error(`Unable to get member metadata for ${target} on property ${propertyKey}!`);
+            }
+            ownMemberMetadata.options = mergeDeep(ownMemberMetadata.options ?? {}, options);
+            if (rootMemberMetadata) {
+                ownMemberMetadata.options = mergeDeep(rootMemberMetadata.options ?? {}, ownMemberMetadata.options);
+            }
+            // Merge known sub types as well
+            rootMeta.knownTypes.forEach((otherType) => {
+                if (otherType === target.constructor || !(otherType.prototype instanceof target.constructor)) {
+                    return;
+                }
+                const otherMeta =
+                    DataSerializerUtils.getMetadata(otherType) ??
+                    JsonObjectMetadata.ensurePresentInPrototype(otherType);
+                const otherMemberMetadata =
+                    otherMeta.dataMembers.get(propertyKey) || otherMeta.dataMembers.get(options.name);
+                if (otherMemberMetadata) {
+                    otherMemberMetadata.options = mergeDeep(
+                        ownMemberMetadata.options ?? {},
+                        otherMemberMetadata.options,
+                    );
+                } else {
+                    otherMeta.dataMembers.set(options.name ?? propertyKey, cloneDeep(ownMemberMetadata));
+                }
+            });
+            // TODO: Possibly need to sync super types as well
+        }
+
+        // Detect generic types that have no deserialization or constructor specified
+        const meta = JsonObjectMetadata.ensurePresentInPrototype(target);
+        const existingOptions = meta.dataMembers.get(options ? options.name || propertyKey : propertyKey);
+        if (
+            reflectPropCtor === Object &&
+            (!options || (!options.deserializer && !Object.keys(options).includes('constructor')))
+        ) {
+            // If the type is Object and no deserializer is specified, it can be any
+            // type of object, including serializable objects.
+            existingOptions.type = () => AnyT;
+        } else if (
+            existingOptions &&
+            typeof options !== 'object' &&
+            existingOptions.type() instanceof ConcreteTypeDescriptor
+        ) {
+            existingOptions.type = () => new ConcreteTypeDescriptor(reflectPropCtor);
+        }
+    }
+
+    static updateObjectMetadata<T>(
+        target: Serializable<T>,
+        options: SerializableObjectOptions<T>,
+        ownMeta: ObjectMetadata,
+        rootMeta: ObjectMetadata,
+    ): ObjectMetadata {
+        rootMeta.knownTypes.add(target);
+        if (rootMeta.initializerCallback && !ownMeta.initializerCallback) {
+            ownMeta.initializerCallback = rootMeta.initializerCallback;
+        }
+
+        // Merge options
+        if (options) {
+            ownMeta.options = mergeDeep(
+                ownMeta === rootMeta ? ownMeta.options ?? {} : ownMeta.options ?? rootMeta.options ?? {},
+                options,
+            );
+
+            // Merge known sub types as well
+            rootMeta.knownTypes.forEach((otherType) => {
+                if (otherType === target || !(otherType.prototype instanceof target)) {
+                    return;
+                }
+
+                const otherMeta = DataSerializerUtils.getMetadata(otherType);
+                otherMeta.options = mergeDeep(ownMeta.options ?? {}, otherMeta.options);
+
+                if (!otherMeta.initializerCallback && ownMeta.initializerCallback) {
+                    otherMeta.initializerCallback = ownMeta.initializerCallback;
+                }
+            });
+        }
+
+        // Sync settings from super types
+        rootMeta.knownTypes.forEach((otherType) => {
+            if (otherType === target || !(target.prototype instanceof otherType)) {
+                return;
+            }
+
+            const otherMeta = DataSerializerUtils.getMetadata(otherType);
+            if (otherMeta && otherMeta.initializerCallback && !ownMeta.initializerCallback) {
+                ownMeta.initializerCallback = otherMeta.initializerCallback;
+            }
+        });
+        return ownMeta;
+    }
+}
 
 export abstract class TypeDescriptor {
     protected constructor(readonly ctor: Serializable<any>) {}
@@ -142,3 +268,29 @@ export class ConcreteTypeDescriptor extends TypeDescriptor {
 }
 
 export type { ArrayTypeDescriptor, MapTypeDescriptor, SetTypeDescriptor } from 'typedjson/lib/types/type-descriptor';
+
+/**
+ * Deep merge objects
+ * @param {any} target Target object
+ * @param {any} source Source object
+ * @returns {any} Merged object
+ */
+function mergeDeep(target: any, source: any): any {
+    const output = cloneDeep(target);
+    if (isObject(target) && isObject(source)) {
+        Object.keys(source).forEach((key) => {
+            if (Array.isArray(source[key])) {
+                output[key] = source[key];
+                const targetProperty =
+                    target[key] !== undefined ? (Array.isArray(target[key]) ? target[key] : [target[key]]) : [];
+                output[key].push(...targetProperty.filter((val: any) => !source[key].includes(val)));
+            } else if (isObject(source[key])) {
+                if (!(key in target)) Object.assign(output, { [key]: source[key] });
+                else output[key] = mergeDeep(target[key], source[key]);
+            } else {
+                Object.assign(output, { [key]: source[key] });
+            }
+        });
+    }
+    return output;
+}

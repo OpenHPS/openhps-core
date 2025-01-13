@@ -1,10 +1,28 @@
 import { EventEmitter } from 'events';
-import { JsonObjectMetadata, Constructor, Serializable } from 'typedjson';
-import type { MappedTypeConverters } from 'typedjson/lib/types/parser';
+import { JsonObjectMetadata, Constructor, Serializable, IndexedObject, jsonObject } from 'typedjson';
 import { DataSerializerUtils, TypeDescriptor } from './DataSerializerUtils';
 import { ObjectMetadata } from './decorators/metadata';
 import { Deserializer } from './Deserializer';
 import { Serializer } from './Serializer';
+import { CustomDeserializerParams, CustomSerializerParams, SerializableMemberOptions } from './decorators/options';
+import { SerializableMember } from './decorators/SerializableMember';
+
+export interface MappedTypeConverters<T> {
+    /**
+     * Use this deserializer to convert a JSON value to the type.
+     */
+    deserializer?: ((json: any, params: CustomDeserializerParams) => T | null | undefined) | null;
+
+    /**
+     * Use this serializer to convert a type back to JSON.
+     */
+    serializer?: ((value: T | null | undefined, params: CustomSerializerParams) => any) | null;
+
+    /**
+     * Custom member serialization strategies.
+     */
+    members?: Partial<Record<keyof T, SerializableMemberOptions | IndexedObject>>;
+}
 
 JsonObjectMetadata.getFromConstructor = function (ctor) {
     if (!ctor) {
@@ -69,27 +87,48 @@ export class DataSerializer {
     static registerType<T>(type: Serializable<T>, converters?: MappedTypeConverters<T>): void {
         DataSerializer.knownTypes.set(type.name, type);
         if (converters) {
-            DataSerializer.serializer.setSerializationStrategy(type, (value) => {
-                return converters.serializer(value, {
-                    fallback: (so, td) => DataSerializer.serializer.convertSingleValue(so, td as TypeDescriptor),
+            // Set custom serialization strategies
+            if (converters.serializer) {
+                DataSerializer.serializer.setSerializationStrategy(type, (value) => {
+                    return converters.serializer(value, {
+                        fallback: (so, td) => DataSerializer.serializer.convertSingleValue(so, td as TypeDescriptor),
+                    });
                 });
-            });
-            DataSerializer.deserializer.setDeserializationStrategy(type, (value) => {
-                return converters.deserializer(value, {
-                    fallback: (so, td) =>
-                        DataSerializer.deserializer.convertSingleValue(
-                            so,
-                            td as TypeDescriptor,
-                            DataSerializer.knownTypes,
-                        ),
+            }
+            if (converters.deserializer) {
+                DataSerializer.deserializer.setDeserializationStrategy(type, (value) => {
+                    return converters.deserializer(value, {
+                        fallback: (so, td) =>
+                            DataSerializer.deserializer.convertSingleValue(
+                                so,
+                                td as TypeDescriptor,
+                                DataSerializer.knownTypes,
+                            ),
+                    });
                 });
-            });
+            }
+
             if (type.name !== 'Object') {
-                const objectMetadata = new JsonObjectMetadata(type);
-                objectMetadata.isExplicitlyMarked = true;
-                type.prototype[DataSerializerUtils.META_FIELD] = objectMetadata;
+                // Ensure that the type has a serializable metadata
+                DataSerializerUtils.createMetadata(type.prototype);
+                const options = {};
+                jsonObject(options)(type);
+                DataSerializer['eventEmitter'].emit('updateSerializableObject', type, options);
+                // Merge
+                const ownMeta = DataSerializerUtils.getMetadata(type);
+                const rootMeta = DataSerializerUtils.getRootMetadata(type.prototype);
+                DataSerializerUtils.updateObjectMetadata(type, options, ownMeta, rootMeta);
+            }
+
+            // Register members
+            if (converters.members) {
+                Object.keys(converters.members).forEach((key) => {
+                    const memberOptions = converters.members[key];
+                    SerializableMember(memberOptions)(type.prototype, key);
+                });
             }
         }
+
         DataSerializer.eventEmitter.emit('registerType', type, converters);
     }
 

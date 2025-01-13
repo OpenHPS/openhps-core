@@ -6,7 +6,7 @@ import {
     MapTypeDescriptor,
     SetTypeDescriptor,
 } from 'typedjson/lib/cjs/type-descriptor';
-import { IndexedObject, JsonObjectMetadata, Serializable, TypeHintEmitter } from 'typedjson';
+import { AnyT, IndexedObject, JsonObjectMetadata, Serializable, TypeHintEmitter } from 'typedjson';
 import { MemberOptionsBase } from './decorators/options';
 import { ObjectMemberMetadata } from './decorators/metadata';
 import { isInstanceOf, isValueDefined, nameof } from 'typedjson/lib/cjs/helpers';
@@ -186,6 +186,19 @@ export class Serializer extends JSONSerializer {
                         `Could not serialize ${objMemberMetadata.name}, there is` +
                             ` no constructor nor serialization function to use.`,
                     );
+                } else if (objMemberMetadata.type() === AnyT) {
+                    // Any type, serialize as an unknown object
+                    const globalDataType = Object.getPrototypeOf(sourceObject[objMemberMetadata.key]).constructor;
+                    serialized = serializer.convertSingleValue(
+                        sourceObject[objMemberMetadata.key],
+                        globalDataType ? ensureTypeDescriptor(globalDataType) : objMemberMetadata.type(),
+                        `${nameof(sourceMeta.classType)}.${objMemberMetadata.key}`,
+                        objMemberOptions,
+                        serializerOptions,
+                    );
+                    if (typeof serialized === 'object' && serialized !== null) {
+                        serialized.__type = globalDataType ? globalDataType.name : 'Object';
+                    }
                 } else {
                     serialized = serializer.convertSingleValue(
                         sourceObject[objMemberMetadata.key],
@@ -345,10 +358,8 @@ export class Serializer extends JSONSerializer {
         serializerOptions?: any,
     ): IndexedObject | Array<{ key: any; value: any }> {
         if (!(typeDescriptor instanceof MapTypeDescriptor)) {
-            throw new TypeError(
-                `Could not serialize ${memberName} as Map: incorrect TypeDescriptor detected, please` +
-                    ' use proper annotation or function for this type',
-            );
+            // Serialize as object
+            return serializer.convertAsObject(sourceObject, typeDescriptor, memberName, serializer, memberOptions);
         }
         if ((typeDescriptor.valueType as any) == null) {
             // @todo Check type

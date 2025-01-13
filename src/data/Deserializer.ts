@@ -7,7 +7,7 @@ import {
     MapTypeDescriptor,
     SetTypeDescriptor,
 } from 'typedjson/lib/cjs/type-descriptor';
-import { IndexedObject, JsonObjectMetadata, Serializable, TypeResolver } from 'typedjson';
+import { AnyT, IndexedObject, JsonObjectMetadata, Serializable, TypeResolver } from 'typedjson';
 import { ObjectMemberMetadata } from './decorators/metadata';
 import type { OptionsBase } from 'typedjson/lib/types/options-base';
 import { mergeOptions } from 'typedjson/lib/cjs/options-base';
@@ -53,6 +53,21 @@ export class Deserializer extends JSONDeserializer {
         this.setDeserializationStrategy(Array, this.convertAsArray.bind(this));
         this.setDeserializationStrategy(Set, this.convertAsSet.bind(this));
         this.setDeserializationStrategy(Uint8Array, BufferUtils.fromHexString);
+        this.setDeserializationStrategy(AnyT.ctor, this.identityDeserializer.bind(this));
+    }
+
+    protected identityDeserializer<T>(
+        sourceObject: T,
+        _: TypeDescriptor,
+        knownTypes: Map<string, Serializable<any>>,
+        ...args: any[]
+    ): T {
+        // First check typehint
+        const typeFromTypeHint = this.getTypeResolver()(sourceObject, knownTypes);
+        if (typeFromTypeHint != null) {
+            return this.convertSingleValue(sourceObject, ensureTypeDescriptor(typeFromTypeHint), knownTypes, ...args);
+        }
+        return sourceObject;
     }
 
     convertSingleValue(

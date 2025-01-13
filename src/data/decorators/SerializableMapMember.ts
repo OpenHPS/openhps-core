@@ -1,6 +1,6 @@
 import { jsonMapMember, Serializable } from 'typedjson';
 import { SerializableMapMemberOptions } from './options';
-import { mergeMemberOptions, updateSerializableMember } from './utils';
+import { DataSerializerUtils } from '../DataSerializerUtils';
 
 /**
  * @param {Serializable<any>} keyConstructor Map key constructor
@@ -31,8 +31,8 @@ export function SerializableMapMember(
                 return json;
             };
         }
-        const finalOptions = mergeMemberOptions(target, propertyKey, options);
+        const finalOptions = DataSerializerUtils.mergeMemberOptions(target, propertyKey, options);
         jsonMapMember(keyConstructor, valueConstructor, finalOptions)(target, propertyKey);
-        updateSerializableMember(target, propertyKey, finalOptions);
+        DataSerializerUtils.updateMemberOptions(target, propertyKey, finalOptions);
     };
 }

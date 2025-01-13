@@ -2,7 +2,6 @@ import { jsonObject, Serializable } from 'typedjson';
 import { DataSerializer } from '../DataSerializer';
 import { DataSerializerUtils } from '../DataSerializerUtils';
 import { SerializableObjectOptions } from './options';
-import { updateSerializableObject } from './utils';
 
 /**
  * Serializable object
@@ -14,6 +13,11 @@ export function SerializableObject<T>(options?: SerializableObjectOptions<T>): C
         DataSerializerUtils.createMetadata(target.prototype);
         jsonObject(options)(target);
         DataSerializer['eventEmitter'].emit('updateSerializableObject', target, options);
-        updateSerializableObject(target, options);
+        const ownMeta = DataSerializerUtils.getMetadata(target);
+        const rootMeta = DataSerializerUtils.getRootMetadata(target.prototype);
+        DataSerializerUtils.updateObjectMetadata(target, options, ownMeta, rootMeta);
+
+        // (Re)register type
+        DataSerializer.registerType(target);
     };
 }

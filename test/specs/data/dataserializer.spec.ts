@@ -35,6 +35,33 @@ describe('DataSerializer', () => {
         expect(DataSerializer.findTypeByName('DataObject')).to.equal(DataObject);
     });
 
+    it('should register a new esm type', () => {
+        class FloorObject extends DataObject {
+            floor: number;
+            randomObject: any;
+            
+            constructor() {
+                super();
+            }
+        }
+
+        DataSerializer.registerType(FloorObject, {
+            members: {
+                floor: Number,
+                randomObject: Object,
+            }
+        });
+        
+        console.log(DataSerializerUtils.getOwnMetadata(FloorObject).dataMembers.get('randomObject').type());
+        const obj = new FloorObject();
+        obj.floor = 1;
+        obj.randomObject = new DataObject();
+        const serialized = DataSerializer.serialize(obj);
+        console.log(serialized);
+        const deserialized = DataSerializer.deserialize(serialized);
+        // expect(deserialized).to.eql(obj);
+    });
+
     describe('serializing', () => {
         it('should correctly serialize an extended object without decorators', () => {
             @SerializableObject()
@@ -52,7 +79,7 @@ describe('DataSerializer', () => {
             const obj = new Foo();
             obj.username = "mvdewync";
             obj.name = "Maxim";
-            const serialized = DataSerializer.serialize(obj);
+            const serialized = DataSerializer. serialize(obj);
             expect(serialized.username).to.be.undefined;
             expect(serialized.displayName).to.not.be.undefined;
         });

@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { jsonMember, IndexedObject } from 'typedjson';
-import { updateSerializableMember, mergeMemberOptions } from './utils';
 import { SerializableMemberOptions } from './options';
+import { DataSerializerUtils } from '../DataSerializerUtils';
 
 /**
  * @param {SerializableMemberOptions} [options] Member options
@@ -9,8 +9,8 @@ import { SerializableMemberOptions } from './options';
  */
 export function SerializableMember(options?: SerializableMemberOptions | IndexedObject): PropertyDecorator {
     return (target: unknown, propertyKey: string) => {
-        const finalOptions = mergeMemberOptions(target, propertyKey, options);
+        const finalOptions = DataSerializerUtils.mergeMemberOptions(target, propertyKey, options);
         jsonMember(finalOptions)(target, propertyKey);
-        updateSerializableMember(target, propertyKey, finalOptions);
+        DataSerializerUtils.updateMemberOptions(target, propertyKey, finalOptions);
     };
 }
