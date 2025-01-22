@@ -1,0 +1,265 @@
+<svg version="1.1" baseProfile="full" width="1199.0" height="467.0" viewBox="0 0 1199 467" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<desc >#.interface: fill=lightblue
+#.enumeration: fill=lightgreen
+#.type: fill=lightgray
+
+[SensorCalibrationData&lt;T&gt;|+unit;+offset;+multiplier|]
+[SensorObject&lt;T&gt;|+value;+frequency;+calibrationData|]
+[DataObject]&lt;:-[SensorObject&lt;T&gt;]
+[SensorValue&lt;U&gt;|+timestamp;+accuracy;-_defaultUnit;+unit|+setAccuracy();+toTuple();+clone()]
+[Vector3]&lt;:-[SensorValue&lt;U&gt;]
+[AbsoluteOrientationSensor||]
+[SensorObject&lt;T&gt;]&lt;:-[AbsoluteOrientationSensor]
+[GravitySensor||]
+[SensorObject&lt;T&gt;]&lt;:-[GravitySensor]
+[LinearAccelerationSensor||]
+[SensorObject&lt;T&gt;]&lt;:-[LinearAccelerationSensor]
+[LinearVelocitySensor||]
+[SensorObject&lt;T&gt;]&lt;:-[LinearVelocitySensor]
+[RelativeOrientationSensor||]
+[SensorObject&lt;T&gt;]&lt;:-[RelativeOrientationSensor]</desc>
+<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
+<g stroke="transparent" fill="#ffffff">
+<rect x="0.0" y="0.0" height="467.0" width="1199.0" stroke="none"></rect>
+</g>
+<g transform="translate(8, 8)" fill="#33322E">
+<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+<path d="M546.0 81.8 L546 125 L546 181.5 L546.0 181.5 " fill="none"></path>
+<path d="M551.3 81.8 L546.0 81.8 L540.7 81.8 L546.0 68.5 Z"></path>
+<path d="M737.0 81.8 L737 125 L737 145 L737.0 145.0 " fill="none"></path>
+<path d="M742.3 81.8 L737.0 81.8 L731.7 81.8 L737.0 68.5 Z"></path>
+<path d="M456.6 256.6 L114 343 L114 363 L114.0 363.0 " fill="none"></path>
+<path d="M457.9 261.7 L456.6 256.6 L455.3 251.4 L469.5 253.3 Z"></path>
+<path d="M457.6 279.0 L332 343 L332 363 L332.0 363.0 " fill="none"></path>
+<path d="M460.0 283.8 L457.6 279.0 L455.2 274.3 L469.5 273.0 Z"></path>
+<path d="M546.0 299.8 L546 343 L546 363 L546.0 363.0 " fill="none"></path>
+<path d="M551.3 299.8 L546.0 299.8 L540.7 299.8 L546.0 286.5 Z"></path>
+<path d="M634.7 273.9 L788 343 L788 363 L788.0 363.0 " fill="none"></path>
+<path d="M636.8 269.1 L634.7 273.9 L632.5 278.8 L622.5 268.5 Z"></path>
+<path d="M635.5 254.1 L1031.5 343 L1031.5 363 L1031.5 363.0 " fill="none"></path>
+<path d="M636.7 248.9 L635.5 254.1 L634.3 259.3 L622.5 251.2 Z"></path>
+<g data-name="SensorCalibrationData&lt;T&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="SensorCalibrationData&lt;T&gt;">
+<rect x="230.0" y="0.0" height="105.0" width="224.0" data-name="SensorCalibrationData&lt;T&gt;"></rect>
+<path d="M230.0 32.0 L454.0 32.0" fill="none" data-name="SensorCalibrationData&lt;T&gt;"></path>
+<path d="M230.0 97.0 L454.0 97.0" fill="none" data-name="SensorCalibrationData&lt;T&gt;"></path>
+</g>
+<g transform="translate(230, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="0">
+<a id="..\..\src\data\object\SensorObject.ts.SensorCalibrationData&lt;T&gt;" xlink:href="..\..\src\data\object\SensorObject.ts"><text x="104.0" y="14.1" stroke="none" text-anchor="middle" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="0">SensorCalibrationData&lt;T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(230, 32)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="1">+unit</text>
+<text x="0.0" y="30.3" stroke="none" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="1">+offset</text>
+<text x="0.0" y="46.5" stroke="none" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="1">+multiplier</text>
+
+</g>
+</g>
+<g transform="translate(230, 97)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="SensorObject&lt;T&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="SensorObject&lt;T&gt;">
+<rect x="469.5" y="181.5" height="105.0" width="153.0" data-name="SensorObject&lt;T&gt;"></rect>
+<path d="M469.5 213.5 L622.5 213.5" fill="none" data-name="SensorObject&lt;T&gt;"></path>
+<path d="M469.5 278.5 L622.5 278.5" fill="none" data-name="SensorObject&lt;T&gt;"></path>
+</g>
+<g transform="translate(469.5, 181.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SensorObject&lt;T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SensorObject&lt;T&gt;" data-compartment="0">
+<a id="..\..\src\data\object\SensorObject.ts.SensorObject&lt;T&gt;" xlink:href="..\..\src\data\object\SensorObject.ts"><text x="68.5" y="14.1" stroke="none" text-anchor="middle" data-name="SensorObject&lt;T&gt;" data-compartment="0">SensorObject&lt;T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(469.5, 213.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorObject&lt;T&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SensorObject&lt;T&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="SensorObject&lt;T&gt;" data-compartment="1">+value</text>
+<text x="0.0" y="30.3" stroke="none" data-name="SensorObject&lt;T&gt;" data-compartment="1">+frequency</text>
+<text x="0.0" y="46.5" stroke="none" data-name="SensorObject&lt;T&gt;" data-compartment="1">+calibrationData</text>
+
+</g>
+</g>
+<g transform="translate(469.5, 278.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorObject&lt;T&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SensorObject&lt;T&gt;" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="DataObject">
+<g fill="#eee8d5" stroke="#33322E" data-name="DataObject">
+<rect x="494.0" y="36.5" height="32.0" width="104.0" data-name="DataObject"></rect>
+</g>
+<g transform="translate(494, 36.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DataObject" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DataObject" data-compartment="0">
+<text x="44.0" y="14.1" stroke="none" text-anchor="middle" data-name="DataObject" data-compartment="0">DataObject</text>
+
+</g>
+</g>
+</g>
+<g data-name="SensorValue&lt;U&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="SensorValue&lt;U&gt;">
+<rect x="662.5" y="145.0" height="178.0" width="149.0" data-name="SensorValue&lt;U&gt;"></rect>
+<path d="M662.5 177.0 L811.5 177.0" fill="none" data-name="SensorValue&lt;U&gt;"></path>
+<path d="M662.5 258.0 L811.5 258.0" fill="none" data-name="SensorValue&lt;U&gt;"></path>
+</g>
+<g transform="translate(662.5, 145)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SensorValue&lt;U&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SensorValue&lt;U&gt;" data-compartment="0">
+<a id="..\..\src\data\values\SensorValue.ts.SensorValue&lt;U&gt;" xlink:href="..\..\src\data\values\SensorValue.ts"><text x="66.5" y="14.1" stroke="none" text-anchor="middle" data-name="SensorValue&lt;U&gt;" data-compartment="0">SensorValue&lt;U&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(662.5, 177)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorValue&lt;U&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SensorValue&lt;U&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="SensorValue&lt;U&gt;" data-compartment="1">+timestamp</text>
+<text x="0.0" y="30.3" stroke="none" data-name="SensorValue&lt;U&gt;" data-compartment="1">+accuracy</text>
+<text x="0.0" y="46.5" stroke="none" data-name="SensorValue&lt;U&gt;" data-compartment="1">-_defaultUnit</text>
+<text x="0.0" y="62.7" stroke="none" data-name="SensorValue&lt;U&gt;" data-compartment="1">+unit</text>
+
+</g>
+</g>
+<g transform="translate(662.5, 258)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorValue&lt;U&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SensorValue&lt;U&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="SensorValue&lt;U&gt;" data-compartment="2">+setAccuracy()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="SensorValue&lt;U&gt;" data-compartment="2">+toTuple()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="SensorValue&lt;U&gt;" data-compartment="2">+clone()</text>
+
+</g>
+</g>
+</g>
+<g data-name="Vector3">
+<g fill="#eee8d5" stroke="#33322E" data-name="Vector3">
+<rect x="698.5" y="36.5" height="32.0" width="77.0" data-name="Vector3"></rect>
+</g>
+<g transform="translate(698.5, 36.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Vector3" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Vector3" data-compartment="0">
+<text x="30.5" y="14.1" stroke="none" text-anchor="middle" data-name="Vector3" data-compartment="0">Vector3</text>
+
+</g>
+</g>
+</g>
+<g data-name="AbsoluteOrientationSensor">
+<g fill="#eee8d5" stroke="#33322E" data-name="AbsoluteOrientationSensor">
+<rect x="0.0" y="363.0" height="48.0" width="228.0" data-name="AbsoluteOrientationSensor"></rect>
+<path d="M0.0 395.0 L228.0 395.0" fill="none" data-name="AbsoluteOrientationSensor"></path>
+<path d="M0.0 403.0 L228.0 403.0" fill="none" data-name="AbsoluteOrientationSensor"></path>
+</g>
+<g transform="translate(0, 363)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AbsoluteOrientationSensor" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AbsoluteOrientationSensor" data-compartment="0">
+<a id="..\..\src\data\object\sensors\AbsoluteOrientationSensor.ts.AbsoluteOrientationSensor" xlink:href="..\..\src\data\object\sensors\AbsoluteOrientationSensor.ts"><text x="106.0" y="14.1" stroke="none" text-anchor="middle" data-name="AbsoluteOrientationSensor" data-compartment="0">AbsoluteOrientationSensor</text></a>
+
+</g>
+</g>
+<g transform="translate(0, 395)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AbsoluteOrientationSensor" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" data-name="AbsoluteOrientationSensor" data-compartment="1">
+
+</g>
+</g>
+<g transform="translate(0, 403)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AbsoluteOrientationSensor" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="AbsoluteOrientationSensor" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="GravitySensor">
+<g fill="#eee8d5" stroke="#33322E" data-name="GravitySensor">
+<rect x="268.0" y="363.0" height="48.0" width="128.0" data-name="GravitySensor"></rect>
+<path d="M268.0 395.0 L396.0 395.0" fill="none" data-name="GravitySensor"></path>
+<path d="M268.0 403.0 L396.0 403.0" fill="none" data-name="GravitySensor"></path>
+</g>
+<g transform="translate(268, 363)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GravitySensor" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GravitySensor" data-compartment="0">
+<a id="..\..\src\data\object\sensors\GravitySensor.ts.GravitySensor" xlink:href="..\..\src\data\object\sensors\GravitySensor.ts"><text x="56.0" y="14.1" stroke="none" text-anchor="middle" data-name="GravitySensor" data-compartment="0">GravitySensor</text></a>
+
+</g>
+</g>
+<g transform="translate(268, 395)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GravitySensor" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" data-name="GravitySensor" data-compartment="1">
+
+</g>
+</g>
+<g transform="translate(268, 403)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GravitySensor" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="GravitySensor" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="LinearAccelerationSensor">
+<g fill="#eee8d5" stroke="#33322E" data-name="LinearAccelerationSensor">
+<rect x="436.0" y="363.0" height="48.0" width="220.0" data-name="LinearAccelerationSensor"></rect>
+<path d="M436.0 395.0 L656.0 395.0" fill="none" data-name="LinearAccelerationSensor"></path>
+<path d="M436.0 403.0 L656.0 403.0" fill="none" data-name="LinearAccelerationSensor"></path>
+</g>
+<g transform="translate(436, 363)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LinearAccelerationSensor" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="LinearAccelerationSensor" data-compartment="0">
+<a id="..\..\src\data\object\sensors\LinearAccelerationSensor.ts.LinearAccelerationSensor" xlink:href="..\..\src\data\object\sensors\LinearAccelerationSensor.ts"><text x="102.0" y="14.1" stroke="none" text-anchor="middle" data-name="LinearAccelerationSensor" data-compartment="0">LinearAccelerationSensor</text></a>
+
+</g>
+</g>
+<g transform="translate(436, 395)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearAccelerationSensor" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" data-name="LinearAccelerationSensor" data-compartment="1">
+
+</g>
+</g>
+<g transform="translate(436, 403)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearAccelerationSensor" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="LinearAccelerationSensor" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="LinearVelocitySensor">
+<g fill="#eee8d5" stroke="#33322E" data-name="LinearVelocitySensor">
+<rect x="696.0" y="363.0" height="48.0" width="184.0" data-name="LinearVelocitySensor"></rect>
+<path d="M696.0 395.0 L880.0 395.0" fill="none" data-name="LinearVelocitySensor"></path>
+<path d="M696.0 403.0 L880.0 403.0" fill="none" data-name="LinearVelocitySensor"></path>
+</g>
+<g transform="translate(696, 363)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LinearVelocitySensor" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="LinearVelocitySensor" data-compartment="0">
+<a id="..\..\src\data\object\sensors\LinearVelocitySensor.ts.LinearVelocitySensor" xlink:href="..\..\src\data\object\sensors\LinearVelocitySensor.ts"><text x="84.0" y="14.1" stroke="none" text-anchor="middle" data-name="LinearVelocitySensor" data-compartment="0">LinearVelocitySensor</text></a>
+
+</g>
+</g>
+<g transform="translate(696, 395)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearVelocitySensor" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" data-name="LinearVelocitySensor" data-compartment="1">
+
+</g>
+</g>
+<g transform="translate(696, 403)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearVelocitySensor" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="LinearVelocitySensor" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="RelativeOrientationSensor">
+<g fill="#eee8d5" stroke="#33322E" data-name="RelativeOrientationSensor">
+<rect x="920.0" y="363.0" height="48.0" width="223.0" data-name="RelativeOrientationSensor"></rect>
+<path d="M920.0 395.0 L1143.0 395.0" fill="none" data-name="RelativeOrientationSensor"></path>
+<path d="M920.0 403.0 L1143.0 403.0" fill="none" data-name="RelativeOrientationSensor"></path>
+</g>
+<g transform="translate(920, 363)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RelativeOrientationSensor" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RelativeOrientationSensor" data-compartment="0">
+<a id="..\..\src\data\object\sensors\RelativeOrientationSensor.ts.RelativeOrientationSensor" xlink:href="..\..\src\data\object\sensors\RelativeOrientationSensor.ts"><text x="103.5" y="14.1" stroke="none" text-anchor="middle" data-name="RelativeOrientationSensor" data-compartment="0">RelativeOrientationSensor</text></a>
+
+</g>
+</g>
+<g transform="translate(920, 395)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RelativeOrientationSensor" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" data-name="RelativeOrientationSensor" data-compartment="1">
+
+</g>
+</g>
+<g transform="translate(920, 403)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RelativeOrientationSensor" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="RelativeOrientationSensor" data-compartment="2">
+
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

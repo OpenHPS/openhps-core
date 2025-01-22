@@ -1,0 +1,8 @@
+{
+    "glob": "./src/data/values/**/*.ts",
+    "memberAssociations": true,
+    "outMermaidDsl": "./docs/uml/sensorvalue_mermaid.dsl",
+    "outFile": "./docs/uml/sensorvalue_diagram.svg",
+    "exportedTypesOnly": true,
+    "propertyTypes": false
+}

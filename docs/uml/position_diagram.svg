@@ -1,0 +1,472 @@
+<svg version="1.1" baseProfile="full" width="1056.5" height="1127.0" viewBox="0 0 1056.5 1127" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<desc >#.interface: fill=lightblue
+#.enumeration: fill=lightgreen
+#.type: fill=lightgray
+
+[Absolute2DPosition|\#vector|+angleTo();+fromVector();+toVector3();+clone()]
+[AbsolutePosition]&lt;:-[Absolute2DPosition]
+[Absolute3DPosition||+fromVector();+toVector3();+clone()]
+[Absolute2DPosition]&lt;:-[Absolute3DPosition]
+[AbsolutePosition|+timestamp;+velocity;+orientation;+unit;+referenceSpaceUID;-_accuracy;-_probability|+setOrientation();+setAccuracy();+abstract fromVector();+abstract toVector3();+abstract angleTo();+distanceTo();+equals();+clone()]
+[Position&lt;U&gt;]&lt;:--[AbsolutePosition]
+[AbsolutePosition]  -  [Orientation]
+[GeographicalPosition||+distanceTo();+bearing();+angleTo();+destination();+fromVector();+toVector3();+clone()]
+[Absolute3DPosition]&lt;:-[GeographicalPosition]
+[Orientation|+timestamp;+accuracy|+static fromBearing();+static fromQuaternion();+clone()]
+[Quaternion]&lt;:-[Orientation]
+[Pose|+timestamp;+unit;-_accuracy;-_probability|+static fromMatrix4();+static fromPosition()]
+[Matrix4]&lt;:-[Pose]
+[Position&lt;U&gt;]&lt;:--[Pose]
+[&lt;interface&gt;Position&lt;U&gt;|+timestamp;+accuracy;+probability|+clone();+equals()]
+[Relative2DPosition||+fromVector();+toVector3();+clone()]
+[RelativePosition&lt;T,U&gt;]&lt;:-[Relative2DPosition]
+[Relative3DPosition||+fromVector();+toVector3();+clone()]
+[Relative2DPosition]&lt;:-[Relative3DPosition]
+[RelativeAngle|+orientation;+unit;+referenceValue|]
+[RelativePosition&lt;T,U&gt;]&lt;:-[RelativeAngle]
+[RelativeAngle]  -  [Orientation]
+[RelativeDistance|+unit;+referenceValue|]
+[RelativePosition&lt;T,U&gt;]&lt;:-[RelativeDistance]
+[RelativePosition&lt;T,U&gt;|+timestamp;+referenceObjectUID;+referenceObjectType;+referenceValue;-_accuracy;-_probability;-_defaultUnit;+unit|+setAccuracy();+equals();+clone()]
+[Position&lt;U&gt;]&lt;:--[RelativePosition&lt;T,U&gt;]
+[Trajectory|+uid;+objectUID;+positions;+createdTimestamp|]
+[Trajectory]  - 0..* [AbsolutePosition]</desc>
+<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
+<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
+<g stroke="transparent" fill="#ffffff">
+<rect x="0.0" y="0.0" height="1127.0" width="1056.5" stroke="none"></rect>
+</g>
+<g transform="translate(8, 8)" fill="#33322E">
+<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+<path d="M97.3 503.6 L92.5 512 L92.5 532 L92.5 532.0 " fill="none"></path>
+<path d="M101.9 506.2 L97.3 503.6 L92.6 501.0 L103.8 492.0 Z"></path>
+<path d="M92.5 690.3 L92.5 697 L92.5 737 L92.5 737.0 " fill="none"></path>
+<path d="M97.8 690.3 L92.5 690.3 L87.2 690.3 L92.5 677.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M518.7 87.0 L150.75 165 L155.36095100864554 185 L155.4 185.0 " fill="none"></path>
+</g>
+<path d="M519.8 92.2 L518.7 87.0 L517.6 81.8 L531.8 84.3 Z"></path>
+<path d="M265.7 492.0 L275.5 512 L275.5 604.5 L275.5 604.5 L275.5 697 L275.5 697 L294.9594594594595 717 L295.0 717.0 " fill="none"></path>
+<path d="M92.5 855.3 L92.5 882 L92.5 902 L92.5 902.0 " fill="none"></path>
+<path d="M97.8 855.3 L92.5 855.3 L87.2 855.3 L92.5 842.0 Z"></path>
+<path d="M367.5 633.8 L367.5 697 L367.06756756756755 717 L367.1 717.0 " fill="none"></path>
+<path d="M372.8 633.8 L367.5 633.8 L362.2 633.8 L367.5 620.5 Z"></path>
+<path d="M383.5 97.0 L466 165 L483.4207492795389 258 L483.4 258.0 " fill="none"></path>
+<path d="M386.8 92.9 L383.5 97.0 L380.1 101.1 L373.2 88.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M591.9 158.3 L592.25 165 L541.9978386167147 258 L542.0 258.0 " fill="none"></path>
+</g>
+<path d="M597.2 158.0 L591.9 158.3 L586.6 158.6 L591.2 145.0 Z"></path>
+<path d="M891.5 471.2 L918 512 L918 552 L918.0 552.0 " fill="none"></path>
+<path d="M895.9 468.3 L891.5 471.2 L887.0 474.1 L884.2 460.0 Z"></path>
+<path d="M918.0 670.3 L918 697 L918 737 L918.0 737.0 " fill="none"></path>
+<path d="M923.3 670.3 L918.0 670.3 L912.7 670.3 L918.0 657.0 Z"></path>
+<path d="M698.0 406.8 L533 512 L533 552 L533.0 552.0 " fill="none"></path>
+<path d="M700.9 411.3 L698.0 406.8 L695.1 402.3 L709.3 399.7 Z"></path>
+<path d="M533.0 657.0 L533 697 L469.5 732.0671641791045 L469.5 732.1 " fill="none"></path>
+<path d="M740.4 472.0 L721 512 L721 560.5 L721.0 560.5 " fill="none"></path>
+<path d="M745.2 474.3 L740.4 472.0 L735.6 469.7 L746.3 460.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M655.0 101.3 L805.25 165 L805.25 217 L805.3 217.0 " fill="none"></path>
+</g>
+<path d="M657.1 96.3 L655.0 101.3 L652.9 106.2 L642.8 96.0 Z"></path>
+<text x="252.3" y="181.3" stroke="none">0..*</text>
+<path d="M264.2 133.0 L303 165 L287.25 189.34409799554567 L287.3 189.3 " fill="none"></path>
+<g data-name="Absolute2DPosition">
+<g fill="#eee8d5" stroke="#33322E" data-name="Absolute2DPosition">
+<rect x="7.5" y="532.0" height="145.0" width="170.0" data-name="Absolute2DPosition"></rect>
+<path d="M7.5 564.0 L177.5 564.0" fill="none" data-name="Absolute2DPosition"></path>
+<path d="M7.5 596.0 L177.5 596.0" fill="none" data-name="Absolute2DPosition"></path>
+</g>
+<g transform="translate(7.5, 532)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Absolute2DPosition" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Absolute2DPosition" data-compartment="0">
+<a id="..\..\src\data\position\Absolute2DPosition.ts.Absolute2DPosition" xlink:href="..\..\src\data\position\Absolute2DPosition.ts"><text x="77.0" y="14.1" stroke="none" text-anchor="middle" data-name="Absolute2DPosition" data-compartment="0">Absolute2DPosition</text></a>
+
+</g>
+</g>
+<g transform="translate(7.5, 564)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Absolute2DPosition" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Absolute2DPosition" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="Absolute2DPosition" data-compartment="1">#vector</text>
+
+</g>
+</g>
+<g transform="translate(7.5, 596)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Absolute2DPosition" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Absolute2DPosition" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="Absolute2DPosition" data-compartment="2">+angleTo()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Absolute2DPosition" data-compartment="2">+fromVector()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Absolute2DPosition" data-compartment="2">+toVector3()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="Absolute2DPosition" data-compartment="2">+clone()</text>
+
+</g>
+</g>
+</g>
+<g data-name="AbsolutePosition">
+<g fill="#eee8d5" stroke="#33322E" data-name="AbsolutePosition">
+<rect x="94.3" y="185.0" height="307.0" width="193.0" data-name="AbsolutePosition"></rect>
+<path d="M94.3 217.0 L287.3 217.0" fill="none" data-name="AbsolutePosition"></path>
+<path d="M94.3 346.0 L287.3 346.0" fill="none" data-name="AbsolutePosition"></path>
+</g>
+<g transform="translate(94.25, 185)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AbsolutePosition" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AbsolutePosition" data-compartment="0">
+<a id="..\..\src\data\position\AbsolutePosition.ts.AbsolutePosition" xlink:href="..\..\src\data\position\AbsolutePosition.ts"><text x="88.5" y="14.1" stroke="none" text-anchor="middle" data-name="AbsolutePosition" data-compartment="0">AbsolutePosition</text></a>
+
+</g>
+</g>
+<g transform="translate(94.25, 217)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AbsolutePosition" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AbsolutePosition" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="AbsolutePosition" data-compartment="1">+timestamp</text>
+<text x="0.0" y="30.3" stroke="none" data-name="AbsolutePosition" data-compartment="1">+velocity</text>
+<text x="0.0" y="46.5" stroke="none" data-name="AbsolutePosition" data-compartment="1">+orientation</text>
+<text x="0.0" y="62.7" stroke="none" data-name="AbsolutePosition" data-compartment="1">+unit</text>
+<text x="0.0" y="78.9" stroke="none" data-name="AbsolutePosition" data-compartment="1">+referenceSpaceUID</text>
+<text x="0.0" y="95.1" stroke="none" data-name="AbsolutePosition" data-compartment="1">-_accuracy</text>
+<text x="0.0" y="111.3" stroke="none" data-name="AbsolutePosition" data-compartment="1">-_probability</text>
+
+</g>
+</g>
+<g transform="translate(94.25, 346)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AbsolutePosition" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AbsolutePosition" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="AbsolutePosition" data-compartment="2">+setOrientation()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="AbsolutePosition" data-compartment="2">+setAccuracy()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="AbsolutePosition" data-compartment="2">+abstract fromVector()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="AbsolutePosition" data-compartment="2">+abstract toVector3()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="AbsolutePosition" data-compartment="2">+abstract angleTo()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="AbsolutePosition" data-compartment="2">+distanceTo()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="AbsolutePosition" data-compartment="2">+equals()</text>
+<text x="0.0" y="127.5" stroke="none" data-name="AbsolutePosition" data-compartment="2">+clone()</text>
+
+</g>
+</g>
+</g>
+<g data-name="Absolute3DPosition">
+<g fill="#eee8d5" stroke="#33322E" data-name="Absolute3DPosition">
+<rect x="7.5" y="737.0" height="105.0" width="170.0" data-name="Absolute3DPosition"></rect>
+<path d="M7.5 769.0 L177.5 769.0" fill="none" data-name="Absolute3DPosition"></path>
+<path d="M7.5 777.0 L177.5 777.0" fill="none" data-name="Absolute3DPosition"></path>
+</g>
+<g transform="translate(7.5, 737)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Absolute3DPosition" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Absolute3DPosition" data-compartment="0">
+<a id="..\..\src\data\position\Absolute3DPosition.ts.Absolute3DPosition" xlink:href="..\..\src\data\position\Absolute3DPosition.ts"><text x="77.0" y="14.1" stroke="none" text-anchor="middle" data-name="Absolute3DPosition" data-compartment="0">Absolute3DPosition</text></a>
+
+</g>
+</g>
+<g transform="translate(7.5, 769)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Absolute3DPosition" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Absolute3DPosition" data-compartment="1">
+
+</g>
+</g>
+<g transform="translate(7.5, 777)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Absolute3DPosition" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Absolute3DPosition" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="Absolute3DPosition" data-compartment="2">+fromVector()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Absolute3DPosition" data-compartment="2">+toVector3()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Absolute3DPosition" data-compartment="2">+clone()</text>
+
+</g>
+</g>
+</g>
+<g data-name="Position&lt;U&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="Position&lt;U&gt;">
+<rect x="531.8" y="0.0" height="145.0" width="111.0" data-name="Position&lt;U&gt;"></rect>
+<path d="M531.8 32.0 L642.8 32.0" fill="none" data-name="Position&lt;U&gt;"></path>
+<path d="M531.8 97.0 L642.8 97.0" fill="none" data-name="Position&lt;U&gt;"></path>
+</g>
+<g transform="translate(531.75, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Position&lt;U&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Position&lt;U&gt;" data-compartment="0">
+<a id="..\..\src\data\position\Position.ts.Position&lt;U&gt;" xlink:href="..\..\src\data\position\Position.ts"><text x="47.5" y="14.1" stroke="none" text-anchor="middle" data-name="Position&lt;U&gt;" data-compartment="0">Position&lt;U&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(531.75, 32)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Position&lt;U&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Position&lt;U&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="Position&lt;U&gt;" data-compartment="1">+timestamp</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Position&lt;U&gt;" data-compartment="1">+accuracy</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Position&lt;U&gt;" data-compartment="1">+probability</text>
+
+</g>
+</g>
+<g transform="translate(531.75, 97)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Position&lt;U&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Position&lt;U&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="Position&lt;U&gt;" data-compartment="2">+clone()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Position&lt;U&gt;" data-compartment="2">+equals()</text>
+
+</g>
+</g>
+</g>
+<g data-name="Orientation">
+<g fill="#eee8d5" stroke="#33322E" data-name="Orientation">
+<rect x="261.5" y="717.0" height="145.0" width="208.0" data-name="Orientation"></rect>
+<path d="M261.5 749.0 L469.5 749.0" fill="none" data-name="Orientation"></path>
+<path d="M261.5 797.0 L469.5 797.0" fill="none" data-name="Orientation"></path>
+</g>
+<g transform="translate(261.5, 717)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Orientation" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Orientation" data-compartment="0">
+<a id="..\..\src\data\position\Orientation.ts.Orientation" xlink:href="..\..\src\data\position\Orientation.ts"><text x="96.0" y="14.1" stroke="none" text-anchor="middle" data-name="Orientation" data-compartment="0">Orientation</text></a>
+
+</g>
+</g>
+<g transform="translate(261.5, 749)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Orientation" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Orientation" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="Orientation" data-compartment="1">+timestamp</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Orientation" data-compartment="1">+accuracy</text>
+
+</g>
+</g>
+<g transform="translate(261.5, 797)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Orientation" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Orientation" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="Orientation" data-compartment="2">+static fromBearing()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Orientation" data-compartment="2">+static fromQuaternion()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Orientation" data-compartment="2">+clone()</text>
+
+</g>
+</g>
+</g>
+<g data-name="GeographicalPosition">
+<g fill="#eee8d5" stroke="#33322E" data-name="GeographicalPosition">
+<rect x="0.0" y="902.0" height="169.0" width="185.0" data-name="GeographicalPosition"></rect>
+<path d="M0.0 934.0 L185.0 934.0" fill="none" data-name="GeographicalPosition"></path>
+<path d="M0.0 942.0 L185.0 942.0" fill="none" data-name="GeographicalPosition"></path>
+</g>
+<g transform="translate(0, 902)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GeographicalPosition" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GeographicalPosition" data-compartment="0">
+<a id="..\..\src\data\position\GeographicalPosition.ts.GeographicalPosition" xlink:href="..\..\src\data\position\GeographicalPosition.ts"><text x="84.5" y="14.1" stroke="none" text-anchor="middle" data-name="GeographicalPosition" data-compartment="0">GeographicalPosition</text></a>
+
+</g>
+</g>
+<g transform="translate(0, 934)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GeographicalPosition" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" data-name="GeographicalPosition" data-compartment="1">
+
+</g>
+</g>
+<g transform="translate(0, 942)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GeographicalPosition" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="GeographicalPosition" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="GeographicalPosition" data-compartment="2">+distanceTo()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="GeographicalPosition" data-compartment="2">+bearing()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="GeographicalPosition" data-compartment="2">+angleTo()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="GeographicalPosition" data-compartment="2">+destination()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="GeographicalPosition" data-compartment="2">+fromVector()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="GeographicalPosition" data-compartment="2">+toVector3()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="GeographicalPosition" data-compartment="2">+clone()</text>
+
+</g>
+</g>
+</g>
+<g data-name="Quaternion">
+<g fill="#eee8d5" stroke="#33322E" data-name="Quaternion">
+<rect x="315.5" y="588.5" height="32.0" width="104.0" data-name="Quaternion"></rect>
+</g>
+<g transform="translate(315.5, 588.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Quaternion" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Quaternion" data-compartment="0">
+<text x="44.0" y="14.1" stroke="none" text-anchor="middle" data-name="Quaternion" data-compartment="0">Quaternion</text>
+
+</g>
+</g>
+</g>
+<g data-name="Pose">
+<g fill="#eee8d5" stroke="#33322E" data-name="Pose">
+<rect x="407.0" y="258.0" height="161.0" width="183.0" data-name="Pose"></rect>
+<path d="M407.0 290.0 L590.0 290.0" fill="none" data-name="Pose"></path>
+<path d="M407.0 371.0 L590.0 371.0" fill="none" data-name="Pose"></path>
+</g>
+<g transform="translate(407, 258)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Pose" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Pose" data-compartment="0">
+<a id="..\..\src\data\position\Pose.ts.Pose" xlink:href="..\..\src\data\position\Pose.ts"><text x="83.5" y="14.1" stroke="none" text-anchor="middle" data-name="Pose" data-compartment="0">Pose</text></a>
+
+</g>
+</g>
+<g transform="translate(407, 290)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Pose" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Pose" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="Pose" data-compartment="1">+timestamp</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Pose" data-compartment="1">+unit</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Pose" data-compartment="1">-_accuracy</text>
+<text x="0.0" y="62.7" stroke="none" data-name="Pose" data-compartment="1">-_probability</text>
+
+</g>
+</g>
+<g transform="translate(407, 371)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Pose" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Pose" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="Pose" data-compartment="2">+static fromMatrix4()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Pose" data-compartment="2">+static fromPosition()</text>
+
+</g>
+</g>
+</g>
+<g data-name="Matrix4">
+<g fill="#eee8d5" stroke="#33322E" data-name="Matrix4">
+<rect x="316.8" y="56.5" height="32.0" width="74.0" data-name="Matrix4"></rect>
+</g>
+<g transform="translate(316.75, 56.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Matrix4" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Matrix4" data-compartment="0">
+<text x="29.0" y="14.1" stroke="none" text-anchor="middle" data-name="Matrix4" data-compartment="0">Matrix4</text>
+
+</g>
+</g>
+</g>
+<g data-name="Relative2DPosition">
+<g fill="#eee8d5" stroke="#33322E" data-name="Relative2DPosition">
+<rect x="835.5" y="552.0" height="105.0" width="165.0" data-name="Relative2DPosition"></rect>
+<path d="M835.5 584.0 L1000.5 584.0" fill="none" data-name="Relative2DPosition"></path>
+<path d="M835.5 592.0 L1000.5 592.0" fill="none" data-name="Relative2DPosition"></path>
+</g>
+<g transform="translate(835.5, 552)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Relative2DPosition" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Relative2DPosition" data-compartment="0">
+<a id="..\..\src\data\position\Relative2DPosition.ts.Relative2DPosition" xlink:href="..\..\src\data\position\Relative2DPosition.ts"><text x="74.5" y="14.1" stroke="none" text-anchor="middle" data-name="Relative2DPosition" data-compartment="0">Relative2DPosition</text></a>
+
+</g>
+</g>
+<g transform="translate(835.5, 584)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Relative2DPosition" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Relative2DPosition" data-compartment="1">
+
+</g>
+</g>
+<g transform="translate(835.5, 592)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Relative2DPosition" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Relative2DPosition" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="Relative2DPosition" data-compartment="2">+fromVector()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Relative2DPosition" data-compartment="2">+toVector3()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Relative2DPosition" data-compartment="2">+clone()</text>
+
+</g>
+</g>
+</g>
+<g data-name="RelativePosition&lt;T,U&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="RelativePosition&lt;T,U&gt;">
+<rect x="709.3" y="217.0" height="243.0" width="192.0" data-name="RelativePosition&lt;T,U&gt;"></rect>
+<path d="M709.3 249.0 L901.3 249.0" fill="none" data-name="RelativePosition&lt;T,U&gt;"></path>
+<path d="M709.3 395.0 L901.3 395.0" fill="none" data-name="RelativePosition&lt;T,U&gt;"></path>
+</g>
+<g transform="translate(709.25, 217)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RelativePosition&lt;T,U&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RelativePosition&lt;T,U&gt;" data-compartment="0">
+<a id="..\..\src\data\position\RelativePosition.ts.RelativePosition&lt;T,U&gt;" xlink:href="..\..\src\data\position\RelativePosition.ts"><text x="88.0" y="14.1" stroke="none" text-anchor="middle" data-name="RelativePosition&lt;T,U&gt;" data-compartment="0">RelativePosition&lt;T,U&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(709.25, 249)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RelativePosition&lt;T,U&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RelativePosition&lt;T,U&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="RelativePosition&lt;T,U&gt;" data-compartment="1">+timestamp</text>
+<text x="0.0" y="30.3" stroke="none" data-name="RelativePosition&lt;T,U&gt;" data-compartment="1">+referenceObjectUID</text>
+<text x="0.0" y="46.5" stroke="none" data-name="RelativePosition&lt;T,U&gt;" data-compartment="1">+referenceObjectType</text>
+<text x="0.0" y="62.7" stroke="none" data-name="RelativePosition&lt;T,U&gt;" data-compartment="1">+referenceValue</text>
+<text x="0.0" y="78.9" stroke="none" data-name="RelativePosition&lt;T,U&gt;" data-compartment="1">-_accuracy</text>
+<text x="0.0" y="95.1" stroke="none" data-name="RelativePosition&lt;T,U&gt;" data-compartment="1">-_probability</text>
+<text x="0.0" y="111.3" stroke="none" data-name="RelativePosition&lt;T,U&gt;" data-compartment="1">-_defaultUnit</text>
+<text x="0.0" y="127.5" stroke="none" data-name="RelativePosition&lt;T,U&gt;" data-compartment="1">+unit</text>
+
+</g>
+</g>
+<g transform="translate(709.25, 395)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RelativePosition&lt;T,U&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RelativePosition&lt;T,U&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="RelativePosition&lt;T,U&gt;" data-compartment="2">+setAccuracy()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="RelativePosition&lt;T,U&gt;" data-compartment="2">+equals()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="RelativePosition&lt;T,U&gt;" data-compartment="2">+clone()</text>
+
+</g>
+</g>
+</g>
+<g data-name="Relative3DPosition">
+<g fill="#eee8d5" stroke="#33322E" data-name="Relative3DPosition">
+<rect x="835.5" y="737.0" height="105.0" width="165.0" data-name="Relative3DPosition"></rect>
+<path d="M835.5 769.0 L1000.5 769.0" fill="none" data-name="Relative3DPosition"></path>
+<path d="M835.5 777.0 L1000.5 777.0" fill="none" data-name="Relative3DPosition"></path>
+</g>
+<g transform="translate(835.5, 737)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Relative3DPosition" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Relative3DPosition" data-compartment="0">
+<a id="..\..\src\data\position\Relative3DPosition.ts.Relative3DPosition" xlink:href="..\..\src\data\position\Relative3DPosition.ts"><text x="74.5" y="14.1" stroke="none" text-anchor="middle" data-name="Relative3DPosition" data-compartment="0">Relative3DPosition</text></a>
+
+</g>
+</g>
+<g transform="translate(835.5, 769)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Relative3DPosition" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Relative3DPosition" data-compartment="1">
+
+</g>
+</g>
+<g transform="translate(835.5, 777)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Relative3DPosition" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Relative3DPosition" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="Relative3DPosition" data-compartment="2">+fromVector()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Relative3DPosition" data-compartment="2">+toVector3()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Relative3DPosition" data-compartment="2">+clone()</text>
+
+</g>
+</g>
+</g>
+<g data-name="RelativeAngle">
+<g fill="#eee8d5" stroke="#33322E" data-name="RelativeAngle">
+<rect x="459.5" y="552.0" height="105.0" width="147.0" data-name="RelativeAngle"></rect>
+<path d="M459.5 584.0 L606.5 584.0" fill="none" data-name="RelativeAngle"></path>
+<path d="M459.5 649.0 L606.5 649.0" fill="none" data-name="RelativeAngle"></path>
+</g>
+<g transform="translate(459.5, 552)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RelativeAngle" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RelativeAngle" data-compartment="0">
+<a id="..\..\src\data\position\RelativeAngle.ts.RelativeAngle" xlink:href="..\..\src\data\position\RelativeAngle.ts"><text x="65.5" y="14.1" stroke="none" text-anchor="middle" data-name="RelativeAngle" data-compartment="0">RelativeAngle</text></a>
+
+</g>
+</g>
+<g transform="translate(459.5, 584)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RelativeAngle" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RelativeAngle" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="RelativeAngle" data-compartment="1">+orientation</text>
+<text x="0.0" y="30.3" stroke="none" data-name="RelativeAngle" data-compartment="1">+unit</text>
+<text x="0.0" y="46.5" stroke="none" data-name="RelativeAngle" data-compartment="1">+referenceValue</text>
+
+</g>
+</g>
+<g transform="translate(459.5, 649)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RelativeAngle" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="RelativeAngle" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="RelativeDistance">
+<g fill="#eee8d5" stroke="#33322E" data-name="RelativeDistance">
+<rect x="646.5" y="560.5" height="88.0" width="149.0" data-name="RelativeDistance"></rect>
+<path d="M646.5 592.5 L795.5 592.5" fill="none" data-name="RelativeDistance"></path>
+<path d="M646.5 640.5 L795.5 640.5" fill="none" data-name="RelativeDistance"></path>
+</g>
+<g transform="translate(646.5, 560.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RelativeDistance" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RelativeDistance" data-compartment="0">
+<a id="..\..\src\data\position\RelativeDistance.ts.RelativeDistance" xlink:href="..\..\src\data\position\RelativeDistance.ts"><text x="66.5" y="14.1" stroke="none" text-anchor="middle" data-name="RelativeDistance" data-compartment="0">RelativeDistance</text></a>
+
+</g>
+</g>
+<g transform="translate(646.5, 592.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RelativeDistance" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RelativeDistance" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="RelativeDistance" data-compartment="1">+unit</text>
+<text x="0.0" y="30.3" stroke="none" data-name="RelativeDistance" data-compartment="1">+referenceValue</text>
+
+</g>
+</g>
+<g transform="translate(646.5, 640.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RelativeDistance" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="RelativeDistance" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="Trajectory">
+<g fill="#eee8d5" stroke="#33322E" data-name="Trajectory">
+<rect x="104.8" y="12.0" height="121.0" width="172.0" data-name="Trajectory"></rect>
+<path d="M104.8 44.0 L276.8 44.0" fill="none" data-name="Trajectory"></path>
+<path d="M104.8 125.0 L276.8 125.0" fill="none" data-name="Trajectory"></path>
+</g>
+<g transform="translate(104.75, 12)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Trajectory" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Trajectory" data-compartment="0">
+<a id="..\..\src\data\position\Trajectory.ts.Trajectory" xlink:href="..\..\src\data\position\Trajectory.ts"><text x="78.0" y="14.1" stroke="none" text-anchor="middle" data-name="Trajectory" data-compartment="0">Trajectory</text></a>
+
+</g>
+</g>
+<g transform="translate(104.75, 44)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Trajectory" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Trajectory" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="Trajectory" data-compartment="1">+uid</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Trajectory" data-compartment="1">+objectUID</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Trajectory" data-compartment="1">+positions</text>
+<text x="0.0" y="62.7" stroke="none" data-name="Trajectory" data-compartment="1">+createdTimestamp</text>
+
+</g>
+</g>
+<g transform="translate(104.75, 125)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Trajectory" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Trajectory" data-compartment="2">
+
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

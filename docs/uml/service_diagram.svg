@@ -1,0 +1,820 @@
+<svg version="1.1" baseProfile="full" width="2264.3" height="1354.0" viewBox="0 0 2264.25 1354" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<desc >#.interface: fill=lightblue
+#.enumeration: fill=lightgreen
+#.type: fill=lightgray
+
+[CalibrationService&lt;T&gt;|\#node|+abstract calibrate();\#start();\#stop();\#suspend()]
+[DataObjectService&lt;T&gt;]&lt;:-[CalibrationService&lt;T&gt;]
+[DataFrameService&lt;T&gt;||+insertFrame();+findBefore();+findAfter();+findByDataObject();-_findTimestamp()]
+[DataService&lt;I,T&gt;]&lt;:-[DataFrameService&lt;T&gt;]
+[DataObjectService&lt;T&gt;||+insertObject();+insert();+findByDisplayName();+findByPosition();+findByParentUID();+findBefore();+findAfter();-_findTimestamp()]
+[DataService&lt;I,T&gt;]&lt;:-[DataObjectService&lt;T&gt;]
+[DataService&lt;I,T&gt;|\#driver;+priority|-_buildDriver();-_destroyDriver();+setPriority();+findByUID();+findOne();+findAll();+insert();+count();+delete();+deleteAll()]
+[Service]&lt;:-[DataService&lt;I,T&gt;]
+[DataServiceDriver&lt;I,T&gt;|+dataType;\#options|+abstract findByUID();+abstract findOne();+abstract findAll();+abstract count();+abstract insert();+abstract delete();+abstract deleteAll()]
+[&lt;interface&gt;DataServiceOptions&lt;T&gt;|+serialize;+deserialize;+keepChangelog|]
+[Service]&lt;:-[DataServiceDriver&lt;I,T&gt;]
+[ServiceOptions]&lt;:--[DataServiceOptions&lt;T&gt;]
+[&lt;interface&gt;QuerySelector&lt;T&gt;|+$eq;+$gt;+$gte;+$lt;+$lte;+$in;+$nin;+$elemMatch|]
+[&lt;interface&gt;RootQuerySelector&lt;T&gt;|+$and;+$or|]
+[&lt;interface&gt;FindOptions|+dataType;+limit;+sort|]
+[MemoryDataService&lt;I,T&gt;|\#_data|+findByUID();+findOne();+findAll();+insert();+delete();+count();+deleteAll()]
+[DataServiceDriver&lt;I,T&gt;]&lt;:-[MemoryDataService&lt;I,T&gt;]
+[MemoryQueryEvaluator||-static isRegexQuery();+static evaluateComponent();+static evaluate();+static getValueFromPath();\#static evaluatePath();\#static evaluateSelector();\#static evaluateComparisonSelector();\#static evaluateArraySelector();\#static evaluateOp()]
+[RemoteService|\#nodes;\#localServices;\#remoteServices;\#promises;+model|-_registerServices();\#registerPromise();\#getPromise();+localPush();+localPull();+localEvent();+localServiceCall();+abstract remotePush();+abstract remotePull();+abstract remoteEvent();+abstract remoteServiceCall();+registerNode();+registerService()]
+[RemoteServiceProxy&lt;T,S&gt;|\#options;\#service|+get();+set();+createHandler()]
+[&lt;interface&gt;RemoteServiceOptions|+uid;+service|]
+[&lt;interface&gt;RemotePullOptions|+clientId|]
+[&lt;interface&gt;RemotePushOptions|+clientId;+broadcast|]
+[Service]&lt;:-[RemoteService]
+[Service]&lt;:-[RemoteServiceProxy&lt;T,S&gt;]
+[ProxyHandler&lt;T&gt;]&lt;:--[RemoteServiceProxy&lt;T,S&gt;]
+[PullOptions]&lt;:--[RemotePullOptions]
+[PushOptions]&lt;:--[RemotePushOptions]
+[RemoteServiceProxy&lt;T,S&gt;]  -  [RemoteServiceOptions]
+[Service|+uid;-_ready;+model;+dependencies|+addDependency();\#generateUUID();+setUID();+isReady();+emit();+once();+logger()]
+[&lt;interface&gt;ServiceOptions|+uid|]
+[AsyncEventEmitter]&lt;:-[Service]
+[TrajectoryService&lt;T&gt;|+model;\#options|-_bindService();+findCurrentTrajectory();+findTrajectoryByRange();+findTrajectories();+appendPosition()]
+[&lt;interface&gt;TrajectoryServiceOptions|+dataService;+autoBind;+defaultUID|]
+[DataService&lt;I,T&gt;]&lt;:-[TrajectoryService&lt;T&gt;]
+[DataServiceOptions&lt;T&gt;]&lt;:--[TrajectoryServiceOptions]
+[TrajectoryService&lt;T&gt;]  -  [TrajectoryServiceOptions]
+[WorkerServiceProxy|\#options;-_promises|-_onOutput();+get();+createHandler()]
+[&lt;interface&gt;WorkerServiceCall|+id;+serviceUID;+method;+parameters|]
+[&lt;interface&gt;WorkerServiceResponse|+id;+success;+result|]
+[ServiceProxy&lt;S&gt;]&lt;:-[WorkerServiceProxy]</desc>
+<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
+<g stroke="transparent" fill="#ffffff">
+<rect x="0.0" y="0.0" height="1354.0" width="2264.3" stroke="none"></rect>
+</g>
+<g transform="translate(8, 8)" fill="#33322E">
+<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+<path d="M328.5 1122.8 L328.5 1133 L328.5 1153 L328.5 1153.0 " fill="none"></path>
+<path d="M333.8 1122.8 L328.5 1122.8 L323.2 1122.8 L328.5 1109.5 Z"></path>
+<path d="M343.8 753.7 L96 900 L96 948 L96.0 948.0 " fill="none"></path>
+<path d="M346.5 758.3 L343.8 753.7 L341.1 749.1 L355.3 746.9 Z"></path>
+<path d="M358.2 842.8 L328.5 900 L328.5 923.5 L328.5 923.5 " fill="none"></path>
+<path d="M362.9 845.3 L358.2 842.8 L353.4 840.4 L364.3 831.0 Z"></path>
+<path d="M974.7 384.4 L431.25 504 L431.25 573 L431.3 573.0 " fill="none"></path>
+<path d="M975.9 389.6 L974.7 384.4 L973.6 379.1 L987.8 381.5 Z"></path>
+<path d="M976.2 418.8 L830.5 504 L830.5 597.5 L830.5 597.5 " fill="none"></path>
+<path d="M978.9 423.4 L976.2 418.8 L973.5 414.2 L987.8 412.1 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M1100.3 751.3 L1100.25 900 L1100.25 964 L1100.3 964.0 " fill="none"></path>
+</g>
+<path d="M1105.6 751.3 L1100.3 751.3 L1094.9 751.3 L1100.3 738.0 Z"></path>
+<path d="M830.5 819.8 L830.5 900 L830.5 920 L830.5 920.0 " fill="none"></path>
+<path d="M835.8 819.8 L830.5 819.8 L825.2 819.8 L830.5 806.5 Z"></path>
+<path d="M1167.5 414.5 L1333.75 504 L1333.75 524 L1333.8 524.0 " fill="none"></path>
+<path d="M1170.0 409.8 L1167.5 414.5 L1165.0 419.2 L1155.8 408.2 Z"></path>
+<path d="M1168.4 395.3 L1493.25 504 L1678.8061868686868 629.5 L1678.8 629.5 " fill="none"></path>
+<path d="M1170.1 390.3 L1168.4 395.3 L1166.7 400.4 L1155.8 391.1 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M1806.0 392.3 L1806 504 L1793.3232323232323 629.5 L1793.3 629.5 " fill="none"></path>
+</g>
+<path d="M1811.3 392.3 L1806.0 392.3 L1800.7 392.3 L1806.0 379.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M1279.3 130.3 L1279.25 222 L1279.25 327 L1279.3 327.0 " fill="none"></path>
+</g>
+<path d="M1284.6 130.3 L1279.3 130.3 L1273.9 130.3 L1279.3 117.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M1491.8 130.3 L1491.75 222 L1491.75 319 L1491.8 319.0 " fill="none"></path>
+</g>
+<path d="M1497.1 130.3 L1491.8 130.3 L1486.4 130.3 L1491.8 117.0 Z"></path>
+<path d="M1786.0 774.5 L1786 900 L1786 972.5 L1786.0 972.5 " fill="none"></path>
+<path d="M1071.8 130.3 L1071.75 222 L1071.75 242 L1071.8 242.0 " fill="none"></path>
+<path d="M1077.1 130.3 L1071.8 130.3 L1066.4 130.3 L1071.8 117.0 Z"></path>
+<path d="M515.0 818.2 L574 900 L574 928 L574.0 928.0 " fill="none"></path>
+<path d="M519.4 815.1 L515.0 818.2 L510.7 821.3 L507.3 807.4 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M1100.3 1082.3 L1100.25 1133 L934.25 1189.1425959780622 L934.3 1189.1 " fill="none"></path>
+</g>
+<path d="M1105.6 1082.3 L1100.3 1082.3 L1094.9 1082.3 L1100.3 1069.0 Z"></path>
+<path d="M574.0 1105.0 L574 1133 L719.25 1186.1577645895154 L719.3 1186.2 " fill="none"></path>
+<path d="M2119.8 130.3 L2119.75 222 L2119.75 290.5 L2119.8 290.5 " fill="none"></path>
+<path d="M2125.1 130.3 L2119.8 130.3 L2114.4 130.3 L2119.8 117.0 Z"></path>
+<g data-name="CalibrationService&lt;T&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="CalibrationService&lt;T&gt;">
+<rect x="233.5" y="1153.0" height="145.0" width="190.0" data-name="CalibrationService&lt;T&gt;"></rect>
+<path d="M233.5 1185.0 L423.5 1185.0" fill="none" data-name="CalibrationService&lt;T&gt;"></path>
+<path d="M233.5 1217.0 L423.5 1217.0" fill="none" data-name="CalibrationService&lt;T&gt;"></path>
+</g>
+<g transform="translate(233.5, 1153)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CalibrationService&lt;T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CalibrationService&lt;T&gt;" data-compartment="0">
+<a id="..\..\src\service\CalibrationService.ts.CalibrationService&lt;T&gt;" xlink:href="..\..\src\service\CalibrationService.ts"><text x="87.0" y="14.1" stroke="none" text-anchor="middle" data-name="CalibrationService&lt;T&gt;" data-compartment="0">CalibrationService&lt;T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(233.5, 1185)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CalibrationService&lt;T&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CalibrationService&lt;T&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="CalibrationService&lt;T&gt;" data-compartment="1">#node</text>
+
+</g>
+</g>
+<g transform="translate(233.5, 1217)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CalibrationService&lt;T&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CalibrationService&lt;T&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="CalibrationService&lt;T&gt;" data-compartment="2">+abstract calibrate()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="CalibrationService&lt;T&gt;" data-compartment="2">#start()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="CalibrationService&lt;T&gt;" data-compartment="2">#stop()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="CalibrationService&lt;T&gt;" data-compartment="2">#suspend()</text>
+
+</g>
+</g>
+</g>
+<g data-name="DataObjectService&lt;T&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="DataObjectService&lt;T&gt;">
+<rect x="232.0" y="923.5" height="186.0" width="193.0" data-name="DataObjectService&lt;T&gt;"></rect>
+<path d="M232.0 955.5 L425.0 955.5" fill="none" data-name="DataObjectService&lt;T&gt;"></path>
+<path d="M232.0 963.5 L425.0 963.5" fill="none" data-name="DataObjectService&lt;T&gt;"></path>
+</g>
+<g transform="translate(232, 923.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DataObjectService&lt;T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DataObjectService&lt;T&gt;" data-compartment="0">
+<a id="..\..\src\service\DataObjectService.ts.DataObjectService&lt;T&gt;" xlink:href="..\..\src\service\DataObjectService.ts"><text x="88.5" y="14.1" stroke="none" text-anchor="middle" data-name="DataObjectService&lt;T&gt;" data-compartment="0">DataObjectService&lt;T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(232, 955.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataObjectService&lt;T&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" data-name="DataObjectService&lt;T&gt;" data-compartment="1">
+
+</g>
+</g>
+<g transform="translate(232, 963.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataObjectService&lt;T&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataObjectService&lt;T&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="DataObjectService&lt;T&gt;" data-compartment="2">+insertObject()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="DataObjectService&lt;T&gt;" data-compartment="2">+insert()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="DataObjectService&lt;T&gt;" data-compartment="2">+findByDisplayName()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="DataObjectService&lt;T&gt;" data-compartment="2">+findByPosition()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="DataObjectService&lt;T&gt;" data-compartment="2">+findByParentUID()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="DataObjectService&lt;T&gt;" data-compartment="2">+findBefore()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="DataObjectService&lt;T&gt;" data-compartment="2">+findAfter()</text>
+<text x="0.0" y="127.5" stroke="none" data-name="DataObjectService&lt;T&gt;" data-compartment="2">-_findTimestamp()</text>
+
+</g>
+</g>
+</g>
+<g data-name="DataFrameService&lt;T&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="DataFrameService&lt;T&gt;">
+<rect x="0.0" y="948.0" height="137.0" width="192.0" data-name="DataFrameService&lt;T&gt;"></rect>
+<path d="M0.0 980.0 L192.0 980.0" fill="none" data-name="DataFrameService&lt;T&gt;"></path>
+<path d="M0.0 988.0 L192.0 988.0" fill="none" data-name="DataFrameService&lt;T&gt;"></path>
+</g>
+<g transform="translate(0, 948)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DataFrameService&lt;T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DataFrameService&lt;T&gt;" data-compartment="0">
+<a id="..\..\src\service\DataFrameService.ts.DataFrameService&lt;T&gt;" xlink:href="..\..\src\service\DataFrameService.ts"><text x="88.0" y="14.1" stroke="none" text-anchor="middle" data-name="DataFrameService&lt;T&gt;" data-compartment="0">DataFrameService&lt;T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(0, 980)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataFrameService&lt;T&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" data-name="DataFrameService&lt;T&gt;" data-compartment="1">
+
+</g>
+</g>
+<g transform="translate(0, 988)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataFrameService&lt;T&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataFrameService&lt;T&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="DataFrameService&lt;T&gt;" data-compartment="2">+insertFrame()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="DataFrameService&lt;T&gt;" data-compartment="2">+findBefore()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="DataFrameService&lt;T&gt;" data-compartment="2">+findAfter()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="DataFrameService&lt;T&gt;" data-compartment="2">+findByDataObject()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="DataFrameService&lt;T&gt;" data-compartment="2">-_findTimestamp()</text>
+
+</g>
+</g>
+</g>
+<g data-name="DataService&lt;I,T&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="DataService&lt;I,T&gt;">
+<rect x="355.3" y="573.0" height="258.0" width="152.0" data-name="DataService&lt;I,T&gt;"></rect>
+<path d="M355.3 605.0 L507.3 605.0" fill="none" data-name="DataService&lt;I,T&gt;"></path>
+<path d="M355.3 653.0 L507.3 653.0" fill="none" data-name="DataService&lt;I,T&gt;"></path>
+</g>
+<g transform="translate(355.25, 573)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DataService&lt;I,T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DataService&lt;I,T&gt;" data-compartment="0">
+<a id="..\..\src\service\DataService.ts.DataService&lt;I,T&gt;" xlink:href="..\..\src\service\DataService.ts"><text x="68.0" y="14.1" stroke="none" text-anchor="middle" data-name="DataService&lt;I,T&gt;" data-compartment="0">DataService&lt;I,T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(355.25, 605)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataService&lt;I,T&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataService&lt;I,T&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="DataService&lt;I,T&gt;" data-compartment="1">#driver</text>
+<text x="0.0" y="30.3" stroke="none" data-name="DataService&lt;I,T&gt;" data-compartment="1">+priority</text>
+
+</g>
+</g>
+<g transform="translate(355.25, 653)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataService&lt;I,T&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataService&lt;I,T&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="DataService&lt;I,T&gt;" data-compartment="2">-_buildDriver()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="DataService&lt;I,T&gt;" data-compartment="2">-_destroyDriver()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="DataService&lt;I,T&gt;" data-compartment="2">+setPriority()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="DataService&lt;I,T&gt;" data-compartment="2">+findByUID()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="DataService&lt;I,T&gt;" data-compartment="2">+findOne()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="DataService&lt;I,T&gt;" data-compartment="2">+findAll()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="DataService&lt;I,T&gt;" data-compartment="2">+insert()</text>
+<text x="0.0" y="127.5" stroke="none" data-name="DataService&lt;I,T&gt;" data-compartment="2">+count()</text>
+<text x="0.0" y="143.7" stroke="none" data-name="DataService&lt;I,T&gt;" data-compartment="2">+delete()</text>
+<text x="0.0" y="159.9" stroke="none" data-name="DataService&lt;I,T&gt;" data-compartment="2">+deleteAll()</text>
+
+</g>
+</g>
+</g>
+<g data-name="Service">
+<g fill="#eee8d5" stroke="#33322E" data-name="Service">
+<rect x="987.8" y="242.0" height="242.0" width="168.0" data-name="Service"></rect>
+<path d="M987.8 274.0 L1155.8 274.0" fill="none" data-name="Service"></path>
+<path d="M987.8 355.0 L1155.8 355.0" fill="none" data-name="Service"></path>
+</g>
+<g transform="translate(987.75, 242)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Service" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Service" data-compartment="0">
+<a id="..\..\src\service\Service.ts.Service" xlink:href="..\..\src\service\Service.ts"><text x="76.0" y="14.1" stroke="none" text-anchor="middle" data-name="Service" data-compartment="0">Service</text></a>
+
+</g>
+</g>
+<g transform="translate(987.75, 274)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Service" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Service" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="Service" data-compartment="1">+uid</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Service" data-compartment="1">-_ready</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Service" data-compartment="1">+model</text>
+<text x="0.0" y="62.7" stroke="none" data-name="Service" data-compartment="1">+dependencies</text>
+
+</g>
+</g>
+<g transform="translate(987.75, 355)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Service" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Service" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="Service" data-compartment="2">+addDependency()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Service" data-compartment="2">#generateUUID()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Service" data-compartment="2">+setUID()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="Service" data-compartment="2">+isReady()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="Service" data-compartment="2">+emit()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="Service" data-compartment="2">+once()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="Service" data-compartment="2">+logger()</text>
+
+</g>
+</g>
+</g>
+<g data-name="DataServiceDriver&lt;I,T&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="DataServiceDriver&lt;I,T&gt;">
+<rect x="731.0" y="597.5" height="209.0" width="199.0" data-name="DataServiceDriver&lt;I,T&gt;"></rect>
+<path d="M731.0 629.5 L930.0 629.5" fill="none" data-name="DataServiceDriver&lt;I,T&gt;"></path>
+<path d="M731.0 677.5 L930.0 677.5" fill="none" data-name="DataServiceDriver&lt;I,T&gt;"></path>
+</g>
+<g transform="translate(731, 597.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="0">
+<a id="..\..\src\service\DataServiceDriver.ts.DataServiceDriver&lt;I,T&gt;" xlink:href="..\..\src\service\DataServiceDriver.ts"><text x="91.5" y="14.1" stroke="none" text-anchor="middle" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="0">DataServiceDriver&lt;I,T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(731, 629.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="1">+dataType</text>
+<text x="0.0" y="30.3" stroke="none" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="1">#options</text>
+
+</g>
+</g>
+<g transform="translate(731, 677.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="2">+abstract findByUID()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="2">+abstract findOne()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="2">+abstract findAll()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="2">+abstract count()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="2">+abstract insert()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="2">+abstract delete()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="DataServiceDriver&lt;I,T&gt;" data-compartment="2">+abstract deleteAll()</text>
+
+</g>
+</g>
+</g>
+<g data-name="DataServiceOptions&lt;T&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="DataServiceOptions&lt;T&gt;">
+<rect x="998.8" y="964.0" height="105.0" width="203.0" data-name="DataServiceOptions&lt;T&gt;"></rect>
+<path d="M998.8 996.0 L1201.8 996.0" fill="none" data-name="DataServiceOptions&lt;T&gt;"></path>
+<path d="M998.8 1061.0 L1201.8 1061.0" fill="none" data-name="DataServiceOptions&lt;T&gt;"></path>
+</g>
+<g transform="translate(998.75, 964)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataServiceOptions&lt;T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DataServiceOptions&lt;T&gt;" data-compartment="0">
+<a id="..\..\src\service\DataServiceDriver.ts.DataServiceOptions&lt;T&gt;" xlink:href="..\..\src\service\DataServiceDriver.ts"><text x="93.5" y="14.1" stroke="none" text-anchor="middle" data-name="DataServiceOptions&lt;T&gt;" data-compartment="0">DataServiceOptions&lt;T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(998.75, 996)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataServiceOptions&lt;T&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataServiceOptions&lt;T&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="DataServiceOptions&lt;T&gt;" data-compartment="1">+serialize</text>
+<text x="0.0" y="30.3" stroke="none" data-name="DataServiceOptions&lt;T&gt;" data-compartment="1">+deserialize</text>
+<text x="0.0" y="46.5" stroke="none" data-name="DataServiceOptions&lt;T&gt;" data-compartment="1">+keepChangelog</text>
+
+</g>
+</g>
+<g transform="translate(998.75, 1061)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataServiceOptions&lt;T&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="DataServiceOptions&lt;T&gt;" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="ServiceOptions">
+<g fill="lightblue" stroke="#33322E" data-name="ServiceOptions">
+<rect x="1032.3" y="666.0" height="72.0" width="136.0" data-name="ServiceOptions"></rect>
+<path d="M1032.3 698.0 L1168.3 698.0" fill="none" data-name="ServiceOptions"></path>
+<path d="M1032.3 730.0 L1168.3 730.0" fill="none" data-name="ServiceOptions"></path>
+</g>
+<g transform="translate(1032.25, 666)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ServiceOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ServiceOptions" data-compartment="0">
+<a id="..\..\src\service\Service.ts.ServiceOptions" xlink:href="..\..\src\service\Service.ts"><text x="60.0" y="14.1" stroke="none" text-anchor="middle" data-name="ServiceOptions" data-compartment="0">ServiceOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(1032.25, 698)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ServiceOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ServiceOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="ServiceOptions" data-compartment="1">+uid</text>
+
+</g>
+</g>
+<g transform="translate(1032.25, 730)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ServiceOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="ServiceOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="QuerySelector&lt;T&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="QuerySelector&lt;T&gt;">
+<rect x="50.8" y="8.0" height="186.0" width="159.0" data-name="QuerySelector&lt;T&gt;"></rect>
+<path d="M50.8 40.0 L209.8 40.0" fill="none" data-name="QuerySelector&lt;T&gt;"></path>
+<path d="M50.8 186.0 L209.8 186.0" fill="none" data-name="QuerySelector&lt;T&gt;"></path>
+</g>
+<g transform="translate(50.75, 8)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuerySelector&lt;T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuerySelector&lt;T&gt;" data-compartment="0">
+<a id="..\..\src\service\FilterQuery.ts.QuerySelector&lt;T&gt;" xlink:href="..\..\src\service\FilterQuery.ts"><text x="71.5" y="14.1" stroke="none" text-anchor="middle" data-name="QuerySelector&lt;T&gt;" data-compartment="0">QuerySelector&lt;T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(50.75, 40)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuerySelector&lt;T&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuerySelector&lt;T&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="QuerySelector&lt;T&gt;" data-compartment="1">+$eq</text>
+<text x="0.0" y="30.3" stroke="none" data-name="QuerySelector&lt;T&gt;" data-compartment="1">+$gt</text>
+<text x="0.0" y="46.5" stroke="none" data-name="QuerySelector&lt;T&gt;" data-compartment="1">+$gte</text>
+<text x="0.0" y="62.7" stroke="none" data-name="QuerySelector&lt;T&gt;" data-compartment="1">+$lt</text>
+<text x="0.0" y="78.9" stroke="none" data-name="QuerySelector&lt;T&gt;" data-compartment="1">+$lte</text>
+<text x="0.0" y="95.1" stroke="none" data-name="QuerySelector&lt;T&gt;" data-compartment="1">+$in</text>
+<text x="0.0" y="111.3" stroke="none" data-name="QuerySelector&lt;T&gt;" data-compartment="1">+$nin</text>
+<text x="0.0" y="127.5" stroke="none" data-name="QuerySelector&lt;T&gt;" data-compartment="1">+$elemMatch</text>
+
+</g>
+</g>
+<g transform="translate(50.75, 186)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuerySelector&lt;T&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="QuerySelector&lt;T&gt;" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="RootQuerySelector&lt;T&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="RootQuerySelector&lt;T&gt;">
+<rect x="249.8" y="57.0" height="88.0" width="196.0" data-name="RootQuerySelector&lt;T&gt;"></rect>
+<path d="M249.8 89.0 L445.8 89.0" fill="none" data-name="RootQuerySelector&lt;T&gt;"></path>
+<path d="M249.8 137.0 L445.8 137.0" fill="none" data-name="RootQuerySelector&lt;T&gt;"></path>
+</g>
+<g transform="translate(249.75, 57)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RootQuerySelector&lt;T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RootQuerySelector&lt;T&gt;" data-compartment="0">
+<a id="..\..\src\service\FilterQuery.ts.RootQuerySelector&lt;T&gt;" xlink:href="..\..\src\service\FilterQuery.ts"><text x="90.0" y="14.1" stroke="none" text-anchor="middle" data-name="RootQuerySelector&lt;T&gt;" data-compartment="0">RootQuerySelector&lt;T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(249.75, 89)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RootQuerySelector&lt;T&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RootQuerySelector&lt;T&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="RootQuerySelector&lt;T&gt;" data-compartment="1">+$and</text>
+<text x="0.0" y="30.3" stroke="none" data-name="RootQuerySelector&lt;T&gt;" data-compartment="1">+$or</text>
+
+</g>
+</g>
+<g transform="translate(249.75, 137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RootQuerySelector&lt;T&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="RootQuerySelector&lt;T&gt;" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="FindOptions">
+<g fill="lightblue" stroke="#33322E" data-name="FindOptions">
+<rect x="485.8" y="48.5" height="105.0" width="111.0" data-name="FindOptions"></rect>
+<path d="M485.8 80.5 L596.8 80.5" fill="none" data-name="FindOptions"></path>
+<path d="M485.8 145.5 L596.8 145.5" fill="none" data-name="FindOptions"></path>
+</g>
+<g transform="translate(485.75, 48.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FindOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FindOptions" data-compartment="0">
+<a id="..\..\src\service\FindOptions.ts.FindOptions" xlink:href="..\..\src\service\FindOptions.ts"><text x="47.5" y="14.1" stroke="none" text-anchor="middle" data-name="FindOptions" data-compartment="0">FindOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(485.75, 80.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FindOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FindOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="FindOptions" data-compartment="1">+dataType</text>
+<text x="0.0" y="30.3" stroke="none" data-name="FindOptions" data-compartment="1">+limit</text>
+<text x="0.0" y="46.5" stroke="none" data-name="FindOptions" data-compartment="1">+sort</text>
+
+</g>
+</g>
+<g transform="translate(485.75, 145.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FindOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="FindOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="MemoryDataService&lt;I,T&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="MemoryDataService&lt;I,T&gt;">
+<rect x="723.0" y="920.0" height="193.0" width="215.0" data-name="MemoryDataService&lt;I,T&gt;"></rect>
+<path d="M723.0 952.0 L938.0 952.0" fill="none" data-name="MemoryDataService&lt;I,T&gt;"></path>
+<path d="M723.0 984.0 L938.0 984.0" fill="none" data-name="MemoryDataService&lt;I,T&gt;"></path>
+</g>
+<g transform="translate(723, 920)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MemoryDataService&lt;I,T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MemoryDataService&lt;I,T&gt;" data-compartment="0">
+<a id="..\..\src\service\MemoryDataService.ts.MemoryDataService&lt;I,T&gt;" xlink:href="..\..\src\service\MemoryDataService.ts"><text x="99.5" y="14.1" stroke="none" text-anchor="middle" data-name="MemoryDataService&lt;I,T&gt;" data-compartment="0">MemoryDataService&lt;I,T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(723, 952)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MemoryDataService&lt;I,T&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MemoryDataService&lt;I,T&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="MemoryDataService&lt;I,T&gt;" data-compartment="1">#_data</text>
+
+</g>
+</g>
+<g transform="translate(723, 984)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MemoryDataService&lt;I,T&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MemoryDataService&lt;I,T&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="MemoryDataService&lt;I,T&gt;" data-compartment="2">+findByUID()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="MemoryDataService&lt;I,T&gt;" data-compartment="2">+findOne()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="MemoryDataService&lt;I,T&gt;" data-compartment="2">+findAll()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="MemoryDataService&lt;I,T&gt;" data-compartment="2">+insert()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="MemoryDataService&lt;I,T&gt;" data-compartment="2">+delete()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="MemoryDataService&lt;I,T&gt;" data-compartment="2">+count()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="MemoryDataService&lt;I,T&gt;" data-compartment="2">+deleteAll()</text>
+
+</g>
+</g>
+</g>
+<g data-name="MemoryQueryEvaluator">
+<g fill="#eee8d5" stroke="#33322E" data-name="MemoryQueryEvaluator">
+<rect x="636.8" y="0.0" height="202.0" width="313.0" data-name="MemoryQueryEvaluator"></rect>
+<path d="M636.8 32.0 L949.8 32.0" fill="none" data-name="MemoryQueryEvaluator"></path>
+<path d="M636.8 40.0 L949.8 40.0" fill="none" data-name="MemoryQueryEvaluator"></path>
+</g>
+<g transform="translate(636.75, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MemoryQueryEvaluator" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MemoryQueryEvaluator" data-compartment="0">
+<a id="..\..\src\service\MemoryQueryEvaluator.ts.MemoryQueryEvaluator" xlink:href="..\..\src\service\MemoryQueryEvaluator.ts"><text x="148.5" y="14.1" stroke="none" text-anchor="middle" data-name="MemoryQueryEvaluator" data-compartment="0">MemoryQueryEvaluator</text></a>
+
+</g>
+</g>
+<g transform="translate(636.75, 32)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MemoryQueryEvaluator" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" data-name="MemoryQueryEvaluator" data-compartment="1">
+
+</g>
+</g>
+<g transform="translate(636.75, 40)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MemoryQueryEvaluator" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MemoryQueryEvaluator" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="MemoryQueryEvaluator" data-compartment="2">-static isRegexQuery()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="MemoryQueryEvaluator" data-compartment="2">+static evaluateComponent()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="MemoryQueryEvaluator" data-compartment="2">+static evaluate()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="MemoryQueryEvaluator" data-compartment="2">+static getValueFromPath()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="MemoryQueryEvaluator" data-compartment="2">#static evaluatePath()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="MemoryQueryEvaluator" data-compartment="2">#static evaluateSelector()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="MemoryQueryEvaluator" data-compartment="2">#static evaluateComparisonSelector()</text>
+<text x="0.0" y="127.5" stroke="none" data-name="MemoryQueryEvaluator" data-compartment="2">#static evaluateArraySelector()</text>
+<text x="0.0" y="143.7" stroke="none" data-name="MemoryQueryEvaluator" data-compartment="2">#static evaluateOp()</text>
+
+</g>
+</g>
+</g>
+<g data-name="RemoteService">
+<g fill="#eee8d5" stroke="#33322E" data-name="RemoteService">
+<rect x="1208.3" y="524.0" height="356.0" width="251.0" data-name="RemoteService"></rect>
+<path d="M1208.3 556.0 L1459.3 556.0" fill="none" data-name="RemoteService"></path>
+<path d="M1208.3 653.0 L1459.3 653.0" fill="none" data-name="RemoteService"></path>
+</g>
+<g transform="translate(1208.25, 524)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RemoteService" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RemoteService" data-compartment="0">
+<a id="..\..\src\service\RemoteService.ts.RemoteService" xlink:href="..\..\src\service\RemoteService.ts"><text x="117.5" y="14.1" stroke="none" text-anchor="middle" data-name="RemoteService" data-compartment="0">RemoteService</text></a>
+
+</g>
+</g>
+<g transform="translate(1208.25, 556)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemoteService" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RemoteService" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="RemoteService" data-compartment="1">#nodes</text>
+<text x="0.0" y="30.3" stroke="none" data-name="RemoteService" data-compartment="1">#localServices</text>
+<text x="0.0" y="46.5" stroke="none" data-name="RemoteService" data-compartment="1">#remoteServices</text>
+<text x="0.0" y="62.7" stroke="none" data-name="RemoteService" data-compartment="1">#promises</text>
+<text x="0.0" y="78.9" stroke="none" data-name="RemoteService" data-compartment="1">+model</text>
+
+</g>
+</g>
+<g transform="translate(1208.25, 653)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemoteService" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RemoteService" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="RemoteService" data-compartment="2">-_registerServices()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="RemoteService" data-compartment="2">#registerPromise()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="RemoteService" data-compartment="2">#getPromise()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="RemoteService" data-compartment="2">+localPush()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="RemoteService" data-compartment="2">+localPull()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="RemoteService" data-compartment="2">+localEvent()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="RemoteService" data-compartment="2">+localServiceCall()</text>
+<text x="0.0" y="127.5" stroke="none" data-name="RemoteService" data-compartment="2">+abstract remotePush()</text>
+<text x="0.0" y="143.7" stroke="none" data-name="RemoteService" data-compartment="2">+abstract remotePull()</text>
+<text x="0.0" y="159.9" stroke="none" data-name="RemoteService" data-compartment="2">+abstract remoteEvent()</text>
+<text x="0.0" y="176.1" stroke="none" data-name="RemoteService" data-compartment="2">+abstract remoteServiceCall()</text>
+<text x="0.0" y="192.3" stroke="none" data-name="RemoteService" data-compartment="2">+registerNode()</text>
+<text x="0.0" y="208.5" stroke="none" data-name="RemoteService" data-compartment="2">+registerService()</text>
+
+</g>
+</g>
+</g>
+<g data-name="RemoteServiceProxy&lt;T,S&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="RemoteServiceProxy&lt;T,S&gt;">
+<rect x="1672.5" y="629.5" height="145.0" width="227.0" data-name="RemoteServiceProxy&lt;T,S&gt;"></rect>
+<path d="M1672.5 661.5 L1899.5 661.5" fill="none" data-name="RemoteServiceProxy&lt;T,S&gt;"></path>
+<path d="M1672.5 709.5 L1899.5 709.5" fill="none" data-name="RemoteServiceProxy&lt;T,S&gt;"></path>
+</g>
+<g transform="translate(1672.5, 629.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RemoteServiceProxy&lt;T,S&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RemoteServiceProxy&lt;T,S&gt;" data-compartment="0">
+<a id="..\..\src\service\RemoteService.ts.RemoteServiceProxy&lt;T,S&gt;" xlink:href="..\..\src\service\RemoteService.ts"><text x="105.5" y="14.1" stroke="none" text-anchor="middle" data-name="RemoteServiceProxy&lt;T,S&gt;" data-compartment="0">RemoteServiceProxy&lt;T,S&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(1672.5, 661.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemoteServiceProxy&lt;T,S&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RemoteServiceProxy&lt;T,S&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="RemoteServiceProxy&lt;T,S&gt;" data-compartment="1">#options</text>
+<text x="0.0" y="30.3" stroke="none" data-name="RemoteServiceProxy&lt;T,S&gt;" data-compartment="1">#service</text>
+
+</g>
+</g>
+<g transform="translate(1672.5, 709.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemoteServiceProxy&lt;T,S&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RemoteServiceProxy&lt;T,S&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="RemoteServiceProxy&lt;T,S&gt;" data-compartment="2">+get()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="RemoteServiceProxy&lt;T,S&gt;" data-compartment="2">+set()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="RemoteServiceProxy&lt;T,S&gt;" data-compartment="2">+createHandler()</text>
+
+</g>
+</g>
+</g>
+<g data-name="RemoteServiceOptions">
+<g fill="lightblue" stroke="#33322E" data-name="RemoteServiceOptions">
+<rect x="1687.5" y="972.5" height="88.0" width="197.0" data-name="RemoteServiceOptions"></rect>
+<path d="M1687.5 1004.5 L1884.5 1004.5" fill="none" data-name="RemoteServiceOptions"></path>
+<path d="M1687.5 1052.5 L1884.5 1052.5" fill="none" data-name="RemoteServiceOptions"></path>
+</g>
+<g transform="translate(1687.5, 972.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemoteServiceOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RemoteServiceOptions" data-compartment="0">
+<a id="..\..\src\service\RemoteService.ts.RemoteServiceOptions" xlink:href="..\..\src\service\RemoteService.ts"><text x="90.5" y="14.1" stroke="none" text-anchor="middle" data-name="RemoteServiceOptions" data-compartment="0">RemoteServiceOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(1687.5, 1004.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemoteServiceOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RemoteServiceOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="RemoteServiceOptions" data-compartment="1">+uid</text>
+<text x="0.0" y="30.3" stroke="none" data-name="RemoteServiceOptions" data-compartment="1">+service</text>
+
+</g>
+</g>
+<g transform="translate(1687.5, 1052.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemoteServiceOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="RemoteServiceOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="RemotePullOptions">
+<g fill="lightblue" stroke="#33322E" data-name="RemotePullOptions">
+<rect x="1195.8" y="327.0" height="72.0" width="167.0" data-name="RemotePullOptions"></rect>
+<path d="M1195.8 359.0 L1362.8 359.0" fill="none" data-name="RemotePullOptions"></path>
+<path d="M1195.8 391.0 L1362.8 391.0" fill="none" data-name="RemotePullOptions"></path>
+</g>
+<g transform="translate(1195.75, 327)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemotePullOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RemotePullOptions" data-compartment="0">
+<a id="..\..\src\service\RemoteService.ts.RemotePullOptions" xlink:href="..\..\src\service\RemoteService.ts"><text x="75.5" y="14.1" stroke="none" text-anchor="middle" data-name="RemotePullOptions" data-compartment="0">RemotePullOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(1195.75, 359)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemotePullOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RemotePullOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="RemotePullOptions" data-compartment="1">+clientId</text>
+
+</g>
+</g>
+<g transform="translate(1195.75, 391)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemotePullOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="RemotePullOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="RemotePushOptions">
+<g fill="lightblue" stroke="#33322E" data-name="RemotePushOptions">
+<rect x="1402.8" y="319.0" height="88.0" width="178.0" data-name="RemotePushOptions"></rect>
+<path d="M1402.8 351.0 L1580.8 351.0" fill="none" data-name="RemotePushOptions"></path>
+<path d="M1402.8 399.0 L1580.8 399.0" fill="none" data-name="RemotePushOptions"></path>
+</g>
+<g transform="translate(1402.75, 319)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemotePushOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RemotePushOptions" data-compartment="0">
+<a id="..\..\src\service\RemoteService.ts.RemotePushOptions" xlink:href="..\..\src\service\RemoteService.ts"><text x="81.0" y="14.1" stroke="none" text-anchor="middle" data-name="RemotePushOptions" data-compartment="0">RemotePushOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(1402.75, 351)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemotePushOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RemotePushOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="RemotePushOptions" data-compartment="1">+clientId</text>
+<text x="0.0" y="30.3" stroke="none" data-name="RemotePushOptions" data-compartment="1">+broadcast</text>
+
+</g>
+</g>
+<g transform="translate(1402.75, 399)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemotePushOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="RemotePushOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="ProxyHandler&lt;T&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="ProxyHandler&lt;T&gt;">
+<rect x="1729.5" y="347.0" height="32.0" width="153.0" data-name="ProxyHandler&lt;T&gt;"></rect>
+</g>
+<g transform="translate(1729.5, 347)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ProxyHandler&lt;T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ProxyHandler&lt;T&gt;" data-compartment="0">
+<text x="68.5" y="14.1" stroke="none" text-anchor="middle" data-name="ProxyHandler&lt;T&gt;" data-compartment="0">ProxyHandler&lt;T&gt;</text>
+
+</g>
+</g>
+</g>
+<g data-name="PullOptions">
+<g fill="#eee8d5" stroke="#33322E" data-name="PullOptions">
+<rect x="1226.3" y="85.0" height="32.0" width="106.0" data-name="PullOptions"></rect>
+</g>
+<g transform="translate(1226.25, 85)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PullOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PullOptions" data-compartment="0">
+<text x="45.0" y="14.1" stroke="none" text-anchor="middle" data-name="PullOptions" data-compartment="0">PullOptions</text>
+
+</g>
+</g>
+</g>
+<g data-name="PushOptions">
+<g fill="#eee8d5" stroke="#33322E" data-name="PushOptions">
+<rect x="1433.3" y="85.0" height="32.0" width="117.0" data-name="PushOptions"></rect>
+</g>
+<g transform="translate(1433.25, 85)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PushOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PushOptions" data-compartment="0">
+<text x="50.5" y="14.1" stroke="none" text-anchor="middle" data-name="PushOptions" data-compartment="0">PushOptions</text>
+
+</g>
+</g>
+</g>
+<g data-name="AsyncEventEmitter">
+<g fill="#eee8d5" stroke="#33322E" data-name="AsyncEventEmitter">
+<rect x="989.8" y="85.0" height="32.0" width="164.0" data-name="AsyncEventEmitter"></rect>
+</g>
+<g transform="translate(989.75, 85)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AsyncEventEmitter" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AsyncEventEmitter" data-compartment="0">
+<text x="74.0" y="14.1" stroke="none" text-anchor="middle" data-name="AsyncEventEmitter" data-compartment="0">AsyncEventEmitter</text>
+
+</g>
+</g>
+</g>
+<g data-name="TrajectoryService&lt;T&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="TrajectoryService&lt;T&gt;">
+<rect x="465.0" y="928.0" height="177.0" width="218.0" data-name="TrajectoryService&lt;T&gt;"></rect>
+<path d="M465.0 960.0 L683.0 960.0" fill="none" data-name="TrajectoryService&lt;T&gt;"></path>
+<path d="M465.0 1008.0 L683.0 1008.0" fill="none" data-name="TrajectoryService&lt;T&gt;"></path>
+</g>
+<g transform="translate(465, 928)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TrajectoryService&lt;T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TrajectoryService&lt;T&gt;" data-compartment="0">
+<a id="..\..\src\service\TrajectoryService.ts.TrajectoryService&lt;T&gt;" xlink:href="..\..\src\service\TrajectoryService.ts"><text x="101.0" y="14.1" stroke="none" text-anchor="middle" data-name="TrajectoryService&lt;T&gt;" data-compartment="0">TrajectoryService&lt;T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(465, 960)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TrajectoryService&lt;T&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TrajectoryService&lt;T&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="TrajectoryService&lt;T&gt;" data-compartment="1">+model</text>
+<text x="0.0" y="30.3" stroke="none" data-name="TrajectoryService&lt;T&gt;" data-compartment="1">#options</text>
+
+</g>
+</g>
+<g transform="translate(465, 1008)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TrajectoryService&lt;T&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TrajectoryService&lt;T&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="TrajectoryService&lt;T&gt;" data-compartment="2">-_bindService()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="TrajectoryService&lt;T&gt;" data-compartment="2">+findCurrentTrajectory()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="TrajectoryService&lt;T&gt;" data-compartment="2">+findTrajectoryByRange()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="TrajectoryService&lt;T&gt;" data-compartment="2">+findTrajectories()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="TrajectoryService&lt;T&gt;" data-compartment="2">+appendPosition()</text>
+
+</g>
+</g>
+</g>
+<g data-name="TrajectoryServiceOptions">
+<g fill="lightblue" stroke="#33322E" data-name="TrajectoryServiceOptions">
+<rect x="719.3" y="1173.0" height="105.0" width="215.0" data-name="TrajectoryServiceOptions"></rect>
+<path d="M719.3 1205.0 L934.3 1205.0" fill="none" data-name="TrajectoryServiceOptions"></path>
+<path d="M719.3 1270.0 L934.3 1270.0" fill="none" data-name="TrajectoryServiceOptions"></path>
+</g>
+<g transform="translate(719.25, 1173)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TrajectoryServiceOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TrajectoryServiceOptions" data-compartment="0">
+<a id="..\..\src\service\TrajectoryService.ts.TrajectoryServiceOptions" xlink:href="..\..\src\service\TrajectoryService.ts"><text x="99.5" y="14.1" stroke="none" text-anchor="middle" data-name="TrajectoryServiceOptions" data-compartment="0">TrajectoryServiceOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(719.25, 1205)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TrajectoryServiceOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TrajectoryServiceOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="TrajectoryServiceOptions" data-compartment="1">+dataService</text>
+<text x="0.0" y="30.3" stroke="none" data-name="TrajectoryServiceOptions" data-compartment="1">+autoBind</text>
+<text x="0.0" y="46.5" stroke="none" data-name="TrajectoryServiceOptions" data-compartment="1">+defaultUID</text>
+
+</g>
+</g>
+<g transform="translate(719.25, 1270)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TrajectoryServiceOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="TrajectoryServiceOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="WorkerServiceProxy">
+<g fill="#eee8d5" stroke="#33322E" data-name="WorkerServiceProxy">
+<rect x="2031.3" y="290.5" height="145.0" width="177.0" data-name="WorkerServiceProxy"></rect>
+<path d="M2031.3 322.5 L2208.3 322.5" fill="none" data-name="WorkerServiceProxy"></path>
+<path d="M2031.3 370.5 L2208.3 370.5" fill="none" data-name="WorkerServiceProxy"></path>
+</g>
+<g transform="translate(2031.25, 290.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="WorkerServiceProxy" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WorkerServiceProxy" data-compartment="0">
+<a id="..\..\src\service\WorkerServiceProxy.ts.WorkerServiceProxy" xlink:href="..\..\src\service\WorkerServiceProxy.ts"><text x="80.5" y="14.1" stroke="none" text-anchor="middle" data-name="WorkerServiceProxy" data-compartment="0">WorkerServiceProxy</text></a>
+
+</g>
+</g>
+<g transform="translate(2031.25, 322.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WorkerServiceProxy" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WorkerServiceProxy" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="WorkerServiceProxy" data-compartment="1">#options</text>
+<text x="0.0" y="30.3" stroke="none" data-name="WorkerServiceProxy" data-compartment="1">-_promises</text>
+
+</g>
+</g>
+<g transform="translate(2031.25, 370.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WorkerServiceProxy" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WorkerServiceProxy" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="WorkerServiceProxy" data-compartment="2">-_onOutput()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="WorkerServiceProxy" data-compartment="2">+get()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="WorkerServiceProxy" data-compartment="2">+createHandler()</text>
+
+</g>
+</g>
+</g>
+<g data-name="WorkerServiceCall">
+<g fill="lightblue" stroke="#33322E" data-name="WorkerServiceCall">
+<rect x="1590.3" y="40.5" height="121.0" width="162.0" data-name="WorkerServiceCall"></rect>
+<path d="M1590.3 72.5 L1752.3 72.5" fill="none" data-name="WorkerServiceCall"></path>
+<path d="M1590.3 153.5 L1752.3 153.5" fill="none" data-name="WorkerServiceCall"></path>
+</g>
+<g transform="translate(1590.25, 40.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WorkerServiceCall" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WorkerServiceCall" data-compartment="0">
+<a id="..\..\src\service\WorkerServiceProxy.ts.WorkerServiceCall" xlink:href="..\..\src\service\WorkerServiceProxy.ts"><text x="73.0" y="14.1" stroke="none" text-anchor="middle" data-name="WorkerServiceCall" data-compartment="0">WorkerServiceCall</text></a>
+
+</g>
+</g>
+<g transform="translate(1590.25, 72.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WorkerServiceCall" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WorkerServiceCall" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="WorkerServiceCall" data-compartment="1">+id</text>
+<text x="0.0" y="30.3" stroke="none" data-name="WorkerServiceCall" data-compartment="1">+serviceUID</text>
+<text x="0.0" y="46.5" stroke="none" data-name="WorkerServiceCall" data-compartment="1">+method</text>
+<text x="0.0" y="62.7" stroke="none" data-name="WorkerServiceCall" data-compartment="1">+parameters</text>
+
+</g>
+</g>
+<g transform="translate(1590.25, 153.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WorkerServiceCall" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="WorkerServiceCall" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="WorkerServiceResponse">
+<g fill="lightblue" stroke="#33322E" data-name="WorkerServiceResponse">
+<rect x="1792.3" y="48.5" height="105.0" width="212.0" data-name="WorkerServiceResponse"></rect>
+<path d="M1792.3 80.5 L2004.3 80.5" fill="none" data-name="WorkerServiceResponse"></path>
+<path d="M1792.3 145.5 L2004.3 145.5" fill="none" data-name="WorkerServiceResponse"></path>
+</g>
+<g transform="translate(1792.25, 48.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WorkerServiceResponse" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WorkerServiceResponse" data-compartment="0">
+<a id="..\..\src\service\WorkerServiceProxy.ts.WorkerServiceResponse" xlink:href="..\..\src\service\WorkerServiceProxy.ts"><text x="98.0" y="14.1" stroke="none" text-anchor="middle" data-name="WorkerServiceResponse" data-compartment="0">WorkerServiceResponse</text></a>
+
+</g>
+</g>
+<g transform="translate(1792.25, 80.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WorkerServiceResponse" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WorkerServiceResponse" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="WorkerServiceResponse" data-compartment="1">+id</text>
+<text x="0.0" y="30.3" stroke="none" data-name="WorkerServiceResponse" data-compartment="1">+success</text>
+<text x="0.0" y="46.5" stroke="none" data-name="WorkerServiceResponse" data-compartment="1">+result</text>
+
+</g>
+</g>
+<g transform="translate(1792.25, 145.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WorkerServiceResponse" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="WorkerServiceResponse" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="ServiceProxy&lt;S&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="ServiceProxy&lt;S&gt;">
+<rect x="2044.3" y="85.0" height="32.0" width="151.0" data-name="ServiceProxy&lt;S&gt;"></rect>
+</g>
+<g transform="translate(2044.25, 85)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ServiceProxy&lt;S&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ServiceProxy&lt;S&gt;" data-compartment="0">
+<text x="67.5" y="14.1" stroke="none" text-anchor="middle" data-name="ServiceProxy&lt;S&gt;" data-compartment="0">ServiceProxy&lt;S&gt;</text>
+
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

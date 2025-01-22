@@ -1,0 +1,8 @@
+{
+    "glob": "./src/data/position/!(RelativeAngularVelocity|RelativeLinearVelocity|RelativeOrientation).ts",
+    "memberAssociations": true,
+    "outMermaidDsl": "./docs/uml/position_mermaid.dsl",
+    "outFile": "./docs/uml/position_diagram.svg",
+    "exportedTypesOnly": true,
+    "propertyTypes": false
+}

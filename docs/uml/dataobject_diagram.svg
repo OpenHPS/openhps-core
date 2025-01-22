@@ -1,0 +1,273 @@
+<svg version="1.1" baseProfile="full" width="1303.0" height="758.0" viewBox="0 0 1303 758" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<desc >#.interface: fill=lightblue
+#.enumeration: fill=lightgreen
+#.type: fill=lightgray
+
+[ActuatorProperty|+name;+callback|]
+[ActuatorObject|\#properties|+invoke()]
+[DataObject]&lt;:-[ActuatorObject]
+[DataObject|+displayName;+createdTimestamp;+uid;-_position;-_relativePositions;+parentUID|+getPosition();+setPosition();+setUID();+setParent();+removeRelativePositions();+addRelativePosition();+getRelativePositions();+getRelativePosition();+hasRelativePosition();+bind();+clone()]
+[SensorCalibrationData&lt;T&gt;|+unit;+offset;+multiplier|]
+[SensorObject&lt;T&gt;|+value;+frequency;+calibrationData|]
+[DataObject]&lt;:-[SensorObject&lt;T&gt;]
+[ReferenceSpace|-_translationMatrix;-_transformationMatrix;-_scaleMatrix;-_rotation;-_unit;-_parent|+static fromDataObject();+update();+orthographic();+perspective();+reset();+referenceUnit();+translation();+scale();+rotation();+transform()]
+[DataObject]&lt;:-[ReferenceSpace]
+[TransformationSpace]&lt;:--[ReferenceSpace]
+[&lt;interface&gt;TransformationSpace|+uid;+parent|+update();+transform()]
+[&lt;interface&gt;SpaceTransformationOptions|+inverse|]
+[TransformationSpace]  -  [TransformationSpace]</desc>
+<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
+<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
+<g stroke="transparent" fill="#ffffff">
+<rect x="0.0" y="0.0" height="758.0" width="1303.0" stroke="none"></rect>
+</g>
+<g transform="translate(8, 8)" fill="#33322E">
+<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+<path d="M179.7 299.7 L122.5 359 L122.5 492.5 L122.5 492.5 " fill="none"></path>
+<path d="M183.6 303.4 L179.7 299.7 L175.9 296.0 L189.0 290.1 Z"></path>
+<path d="M305.5 352.3 L305.5 359 L305.5 488 L305.5 488.0 " fill="none"></path>
+<path d="M310.8 352.3 L305.5 352.3 L300.2 352.3 L305.5 339.0 Z"></path>
+<path d="M432.7 263.5 L562 359 L694.5 460.6860465116279 L694.5 460.7 " fill="none"></path>
+<path d="M435.9 259.2 L432.7 263.5 L429.6 267.8 L422.0 255.6 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M818.5 246.8 L818.5 359 L816.2961432506887 379 L816.3 379.0 " fill="none"></path>
+</g>
+<path d="M823.8 246.8 L818.5 246.8 L813.2 246.8 L818.5 233.5 Z"></path>
+<path d="M911.0 121.2 L941 105.5 L948.5 105.5 L948.5 105.5 L956 169.5 L956 169.5 L948.5 233.5 L948.5 233.5 L941 233.5 L941 233.5 L911 217.82653061224488 L911.0 217.8 " fill="none"></path>
+<g data-name="ActuatorProperty">
+<g fill="#eee8d5" stroke="#33322E" data-name="ActuatorProperty">
+<rect x="0.0" y="125.5" height="88.0" width="149.0" data-name="ActuatorProperty"></rect>
+<path d="M0.0 157.5 L149.0 157.5" fill="none" data-name="ActuatorProperty"></path>
+<path d="M0.0 205.5 L149.0 205.5" fill="none" data-name="ActuatorProperty"></path>
+</g>
+<g transform="translate(0, 125.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ActuatorProperty" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ActuatorProperty" data-compartment="0">
+<a id="..\..\src\data\object\ActuatorObject.ts.ActuatorProperty" xlink:href="..\..\src\data\object\ActuatorObject.ts"><text x="66.5" y="14.1" stroke="none" text-anchor="middle" data-name="ActuatorProperty" data-compartment="0">ActuatorProperty</text></a>
+
+</g>
+</g>
+<g transform="translate(0, 157.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ActuatorProperty" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ActuatorProperty" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="ActuatorProperty" data-compartment="1">+name</text>
+<text x="0.0" y="30.3" stroke="none" data-name="ActuatorProperty" data-compartment="1">+callback</text>
+
+</g>
+</g>
+<g transform="translate(0, 205.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ActuatorProperty" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="ActuatorProperty" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="ActuatorObject">
+<g fill="#eee8d5" stroke="#33322E" data-name="ActuatorObject">
+<rect x="56.0" y="492.5" height="96.0" width="133.0" data-name="ActuatorObject"></rect>
+<path d="M56.0 524.5 L189.0 524.5" fill="none" data-name="ActuatorObject"></path>
+<path d="M56.0 556.5 L189.0 556.5" fill="none" data-name="ActuatorObject"></path>
+</g>
+<g transform="translate(56, 492.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ActuatorObject" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ActuatorObject" data-compartment="0">
+<a id="..\..\src\data\object\ActuatorObject.ts.ActuatorObject" xlink:href="..\..\src\data\object\ActuatorObject.ts"><text x="58.5" y="14.1" stroke="none" text-anchor="middle" data-name="ActuatorObject" data-compartment="0">ActuatorObject</text></a>
+
+</g>
+</g>
+<g transform="translate(56, 524.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ActuatorObject" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ActuatorObject" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="ActuatorObject" data-compartment="1">#properties</text>
+
+</g>
+</g>
+<g transform="translate(56, 556.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ActuatorObject" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ActuatorObject" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="ActuatorObject" data-compartment="2">+invoke()</text>
+
+</g>
+</g>
+</g>
+<g data-name="DataObject">
+<g fill="#eee8d5" stroke="#33322E" data-name="DataObject">
+<rect x="189.0" y="0.0" height="339.0" width="233.0" data-name="DataObject"></rect>
+<path d="M189.0 32.0 L422.0 32.0" fill="none" data-name="DataObject"></path>
+<path d="M189.0 145.0 L422.0 145.0" fill="none" data-name="DataObject"></path>
+</g>
+<g transform="translate(189, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DataObject" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DataObject" data-compartment="0">
+<a id="..\..\src\data\object\DataObject.ts.DataObject" xlink:href="..\..\src\data\object\DataObject.ts"><text x="108.5" y="14.1" stroke="none" text-anchor="middle" data-name="DataObject" data-compartment="0">DataObject</text></a>
+
+</g>
+</g>
+<g transform="translate(189, 32)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataObject" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataObject" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="DataObject" data-compartment="1">+displayName</text>
+<text x="0.0" y="30.3" stroke="none" data-name="DataObject" data-compartment="1">+createdTimestamp</text>
+<text x="0.0" y="46.5" stroke="none" data-name="DataObject" data-compartment="1">+uid</text>
+<text x="0.0" y="62.7" stroke="none" data-name="DataObject" data-compartment="1">-_position</text>
+<text x="0.0" y="78.9" stroke="none" data-name="DataObject" data-compartment="1">-_relativePositions</text>
+<text x="0.0" y="95.1" stroke="none" data-name="DataObject" data-compartment="1">+parentUID</text>
+
+</g>
+</g>
+<g transform="translate(189, 145)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataObject" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataObject" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="DataObject" data-compartment="2">+getPosition()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="DataObject" data-compartment="2">+setPosition()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="DataObject" data-compartment="2">+setUID()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="DataObject" data-compartment="2">+setParent()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="DataObject" data-compartment="2">+removeRelativePositions()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="DataObject" data-compartment="2">+addRelativePosition()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="DataObject" data-compartment="2">+getRelativePositions()</text>
+<text x="0.0" y="127.5" stroke="none" data-name="DataObject" data-compartment="2">+getRelativePosition()</text>
+<text x="0.0" y="143.7" stroke="none" data-name="DataObject" data-compartment="2">+hasRelativePosition()</text>
+<text x="0.0" y="159.9" stroke="none" data-name="DataObject" data-compartment="2">+bind()</text>
+<text x="0.0" y="176.1" stroke="none" data-name="DataObject" data-compartment="2">+clone()</text>
+
+</g>
+</g>
+</g>
+<g data-name="SensorCalibrationData&lt;T&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="SensorCalibrationData&lt;T&gt;">
+<rect x="462.0" y="117.0" height="105.0" width="224.0" data-name="SensorCalibrationData&lt;T&gt;"></rect>
+<path d="M462.0 149.0 L686.0 149.0" fill="none" data-name="SensorCalibrationData&lt;T&gt;"></path>
+<path d="M462.0 214.0 L686.0 214.0" fill="none" data-name="SensorCalibrationData&lt;T&gt;"></path>
+</g>
+<g transform="translate(462, 117)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="0">
+<a id="..\..\src\data\object\SensorObject.ts.SensorCalibrationData&lt;T&gt;" xlink:href="..\..\src\data\object\SensorObject.ts"><text x="104.0" y="14.1" stroke="none" text-anchor="middle" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="0">SensorCalibrationData&lt;T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(462, 149)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="1">+unit</text>
+<text x="0.0" y="30.3" stroke="none" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="1">+offset</text>
+<text x="0.0" y="46.5" stroke="none" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="1">+multiplier</text>
+
+</g>
+</g>
+<g transform="translate(462, 214)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SensorCalibrationData&lt;T&gt;" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="SensorObject&lt;T&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="SensorObject&lt;T&gt;">
+<rect x="229.0" y="488.0" height="105.0" width="153.0" data-name="SensorObject&lt;T&gt;"></rect>
+<path d="M229.0 520.0 L382.0 520.0" fill="none" data-name="SensorObject&lt;T&gt;"></path>
+<path d="M229.0 585.0 L382.0 585.0" fill="none" data-name="SensorObject&lt;T&gt;"></path>
+</g>
+<g transform="translate(229, 488)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SensorObject&lt;T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SensorObject&lt;T&gt;" data-compartment="0">
+<a id="..\..\src\data\object\SensorObject.ts.SensorObject&lt;T&gt;" xlink:href="..\..\src\data\object\SensorObject.ts"><text x="68.5" y="14.1" stroke="none" text-anchor="middle" data-name="SensorObject&lt;T&gt;" data-compartment="0">SensorObject&lt;T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(229, 520)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorObject&lt;T&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SensorObject&lt;T&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="SensorObject&lt;T&gt;" data-compartment="1">+value</text>
+<text x="0.0" y="30.3" stroke="none" data-name="SensorObject&lt;T&gt;" data-compartment="1">+frequency</text>
+<text x="0.0" y="46.5" stroke="none" data-name="SensorObject&lt;T&gt;" data-compartment="1">+calibrationData</text>
+
+</g>
+</g>
+<g transform="translate(229, 585)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorObject&lt;T&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SensorObject&lt;T&gt;" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="ReferenceSpace">
+<g fill="#eee8d5" stroke="#33322E" data-name="ReferenceSpace">
+<rect x="694.5" y="379.0" height="323.0" width="208.0" data-name="ReferenceSpace"></rect>
+<path d="M694.5 411.0 L902.5 411.0" fill="none" data-name="ReferenceSpace"></path>
+<path d="M694.5 524.0 L902.5 524.0" fill="none" data-name="ReferenceSpace"></path>
+</g>
+<g transform="translate(694.5, 379)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReferenceSpace" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReferenceSpace" data-compartment="0">
+<a id="..\..\src\data\object\space\ReferenceSpace.ts.ReferenceSpace" xlink:href="..\..\src\data\object\space\ReferenceSpace.ts"><text x="96.0" y="14.1" stroke="none" text-anchor="middle" data-name="ReferenceSpace" data-compartment="0">ReferenceSpace</text></a>
+
+</g>
+</g>
+<g transform="translate(694.5, 411)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReferenceSpace" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReferenceSpace" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="ReferenceSpace" data-compartment="1">-_translationMatrix</text>
+<text x="0.0" y="30.3" stroke="none" data-name="ReferenceSpace" data-compartment="1">-_transformationMatrix</text>
+<text x="0.0" y="46.5" stroke="none" data-name="ReferenceSpace" data-compartment="1">-_scaleMatrix</text>
+<text x="0.0" y="62.7" stroke="none" data-name="ReferenceSpace" data-compartment="1">-_rotation</text>
+<text x="0.0" y="78.9" stroke="none" data-name="ReferenceSpace" data-compartment="1">-_unit</text>
+<text x="0.0" y="95.1" stroke="none" data-name="ReferenceSpace" data-compartment="1">-_parent</text>
+
+</g>
+</g>
+<g transform="translate(694.5, 524)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReferenceSpace" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReferenceSpace" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="ReferenceSpace" data-compartment="2">+static fromDataObject()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="ReferenceSpace" data-compartment="2">+update()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="ReferenceSpace" data-compartment="2">+orthographic()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="ReferenceSpace" data-compartment="2">+perspective()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="ReferenceSpace" data-compartment="2">+reset()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="ReferenceSpace" data-compartment="2">+referenceUnit()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="ReferenceSpace" data-compartment="2">+translation()</text>
+<text x="0.0" y="127.5" stroke="none" data-name="ReferenceSpace" data-compartment="2">+scale()</text>
+<text x="0.0" y="143.7" stroke="none" data-name="ReferenceSpace" data-compartment="2">+rotation()</text>
+<text x="0.0" y="159.9" stroke="none" data-name="ReferenceSpace" data-compartment="2">+transform()</text>
+
+</g>
+</g>
+</g>
+<g data-name="TransformationSpace">
+<g fill="lightblue" stroke="#33322E" data-name="TransformationSpace">
+<rect x="726.0" y="105.5" height="128.0" width="185.0" data-name="TransformationSpace"></rect>
+<path d="M726.0 137.5 L911.0 137.5" fill="none" data-name="TransformationSpace"></path>
+<path d="M726.0 185.5 L911.0 185.5" fill="none" data-name="TransformationSpace"></path>
+</g>
+<g transform="translate(726, 105.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TransformationSpace" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TransformationSpace" data-compartment="0">
+<a id="..\..\src\data\object\space\TransformationSpace.ts.TransformationSpace" xlink:href="..\..\src\data\object\space\TransformationSpace.ts"><text x="84.5" y="14.1" stroke="none" text-anchor="middle" data-name="TransformationSpace" data-compartment="0">TransformationSpace</text></a>
+
+</g>
+</g>
+<g transform="translate(726, 137.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TransformationSpace" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TransformationSpace" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="TransformationSpace" data-compartment="1">+uid</text>
+<text x="0.0" y="30.3" stroke="none" data-name="TransformationSpace" data-compartment="1">+parent</text>
+
+</g>
+</g>
+<g transform="translate(726, 185.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TransformationSpace" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TransformationSpace" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="TransformationSpace" data-compartment="2">+update()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="TransformationSpace" data-compartment="2">+transform()</text>
+
+</g>
+</g>
+</g>
+<g data-name="SpaceTransformationOptions">
+<g fill="lightblue" stroke="#33322E" data-name="SpaceTransformationOptions">
+<rect x="1001.0" y="133.5" height="72.0" width="246.0" data-name="SpaceTransformationOptions"></rect>
+<path d="M1001.0 165.5 L1247.0 165.5" fill="none" data-name="SpaceTransformationOptions"></path>
+<path d="M1001.0 197.5 L1247.0 197.5" fill="none" data-name="SpaceTransformationOptions"></path>
+</g>
+<g transform="translate(1001, 133.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpaceTransformationOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SpaceTransformationOptions" data-compartment="0">
+<a id="..\..\src\data\object\space\TransformationSpace.ts.SpaceTransformationOptions" xlink:href="..\..\src\data\object\space\TransformationSpace.ts"><text x="115.0" y="14.1" stroke="none" text-anchor="middle" data-name="SpaceTransformationOptions" data-compartment="0">SpaceTransformationOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(1001, 165.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpaceTransformationOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SpaceTransformationOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="SpaceTransformationOptions" data-compartment="1">+inverse</text>
+
+</g>
+</g>
+<g transform="translate(1001, 197.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpaceTransformationOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SpaceTransformationOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

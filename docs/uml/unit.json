@@ -1,0 +1,8 @@
+{
+    "glob": "./src/utils/unit/(Unit|DerivedUnit|GCS|UnitDefinition|UnitOptions|UnitPrefix|UnitValue).ts",
+    "memberAssociations": true,
+    "outMermaidDsl": "./docs/uml/unit_mermaid.dsl",
+    "outFile": "./docs/uml/unit_diagram.svg",
+    "exportedTypesOnly": true,
+    "propertyTypes": false
+}

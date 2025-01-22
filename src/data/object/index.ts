@@ -3,4 +3,4 @@ export * from './space';
 export * from './SensorObject';
 export * from './sensors';
 
-export * from './ActuatableObject';
+export * from './ActuatorObject';

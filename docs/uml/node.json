@@ -1,0 +1,8 @@
+{
+    "glob": "./src/nodes/*.ts",
+    "memberAssociations": true,
+    "outMermaidDsl": "./docs/uml/nodes_mermaid.dsl",
+    "outFile": "./docs/uml/nodes_diagram.svg",
+    "exportedTypesOnly": true,
+    "propertyTypes": false
+}

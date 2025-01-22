@@ -1,0 +1,302 @@
+<svg version="1.1" baseProfile="full" width="1278.0" height="727.0" viewBox="0 0 1278 727" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<desc >#.interface: fill=lightblue
+#.enumeration: fill=lightgreen
+#.type: fill=lightgray
+
+[DerivedUnit|-_units;-_unitPower|+addUnit();+swap()]
+[Unit]&lt;:-[DerivedUnit]
+[GCS|+static EARTH_RADIUS_MEAN;+static EARTH_EQUATORIAL_RADIUS;+static EARTH_POLAR_RADIUS;+static EARTH_ECCENTRICITY;+static EPSG4326;+static WGS84;+static ECEF;+static EPSG3857|]
+[Unit]&lt;:-[GCS]
+[GCS]  -  [GCS]
+[Unit|-_name;-_baseName;-_definitions;-_prefixType;-_aliases;\#static UNIT_BASES;\#static UNITS;+static UNKNOWN|+static fromJSON();-_initDefinition();-_initFunctionDefinition();-_initBasicDefinition();+createBaseDefinition();+createDefinition();+specifier();\#findByName();+static findByName();+convert();+static convert();+static registerUnit()]
+[Unit]  -  [Unit]
+[&lt;type&gt;UnitBasicDefinition|+unit;+magnitude;+offset|]
+[&lt;type&gt;UnitFunctionDefinition&lt;In,Out&gt;|+inputType;+outputType;+unit;+toUnit;+fromUnit|]
+[&lt;interface&gt;UnitOptions|+baseName;+name;+definitions;+aliases;+prefixes;+override|]
+[UnitOptions]  - 0..* [UnitBasicDefinition]
+[UnitPrefix|+static DECA;+static HECTO;+static KILO;+static MEGA;+static GIGA;+static TERA;+static PETA;+static EXA;+static ZETTA;+static YOTTA;+static DECI;+static CENTI;+static MILLI;+static MICRO;+static NANO;+static PICO;+static FEMTO;+static ATTO;+static ZEPTO;+static YOCTO;+static DECIMAL;+name;+abbrevation;+magnitude|]
+[UnitPrefix] 0..* -  [UnitPrefix]
+[UnitValue&lt;U,T&gt;|\#_value;\#_unit|+to();+toString();+valueOf();+setValue();+clone()]</desc>
+<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
+<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
+<g stroke="transparent" fill="#ffffff">
+<rect x="0.0" y="0.0" height="727.0" width="1278.0" stroke="none"></rect>
+</g>
+<g transform="translate(8, 8)" fill="#33322E">
+<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+<path d="M74.3 428.3 L55 465 L55 514 L55.0 514.0 " fill="none"></path>
+<path d="M79.0 430.8 L74.3 428.3 L69.6 425.8 L80.5 416.5 Z"></path>
+<path d="M290.7 428.3 L310 465 L310 485 L310.0 485.0 " fill="none"></path>
+<path d="M295.4 425.8 L290.7 428.3 L286.0 430.8 L284.5 416.5 Z"></path>
+<path d="M470.0 499.7 L500 485 L507.5 485 L507.5 485 L515 578 L515 578 L507.5 671 L507.5 671 L500 671 L500 671 L470 656.3157894736842 L470.0 656.3 " fill="none"></path>
+<path d="M287.0 85.4 L330.33333333333337 28.5 L341.16666666666663 28.5 L341.16666666666663 28.5 L352 222.5 L352 222.5 L341.16666666666663 416.5 L341.16666666666663 416.5 L330.33333333333337 416.5 L330.33333333333337 416.5 L287 359.6341600901916 L287.0 359.6 " fill="none"></path>
+<text x="714.5" y="517.5" stroke="none">0..*</text>
+<path d="M749.5 299.0 L749.5 465 L749.5 525.5 L749.5 525.5 " fill="none"></path>
+<text x="958.0" y="56.2" stroke="none">0..*</text>
+<path d="M993.0 64.2 L1023 0 L1030.5 0 L1030.5 0 L1038 222.5 L1038 222.5 L1030.5 445 L1030.5 445 L1023 445 L1023 445 L993 380.8173076923077 L993.0 380.8 " fill="none"></path>
+<g data-name="DerivedUnit">
+<g fill="#eee8d5" stroke="#33322E" data-name="DerivedUnit">
+<rect x="0.0" y="514.0" height="128.0" width="110.0" data-name="DerivedUnit"></rect>
+<path d="M0.0 546.0 L110.0 546.0" fill="none" data-name="DerivedUnit"></path>
+<path d="M0.0 594.0 L110.0 594.0" fill="none" data-name="DerivedUnit"></path>
+</g>
+<g transform="translate(0, 514)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DerivedUnit" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DerivedUnit" data-compartment="0">
+<a id="..\..\src\utils\unit\DerivedUnit.ts.DerivedUnit" xlink:href="..\..\src\utils\unit\DerivedUnit.ts"><text x="47.0" y="14.1" stroke="none" text-anchor="middle" data-name="DerivedUnit" data-compartment="0">DerivedUnit</text></a>
+
+</g>
+</g>
+<g transform="translate(0, 546)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DerivedUnit" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DerivedUnit" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="DerivedUnit" data-compartment="1">-_units</text>
+<text x="0.0" y="30.3" stroke="none" data-name="DerivedUnit" data-compartment="1">-_unitPower</text>
+
+</g>
+</g>
+<g transform="translate(0, 594)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DerivedUnit" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DerivedUnit" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="DerivedUnit" data-compartment="2">+addUnit()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="DerivedUnit" data-compartment="2">+swap()</text>
+
+</g>
+</g>
+</g>
+<g data-name="Unit">
+<g fill="#eee8d5" stroke="#33322E" data-name="Unit">
+<rect x="78.0" y="28.5" height="388.0" width="209.0" data-name="Unit"></rect>
+<path d="M78.0 60.5 L287.0 60.5" fill="none" data-name="Unit"></path>
+<path d="M78.0 206.5 L287.0 206.5" fill="none" data-name="Unit"></path>
+</g>
+<g transform="translate(78, 28.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Unit" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Unit" data-compartment="0">
+<a id="..\..\src\utils\unit\Unit.ts.Unit" xlink:href="..\..\src\utils\unit\Unit.ts"><text x="96.5" y="14.1" stroke="none" text-anchor="middle" data-name="Unit" data-compartment="0">Unit</text></a>
+
+</g>
+</g>
+<g transform="translate(78, 60.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Unit" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Unit" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="Unit" data-compartment="1">-_name</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Unit" data-compartment="1">-_baseName</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Unit" data-compartment="1">-_definitions</text>
+<text x="0.0" y="62.7" stroke="none" data-name="Unit" data-compartment="1">-_prefixType</text>
+<text x="0.0" y="78.9" stroke="none" data-name="Unit" data-compartment="1">-_aliases</text>
+<text x="0.0" y="95.1" stroke="none" data-name="Unit" data-compartment="1">#static UNIT_BASES</text>
+<text x="0.0" y="111.3" stroke="none" data-name="Unit" data-compartment="1">#static UNITS</text>
+<text x="0.0" y="127.5" stroke="none" data-name="Unit" data-compartment="1">+static UNKNOWN</text>
+
+</g>
+</g>
+<g transform="translate(78, 206.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Unit" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Unit" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="Unit" data-compartment="2">+static fromJSON()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Unit" data-compartment="2">-_initDefinition()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Unit" data-compartment="2">-_initFunctionDefinition()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="Unit" data-compartment="2">-_initBasicDefinition()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="Unit" data-compartment="2">+createBaseDefinition()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="Unit" data-compartment="2">+createDefinition()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="Unit" data-compartment="2">+specifier()</text>
+<text x="0.0" y="127.5" stroke="none" data-name="Unit" data-compartment="2">#findByName()</text>
+<text x="0.0" y="143.7" stroke="none" data-name="Unit" data-compartment="2">+static findByName()</text>
+<text x="0.0" y="159.9" stroke="none" data-name="Unit" data-compartment="2">+convert()</text>
+<text x="0.0" y="176.1" stroke="none" data-name="Unit" data-compartment="2">+static convert()</text>
+<text x="0.0" y="192.3" stroke="none" data-name="Unit" data-compartment="2">+static registerUnit()</text>
+
+</g>
+</g>
+</g>
+<g data-name="GCS">
+<g fill="#eee8d5" stroke="#33322E" data-name="GCS">
+<rect x="150.0" y="485.0" height="186.0" width="320.0" data-name="GCS"></rect>
+<path d="M150.0 517.0 L470.0 517.0" fill="none" data-name="GCS"></path>
+<path d="M150.0 663.0 L470.0 663.0" fill="none" data-name="GCS"></path>
+</g>
+<g transform="translate(150, 485)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GCS" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GCS" data-compartment="0">
+<a id="..\..\src\utils\unit\GCS.ts.GCS" xlink:href="..\..\src\utils\unit\GCS.ts"><text x="152.0" y="14.1" stroke="none" text-anchor="middle" data-name="GCS" data-compartment="0">GCS</text></a>
+
+</g>
+</g>
+<g transform="translate(150, 517)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GCS" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="GCS" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="GCS" data-compartment="1">+static EARTH_RADIUS_MEAN</text>
+<text x="0.0" y="30.3" stroke="none" data-name="GCS" data-compartment="1">+static EARTH_EQUATORIAL_RADIUS</text>
+<text x="0.0" y="46.5" stroke="none" data-name="GCS" data-compartment="1">+static EARTH_POLAR_RADIUS</text>
+<text x="0.0" y="62.7" stroke="none" data-name="GCS" data-compartment="1">+static EARTH_ECCENTRICITY</text>
+<text x="0.0" y="78.9" stroke="none" data-name="GCS" data-compartment="1">+static EPSG4326</text>
+<text x="0.0" y="95.1" stroke="none" data-name="GCS" data-compartment="1">+static WGS84</text>
+<text x="0.0" y="111.3" stroke="none" data-name="GCS" data-compartment="1">+static ECEF</text>
+<text x="0.0" y="127.5" stroke="none" data-name="GCS" data-compartment="1">+static EPSG3857</text>
+
+</g>
+</g>
+<g transform="translate(150, 663)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GCS" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="GCS" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="UnitBasicDefinition">
+<g fill="lightgray" stroke="#33322E" data-name="UnitBasicDefinition">
+<rect x="667.5" y="525.5" height="105.0" width="164.0" data-name="UnitBasicDefinition"></rect>
+<path d="M667.5 557.5 L831.5 557.5" fill="none" data-name="UnitBasicDefinition"></path>
+<path d="M667.5 622.5 L831.5 622.5" fill="none" data-name="UnitBasicDefinition"></path>
+</g>
+<g transform="translate(667.5, 525.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UnitBasicDefinition" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="UnitBasicDefinition" data-compartment="0">
+<a id="..\..\src\utils\unit\UnitDefinition.ts.UnitBasicDefinition" xlink:href="..\..\src\utils\unit\UnitDefinition.ts"><text x="74.0" y="14.1" stroke="none" text-anchor="middle" data-name="UnitBasicDefinition" data-compartment="0">UnitBasicDefinition</text></a>
+
+</g>
+</g>
+<g transform="translate(667.5, 557.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UnitBasicDefinition" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="UnitBasicDefinition" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="UnitBasicDefinition" data-compartment="1">+unit</text>
+<text x="0.0" y="30.3" stroke="none" data-name="UnitBasicDefinition" data-compartment="1">+magnitude</text>
+<text x="0.0" y="46.5" stroke="none" data-name="UnitBasicDefinition" data-compartment="1">+offset</text>
+
+</g>
+</g>
+<g transform="translate(667.5, 622.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UnitBasicDefinition" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="UnitBasicDefinition" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="UnitFunctionDefinition&lt;In,Out&gt;">
+<g fill="lightgray" stroke="#33322E" data-name="UnitFunctionDefinition&lt;In,Out&gt;">
+<rect x="397.0" y="154.0" height="137.0" width="257.0" data-name="UnitFunctionDefinition&lt;In,Out&gt;"></rect>
+<path d="M397.0 186.0 L654.0 186.0" fill="none" data-name="UnitFunctionDefinition&lt;In,Out&gt;"></path>
+<path d="M397.0 283.0 L654.0 283.0" fill="none" data-name="UnitFunctionDefinition&lt;In,Out&gt;"></path>
+</g>
+<g transform="translate(397, 154)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UnitFunctionDefinition&lt;In,Out&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="UnitFunctionDefinition&lt;In,Out&gt;" data-compartment="0">
+<a id="..\..\src\utils\unit\UnitDefinition.ts.UnitFunctionDefinition&lt;In,Out&gt;" xlink:href="..\..\src\utils\unit\UnitDefinition.ts"><text x="120.5" y="14.1" stroke="none" text-anchor="middle" data-name="UnitFunctionDefinition&lt;In,Out&gt;" data-compartment="0">UnitFunctionDefinition&lt;In,Out&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(397, 186)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UnitFunctionDefinition&lt;In,Out&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="UnitFunctionDefinition&lt;In,Out&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="UnitFunctionDefinition&lt;In,Out&gt;" data-compartment="1">+inputType</text>
+<text x="0.0" y="30.3" stroke="none" data-name="UnitFunctionDefinition&lt;In,Out&gt;" data-compartment="1">+outputType</text>
+<text x="0.0" y="46.5" stroke="none" data-name="UnitFunctionDefinition&lt;In,Out&gt;" data-compartment="1">+unit</text>
+<text x="0.0" y="62.7" stroke="none" data-name="UnitFunctionDefinition&lt;In,Out&gt;" data-compartment="1">+toUnit</text>
+<text x="0.0" y="78.9" stroke="none" data-name="UnitFunctionDefinition&lt;In,Out&gt;" data-compartment="1">+fromUnit</text>
+
+</g>
+</g>
+<g transform="translate(397, 283)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UnitFunctionDefinition&lt;In,Out&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="UnitFunctionDefinition&lt;In,Out&gt;" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="UnitOptions">
+<g fill="lightblue" stroke="#33322E" data-name="UnitOptions">
+<rect x="694.0" y="146.0" height="153.0" width="111.0" data-name="UnitOptions"></rect>
+<path d="M694.0 178.0 L805.0 178.0" fill="none" data-name="UnitOptions"></path>
+<path d="M694.0 291.0 L805.0 291.0" fill="none" data-name="UnitOptions"></path>
+</g>
+<g transform="translate(694, 146)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UnitOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="UnitOptions" data-compartment="0">
+<a id="..\..\src\utils\unit\UnitOptions.ts.UnitOptions" xlink:href="..\..\src\utils\unit\UnitOptions.ts"><text x="47.5" y="14.1" stroke="none" text-anchor="middle" data-name="UnitOptions" data-compartment="0">UnitOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(694, 178)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UnitOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="UnitOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="UnitOptions" data-compartment="1">+baseName</text>
+<text x="0.0" y="30.3" stroke="none" data-name="UnitOptions" data-compartment="1">+name</text>
+<text x="0.0" y="46.5" stroke="none" data-name="UnitOptions" data-compartment="1">+definitions</text>
+<text x="0.0" y="62.7" stroke="none" data-name="UnitOptions" data-compartment="1">+aliases</text>
+<text x="0.0" y="78.9" stroke="none" data-name="UnitOptions" data-compartment="1">+prefixes</text>
+<text x="0.0" y="95.1" stroke="none" data-name="UnitOptions" data-compartment="1">+override</text>
+
+</g>
+</g>
+<g transform="translate(694, 291)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UnitOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="UnitOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="UnitPrefix">
+<g fill="#eee8d5" stroke="#33322E" data-name="UnitPrefix">
+<rect x="845.0" y="0.0" height="445.0" width="148.0" data-name="UnitPrefix"></rect>
+<path d="M845.0 32.0 L993.0 32.0" fill="none" data-name="UnitPrefix"></path>
+<path d="M845.0 437.0 L993.0 437.0" fill="none" data-name="UnitPrefix"></path>
+</g>
+<g transform="translate(845, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="UnitPrefix" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="UnitPrefix" data-compartment="0">
+<a id="..\..\src\utils\unit\UnitPrefix.ts.UnitPrefix" xlink:href="..\..\src\utils\unit\UnitPrefix.ts"><text x="66.0" y="14.1" stroke="none" text-anchor="middle" data-name="UnitPrefix" data-compartment="0">UnitPrefix</text></a>
+
+</g>
+</g>
+<g transform="translate(845, 32)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UnitPrefix" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="UnitPrefix" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="UnitPrefix" data-compartment="1">+static DECA</text>
+<text x="0.0" y="30.3" stroke="none" data-name="UnitPrefix" data-compartment="1">+static HECTO</text>
+<text x="0.0" y="46.5" stroke="none" data-name="UnitPrefix" data-compartment="1">+static KILO</text>
+<text x="0.0" y="62.7" stroke="none" data-name="UnitPrefix" data-compartment="1">+static MEGA</text>
+<text x="0.0" y="78.9" stroke="none" data-name="UnitPrefix" data-compartment="1">+static GIGA</text>
+<text x="0.0" y="95.1" stroke="none" data-name="UnitPrefix" data-compartment="1">+static TERA</text>
+<text x="0.0" y="111.3" stroke="none" data-name="UnitPrefix" data-compartment="1">+static PETA</text>
+<text x="0.0" y="127.5" stroke="none" data-name="UnitPrefix" data-compartment="1">+static EXA</text>
+<text x="0.0" y="143.7" stroke="none" data-name="UnitPrefix" data-compartment="1">+static ZETTA</text>
+<text x="0.0" y="159.9" stroke="none" data-name="UnitPrefix" data-compartment="1">+static YOTTA</text>
+<text x="0.0" y="176.1" stroke="none" data-name="UnitPrefix" data-compartment="1">+static DECI</text>
+<text x="0.0" y="192.3" stroke="none" data-name="UnitPrefix" data-compartment="1">+static CENTI</text>
+<text x="0.0" y="208.5" stroke="none" data-name="UnitPrefix" data-compartment="1">+static MILLI</text>
+<text x="0.0" y="224.7" stroke="none" data-name="UnitPrefix" data-compartment="1">+static MICRO</text>
+<text x="0.0" y="240.9" stroke="none" data-name="UnitPrefix" data-compartment="1">+static NANO</text>
+<text x="0.0" y="257.1" stroke="none" data-name="UnitPrefix" data-compartment="1">+static PICO</text>
+<text x="0.0" y="273.3" stroke="none" data-name="UnitPrefix" data-compartment="1">+static FEMTO</text>
+<text x="0.0" y="289.5" stroke="none" data-name="UnitPrefix" data-compartment="1">+static ATTO</text>
+<text x="0.0" y="305.7" stroke="none" data-name="UnitPrefix" data-compartment="1">+static ZEPTO</text>
+<text x="0.0" y="321.9" stroke="none" data-name="UnitPrefix" data-compartment="1">+static YOCTO</text>
+<text x="0.0" y="338.1" stroke="none" data-name="UnitPrefix" data-compartment="1">+static DECIMAL</text>
+<text x="0.0" y="354.3" stroke="none" data-name="UnitPrefix" data-compartment="1">+name</text>
+<text x="0.0" y="370.5" stroke="none" data-name="UnitPrefix" data-compartment="1">+abbrevation</text>
+<text x="0.0" y="386.7" stroke="none" data-name="UnitPrefix" data-compartment="1">+magnitude</text>
+
+</g>
+</g>
+<g transform="translate(845, 437)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UnitPrefix" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="UnitPrefix" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="UnitValue&lt;U,T&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="UnitValue&lt;U,T&gt;">
+<rect x="1083.0" y="134.0" height="177.0" width="139.0" data-name="UnitValue&lt;U,T&gt;"></rect>
+<path d="M1083.0 166.0 L1222.0 166.0" fill="none" data-name="UnitValue&lt;U,T&gt;"></path>
+<path d="M1083.0 214.0 L1222.0 214.0" fill="none" data-name="UnitValue&lt;U,T&gt;"></path>
+</g>
+<g transform="translate(1083, 134)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="UnitValue&lt;U,T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="UnitValue&lt;U,T&gt;" data-compartment="0">
+<a id="..\..\src\utils\unit\UnitValue.ts.UnitValue&lt;U,T&gt;" xlink:href="..\..\src\utils\unit\UnitValue.ts"><text x="61.5" y="14.1" stroke="none" text-anchor="middle" data-name="UnitValue&lt;U,T&gt;" data-compartment="0">UnitValue&lt;U,T&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(1083, 166)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UnitValue&lt;U,T&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="UnitValue&lt;U,T&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="UnitValue&lt;U,T&gt;" data-compartment="1">#_value</text>
+<text x="0.0" y="30.3" stroke="none" data-name="UnitValue&lt;U,T&gt;" data-compartment="1">#_unit</text>
+
+</g>
+</g>
+<g transform="translate(1083, 214)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UnitValue&lt;U,T&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="UnitValue&lt;U,T&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="UnitValue&lt;U,T&gt;" data-compartment="2">+to()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="UnitValue&lt;U,T&gt;" data-compartment="2">+toString()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="UnitValue&lt;U,T&gt;" data-compartment="2">+valueOf()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="UnitValue&lt;U,T&gt;" data-compartment="2">+setValue()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="UnitValue&lt;U,T&gt;" data-compartment="2">+clone()</text>
+
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

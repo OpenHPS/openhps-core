@@ -1,0 +1,179 @@
+<svg version="1.1" baseProfile="full" width="693.0" height="475.0" viewBox="0 0 693 475" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<desc >#.interface: fill=lightblue
+#.enumeration: fill=lightgreen
+#.type: fill=lightgray
+
+[Edge&lt;InOut&gt;|+inputNode;+outputNode|-_onPush();-_onPull();+push();+pull();+emit();+on()]
+[EventEmitter&lt;T&gt;]&lt;:-[Edge&lt;InOut&gt;]
+[Inlet&lt;In&gt;]&lt;:--[Edge&lt;InOut&gt;]
+[Outlet&lt;Out&gt;]&lt;:--[Edge&lt;InOut&gt;]
+[&lt;interface&gt;Graph&lt;In,Out&gt;|+internalSink;+internalSource;+edges;+nodes|+findNodeByUID();+findNodeByName();+findEdge();+addNode();+addEdge();+deleteEdge();+deleteNode()]
+[GraphNode&lt;In,Out&gt;]&lt;:--[Graph&lt;In,Out&gt;]
+[&lt;interface&gt;Inlet&lt;In&gt;||+pull();+emit();+emit();+emit();+on()]
+[&lt;interface&gt;Outlet&lt;Out&gt;||+push();+on()]</desc>
+<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
+<g stroke="transparent" fill="#ffffff">
+<rect x="0.0" y="0.0" height="475.0" width="693.0" stroke="none"></rect>
+</g>
+<g transform="translate(8, 8)" fill="#33322E">
+<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+<path d="M73.0 97.8 L73 157 L168.5 243.59485530546624 L168.5 243.6 " fill="none"></path>
+<path d="M78.3 97.8 L73.0 97.8 L67.7 97.8 L73.0 84.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M228.5 150.3 L228.5 157 L228.5 201.5 L228.5 201.5 " fill="none"></path>
+</g>
+<path d="M233.8 150.3 L228.5 150.3 L223.2 150.3 L228.5 137.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M366.5 125.8 L366.5 157 L288.5 236.69565217391306 L288.5 236.7 " fill="none"></path>
+</g>
+<path d="M371.8 125.8 L366.5 125.8 L361.2 125.8 L366.5 112.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M549.5 97.8 L549.5 157 L549.5 177 L549.5 177.0 " fill="none"></path>
+</g>
+<path d="M554.8 97.8 L549.5 97.8 L544.2 97.8 L549.5 84.5 Z"></path>
+<g data-name="Edge&lt;InOut&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="Edge&lt;InOut&gt;">
+<rect x="168.5" y="201.5" height="193.0" width="120.0" data-name="Edge&lt;InOut&gt;"></rect>
+<path d="M168.5 233.5 L288.5 233.5" fill="none" data-name="Edge&lt;InOut&gt;"></path>
+<path d="M168.5 281.5 L288.5 281.5" fill="none" data-name="Edge&lt;InOut&gt;"></path>
+</g>
+<g transform="translate(168.5, 201.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Edge&lt;InOut&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Edge&lt;InOut&gt;" data-compartment="0">
+<a id="..\..\src\graph\Edge.ts.Edge&lt;InOut&gt;" xlink:href="..\..\src\graph\Edge.ts"><text x="52.0" y="14.1" stroke="none" text-anchor="middle" data-name="Edge&lt;InOut&gt;" data-compartment="0">Edge&lt;InOut&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(168.5, 233.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Edge&lt;InOut&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Edge&lt;InOut&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="Edge&lt;InOut&gt;" data-compartment="1">+inputNode</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Edge&lt;InOut&gt;" data-compartment="1">+outputNode</text>
+
+</g>
+</g>
+<g transform="translate(168.5, 281.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Edge&lt;InOut&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Edge&lt;InOut&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="Edge&lt;InOut&gt;" data-compartment="2">-_onPush()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Edge&lt;InOut&gt;" data-compartment="2">-_onPull()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Edge&lt;InOut&gt;" data-compartment="2">+push()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="Edge&lt;InOut&gt;" data-compartment="2">+pull()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="Edge&lt;InOut&gt;" data-compartment="2">+emit()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="Edge&lt;InOut&gt;" data-compartment="2">+on()</text>
+
+</g>
+</g>
+</g>
+<g data-name="EventEmitter&lt;T&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="EventEmitter&lt;T&gt;">
+<rect x="0.0" y="52.5" height="32.0" width="146.0" data-name="EventEmitter&lt;T&gt;"></rect>
+</g>
+<g transform="translate(0, 52.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="EventEmitter&lt;T&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="EventEmitter&lt;T&gt;" data-compartment="0">
+<text x="65.0" y="14.1" stroke="none" text-anchor="middle" data-name="EventEmitter&lt;T&gt;" data-compartment="0">EventEmitter&lt;T&gt;</text>
+
+</g>
+</g>
+</g>
+<g data-name="Inlet&lt;In&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="Inlet&lt;In&gt;">
+<rect x="186.0" y="0.0" height="137.0" width="85.0" data-name="Inlet&lt;In&gt;"></rect>
+<path d="M186.0 32.0 L271.0 32.0" fill="none" data-name="Inlet&lt;In&gt;"></path>
+<path d="M186.0 40.0 L271.0 40.0" fill="none" data-name="Inlet&lt;In&gt;"></path>
+</g>
+<g transform="translate(186, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Inlet&lt;In&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Inlet&lt;In&gt;" data-compartment="0">
+<a id="..\..\src\graph\Inlet.ts.Inlet&lt;In&gt;" xlink:href="..\..\src\graph\Inlet.ts"><text x="34.5" y="14.1" stroke="none" text-anchor="middle" data-name="Inlet&lt;In&gt;" data-compartment="0">Inlet&lt;In&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(186, 32)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Inlet&lt;In&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Inlet&lt;In&gt;" data-compartment="1">
+
+</g>
+</g>
+<g transform="translate(186, 40)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Inlet&lt;In&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Inlet&lt;In&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="Inlet&lt;In&gt;" data-compartment="2">+pull()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Inlet&lt;In&gt;" data-compartment="2">+emit()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Inlet&lt;In&gt;" data-compartment="2">+emit()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="Inlet&lt;In&gt;" data-compartment="2">+emit()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="Inlet&lt;In&gt;" data-compartment="2">+on()</text>
+
+</g>
+</g>
+</g>
+<g data-name="Outlet&lt;Out&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="Outlet&lt;Out&gt;">
+<rect x="311.0" y="24.5" height="88.0" width="111.0" data-name="Outlet&lt;Out&gt;"></rect>
+<path d="M311.0 56.5 L422.0 56.5" fill="none" data-name="Outlet&lt;Out&gt;"></path>
+<path d="M311.0 64.5 L422.0 64.5" fill="none" data-name="Outlet&lt;Out&gt;"></path>
+</g>
+<g transform="translate(311, 24.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Outlet&lt;Out&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Outlet&lt;Out&gt;" data-compartment="0">
+<a id="..\..\src\graph\Outlet.ts.Outlet&lt;Out&gt;" xlink:href="..\..\src\graph\Outlet.ts"><text x="47.5" y="14.1" stroke="none" text-anchor="middle" data-name="Outlet&lt;Out&gt;" data-compartment="0">Outlet&lt;Out&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(311, 56.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Outlet&lt;Out&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Outlet&lt;Out&gt;" data-compartment="1">
+
+</g>
+</g>
+<g transform="translate(311, 64.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Outlet&lt;Out&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Outlet&lt;Out&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="Outlet&lt;Out&gt;" data-compartment="2">+push()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Outlet&lt;Out&gt;" data-compartment="2">+on()</text>
+
+</g>
+</g>
+</g>
+<g data-name="Graph&lt;In,Out&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="Graph&lt;In,Out&gt;">
+<rect x="462.0" y="177.0" height="242.0" width="175.0" data-name="Graph&lt;In,Out&gt;"></rect>
+<path d="M462.0 209.0 L637.0 209.0" fill="none" data-name="Graph&lt;In,Out&gt;"></path>
+<path d="M462.0 290.0 L637.0 290.0" fill="none" data-name="Graph&lt;In,Out&gt;"></path>
+</g>
+<g transform="translate(462, 177)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Graph&lt;In,Out&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Graph&lt;In,Out&gt;" data-compartment="0">
+<a id="..\..\src\graph\Graph.ts.Graph&lt;In,Out&gt;" xlink:href="..\..\src\graph\Graph.ts"><text x="79.5" y="14.1" stroke="none" text-anchor="middle" data-name="Graph&lt;In,Out&gt;" data-compartment="0">Graph&lt;In,Out&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(462, 209)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Graph&lt;In,Out&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Graph&lt;In,Out&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="Graph&lt;In,Out&gt;" data-compartment="1">+internalSink</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Graph&lt;In,Out&gt;" data-compartment="1">+internalSource</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Graph&lt;In,Out&gt;" data-compartment="1">+edges</text>
+<text x="0.0" y="62.7" stroke="none" data-name="Graph&lt;In,Out&gt;" data-compartment="1">+nodes</text>
+
+</g>
+</g>
+<g transform="translate(462, 290)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Graph&lt;In,Out&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Graph&lt;In,Out&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="Graph&lt;In,Out&gt;" data-compartment="2">+findNodeByUID()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="Graph&lt;In,Out&gt;" data-compartment="2">+findNodeByName()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="Graph&lt;In,Out&gt;" data-compartment="2">+findEdge()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="Graph&lt;In,Out&gt;" data-compartment="2">+addNode()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="Graph&lt;In,Out&gt;" data-compartment="2">+addEdge()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="Graph&lt;In,Out&gt;" data-compartment="2">+deleteEdge()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="Graph&lt;In,Out&gt;" data-compartment="2">+deleteNode()</text>
+
+</g>
+</g>
+</g>
+<g data-name="GraphNode&lt;In,Out&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="GraphNode&lt;In,Out&gt;">
+<rect x="462.0" y="52.5" height="32.0" width="175.0" data-name="GraphNode&lt;In,Out&gt;"></rect>
+</g>
+<g transform="translate(462, 52.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GraphNode&lt;In,Out&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GraphNode&lt;In,Out&gt;" data-compartment="0">
+<text x="79.5" y="14.1" stroke="none" text-anchor="middle" data-name="GraphNode&lt;In,Out&gt;" data-compartment="0">GraphNode&lt;In,Out&gt;</text>
+
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

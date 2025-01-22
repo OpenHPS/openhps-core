@@ -1,0 +1,617 @@
+<svg version="1.1" baseProfile="full" width="2214.5" height="797.0" viewBox="0 0 2214.5 797" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<desc >#.interface: fill=lightblue
+#.enumeration: fill=lightgreen
+#.type: fill=lightgray
+
+[CallbackNode&lt;InOut&gt;|+pushCallback;+pullCallback;\#options|-_onPush();-_onPull()]
+[&lt;interface&gt;CallbackNodeOptions|+autoPush|]
+[Node&lt;In,Out&gt;]&lt;:-[CallbackNode&lt;InOut&gt;]
+[NodeOptions]&lt;:--[CallbackNodeOptions]
+[CallbackNode&lt;InOut&gt;]  -  [CallbackNodeOptions]
+[GraphShapeNode&lt;In,Out&gt;|-_builder;-_graph|-_onBuild();-_onDestroy();+abstract construct();+pull();+push()]
+[Node&lt;In,Out&gt;]&lt;:-[GraphShapeNode&lt;In,Out&gt;]
+[ObjectProcessingNode&lt;InOut&gt;|\#options|+process();+abstract processObject();\#findObjectByUID()]
+[&lt;interface&gt;ObjectProcessingNodeOptions|+objectFilter|]
+[ProcessingNode&lt;In,Out&gt;]&lt;:-[ObjectProcessingNode&lt;InOut&gt;]
+[ProcessingNodeOptions]&lt;:--[ObjectProcessingNodeOptions]
+[ObjectProcessingNode&lt;InOut&gt;]  -  [ObjectProcessingNodeOptions]
+[ProcessingNode&lt;In,Out&gt;|\#options|-_onPush();\#findNodeDataService();\#getNodeData();\#setNodeData();+processBulk();+abstract process()]
+[&lt;interface&gt;ProcessingNodeOptions|+frameFilter|]
+[Node&lt;In,Out&gt;]&lt;:-[ProcessingNode&lt;In,Out&gt;]
+[NodeOptions]&lt;:--[ProcessingNodeOptions]
+[ProcessingNode&lt;In,Out&gt;]  -  [ProcessingNodeOptions]
+[RemoteNode&lt;In,Out,S&gt;|\#service;\#options;+proxyNode|-_onBuild();-_onPush();-_onPull();-_onLocalPush();-_onLocalPull();-_onLocalEvent();-_onDownstreamCompleted();-_onDownstreamError()]
+[&lt;interface&gt;RemoteNodeOptions&lt;S&gt;|+service;+serialize;+deserialize|]
+[Node&lt;In,Out&gt;]&lt;:-[RemoteNode&lt;In,Out,S&gt;]
+[NodeOptions]&lt;:--[RemoteNodeOptions&lt;S&gt;]
+[SinkNode&lt;In&gt;|\#options|+push();\#persistDataObject();+abstract onPush()]
+[&lt;interface&gt;SinkNodeOptions|+persistence;+completedEvent|]
+[Node&lt;In,Out&gt;]&lt;:-[SinkNode&lt;In&gt;]
+[NodeOptions]&lt;:--[SinkNodeOptions]
+[SinkNode&lt;In&gt;]  -  [SinkNodeOptions]
+[SourceNode&lt;Out&gt;|\#options|\#registerService();-_onPush();\#mergeFrame();\#mergeObject();-_onPull();-_onSequentialPull();-_onParallelPull();+abstract onPull()]
+[&lt;interface&gt;SourceNodeOptions|+persistence;+source|]
+[&lt;interface&gt;ActiveSourceOptions|+interval;+autoStart;+softStop|]
+[&lt;interface&gt;SensorSourceOptions|+sensors|]
+[Node&lt;In,Out&gt;]&lt;:-[SourceNode&lt;Out&gt;]
+[NodeOptions]&lt;:--[SourceNodeOptions]
+[SourceNodeOptions]&lt;:--[ActiveSourceOptions]
+[ActiveSourceOptions]&lt;:--[SensorSourceOptions]
+[SourceNode&lt;Out&gt;]  -  [SourceNodeOptions]
+[WorkerNode&lt;In,Out&gt;|\#options;\#config;\#handler|-_onBuild();-_onDestroy();-_onPull();-_onPush();-_onWorkerEvent();-_onWorkerPull();-_onWorkerPush();+invokeMethod()]
+[&lt;interface&gt;WorkerNodeOptions|+optimizedPull|]
+[Node&lt;In,Out&gt;]&lt;:-[WorkerNode&lt;In,Out&gt;]
+[NodeOptions]&lt;:--[WorkerNodeOptions]
+[WorkerOptions]&lt;:--[WorkerNodeOptions]
+[WorkerNode&lt;In,Out&gt;]  -  [WorkerNodeOptions]</desc>
+<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
+<g stroke="transparent" fill="#ffffff">
+<rect x="0.0" y="0.0" height="797.0" width="2214.5" stroke="none"></rect>
+</g>
+<g transform="translate(8, 8)" fill="#33322E">
+<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+<path d="M1125.7 18.5 L94.5 52 L94.5 121 L94.5 121.0 " fill="none"></path>
+<path d="M1125.8 23.8 L1125.7 18.5 L1125.5 13.2 L1139.0 18.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M906.3 204.9 L74.5 335 L85.97928994082841 383.5 L86.0 383.5 " fill="none"></path>
+</g>
+<path d="M907.2 210.1 L906.3 204.9 L905.5 199.6 L919.5 202.8 Z"></path>
+<path d="M112.9 266.0 L130.5 335 L109.83727810650888 383.5 L109.8 383.5 " fill="none"></path>
+<path d="M1125.7 21.8 L730.5 52 L730.5 105 L730.5 105.0 " fill="none"></path>
+<path d="M1126.1 27.1 L1125.7 21.8 L1125.3 16.5 L1139.0 20.8 Z"></path>
+<path d="M563.8 291.7 L605 335 L605 355 L605.0 355.0 " fill="none"></path>
+<path d="M567.7 288.0 L563.8 291.7 L559.9 295.3 L554.6 282.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M331.5 468.8 L331.5 504 L400.34655172413795 540.5 L400.3 540.5 " fill="none"></path>
+</g>
+<path d="M336.8 468.8 L331.5 468.8 L326.2 468.8 L331.5 455.5 Z"></path>
+<path d="M605.0 484.0 L605 504 L536.153448275862 540.5 L536.2 540.5 " fill="none"></path>
+<path d="M1125.7 19.8 L470.5 52 L470.5 105 L470.5 105.0 " fill="none"></path>
+<path d="M1125.9 25.1 L1125.7 19.8 L1125.4 14.4 L1139.0 19.1 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M906.4 207.3 L233 335 L289.53550295857985 383.5 L289.5 383.5 " fill="none"></path>
+</g>
+<path d="M907.4 212.5 L906.4 207.3 L905.4 202.0 L919.5 204.8 Z"></path>
+<path d="M407.5 282.0 L369.75 335 L347.79585798816566 383.5 L347.8 383.5 " fill="none"></path>
+<path d="M1202.0 45.3 L1202 52 L1202 72 L1202.0 72.0 " fill="none"></path>
+<path d="M1207.3 45.3 L1202.0 45.3 L1196.7 45.3 L1202.0 32.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M960.2 220.4 L880.5 335 L880.5 367 L880.5 367.0 " fill="none"></path>
+</g>
+<path d="M964.6 223.5 L960.2 220.4 L955.9 217.4 L967.9 209.5 Z"></path>
+<path d="M1278.2 26.8 L1455 52 L1455 129 L1455.0 129.0 " fill="none"></path>
+<path d="M1279.0 21.6 L1278.2 26.8 L1277.4 32.1 L1265.0 25.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M1014.4 216.8 L1194 335 L1355.5 392.3392857142857 L1355.5 392.3 " fill="none"></path>
+</g>
+<path d="M1017.4 212.4 L1014.4 216.8 L1011.5 221.3 L1003.3 209.5 Z"></path>
+<path d="M1455.0 258.0 L1455 335 L1443.9763313609467 375.5 L1444.0 375.5 " fill="none"></path>
+<path d="M1278.3 21.8 L1673 52 L1673 88.5 L1673.0 88.5 " fill="none"></path>
+<path d="M1278.7 16.5 L1278.3 21.8 L1277.9 27.1 L1265.0 20.8 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M1051.4 211.3 L1554 335 L1596.6568047337278 375.5 L1596.7 375.5 " fill="none"></path>
+</g>
+<path d="M1052.7 206.1 L1051.4 211.3 L1050.2 216.5 L1038.5 208.1 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M1643.0 476.8 L1643 504 L1643 524 L1643.0 524.0 " fill="none"></path>
+</g>
+<path d="M1648.3 476.8 L1643.0 476.8 L1637.7 476.8 L1643.0 463.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M1643.0 642.3 L1643 649 L1643 669 L1643.0 669.0 " fill="none"></path>
+</g>
+<path d="M1648.3 642.3 L1643.0 642.3 L1637.7 642.3 L1643.0 629.0 Z"></path>
+<path d="M1673.0 298.5 L1673 335 L1658.621301775148 375.5 L1658.6 375.5 " fill="none"></path>
+<path d="M1278.3 19.2 L2067 52 L2067 72 L2067.0 72.0 " fill="none"></path>
+<path d="M1278.5 13.8 L1278.3 19.2 L1278.1 24.5 L1265.0 18.6 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M1051.6 206.5 L1770.75 335 L1883.8210059171597 383.5 L1883.8 383.5 " fill="none"></path>
+</g>
+<path d="M1052.6 201.2 L1051.6 206.5 L1050.7 211.7 L1038.5 204.1 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M1868.5 222.8 L1868.5 335 L1925.465976331361 383.5 L1925.5 383.5 " fill="none"></path>
+</g>
+<path d="M1873.8 222.8 L1868.5 222.8 L1863.2 222.8 L1868.5 209.5 Z"></path>
+<path d="M2067.0 315.0 L2067 335 L2010.034023668639 383.5 L2010.0 383.5 " fill="none"></path>
+<g data-name="CallbackNode&lt;InOut&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="CallbackNode&lt;InOut&gt;">
+<rect x="0.0" y="121.0" height="145.0" width="189.0" data-name="CallbackNode&lt;InOut&gt;"></rect>
+<path d="M0.0 153.0 L189.0 153.0" fill="none" data-name="CallbackNode&lt;InOut&gt;"></path>
+<path d="M0.0 218.0 L189.0 218.0" fill="none" data-name="CallbackNode&lt;InOut&gt;"></path>
+</g>
+<g transform="translate(0, 121)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CallbackNode&lt;InOut&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CallbackNode&lt;InOut&gt;" data-compartment="0">
+<a id="..\..\src\nodes\CallbackNode.ts.CallbackNode&lt;InOut&gt;" xlink:href="..\..\src\nodes\CallbackNode.ts"><text x="86.5" y="14.1" stroke="none" text-anchor="middle" data-name="CallbackNode&lt;InOut&gt;" data-compartment="0">CallbackNode&lt;InOut&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(0, 153)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CallbackNode&lt;InOut&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CallbackNode&lt;InOut&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="CallbackNode&lt;InOut&gt;" data-compartment="1">+pushCallback</text>
+<text x="0.0" y="30.3" stroke="none" data-name="CallbackNode&lt;InOut&gt;" data-compartment="1">+pullCallback</text>
+<text x="0.0" y="46.5" stroke="none" data-name="CallbackNode&lt;InOut&gt;" data-compartment="1">#options</text>
+
+</g>
+</g>
+<g transform="translate(0, 218)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CallbackNode&lt;InOut&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CallbackNode&lt;InOut&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="CallbackNode&lt;InOut&gt;" data-compartment="2">-_onPush()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="CallbackNode&lt;InOut&gt;" data-compartment="2">-_onPull()</text>
+
+</g>
+</g>
+</g>
+<g data-name="CallbackNodeOptions">
+<g fill="lightblue" stroke="#33322E" data-name="CallbackNodeOptions">
+<rect x="1.0" y="383.5" height="72.0" width="187.0" data-name="CallbackNodeOptions"></rect>
+<path d="M1.0 415.5 L188.0 415.5" fill="none" data-name="CallbackNodeOptions"></path>
+<path d="M1.0 447.5 L188.0 447.5" fill="none" data-name="CallbackNodeOptions"></path>
+</g>
+<g transform="translate(1, 383.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CallbackNodeOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CallbackNodeOptions" data-compartment="0">
+<a id="..\..\src\nodes\CallbackNode.ts.CallbackNodeOptions" xlink:href="..\..\src\nodes\CallbackNode.ts"><text x="85.5" y="14.1" stroke="none" text-anchor="middle" data-name="CallbackNodeOptions" data-compartment="0">CallbackNodeOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(1, 415.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CallbackNodeOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CallbackNodeOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="CallbackNodeOptions" data-compartment="1">+autoPush</text>
+
+</g>
+</g>
+<g transform="translate(1, 447.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CallbackNodeOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="CallbackNodeOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="Node&lt;In,Out&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="Node&lt;In,Out&gt;">
+<rect x="1139.0" y="0.0" height="32.0" width="126.0" data-name="Node&lt;In,Out&gt;"></rect>
+</g>
+<g transform="translate(1139, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Node&lt;In,Out&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Node&lt;In,Out&gt;" data-compartment="0">
+<text x="55.0" y="14.1" stroke="none" text-anchor="middle" data-name="Node&lt;In,Out&gt;" data-compartment="0">Node&lt;In,Out&gt;</text>
+
+</g>
+</g>
+</g>
+<g data-name="NodeOptions">
+<g fill="#eee8d5" stroke="#33322E" data-name="NodeOptions">
+<rect x="919.5" y="177.5" height="32.0" width="119.0" data-name="NodeOptions"></rect>
+</g>
+<g transform="translate(919.5, 177.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NodeOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NodeOptions" data-compartment="0">
+<text x="51.5" y="14.1" stroke="none" text-anchor="middle" data-name="NodeOptions" data-compartment="0">NodeOptions</text>
+
+</g>
+</g>
+</g>
+<g data-name="GraphShapeNode&lt;In,Out&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="GraphShapeNode&lt;In,Out&gt;">
+<rect x="617.5" y="105.0" height="177.0" width="226.0" data-name="GraphShapeNode&lt;In,Out&gt;"></rect>
+<path d="M617.5 137.0 L843.5 137.0" fill="none" data-name="GraphShapeNode&lt;In,Out&gt;"></path>
+<path d="M617.5 185.0 L843.5 185.0" fill="none" data-name="GraphShapeNode&lt;In,Out&gt;"></path>
+</g>
+<g transform="translate(617.5, 105)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GraphShapeNode&lt;In,Out&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GraphShapeNode&lt;In,Out&gt;" data-compartment="0">
+<a id="..\..\src\nodes\GraphShapeNode.ts.GraphShapeNode&lt;In,Out&gt;" xlink:href="..\..\src\nodes\GraphShapeNode.ts"><text x="105.0" y="14.1" stroke="none" text-anchor="middle" data-name="GraphShapeNode&lt;In,Out&gt;" data-compartment="0">GraphShapeNode&lt;In,Out&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(617.5, 137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GraphShapeNode&lt;In,Out&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="GraphShapeNode&lt;In,Out&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="GraphShapeNode&lt;In,Out&gt;" data-compartment="1">-_builder</text>
+<text x="0.0" y="30.3" stroke="none" data-name="GraphShapeNode&lt;In,Out&gt;" data-compartment="1">-_graph</text>
+
+</g>
+</g>
+<g transform="translate(617.5, 185)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GraphShapeNode&lt;In,Out&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="GraphShapeNode&lt;In,Out&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="GraphShapeNode&lt;In,Out&gt;" data-compartment="2">-_onBuild()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="GraphShapeNode&lt;In,Out&gt;" data-compartment="2">-_onDestroy()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="GraphShapeNode&lt;In,Out&gt;" data-compartment="2">+abstract construct()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="GraphShapeNode&lt;In,Out&gt;" data-compartment="2">+pull()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="GraphShapeNode&lt;In,Out&gt;" data-compartment="2">+push()</text>
+
+</g>
+</g>
+</g>
+<g data-name="ObjectProcessingNode&lt;InOut&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="ObjectProcessingNode&lt;InOut&gt;">
+<rect x="475.0" y="355.0" height="129.0" width="260.0" data-name="ObjectProcessingNode&lt;InOut&gt;"></rect>
+<path d="M475.0 387.0 L735.0 387.0" fill="none" data-name="ObjectProcessingNode&lt;InOut&gt;"></path>
+<path d="M475.0 419.0 L735.0 419.0" fill="none" data-name="ObjectProcessingNode&lt;InOut&gt;"></path>
+</g>
+<g transform="translate(475, 355)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ObjectProcessingNode&lt;InOut&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ObjectProcessingNode&lt;InOut&gt;" data-compartment="0">
+<a id="..\..\src\nodes\ObjectProcessingNode.ts.ObjectProcessingNode&lt;InOut&gt;" xlink:href="..\..\src\nodes\ObjectProcessingNode.ts"><text x="122.0" y="14.1" stroke="none" text-anchor="middle" data-name="ObjectProcessingNode&lt;InOut&gt;" data-compartment="0">ObjectProcessingNode&lt;InOut&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(475, 387)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ObjectProcessingNode&lt;InOut&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ObjectProcessingNode&lt;InOut&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="ObjectProcessingNode&lt;InOut&gt;" data-compartment="1">#options</text>
+
+</g>
+</g>
+<g transform="translate(475, 419)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ObjectProcessingNode&lt;InOut&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ObjectProcessingNode&lt;InOut&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="ObjectProcessingNode&lt;InOut&gt;" data-compartment="2">+process()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="ObjectProcessingNode&lt;InOut&gt;" data-compartment="2">+abstract processObject()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="ObjectProcessingNode&lt;InOut&gt;" data-compartment="2">#findObjectByUID()</text>
+
+</g>
+</g>
+</g>
+<g data-name="ObjectProcessingNodeOptions">
+<g fill="lightblue" stroke="#33322E" data-name="ObjectProcessingNodeOptions">
+<rect x="339.3" y="540.5" height="72.0" width="258.0" data-name="ObjectProcessingNodeOptions"></rect>
+<path d="M339.3 572.5 L597.3 572.5" fill="none" data-name="ObjectProcessingNodeOptions"></path>
+<path d="M339.3 604.5 L597.3 604.5" fill="none" data-name="ObjectProcessingNodeOptions"></path>
+</g>
+<g transform="translate(339.25, 540.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ObjectProcessingNodeOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ObjectProcessingNodeOptions" data-compartment="0">
+<a id="..\..\src\nodes\ObjectProcessingNode.ts.ObjectProcessingNodeOptions" xlink:href="..\..\src\nodes\ObjectProcessingNode.ts"><text x="121.0" y="14.1" stroke="none" text-anchor="middle" data-name="ObjectProcessingNodeOptions" data-compartment="0">ObjectProcessingNodeOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(339.25, 572.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ObjectProcessingNodeOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ObjectProcessingNodeOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="ObjectProcessingNodeOptions" data-compartment="1">+objectFilter</text>
+
+</g>
+</g>
+<g transform="translate(339.25, 604.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ObjectProcessingNodeOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="ObjectProcessingNodeOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="ProcessingNode&lt;In,Out&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="ProcessingNode&lt;In,Out&gt;">
+<rect x="363.5" y="105.0" height="177.0" width="214.0" data-name="ProcessingNode&lt;In,Out&gt;"></rect>
+<path d="M363.5 137.0 L577.5 137.0" fill="none" data-name="ProcessingNode&lt;In,Out&gt;"></path>
+<path d="M363.5 169.0 L577.5 169.0" fill="none" data-name="ProcessingNode&lt;In,Out&gt;"></path>
+</g>
+<g transform="translate(363.5, 105)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ProcessingNode&lt;In,Out&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ProcessingNode&lt;In,Out&gt;" data-compartment="0">
+<a id="..\..\src\nodes\ProcessingNode.ts.ProcessingNode&lt;In,Out&gt;" xlink:href="..\..\src\nodes\ProcessingNode.ts"><text x="99.0" y="14.1" stroke="none" text-anchor="middle" data-name="ProcessingNode&lt;In,Out&gt;" data-compartment="0">ProcessingNode&lt;In,Out&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(363.5, 137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProcessingNode&lt;In,Out&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ProcessingNode&lt;In,Out&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="ProcessingNode&lt;In,Out&gt;" data-compartment="1">#options</text>
+
+</g>
+</g>
+<g transform="translate(363.5, 169)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProcessingNode&lt;In,Out&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ProcessingNode&lt;In,Out&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="ProcessingNode&lt;In,Out&gt;" data-compartment="2">-_onPush()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="ProcessingNode&lt;In,Out&gt;" data-compartment="2">#findNodeDataService()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="ProcessingNode&lt;In,Out&gt;" data-compartment="2">#getNodeData()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="ProcessingNode&lt;In,Out&gt;" data-compartment="2">#setNodeData()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="ProcessingNode&lt;In,Out&gt;" data-compartment="2">+processBulk()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="ProcessingNode&lt;In,Out&gt;" data-compartment="2">+abstract process()</text>
+
+</g>
+</g>
+</g>
+<g data-name="ProcessingNodeOptions">
+<g fill="lightblue" stroke="#33322E" data-name="ProcessingNodeOptions">
+<rect x="228.0" y="383.5" height="72.0" width="207.0" data-name="ProcessingNodeOptions"></rect>
+<path d="M228.0 415.5 L435.0 415.5" fill="none" data-name="ProcessingNodeOptions"></path>
+<path d="M228.0 447.5 L435.0 447.5" fill="none" data-name="ProcessingNodeOptions"></path>
+</g>
+<g transform="translate(228, 383.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProcessingNodeOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ProcessingNodeOptions" data-compartment="0">
+<a id="..\..\src\nodes\ProcessingNode.ts.ProcessingNodeOptions" xlink:href="..\..\src\nodes\ProcessingNode.ts"><text x="95.5" y="14.1" stroke="none" text-anchor="middle" data-name="ProcessingNodeOptions" data-compartment="0">ProcessingNodeOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(228, 415.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProcessingNodeOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ProcessingNodeOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="ProcessingNodeOptions" data-compartment="1">+frameFilter</text>
+
+</g>
+</g>
+<g transform="translate(228, 447.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProcessingNodeOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="ProcessingNodeOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="RemoteNode&lt;In,Out,S&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="RemoteNode&lt;In,Out,S&gt;">
+<rect x="1078.5" y="72.0" height="243.0" width="247.0" data-name="RemoteNode&lt;In,Out,S&gt;"></rect>
+<path d="M1078.5 104.0 L1325.5 104.0" fill="none" data-name="RemoteNode&lt;In,Out,S&gt;"></path>
+<path d="M1078.5 169.0 L1325.5 169.0" fill="none" data-name="RemoteNode&lt;In,Out,S&gt;"></path>
+</g>
+<g transform="translate(1078.5, 72)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="0">
+<a id="..\..\src\nodes\RemoteNode.ts.RemoteNode&lt;In,Out,S&gt;" xlink:href="..\..\src\nodes\RemoteNode.ts"><text x="115.5" y="14.1" stroke="none" text-anchor="middle" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="0">RemoteNode&lt;In,Out,S&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(1078.5, 104)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="1">#service</text>
+<text x="0.0" y="30.3" stroke="none" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="1">#options</text>
+<text x="0.0" y="46.5" stroke="none" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="1">+proxyNode</text>
+
+</g>
+</g>
+<g transform="translate(1078.5, 169)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="2">-_onBuild()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="2">-_onPush()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="2">-_onPull()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="2">-_onLocalPush()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="2">-_onLocalPull()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="2">-_onLocalEvent()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="2">-_onDownstreamCompleted()</text>
+<text x="0.0" y="127.5" stroke="none" data-name="RemoteNode&lt;In,Out,S&gt;" data-compartment="2">-_onDownstreamError()</text>
+
+</g>
+</g>
+</g>
+<g data-name="RemoteNodeOptions&lt;S&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="RemoteNodeOptions&lt;S&gt;">
+<rect x="775.0" y="367.0" height="105.0" width="211.0" data-name="RemoteNodeOptions&lt;S&gt;"></rect>
+<path d="M775.0 399.0 L986.0 399.0" fill="none" data-name="RemoteNodeOptions&lt;S&gt;"></path>
+<path d="M775.0 464.0 L986.0 464.0" fill="none" data-name="RemoteNodeOptions&lt;S&gt;"></path>
+</g>
+<g transform="translate(775, 367)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemoteNodeOptions&lt;S&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RemoteNodeOptions&lt;S&gt;" data-compartment="0">
+<a id="..\..\src\nodes\RemoteNode.ts.RemoteNodeOptions&lt;S&gt;" xlink:href="..\..\src\nodes\RemoteNode.ts"><text x="97.5" y="14.1" stroke="none" text-anchor="middle" data-name="RemoteNodeOptions&lt;S&gt;" data-compartment="0">RemoteNodeOptions&lt;S&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(775, 399)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemoteNodeOptions&lt;S&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RemoteNodeOptions&lt;S&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="RemoteNodeOptions&lt;S&gt;" data-compartment="1">+service</text>
+<text x="0.0" y="30.3" stroke="none" data-name="RemoteNodeOptions&lt;S&gt;" data-compartment="1">+serialize</text>
+<text x="0.0" y="46.5" stroke="none" data-name="RemoteNodeOptions&lt;S&gt;" data-compartment="1">+deserialize</text>
+
+</g>
+</g>
+<g transform="translate(775, 464)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RemoteNodeOptions&lt;S&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="RemoteNodeOptions&lt;S&gt;" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="SinkNode&lt;In&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="SinkNode&lt;In&gt;">
+<rect x="1365.5" y="129.0" height="129.0" width="179.0" data-name="SinkNode&lt;In&gt;"></rect>
+<path d="M1365.5 161.0 L1544.5 161.0" fill="none" data-name="SinkNode&lt;In&gt;"></path>
+<path d="M1365.5 193.0 L1544.5 193.0" fill="none" data-name="SinkNode&lt;In&gt;"></path>
+</g>
+<g transform="translate(1365.5, 129)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SinkNode&lt;In&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SinkNode&lt;In&gt;" data-compartment="0">
+<a id="..\..\src\nodes\SinkNode.ts.SinkNode&lt;In&gt;" xlink:href="..\..\src\nodes\SinkNode.ts"><text x="81.5" y="14.1" stroke="none" text-anchor="middle" data-name="SinkNode&lt;In&gt;" data-compartment="0">SinkNode&lt;In&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(1365.5, 161)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SinkNode&lt;In&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SinkNode&lt;In&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="SinkNode&lt;In&gt;" data-compartment="1">#options</text>
+
+</g>
+</g>
+<g transform="translate(1365.5, 193)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SinkNode&lt;In&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SinkNode&lt;In&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="SinkNode&lt;In&gt;" data-compartment="2">+push()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="SinkNode&lt;In&gt;" data-compartment="2">#persistDataObject()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="SinkNode&lt;In&gt;" data-compartment="2">+abstract onPush()</text>
+
+</g>
+</g>
+</g>
+<g data-name="SinkNodeOptions">
+<g fill="lightblue" stroke="#33322E" data-name="SinkNodeOptions">
+<rect x="1355.5" y="375.5" height="88.0" width="153.0" data-name="SinkNodeOptions"></rect>
+<path d="M1355.5 407.5 L1508.5 407.5" fill="none" data-name="SinkNodeOptions"></path>
+<path d="M1355.5 455.5 L1508.5 455.5" fill="none" data-name="SinkNodeOptions"></path>
+</g>
+<g transform="translate(1355.5, 375.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SinkNodeOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SinkNodeOptions" data-compartment="0">
+<a id="..\..\src\nodes\SinkNode.ts.SinkNodeOptions" xlink:href="..\..\src\nodes\SinkNode.ts"><text x="68.5" y="14.1" stroke="none" text-anchor="middle" data-name="SinkNodeOptions" data-compartment="0">SinkNodeOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(1355.5, 407.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SinkNodeOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SinkNodeOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="SinkNodeOptions" data-compartment="1">+persistence</text>
+<text x="0.0" y="30.3" stroke="none" data-name="SinkNodeOptions" data-compartment="1">+completedEvent</text>
+
+</g>
+</g>
+<g transform="translate(1355.5, 455.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SinkNodeOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SinkNodeOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="SourceNode&lt;Out&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="SourceNode&lt;Out&gt;">
+<rect x="1584.5" y="88.5" height="210.0" width="177.0" data-name="SourceNode&lt;Out&gt;"></rect>
+<path d="M1584.5 120.5 L1761.5 120.5" fill="none" data-name="SourceNode&lt;Out&gt;"></path>
+<path d="M1584.5 152.5 L1761.5 152.5" fill="none" data-name="SourceNode&lt;Out&gt;"></path>
+</g>
+<g transform="translate(1584.5, 88.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SourceNode&lt;Out&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SourceNode&lt;Out&gt;" data-compartment="0">
+<a id="..\..\src\nodes\SourceNode.ts.SourceNode&lt;Out&gt;" xlink:href="..\..\src\nodes\SourceNode.ts"><text x="80.5" y="14.1" stroke="none" text-anchor="middle" data-name="SourceNode&lt;Out&gt;" data-compartment="0">SourceNode&lt;Out&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(1584.5, 120.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SourceNode&lt;Out&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SourceNode&lt;Out&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="SourceNode&lt;Out&gt;" data-compartment="1">#options</text>
+
+</g>
+</g>
+<g transform="translate(1584.5, 152.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SourceNode&lt;Out&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SourceNode&lt;Out&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="SourceNode&lt;Out&gt;" data-compartment="2">#registerService()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="SourceNode&lt;Out&gt;" data-compartment="2">-_onPush()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="SourceNode&lt;Out&gt;" data-compartment="2">#mergeFrame()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="SourceNode&lt;Out&gt;" data-compartment="2">#mergeObject()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="SourceNode&lt;Out&gt;" data-compartment="2">-_onPull()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="SourceNode&lt;Out&gt;" data-compartment="2">-_onSequentialPull()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="SourceNode&lt;Out&gt;" data-compartment="2">-_onParallelPull()</text>
+<text x="0.0" y="127.5" stroke="none" data-name="SourceNode&lt;Out&gt;" data-compartment="2">+abstract onPull()</text>
+
+</g>
+</g>
+</g>
+<g data-name="SourceNodeOptions">
+<g fill="lightblue" stroke="#33322E" data-name="SourceNodeOptions">
+<rect x="1555.5" y="375.5" height="88.0" width="175.0" data-name="SourceNodeOptions"></rect>
+<path d="M1555.5 407.5 L1730.5 407.5" fill="none" data-name="SourceNodeOptions"></path>
+<path d="M1555.5 455.5 L1730.5 455.5" fill="none" data-name="SourceNodeOptions"></path>
+</g>
+<g transform="translate(1555.5, 375.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SourceNodeOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SourceNodeOptions" data-compartment="0">
+<a id="..\..\src\nodes\SourceNode.ts.SourceNodeOptions" xlink:href="..\..\src\nodes\SourceNode.ts"><text x="79.5" y="14.1" stroke="none" text-anchor="middle" data-name="SourceNodeOptions" data-compartment="0">SourceNodeOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(1555.5, 407.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SourceNodeOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SourceNodeOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="SourceNodeOptions" data-compartment="1">+persistence</text>
+<text x="0.0" y="30.3" stroke="none" data-name="SourceNodeOptions" data-compartment="1">+source</text>
+
+</g>
+</g>
+<g transform="translate(1555.5, 455.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SourceNodeOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SourceNodeOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="ActiveSourceOptions">
+<g fill="lightblue" stroke="#33322E" data-name="ActiveSourceOptions">
+<rect x="1552.5" y="524.0" height="105.0" width="181.0" data-name="ActiveSourceOptions"></rect>
+<path d="M1552.5 556.0 L1733.5 556.0" fill="none" data-name="ActiveSourceOptions"></path>
+<path d="M1552.5 621.0 L1733.5 621.0" fill="none" data-name="ActiveSourceOptions"></path>
+</g>
+<g transform="translate(1552.5, 524)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ActiveSourceOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ActiveSourceOptions" data-compartment="0">
+<a id="..\..\src\nodes\SourceNode.ts.ActiveSourceOptions" xlink:href="..\..\src\nodes\SourceNode.ts"><text x="82.5" y="14.1" stroke="none" text-anchor="middle" data-name="ActiveSourceOptions" data-compartment="0">ActiveSourceOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(1552.5, 556)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ActiveSourceOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ActiveSourceOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="ActiveSourceOptions" data-compartment="1">+interval</text>
+<text x="0.0" y="30.3" stroke="none" data-name="ActiveSourceOptions" data-compartment="1">+autoStart</text>
+<text x="0.0" y="46.5" stroke="none" data-name="ActiveSourceOptions" data-compartment="1">+softStop</text>
+
+</g>
+</g>
+<g transform="translate(1552.5, 621)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ActiveSourceOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="ActiveSourceOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="SensorSourceOptions">
+<g fill="lightblue" stroke="#33322E" data-name="SensorSourceOptions">
+<rect x="1548.5" y="669.0" height="72.0" width="189.0" data-name="SensorSourceOptions"></rect>
+<path d="M1548.5 701.0 L1737.5 701.0" fill="none" data-name="SensorSourceOptions"></path>
+<path d="M1548.5 733.0 L1737.5 733.0" fill="none" data-name="SensorSourceOptions"></path>
+</g>
+<g transform="translate(1548.5, 669)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorSourceOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SensorSourceOptions" data-compartment="0">
+<a id="..\..\src\nodes\SourceNode.ts.SensorSourceOptions" xlink:href="..\..\src\nodes\SourceNode.ts"><text x="86.5" y="14.1" stroke="none" text-anchor="middle" data-name="SensorSourceOptions" data-compartment="0">SensorSourceOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(1548.5, 701)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorSourceOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SensorSourceOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="SensorSourceOptions" data-compartment="1">+sensors</text>
+
+</g>
+</g>
+<g transform="translate(1548.5, 733)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorSourceOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SensorSourceOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="WorkerNode&lt;In,Out&gt;">
+<g fill="#eee8d5" stroke="#33322E" data-name="WorkerNode&lt;In,Out&gt;">
+<rect x="1975.5" y="72.0" height="243.0" width="183.0" data-name="WorkerNode&lt;In,Out&gt;"></rect>
+<path d="M1975.5 104.0 L2158.5 104.0" fill="none" data-name="WorkerNode&lt;In,Out&gt;"></path>
+<path d="M1975.5 169.0 L2158.5 169.0" fill="none" data-name="WorkerNode&lt;In,Out&gt;"></path>
+</g>
+<g transform="translate(1975.5, 72)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="0">
+<a id="..\..\src\nodes\WorkerNode.ts.WorkerNode&lt;In,Out&gt;" xlink:href="..\..\src\nodes\WorkerNode.ts"><text x="83.5" y="14.1" stroke="none" text-anchor="middle" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="0">WorkerNode&lt;In,Out&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(1975.5, 104)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="1">#options</text>
+<text x="0.0" y="30.3" stroke="none" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="1">#config</text>
+<text x="0.0" y="46.5" stroke="none" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="1">#handler</text>
+
+</g>
+</g>
+<g transform="translate(1975.5, 169)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="2">
+<text x="0.0" y="14.1" stroke="none" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="2">-_onBuild()</text>
+<text x="0.0" y="30.3" stroke="none" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="2">-_onDestroy()</text>
+<text x="0.0" y="46.5" stroke="none" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="2">-_onPull()</text>
+<text x="0.0" y="62.7" stroke="none" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="2">-_onPush()</text>
+<text x="0.0" y="78.9" stroke="none" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="2">-_onWorkerEvent()</text>
+<text x="0.0" y="95.1" stroke="none" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="2">-_onWorkerPull()</text>
+<text x="0.0" y="111.3" stroke="none" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="2">-_onWorkerPush()</text>
+<text x="0.0" y="127.5" stroke="none" data-name="WorkerNode&lt;In,Out&gt;" data-compartment="2">+invokeMethod()</text>
+
+</g>
+</g>
+</g>
+<g data-name="WorkerNodeOptions">
+<g fill="lightblue" stroke="#33322E" data-name="WorkerNodeOptions">
+<rect x="1879.8" y="383.5" height="72.0" width="176.0" data-name="WorkerNodeOptions"></rect>
+<path d="M1879.8 415.5 L2055.8 415.5" fill="none" data-name="WorkerNodeOptions"></path>
+<path d="M1879.8 447.5 L2055.8 447.5" fill="none" data-name="WorkerNodeOptions"></path>
+</g>
+<g transform="translate(1879.75, 383.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WorkerNodeOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WorkerNodeOptions" data-compartment="0">
+<a id="..\..\src\nodes\WorkerNode.ts.WorkerNodeOptions" xlink:href="..\..\src\nodes\WorkerNode.ts"><text x="80.0" y="14.1" stroke="none" text-anchor="middle" data-name="WorkerNodeOptions" data-compartment="0">WorkerNodeOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(1879.75, 415.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WorkerNodeOptions" data-compartment="1">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WorkerNodeOptions" data-compartment="1">
+<text x="0.0" y="14.1" stroke="none" data-name="WorkerNodeOptions" data-compartment="1">+optimizedPull</text>
+
+</g>
+</g>
+<g transform="translate(1879.75, 447.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WorkerNodeOptions" data-compartment="2">
+<g transform="translate(8, 8)" fill="#33322E" data-name="WorkerNodeOptions" data-compartment="2">
+
+</g>
+</g>
+</g>
+<g data-name="WorkerOptions">
+<g fill="#eee8d5" stroke="#33322E" data-name="WorkerOptions">
+<rect x="1801.5" y="177.5" height="32.0" width="134.0" data-name="WorkerOptions"></rect>
+</g>
+<g transform="translate(1801.5, 177.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="WorkerOptions" data-compartment="0">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WorkerOptions" data-compartment="0">
+<text x="59.0" y="14.1" stroke="none" text-anchor="middle" data-name="WorkerOptions" data-compartment="0">WorkerOptions</text>
+
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

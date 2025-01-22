@@ -2,7 +2,7 @@ import { SerializableMapMember, SerializableMember, SerializableObject } from '.
 import { DataObject } from './DataObject';
 
 @SerializableObject()
-export class ActuatableProperty {
+export class ActuatorProperty {
     @SerializableMember()
     name: string;
     @SerializableMember()
@@ -10,13 +10,13 @@ export class ActuatableProperty {
 }
 
 /**
- * An actuatable object is a spatial object with actuatable properties
+ * An actuator object is a spatial object with actuator properties
  * that can trigger a state change.
  */
 @SerializableObject()
-export class ActuatableObject extends DataObject {
-    @SerializableMapMember(String, () => ActuatableProperty)
-    protected properties: Map<string, ActuatableProperty> = new Map();
+export class ActuatorObject extends DataObject {
+    @SerializableMapMember(String, () => ActuatorProperty)
+    protected properties: Map<string, ActuatorProperty> = new Map();
 
     invoke(method: string, ...args: any[]): Promise<any> {
         const property = this.properties.get(method);
