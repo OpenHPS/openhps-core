@@ -177,8 +177,9 @@ export class Serializer extends JSONSerializer {
             sourceMeta.dataMembers.forEach((objMemberMetadata) => {
                 const objMemberOptions = mergeOptions(classOptions, objMemberMetadata.options);
                 let serialized;
+                const value = sourceObject[objMemberMetadata.key];
                 if (objMemberMetadata.serializer != null) {
-                    serialized = objMemberMetadata.serializer(sourceObject[objMemberMetadata.key], {
+                    serialized = objMemberMetadata.serializer(value, {
                         fallback: (so, td) => serializer.convertSingleValue(so, ensureTypeDescriptor(td)),
                     });
                 } else if (objMemberMetadata.type == null) {
@@ -186,11 +187,11 @@ export class Serializer extends JSONSerializer {
                         `Could not serialize ${objMemberMetadata.name}, there is` +
                             ` no constructor nor serialization function to use.`,
                     );
-                } else if (objMemberMetadata.type() === AnyT) {
+                } else if (objMemberMetadata.type() === AnyT && value !== null && value !== undefined) {
                     // Any type, serialize as an unknown object
-                    const globalDataType = Object.getPrototypeOf(sourceObject[objMemberMetadata.key]).constructor;
+                    const globalDataType = Object.getPrototypeOf(value).constructor;
                     serialized = serializer.convertSingleValue(
-                        sourceObject[objMemberMetadata.key],
+                        value,
                         globalDataType ? ensureTypeDescriptor(globalDataType) : objMemberMetadata.type(),
                         `${nameof(sourceMeta.classType)}.${objMemberMetadata.key}`,
                         objMemberOptions,
@@ -201,7 +202,7 @@ export class Serializer extends JSONSerializer {
                     }
                 } else {
                     serialized = serializer.convertSingleValue(
-                        sourceObject[objMemberMetadata.key],
+                        value,
                         objMemberMetadata.type(),
                         `${nameof(sourceMeta.classType)}.${objMemberMetadata.key}`,
                         objMemberOptions,

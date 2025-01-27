@@ -60,6 +60,10 @@ describe('DataSerializer', () => {
         console.log(serialized);
         const deserialized = DataSerializer.deserialize(serialized);
         // expect(deserialized).to.eql(obj);
+
+        const obj2 = new FloorObject();
+        obj2.floor = 2;
+        DataSerializer.serialize(obj2); // Test serialization without randomObject
     });
 
     describe('serializing', () => {
