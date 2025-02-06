@@ -8,6 +8,7 @@ import { ServiceProxy } from '../../../service/_internal/ServiceProxy';
 import { PushOptions } from '../../options';
 import { Serializable, SerializableMapMember, SerializableMember, SerializableObject } from '../../../data/decorators';
 import { DataServiceProxy } from '../../../service/_internal';
+import { PushPromise } from '../../PushPromise';
 
 /**
  * [[Model]] implementation
@@ -254,8 +255,8 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
         }
     }
 
-    push(frame: In | In[], options?: PushOptions): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+    push(frame: In | In[], options?: PushOptions): PushPromise<void> {
+        return new PushPromise<void>((resolve, reject, completed) => {
             const servicePromises: Array<Promise<unknown>> = [];
 
             // Merge the changes in the frame service
@@ -274,7 +275,13 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
             }
 
             Promise.all(servicePromises)
-                .then(() => this.internalSource.push(frame, options))
+                .then(() => {
+                    const promise = this.internalSource.push(frame, options);
+                    promise.completed(() => {
+                        completed();
+                    });
+                    return promise;
+                })
                 .then(() => {
                     resolve();
                 })

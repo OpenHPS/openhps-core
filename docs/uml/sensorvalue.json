@@ -1,5 +1,5 @@
 {
-    "glob": "./src/data/values/**/*.ts",
+    "glob": "./src/data/values/**/!(Pressure).ts",
     "memberAssociations": true,
     "outMermaidDsl": "./docs/uml/sensorvalue_mermaid.dsl",
     "outFile": "./docs/uml/sensorvalue_diagram.svg",

@@ -1,4 +1,4 @@
-<svg version="1.1" baseProfile="full" width="1307.0" height="571.0" viewBox="0 0 1307 571" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<svg version="1.1" baseProfile="full" width="1180.0" height="571.0" viewBox="0 0 1180 571" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
 <desc >#.interface: fill=lightblue
 #.enumeration: fill=lightgreen
 #.type: fill=lightgray
@@ -20,8 +20,6 @@
 [SensorValue&lt;U&gt;]&lt;:-[LinearVelocity]
 [Magnetism|+unit|]
 [SensorValue&lt;U&gt;]&lt;:-[Magnetism]
-[Pressure||]
-[SensorValue&lt;U&gt;]&lt;:-[Pressure]
 [SensorValue&lt;U&gt;|+timestamp;+accuracy;-_defaultUnit;+unit|+setAccuracy();+toTuple();+clone()]
 [Vector3]&lt;:-[SensorValue&lt;U&gt;]
 [Temperature||]
@@ -32,52 +30,50 @@
 <g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
 <g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 <g stroke="transparent" fill="#ffffff">
-<rect x="0.0" y="0.0" height="571.0" width="1307.0" stroke="none"></rect>
+<rect x="0.0" y="0.0" height="571.0" width="1180.0" stroke="none"></rect>
 </g>
 <g transform="translate(8, 8)" fill="#33322E">
 <g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-<path d="M738.6 307.6 L1194 399 L1194 443 L1194.0 443.0 " fill="none"></path>
-<path d="M739.6 302.3 L738.6 307.6 L737.5 312.8 L725.5 305.0 Z"></path>
+<path d="M631.6 308.2 L1067 399 L1067 443 L1067.0 443.0 " fill="none"></path>
+<path d="M632.6 303.0 L631.6 308.2 L630.5 313.5 L618.5 305.5 Z"></path>
 <path d="M179.7 136.9 L254.5 181 L254.5 234 L254.5 234.0 " fill="none"></path>
 <path d="M182.4 132.3 L179.7 136.9 L177.0 141.5 L168.3 130.1 Z"></path>
 <path d="M72.4 174.2 L71.5 181 L71.5 225.5 L71.5 225.5 " fill="none"></path>
 <path d="M77.7 174.9 L72.4 174.2 L67.1 173.6 L74.0 161.0 Z"></path>
 <path d="M71.5 367.8 L71.5 399 L71.5 423 L71.5 423.0 " fill="none"></path>
 <path d="M76.8 367.8 L71.5 367.8 L66.2 367.8 L71.5 354.5 Z"></path>
-<path d="M737.9 323.4 L935 399 L958.8235294117648 419 L958.8 419.0 " fill="none"></path>
-<path d="M739.9 318.4 L737.9 323.4 L736.0 328.4 L725.5 318.6 Z"></path>
-<path d="M651.0 392.3 L651 399 L651 443 L651.0 443.0 " fill="none"></path>
-<path d="M656.3 392.3 L651.0 392.3 L645.7 392.3 L651.0 379.0 Z"></path>
-<path d="M734.6 379.8 L752.5 399 L770.5882352941177 419 L770.6 419.0 " fill="none"></path>
-<path d="M738.5 376.1 L734.6 379.8 L730.7 383.4 L725.5 370.0 Z"></path>
-<path d="M566.2 359.5 L518 399 L518 431 L518.0 431.0 " fill="none"></path>
-<path d="M569.6 363.6 L566.2 359.5 L562.8 355.4 L576.5 351.1 Z"></path>
-<path d="M564.2 325.4 L383.5 399 L383.5 443 L383.5 443.0 " fill="none"></path>
-<path d="M566.2 330.3 L564.2 325.4 L562.1 320.4 L576.5 320.4 Z"></path>
-<path d="M651.0 109.8 L651 181 L651 201 L651.0 201.0 " fill="none"></path>
-<path d="M656.3 109.8 L651.0 109.8 L645.7 109.8 L651.0 96.5 Z"></path>
-<path d="M563.6 313.3 L241.5 399 L241.5 443 L241.5 443.0 " fill="none"></path>
-<path d="M565.0 318.4 L563.6 313.3 L562.2 308.1 L576.5 309.8 Z"></path>
-<path d="M1052.5 313.4 L895 399 L871.1764705882352 419 L871.2 419.0 " fill="none"></path>
-<path d="M1090.1 346.0 L1085 399 L1064.7058823529412 419 L1064.7 419.0 " fill="none"></path>
+<path d="M630.8 325.8 L808 399 L831.8235294117648 419 L831.8 419.0 " fill="none"></path>
+<path d="M632.9 320.9 L630.8 325.8 L628.8 330.8 L618.5 320.8 Z"></path>
+<path d="M525.3 392.1 L524 399 L524 443 L524.0 443.0 " fill="none"></path>
+<path d="M530.5 393.1 L525.3 392.1 L520.0 391.2 L527.7 379.0 Z"></path>
+<path d="M618.5 389.7 L625.5 399 L643.5882352941177 419 L643.6 419.0 " fill="none"></path>
+<path d="M622.8 386.5 L618.5 389.7 L614.3 392.9 L610.5 379.0 Z"></path>
+<path d="M458.6 350.8 L391 399 L391 431 L391.0 431.0 " fill="none"></path>
+<path d="M461.7 355.2 L458.6 350.8 L455.5 346.5 L469.5 343.1 Z"></path>
+<path d="M544.0 109.8 L544 181 L544 201 L544.0 201.0 " fill="none"></path>
+<path d="M549.3 109.8 L544.0 109.8 L538.7 109.8 L544.0 96.5 Z"></path>
+<path d="M457.0 321.4 L241.5 399 L241.5 443 L241.5 443.0 " fill="none"></path>
+<path d="M458.8 326.4 L457.0 321.4 L455.1 316.3 L469.5 316.8 Z"></path>
+<path d="M925.5 313.4 L768 399 L744.1764705882352 419 L744.2 419.0 " fill="none"></path>
+<path d="M963.1 346.0 L958 399 L937.7058823529412 419 L937.7 419.0 " fill="none"></path>
 <g data-name="Acceleration">
 <g fill="#eee8d5" stroke="#33322E" data-name="Acceleration">
-<rect x="1137.0" y="443.0" height="48.0" width="114.0" data-name="Acceleration"></rect>
-<path d="M1137.0 475.0 L1251.0 475.0" fill="none" data-name="Acceleration"></path>
-<path d="M1137.0 483.0 L1251.0 483.0" fill="none" data-name="Acceleration"></path>
+<rect x="1010.0" y="443.0" height="48.0" width="114.0" data-name="Acceleration"></rect>
+<path d="M1010.0 475.0 L1124.0 475.0" fill="none" data-name="Acceleration"></path>
+<path d="M1010.0 483.0 L1124.0 483.0" fill="none" data-name="Acceleration"></path>
 </g>
-<g transform="translate(1137, 443)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Acceleration" data-compartment="0">
+<g transform="translate(1010, 443)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Acceleration" data-compartment="0">
 <g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Acceleration" data-compartment="0">
 <a id="..\..\src\data\values\Acceleration.ts.Acceleration" xlink:href="..\..\src\data\values\Acceleration.ts"><text x="49.0" y="14.1" stroke="none" text-anchor="middle" data-name="Acceleration" data-compartment="0">Acceleration</text></a>
 
 </g>
 </g>
-<g transform="translate(1137, 475)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Acceleration" data-compartment="1">
+<g transform="translate(1010, 475)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Acceleration" data-compartment="1">
 <g transform="translate(8, 8)" fill="#33322E" data-name="Acceleration" data-compartment="1">
 
 </g>
 </g>
-<g transform="translate(1137, 483)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Acceleration" data-compartment="2">
+<g transform="translate(1010, 483)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Acceleration" data-compartment="2">
 <g transform="translate(8, 8)" fill="#33322E" data-name="Acceleration" data-compartment="2">
 
 </g>
@@ -85,17 +81,17 @@
 </g>
 <g data-name="SensorValue&lt;U&gt;">
 <g fill="#eee8d5" stroke="#33322E" data-name="SensorValue&lt;U&gt;">
-<rect x="576.5" y="201.0" height="178.0" width="149.0" data-name="SensorValue&lt;U&gt;"></rect>
-<path d="M576.5 233.0 L725.5 233.0" fill="none" data-name="SensorValue&lt;U&gt;"></path>
-<path d="M576.5 314.0 L725.5 314.0" fill="none" data-name="SensorValue&lt;U&gt;"></path>
+<rect x="469.5" y="201.0" height="178.0" width="149.0" data-name="SensorValue&lt;U&gt;"></rect>
+<path d="M469.5 233.0 L618.5 233.0" fill="none" data-name="SensorValue&lt;U&gt;"></path>
+<path d="M469.5 314.0 L618.5 314.0" fill="none" data-name="SensorValue&lt;U&gt;"></path>
 </g>
-<g transform="translate(576.5, 201)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SensorValue&lt;U&gt;" data-compartment="0">
+<g transform="translate(469.5, 201)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SensorValue&lt;U&gt;" data-compartment="0">
 <g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SensorValue&lt;U&gt;" data-compartment="0">
 <a id="..\..\src\data\values\SensorValue.ts.SensorValue&lt;U&gt;" xlink:href="..\..\src\data\values\SensorValue.ts"><text x="66.5" y="14.1" stroke="none" text-anchor="middle" data-name="SensorValue&lt;U&gt;" data-compartment="0">SensorValue&lt;U&gt;</text></a>
 
 </g>
 </g>
-<g transform="translate(576.5, 233)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorValue&lt;U&gt;" data-compartment="1">
+<g transform="translate(469.5, 233)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorValue&lt;U&gt;" data-compartment="1">
 <g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SensorValue&lt;U&gt;" data-compartment="1">
 <text x="0.0" y="14.1" stroke="none" data-name="SensorValue&lt;U&gt;" data-compartment="1">+timestamp</text>
 <text x="0.0" y="30.3" stroke="none" data-name="SensorValue&lt;U&gt;" data-compartment="1">+accuracy</text>
@@ -104,7 +100,7 @@
 
 </g>
 </g>
-<g transform="translate(576.5, 314)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorValue&lt;U&gt;" data-compartment="2">
+<g transform="translate(469.5, 314)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SensorValue&lt;U&gt;" data-compartment="2">
 <g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SensorValue&lt;U&gt;" data-compartment="2">
 <text x="0.0" y="14.1" stroke="none" data-name="SensorValue&lt;U&gt;" data-compartment="2">+setAccuracy()</text>
 <text x="0.0" y="30.3" stroke="none" data-name="SensorValue&lt;U&gt;" data-compartment="2">+toTuple()</text>
@@ -222,23 +218,23 @@
 </g>
 <g data-name="AngularVelocity">
 <g fill="#eee8d5" stroke="#33322E" data-name="AngularVelocity">
-<rect x="935.0" y="419.0" height="96.0" width="162.0" data-name="AngularVelocity"></rect>
-<path d="M935.0 451.0 L1097.0 451.0" fill="none" data-name="AngularVelocity"></path>
-<path d="M935.0 483.0 L1097.0 483.0" fill="none" data-name="AngularVelocity"></path>
+<rect x="808.0" y="419.0" height="96.0" width="162.0" data-name="AngularVelocity"></rect>
+<path d="M808.0 451.0 L970.0 451.0" fill="none" data-name="AngularVelocity"></path>
+<path d="M808.0 483.0 L970.0 483.0" fill="none" data-name="AngularVelocity"></path>
 </g>
-<g transform="translate(935, 419)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AngularVelocity" data-compartment="0">
+<g transform="translate(808, 419)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AngularVelocity" data-compartment="0">
 <g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AngularVelocity" data-compartment="0">
 <a id="..\..\src\data\values\AngularVelocity.ts.AngularVelocity" xlink:href="..\..\src\data\values\AngularVelocity.ts"><text x="73.0" y="14.1" stroke="none" text-anchor="middle" data-name="AngularVelocity" data-compartment="0">AngularVelocity</text></a>
 
 </g>
 </g>
-<g transform="translate(935, 451)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AngularVelocity" data-compartment="1">
+<g transform="translate(808, 451)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AngularVelocity" data-compartment="1">
 <g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AngularVelocity" data-compartment="1">
 <text x="0.0" y="14.1" stroke="none" data-name="AngularVelocity" data-compartment="1">+unit</text>
 
 </g>
 </g>
-<g transform="translate(935, 483)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AngularVelocity" data-compartment="2">
+<g transform="translate(808, 483)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AngularVelocity" data-compartment="2">
 <g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AngularVelocity" data-compartment="2">
 <text x="0.0" y="14.1" stroke="none" data-name="AngularVelocity" data-compartment="2">+static fromArray()</text>
 
@@ -247,22 +243,22 @@
 </g>
 <g data-name="Humidity">
 <g fill="#eee8d5" stroke="#33322E" data-name="Humidity">
-<rect x="609.0" y="443.0" height="48.0" width="84.0" data-name="Humidity"></rect>
-<path d="M609.0 475.0 L693.0 475.0" fill="none" data-name="Humidity"></path>
-<path d="M609.0 483.0 L693.0 483.0" fill="none" data-name="Humidity"></path>
+<rect x="482.0" y="443.0" height="48.0" width="84.0" data-name="Humidity"></rect>
+<path d="M482.0 475.0 L566.0 475.0" fill="none" data-name="Humidity"></path>
+<path d="M482.0 483.0 L566.0 483.0" fill="none" data-name="Humidity"></path>
 </g>
-<g transform="translate(609, 443)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Humidity" data-compartment="0">
+<g transform="translate(482, 443)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Humidity" data-compartment="0">
 <g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Humidity" data-compartment="0">
 <a id="..\..\src\data\values\Humidity.ts.Humidity" xlink:href="..\..\src\data\values\Humidity.ts"><text x="34.0" y="14.1" stroke="none" text-anchor="middle" data-name="Humidity" data-compartment="0">Humidity</text></a>
 
 </g>
 </g>
-<g transform="translate(609, 475)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Humidity" data-compartment="1">
+<g transform="translate(482, 475)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Humidity" data-compartment="1">
 <g transform="translate(8, 8)" fill="#33322E" data-name="Humidity" data-compartment="1">
 
 </g>
 </g>
-<g transform="translate(609, 483)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Humidity" data-compartment="2">
+<g transform="translate(482, 483)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Humidity" data-compartment="2">
 <g transform="translate(8, 8)" fill="#33322E" data-name="Humidity" data-compartment="2">
 
 </g>
@@ -270,23 +266,23 @@
 </g>
 <g data-name="LinearVelocity">
 <g fill="#eee8d5" stroke="#33322E" data-name="LinearVelocity">
-<rect x="733.0" y="419.0" height="96.0" width="162.0" data-name="LinearVelocity"></rect>
-<path d="M733.0 451.0 L895.0 451.0" fill="none" data-name="LinearVelocity"></path>
-<path d="M733.0 483.0 L895.0 483.0" fill="none" data-name="LinearVelocity"></path>
+<rect x="606.0" y="419.0" height="96.0" width="162.0" data-name="LinearVelocity"></rect>
+<path d="M606.0 451.0 L768.0 451.0" fill="none" data-name="LinearVelocity"></path>
+<path d="M606.0 483.0 L768.0 483.0" fill="none" data-name="LinearVelocity"></path>
 </g>
-<g transform="translate(733, 419)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LinearVelocity" data-compartment="0">
+<g transform="translate(606, 419)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LinearVelocity" data-compartment="0">
 <g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="LinearVelocity" data-compartment="0">
 <a id="..\..\src\data\values\LinearVelocity.ts.LinearVelocity" xlink:href="..\..\src\data\values\LinearVelocity.ts"><text x="73.0" y="14.1" stroke="none" text-anchor="middle" data-name="LinearVelocity" data-compartment="0">LinearVelocity</text></a>
 
 </g>
 </g>
-<g transform="translate(733, 451)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearVelocity" data-compartment="1">
+<g transform="translate(606, 451)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearVelocity" data-compartment="1">
 <g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LinearVelocity" data-compartment="1">
 <text x="0.0" y="14.1" stroke="none" data-name="LinearVelocity" data-compartment="1">+unit</text>
 
 </g>
 </g>
-<g transform="translate(733, 483)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearVelocity" data-compartment="2">
+<g transform="translate(606, 483)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearVelocity" data-compartment="2">
 <g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LinearVelocity" data-compartment="2">
 <text x="0.0" y="14.1" stroke="none" data-name="LinearVelocity" data-compartment="2">+static fromArray()</text>
 
@@ -295,56 +291,33 @@
 </g>
 <g data-name="Magnetism">
 <g fill="#eee8d5" stroke="#33322E" data-name="Magnetism">
-<rect x="467.0" y="431.0" height="72.0" width="102.0" data-name="Magnetism"></rect>
-<path d="M467.0 463.0 L569.0 463.0" fill="none" data-name="Magnetism"></path>
-<path d="M467.0 495.0 L569.0 495.0" fill="none" data-name="Magnetism"></path>
+<rect x="340.0" y="431.0" height="72.0" width="102.0" data-name="Magnetism"></rect>
+<path d="M340.0 463.0 L442.0 463.0" fill="none" data-name="Magnetism"></path>
+<path d="M340.0 495.0 L442.0 495.0" fill="none" data-name="Magnetism"></path>
 </g>
-<g transform="translate(467, 431)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Magnetism" data-compartment="0">
+<g transform="translate(340, 431)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Magnetism" data-compartment="0">
 <g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Magnetism" data-compartment="0">
 <a id="..\..\src\data\values\Magnetism.ts.Magnetism" xlink:href="..\..\src\data\values\Magnetism.ts"><text x="43.0" y="14.1" stroke="none" text-anchor="middle" data-name="Magnetism" data-compartment="0">Magnetism</text></a>
 
 </g>
 </g>
-<g transform="translate(467, 463)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Magnetism" data-compartment="1">
+<g transform="translate(340, 463)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Magnetism" data-compartment="1">
 <g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Magnetism" data-compartment="1">
 <text x="0.0" y="14.1" stroke="none" data-name="Magnetism" data-compartment="1">+unit</text>
 
 </g>
 </g>
-<g transform="translate(467, 495)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Magnetism" data-compartment="2">
+<g transform="translate(340, 495)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Magnetism" data-compartment="2">
 <g transform="translate(8, 8)" fill="#33322E" data-name="Magnetism" data-compartment="2">
-
-</g>
-</g>
-</g>
-<g data-name="Pressure">
-<g fill="#eee8d5" stroke="#33322E" data-name="Pressure">
-<rect x="340.0" y="443.0" height="48.0" width="87.0" data-name="Pressure"></rect>
-<path d="M340.0 475.0 L427.0 475.0" fill="none" data-name="Pressure"></path>
-<path d="M340.0 483.0 L427.0 483.0" fill="none" data-name="Pressure"></path>
-</g>
-<g transform="translate(340, 443)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Pressure" data-compartment="0">
-<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Pressure" data-compartment="0">
-<a id="..\..\src\data\values\Pressure.ts.Pressure" xlink:href="..\..\src\data\values\Pressure.ts"><text x="35.5" y="14.1" stroke="none" text-anchor="middle" data-name="Pressure" data-compartment="0">Pressure</text></a>
-
-</g>
-</g>
-<g transform="translate(340, 475)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Pressure" data-compartment="1">
-<g transform="translate(8, 8)" fill="#33322E" data-name="Pressure" data-compartment="1">
-
-</g>
-</g>
-<g transform="translate(340, 483)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Pressure" data-compartment="2">
-<g transform="translate(8, 8)" fill="#33322E" data-name="Pressure" data-compartment="2">
 
 </g>
 </g>
 </g>
 <g data-name="Vector3">
 <g fill="#eee8d5" stroke="#33322E" data-name="Vector3">
-<rect x="612.5" y="64.5" height="32.0" width="77.0" data-name="Vector3"></rect>
+<rect x="505.5" y="64.5" height="32.0" width="77.0" data-name="Vector3"></rect>
 </g>
-<g transform="translate(612.5, 64.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Vector3" data-compartment="0">
+<g transform="translate(505.5, 64.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Vector3" data-compartment="0">
 <g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Vector3" data-compartment="0">
 <text x="30.5" y="14.1" stroke="none" text-anchor="middle" data-name="Vector3" data-compartment="0">Vector3</text>
 
@@ -376,24 +349,24 @@
 </g>
 <g data-name="Velocity">
 <g fill="#eee8d5" stroke="#33322E" data-name="Velocity">
-<rect x="1052.5" y="234.0" height="112.0" width="86.0" data-name="Velocity"></rect>
-<path d="M1052.5 266.0 L1138.5 266.0" fill="none" data-name="Velocity"></path>
-<path d="M1052.5 314.0 L1138.5 314.0" fill="none" data-name="Velocity"></path>
+<rect x="925.5" y="234.0" height="112.0" width="86.0" data-name="Velocity"></rect>
+<path d="M925.5 266.0 L1011.5 266.0" fill="none" data-name="Velocity"></path>
+<path d="M925.5 314.0 L1011.5 314.0" fill="none" data-name="Velocity"></path>
 </g>
-<g transform="translate(1052.5, 234)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Velocity" data-compartment="0">
+<g transform="translate(925.5, 234)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Velocity" data-compartment="0">
 <g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Velocity" data-compartment="0">
 <a id="..\..\src\data\values\Velocity.ts.Velocity" xlink:href="..\..\src\data\values\Velocity.ts"><text x="35.0" y="14.1" stroke="none" text-anchor="middle" data-name="Velocity" data-compartment="0">Velocity</text></a>
 
 </g>
 </g>
-<g transform="translate(1052.5, 266)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Velocity" data-compartment="1">
+<g transform="translate(925.5, 266)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Velocity" data-compartment="1">
 <g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Velocity" data-compartment="1">
 <text x="0.0" y="14.1" stroke="none" data-name="Velocity" data-compartment="1">+linear</text>
 <text x="0.0" y="30.3" stroke="none" data-name="Velocity" data-compartment="1">+angular</text>
 
 </g>
 </g>
-<g transform="translate(1052.5, 314)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Velocity" data-compartment="2">
+<g transform="translate(925.5, 314)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Velocity" data-compartment="2">
 <g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Velocity" data-compartment="2">
 <text x="0.0" y="14.1" stroke="none" data-name="Velocity" data-compartment="2">+clone()</text>
 

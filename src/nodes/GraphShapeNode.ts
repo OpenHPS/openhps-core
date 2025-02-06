@@ -3,6 +3,7 @@ import { PullOptions, PushOptions } from '../graph/options';
 import { Node, NodeOptions } from '../Node';
 import { GraphBuilder } from '../graph/builders/GraphBuilder';
 import { Graph } from '../graph/Graph';
+import { PushPromise } from '../graph';
 
 /**
  * Graph shape node is a node that contains multiple nodes on itself. Other than a constructed
@@ -56,9 +57,9 @@ export abstract class GraphShapeNode<In extends DataFrame = DataFrame, Out exten
      * Push data to the node
      * @param {DataFrame | DataFrame[]} data Data frame to push
      * @param {PushOptions} [options] Push options
-     * @returns {Promise<void>} Push promise
+     * @returns {PushPromise<void>} Push promise
      */
-    public push(data: In | In[], options: PushOptions = {}): Promise<void> {
+    public push(data: In | In[], options: PushOptions = {}): PushPromise<void> {
         return this._graph.push(data, options);
     }
 

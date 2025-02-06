@@ -54,11 +54,6 @@ class Magnetism{
             
         }
 SensorValue~U~<|--Magnetism
-class Pressure{
-            
-            
-        }
-SensorValue~U~<|--Pressure
 class SensorValue~U~{
             +timestamp
 +accuracy

@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Node, NodeOptions } from '../Node';
 import { PushOptions } from '../graph/options';
 import { DataObjectService } from '../service';
+import { PushPromise } from '../graph/PushPromise';
 
 /**
  * Sink node
@@ -40,8 +41,8 @@ export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In
         this.options.persistence = this.options['persistence'] === undefined ? true : this.options.persistence;
     }
 
-    public push(data: In | In[], options?: PushOptions): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+    public push(data: In | In[], options?: PushOptions): PushPromise<void> {
+        return new PushPromise<void>((resolve, reject) => {
             if (data === null || data === undefined) {
                 return reject();
             }

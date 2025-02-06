@@ -17,12 +17,9 @@ import {
     DataObjectService,
     MemoryDataService,
     DataService,
-    DataSerializer,
     ModelSerializer,
-    WorkerHandler,
     SourceNode,
 } from '../../src';
-import { BroadcastNode } from '../../src/nodes/shapes/BroadcastNode';
 import { PlaceholderNode } from '../../src/nodes/_internal/PlaceholderNode';
 import { DataServiceProxy } from '../../src/service/_internal';
 import { DummyDataObject } from '../mock/data/object/DummyDataObject';
@@ -448,6 +445,24 @@ describe('Model', () => {
     });
 
     describe('pushing', () => {
+
+        it('should support a completed promise', (done) => {
+            ModelBuilder.create()
+                .from()
+                .via(new CallbackNode((f) => {f}))
+                .to(new CallbackSinkNode((f) => {
+                    // do something
+                    f.addObject(new DataObject("test"));
+                }))
+                .build().then((model: Model) =>{
+                    const frame = new DataFrame();
+                    model.push(frame).completed(() => {
+                        // Expect frame to be completed
+                        done();
+                    });
+                });
+        });
+
         it('should support pushing to placeholders', (done) => {
             ModelBuilder.create()
                 .addShape(
@@ -598,16 +613,16 @@ describe('Model', () => {
         });
 
         it('should throw an exception when a graph shape node throws an error', (done) => {
-            ModelBuilder.create()
+            return ModelBuilder.create()
                 .addShape(
                     GraphBuilder.create()
                         .from()
                         .via(
-                            new CallbackSinkNode((data: DataFrame) => {
+                            new CallbackNode(() => {
                                 throw new Error('Excepting this error');
-                            }),
+                            })
                         )
-                        .to('a'),
+                        .to('a')
                 )
                 .from('a')
                 .to()

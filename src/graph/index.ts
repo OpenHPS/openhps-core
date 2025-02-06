@@ -5,3 +5,5 @@ export * from './Edge';
 export * from './Inlet';
 export * from './Outlet';
 export * from './Graph';
+export * from './PushPromise';
+export * from './PullPromise';

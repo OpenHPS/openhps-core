@@ -6,6 +6,8 @@ import { PushCompletedEvent, PushError, PushEvent } from '../events';
 import { Inlet } from '../Inlet';
 import { PullOptions, PushOptions } from '../options';
 import { Outlet } from '../Outlet';
+import { PushPromise } from '../PushPromise';
+import { PullPromise } from '../PullPromise';
 
 @SerializableObject()
 export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
@@ -206,9 +208,9 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
      * @param {PullOptions} [options] Pull options
      * @returns {Promise<void>} Pull promise
      */
-    pull(options?: PullOptions): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            const callbackPromises: Array<Promise<void>> = [];
+    pull(options?: PullOptions): PullPromise<void> {
+        return new PullPromise<void>((resolve, reject) => {
+            const callbackPromises: Array<PullPromise<void> | Promise<void>> = [];
             this.listeners('pull').forEach((callback) => {
                 callbackPromises.push(callback(options));
             });
@@ -231,10 +233,10 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
      * Push data to the node
      * @param {DataFrame | DataFrame[]} data Data frame to push
      * @param {PushOptions} [options] Push options
-     * @returns {Promise<void>} Push promise
+     * @returns {PushPromise<void>} Push promise
      */
-    push(data: In | In[], options: PushOptions = {}): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+    push(data: In | In[], options: PushOptions = {}): PushPromise<void> {
+        return new PushPromise<void>((resolve, reject, completed) => {
             if (data === null || data === undefined) {
                 return reject(new Error('Node received null data frame!'));
             }
@@ -242,8 +244,15 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
             const listeners = this.listeners('push');
             if (listeners.length === 0) {
                 // Forward push, resolve before outlets resolve
-                this.outlets.forEach((outlet) => outlet.push(data as any, options));
+                const pushPromises = this.outlets.map((outlet) => outlet.push(data as any, options));
+                // Resolve
                 resolve();
+                Promise.all(pushPromises)
+                    .then(() => {
+                        completed();
+                    }).catch(() => {
+                        // Do nothing, promimse is already resolved
+                    });
             } else {
                 this._available = false;
                 Promise.all(listeners.map((callback) => callback(data, options)))
@@ -251,6 +260,7 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
                         this._available = true;
                         this.emit('available');
                         resolve();
+                        completed();
                     })
                     .catch(reject);
             }

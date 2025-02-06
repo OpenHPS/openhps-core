@@ -50,7 +50,7 @@ export default function register() {
     GraphShapeBuilder.registerShape('flatten', () => new FrameFlattenNode());
     GraphShapeBuilder.registerShape('buffer', () => new MemoryBufferNode());
     GraphShapeBuilder.registerShape('filterObjects', (filterFn: any) => new ObjectFilterNode(filterFn));
-    GraphShapeBuilder.registerShape('store', () => new CallbackSinkNode());
+    GraphShapeBuilder.registerShape('store', () => new CallbackSinkNode() as any);
     GraphShapeBuilder.registerShape(
         'merge',
         (by: (frame: DataFrame) => any, timeout: number, timeoutUnit: TimeUnit) =>

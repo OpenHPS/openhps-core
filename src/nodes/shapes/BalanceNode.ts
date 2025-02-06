@@ -1,4 +1,5 @@
 import { DataFrame } from '../../data';
+import { PushPromise } from '../../graph';
 import { Outlet } from '../../graph/Outlet';
 import { Node } from '../../Node';
 
@@ -13,8 +14,8 @@ export class BalanceNode<InOut extends DataFrame> extends Node<InOut, InOut> {
         reject: (ex?: any) => void;
     }> = [];
 
-    public push(frame: InOut | InOut[]): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+    public push(frame: InOut | InOut[]): PushPromise<void> {
+        return new PushPromise<void>((resolve, reject) => {
             this.logger('debug', `Received a data frame in the balance node ${this.uid}`, frame);
 
             let assigned = false;

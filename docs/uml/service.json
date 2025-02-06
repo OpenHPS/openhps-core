@@ -1,5 +1,5 @@
 {
-    "glob": "./src/service/!(Dummy*|Time*|Node*|Key*|Location*).ts",
+    "glob": "./src/service/!(Dummy*|Time*|Node*|Key*|Location*|Trajectory*|*Proxy*|RemoteService).ts",
     "memberAssociations": true,
     "outMermaidDsl": "./docs/uml/service_mermaid.dsl",
     "outFile": "./docs/uml/service_diagram.svg",

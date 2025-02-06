@@ -8,6 +8,8 @@ import { Graph } from '../../Graph';
 import { Node } from '../../../Node';
 import { Constructor, SerializableMapMember, SerializableMember, SerializableObject } from '../../../data/decorators';
 import { DataSerializer } from '../../../data';
+import { PushPromise } from '../../PushPromise';
+import { PullPromise } from '../../PullPromise';
 
 /**
  * @category Graph
@@ -165,9 +167,9 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
     /**
      * Send a pull request to the graph
      * @param {PullOptions} [options] Pull options
-     * @returns {Promise<void>} Pull promise
+     * @returns {PullPromise<void>} Pull promise
      */
-    pull(options?: PullOptions): Promise<void> {
+    pull(options?: PullOptions): PullPromise<void> {
         return this.internalSink.pull(options);
     }
 
@@ -175,9 +177,9 @@ export class GraphShape<In extends DataFrame, Out extends DataFrame> extends Nod
      * Push data to the graph
      * @param {DataFrame | DataFrame[]} frame Data frame to push
      * @param {PushOptions} [options] Push options
-     * @returns {Promise<void>} Push promise
+     * @returns {PushPromise<void>} Push promise
      */
-    push(frame: In | In[], options?: PushOptions): Promise<void> {
+    push(frame: In | In[], options?: PushOptions): PushPromise<void> {
         return this.internalSource.push(frame, options);
     }
 
