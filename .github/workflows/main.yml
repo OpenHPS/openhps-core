@@ -37,7 +37,7 @@ jobs:
           npm run build
           npm run size
       - name: Upload web artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: web
           path: |
@@ -138,7 +138,7 @@ jobs:
             **/docs/out
           key: ${{ runner.os }}-docs-v1-${{ github.run_number }}
       - name: Publish Documentation
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: docs
           path: |

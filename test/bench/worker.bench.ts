@@ -14,25 +14,33 @@ import {
 } from '../../src';
 import * as path from 'path';
 import { ComputingNode } from '../mock/nodes/ComputingNode';
-import Benchmark = require('benchmark');
+import * as Benchmark from 'benchmark';
 import * as fs from 'fs';
 
 const size = parseInt(process.argv[2]);
 const minSamples = parseInt(process.argv[3]);
+const workerCount = parseInt(process.argv[5]);
+const concurrency = parseInt(process.argv[4]);
+
+console.log("Size: " + size);
+console.log("Min Samples: " + minSamples);
+console.log("Worker Count: " + workerCount);
+console.log("Concurrency: " + concurrency);
 
 const frames: DataFrame[] = new Array();
 const suite = new Suite();
 const settings: Benchmark.Options = {
     defer: true,
     minSamples,
-    initCount: 5,
-    delay: 2
+    initCount: 10,
+    delay: 10
 };
 const settingsCreate: Benchmark.Options = {
     defer: true,
-    minSamples: 1
+    minSamples: 1,
+    delay: 10
 };
-let model: Model;
+let model: Model | null;
 
 async function init() {
     for (let i = 0 ; i < 100 ; i++) {
@@ -60,7 +68,7 @@ function createModel(workers: number): Promise<Model> {
                     builder.via(new ComputingNode(args.size));
                 }, {
                     poolSize: workers,
-                    poolConcurrency: parseInt(process.argv[4]),
+                    poolConcurrency: concurrency,
                     directory: __dirname,
                     services: [],
                     args: {
@@ -83,7 +91,11 @@ function createModel(workers: number): Promise<Model> {
     });
 }
 
-function testFunction(model: Model, deferred: any): void {
+function testFunction(model: Model | null, deferred: any): void {
+    if (model === null) {
+        console.error("Model is null!");
+        return deferred.resolve();
+    }
     let promises = new Array();
     frames.forEach(frame => {
         promises.push(model.push(frame));
@@ -103,7 +115,7 @@ init().then(() => {
     console.log("Initialized! Starting benchmarks ...");
 
     suite.add("worker#none-create", (deferred: any) => {
-        if (model !== undefined && model.name == "none")
+        if (model !== null && model.name == "none")
             return deferred.resolve();
         ModelBuilder.create()
             .addShape(GraphBuilder.create()
@@ -120,28 +132,33 @@ init().then(() => {
                 deferred.resolve();
             });
     }, settingsCreate)
-    .add("worker#computenode", (deferred: any) => {
-        const sink = model.findNodeByUID("sink") as CallbackSinkNode<any>;
-        sink.callback = (frame) => {
-            deferred.resolve();
-        };
-        Promise.resolve(model.push(frames[0]));
-    }, {
-        minSamples: 10,
-        defer: true
-    })
+    // .add("worker#computenode", (deferred: any) => {
+    //     const sink = model.findNodeByUID("sink") as CallbackSinkNode<any>;
+    //     sink.callback = (frame) => {
+    //         deferred.resolve();
+    //     };
+    //     Promise.resolve(model.push(frames[0]));
+    // }, {
+    //     minSamples: 10,
+    //     defer: true
+    // })
     .add("worker#none", (deferred: any) => {
-        testFunction(model, deferred);
+        return testFunction(model, deferred);
     }, {
         onComplete: () => {
-            model.emit('destroy');
+            if (model) {
+                model.emit('destroy');
+            }
+            model = null;
         },
         ...settings
     });
-    for (let i = 1 ; i <= parseInt(process.argv[5]) ; i++) {
+
+    for (let i = 1 ; i <= workerCount ; i++) {
         suite.add(`worker#${i}-create`, (deferred: any) => {
-            if (model !== undefined && model.name == `${i}`)
+            if (model !== null && model.name == `${i}`) {
                 return deferred.resolve();
+            }
             createModel(i).then((m: Model) => {
                 model = m;
                 model.name = `${i}`;
@@ -149,11 +166,13 @@ init().then(() => {
             });
         }, settingsCreate)
         .add(`worker#${i}`, (deferred: any) => {
-            testFunction(model, deferred);
+            return testFunction(model, deferred);
         }, {
             onComplete: () => {
-                model.emit('destroy');
-                model = undefined;
+                if (model) {
+                    model.emit('destroy');
+                }
+                model = null;
             },
             ...settings
         })
@@ -161,8 +180,12 @@ init().then(() => {
     suite.on('cycle', function(event: any) {
         console.log(String(event.target));
     }).on('complete', function () {
-        for (let i = 0; i < this.length; i ++) {
-            fs.writeFileSync("benchmark_" + i + "_" + Date.now() + ".json", JSON.stringify(this[i], null, 4))
+        try {
+            for (let i = 0; i < this.length; i ++) {
+                fs.writeFileSync("benchmark_" + i + "_" + Date.now() + ".json", JSON.stringify(this[i], null, 4))
+            }
+        } catch (ex) {
+            console.error(ex);
         }
     })
     .run();    
