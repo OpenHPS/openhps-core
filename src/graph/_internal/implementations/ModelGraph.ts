@@ -276,10 +276,24 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
 
             Promise.all(servicePromises)
                 .then(() => {
-                    const promise = this.internalSource.push(frame, options);
-                    promise.completed(() => {
-                        completed();
+                    const completedFrames = new Set<string>();
+                    this.once('completed', (e) => {
+                        if (Array.isArray(frame)) {
+                            frame.forEach((f) => {
+                                if (e.frameUID === f.uid) {
+                                    completedFrames.add(f.uid);
+                                }
+                            });
+                            if (completedFrames.size === frame.length) {
+                                completed();
+                            }
+                        } else {
+                            if (e.frameUID === frame.uid) {
+                                completed();
+                            }
+                        }
                     });
+                    const promise = this.internalSource.push(frame, options);
                     return promise;
                 })
                 .then(() => {

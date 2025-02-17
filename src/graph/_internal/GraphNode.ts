@@ -250,7 +250,8 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
                 Promise.all(pushPromises)
                     .then(() => {
                         completed();
-                    }).catch(() => {
+                    })
+                    .catch(() => {
                         // Do nothing, promimse is already resolved
                     });
             } else {

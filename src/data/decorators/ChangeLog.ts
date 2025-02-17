@@ -160,12 +160,24 @@ export function createChangeLog<T extends Object>(target: T): T & SerializableCh
                             element = createChangeLog(element);
                         }
                     });
+                    // Wrap the array in a proxy to track changes
+                    target[member.key] = new Proxy(target[member.key], {
+                        set: (arr, index: string, value) => {
+                            const oldArray = [...arr];
+                            arr[index] = value;
+                            const newArray = [...arr];
+                            target[CHANGELOG_METADATA_KEY].addChange(member.key, oldArray, newArray);
+                            return true;
+                        },
+                    });
                 } else if (target[member.key] instanceof Map || target[member.key] instanceof Set) {
                     target[member.key].forEach((element) => {
                         if (element instanceof Object) {
                             element = createChangeLog(element);
                         }
                     });
+                    // The map itself should also be watched
+                    target[member.key] = createChangeLog(target[member.key]);
                 } else if (target[member.key] instanceof Object) {
                     // Only wrap objects that are not ignored
                     if (!IGNORED_TYPES.includes(target[member.key].constructor)) {

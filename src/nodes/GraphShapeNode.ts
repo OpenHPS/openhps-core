@@ -3,7 +3,7 @@ import { PullOptions, PushOptions } from '../graph/options';
 import { Node, NodeOptions } from '../Node';
 import { GraphBuilder } from '../graph/builders/GraphBuilder';
 import { Graph } from '../graph/Graph';
-import { PushPromise } from '../graph';
+import { PushPromise } from '../graph/PushPromise';
 
 /**
  * Graph shape node is a node that contains multiple nodes on itself. Other than a constructed

@@ -613,7 +613,7 @@ describe('Model', () => {
         });
 
         it('should throw an exception when a graph shape node throws an error', (done) => {
-            return ModelBuilder.create()
+            ModelBuilder.create()
                 .addShape(
                     GraphBuilder.create()
                         .from()

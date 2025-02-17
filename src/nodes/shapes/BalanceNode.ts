@@ -1,5 +1,5 @@
 import { DataFrame } from '../../data';
-import { PushPromise } from '../../graph';
+import { PushPromise } from '../../graph/PushPromise';
 import { Outlet } from '../../graph/Outlet';
 import { Node } from '../../Node';
 

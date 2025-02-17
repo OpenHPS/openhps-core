@@ -21,6 +21,9 @@ import {
     Accuracy2D,
     SensorValue,
     Vector3,
+    createChangeLog,
+    getChangeLog,
+    SerializableArrayMember,
 } from '../../../src';
 import { BroadcastNode } from '../../../src/nodes/shapes/BroadcastNode';
 import { ServiceProxy } from '../../../src/service/_internal';
@@ -289,6 +292,32 @@ describe('DataSerializer', () => {
             expect(DataSerializerUtils.getOwnMetadata(LengthUnit).knownTypes.size).to.eql(0);
             expect(DataSerializerUtils.getOwnMetadata(DerivedUnit).knownTypes.size).to.eql(3);
             //expect(DataSerializerUtils.getOwnMetadata(SensorValue).knownTypes).to.not.contain(Vector3);
+        });
+    });
+
+    describe('changelog', () => {
+        it('should serialize a changelog', () => {
+            @SerializableObject()
+            class TestObjectEntry { 
+                @SerializableMember()
+                key: string;
+
+                constructor(key?: string) {
+                    this.key = key;
+                }
+            }
+
+            @SerializableObject()
+            class TestObject {
+                @SerializableArrayMember(TestObjectEntry)
+                members: TestObjectEntry[] = [];
+            }
+
+            const object = createChangeLog(new TestObject());
+            object.members.push(new TestObjectEntry("test"));
+            const changelog = getChangeLog(object);
+            expect(changelog).to.not.be.undefined;
+            expect(changelog.getLatestChanges().length).to.be.greaterThan(0);
         });
     });
 });
