@@ -312,6 +312,7 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
     }
 
     private _onCompleted(event: PushCompletedEvent): void {
+        this.logger('debug', `Node ${this.name} completed frame ${event.frameUID}`);
         this.inlets.forEach((inlet) => inlet.emit('completed', event));
     }
 }
