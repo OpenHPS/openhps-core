@@ -19,14 +19,12 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v3
 
-            # Set up Docker
-            - name: Set up Docker
-              uses: docker/setup-buildx-action@v2
-
-            # Start the Docker container using docker-compose
-            # This is the JOSS service used for building the paper locally
-            - name: Build and run paper container
-              run: docker-compose -f ./docs/paper/docker-compose.yml up --build --abort-on-container-exit
+            - name: Build draft PDF
+              uses: openjournals/openjournals-draft-action@master
+              with:
+                journal: joss
+                # This should be the path to the paper within your repo.
+                paper-path: ./docs/paper/paper.md
 
             # Upload the generated PDF as an artifact
             # The output PDF should be (temporarily) available via the GitHub Actions UI
