@@ -14,7 +14,7 @@ authors:
     orcid: 0000-0001-9916-0837
     affiliation: 1
 affiliations:
- - name: Vrije Universiteit Brussel, Web & Information Systems Engineer Lab, Brussels, Belgium
+ - name: Vrije Universiteit Brussel, Web & Information Systems Engineering Lab, Brussels, Belgium
    index: 1
 date: 31 March 2025
 bibliography: paper.bib
@@ -36,7 +36,7 @@ All concepts, ranging from positions to sensor values, can be expressed in vario
 
 ![OpenHPS graph of a positioning system](images/openhps-example-2.png){width=60%}
 
-Any data pushed through the graph can be serialised to JSON or RDF data using the POSO ontology [@vandewynckel2022iswc], enabling interoperability between systems. Each node in the graph represent a step in the processing of data frames from source to sink as shown in Figure 1. A `SourceNode` generates information, a `ProcessingNode` processes information and a `SinkNode` consumes information.
+Any data pushed through the graph can be serialised to JSON or RDF data using the POSO ontology [@vandewynckel2022iswc], enabling interoperability between systems. Each node in the graph represents a step in the processing of data frames from source to sink as shown in Figure 1. A `SourceNode` generates information, a `ProcessingNode` processes information and a `SinkNode` consumes information.
 
 OpenHPS is modular by design, mainly due to the ability to extend data frames and objects. These extensions allow for different data objects, including different sensors like cameras, IMU sensors or spatial landmarks such as Bluetooth beacons. Each node in a graph can be extended as well, allowing the creation of custom algorithms that can be added or removed from a positioning system. Researchers can focus on the prototyping of new algorithms without having to worry about the integration of these algorithms into a larger system.
 
@@ -44,11 +44,11 @@ OpenHPS is modular by design, mainly due to the ability to extend data frames an
 Our framework is designed to offer FAIR positioning systems, leveraging the open approach of the framework and the data these systems produce. With our modules such as `@openhps/rdf` and `@openhps/solid`, we have enabled developers to serialise their data to RDF and store it in Solid Pods. This facilitates the creation of positioning systems that are transparent and privacy preserving, while also ensuring that other positioning systems or consumer applications can access the data, regardless of whether they are created using OpenHPS. Extensions such as `@sembeacon/openhps` provide support for semantic beacons [@vandewynckel2023], enabling the discovery (i.e. findability) of these systems and the data they produce. 
 
 ### Performance
-Since our framework uses TypeScript, it uses JavaScript at runtime, which is single-threaded by default. To overcome the challenges associated with creating real-time stream processing systems, our graphs or portions of the graph can be executed using web workers. All data transmitted through our graph is serialisable, eliminating the need for developers to handle this serialisation or communication between web workers themselves.
+Since our framework uses TypeScript, it uses JavaScript at runtime, which is single-threaded by default. To overcome the challenges associated with creating real-time stream processing systems, our graphs or portions of the graph can be executed using Web Workers. All data transmitted through our graph is serialisable, eliminating the need for developers to handle this serialisation or communication between Web Workers themselves.
 
 In addition to the ability to run graphs on multiple workers, our communication nodes such as MQTT, combined with the serialisability of data, allows developers to offload the processing of complex tasks to other servers or dedicated processors. For more high-demanding algorithms as used in computer vision and visual SLAM, modules such as `@openhps/opencv` and `@openhps/openvslam` create C++ bindings in NodeJS.
 
 # Examples of Research Work
-OpenHPS has been a building block for various research that has been used in indoor positioning systems [@vandewynckel2021], its ability to serialise location data to RDF has been demonstrated in an application that aims to preserve privacy and transparency using Solid-pods [@vandewynckel2022]. Next, OpenHPS was used in the SemBeacon demonstrator application [@vandewynckel2023] that is written in CapacitorJS and uses the framework to deserialise positioning data and positioning systems. Modules have been created for other academic projects, such as the FidMark ontology [@vandewynckel2024], which provides fiducial marker classification within the framework. The ability of OpenHPS to contain modular nodes and its use within the domain of positioning systems facilitates the sharing of algorithms and findings, as well as the rapid creation of prototypes and demonstrators that make use of location data. Finally, OpenHPS and the related modules have been used to collect several datasets that can be used by researchers to evaluate their algorithms [@openhps2021dataset], [@maxim_van_de_wynckel_2025], [@maxim_van_de_wynckel_beat_signer_2025]. 
+OpenHPS has been a building block for various research that has been used in indoor positioning systems [@vandewynckel2021], and its ability to serialise location data to RDF has been demonstrated in an application that aims to preserve privacy and transparency using Solid Pods [@vandewynckel2022]. Further, OpenHPS was used in the SemBeacon demonstrator application [@vandewynckel2023] that is written in CapacitorJS and uses the framework to deserialise positioning data and positioning systems. Modules have been created for other academic projects, such as the FidMark ontology [@vandewynckel2024], which provides fiducial marker classification within the framework. The ability of OpenHPS to contain modular nodes and its use within the domain of positioning systems facilitates the sharing of algorithms and findings, as well as the rapid creation of prototypes and demonstrators that make use of location data. Finally, OpenHPS and the related modules have been used to collect several datasets that can be used by researchers to evaluate their algorithms [@openhps2021dataset], [@maxim_van_de_wynckel_2025], [@maxim_van_de_wynckel_beat_signer_2025]. 
 
 # References
