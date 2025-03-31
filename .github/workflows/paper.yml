@@ -7,6 +7,7 @@ on:
     pull_request:
         paths:
             - './docs/paper/**'
+    # Manual trigger
     workflow_dispatch:
 
 jobs:
@@ -23,12 +24,14 @@ jobs:
               uses: docker/setup-buildx-action@v2
 
             # Start the Docker container using docker-compose
+            # This is the JOSS service used for building the paper locally
             - name: Build and run paper container
               run: docker-compose -f ./docs/paper/docker-compose.yml up --build --abort-on-container-exit
 
             # Upload the generated PDF as an artifact
+            # The output PDF should be (temporarily) available via the GitHub Actions UI
             - name: Upload paper PDF
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                 name: paper-pdf
                 path: ./docs/paper/paper/paper.pdf
