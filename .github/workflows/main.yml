@@ -17,13 +17,13 @@ jobs:
         with:
           node-version: 18
       - name: Load dependency cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('yarn.lock') }}
       - name: Load build cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/dist
@@ -51,7 +51,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Load dependency cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/node_modules
@@ -67,20 +67,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Load dependency cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('yarn.lock') }}
       - name: Load build cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/dist
             **/src/three
           key: ${{ runner.os }}-build-v1-${{ github.run_number }}
       - name: Load test and coverage cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/test-results.xml
@@ -100,20 +100,20 @@ jobs:
       - name: Setup Graphviz
         uses: ts-graphviz/setup-graphviz@v1
       - name: Load dependency cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('yarn.lock') }}
       - name: Load build cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/dist
             **/src/three
           key: ${{ runner.os }}-build-v1-${{ github.run_number }}
       - name: Load document cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/docs/out
@@ -132,7 +132,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Load document cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/docs/out
@@ -158,7 +158,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Load test and coverage cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/test-results.xml
@@ -186,13 +186,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Load dependency cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('yarn.lock') }}
       - name: Load build cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/dist
@@ -226,13 +226,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Load dependency cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('yarn.lock') }}
       - name: Load build cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/dist
