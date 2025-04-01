@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Publishing DTD v1.2 20190208//EN"
+                  "JATS-publishing1.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" dtd-version="1.2" article-type="other">
+<front>
+<journal-meta>
+<journal-id></journal-id>
+<journal-title-group>
+<journal-title>Journal of Open Source Software</journal-title>
+<abbrev-journal-title>JOSS</abbrev-journal-title>
+</journal-title-group>
+<issn publication-format="electronic">2475-9066</issn>
+<publisher>
+<publisher-name>Open Journals</publisher-name>
+</publisher>
+</journal-meta>
+<article-meta>
+<article-id pub-id-type="publisher-id">0</article-id>
+<article-id pub-id-type="doi">N/A</article-id>
+<title-group>
+<article-title>OpenHPS: A Modular Framework to Facilitate the
+Development of FAIR Positioning Systems</article-title>
+</title-group>
+<contrib-group>
+<contrib contrib-type="author">
+<contrib-id contrib-id-type="orcid">https://orcid.org/0000-0003-0314-7107</contrib-id>
+<name>
+<surname>Van de Wynckel</surname>
+<given-names>Maxim</given-names>
+</name>
+<xref ref-type="aff" rid="aff-1"/>
+</contrib>
+<contrib contrib-type="author">
+<contrib-id contrib-id-type="orcid">https://orcid.org/0000-0001-9916-0837</contrib-id>
+<name>
+<surname>Signer</surname>
+<given-names>Beat</given-names>
+</name>
+<xref ref-type="aff" rid="aff-1"/>
+</contrib>
+<aff id="aff-1">
+<institution-wrap>
+<institution>Vrije Universiteit Brussel, Web &amp; Information Systems
+Engineer Lab, Brussels, Belgium</institution>
+</institution-wrap>
+</aff>
+</contrib-group>
+<pub-date date-type="pub" publication-format="electronic" iso-8601-date="2025-03-31">
+<day>31</day>
+<month>3</month>
+<year>2025</year>
+</pub-date>
+<volume>¿VOL?</volume>
+<issue>¿ISSUE?</issue>
+<fpage>¿PAGE?</fpage>
+<permissions>
+<copyright-statement>Authors of papers retain copyright and release the
+work under a Creative Commons Attribution 4.0 International License (CC
+BY 4.0)</copyright-statement>
+<copyright-year>1970</copyright-year>
+<copyright-holder>The article authors</copyright-holder>
+<license license-type="open-access" xlink:href="https://creativecommons.org/licenses/by/4.0/">
+<license-p>Authors of papers retain copyright and release the work under
+a Creative Commons Attribution 4.0 International License (CC BY
+4.0)</license-p>
+</license>
+</permissions>
+<kwd-group kwd-group-type="author">
+<kwd>Hybrid positioning</kwd>
+<kwd>Interoperability</kwd>
+<kwd>FAIR</kwd>
+<kwd>Stream processing</kwd>
+</kwd-group>
+</article-meta>
+</front>
+<body>
+<sec id="abstract">
+  <title>Abstract</title>
+  <p>Positioning systems determine the location of people and objects
+  using various technologies and algorithms. While GPS dominates outdoor
+  positioning, indoor and smaller-scale systems often require
+  alternative technologies for improved latency, accuracy or efficiency.
+  These systems are frequently developed as single-use prototypes with
+  no standard data format, hindering replication and expansion. OpenHPS
+  addresses these challenges by providing a modular, graph-based
+  framework for creating versatile positioning systems. It supports a
+  wide range of algorithms and allows developers to extend functionality
+  by sharing custom nodes for sensor fusion and novel algorithms.</p>
+</sec>
+<sec id="keywords">
+  <title>Keywords</title>
+  <p>Hybrid positioning systems, interoperable positioning systems,
+  indoor positioning, stream processing, linked data, RDF</p>
+</sec>
+<sec id="statement-of-need">
+  <title>Statement of Need</title>
+  <p>Existing positioning systems or frameworks such as AnyPlace
+  (<xref alt="Georgiou et al., 2015" rid="ref-georgiou2015anyplace" ref-type="bibr">Georgiou
+  et al., 2015</xref>) or FIND3
+  (<xref alt="Scholl, 2020" rid="ref-find3" ref-type="bibr">Scholl,
+  2020</xref>) focus on specific use cases, platforms or a set of
+  algorithms. While this facilitates the development of a positioning
+  system, it also limits the freedom to design custom algorithms or
+  positioning systems. In systems developed for academic purposes,
+  proprietary systems are created that are difficult to replicate,
+  expand or implement in a production-ready environment due to the use
+  of software such as MatLab. OpenHPS was created to address these
+  issues by providing a modular framework that allows developers and
+  researchers to create positioning systems for a wide range of use
+  cases. The framework and positioning systems created with our
+  framework are designed to be interoperable, allowing developers to
+  share their algorithms and positioning systems with others. Using
+  additional modules that add support for Solid
+  (<xref alt="Van de Wynckel &amp; Signer, 2022a" rid="ref-vandewynckel2022" ref-type="bibr">Van
+  de Wynckel &amp; Signer, 2022a</xref>) and DHTs, we have enabled the
+  development of findable, accessible, interoperable and reusable (FAIR)
+  positioning systems.</p>
+  <sec id="framework-overview">
+    <title>Framework Overview</title>
+    <p><monospace>OpenHPS</monospace> is an open-source hybrid
+    positioning system framework written in TypeScript. It can be run on
+    the server using NodeJS, in the browser or even as a hybrid mobile
+    application. The general design of a positioning system created
+    using our framework consists of a graph with a set of nodes that
+    process data. Background services can be added to the graph to
+    persist data or to communicate with other systems.</p>
+    <p>All concepts, ranging from positions to sensor values, can be
+    expressed in various ways with varying units, allowing OpenHPS to be
+    used for small scale use cases such as tracking a pen on a paper to
+    larger use cases such as tracking airplanes across the globe. Our
+    framework uses stream-based processing of
+    <monospace>DataFrame</monospace>s which contain all time-sensitive
+    information. Inside these frames can be one or more
+    <monospace>DataObject</monospace>s which indicate the spatial
+    objects that are relevant for the information within the data
+    frame.</p>
+    <fig>
+      <caption><p>OpenHPS graph of a positioning system</p></caption>
+      <graphic mimetype="image" mime-subtype="png" xlink:href="openhps-example-2.png" />
+    </fig>
+    <p>Any data pushed through the graph can be serialised to JSON or
+    RDF data using the POSO ontology
+    (<xref alt="Van de Wynckel &amp; Signer, 2022b" rid="ref-vandewynckel2022iswc" ref-type="bibr">Van
+    de Wynckel &amp; Signer, 2022b</xref>), enabling interoperability
+    between systems. Each node in the graph represent a step in the
+    processing of data frames from source to sink as shown in Figure 1.
+    A <monospace>SourceNode</monospace> generates information, a
+    <monospace>ProcessingNode</monospace> processes information and a
+    <monospace>SinkNode</monospace> consumes information.</p>
+    <p>OpenHPS is modular by design, mainly due to the ability to extend
+    data frames and objects. These extensions allow for different data
+    objects, including different sensors like cameras, IMU sensors or
+    spatial landmarks such as Bluetooth beacons. Each node in a graph
+    can be extended as well, allowing the creation of custom algorithms
+    that can be added or removed from a positioning system. Researchers
+    can focus on the prototyping of new algorithms without having to
+    worry about the integration of these algorithms into a larger
+    system.</p>
+    <sec id="interoperability">
+      <title>Interoperability</title>
+      <p>Our framework is designed to offer FAIR positioning systems,
+      leveraging the open approach of the framework and the data these
+      systems produce. With our modules such as
+      <monospace>@openhps/rdf</monospace> and
+      <monospace>@openhps/solid</monospace>, we have enabled developers
+      to serialise their data to RDF and store it in Solid Pods. This
+      facilitates the creation of positioning systems that are
+      transparent and privacy preserving, while also ensuring that other
+      positioning systems or consumer applications can access the data,
+      regardless of whether they are created using OpenHPS. Extensions
+      such as <monospace>@sembeacon/openhps</monospace> provide support
+      for semantic beacons
+      (<xref alt="Van de Wynckel &amp; Signer, 2023" rid="ref-vandewynckel2023" ref-type="bibr">Van
+      de Wynckel &amp; Signer, 2023</xref>), enabling the discovery
+      (i.e. findability) of these systems and the data they produce.</p>
+    </sec>
+    <sec id="performance">
+      <title>Performance</title>
+      <p>Since our framework uses TypeScript, it uses JavaScript at
+      runtime, which is single-threaded by default. To overcome the
+      challenges associated with creating real-time stream processing
+      systems, our graphs or portions of the graph can be executed using
+      web workers. All data transmitted through our graph is
+      serialisable, eliminating the need for developers to handle this
+      serialisation or communication between web workers themselves.</p>
+      <p>In addition to the ability to run graphs on multiple workers,
+      our communication nodes such as MQTT, combined with the
+      serialisability of data, allows developers to offload the
+      processing of complex tasks to other servers or dedicated
+      processors. For more high-demanding algorithms as used in computer
+      vision and visual SLAM, modules such as
+      <monospace>@openhps/opencv</monospace> and
+      <monospace>@openhps/openvslam</monospace> create C++ bindings in
+      NodeJS.</p>
+    </sec>
+  </sec>
+</sec>
+<sec id="examples-of-research-work">
+  <title>Examples of Research Work</title>
+  <p>OpenHPS has been a building block for various research that has
+  been used in indoor positioning systems
+  (<xref alt="Van de Wynckel &amp; Signer, 2021a" rid="ref-vandewynckel2021" ref-type="bibr">Van
+  de Wynckel &amp; Signer, 2021a</xref>), its ability to serialise
+  location data to RDF has been demonstrated in an application that aims
+  to preserve privacy and transparency using Solid-pods
+  (<xref alt="Van de Wynckel &amp; Signer, 2022a" rid="ref-vandewynckel2022" ref-type="bibr">Van
+  de Wynckel &amp; Signer, 2022a</xref>). Next, OpenHPS was used in the
+  SemBeacon demonstrator application
+  (<xref alt="Van de Wynckel &amp; Signer, 2023" rid="ref-vandewynckel2023" ref-type="bibr">Van
+  de Wynckel &amp; Signer, 2023</xref>) that is written in CapacitorJS
+  and uses the framework to deserialise positioning data and positioning
+  systems. Modules have been created for other academic projects, such
+  as the FidMark ontology
+  (<xref alt="Van de Wynckel et al., 2024" rid="ref-vandewynckel2024" ref-type="bibr">Van
+  de Wynckel et al., 2024</xref>), which provides fiducial marker
+  classification within the framework. The ability of OpenHPS to contain
+  modular nodes and its use within the domain of positioning systems
+  facilitates the sharing of algorithms and findings, as well as the
+  rapid creation of prototypes and demonstrators that make use of
+  location data. Finally, OpenHPS and the related modules have been used
+  to collect several datasets that can be used by researchers to
+  evaluate their algorithms
+  (<xref alt="Van de Wynckel &amp; Signer, 2021b" rid="ref-openhps2021dataset" ref-type="bibr">Van
+  de Wynckel &amp; Signer, 2021b</xref>),
+  (<xref alt="Van de Wynckel, 2025" rid="ref-maxim_van_de_wynckel_2025" ref-type="bibr">Van
+  de Wynckel, 2025</xref>),
+  (<xref alt="Van de Wynckel &amp; Signer, 2025" rid="ref-maxim_van_de_wynckel_beat_signer_2025" ref-type="bibr">Van
+  de Wynckel &amp; Signer, 2025</xref>).</p>
+</sec>
+</body>
+<back>
+<ref-list>
+  <title></title>
+  <ref id="ref-vandewynckel2021">
+    <element-citation publication-type="paper-conference">
+      <person-group person-group-type="author">
+        <name><surname>Van de Wynckel</surname><given-names>Maxim</given-names></name>
+        <name><surname>Signer</surname><given-names>Beat</given-names></name>
+      </person-group>
+      <article-title>Indoor Positioning Using the OpenHPS Framework</article-title>
+      <source>Proceedings of the 11th international conference on indoor positioning and indoor navigation (IPIN 2021)</source>
+      <year iso-8601-date="2021">2021</year>
+      <pub-id pub-id-type="doi">10.1109/IPIN51156.2021.9662569</pub-id>
+      <fpage>1</fpage>
+      <lpage>8</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-vandewynckel2023">
+    <element-citation publication-type="paper-conference">
+      <person-group person-group-type="author">
+        <name><surname>Van de Wynckel</surname><given-names>Maxim</given-names></name>
+        <name><surname>Signer</surname><given-names>Beat</given-names></name>
+      </person-group>
+      <article-title>SemBeacon: A Semantic Proximity Beacon Solution for Discovering and Detecting the Position of Physical Things</article-title>
+      <source>Proceedings of the 13th international conference on the internet of things (IoT 2023)</source>
+      <year iso-8601-date="2023">2023</year>
+      <pub-id pub-id-type="doi">10.1145/3627050.3627060</pub-id>
+    </element-citation>
+  </ref>
+  <ref id="ref-vandewynckel2022">
+    <element-citation publication-type="paper-conference">
+      <person-group person-group-type="author">
+        <name><surname>Van de Wynckel</surname><given-names>Maxim</given-names></name>
+        <name><surname>Signer</surname><given-names>Beat</given-names></name>
+      </person-group>
+      <article-title>A Solid-based Architecture for Decentralised Interoperable Location Data</article-title>
+      <source>Proceedings of the 12th international conference on indoor positioning and indoor navigation (IPIN 2022), CEUR workshop proceedings</source>
+      <year iso-8601-date="2022">2022</year>
+      <volume>3248</volume>
+      <issn>1613-0073</issn>
+      <uri>https://ceur-ws.org/Vol-3248/paper11.pdf</uri>
+    </element-citation>
+  </ref>
+  <ref id="ref-georgiou2015anyplace">
+    <element-citation publication-type="paper-conference">
+      <person-group person-group-type="author">
+        <name><surname>Georgiou</surname><given-names>Kyriakos</given-names></name>
+        <name><surname>Constambeys</surname><given-names>Timotheos</given-names></name>
+        <name><surname>Laoudias</surname><given-names>Christos</given-names></name>
+        <name><surname>Petrou</surname><given-names>Lambros</given-names></name>
+        <name><surname>Chatzimilioudis</surname><given-names>Georgios</given-names></name>
+        <name><surname>Zeinalipour-Yazti</surname><given-names>Demetrios</given-names></name>
+      </person-group>
+      <article-title>Anyplace: A Crowdsourced Indoor Information Service</article-title>
+      <source>Proceedings of the international conference on mobile data management: Systems, services and middleware (MDM 2015)</source>
+      <year iso-8601-date="2015">2015</year>
+      <pub-id pub-id-type="doi">10.1109/MDM.2015.80</pub-id>
+      <fpage>291</fpage>
+      <lpage>294</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-vandewynckel2024">
+    <element-citation publication-type="paper-conference">
+      <person-group person-group-type="author">
+        <name><surname>Van de Wynckel</surname><given-names>Maxim</given-names></name>
+        <name><surname>Valadez</surname><given-names>Isaac</given-names></name>
+        <name><surname>Signer</surname><given-names>Beat</given-names></name>
+      </person-group>
+      <article-title>FidMark: A Fiducial Marker Ontology for Semantically Describing Visual Markers</article-title>
+      <source>Proceedings of the semantic web (ESWC 2024)</source>
+      <publisher-name>Springer-Verlag</publisher-name>
+      <publisher-loc>Hersonissos, Greece</publisher-loc>
+      <year iso-8601-date="2024">2024</year>
+      <pub-id pub-id-type="doi">10.1007/978-3-031-60635-9_14</pub-id>
+      <fpage>235</fpage>
+      <lpage>250</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-vandewynckel2022iswc">
+    <element-citation publication-type="paper-conference">
+      <person-group person-group-type="author">
+        <name><surname>Van de Wynckel</surname><given-names>Maxim</given-names></name>
+        <name><surname>Signer</surname><given-names>Beat</given-names></name>
+      </person-group>
+      <article-title>POSO: A Generic Positioning System Ontology</article-title>
+      <source>Proceedings of the 21st international semantic web conference (ISWC 2022)</source>
+      <publisher-loc>Virtual conference</publisher-loc>
+      <year iso-8601-date="2022">2022</year>
+      <pub-id pub-id-type="doi">10.1007/978-3-031-19433-7_14</pub-id>
+    </element-citation>
+  </ref>
+  <ref id="ref-maxim_van_de_wynckel_2025">
+    <element-citation>
+      <person-group person-group-type="author">
+        <name><surname>Van de Wynckel</surname><given-names>Maxim</given-names></name>
+      </person-group>
+      <article-title>Garage Positioning Dataset</article-title>
+      <publisher-name>Kaggle</publisher-name>
+      <year iso-8601-date="2025">2025</year>
+      <pub-id pub-id-type="doi">10.34740/KAGGLE/DS/6654647</pub-id>
+    </element-citation>
+  </ref>
+  <ref id="ref-maxim_van_de_wynckel_beat_signer_2025">
+    <element-citation>
+      <person-group person-group-type="author">
+        <name><surname>Van de Wynckel</surname><given-names>Maxim</given-names></name>
+        <name><surname>Signer</surname><given-names>Beat</given-names></name>
+      </person-group>
+      <article-title>Sphero Dead Reckoning and CV Tracking Dataset</article-title>
+      <publisher-name>Kaggle</publisher-name>
+      <year iso-8601-date="2025">2025</year>
+      <pub-id pub-id-type="doi">10.34740/KAGGLE/DS/6760212</pub-id>
+    </element-citation>
+  </ref>
+  <ref id="ref-openhps2021dataset">
+    <element-citation>
+      <person-group person-group-type="author">
+        <name><surname>Van de Wynckel</surname><given-names>Maxim</given-names></name>
+        <name><surname>Signer</surname><given-names>Beat</given-names></name>
+      </person-group>
+      <article-title>OpenHPS: Single Floor Fingerprinting and Trajectory Dataset</article-title>
+      <year iso-8601-date="2021-05">2021</year><month>05</month>
+      <pub-id pub-id-type="doi">10.5281/zenodo.4744380</pub-id>
+    </element-citation>
+  </ref>
+  <ref id="ref-find3">
+    <element-citation>
+      <person-group person-group-type="author">
+        <name><surname>Scholl</surname><given-names>Zach</given-names></name>
+      </person-group>
+      <article-title>The Framework for Internal Navigation and Discovery (FIND)</article-title>
+      <year iso-8601-date="2020">2020</year>
+      <uri>https://github.com/schollz/find3</uri>
+    </element-citation>
+  </ref>
+</ref-list>
+</back>
+</article>

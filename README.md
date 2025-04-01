@@ -96,7 +96,13 @@ ModelBuilder.create()
 - `worker.openhps-core.js`: UMD worker
 - `openhps-core-lite.js`: UMD lite version for embedded systems
 
-## UML
+## Documentation
+
+### JOSS Paper
+The JOSS paper can be found here: `/docs/paper/paper.md`.
+
+### Publications
+Please check [https://openhps.org/publications/](https://openhps.org/publications/) for more information.
 
 ### Data Objects
 ```mermaid

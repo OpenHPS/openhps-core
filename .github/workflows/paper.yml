@@ -1,0 +1,35 @@
+name: Build JOSS Paper
+
+on:
+    push:
+        paths:
+            - './docs/paper/**'
+    pull_request:
+        paths:
+            - './docs/paper/**'
+    # Manual trigger
+    workflow_dispatch:
+
+jobs:
+    build-paper:
+        runs-on: ubuntu-latest
+
+        steps:
+            # Checkout the repository
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            - name: Build draft PDF
+              uses: openjournals/openjournals-draft-action@master
+              with:
+                journal: joss
+                # This should be the path to the paper within your repo.
+                paper-path: ./docs/paper/paper.md
+
+            # Upload the generated PDF as an artifact
+            # The output PDF should be (temporarily) available via the GitHub Actions UI
+            - name: Upload paper PDF
+              uses: actions/upload-artifact@v4
+              with:
+                name: paper-pdf
+                path: ./docs/paper/paper.pdf
