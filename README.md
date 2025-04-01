@@ -26,7 +26,7 @@
 
 <br />
 
-This repository contains the core component for OpenHPS (Open Source Hybrid Positioning System). It includes concepts for creating the model, nodes and data object definitions.
+This repository contains the core component for OpenHPS (Open Source Hybrid Positioning System). It includes concepts for creating the model, nodes and data object definitions. The core component acts as the main repository for OpenHPS. However, additional modules expand OpenHPS with additional data storage techniques, positioning algorithms and enable the interoperability of the data produced by systems created with OpenHPS.
 
 OpenHPS is a data processing positioning framework. It is designed to support many different use cases ranging from simple positioning such as detecting the position of a pawn on a chessboard using RFID, to indoor positioning methods using multiple cameras.
 
@@ -71,6 +71,7 @@ OpenHPS is a data processing positioning framework. It is designed to support ma
 ### Misc
 - **[@openhps/sphero](https://github.com/OpenHPS/openhps-sphero)** - Example implementation for controlling and receiving sensor data from Sphero toys.
 - **[@openhps/csv](https://github.com/OpenHPS/openhps-csv)** - Read and write data frames from/to CSV files.
+- **[@openhps/dht](https://github.com/OpenHPS/openhps-dht)** - Distributed hash tables for discovering positioning systems based on a rough geographical location.
 
 ## Getting Started
 If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps/core with the following command.
@@ -78,13 +79,19 @@ If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps
 npm install @openhps/core --save
 ```
 
-The core idea and goals of OpenHPS are outlined in the technical paper: *OpenHPS: An Open Source Hybrid Positioning System*.
+The core idea and goals of OpenHPS are outlined in the technical paper: [*OpenHPS: An Open Source Hybrid Positioning System*](https://openhps.org/publications/2020/techreport/).
 
 ## Usage
+OpenHPS uses a process network to create a positioning system. This process network is created using the `ModelBuilder`. Every model starts with the creation
+of a new model that starts `from` a source node and passed `via` a set of processing nodes until it arrives `to` a sink node.
+
 ```typescript
 import { ModelBuilder } from '@openhps/core';
 
 ModelBuilder.create()
+    .from(/* ... */)
+    .via(/* ... */)
+    .to(/* ... */)
     .build().then(model => {
          // ...
     });
@@ -97,6 +104,7 @@ ModelBuilder.create()
 - `openhps-core-lite.js`: UMD lite version for embedded systems
 
 ## Documentation
+The documentation for OpenHPS can be found [online](https://openhps.org) on the website.
 
 ### JOSS Paper
 The JOSS paper can be found here: `/docs/paper/paper.md`.
