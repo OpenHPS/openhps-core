@@ -28,15 +28,15 @@
 
 This repository contains the core component for OpenHPS (Open Source Hybrid Positioning System). It includes concepts for creating the model, nodes and data object definitions. The core component acts as the main repository for OpenHPS. However, additional modules expand OpenHPS with additional data storage techniques, positioning algorithms and enable the interoperability of the data produced by systems created with OpenHPS.
 
-OpenHPS is a data processing positioning framework. It is designed to support many different use cases ranging from simple positioning such as detecting the position of a pawn on a chessboard using RFID, to indoor positioning methods using multiple cameras.
+OpenHPS is a data processing positioning framework. It is designed to support many different use cases ranging from simple positioning such as detecting the position of a pawn on a chessboard using RFID, to indoor positioning methods using multiple cameras. Already have a hybrid mobile application that you wish to expand with a positioning system? No problem, OpenHPS integrates well into any hybrid mobile applications!
 
 ## Features
-- 2D, 3D and Geographical positioning.
-- Relative positioning.
-- Basic positioning algorithms (e.g. trilateration, triangulation, fingerprinting, dead reckoning...)
-- Advanced positioning algorithms (e.g. computer vision through @openhps/opencv)
-- Extremely extensible.
-- Open source.
+- 🌍 **2D, 3D and Geographical positioning.**
+- 📍 **Relative positioning.**
+- 🧮 **Basic positioning algorithms** (e.g. trilateration, triangulation, fingerprinting, dead reckoning...)
+- 🤖 **Advanced positioning algorithms** (e.g. computer vision through @openhps/opencv)
+- 🔧 **Extremely extensible.**
+- 🛠️ **Open source.**
 
 ## Add-ons
 ### Positioning Algorithms
@@ -195,8 +195,16 @@ class SpaceTransformationOptions {
 TransformationSpace  --  TransformationSpace
 ```
 
+
 ## Contributing
 Use of OpenHPS, contributions and feedback is highly appreciated. Please read our [contributing guidelines](CONTRIBUTING.md) for more information.
+If you want to contribute to the core of OpenHPS, you will want to build the repo.
+
+1. Using yarn, install the dependencies `yarn install` 
+2. Build OpenHPS using `npm run build`, this will also transpile Three.js
+3. Run the tests using `npm run test`
+
+Before submitting a PR, make sure to test the code using `npm run test` and to fix any linting issues using `npm run lint -- --fix`
 
 ## License
 Copyright (C) 2019-2025 Maxim Van de Wynckel & Vrije Universiteit Brussel

@@ -154,7 +154,7 @@
     "size-limit": "^11.1.2",
     "standard-version": "^9.5.0",
     "terser-webpack-plugin": "^5.3.10",
-    "three": "^0.163.0",
+    "three": "^0.175.0",
     "ts-node": "^10.9.2",
     "typedoc": "^0.25.13",
     "typedoc-umlclass": "^0.8.0",
