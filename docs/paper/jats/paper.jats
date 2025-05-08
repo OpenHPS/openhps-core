@@ -41,13 +41,13 @@ Development of FAIR Positioning Systems</article-title>
 <aff id="aff-1">
 <institution-wrap>
 <institution>Vrije Universiteit Brussel, Web &amp; Information Systems
-Engineer Lab, Brussels, Belgium</institution>
+Engineering Lab, Brussels, Belgium</institution>
 </institution-wrap>
 </aff>
 </contrib-group>
-<pub-date date-type="pub" publication-format="electronic" iso-8601-date="2025-03-31">
-<day>31</day>
-<month>3</month>
+<pub-date date-type="pub" publication-format="electronic" iso-8601-date="2025-05-08">
+<day>8</day>
+<month>5</month>
 <year>2025</year>
 </pub-date>
 <volume>¿VOL?</volume>
@@ -81,11 +81,12 @@ a Creative Commons Attribution 4.0 International License (CC BY
   positioning, indoor and smaller-scale systems often require
   alternative technologies for improved latency, accuracy or efficiency.
   These systems are frequently developed as single-use prototypes with
-  no standard data format, hindering replication and expansion. OpenHPS
+  no standard data format, hindering reusability and expansion. OpenHPS
   addresses these challenges by providing a modular, graph-based
-  framework for creating versatile positioning systems. It supports a
-  wide range of algorithms and allows developers to extend functionality
-  by sharing custom nodes for sensor fusion and novel algorithms.</p>
+  framework for creating versatile positioning systems on multiple
+  platforms. It supports a wide range of algorithms and allows
+  developers to extend functionality by sharing custom nodes for sensor
+  fusion and novel algorithms.</p>
 </sec>
 <sec id="keywords">
   <title>Keywords</title>
@@ -94,23 +95,24 @@ a Creative Commons Attribution 4.0 International License (CC BY
 </sec>
 <sec id="statement-of-need">
   <title>Statement of Need</title>
-  <p>Existing positioning systems or frameworks such as AnyPlace
-  (<xref alt="Georgiou et al., 2015" rid="ref-georgiou2015anyplace" ref-type="bibr">Georgiou
-  et al., 2015</xref>) or FIND3
-  (<xref alt="Scholl, 2020" rid="ref-find3" ref-type="bibr">Scholl,
-  2020</xref>) focus on specific use cases, platforms or a set of
-  algorithms. While this facilitates the development of a positioning
-  system, it also limits the freedom to design custom algorithms or
-  positioning systems. In systems developed for academic purposes,
-  proprietary systems are created that are difficult to replicate,
-  expand or implement in a production-ready environment due to the use
-  of software such as MatLab. OpenHPS was created to address these
-  issues by providing a modular framework that allows developers and
-  researchers to create positioning systems for a wide range of use
-  cases. The framework and positioning systems created with our
+  <p>Existing positioning systems or frameworks [Georgiou et al.
+  (<xref alt="2015" rid="ref-georgiou2015anyplace" ref-type="bibr">2015</xref>)](<xref alt="Scholl, 2020" rid="ref-find3" ref-type="bibr">Scholl,
+  2020</xref>)(<xref alt="Pustka et al., 2011" rid="ref-5482592" ref-type="bibr">Pustka
+  et al., 2011</xref>) often focus on specific use cases, platforms or a
+  set of algorithms. While this facilitates the deployment of a system,
+  it also limits the freedom to design and reuse custom algorithms or
+  positioning systems. In systems developed for academic purposes
+  (<xref alt="García et al., 2015" rid="ref-7125601" ref-type="bibr">García
+  et al., 2015</xref>), proprietary systems are created that are
+  difficult to replicate, expand or implement in a production-ready
+  environment due to the use of software such as MatLab. Furthermore,
+  the data produced by such systems is often unstandardised. OpenHPS was
+  created to address these issues by providing a modular framework that
+  allows developers and researchers to create positioning systems for a
+  wide range of use cases. The framework and data created with our
   framework are designed to be interoperable, allowing developers to
-  share their algorithms and positioning systems with others. Using
-  additional modules that add support for Solid
+  share their algorithms and data with others. Using additional modules
+  that add support for Solid
   (<xref alt="Van de Wynckel &amp; Signer, 2022a" rid="ref-vandewynckel2022" ref-type="bibr">Van
   de Wynckel &amp; Signer, 2022a</xref>) and DHTs, we have enabled the
   development of findable, accessible, interoperable and reusable (FAIR)
@@ -123,17 +125,22 @@ a Creative Commons Attribution 4.0 International License (CC BY
     application. The general design of a positioning system created
     using our framework consists of a graph with a set of nodes that
     process data. Background services can be added to the graph to
-    persist data or to communicate with other systems.</p>
+    persist data or to communicate with other systems. Our decision to
+    use TypeScript compared to using a low-level language was based on
+    the goal of achieving cross-platform reusability.</p>
     <p>All concepts, ranging from positions to sensor values, can be
     expressed in various ways with varying units, allowing OpenHPS to be
     used for small scale use cases such as tracking a pen on a paper to
     larger use cases such as tracking airplanes across the globe. Our
     framework uses stream-based processing of
     <monospace>DataFrame</monospace>s which contain all time-sensitive
-    information. Inside these frames can be one or more
+    information. These frames contain one or more
     <monospace>DataObject</monospace>s which indicate the spatial
-    objects that are relevant for the information within the data
-    frame.</p>
+    objects that are relevant for the information within the data frame,
+    allowing the tracking of multiple actors as opposed to frameworks
+    such as ROS
+    (<xref alt="Quigley et al., 2009" rid="ref-quigley2009ros" ref-type="bibr">Quigley
+    et al., 2009</xref>).</p>
     <fig>
       <caption><p>OpenHPS graph of a positioning system</p></caption>
       <graphic mimetype="image" mime-subtype="png" xlink:href="openhps-example-2.png" />
@@ -142,7 +149,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
     RDF data using the POSO ontology
     (<xref alt="Van de Wynckel &amp; Signer, 2022b" rid="ref-vandewynckel2022iswc" ref-type="bibr">Van
     de Wynckel &amp; Signer, 2022b</xref>), enabling interoperability
-    between systems. Each node in the graph represent a step in the
+    between systems. Each node in the graph represents a step in the
     processing of data frames from source to sink as shown in Figure 1.
     A <monospace>SourceNode</monospace> generates information, a
     <monospace>ProcessingNode</monospace> processes information and a
@@ -167,31 +174,27 @@ a Creative Commons Attribution 4.0 International License (CC BY
       facilitates the creation of positioning systems that are
       transparent and privacy preserving, while also ensuring that other
       positioning systems or consumer applications can access the data,
-      regardless of whether they are created using OpenHPS. Extensions
-      such as <monospace>@sembeacon/openhps</monospace> provide support
-      for semantic beacons
+      regardless of whether they are created using OpenHPS. With various
+      extensions such as semantic beacons
       (<xref alt="Van de Wynckel &amp; Signer, 2023" rid="ref-vandewynckel2023" ref-type="bibr">Van
-      de Wynckel &amp; Signer, 2023</xref>), enabling the discovery
-      (i.e. findability) of these systems and the data they produce.</p>
+      de Wynckel &amp; Signer, 2023</xref>), we enable the discovery of
+      these systems and the data they produce.</p>
     </sec>
     <sec id="performance">
       <title>Performance</title>
-      <p>Since our framework uses TypeScript, it uses JavaScript at
-      runtime, which is single-threaded by default. To overcome the
-      challenges associated with creating real-time stream processing
-      systems, our graphs or portions of the graph can be executed using
-      web workers. All data transmitted through our graph is
+      <p>Our framework uses JavaScript at runtime, which is
+      single-threaded by default. To overcome the challenges associated
+      with creating real-time dataflows, our graph can be executed using
+      Web Workers. All data transmitted through our graph is
       serialisable, eliminating the need for developers to handle this
-      serialisation or communication between web workers themselves.</p>
+      serialisation or communication between workers.</p>
       <p>In addition to the ability to run graphs on multiple workers,
-      our communication nodes such as MQTT, combined with the
-      serialisability of data, allows developers to offload the
-      processing of complex tasks to other servers or dedicated
-      processors. For more high-demanding algorithms as used in computer
-      vision and visual SLAM, modules such as
+      communication nodes such as MQTT, enables developers to offload
+      the processing of complex tasks to other servers or dedicated
+      processors. For more high-demanding algorithms, modules such as
       <monospace>@openhps/opencv</monospace> and
-      <monospace>@openhps/openvslam</monospace> create C++ bindings in
-      NodeJS.</p>
+      <monospace>@openhps/openvslam</monospace> create C++ bindings to
+      low-level frameworks.</p>
     </sec>
   </sec>
 </sec>
@@ -200,12 +203,12 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <p>OpenHPS has been a building block for various research that has
   been used in indoor positioning systems
   (<xref alt="Van de Wynckel &amp; Signer, 2021a" rid="ref-vandewynckel2021" ref-type="bibr">Van
-  de Wynckel &amp; Signer, 2021a</xref>), its ability to serialise
+  de Wynckel &amp; Signer, 2021a</xref>), and its ability to serialise
   location data to RDF has been demonstrated in an application that aims
-  to preserve privacy and transparency using Solid-pods
+  to preserve privacy and transparency using Solid Pods
   (<xref alt="Van de Wynckel &amp; Signer, 2022a" rid="ref-vandewynckel2022" ref-type="bibr">Van
-  de Wynckel &amp; Signer, 2022a</xref>). Next, OpenHPS was used in the
-  SemBeacon demonstrator application
+  de Wynckel &amp; Signer, 2022a</xref>). Further, OpenHPS was used in
+  the SemBeacon demonstrator application
   (<xref alt="Van de Wynckel &amp; Signer, 2023" rid="ref-vandewynckel2023" ref-type="bibr">Van
   de Wynckel &amp; Signer, 2023</xref>) that is written in CapacitorJS
   and uses the framework to deserialise positioning data and positioning
@@ -361,6 +364,65 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <article-title>The Framework for Internal Navigation and Discovery (FIND)</article-title>
       <year iso-8601-date="2020">2020</year>
       <uri>https://github.com/schollz/find3</uri>
+    </element-citation>
+  </ref>
+  <ref id="ref-5482592">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Pustka</surname><given-names>Daniel</given-names></name>
+        <name><surname>Huber</surname><given-names>Manuel</given-names></name>
+        <name><surname>Waechter</surname><given-names>Christian</given-names></name>
+        <name><surname>Echtler</surname><given-names>Florian</given-names></name>
+        <name><surname>Keitler</surname><given-names>Peter</given-names></name>
+        <name><surname>Newman</surname><given-names>Joseph</given-names></name>
+        <name><surname>Schmalstieg</surname><given-names>Dieter</given-names></name>
+        <name><surname>Klinker</surname><given-names>Gudrun</given-names></name>
+      </person-group>
+      <article-title>Automatic Configuration of Pervasive Sensor Networks for Augmented Reality</article-title>
+      <source>IEEE Pervasive Computing</source>
+      <year iso-8601-date="2011">2011</year>
+      <volume>10</volume>
+      <issue>3</issue>
+      <pub-id pub-id-type="doi">10.1109/MPRV.2010.50</pub-id>
+      <fpage>68</fpage>
+      <lpage>79</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-7125601">
+    <element-citation publication-type="paper-conference">
+      <person-group person-group-type="author">
+        <name><surname>García</surname><given-names>Enrique</given-names></name>
+        <name><surname>Poudereux</surname><given-names>Pablo</given-names></name>
+        <name><surname>Hernández</surname><given-names>Álvaro</given-names></name>
+        <name><surname>Ureña</surname><given-names>Jesús</given-names></name>
+        <name><surname>Gualda</surname><given-names>David</given-names></name>
+      </person-group>
+      <article-title>A Robust UWB Indoor Positioning System for Highly Complex Environments</article-title>
+      <source>2015 IEEE international conference on industrial technology (ICIT)</source>
+      <year iso-8601-date="2015">2015</year>
+      <volume></volume>
+      <pub-id pub-id-type="doi">10.1109/ICIT.2015.7125601</pub-id>
+      <fpage>3386</fpage>
+      <lpage>3391</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-quigley2009ros">
+    <element-citation publication-type="paper-conference">
+      <person-group person-group-type="author">
+        <name><surname>Quigley</surname><given-names>Morgan</given-names></name>
+        <name><surname>Conley</surname><given-names>Ken</given-names></name>
+        <name><surname>Gerkey</surname><given-names>Brian</given-names></name>
+        <name><surname>Faust</surname><given-names>Josh</given-names></name>
+        <name><surname>Foote</surname><given-names>Tully</given-names></name>
+        <name><surname>Leibs</surname><given-names>Jeremy</given-names></name>
+        <name><surname>Wheeler</surname><given-names>Rob</given-names></name>
+        <name><surname>Ng</surname><given-names>Andrew Y</given-names></name>
+      </person-group>
+      <article-title>ROS: An Open-Source Robot Operating System</article-title>
+      <source>Proceedings of the international workshop on open source software</source>
+      <publisher-loc>Kobe, Japan</publisher-loc>
+      <year iso-8601-date="2009-05">2009</year><month>05</month>
+      <uri>https://api.semanticscholar.org/CorpusID:6324125</uri>
     </element-citation>
   </ref>
 </ref-list>
