@@ -45,8 +45,8 @@ Engineering Lab, Brussels, Belgium</institution>
 </institution-wrap>
 </aff>
 </contrib-group>
-<pub-date date-type="pub" publication-format="electronic" iso-8601-date="2025-05-08">
-<day>8</day>
+<pub-date date-type="pub" publication-format="electronic" iso-8601-date="2025-05-29">
+<day>29</day>
 <month>5</month>
 <year>2025</year>
 </pub-date>
@@ -79,14 +79,14 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <p>Positioning systems determine the location of people and objects
   using various technologies and algorithms. While GPS dominates outdoor
   positioning, indoor and smaller-scale systems often require
-  alternative technologies for improved latency, accuracy or efficiency.
-  These systems are frequently developed as single-use prototypes with
-  no standard data format, hindering reusability and expansion. OpenHPS
-  addresses these challenges by providing a modular, graph-based
+  alternative technologies for improved latency, accuracy, or
+  efficiency. These systems are often developed as single-use prototypes
+  with no standard data format, hindering reusability and expansion.
+  OpenHPS addresses these challenges by providing a modular, graph-based
   framework for creating versatile positioning systems on multiple
-  platforms. It supports a wide range of algorithms and allows
-  developers to extend functionality by sharing custom nodes for sensor
-  fusion and novel algorithms.</p>
+  platforms. It supports a wide range of algorithms and enables
+  extensibility through custom nodes for sensor fusion and algorithm
+  integration.</p>
 </sec>
 <sec id="keywords">
   <title>Keywords</title>
@@ -95,24 +95,26 @@ a Creative Commons Attribution 4.0 International License (CC BY
 </sec>
 <sec id="statement-of-need">
   <title>Statement of Need</title>
-  <p>Existing positioning systems or frameworks [Georgiou et al.
-  (<xref alt="2015" rid="ref-georgiou2015anyplace" ref-type="bibr">2015</xref>)](<xref alt="Scholl, 2020" rid="ref-find3" ref-type="bibr">Scholl,
-  2020</xref>)(<xref alt="Pustka et al., 2011" rid="ref-5482592" ref-type="bibr">Pustka
-  et al., 2011</xref>) often focus on specific use cases, platforms or a
-  set of algorithms. While this facilitates the deployment of a system,
-  it also limits the freedom to design and reuse custom algorithms or
-  positioning systems. In systems developed for academic purposes
+  <p>Existing positioning systems or frameworks
+  (<xref alt="Georgiou et al., 2015" rid="ref-georgiou2015anyplace" ref-type="bibr">Georgiou
+  et al., 2015</xref>;
+  <xref alt="Pustka et al., 2011" rid="ref-5482592" ref-type="bibr">Pustka
+  et al., 2011</xref>;
+  <xref alt="Scholl, 2020" rid="ref-find3" ref-type="bibr">Scholl,
+  2020</xref>) often focus on specific use cases, platforms, or a set of
+  algorithms. While this facilitates the deployment of a system, it
+  limits the flexibility to design or reuse custom algorithms and
+  systems. In systems developed for academic purposes
   (<xref alt="García et al., 2015" rid="ref-7125601" ref-type="bibr">García
-  et al., 2015</xref>), proprietary systems are created that are
-  difficult to replicate, expand or implement in a production-ready
-  environment due to the use of software such as MatLab. Furthermore,
-  the data produced by such systems is often unstandardised. OpenHPS was
-  created to address these issues by providing a modular framework that
-  allows developers and researchers to create positioning systems for a
-  wide range of use cases. The framework and data created with our
-  framework are designed to be interoperable, allowing developers to
-  share their algorithms and data with others. Using additional modules
-  that add support for Solid
+  et al., 2015</xref>), proprietary systems are often difficult to
+  replicate, extend, or deploy in a production-ready environment due to
+  the use of software such as MatLab. Furthermore, the data produced by
+  such systems is often unstandardised. OpenHPS was created to address
+  these issues by providing a modular framework that allows developers
+  and researchers to create positioning systems for a wide range of use
+  cases. The framework and data created with our framework is designed
+  to be interoperable, allowing developers to share their algorithms and
+  data with others. Using additional modules that add support for Solid
   (<xref alt="Van de Wynckel &amp; Signer, 2022a" rid="ref-vandewynckel2022" ref-type="bibr">Van
   de Wynckel &amp; Signer, 2022a</xref>) and DHTs, we have enabled the
   development of findable, accessible, interoperable and reusable (FAIR)
@@ -120,25 +122,30 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <sec id="framework-overview">
     <title>Framework Overview</title>
     <p><monospace>OpenHPS</monospace> is an open-source hybrid
-    positioning system framework written in TypeScript. It can be run on
-    the server using NodeJS, in the browser or even as a hybrid mobile
-    application. The general design of a positioning system created
-    using our framework consists of a graph with a set of nodes that
-    process data. Background services can be added to the graph to
-    persist data or to communicate with other systems. Our decision to
-    use TypeScript compared to using a low-level language was based on
-    the goal of achieving cross-platform reusability.</p>
+    positioning system framework written in TypeScript. It runs on the
+    server (Node.js), in the browser, or within hybrid mobile
+    applications. The general design of a positioning system created
+    using OpenHPS consists of a graph with a set of nodes that process
+    data. Background services can be added to the graph to persist data
+    or to communicate with other systems. Our decision to use TypeScript
+    compared to using a low-level language was based on the goal of
+    achieving cross-platform reusability.</p>
+    <fig>
+      <caption><p><monospace>DataFrame</monospace>s and
+      <monospace>DataObject</monospace>s</p></caption>
+      <graphic mimetype="image" mime-subtype="png" xlink:href="dataframe.png" />
+    </fig>
     <p>All concepts, ranging from positions to sensor values, can be
-    expressed in various ways with varying units, allowing OpenHPS to be
-    used for small scale use cases such as tracking a pen on a paper to
-    larger use cases such as tracking airplanes across the globe. Our
+    expressed in various ways with varying units, enabling OpenHPS to
+    support both small-scale use cases such as tracking a pen on a paper
+    to larger use cases such as tracking airplanes across the globe. Our
     framework uses stream-based processing of
     <monospace>DataFrame</monospace>s which contain all time-sensitive
     information. These frames contain one or more
-    <monospace>DataObject</monospace>s which indicate the spatial
-    objects that are relevant for the information within the data frame,
-    allowing the tracking of multiple actors as opposed to frameworks
-    such as ROS
+    <monospace>DataObject</monospace>s as illustrated in Figure 1, which
+    indicate the spatial objects relevant for the information within the
+    data frame. This enables the tracking of multiple actors, unlike
+    frameworks such as ROS
     (<xref alt="Quigley et al., 2009" rid="ref-quigley2009ros" ref-type="bibr">Quigley
     et al., 2009</xref>).</p>
     <fig>
@@ -150,7 +157,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
     (<xref alt="Van de Wynckel &amp; Signer, 2022b" rid="ref-vandewynckel2022iswc" ref-type="bibr">Van
     de Wynckel &amp; Signer, 2022b</xref>), enabling interoperability
     between systems. Each node in the graph represents a step in the
-    processing of data frames from source to sink as shown in Figure 1.
+    processing of data frames from source to sink as shown in Figure 2.
     A <monospace>SourceNode</monospace> generates information, a
     <monospace>ProcessingNode</monospace> processes information and a
     <monospace>SinkNode</monospace> consumes information.</p>
@@ -166,15 +173,14 @@ a Creative Commons Attribution 4.0 International License (CC BY
     <sec id="interoperability">
       <title>Interoperability</title>
       <p>Our framework is designed to offer FAIR positioning systems,
-      leveraging the open approach of the framework and the data these
-      systems produce. With our modules such as
-      <monospace>@openhps/rdf</monospace> and
+      leveraging its open architecture and the data it produces. Modules
+      such as <monospace>@openhps/rdf</monospace> and
       <monospace>@openhps/solid</monospace>, we have enabled developers
       to serialise their data to RDF and store it in Solid Pods. This
       facilitates the creation of positioning systems that are
-      transparent and privacy preserving, while also ensuring that other
+      transparent and privacy-preserving, while also ensuring that other
       positioning systems or consumer applications can access the data,
-      regardless of whether they are created using OpenHPS. With various
+      regardless of whether they were created with OpenHPS. With various
       extensions such as semantic beacons
       (<xref alt="Van de Wynckel &amp; Signer, 2023" rid="ref-vandewynckel2023" ref-type="bibr">Van
       de Wynckel &amp; Signer, 2023</xref>), we enable the discovery of
@@ -182,19 +188,22 @@ a Creative Commons Attribution 4.0 International License (CC BY
     </sec>
     <sec id="performance">
       <title>Performance</title>
-      <p>Our framework uses JavaScript at runtime, which is
-      single-threaded by default. To overcome the challenges associated
-      with creating real-time dataflows, our graph can be executed using
-      Web Workers. All data transmitted through our graph is
-      serialisable, eliminating the need for developers to handle this
-      serialisation or communication between workers.</p>
-      <p>In addition to the ability to run graphs on multiple workers,
-      communication nodes such as MQTT, enables developers to offload
-      the processing of complex tasks to other servers or dedicated
-      processors. For more high-demanding algorithms, modules such as
-      <monospace>@openhps/opencv</monospace> and
-      <monospace>@openhps/openvslam</monospace> create C++ bindings to
-      low-level frameworks.</p>
+      <p>OpenHPS uses JavaScript at runtime. To overcome the challenges
+      associated with creating real-time dataflows, our graph can be
+      executed using Web Workers
+      (<xref alt="Van de Wynckel &amp; Signer, 2020" rid="ref-mvdewync2020openhps" ref-type="bibr">Van
+      de Wynckel &amp; Signer, 2020</xref>). All data transmitted
+      through our graph is serialisable, eliminating the need for
+      developers to handle this serialisation or communication between
+      workers. In addition to the ability to run graphs on multiple
+      workers, communication nodes, such as MQTT, enable developers to
+      offload the processing of complex tasks to other servers or
+      dedicated processors. For more high-demanding algorithms, modules
+      like <monospace>@openhps/opencv</monospace> and
+      <monospace>@openhps/openvslam</monospace> provide C++ bindings to
+      low-level libraries. While these bindings may not achieve the same
+      performance, the ability to reuse other libraries is part of the
+      main requirements.</p>
     </sec>
   </sec>
 </sec>
@@ -216,13 +225,12 @@ a Creative Commons Attribution 4.0 International License (CC BY
   as the FidMark ontology
   (<xref alt="Van de Wynckel et al., 2024" rid="ref-vandewynckel2024" ref-type="bibr">Van
   de Wynckel et al., 2024</xref>), which provides fiducial marker
-  classification within the framework. The ability of OpenHPS to contain
-  modular nodes and its use within the domain of positioning systems
-  facilitates the sharing of algorithms and findings, as well as the
-  rapid creation of prototypes and demonstrators that make use of
-  location data. Finally, OpenHPS and the related modules have been used
-  to collect several datasets that can be used by researchers to
-  evaluate their algorithms
+  classification within the framework. OpenHPS’s modular node design and
+  domain focus facilitate the sharing of algorithms and findings, as
+  well as the rapid creation of prototypes and demonstrators that make
+  use of location data. Finally, OpenHPS and the related modules have
+  been used to collect several datasets that can be used by researchers
+  to evaluate their algorithms
   (<xref alt="Van de Wynckel &amp; Signer, 2021b" rid="ref-openhps2021dataset" ref-type="bibr">Van
   de Wynckel &amp; Signer, 2021b</xref>),
   (<xref alt="Van de Wynckel, 2025" rid="ref-maxim_van_de_wynckel_2025" ref-type="bibr">Van
@@ -423,6 +431,18 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <publisher-loc>Kobe, Japan</publisher-loc>
       <year iso-8601-date="2009-05">2009</year><month>05</month>
       <uri>https://api.semanticscholar.org/CorpusID:6324125</uri>
+    </element-citation>
+  </ref>
+  <ref id="ref-mvdewync2020openhps">
+    <element-citation publication-type="report">
+      <person-group person-group-type="author">
+        <name><surname>Van de Wynckel</surname><given-names>Maxim</given-names></name>
+        <name><surname>Signer</surname><given-names>Beat</given-names></name>
+      </person-group>
+      <article-title>OpenHPS: An Open Source Hybrid Positioning System</article-title>
+      <publisher-name>Vrije Universiteit Brussel</publisher-name>
+      <year iso-8601-date="2020">2020</year>
+      <pub-id pub-id-type="doi">10.48550/ARXIV.2101.05198</pub-id>
     </element-citation>
   </ref>
 </ref-list>
