@@ -40,7 +40,7 @@ const settingsCreate: Benchmark.Options = {
     minSamples: 1,
     delay: 10
 };
-let model: Model | null;
+let model: Model | undefined;
 
 async function init() {
     for (let i = 0 ; i < 100 ; i++) {
@@ -91,9 +91,9 @@ function createModel(workers: number): Promise<Model> {
     });
 }
 
-function testFunction(model: Model | null, deferred: any): void {
-    if (model === null) {
-        console.error("Model is null!");
+function testFunction(model: Model | undefined, deferred: any): void {
+    if (model === undefined) {
+        console.error("Model is undefined!");
         return deferred.resolve();
     }
     let promises = new Array();
@@ -115,7 +115,7 @@ init().then(() => {
     console.log("Initialized! Starting benchmarks ...");
 
     suite.add("worker#none-create", (deferred: any) => {
-        if (model !== null && model.name == "none")
+        if (model !== undefined && model.name == "none")
             return deferred.resolve();
         ModelBuilder.create()
             .addShape(GraphBuilder.create()
@@ -149,14 +149,14 @@ init().then(() => {
             if (model) {
                 model.emit('destroy');
             }
-            model = null;
+            model = undefined;
         },
         ...settings
     });
 
     for (let i = 1 ; i <= workerCount ; i++) {
         suite.add(`worker#${i}-create`, (deferred: any) => {
-            if (model !== null && model.name == `${i}`) {
+            if (model !== undefined && model.name == `${i}`) {
                 return deferred.resolve();
             }
             createModel(i).then((m: Model) => {
@@ -172,7 +172,7 @@ init().then(() => {
                 if (model) {
                     model.emit('destroy');
                 }
-                model = null;
+                model = undefined;
             },
             ...settings
         })
