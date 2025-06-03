@@ -1,0 +1,52 @@
+{
+    "name": "worker#none-create",
+    "options": {
+        "async": false,
+        "defer": true,
+        "delay": 10,
+        "initCount": 1,
+        "maxTime": 5,
+        "minSamples": 1,
+        "minTime": 0.05
+    },
+    "async": false,
+    "defer": true,
+    "delay": 10,
+    "initCount": 1,
+    "maxTime": 5,
+    "minSamples": 1,
+    "minTime": 0.05,
+    "id": 1,
+    "stats": {
+        "moe": 0,
+        "rme": 0,
+        "sem": 0,
+        "deviation": 0,
+        "mean": 0.000013312469052840065,
+        "sample": [
+            0.000013312469052840065
+        ],
+        "variance": 0
+    },
+    "times": {
+        "cycle": 0.000013312469052840065,
+        "elapsed": 40.833,
+        "period": 0.000013312469052840065,
+        "timeStamp": 1748889551324
+    },
+    "_timerId": {
+        "_idleTimeout": 10000,
+        "_idlePrev": null,
+        "_idleNext": null,
+        "_idleStart": 2755,
+        "_repeat": null,
+        "_destroyed": true
+    },
+    "events": {
+        "complete": []
+    },
+    "running": false,
+    "count": 1,
+    "cycles": 3,
+    "hz": 75117.54551547005
+}
