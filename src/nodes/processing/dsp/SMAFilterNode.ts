@@ -50,7 +50,7 @@ export class SMAFilterNode<InOut extends DataFrame> extends PropertyFilterProces
                 for (let i = 1; i < filter.x.length; i++) {
                     sum.add(filter.x[i]);
                 }
-                resolve(sum.divideScalar(filter.taps) as T);
+                resolve(sum.divideScalar(Math.min(filter.x.length, filter.taps)) as T);
             }
         });
     }
