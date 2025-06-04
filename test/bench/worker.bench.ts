@@ -17,7 +17,7 @@ import { ComputingNode } from '../mock/nodes/ComputingNode';
 import * as Benchmark from 'benchmark';
 import * as fs from 'fs';
 
-const sizes: number[] = [5000, 10000, 15000];
+const sizes: number[] = [15000];
 
 let promise: Promise<void> = Promise.resolve();
 
