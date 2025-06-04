@@ -86,16 +86,34 @@ OpenHPS uses a process network to create a positioning system. This process netw
 of a new model that starts `from` a source node and passed `via` a set of processing nodes until it arrives `to` a sink node.
 
 ```typescript
-import { ModelBuilder } from '@openhps/core';
-
+import { ModelBuilder, DataObject, Absolute2DPosition, SMAFilterNode, ReferenceSpace, Euler, AngleUnit } from '@openhps/core';
+import { MouseSourceNode } from './MouseSourceNode';
+import { ChartSinkNode } from './ChartSinkNode';
+ 
+const mouseReferenceSpace = new ReferenceSpace()
+    .translation(0, 200)
+    .rotation(new Euler(180, 0, 0, 'ZXY', AngleUnit.DEGREE));
+ 
 ModelBuilder.create()
-    .from(/* ... */)
-    .via(/* ... */)
-    .to(/* ... */)
+    // Step 1. Obtain X,Y location from mouse (active source node)
+    .from(new MouseSourceNode("trackArea"))
+    // Step 2. Flip the axis
+    .convertFromSpace(mouseReferenceSpace)
+    // Step 3. Simple moving average of the X,Y position (average of 40 readings)
+    .via(new SMAFilterNode((obj: DataObject) => ([
+            { key: "x", value: (obj.position as Absolute2DPosition).x },
+            { key: "y", value: (obj.position as Absolute2DPosition).y }
+        ]),
+        (key: string, value: number, obj: DataObject) => { obj.position[key] = value },
+        { taps: 40 })
+    )
+    // Step 4. Plot the results
+    .to(new ChartSinkNode("mouseChart"))
     .build().then(model => {
          // ...
     });
 ```
+*See https://openhps.org/docs/tutorials/mouse/ for the implementation of the source and sink node*
 
 ### Browser
 - `openhps-core.js`: UMD
