@@ -44,7 +44,7 @@ export class SMAFilterNode<InOut extends DataFrame> extends PropertyFilterProces
 
             if (typeof value === 'number') {
                 const sum = filter.x.reduce((a, b) => a + b);
-                resolve((sum / filter.taps) as T);
+                resolve((sum / Math.min(filter.x.length, filter.taps)) as T);
             } else {
                 const sum: Vector2 | Vector3 = filter.x[0].clone();
                 for (let i = 1; i < filter.x.length; i++) {
