@@ -1,0 +1,34 @@
+cff-version: "1.2.0"
+authors:
+- family-names: Van de Wynckel
+  given-names: Maxim
+  orcid: "https://orcid.org/0000-0003-0314-7107"
+- family-names: Signer
+  given-names: Beat
+  orcid: "https://orcid.org/0000-0001-9916-0837"
+doi: 10.5281/zenodo.15602601
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Van de Wynckel
+    given-names: Maxim
+    orcid: "https://orcid.org/0000-0003-0314-7107"
+  - family-names: Signer
+    given-names: Beat
+    orcid: "https://orcid.org/0000-0001-9916-0837"
+  date-published: 2025-06-05
+  doi: 10.21105/joss.08113
+  issn: 2475-9066
+  issue: 110
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 8113
+  title: "OpenHPS: A Modular Framework to Facilitate the Development of
+    FAIR Positioning Systems"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.08113"
+  volume: 10
+title: "OpenHPS: A Modular Framework to Facilitate the Development of
+  FAIR Positioning Systems"
