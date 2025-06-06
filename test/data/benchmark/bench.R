@@ -1,17 +1,17 @@
 library("rjson")
 library("ggplot2")
-library("xtable")
 
 baseDir <- 'test/data/benchmark'
 
-# List all JSON files in the current directory
-files <- list.files(pattern = "^benchmark_\\d+_\\d+_\\d+\\.json$")
+# List all JSON files in the base directory
+files <- list.files(path = baseDir, pattern = "^benchmark_\\d+_\\d+_\\d+\\.json$")
+print(files)
 
 # Extract test and run info from filenames
 file_info <- do.call(rbind, lapply(files, function(f) {
     m <- regmatches(f, regexec("benchmark_(\\d+)_(\\d+)_\\d+\\.json", f))[[1]]
     data.frame(
-        file = f,
+        file = file.path(baseDir, f),
         test = as.integer(m[2]),
         run = as.integer(m[3]),
         stringsAsFactors = FALSE
@@ -58,18 +58,20 @@ for (test_val in unique(file_info$test)) {
             Workers = workers,
             FPS = mean_speed,
             Speedup = speedup,
-            Deviation = deviation * 100
+            Deviation = deviation
         ))
     }
 }
 
 # Print results
 print(results)
-
 # Plot
 if (nrow(results) > 0) {
+    # Filter out rows with Workers == 0
+    results <- subset(results, Workers > 0)
+    
     # SVG output
-    svg("plot.svg", width = 6, height = 3)
+    svg(file.path(baseDir, "plot.svg"), width = 6, height = 3)
     print(
         ggplot(results, aes(x = Workers, y = Speedup, color = factor(Test), group = Test)) +
             geom_line() +
@@ -90,7 +92,7 @@ if (nrow(results) > 0) {
     )
     dev.off()
     # PDF output
-    pdf("plot.pdf", width = 6, height = 3)
+    pdf(file.path(baseDir, "plot.pdf"), width = 6, height = 3)
     print(
         ggplot(results, aes(x = Workers, y = Speedup, color = factor(Test), group = Test)) +
             geom_line() +
