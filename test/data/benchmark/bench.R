@@ -1,5 +1,7 @@
 library("rjson")
 library("ggplot2")
+library(extrafont)
+font_import()
 
 baseDir <- 'test/data/benchmark'
 
@@ -91,8 +93,9 @@ if (nrow(results) > 0) {
             theme_minimal()
     )
     dev.off()
-    # PDF output
-    pdf(file.path(baseDir, "plot.pdf"), width = 6, height = 3)
+    
+    # PDF output with embedded Helvetica fonts
+    pdf(file.path(baseDir, "plot.pdf"), width = 6, height = 3, family = "ArialMT")
     print(
         ggplot(results, aes(x = Workers, y = Speedup, color = factor(Test), group = Test)) +
             geom_line() +
@@ -112,6 +115,12 @@ if (nrow(results) > 0) {
             theme_minimal()
     )
     dev.off()
+    
+    # Embed fonts in the PDF
+    embedFonts(
+        file.path(baseDir, "plot.pdf"),
+        options = "-dEmbedAllFonts=true -sFONTPATH=C:/Windows/Fonts"
+    )
 } else {
     message("No results to plot.")
 }
