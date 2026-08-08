@@ -1,7 +1,16 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Orientation, SensorValue, SensorObject, DataSerializer, AngularVelocityUnit, Magnetometer, Magnetism, Gyroscope } from '../../../src';
-import { AccelerometerObject } from "../../mock/data/object/AccelerometerObject";
+import {
+    Orientation,
+    SensorValue,
+    SensorObject,
+    DataSerializer,
+    AngularVelocityUnit,
+    Magnetometer,
+    Magnetism,
+    Gyroscope,
+} from '../../../src';
+import { AccelerometerObject } from '../../mock/data/object/AccelerometerObject';
 
 describe('SensorObject', () => {
     describe('serialization', () => {
@@ -30,16 +39,12 @@ describe('SensorObject', () => {
 
     describe('initialization', () => {
         it('should initialize with value', () => {
-            const magnetometer = new Magnetometer("M1", new Magnetism(
-                1,
-                2,
-                3
-            ), 50);
+            const magnetometer = new Magnetometer('M1', new Magnetism(1, 2, 3), 50);
             expect(magnetometer.value.x).to.equal(1);
         });
 
         it('should initialize with a default value', () => {
-            const magnetometer = new Magnetometer("M1");
+            const magnetometer = new Magnetometer('M1');
             magnetometer.value.x = 1;
             expect(magnetometer.value.x).to.equal(1);
             expect(magnetometer.value).to.be.instanceOf(Magnetism);

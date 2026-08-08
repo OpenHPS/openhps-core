@@ -1,4 +1,4 @@
-const cloneDeep = require('lodash.clonedeep'); // eslint-disable-line
+const cloneDeep = require('lodash.clonedeep');
 
 export { cloneDeep };
 

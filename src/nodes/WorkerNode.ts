@@ -69,7 +69,6 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
             // Code
             this.config.builder = worker.toString();
             if (this.options.type === 'typescript') {
-                // eslint-disable-next-line
                 this.config.builder = require('typescript').transpile(this.config.builder);
             }
         } else {

@@ -73,7 +73,7 @@ describe('LocationBasedService', () => {
         it('should forcefully return a position', (done) => {
             service
                 .getCurrentPosition('mvdewync', {
-                    forceUpdate: true
+                    forceUpdate: true,
                 })
                 .then((position) => {
                     expect(position.toVector3().x).to.equal(3);
@@ -88,33 +88,39 @@ describe('LocationBasedService', () => {
     describe('watchPosition', () => {
         it('should watch for changes', (done) => {
             let count = 0;
-            const watchId = service
-                .watchPosition('mvdewync', pos => {
+            const watchId = service.watchPosition(
+                'mvdewync',
+                (pos) => {
                     expect(pos).to.not.be.undefined;
                     count++;
                     if (count === 10) {
                         service.clearWatch(watchId);
                         done();
                     }
-                }, {
-                    interval: 10
-                });
+                },
+                {
+                    interval: 10,
+                },
+            );
         });
 
         it('should forcefully watch for changes', (done) => {
             let count = 0;
-            const watchId = service
-                .watchPosition('mvdewync', pos => {
+            const watchId = service.watchPosition(
+                'mvdewync',
+                (pos) => {
                     expect(pos).to.not.be.undefined;
                     count++;
                     if (count === 10) {
                         service.clearWatch(watchId);
                         done();
                     }
-                }, {
+                },
+                {
                     interval: 10,
-                    forceUpdate: true
-                });
+                    forceUpdate: true,
+                },
+            );
         });
     });
 });

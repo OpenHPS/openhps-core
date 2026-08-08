@@ -431,18 +431,26 @@ describe('DataObjectService', () => {
         let objectDataService: DataObjectService<DataObject>;
 
         before((done) => {
-            objectDataService = new DataObjectService(new SlowMemoryDataService(DataObject, {
-                timeout: 2000
-            }));
-            objectDataService.emitAsync('build').then(() => {
-                done();
-            }).catch(done);
+            objectDataService = new DataObjectService(
+                new SlowMemoryDataService(DataObject, {
+                    timeout: 2000,
+                }),
+            );
+            objectDataService
+                .emitAsync('build')
+                .then(() => {
+                    done();
+                })
+                .catch(done);
         });
 
         it('should wait for the driver to be ready', (done) => {
-            objectDataService.findAll().then(() => {
-                done();
-            }).catch(done);
+            objectDataService
+                .findAll()
+                .then(() => {
+                    done();
+                })
+                .catch(done);
         });
     });
 });

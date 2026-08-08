@@ -1,4 +1,4 @@
-import { AngularVelocityUnit, SensorObject, SensorValue, SerializableObject } from "../../../../src";
+import { AngularVelocityUnit, SensorObject, SensorValue, SerializableObject } from '../../../../src';
 
 @SerializableObject()
 export class GyroscopeObject extends SensorObject {

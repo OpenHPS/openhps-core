@@ -48,7 +48,7 @@ export class WorkerBase {
                     ? config.type === 'module'
                         ? (file: string) => import(/* webpackIgnore: true */ file) // ES6
                         : (file: string) => Promise.resolve(importScripts(/* webpackIgnore: true */ file)) // CJS
-                    : (file: string) => Promise.resolve(require(/* webpackIgnore: true */ file)); // eslint-disable-line
+                    : (file: string) => Promise.resolve(require(/* webpackIgnore: true */ file));
 
             // Set global dir name
 

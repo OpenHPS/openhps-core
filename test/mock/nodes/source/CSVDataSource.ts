@@ -1,4 +1,4 @@
-import { DataFrame, DataObject, ListSourceNode, SourceNodeOptions } from "../../../../src";
+import { DataFrame, DataObject, ListSourceNode, SourceNodeOptions } from '../../../../src';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as csv from 'csv-parser';
@@ -10,17 +10,18 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
     constructor(file: string, rowCallback: (row: any) => Out, options: csv.Options & SourceNodeOptions = {}) {
         super([], options);
         this.options.source = this.options.source || new DataObject(path.basename(file));
-        
+
         this._rowCallback = rowCallback;
         this._file = file;
 
-        this.once("build", this._initCSV.bind(this));
+        this.once('build', this._initCSV.bind(this));
     }
 
     private _initCSV(_?: any): Promise<void> {
         return new Promise((resolve, reject) => {
             const inputData = new Array();
-            const stream = fs.createReadStream(this._file)
+            const stream = fs
+                .createReadStream(this._file)
                 .pipe(csv(this.options as csv.Options))
                 .on('data', (row: any) => {
                     const frame = this._rowCallback(row);
@@ -28,7 +29,7 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
                         if (frame.source === undefined) {
                             frame.source = this.source;
                         }
-                        inputData.push(frame);   
+                        inputData.push(frame);
                     }
                 })
                 .on('end', () => {
@@ -47,12 +48,13 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
     public reset(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.inputData = [];
-            this._initCSV().then(_ => {
-                resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            this._initCSV()
+                .then((_) => {
+                    resolve();
+                })
+                .catch((ex) => {
+                    reject(ex);
+                });
         });
     }
-    
 }

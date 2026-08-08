@@ -1,4 +1,4 @@
-import * as EventEmitter from "events";
+import * as EventEmitter from 'events';
 
 export class DummyBroker extends EventEmitter {
     public static instance: DummyBroker;

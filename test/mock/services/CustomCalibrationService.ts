@@ -1,12 +1,11 @@
 import { CalibrationService } from '../../../src';
 
 export class CustomCalibrationService extends CalibrationService {
-
     calibrate(time: number): Promise<number> {
         return new Promise((resolve) => {
             let count = 0;
             this.start((object) => {
-                if (object.uid === "test") {
+                if (object.uid === 'test') {
                     count++;
                 }
             });
@@ -16,5 +15,4 @@ export class CustomCalibrationService extends CalibrationService {
             }, time);
         });
     }
-
 }

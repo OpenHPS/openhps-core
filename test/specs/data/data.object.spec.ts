@@ -324,8 +324,7 @@ describe('DataObject', () => {
             object.features = new Map();
             object.features.set('test', '123');
             const objectWithChangelog = createChangeLog(object);
-            objectWithChangelog.features.forEach((value, key) => {
-            });
+            objectWithChangelog.features.forEach((value, key) => {});
         });
 
         it('should not break dates', () => {
@@ -337,7 +336,7 @@ describe('DataObject', () => {
             const object = new MyObject();
             object.date = new Date();
             const objectWithChangelog = createChangeLog(object);
-            console.log(object)
+            console.log(object);
         });
 
         it('should detect changes with setters', () => {
@@ -346,8 +345,10 @@ describe('DataObject', () => {
             const objectWithChangelog = createChangeLog(object);
             (object.position as GeographicalPosition).latitude = 456;
             expect(objectWithChangelog.position[CHANGELOG_METADATA_KEY].getLatestChanges().length).to.equal(1);
-            expect(objectWithChangelog.position[CHANGELOG_METADATA_KEY].getLatestChanges()[0].property).to.not.equal("latitude");
-            expect(objectWithChangelog.position[CHANGELOG_METADATA_KEY].getLatestChanges()[0].property).to.equal("y");
+            expect(objectWithChangelog.position[CHANGELOG_METADATA_KEY].getLatestChanges()[0].property).to.not.equal(
+                'latitude',
+            );
+            expect(objectWithChangelog.position[CHANGELOG_METADATA_KEY].getLatestChanges()[0].property).to.equal('y');
         });
     });
 });

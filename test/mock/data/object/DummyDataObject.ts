@@ -5,5 +5,4 @@ import { DataObject, SerializableObject, SerializableMember } from '../../../../
 export class DummyDataObject extends DataObject {
     @SerializableMember()
     private flag: boolean = false;
-
 }

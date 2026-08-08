@@ -20,17 +20,27 @@ describe('node', () => {
             ModelBuilder.create()
                 .from(
                     new ListSourceNode([
-                        new DataFrame(new DummyDataFilterObject('abc', 1).addRelativePosition(new RelativeDistance("x", 1))),
-                        new DataFrame(new DummyDataFilterObject('abc', 2).addRelativePosition(new RelativeDistance("x", 4))),
-                        new DataFrame(new DummyDataFilterObject('abc', 10).addRelativePosition(new RelativeDistance("x", 3))),
-                        new DataFrame(new DummyDataFilterObject('abc', 12).addRelativePosition(new RelativeDistance("x", 6))),
-                        new DataFrame(new DummyDataFilterObject('abc', 11).addRelativePosition(new RelativeDistance("x", 9))),
+                        new DataFrame(
+                            new DummyDataFilterObject('abc', 1).addRelativePosition(new RelativeDistance('x', 1)),
+                        ),
+                        new DataFrame(
+                            new DummyDataFilterObject('abc', 2).addRelativePosition(new RelativeDistance('x', 4)),
+                        ),
+                        new DataFrame(
+                            new DummyDataFilterObject('abc', 10).addRelativePosition(new RelativeDistance('x', 3)),
+                        ),
+                        new DataFrame(
+                            new DummyDataFilterObject('abc', 12).addRelativePosition(new RelativeDistance('x', 6)),
+                        ),
+                        new DataFrame(
+                            new DummyDataFilterObject('abc', 11).addRelativePosition(new RelativeDistance('x', 9)),
+                        ),
                     ]),
                 )
                 .via(
                     new KalmanFilterNode(
                         (object: DummyDataFilterObject) => {
-                            return object.getRelativePositions().map(rel => {
+                            return object.getRelativePositions().map((rel) => {
                                 return {
                                     key: rel.referenceObjectUID,
                                     value: rel.referenceValue,
@@ -83,10 +93,12 @@ describe('node', () => {
                 .via(
                     new KalmanFilterNode(
                         (object: DummyDataFilterObject) => {
-                            return [{
-                                key: 'reading',
-                                value: object.reading
-                            }];
+                            return [
+                                {
+                                    key: 'reading',
+                                    value: object.reading,
+                                },
+                            ];
                         },
                         (key: string, value: number, object: DummyDataFilterObject) => {
                             object[key] = value;

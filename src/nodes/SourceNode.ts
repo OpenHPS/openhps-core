@@ -48,7 +48,7 @@ import { SerializableObject, SerializableMember } from '../data/decorators';
 @SerializableObject()
 export abstract class SourceNode<Out extends DataFrame = DataFrame> extends Node<Out, Out> {
     @SerializableMember()
-    protected declare options: SourceNodeOptions;
+    declare protected options: SourceNodeOptions;
 
     /**
      * Construct a new source node

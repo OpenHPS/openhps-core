@@ -213,7 +213,7 @@ export class DataSerializerUtils {
         // Merge options
         if (options) {
             ownMeta.options = mergeDeep(
-                ownMeta === rootMeta ? ownMeta.options ?? {} : ownMeta.options ?? rootMeta.options ?? {},
+                ownMeta === rootMeta ? (ownMeta.options ?? {}) : (ownMeta.options ?? rootMeta.options ?? {}),
                 options,
             );
 

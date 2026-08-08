@@ -1,4 +1,4 @@
-import { Service } from "../../../src";
+import { Service } from '../../../src';
 
 export class TimeConsumingService extends Service {
     private _computations: number;
@@ -15,9 +15,9 @@ export class TimeConsumingService extends Service {
     }
 
     private listPrimes(nPrimes: number) {
-        var primes = [];
-        for (let n = 2; nPrimes > 0;  n++ ) {
-            if(this.isPrime(n)) {
+        const primes = [];
+        for (let n = 2; nPrimes > 0; n++) {
+            if (this.isPrime(n)) {
                 primes.push(n);
                 --nPrimes;
             }
@@ -26,10 +26,9 @@ export class TimeConsumingService extends Service {
     }
 
     private isPrime(n: number) {
-        var max = Math.sqrt(n);
-        for (let i = 2;  i <= max;  i++ ) {
-            if( n % i === 0 )
-                return false;
+        const max = Math.sqrt(n);
+        for (let i = 2; i <= max; i++) {
+            if (n % i === 0) return false;
         }
         return true;
     }

@@ -1,4 +1,13 @@
-import { DataObject, Absolute2DPosition, TrajectoryService, Trajectory, ModelBuilder, CallbackSinkNode, DataFrame, Model } from '../../../src';
+import {
+    DataObject,
+    Absolute2DPosition,
+    TrajectoryService,
+    Trajectory,
+    ModelBuilder,
+    CallbackSinkNode,
+    DataFrame,
+    Model,
+} from '../../../src';
 import { expect } from 'chai';
 import 'mocha';
 import { SlowMemoryDataService } from '../../mock/services/SlowMemoryDataService';
@@ -9,15 +18,18 @@ describe('TrajectoryService', () => {
     before((done) => {
         trajectoryService = new TrajectoryService(new SlowMemoryDataService(Trajectory));
         // Prepare
-        trajectoryService.emitAsync("build").then(() => {
-            trajectoryService.deleteAll().then(_ => {
-                done();
-            });
-        }).catch(done);
+        trajectoryService
+            .emitAsync('build')
+            .then(() => {
+                trajectoryService.deleteAll().then((_) => {
+                    done();
+                });
+            })
+            .catch(done);
     });
-    
+
     after((done) => {
-        trajectoryService.emitAsync("destroy").then(() => {
+        trajectoryService.emitAsync('destroy').then(() => {
             done();
         });
     });
@@ -33,7 +45,10 @@ describe('TrajectoryService', () => {
             insertPromise = insertPromise.then(
                 () =>
                     new Promise((next) => {
-                        trajectoryService.appendPosition(object).then(() => next()).catch(done);
+                        trajectoryService
+                            .appendPosition(object)
+                            .then(() => next())
+                            .catch(done);
                     }),
             );
         }
@@ -50,17 +65,20 @@ describe('TrajectoryService', () => {
     });
 
     it('should find the last known trajectory', (done) => {
-        trajectoryService.findCurrentTrajectory('abc').then((trajectory) => {
-            expect(trajectory.positions[trajectory.positions.length - 1].toVector3().toArray()).to.eql([9, 9, 0]);
-            done();
-        })
-        .catch((ex) => {
-            done(ex);
-        });
+        trajectoryService
+            .findCurrentTrajectory('abc')
+            .then((trajectory) => {
+                expect(trajectory.positions[trajectory.positions.length - 1].toVector3().toArray()).to.eql([9, 9, 0]);
+                done();
+            })
+            .catch((ex) => {
+                done(ex);
+            });
     });
 
     it('should find a trajectory', (done) => {
-        trajectoryService.findCurrentTrajectory('abc')
+        trajectoryService
+            .findCurrentTrajectory('abc')
             .then((trajectory) => {
                 expect(trajectory.positions.length).to.equal(10);
                 done();
@@ -71,7 +89,8 @@ describe('TrajectoryService', () => {
     });
 
     it('should find a trajectory from start to end date or time', (done) => {
-        trajectoryService.findTrajectoryByRange('abc', 2, 5)
+        trajectoryService
+            .findTrajectoryByRange('abc', 2, 5)
             .then((trajectory) => {
                 expect(trajectory.positions.length).to.equal(10);
                 done();
@@ -83,19 +102,23 @@ describe('TrajectoryService', () => {
         // Create position model
         let model: Model;
         ModelBuilder.create()
-            .addService(new TrajectoryService(new SlowMemoryDataService(Trajectory), {
-                dataService: DataObject // If you want to store trajectory of BLEObject, use BLEObject
-            }))
+            .addService(
+                new TrajectoryService(new SlowMemoryDataService(Trajectory), {
+                    dataService: DataObject, // If you want to store trajectory of BLEObject, use BLEObject
+                }),
+            )
             .from()
-            .to(new CallbackSinkNode(function(frame: DataFrame) {
-                // The trajectory service will automatically store
-                // the position when the object is stored in the DataObjectService
-                // (i.e. when reaching a sink)
-
-                // Downside: this can cause race conditions if frames are pushed too fast
-                // check autobind=false with a custom sink for solving this issue
-            }))
-            .build().then(m => {
+            .to(
+                new CallbackSinkNode(function (frame: DataFrame) {
+                    // The trajectory service will automatically store
+                    // the position when the object is stored in the DataObjectService
+                    // (i.e. when reaching a sink)
+                    // Downside: this can cause race conditions if frames are pushed too fast
+                    // check autobind=false with a custom sink for solving this issue
+                }),
+            )
+            .build()
+            .then((m) => {
                 model = m;
                 let pushPromise = Promise.resolve();
                 // Delete all data from previous tests
@@ -125,32 +148,40 @@ describe('TrajectoryService', () => {
                             }),
                     );
                 }
-                
+
                 return pushPromise;
-            }).then(() => {
+            })
+            .then(() => {
                 // Verify that trajectory is stored
                 const service = model.findDataService(Trajectory);
                 return service.findAll();
-            }).then(trajectories => {
+            })
+            .then((trajectories) => {
                 expect(trajectories.length).to.equal(1);
                 expect(trajectories[0].positions.length).to.equal(10);
                 done();
-            }).catch(done);
+            })
+            .catch(done);
     });
 
     it('should support a practical example with a sink and autobind=false', (done) => {
         // Create position model
         let model: Model;
         ModelBuilder.create()
-            .addService(new TrajectoryService(new SlowMemoryDataService(Trajectory), {
-                dataService: DataObject, // If you want to store trajectory of BLEObject, use BLEObject
-                autoBind: false // You manually have to "appendPosition" in a sink
-            }))
+            .addService(
+                new TrajectoryService(new SlowMemoryDataService(Trajectory), {
+                    dataService: DataObject, // If you want to store trajectory of BLEObject, use BLEObject
+                    autoBind: false, // You manually have to "appendPosition" in a sink
+                }),
+            )
             .from()
-            .to(new CallbackSinkNode(function(frame: DataFrame) {
-                // The trajectory service will not store automatically
-            }))
-            .build().then(m => {
+            .to(
+                new CallbackSinkNode(function (frame: DataFrame) {
+                    // The trajectory service will not store automatically
+                }),
+            )
+            .build()
+            .then((m) => {
                 model = m;
                 let pushPromise = Promise.resolve();
                 // Delete all data from previous tests
@@ -178,40 +209,51 @@ describe('TrajectoryService', () => {
                 }
 
                 return pushPromise;
-            }).then(() => {
+            })
+            .then(() => {
                 // Verify that trajectory is NOT stored
                 const service = model.findDataService(Trajectory);
                 return service.findAll();
-            }).then(trajectories => {
+            })
+            .then((trajectories) => {
                 expect(trajectories.length).to.equal(0);
                 done();
-            }).catch(done);
+            })
+            .catch(done);
     });
 
     it('should support a practical example with a custom sink and autobind=false', (done) => {
         // Create position model
         let model: Model;
         ModelBuilder.create()
-            .addService(new TrajectoryService(new SlowMemoryDataService(Trajectory), {
-                autoBind: false,
-                dataService: DataObject
-            }))
+            .addService(
+                new TrajectoryService(new SlowMemoryDataService(Trajectory), {
+                    autoBind: false,
+                    dataService: DataObject,
+                }),
+            )
             .from()
-            .to(new CallbackSinkNode(function(frame: DataFrame) {
-                return new Promise((resolve, reject) => {
-                    // The trajectory service will not store automatically
+            .to(
+                new CallbackSinkNode(function (frame: DataFrame) {
+                    return new Promise((resolve, reject) => {
+                        // The trajectory service will not store automatically
 
-                    const service: TrajectoryService = this.model.findDataService(Trajectory);
-                    // Append the position (similar to autoBind=true)
-                    // service.appendPosition(frame.source);
+                        const service: TrajectoryService = this.model.findDataService(Trajectory);
+                        // Append the position (similar to autoBind=true)
+                        // service.appendPosition(frame.source);
 
-                    // Append the position with a custom UID for the trajectory
-                    service.appendPosition(frame.source, frame.source.uid + "_movement").then(() => {
-                        resolve();
-                    }).catch(reject);
-                });
-            }))
-            .build().then(m => {
+                        // Append the position with a custom UID for the trajectory
+                        service
+                            .appendPosition(frame.source, frame.source.uid + '_movement')
+                            .then(() => {
+                                resolve();
+                            })
+                            .catch(reject);
+                    });
+                }),
+            )
+            .build()
+            .then((m) => {
                 model = m;
                 let pushPromise = Promise.resolve();
                 // Delete all data from previous tests
@@ -239,15 +281,18 @@ describe('TrajectoryService', () => {
                 }
 
                 return pushPromise;
-            }).then(() => {
+            })
+            .then(() => {
                 // Verify that trajectory is stored
                 const service = model.findDataService(Trajectory);
                 return service.findAll();
-            }).then((trajectories: Trajectory[]) => {
+            })
+            .then((trajectories: Trajectory[]) => {
                 expect(trajectories.length).to.equal(1);
                 expect(trajectories[0].positions.length).to.equal(10);
-                expect(trajectories[0].uid).to.equal("abc_movement");
+                expect(trajectories[0].uid).to.equal('abc_movement');
                 done();
-            }).catch(done);
+            })
+            .catch(done);
     });
 });
