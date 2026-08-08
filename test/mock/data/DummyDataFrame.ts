@@ -1,4 +1,10 @@
-import { DataFrame, SerializableObject, SerializableMember, SerializableMapMember, SerializableSetMember } from '../../../src';
+import {
+    DataFrame,
+    SerializableObject,
+    SerializableMember,
+    SerializableMapMember,
+    SerializableSetMember,
+} from '../../../src';
 
 @SerializableObject()
 export class DummyDataFrame extends DataFrame {

@@ -42,7 +42,7 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
     In,
     Out
 > {
-    protected declare options: ProcessingNodeOptions;
+    declare protected options: ProcessingNodeOptions;
 
     constructor(options?: ProcessingNodeOptions) {
         super(options);

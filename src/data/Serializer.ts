@@ -15,9 +15,9 @@ import type { OptionsBase } from 'typedjson/lib/types/options-base';
 import { BufferUtils } from '../utils/BufferUtils';
 
 export class Serializer extends JSONSerializer {
-    protected declare options?: OptionsBase;
-    protected declare typeHintEmitter: TypeHintEmitter;
-    protected declare serializationStrategy: Map<Serializable<any>, SerializerFn<any, TypeDescriptor, any>>;
+    declare protected options?: OptionsBase;
+    declare protected typeHintEmitter: TypeHintEmitter;
+    declare protected serializationStrategy: Map<Serializable<any>, SerializerFn<any, TypeDescriptor, any>>;
     protected errorHandler: (error: Error) => void = (e: Error) => {
         e.message = e.message.replace('@jsonObject', '@SerializableObject()');
         e.message = e.message.replace('@jsonMember', '@SerializableMember()');

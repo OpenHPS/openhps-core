@@ -34,10 +34,12 @@ describe('node', () => {
                 .via(
                     new LPFilterNode(
                         (object: DummyDataFilterObject) => {
-                            return [{
-                                key: 'reading',
-                                value: object.reading
-                            }];
+                            return [
+                                {
+                                    key: 'reading',
+                                    value: object.reading,
+                                },
+                            ];
                         },
                         (key: string, value: number, object: DummyDataFilterObject) => {
                             object[key] = value;

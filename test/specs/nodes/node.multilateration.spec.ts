@@ -77,7 +77,7 @@ describe('MultilaterationNode', () => {
         model.once('error', done);
         model.push(frame);
     });
-    
+
     it('should work with 2 reference positions with two distances (2d)', (done) => {
         sink.callback = (frame: DataFrame) => {
             expect(frame.source.uid).to.eql('dummy');
@@ -136,7 +136,7 @@ describe('MultilaterationNode', () => {
         model.once('error', done);
         model.push(frame);
     });
-    
+
     it('should work with 3 reference positions with distances (2d)', (done) => {
         sink.callback = (frame: DataFrame) => {
             expect(frame.source.uid).to.eql('dummy');
@@ -225,5 +225,4 @@ describe('MultilaterationNode', () => {
         model.once('error', done);
         model.push(frame);
     });
-
 });

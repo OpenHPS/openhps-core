@@ -15,8 +15,8 @@ import { isSubtypeOf, isValueDefined, nameof } from 'typedjson/lib/cjs/helpers';
 import { BufferUtils } from '../utils/BufferUtils';
 
 export class Deserializer extends JSONDeserializer {
-    protected declare options?: OptionsBase;
-    protected declare deserializationStrategy: Map<Serializable<any>, DeserializerFn<any, TypeDescriptor, any>>;
+    declare protected options?: OptionsBase;
+    declare protected deserializationStrategy: Map<Serializable<any>, DeserializerFn<any, TypeDescriptor, any>>;
     protected errorHandler: (error: Error) => void = (e: Error) => {
         e.message = e.message.replace('@jsonObject', '@SerializableObject()');
         e.message = e.message.replace('@jsonMember', '@SerializableMember()');
@@ -28,9 +28,9 @@ export class Deserializer extends JSONDeserializer {
     protected typeResolver(sourceObject: IndexedObject, knownTypes: Map<string, Serializable<any>>) {
         return sourceObject['__type'] !== undefined
             ? knownTypes.get(sourceObject.__type)
-            : sourceObject.constructor ?? Object;
+            : (sourceObject.constructor ?? Object);
     }
-    protected declare nameResolver?: (ctor: Serializable<any>) => string;
+    declare protected nameResolver?: (ctor: Serializable<any>) => string;
     declare setDeserializationStrategy: (
         type: Serializable<any>,
         deserializer: DeserializerFn<any, TypeDescriptor, any>,

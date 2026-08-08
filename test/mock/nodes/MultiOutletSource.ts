@@ -1,9 +1,4 @@
-import { 
-    SourceNode, 
-    DataFrame,
-    Outlet,
-    Inlet
-} from '../../../src';
+import { SourceNode, DataFrame, Outlet, Inlet } from '../../../src';
 
 export class MultiOutletSource {
     test: Inlet<DataFrame>;
@@ -12,9 +7,6 @@ export class MultiOutletSource {
     sensor3: Outlet<DataFrame>;
 
     onPull(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            
-        });
+        return new Promise((resolve, reject) => {});
     }
-
 }

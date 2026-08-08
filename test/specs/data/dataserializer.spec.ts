@@ -42,7 +42,7 @@ describe('DataSerializer', () => {
         class FloorObject extends DataObject {
             floor: number;
             randomObject: any;
-            
+
             constructor() {
                 super();
             }
@@ -52,9 +52,9 @@ describe('DataSerializer', () => {
             members: {
                 floor: Number,
                 randomObject: Object,
-            }
+            },
         });
-        
+
         console.log(DataSerializerUtils.getOwnMetadata(FloorObject).dataMembers.get('randomObject').type());
         const obj = new FloorObject();
         obj.floor = 1;
@@ -74,19 +74,19 @@ describe('DataSerializer', () => {
             @SerializableObject()
             class Bar {
                 @SerializableMember({
-                    name: "displayName"
+                    name: 'displayName',
                 })
                 name: string;
-            }    
+            }
 
             class Foo extends Bar {
                 username: string;
             }
 
             const obj = new Foo();
-            obj.username = "mvdewync";
-            obj.name = "Maxim";
-            const serialized = DataSerializer. serialize(obj);
+            obj.username = 'mvdewync';
+            obj.name = 'Maxim';
+            const serialized = DataSerializer.serialize(obj);
             expect(serialized.username).to.be.undefined;
             expect(serialized.displayName).to.not.be.undefined;
         });
@@ -101,7 +101,7 @@ describe('DataSerializer', () => {
             const meta = DataSerializer.getRootMetadata(AbsolutePosition);
             expect(meta.dataMembers).to.not.be.undefined;
         });
-        
+
         it('should not crash on null or undefined objects in an array', () => {
             DataSerializer.deserialize([null, undefined]);
         });
@@ -110,12 +110,12 @@ describe('DataSerializer', () => {
             @SerializableObject()
             class Test {
                 @SerializableMemberFunction()
-                fn = (abc: string) => abc + "_test";
+                fn = (abc: string) => abc + '_test';
             }
             const obj = new Test();
             const serialized = DataSerializer.serialize(obj);
             const deserialized: Test = DataSerializer.deserialize(serialized);
-            expect(deserialized.fn("hello")).to.equal(obj.fn("hello"));
+            expect(deserialized.fn('hello')).to.equal(obj.fn('hello'));
         });
 
         it('should serialize global types directly', () => {
@@ -267,7 +267,7 @@ describe('DataSerializer', () => {
             expect(deserialized[0]).to.be.instanceOf(DataObject);
         });
 
-        it('should deserialize generic types' , () => {
+        it('should deserialize generic types', () => {
             const velocity = new LinearVelocity(1, 2, 3, LinearVelocityUnit.METER_PER_SECOND);
             velocity.setAccuracy(new Accuracy2D(1, 1, LinearVelocityUnit.CENTIMETER_PER_SECOND));
             const serialized = DataSerializer.serialize(velocity);
@@ -298,7 +298,7 @@ describe('DataSerializer', () => {
     describe('changelog', () => {
         it('should serialize a changelog', () => {
             @SerializableObject()
-            class TestObjectEntry { 
+            class TestObjectEntry {
                 @SerializableMember()
                 key: string;
 
@@ -314,7 +314,7 @@ describe('DataSerializer', () => {
             }
 
             const object = createChangeLog(new TestObject());
-            object.members.push(new TestObjectEntry("test"));
+            object.members.push(new TestObjectEntry('test'));
             const changelog = getChangeLog(object);
             expect(changelog).to.not.be.undefined;
             expect(changelog.getLatestChanges().length).to.be.greaterThan(0);

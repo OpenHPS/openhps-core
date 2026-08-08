@@ -54,21 +54,33 @@ describe('DataFrame', () => {
 
     it('should add a sensor', () => {
         const frame = new DataFrame();
-        frame.addSensor(new AbsoluteOrientationSensor("test", Orientation.fromEuler({
-            x: 0,
-            y: 0,
-            z: 0
-        }), 50));
+        frame.addSensor(
+            new AbsoluteOrientationSensor(
+                'test',
+                Orientation.fromEuler({
+                    x: 0,
+                    y: 0,
+                    z: 0,
+                }),
+                50,
+            ),
+        );
         expect(frame.getObjects().length).to.equal(1);
     });
 
     it('should get a sensor', () => {
         const frame = new DataFrame();
-        frame.addSensor(new AbsoluteOrientationSensor("test", Orientation.fromEuler({
-            x: 0,
-            y: 0,
-            z: 0
-        }), 50));
+        frame.addSensor(
+            new AbsoluteOrientationSensor(
+                'test',
+                Orientation.fromEuler({
+                    x: 0,
+                    y: 0,
+                    z: 0,
+                }),
+                50,
+            ),
+        );
         expect(frame.getObjects().length).to.equal(1);
         const objects = frame.getObjects(AbsoluteOrientationSensor);
         expect(objects.length).to.equal(1);

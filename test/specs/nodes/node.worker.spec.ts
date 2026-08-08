@@ -33,16 +33,15 @@ describe('WorkerNode', () => {
                 new WorkerNode(
                     (builder) => {
                         // eslint-ignore-next-line
-                        const { TimeConsumingNode } = require(path.join(
-                            __dirname,
-                            '../../mock/nodes/TimeConsumingNode',
-                        ));
+                        const { TimeConsumingNode } = require(
+                            path.join(__dirname, '../../mock/nodes/TimeConsumingNode'),
+                        );
                         builder.via(new TimeConsumingNode());
                     },
                     {
                         directory: __dirname,
                         poolSize: 1,
-                        timeout: 60000
+                        timeout: 60000,
                     },
                 ),
             )
@@ -71,9 +70,12 @@ describe('WorkerNode', () => {
                             done(new Error(`Timeout!`));
                         }
                         expect(diff).to.be.lessThan(30 + overhead);
-                        model.emitAsync('destroy').then(() => {
-                            done();
-                        }).catch(done);
+                        model
+                            .emitAsync('destroy')
+                            .then(() => {
+                                done();
+                            })
+                            .catch(done);
                     }
                 });
 
@@ -96,16 +98,15 @@ describe('WorkerNode', () => {
             .via(
                 new WorkerNode(
                     (builder) => {
-                        const { TimeConsumingNode } = require(path.join(
-                            __dirname,
-                            '../../mock/nodes/TimeConsumingNode',
-                        ));
+                        const { TimeConsumingNode } = require(
+                            path.join(__dirname, '../../mock/nodes/TimeConsumingNode'),
+                        );
                         builder.via(new TimeConsumingNode());
                     },
                     {
                         directory: __dirname,
                         poolSize: 2,
-                        timeout: 60000
+                        timeout: 60000,
                     },
                 ),
             )
@@ -134,9 +135,12 @@ describe('WorkerNode', () => {
                             done(new Error(`Timeout!`));
                         }
                         expect(diff).to.be.lessThan(20 + overhead);
-                        model.emitAsync('destroy').then(() => {
-                            done();
-                        }).catch(done);
+                        model
+                            .emitAsync('destroy')
+                            .then(() => {
+                                done();
+                            })
+                            .catch(done);
                     }
                 });
 
@@ -158,16 +162,15 @@ describe('WorkerNode', () => {
             .via(
                 new WorkerNode(
                     (builder) => {
-                        const { DataServiceTestNode } = require(path.join(
-                            __dirname,
-                            '../../mock/nodes/DataServiceTestNode',
-                        ));
+                        const { DataServiceTestNode } = require(
+                            path.join(__dirname, '../../mock/nodes/DataServiceTestNode'),
+                        );
                         builder.via(new DataServiceTestNode());
                     },
                     {
                         directory: __dirname,
                         poolSize: 1,
-                        timeout: 60000
+                        timeout: 60000,
                     },
                 ),
             )
@@ -175,9 +178,12 @@ describe('WorkerNode', () => {
                 new CallbackSinkNode((data: DataFrame) => {
                     expect(data.getObjects()[0].uid).to.equal('abc456');
                     expect(data.getObjects()[0].displayName).to.equal('hello world');
-                    model.emitAsync('destroy').then(() => {
-                        done();
-                    }).catch(done);
+                    model
+                        .emitAsync('destroy')
+                        .then(() => {
+                            done();
+                        })
+                        .catch(done);
                 }),
             )
             .build()
@@ -199,16 +205,15 @@ describe('WorkerNode', () => {
             .via(
                 new WorkerNode(
                     (builder) => {
-                        const { NodeDataServiceTestNode } = require(path.join(
-                            __dirname,
-                            '../../mock/nodes/NodeDataServiceTestNode',
-                        ));
+                        const { NodeDataServiceTestNode } = require(
+                            path.join(__dirname, '../../mock/nodes/NodeDataServiceTestNode'),
+                        );
                         builder.via(new NodeDataServiceTestNode());
                     },
                     {
                         directory: __dirname,
                         poolSize: 1,
-                        timeout: 60000
+                        timeout: 60000,
                     },
                 ),
             )
@@ -217,9 +222,12 @@ describe('WorkerNode', () => {
                     const dataService: NodeDataService<NodeData> = model.findDataService(NodeData);
                     dataService.findData('x123', 'mvdewync').then((data) => {
                         expect(data.test).to.equal('abc');
-                        model.emitAsync('destroy').then(() => {
-                            done();
-                        }).catch(done);
+                        model
+                            .emitAsync('destroy')
+                            .then(() => {
+                                done();
+                            })
+                            .catch(done);
                     });
                 }),
             )
@@ -232,38 +240,38 @@ describe('WorkerNode', () => {
         .slow(5000)
         .timeout(60000);
 
-        // it('should throw an error when missing an import', (done) => {
-        //     let model;
-        //     ModelBuilder.create()
-        //         .from()
-        //         .via(
-        //             new WorkerNode(
-        //                 (builder) => {
-        //                     const { NodeDataServiceTestNode } = require(path.join(
-        //                         __dirname,
-        //                         '../../mock/nodes/NodeDataServiceTestNodeDOESNOTEXIST',
-        //                     ));
-        //                 },
-        //                 {
-        //                     directory: __dirname,
-        //                     poolSize: 1,
-        //                     timeout: 60000
-        //                 },
-        //             ),
-        //         )
-        //         .to(
-        //             new CallbackSinkNode(() => {
-        //                 done();
-        //             }),
-        //         )
-        //         .build()
-        //         .then((m) => {
-        //             model = m;
-        //             model.push(new DataFrame(new DataObject('mvdewync')));
-        //         }).catch(() => done());
-        // })
-        //     .slow(5000)
-        //     .timeout(60000);
+    // it('should throw an error when missing an import', (done) => {
+    //     let model;
+    //     ModelBuilder.create()
+    //         .from()
+    //         .via(
+    //             new WorkerNode(
+    //                 (builder) => {
+    //                     const { NodeDataServiceTestNode } = require(path.join(
+    //                         __dirname,
+    //                         '../../mock/nodes/NodeDataServiceTestNodeDOESNOTEXIST',
+    //                     ));
+    //                 },
+    //                 {
+    //                     directory: __dirname,
+    //                     poolSize: 1,
+    //                     timeout: 60000
+    //                 },
+    //             ),
+    //         )
+    //         .to(
+    //             new CallbackSinkNode(() => {
+    //                 done();
+    //             }),
+    //         )
+    //         .build()
+    //         .then((m) => {
+    //             model = m;
+    //             model.push(new DataFrame(new DataObject('mvdewync')));
+    //         }).catch(() => done());
+    // })
+    //     .slow(5000)
+    //     .timeout(60000);
 
     it('should support error events', (done) => {
         let model;
@@ -272,16 +280,15 @@ describe('WorkerNode', () => {
             .via(
                 new WorkerNode(
                     (builder) => {
-                        const { ErrorThrowingNode } = require(path.join(
-                            __dirname,
-                            '../../mock/nodes/ErrorThrowingNode',
-                        ));
+                        const { ErrorThrowingNode } = require(
+                            path.join(__dirname, '../../mock/nodes/ErrorThrowingNode'),
+                        );
                         builder.via(new ErrorThrowingNode());
                     },
                     {
                         directory: __dirname,
                         poolSize: 1,
-                        timeout: 60000
+                        timeout: 60000,
                     },
                 ),
             )
@@ -290,9 +297,12 @@ describe('WorkerNode', () => {
             .then((m) => {
                 model = m;
                 model.once('error', (event) => {
-                    model.emitAsync('destroy').then(() => {
-                        done();
-                    }).catch(done);
+                    model
+                        .emitAsync('destroy')
+                        .then(() => {
+                            done();
+                        })
+                        .catch(done);
                 });
                 model.push(new DataFrame(new DataObject('mvdewync')));
             });
@@ -307,16 +317,15 @@ describe('WorkerNode', () => {
             .via(
                 new WorkerNode(
                     (builder) => {
-                        const { TimeConsumingNode } = require(path.join(
-                            __dirname,
-                            '../../mock/nodes/TimeConsumingNode',
-                        ));
+                        const { TimeConsumingNode } = require(
+                            path.join(__dirname, '../../mock/nodes/TimeConsumingNode'),
+                        );
                         builder.via(new TimeConsumingNode());
                     },
                     {
                         directory: __dirname,
                         poolSize: 1,
-                        timeout: 60000
+                        timeout: 60000,
                     },
                 ),
             )
@@ -325,9 +334,12 @@ describe('WorkerNode', () => {
             .then((m) => {
                 model = m;
                 model.once('completed', (event) => {
-                    model.emitAsync('destroy').then(() => {
-                        done();
-                    }).catch(done);
+                    model
+                        .emitAsync('destroy')
+                        .then(() => {
+                            done();
+                        })
+                        .catch(done);
                 });
                 model.push(new DataFrame(new DataObject('mvdewync')));
             });
@@ -340,20 +352,12 @@ describe('WorkerNode', () => {
         ModelBuilder.create()
             .from()
             .via(
-                new WorkerNode(
-                    new TimeConsumingNode(),
-                    {
-                        directory: __dirname,
-                        poolSize: 1,
-                        imports: [
-                            path.join(
-                                __dirname,
-                                '../../mock/nodes/TimeConsumingNode',
-                            )
-                        ],
-                        timeout: 60000,
-                    },
-                ),
+                new WorkerNode(new TimeConsumingNode(), {
+                    directory: __dirname,
+                    poolSize: 1,
+                    imports: [path.join(__dirname, '../../mock/nodes/TimeConsumingNode')],
+                    timeout: 60000,
+                }),
             )
             .to(new CallbackSinkNode((data: DataFrame) => {}))
             .build()
@@ -361,12 +365,16 @@ describe('WorkerNode', () => {
                 model = m;
                 model.once('error', done);
                 model.once('completed', (event) => {
-                    model.emitAsync('destroy').then(() => {
-                        done();
-                    }).catch(done);
+                    model
+                        .emitAsync('destroy')
+                        .then(() => {
+                            done();
+                        })
+                        .catch(done);
                 });
                 model.push(new DataFrame(new DataObject('mvdewync')));
-            }).catch(done);
+            })
+            .catch(done);
     })
         .slow(5000)
         .timeout(60000);
@@ -415,39 +423,33 @@ describe('WorkerNode', () => {
         ModelBuilder.create()
             .from()
             .via(
-                new WorkerNode(
-                    new TimeConsumingNode(),
-                    {
-                        uid: "worker",
-                        directory: __dirname,
-                        poolSize: 1,
-                        imports: [
-                            path.join(
-                                __dirname,
-                                '../../mock/nodes/TimeConsumingNode',
-                            )
-                        ],
-                        timeout: 60000,
-                        methods: [{
-                            name: "test1",
+                new WorkerNode(new TimeConsumingNode(), {
+                    uid: 'worker',
+                    directory: __dirname,
+                    poolSize: 1,
+                    imports: [path.join(__dirname, '../../mock/nodes/TimeConsumingNode')],
+                    timeout: 60000,
+                    methods: [
+                        {
+                            name: 'test1',
                             handler: (model: Model, ...args: any[]) => {
-                                model.logger("info", "test1");
-                            }
+                                model.logger('info', 'test1');
+                            },
                         },
                         {
-                            name: "test2",
+                            name: 'test2',
                             handler: (model: Model, ...args: any[]) => {
                                 return model.referenceSpace;
-                            }
+                            },
                         },
                         {
-                            name: "test3",
+                            name: 'test3',
                             handler: (model: Model, object: DataObject) => {
-                                return object.uid === "maxim";
-                            }
-                        }]
-                    },
-                ),
+                                return object.uid === 'maxim';
+                            },
+                        },
+                    ],
+                }),
             )
             .to(new CallbackSinkNode((data: DataFrame) => {}))
             .build()
@@ -455,21 +457,28 @@ describe('WorkerNode', () => {
                 model = m;
                 model.once('error', done);
                 model.once('completed', () => {
-                    const worker: WorkerNode<any, any> = model.findNodeByUID("worker");
-                    worker.invokeMethod("test1").then(() => {
-                        return worker.invokeMethod("test2");
-                    }).then(data => {
-                        expect(data).to.be.instanceOf(ReferenceSpace);
-                        return worker.invokeMethod("test3", new DataObject("maxim"));
-                    }).then((data) => {
-                        expect(data).to.be.true;
-                        return model.emitAsync('destroy');
-                    }).then(() => {
-                        done();
-                    }).catch(done);
+                    const worker: WorkerNode<any, any> = model.findNodeByUID('worker');
+                    worker
+                        .invokeMethod('test1')
+                        .then(() => {
+                            return worker.invokeMethod('test2');
+                        })
+                        .then((data) => {
+                            expect(data).to.be.instanceOf(ReferenceSpace);
+                            return worker.invokeMethod('test3', new DataObject('maxim'));
+                        })
+                        .then((data) => {
+                            expect(data).to.be.true;
+                            return model.emitAsync('destroy');
+                        })
+                        .then(() => {
+                            done();
+                        })
+                        .catch(done);
                 });
                 model.push(new DataFrame(new DataObject('mvdewync')));
-            }).catch(done);
+            })
+            .catch(done);
     })
         .slow(5000)
         .timeout(60000);
@@ -483,7 +492,7 @@ describe('worker graph', () => {
                     name: 'output',
                     directory: __dirname,
                     poolSize: 2,
-                    timeout: 60000
+                    timeout: 60000,
                 }),
             )
             .from('output')
@@ -492,9 +501,12 @@ describe('worker graph', () => {
                     expect(frame).to.not.be.undefined;
                     expect(frame.source).to.not.be.undefined;
                     expect(frame.source.uid).to.be.equal('mvdewync');
-                    this.model.emitAsync('destroy').then(() => {
-                        done();
-                    }).catch(done);
+                    this.model
+                        .emitAsync('destroy')
+                        .then(() => {
+                            done();
+                        })
+                        .catch(done);
                 }),
             )
             .build()
@@ -518,7 +530,7 @@ describe('worker graph', () => {
                     directory: __dirname,
                     poolSize: 2,
                     worker: '../../test/mock/ExampleWorker',
-                    timeout: 60000
+                    timeout: 60000,
                 }),
             )
             .from('output')
@@ -527,9 +539,12 @@ describe('worker graph', () => {
                     expect(frame).to.not.be.undefined;
                     expect(frame.source).to.not.be.undefined;
                     expect(frame.source.uid).to.be.equal('mvdewync');
-                    this.model.emitAsync('destroy').then(() => {
-                        done();
-                    }).catch(done);
+                    this.model
+                        .emitAsync('destroy')
+                        .then(() => {
+                            done();
+                        })
+                        .catch(done);
                 }),
             )
             .build()
@@ -553,7 +568,7 @@ describe('worker graph', () => {
                     name: 'output',
                     directory: __dirname,
                     poolSize: 2,
-                    timeout: 60000
+                    timeout: 60000,
                 }),
             )
             .from('output')
@@ -563,9 +578,12 @@ describe('worker graph', () => {
                     expect(frame.source).to.not.be.undefined;
                     expect(frame.source.uid).to.be.equal('mvdewync');
                     expect(frame.source.displayName).to.equal('abc');
-                    this.model.emitAsync('destroy').then(() => {
-                        done();
-                    }).catch(done);
+                    this.model
+                        .emitAsync('destroy')
+                        .then(() => {
+                            done();
+                        })
+                        .catch(done);
                 }),
             )
             .build()
@@ -589,7 +607,7 @@ describe('worker graph', () => {
                     name: 'output',
                     directory: __dirname,
                     poolSize: 1,
-                    timeout: 60000
+                    timeout: 60000,
                 }),
             )
             .from('output')
@@ -599,9 +617,12 @@ describe('worker graph', () => {
                     expect(frame.source).to.not.be.undefined;
                     expect(frame.source.uid).to.be.equal('mvdewync');
                     expect(frame.source.displayName).to.equal('maxim');
-                    this.model.emitAsync('destroy').then(() => {
-                        done();
-                    }).catch(done);
+                    this.model
+                        .emitAsync('destroy')
+                        .then(() => {
+                            done();
+                        })
+                        .catch(done);
                 }),
             )
             .build()

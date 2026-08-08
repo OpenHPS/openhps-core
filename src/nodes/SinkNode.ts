@@ -32,7 +32,7 @@ import { PushPromise } from '../graph/PushPromise';
  */
 @SerializableObject()
 export abstract class SinkNode<In extends DataFrame = DataFrame> extends Node<In, In> {
-    protected declare options: SinkNodeOptions;
+    declare protected options: SinkNodeOptions;
 
     constructor(options?: SinkNodeOptions) {
         super(options);

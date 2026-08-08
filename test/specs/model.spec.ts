@@ -28,17 +28,23 @@ import { DummySensorObject } from '../mock/data/object/DummySensorObject';
 describe('Model', () => {
     describe('serializer', () => {
         it('should serialize a model', (done) => {
-             
             ModelBuilder.create()
                 .from()
-                .via(new CallbackNode(frame => {
-                    frame.addObject(new DataObject("test"));
-                }))
-                .to(new CallbackSinkNode(frame => {
-                    console.log("yes");
-                }, {
-                    uid: "end"
-                }))
+                .via(
+                    new CallbackNode((frame) => {
+                        frame.addObject(new DataObject('test'));
+                    }),
+                )
+                .to(
+                    new CallbackSinkNode(
+                        (frame) => {
+                            console.log('yes');
+                        },
+                        {
+                            uid: 'end',
+                        },
+                    ),
+                )
                 .build()
                 .then((model) => {
                     const serialized = ModelSerializer.serialize(model);
@@ -46,9 +52,10 @@ describe('Model', () => {
                     expect(model.uid).to.equal(deserialized.uid);
                     expect(model.nodes.length).to.equal(deserialized.nodes.length);
                     expect(model.edges.length).to.equal(deserialized.edges.length);
-                    deserialized.push(new DataFrame())
+                    deserialized.push(new DataFrame());
                     done();
-                }).catch(done);
+                })
+                .catch(done);
         }).timeout(60000);
     });
 
@@ -131,8 +138,7 @@ describe('Model', () => {
             });
 
             it('should determine instanceof with priority', () => {
-                let result;
-                result = instanceofPriority(DummySensorObject, DataObject);
+                const result = instanceofPriority(DummySensorObject, DataObject);
                 expect(result[0]).to.be.true;
             });
 
@@ -445,16 +451,22 @@ describe('Model', () => {
     });
 
     describe('pushing', () => {
-
         it('should support a completed promise', (done) => {
             ModelBuilder.create()
                 .from()
-                .via(new CallbackNode((f) => {f}))
-                .to(new CallbackSinkNode((f) => {
-                    // do something
-                    f.addObject(new DataObject("test"));
-                }))
-                .build().then((model: Model) =>{
+                .via(
+                    new CallbackNode((f) => {
+                        f;
+                    }),
+                )
+                .to(
+                    new CallbackSinkNode((f) => {
+                        // do something
+                        f.addObject(new DataObject('test'));
+                    }),
+                )
+                .build()
+                .then((model: Model) => {
                     const frame = new DataFrame();
                     model.push(frame).completed(() => {
                         // Expect frame to be completed
@@ -620,9 +632,9 @@ describe('Model', () => {
                         .via(
                             new CallbackNode(() => {
                                 throw new Error('Excepting this error');
-                            })
+                            }),
                         )
-                        .to('a')
+                        .to('a'),
                 )
                 .from('a')
                 .to()
@@ -777,26 +789,33 @@ describe('Model', () => {
             ModelBuilder.create()
                 .from()
                 .store()
-                .build().then(model => {
+                .build()
+                .then((model) => {
                     const frame = new DataFrame();
-                    model.onceCompleted(frame.uid).then(() => {
-                        done();
-                    }).catch(done);
+                    model
+                        .onceCompleted(frame.uid)
+                        .then(() => {
+                            done();
+                        })
+                        .catch(done);
                     model.push(frame);
                 });
         }).timeout(2000);
 
         it('should support a completed event on a graph shape', (done) => {
             ModelBuilder.create()
-                .addShape(GraphBuilder.create()
-                    .from("input")
-                    .store())
-                .build().then(model => {
+                .addShape(GraphBuilder.create().from('input').store())
+                .build()
+                .then((model) => {
                     const frame = new DataFrame();
-                    model.findNodeByName("input").onceCompleted(frame.uid).then(() => {
-                        done();
-                    }).catch(done);
-                    model.findNodeByName("input").push(frame);
+                    model
+                        .findNodeByName('input')
+                        .onceCompleted(frame.uid)
+                        .then(() => {
+                            done();
+                        })
+                        .catch(done);
+                    model.findNodeByName('input').push(frame);
                 });
         }).timeout(2000);
 
@@ -804,16 +823,16 @@ describe('Model', () => {
             const source = new CallbackSourceNode(() => {
                 return new DataFrame();
             });
-            const sourceProxy = new Proxy(source, new (class x implements ProxyHandler<SourceNode> {
-
-            })());
+            const sourceProxy = new Proxy(source, new (class x implements ProxyHandler<SourceNode> {})());
             ModelBuilder.create()
                 .from(sourceProxy)
                 .to()
-                .build().then(() => {
+                .build()
+                .then(() => {
                     expect(sourceProxy.outlets.length).to.eql(1);
                     done();
-                }).catch(done);
+                })
+                .catch(done);
         });
     });
 });
