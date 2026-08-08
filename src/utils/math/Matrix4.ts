@@ -9,7 +9,7 @@ export class Matrix4 extends THREE.Matrix4 {
     @SerializableArrayMember(Number, {
         numberType: NumberType.DECIMAL,
     })
-    public elements: number[];
+    public elements: THREE.Matrix4Tuple;
 
     public static round(value: Matrix4, decimals = 0): Matrix4 {
         const pow = Math.pow(10, decimals);
