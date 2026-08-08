@@ -1,11 +1,60 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
-
+# Dependency updates for this OpenHPS module.
+# Docs: https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+#
+# Grouped deliberately: the lint and test stacks each have to move as a unit
+# because of peer ranges between them (eslint <-> typescript-eslint <-> plugins).
+# Ungrouped daily updates are what left ~10 abandoned dependabot branches behind.
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
-    schedule:
-      interval: "daily"
+    - package-ecosystem: npm
+      directory: /
+      schedule:
+          interval: weekly
+          day: monday
+      open-pull-requests-limit: 10
+      versioning-strategy: increase-if-necessary
+      groups:
+          lint:
+              patterns:
+                  - eslint
+                  - eslint-*
+                  - '@eslint/*'
+                  - typescript-eslint
+                  - '@typescript-eslint/*'
+                  - prettier
+                  - globals
+          test:
+              patterns:
+                  - mocha
+                  - mocha-*
+                  - chai
+                  - '@types/chai'
+                  - '@types/mocha'
+                  - nyc
+                  - ts-node
+          build:
+              patterns:
+                  - webpack
+                  - webpack-*
+                  - terser-webpack-plugin
+                  - typedoc
+                  - typedoc-*
+                  - '@babel/*'
+                  - size-limit
+                  - '@size-limit/*'
+          types:
+              patterns:
+                  - '@types/*'
+              exclude-patterns:
+                  - '@types/chai'
+                  - '@types/mocha'
+      ignore:
+          # TypeScript majors are gated on the typedoc and typescript-eslint peer
+          # ranges, so they are bumped deliberately rather than automatically.
+          - dependency-name: typescript
+            update-types: ['version-update:semver-major']
+    - package-ecosystem: github-actions
+      directory: /
+      schedule:
+          interval: weekly
+          day: monday

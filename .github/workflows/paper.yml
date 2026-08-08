@@ -3,10 +3,10 @@ name: Build JOSS Paper
 on:
     push:
         paths:
-            - './docs/paper/**'
+            - 'docs/paper/**'
     pull_request:
         paths:
-            - './docs/paper/**'
+            - 'docs/paper/**'
     # Manual trigger
     workflow_dispatch:
 
