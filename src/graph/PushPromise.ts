@@ -1,5 +1,3 @@
-import { resolve } from 'path';
-
 /**
  * A push promise is a promise that is returned when pushing a dataframe to a graph.
  */
