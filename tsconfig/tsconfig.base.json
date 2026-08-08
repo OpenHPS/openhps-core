@@ -13,18 +13,6 @@
         "declaration": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "lib": [
-            "DOM",
-            "WebWorker"
-        ],
-        "baseUrl": ".",
-        "paths": {
-            "@/*": [
-              "src/*"
-            ],
-            "@": [
-              "src"
-            ]
-        }
-    },
+        "lib": ["DOM", "WebWorker", "ES2022"]
+    }
 }
