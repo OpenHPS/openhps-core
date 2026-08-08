@@ -3,14 +3,14 @@
   @openhps/core
 </h1>
 <p align="center">
-    <a href="https://github.com/OpenHPS/openhps-core/actions/workflows/main.yml" target="_blank">
-        <img alt="Build Status" src="https://github.com/OpenHPS/openhps-core/actions/workflows/main.yml/badge.svg">
+    <a href="https://github.com/OpenHPS/openhps-core/actions/workflows/ci.yml" target="_blank">
+        <img alt="Build Status" src="https://github.com/OpenHPS/openhps-core/actions/workflows/ci.yml/badge.svg">
     </a>
     <a href="https://badge.fury.io/js/@openhps%2Fcore">
         <img src="https://badge.fury.io/js/@openhps%2Fcore.svg" alt="npm version" height="18">
     </a>
     <a href="https://www.typescriptlang.org/" target="_blank">
-        <img src="https://img.shields.io/badge/TypeScript-4.0+-blue.svg" alt="TypeScript">
+        <img src="https://img.shields.io/badge/TypeScript-5.9+-blue.svg" alt="TypeScript">
     </a>
     <a href="https://opensource.org/licenses/Apache-2.0" target="_blank">
         <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License: Apache 2.0">
