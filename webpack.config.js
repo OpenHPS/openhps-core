@@ -45,7 +45,7 @@ const defaultConfig = env => ({
 
 const bundle = (env, module) => ({
   name: PROJECT_NAME,
-  entry: `./dist/esm5/index.js`,
+  entry: `./dist/esm/index.js`,
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: `web/${PROJECT_NAME}${module ? ".es" : ""}${env.prod ? ".min" : ""}.js`,
@@ -85,7 +85,7 @@ module.exports = env => [
   },
   {
     name:`${PROJECT_NAME}-worker`,
-    entry: `./dist/esm5/worker/WorkerRunner.js`,
+    entry: `./dist/esm/worker/WorkerRunner.js`,
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: `web/worker.${PROJECT_NAME}.es${env.prod ? ".min" : ""}.js`,
@@ -101,7 +101,7 @@ module.exports = env => [
   },
   {
     name: PROJECT_NAME,
-    entry: `./dist/esm5/index.lite.js`,
+    entry: `./dist/esm/index.lite.js`,
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: `web/${PROJECT_NAME}-lite${env.prod ? ".min" : ""}.js`,

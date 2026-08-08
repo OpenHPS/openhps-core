@@ -1,79 +1,62 @@
 /**
- * Build THREE.js to CommonJS
- *  Reason: Tree shaking on three.js NPM module is not possible
+ * Vendor THREE.js into the build as CommonJS and ESM.
+ *   Reason: tree shaking the three.js npm module is not possible, so only the
+ *   handful of math classes this package actually uses are copied in.
+ *
+ * Uses only node: builtins. It previously required `shelljs`, which was never a
+ * declared dependency and only resolved by hoisting — one dependency-tree change
+ * away from breaking `npm run build` at its very first step.
  */
-const shell = require('shelljs');
-const path = require('path');
+const path = require('node:path');
+const fs = require('node:fs');
 const babel = require('@babel/core');
-const fs = require('fs');
 
-const three_dir = path.join(path.dirname(require.resolve('three')), "../");
-const src_dir = path.join(__dirname, "../src/three");
-const cjs_dir = path.join(__dirname, "../dist/cjs/three");
-const esm_dir = path.join(__dirname, "../dist/esm/three");
-const esm5_dir = path.join(__dirname, "../dist/esm5/three");
-const types_dir = path.join(__dirname, "../dist/types/three");
+const threeDir = path.join(path.dirname(require.resolve('three')), '..');
+const threeTypesDir = path.join(path.dirname(require.resolve('@types/three/package.json')), 'src');
 
-console.log("Three dir: ", three_dir);
-console.log("Source dir: ", src_dir);
-console.log("CJS dir: ", cjs_dir);
-console.log("ESM dir: ", esm_dir);
-console.log("ESM5 dir: ", esm5_dir);
+const srcDir = path.join(__dirname, '../src/three');
+const cjsDir = path.join(__dirname, '../dist/cjs/three');
+const esmDir = path.join(__dirname, '../dist/esm/three');
+const typesDir = path.join(__dirname, '../dist/types/three');
 
-[src_dir, esm_dir, esm5_dir, cjs_dir, types_dir].forEach(dir => {
-    // Delete the three directory
-    shell.rm("-rf", dir);
-   
-    // Create three directory
-    shell.mkdir('-p', dir);
-});
+console.log('Three dir:  ', threeDir);
+console.log('Types dir:  ', threeTypesDir);
+console.log('Source dir: ', srcDir);
+console.log('CJS dir:    ', cjsDir);
+console.log('ESM dir:    ', esmDir);
 
-// Copy three javascript files
-[src_dir, esm_dir, esm5_dir].forEach(dir => {
-    shell.cp("-r",
-        path.join(three_dir, "src/*"),
-        dir
-    );
-});
+for (const dir of [srcDir, esmDir, cjsDir, typesDir]) {
+    fs.rmSync(dir, { recursive: true, force: true });
+    fs.mkdirSync(dir, { recursive: true });
+}
 
-// Copy three type definitions
-shell.cp("-r",
-    "node_modules/@types/three/src/*",
-    types_dir,
-);
+// three ships its sources as ESM, so src/ and dist/esm/ take them verbatim.
+for (const dir of [srcDir, esmDir]) {
+    fs.cpSync(path.join(threeDir, 'src'), dir, { recursive: true });
+}
 
-// Transpile three to CJS
-const directory = src_dir;
+fs.cpSync(threeTypesDir, typesDir, { recursive: true });
+
+/**
+ * Transpile every .js under a directory to CommonJS, in place.
+ * @param {string} directory Directory to walk
+ */
 function transform(directory) {
-    const entries = fs.readdirSync(directory);
-    entries.forEach(entry => {
+    for (const entry of fs.readdirSync(directory)) {
         const file = path.join(directory, entry);
-        const stats = fs.lstatSync(path.join(directory, entry));
-        if (stats.isDirectory()) {
+        if (fs.lstatSync(file).isDirectory()) {
             transform(file);
-        } else if (entry.endsWith(".js")) {
-            // Transpile
-            console.log(file);
+        } else if (entry.endsWith('.js')) {
             const result = babel.transformFileSync(file, {
-                presets: [["@babel/preset-env", {
-                    "targets": {
-                        "node": "current"
-                    },
-                }]]
+                presets: [['@babel/preset-env', { targets: { node: 'current' } }]],
             });
             fs.writeFileSync(file, result.code);
         }
-    });
+    }
 }
-transform(directory);
+transform(srcDir);
 
-// Copy three javascript files
-shell.cp("-r",
-    path.join(src_dir, './*'),
-    cjs_dir
-);
+fs.cpSync(srcDir, cjsDir, { recursive: true });
 
-shell.cp("-r",
-    "node_modules/@types/three/src/*",
-    src_dir
-);
+// Finally lay the type definitions over the sources so `src/three` type-checks.
+fs.cpSync(threeTypesDir, srcDir, { recursive: true });
