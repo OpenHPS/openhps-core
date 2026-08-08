@@ -1,14 +1,14 @@
 {
-    "branches": 50,
-    "lines": 50,
-    "functions": 50,
-    "statements": 50,
-    "include": ["src"],
+    "all": true,
+    "src": ["src"],
+    "include": ["src/**/*.ts"],
     "exclude": ["test", "src/worker/WorkerRunner.ts", "src/service/DummyDataService.ts", "src/three/**"],
     "extension": [".ts"],
     "reporter": ["lcov", "text-summary"],
-    "cache": true,
-    "all": true,
+    "report-dir": "./coverage",
     "check-coverage": true,
-    "report-dir": "./coverage"
+    "branches": 85,
+    "lines": 85,
+    "functions": 70,
+    "statements": 85
 }
