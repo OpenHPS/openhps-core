@@ -1,15 +1,10 @@
 {
     "diff": true,
-    "require": [
-        "reflect-metadata",
-        "test/tsconfig.js"
-    ],
+    "require": ["reflect-metadata", "test/tsconfig.js"],
     "extension": ["ts"],
-    "package": "../package.json",
     "reporter": "spec",
     "spec": "test/specs/**/*.spec.ts",
     "slow": 1500,
     "timeout": 20000,
-    "recursive": true,
-    "reporterEnabled": "spec, mocha-junit-reporter"
+    "recursive": true
 }

@@ -1,0 +1,5 @@
+{
+    "extends": "./.mocharc.json",
+    "reporter": "mocha-multi-reporters",
+    "reporter-option": ["configFile=test/.mocha-multi-reporters.json"]
+}

@@ -1,25 +1,24 @@
 /*
-  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language
+  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript's language
   server to improve development experience. It is not intended to be used to perform a compilation.
   To learn more about this file see:
   https://devblogs.microsoft.com/typescript/announcing-typescript-3-9/#solution-style-tsconfig.
 */
 {
     "files": [],
-    "references": [
-      {
-        "path": "./tsconfig/tsconfig.app.json"
-      },
-      {
-        "path": "./tsconfig/tsconfig.spec.json"
-      }
-    ],
-    /* Required for workers */
+    "references": [{ "path": "./tsconfig/tsconfig.app.json" }, { "path": "./tsconfig/tsconfig.spec.json" }],
+    /*
+      Required for workers. WorkerHandler calls `require('ts-node').register()` with no project
+      argument, so ts-node resolves the nearest tsconfig.json -- this one -- when compiling worker
+      sources at runtime. These options look like duplication of tsconfig/tsconfig.base.json, but
+      removing them turns experimentalDecorators off inside the worker, and TypeScript 5 then reads
+      @SerializableMember as a standard ES decorator and fails with TS1240.
+    */
     "compilerOptions": {
-      "target": "es6",
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true,
+        "target": "es6",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
     }
 }
