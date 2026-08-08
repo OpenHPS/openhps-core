@@ -9,7 +9,7 @@ export class Matrix3 extends THREE.Matrix3 {
     @SerializableArrayMember(Number, {
         numberType: NumberType.DECIMAL,
     })
-    public elements: number[];
+    public elements: THREE.Matrix3Tuple;
 
     /**
      * Create a matrix from array
