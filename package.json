@@ -6,7 +6,7 @@
     "license": "Apache-2.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/OpenHPS/openhps-core.git"
+        "url": "git+https://github.com/OpenHPS/openhps-core.git"
     },
     "bugs": {
         "url": "https://github.com/OpenHPS/openhps-core/issues"
@@ -15,6 +15,7 @@
     "publishConfig": {
         "access": "public"
     },
+    "type": "commonjs",
     "sideEffects": false,
     "main": "./dist/cjs/index.js",
     "types": "./dist/types/index.d.ts",
@@ -118,7 +119,6 @@
         "dead reckoning"
     ],
     "dependencies": {
-        "lodash.clonedeep": "^4.5.0",
         "reflect-metadata": ">=0.2.2",
         "threads": "^1.7.0",
         "tslib": "^2.8.1",
@@ -135,7 +135,6 @@
         "@types/benchmark": "^2.1.5",
         "@types/chai": "^5.2.2",
         "@types/deasync": "^0.1.5",
-        "@types/lodash.clonedeep": "^4.5.9",
         "@types/mocha": "^10.0.10",
         "@types/node": "^24.3.0",
         "@types/three": "^0.175.0",
