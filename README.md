@@ -31,6 +31,7 @@ This repository contains the core component for OpenHPS (Open Source Hybrid Posi
 OpenHPS is a data processing positioning framework. It is designed to support many different use cases ranging from simple positioning such as detecting the position of a pawn on a chessboard using RFID, to indoor positioning methods using multiple cameras. Already have a hybrid mobile application that you wish to expand with a positioning system? No problem, OpenHPS integrates well into any hybrid mobile applications!
 
 ## Features
+
 - 🌍 **2D, 3D and Geographical positioning.**
 - 📍 **Relative positioning.**
 - 🧮 **Basic positioning algorithms** (e.g. trilateration, triangulation, fingerprinting, dead reckoning...)
@@ -39,7 +40,9 @@ OpenHPS is a data processing positioning framework. It is designed to support ma
 - 🛠️ **Open source.**
 
 ## Add-ons
+
 ### Positioning Algorithms
+
 - **[@openhps/imu](https://github.com/OpenHPS/openhps-imu)** - Adds IMU processing nodes for fusing IMU sensors.
 - **[@openhps/rf](https://github.com/OpenHPS/openhps-rf)** - Adds RF processing nodes and data objects.
 - **[@openhps/fingerprinting](https://github.com/OpenHPS/openhps-fingerprinting)** - Adds various fingerprinting nodes and services for offline and offline positioning models.
@@ -49,88 +52,116 @@ OpenHPS is a data processing positioning framework. It is designed to support ma
 - **[@openhps/orb-slam3](https://github.com/OpenHPS/openhps-orb-slam3)** - Provides bindings to ORB-SLAM3
 
 ### Abstractions
+
 - **[@openhps/geospatial](https://github.com/OpenHPS/openhps-geospatial)** - Enables the concept of geospatial spaces (e.g. building, room) on top of reference spaces.
 
 ### Data Services
+
 - **[@openhps/mongodb](https://github.com/OpenHPS/openhps-mongodb)** - Adds MongoDB support for the storage of data objects.
 - **[@openhps/localstorage](https://github.com/OpenHPS/openhps-localstorage)** - Basic persistent storage for browser based models.
 - **[@openhps/rdf](https://github.com/OpenHPS/openhps-rdf)** - RDF exporting of data objects and data frames.
 - **[@openhps/solid](https://github.com/OpenHPS/openhps-solid)** - Solid Pods as data storage for data objects.
 
 ### Communication
+
 - **[@openhps/socket](https://github.com/OpenHPS/openhps-socket)** - Provides node communication through Socket.IO for remote models.
 - **[@openhps/rest](https://github.com/OpenHPS/openhps-rest)** - Provides node communication through restful endpoints.
 - **[@openhps/mqtt](https://github.com/OpenHPS/openhps-mqtt)** - MQTT client node communication and standalone MQTT server.
 
 ### Smartphone
+
 - **[@openhps/react-native](https://github.com/OpenHPS/openhps-react-native)** - Provides nodes for retrieving sensor data in react-native.
 - **[@openhps/nativescript](https://github.com/OpenHPS/openhps-nativescript)** - Provides nodes for retrieving sensor data in NativeScript.
 - **[@openhps/cordova](https://github.com/OpenHPS/openhps-cordova)** - Provides nodes for retrieving sensor data in Cordova/Phonegap.
 - **[@openhps/capacitor](https://github.com/OpenHPS/openhps-capacitor)** - Provides nodes for retrieving sensor data in Ionic Capacitor.
 
 ### Misc
+
 - **[@openhps/sphero](https://github.com/OpenHPS/openhps-sphero)** - Example implementation for controlling and receiving sensor data from Sphero toys.
 - **[@openhps/csv](https://github.com/OpenHPS/openhps-csv)** - Read and write data frames from/to CSV files.
 - **[@openhps/dht](https://github.com/OpenHPS/openhps-dht)** - Distributed hash tables for discovering positioning systems based on a rough geographical location.
 
 ## Getting Started
+
 If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps/core with the following command.
+
 ```bash
 npm install @openhps/core --save
 ```
 
-The core idea and goals of OpenHPS are outlined in the technical paper: [*OpenHPS: An Open Source Hybrid Positioning System*](https://openhps.org/publications/2020/techreport/).
+The core idea and goals of OpenHPS are outlined in the technical paper: [_OpenHPS: An Open Source Hybrid Positioning System_](https://openhps.org/publications/2020/techreport/).
 
 ## Usage
+
 OpenHPS uses a process network to create a positioning system. This process network is created using the `ModelBuilder`. Every model starts with the creation
 of a new model that starts `from` a source node and passed `via` a set of processing nodes until it arrives `to` a sink node.
 
 ```typescript
-import { ModelBuilder, DataObject, Absolute2DPosition, SMAFilterNode, ReferenceSpace, Euler, AngleUnit } from '@openhps/core';
+import {
+    ModelBuilder,
+    DataObject,
+    Absolute2DPosition,
+    SMAFilterNode,
+    ReferenceSpace,
+    Euler,
+    AngleUnit,
+} from '@openhps/core';
 import { MouseSourceNode } from './MouseSourceNode';
 import { ChartSinkNode } from './ChartSinkNode';
- 
+
 const mouseReferenceSpace = new ReferenceSpace()
     .translation(0, 200)
     .rotation(new Euler(180, 0, 0, 'ZXY', AngleUnit.DEGREE));
- 
+
 ModelBuilder.create()
     // Step 1. Obtain X,Y location from mouse (active source node)
-    .from(new MouseSourceNode("trackArea"))
+    .from(new MouseSourceNode('trackArea'))
     // Step 2. Flip the axis
     .convertFromSpace(mouseReferenceSpace)
     // Step 3. Simple moving average of the X,Y position (average of 40 readings)
-    .via(new SMAFilterNode((obj: DataObject) => ([
-            { key: "x", value: (obj.position as Absolute2DPosition).x },
-            { key: "y", value: (obj.position as Absolute2DPosition).y }
-        ]),
-        (key: string, value: number, obj: DataObject) => { obj.position[key] = value },
-        { taps: 40 })
+    .via(
+        new SMAFilterNode(
+            (obj: DataObject) => [
+                { key: 'x', value: (obj.position as Absolute2DPosition).x },
+                { key: 'y', value: (obj.position as Absolute2DPosition).y },
+            ],
+            (key: string, value: number, obj: DataObject) => {
+                obj.position[key] = value;
+            },
+            { taps: 40 },
+        ),
     )
     // Step 4. Plot the results
-    .to(new ChartSinkNode("mouseChart"))
-    .build().then(model => {
-         // ...
+    .to(new ChartSinkNode('mouseChart'))
+    .build()
+    .then((model) => {
+        // ...
     });
 ```
-*See https://openhps.org/docs/tutorials/mouse/ for the implementation of the source and sink node*
+
+_See https://openhps.org/docs/tutorials/mouse/ for the implementation of the source and sink node_
 
 ### Browser
+
 - `openhps-core.js`: UMD
 - `openhps-core.es.js`: ES6 import
 - `worker.openhps-core.js`: UMD worker
 - `openhps-core-lite.js`: UMD lite version for embedded systems
 
 ## Documentation
+
 The documentation for OpenHPS can be found [online](https://openhps.org) on the website.
 
 ### JOSS Paper
+
 The JOSS paper can be found here: `/docs/paper/paper.md`.
 
 ### Publications
+
 Please check [https://openhps.org/publications/](https://openhps.org/publications/) for more information.
 
 ### Data Objects
+
 ```mermaid
 
 classDiagram
@@ -139,7 +170,7 @@ classDiagram
 class ActuatorProperty{
             +name: string
 +callback: (...args: any[]) =~ Promise~any~
-            
+
         }
 class ActuatorObject{
             #properties: Map~string, ActuatorProperty~
@@ -169,13 +200,13 @@ class SensorCalibrationData~T~{
             +unit?: Unit
 +offset?: T
 +multiplier?: T
-            
+
         }
 class SensorObject~T~{
             +value: T
 +frequency: number
 +calibrationData?: SensorCalibrationData~T~
-            
+
         }
 DataObject<|--SensorObject~T~
 class ReferenceSpace{
@@ -208,23 +239,24 @@ class TransformationSpace {
 class SpaceTransformationOptions {
             <<interface>>
             +inverse?: boolean
-            
+
         }
 TransformationSpace  --  TransformationSpace
 ```
 
-
 ## Contributing
-Use of OpenHPS, contributions and feedback is highly appreciated. Please read our [contributing guidelines](CONTRIBUTING.md) for more information.
+
+Use of OpenHPS, contributions and feedback is highly appreciated. Please read our [contributing guidelines](https://github.com/OpenHPS/.github/blob/master/CONTRIBUTING.md) for more information.
 If you want to contribute to the core of OpenHPS, you will want to build the repo.
 
-1. Using yarn, install the dependencies `yarn install` 
+1. Using yarn, install the dependencies `yarn install`
 2. Build OpenHPS using `npm run build`, this will also transpile Three.js
 3. Run the tests using `npm run test`
 
 Before submitting a PR, make sure to test the code using `npm run test` and to fix any linting issues using `npm run lint -- --fix`
 
 ## License
+
 Copyright (C) 2019-2025 Maxim Van de Wynckel & Vrije Universiteit Brussel
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at

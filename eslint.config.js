@@ -37,7 +37,7 @@ module.exports = tseslint.config(
     // Must stay last so it can switch off the stylistic rules it replaces.
     prettierRecommended,
     {
-        files: ['src/**/*.ts', 'test/**/*.ts'],
+        files: ['**/*.ts'],
         languageOptions: {
             ecmaVersion: 2022,
             sourceType: 'module',
@@ -59,8 +59,16 @@ module.exports = tseslint.config(
             '@typescript-eslint/no-require-imports': 'off',
             // Replaces the archived eslint-plugin-deprecation.
             '@typescript-eslint/no-deprecated': 'warn',
-            'import/no-cycle': ['error', { maxDepth: 15 }],
+            // Only became effective with this config: the previous setups declared the
+            // rule but never loaded the TypeScript resolver, so it silently matched
+            // nothing. Pre-existing cycles are therefore reported as warnings rather
+            // than blocking the toolchain migration; promote to 'error' per repo as
+            // each module's cycles are resolved.
+            'import/no-cycle': ['warn', { maxDepth: 15 }],
             'import/no-unresolved': 'off',
+            // Cannot validate computed access into a TypeScript namespace import
+            // (e.g. Spaces[key]), and it is one of the slowest rules in the set.
+            'import/namespace': 'off',
             'jsdoc/check-tag-names': ['error', { definedTags: ["category","rdf"] }],
             'jsdoc/require-jsdoc': 'off',
             'jsdoc/require-param-type': 'off',
@@ -72,7 +80,7 @@ module.exports = tseslint.config(
         },
     },
     {
-        files: ['test/**/*.ts'],
+        files: ['**/test/**/*.ts'],
         rules: {
             'jsdoc/require-returns': 'off',
             'jsdoc/require-param': 'off',
