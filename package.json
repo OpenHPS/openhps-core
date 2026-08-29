@@ -64,19 +64,23 @@
     "size-limit": [
         {
             "path": "./dist/web/openhps-core.min.js",
-            "limit": "73 KB"
+            "limit": "70 KB",
+            "brotli": true
         },
         {
             "path": "./dist/web/openhps-core.es.min.js",
-            "limit": "74 KB"
+            "limit": "70 KB",
+            "brotli": true
         },
         {
             "path": "./dist/web/openhps-core-lite.min.js",
-            "limit": "60 KB"
+            "limit": "66 KB",
+            "brotli": true
         },
         {
             "path": "./dist/web/worker.openhps-core.min.js",
-            "limit": "85 KB"
+            "limit": "18 KB",
+            "brotli": true
         }
     ],
     "scripts": {
@@ -131,7 +135,7 @@
         "@commitlint/cli": "^19.8.1",
         "@commitlint/config-conventional": "^19.8.1",
         "@eslint/js": "^9.34.0",
-        "@size-limit/preset-big-lib": "^11.1.2",
+        "@size-limit/file": "^11.1.2",
         "@types/benchmark": "^2.1.5",
         "@types/chai": "^5.2.2",
         "@types/deasync": "^0.1.5",
