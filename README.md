@@ -246,7 +246,7 @@ TransformationSpace  --  TransformationSpace
 
 ## Contributing
 
-Use of OpenHPS, contributions and feedback is highly appreciated. Please read our [contributing guidelines](https://github.com/OpenHPS/.github/blob/master/CONTRIBUTING.md) for more information.
+Use of OpenHPS, contributions and feedback is highly appreciated. Please read our [contributing guidelines](https://github.com/OpenHPS/.github/blob/HEAD/CONTRIBUTING.md) for more information.
 If you want to contribute to the core of OpenHPS, you will want to build the repo.
 
 1. Using yarn, install the dependencies `yarn install`
