@@ -31,7 +31,12 @@ import { fileURLToPath } from 'node:url';
 /** CommonJS-only deep paths that tsc emits without an extension. */
 const BARE_DEEP = [/^typedjson\/lib\/cjs\/[^'"]+$/];
 
-const dist = join(dirname(dirname(fileURLToPath(import.meta.url))), 'dist');
+// Defaults to the package this script lives in; a workspace child passes its own
+// root, since the script itself is shared from the monorepo root.
+const pkgRoot = process.argv[2]
+    ? resolve(process.cwd(), process.argv[2])
+    : dirname(dirname(fileURLToPath(import.meta.url)));
+const dist = join(pkgRoot, 'dist');
 const esm = join(dist, 'esm');
 const cjs = join(dist, 'cjs');
 
