@@ -47,9 +47,11 @@ export class TriangulationNode<InOut extends DataFrame> extends RelativePosition
                 case 1:
                     return resolve(dataObject);
                 case 2:
-                    break;
+                    // Two angles constrain the object to a line rather than a point. Resolving
+                    // without a position matches every other insufficient-input branch; falling
+                    // out of the switch here left the promise pending forever.
+                    return resolve(dataObject);
                 case 3:
-                    // TODO: Currently only for 2d
                     this.triangulate(points, angles)
                         .then((position) => {
                             if (position !== null) {
@@ -96,14 +98,23 @@ export class TriangulationNode<InOut extends DataFrame> extends RelativePosition
             const k31 = x1 * x3 + y1 * y3 + t31 * (x1 * y3 - x3 * y1);
             const d = (x12 - x23) * (y23 - y31) - (y12 - y23) * (x23 - x31);
             if (d === 0) {
-                return reject();
+                return reject(
+                    new Error('Unable to triangulate: the three reference points and the object are concyclic'),
+                );
             }
             const xr = vectors[1].x + (k31 * (y12 - y23)) / d;
             const yr = vectors[1].y + (k31 * (x23 - x12)) / d;
+            // A RelativeAngle is a single azimuth, which constrains the object to a vertical
+            // plane; any number of them intersect in a vertical line, so the angles carry no
+            // altitude information at all. The best available estimate is the plane of the
+            // reference points. Absolute2DPosition.fromVector ignores z, so 2D output is
+            // unchanged; 3D and geographical positions keep their altitude instead of being
+            // silently flattened to zero.
+            const zr = (vectors[0].z + vectors[1].z + vectors[2].z) / 3;
 
             const point = points[0].clone();
             point.unit = points[0].unit;
-            point.fromVector(new Vector3(xr, yr, 0));
+            point.fromVector(new Vector3(xr, yr, zr));
             return resolve(point as P);
         });
     }
