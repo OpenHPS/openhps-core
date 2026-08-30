@@ -141,6 +141,25 @@ ModelBuilder.create()
 
 _See https://openhps.org/docs/tutorials/mouse/ for the implementation of the source and sink node_
 
+### Modules
+
+`@openhps/core` ships both a CommonJS and an ECMAScript module build. The right
+one is picked automatically through the package `exports` map.
+
+```typescript
+// ECMAScript modules and TypeScript
+import { ModelBuilder, DataObject } from '@openhps/core';
+```
+
+```javascript
+// CommonJS
+const { ModelBuilder, DataObject } = require('@openhps/core');
+```
+
+Besides the main entry point, `@openhps/core/lite` provides a reduced build for
+embedded systems and `@openhps/core/worker` the entry point used inside a worker
+thread.
+
 ### Browser
 
 - `openhps-core.js`: UMD
@@ -148,9 +167,22 @@ _See https://openhps.org/docs/tutorials/mouse/ for the implementation of the sou
 - `worker.openhps-core.js`: UMD worker
 - `openhps-core-lite.js`: UMD lite version for embedded systems
 
+```html
+<script type="module">
+    import { ModelBuilder, DataObject } from './openhps-core.es.js';
+</script>
+```
+
 ## Documentation
 
 The documentation for OpenHPS can be found [online](https://openhps.org) on the website.
+The narrative documentation in `docs/pages/` is included in the generated API
+reference (`npm run build:typedoc`):
+
+- [Getting Started](docs/pages/getting-started.md)
+- [Model and nodes](docs/pages/model-and-nodes.md)
+- [Data objects and positioning](docs/pages/data-and-positioning.md)
+- [Serialization](docs/pages/serialization.md)
 
 ### JOSS Paper
 

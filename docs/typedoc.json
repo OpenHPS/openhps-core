@@ -11,5 +11,11 @@
         "type": "simple",
         "location": "local",
         "format": "svg"
-    }
+    },
+    "projectDocuments": [
+        "pages/getting-started.md",
+        "pages/model-and-nodes.md",
+        "pages/data-and-positioning.md",
+        "pages/serialization.md"
+    ]
 }
