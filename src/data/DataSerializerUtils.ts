@@ -136,6 +136,49 @@ export class DataSerializerUtils {
         return mergeDeep(memberOptions, options);
     }
 
+    /**
+     * Get the member metadata a class declares for a property, preferring the renamed key.
+     * @param {ObjectMetadata} ownMeta Metadata of the class being decorated
+     * @param {string} propertyKey Property key of the member
+     * @param {string} [name] Serialized name of the member, when renamed
+     * @returns {JsonMemberMetadata} Member metadata, or undefined when the class has none
+     */
+    private static getOwnMemberMetadata(ownMeta: ObjectMetadata, propertyKey: string, name?: string) {
+        const renamed = name !== undefined && name !== propertyKey ? ownMeta.dataMembers.get(name) : undefined;
+        return renamed ?? ownMeta.dataMembers.get(propertyKey) ?? (name ? ownMeta.dataMembers.get(name) : undefined);
+    }
+
+    /**
+     * Replace member metadata that is shared with a super type by an own copy, so that
+     * merging options into it does not rewrite the super type's serialization contract.
+     * @param {unknown} target Prototype being decorated
+     * @param {ObjectMetadata} ownMeta Metadata of the class being decorated
+     * @param {JsonMemberMetadata} memberMetadata Member metadata to detach
+     * @param {string} propertyKey Property key of the member
+     * @returns {JsonMemberMetadata} Member metadata owned by this class
+     */
+    private static detachInheritedMemberMetadata(
+        target: unknown,
+        ownMeta: ObjectMetadata,
+        memberMetadata: any,
+        propertyKey: string,
+    ): any {
+        const superProto = Object.getPrototypeOf(target);
+        const superMeta: ObjectMetadata | undefined = superProto
+            ? superProto[DataSerializerUtils.META_FIELD]
+            : undefined;
+        if (!superMeta) {
+            return memberMetadata;
+        }
+        const inherited = superMeta.dataMembers.get(memberMetadata.name) ?? superMeta.dataMembers.get(propertyKey);
+        if (inherited !== memberMetadata) {
+            return memberMetadata;
+        }
+        const detached = cloneDeep(memberMetadata);
+        ownMeta.dataMembers.set(detached.name ?? propertyKey, detached);
+        return detached;
+    }
+
     static updateMemberOptions(
         target: unknown,
         propertyKey: string,
@@ -147,13 +190,25 @@ export class DataSerializerUtils {
         if (options) {
             const ownMeta = JsonObjectMetadata.ensurePresentInPrototype(target);
             const rootMeta = DataSerializerUtils.getRootMetadata(target.constructor);
-            const ownMemberMetadata = ownMeta.dataMembers.get(propertyKey) || ownMeta.dataMembers.get(options.name);
+            // `jsonMember()` has already registered this member under `options.name` when the
+            // member is renamed, so that key identifies this class' own metadata. Looking up
+            // `propertyKey` first would instead find the entry inherited from the super type.
+            let ownMemberMetadata = DataSerializerUtils.getOwnMemberMetadata(ownMeta, propertyKey, options.name);
             const rootMemberMetadata = rootMeta
                 ? rootMeta.dataMembers.get(propertyKey) || rootMeta.dataMembers.get(options.name)
                 : undefined;
             if (!ownMemberMetadata) {
                 throw new Error(`Unable to get member metadata for ${target} on property ${propertyKey}!`);
             }
+            // A sub type inherits the *same* member metadata objects as its super type
+            // (see `createMetadata`), so mutating one in place would rewrite the super type's
+            // contract. Give this class its own copy before merging anything into it.
+            ownMemberMetadata = DataSerializerUtils.detachInheritedMemberMetadata(
+                target,
+                ownMeta,
+                ownMemberMetadata,
+                propertyKey,
+            );
             ownMemberMetadata.options = mergeDeep(ownMemberMetadata.options ?? {}, options);
             if (rootMemberMetadata) {
                 ownMemberMetadata.options = mergeDeep(rootMemberMetadata.options ?? {}, ownMemberMetadata.options);
@@ -177,7 +232,14 @@ export class DataSerializerUtils {
                     otherMeta.dataMembers.set(options.name ?? propertyKey, cloneDeep(ownMemberMetadata));
                 }
             });
-            // TODO: Possibly need to sync super types as well
+            // Renaming a member in a sub type leaves the inherited entry behind under the
+            // original property key, which makes the value serialize twice. Drop the alias.
+            if (options.name && options.name !== propertyKey) {
+                const inheritedAlias = ownMeta.dataMembers.get(propertyKey);
+                if (inheritedAlias && inheritedAlias !== ownMemberMetadata && inheritedAlias.key === propertyKey) {
+                    ownMeta.dataMembers.delete(propertyKey);
+                }
+            }
         }
 
         // Detect generic types that have no deserialization or constructor specified

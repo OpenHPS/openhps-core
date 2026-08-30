@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
 import {
+    DataSerializer,
     DataSerializerUtils,
     RelativeDistance,
     SerializableMember,
@@ -234,6 +235,53 @@ describe('SerializableMember', () => {
 
             meta = DataSerializerUtils.getMetadata(BugABA);
             expect(meta.dataMembers.get('w')).to.be.undefined;
+        });
+    });
+
+    describe('inheritance', () => {
+        @SerializableObject()
+        class InheritBase {
+            @SerializableMember()
+            shared: string;
+        }
+
+        @SerializableObject()
+        class InheritChild extends InheritBase {
+            @SerializableMember({ name: 'renamedInChild' })
+            shared: string;
+        }
+
+        it('should serialize a renamed member once in the sub type', () => {
+            const child = new InheritChild();
+            child.shared = 'child-value';
+            const serialized = DataSerializer.serialize(child);
+            expect(serialized['renamedInChild']).to.equal('child-value');
+            expect(serialized).to.not.have.property('shared');
+        });
+
+        it('should not change the super type when a sub type renames a member', () => {
+            const base = new InheritBase();
+            base.shared = 'base-value';
+            const serialized = DataSerializer.serialize(base);
+            expect(serialized['shared']).to.equal('base-value');
+            expect(serialized).to.not.have.property('renamedInChild');
+        });
+
+        it('should give the sub type its own member metadata', () => {
+            const baseMember = DataSerializerUtils.getMetadata(InheritBase).dataMembers.get('shared');
+            const childMember = DataSerializerUtils.getMetadata(InheritChild).dataMembers.get('renamedInChild');
+            expect(baseMember).to.not.be.undefined;
+            expect(childMember).to.not.be.undefined;
+            // Sub types inherit the same metadata objects; a member override must detach first,
+            // otherwise the merge below rewrites the super type's options too.
+            expect(baseMember).to.not.equal(childMember);
+            expect((baseMember as any).options?.name).to.not.equal('renamedInChild');
+        });
+
+        it('should drop the inherited alias of a renamed member', () => {
+            const keys = [...DataSerializerUtils.getMetadata(InheritChild).dataMembers.keys()];
+            expect(keys).to.include('renamedInChild');
+            expect(keys).to.not.include('shared');
         });
     });
 });
