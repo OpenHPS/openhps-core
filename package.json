@@ -29,24 +29,44 @@
     },
     "exports": {
         ".": {
-            "types": "./dist/types/index.d.ts",
-            "import": "./dist/esm/index.js",
-            "require": "./dist/cjs/index.js"
+            "import": {
+                "types": "./dist/esm/index.d.ts",
+                "default": "./dist/esm/index.js"
+            },
+            "require": {
+                "types": "./dist/types/index.d.ts",
+                "default": "./dist/cjs/index.js"
+            }
         },
         "./internal": {
-            "types": "./dist/types/index.internal.d.ts",
-            "import": "./dist/esm/index.internal.js",
-            "require": "./dist/cjs/index.internal.js"
+            "import": {
+                "types": "./dist/esm/index.internal.d.ts",
+                "default": "./dist/esm/index.internal.js"
+            },
+            "require": {
+                "types": "./dist/types/index.internal.d.ts",
+                "default": "./dist/cjs/index.internal.js"
+            }
         },
         "./worker": {
-            "types": "./dist/types/worker/WorkerRunner.d.ts",
-            "import": "./dist/esm/worker/WorkerRunner.js",
-            "require": "./dist/cjs/worker/WorkerRunner.js"
+            "import": {
+                "types": "./dist/esm/worker/WorkerRunner.d.ts",
+                "default": "./dist/esm/worker/WorkerRunner.js"
+            },
+            "require": {
+                "types": "./dist/types/worker/WorkerRunner.d.ts",
+                "default": "./dist/cjs/worker/WorkerRunner.js"
+            }
         },
         "./lite": {
-            "types": "./dist/types/index.lite.d.ts",
-            "import": "./dist/esm/index.lite.js",
-            "require": "./dist/cjs/index.lite.js"
+            "import": {
+                "types": "./dist/esm/index.lite.d.ts",
+                "default": "./dist/esm/index.lite.js"
+            },
+            "require": {
+                "types": "./dist/types/index.lite.d.ts",
+                "default": "./dist/cjs/index.lite.js"
+            }
         },
         "./package.json": "./package.json"
     },

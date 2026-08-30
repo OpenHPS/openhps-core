@@ -36,6 +36,10 @@ for (const dir of [srcDir, esmDir]) {
 }
 
 fs.cpSync(threeTypesDir, typesDir, { recursive: true });
+// dist/esm carries its own declaration tree (the "import" condition's types point into
+// it), so the three declarations must sit next to the three sources there as well —
+// otherwise the ESM .d.ts files reference ../../../three/math/* with nothing to resolve to.
+fs.cpSync(threeTypesDir, esmDir, { recursive: true });
 
 /**
  * Transpile every .js under a directory to CommonJS, in place.

@@ -54,15 +54,23 @@ const SPECIFIER = /(\bfrom\s*|\bimport\s*\(\s*|\bimport\s+)(['"])([^'"]+)\2/g;
  * @param {string} spec Specifier as emitted by tsc
  * @returns {string} The specifier, with an explicit file path where one was missing
  */
-function resolveSpecifier(fileDir, spec) {
+function resolveSpecifier(fileDir, spec, declaration = false) {
     // Already explicit — leave alone.
     if (/\.(js|mjs|cjs|json|node)$/.test(spec)) return spec;
     if (BARE_DEEP.some((re) => re.test(spec))) return `${spec}.js`;
+    // '.' and '..' are relative directory imports, not bare specifiers. tsc emits them
+    // for a barrel one level up, and Node's ESM resolver rejects them with
+    // ERR_UNSUPPORTED_DIR_IMPORT just like './dir'.
+    const relative = spec.startsWith('./') || spec.startsWith('../') || spec === '.' || spec === '..';
     // Any other bare specifier is a package entry point; leave it to the resolver.
-    if (!spec.startsWith('./') && !spec.startsWith('../')) return spec;
+    if (!relative) return spec;
     const target = resolve(fileDir, spec);
-    if (existsSync(`${target}.js`)) return `${spec}.js`;
-    if (existsSync(join(target, 'index.js'))) return `${spec.replace(/\/$/, '')}/index.js`;
+    // A .d.ts still points at the .js specifier — TypeScript maps it back to the
+    // neighbouring declaration itself — so both cases append the same extension,
+    // but the existence check has to look for the file that was actually emitted.
+    const ext = declaration ? '.d.ts' : '.js';
+    if (existsSync(`${target}${ext}`)) return `${spec}.js`;
+    if (existsSync(join(target, `index${ext}`))) return `${spec.replace(/\/$/, '')}/index.js`;
     // Unresolvable: leave it untouched so the failure stays visible rather than
     // becoming a path that silently does not exist.
     return spec;
@@ -77,13 +85,19 @@ let patched = 0;
             walk(p);
             continue;
         }
-        if (!p.endsWith('.js')) continue;
+        // Declaration files need the same treatment: dist/esm is scoped as ESM by the
+        // package.json written below, and TypeScript's node16 resolution rejects
+        // extensionless relative specifiers in an ESM-scoped .d.ts exactly as Node does
+        // in a .js. Without this, `exports.import.types` would resolve to declarations
+        // that cannot themselves be resolved.
+        if (!p.endsWith('.js') && !p.endsWith('.d.ts')) continue;
 
         const original = readFileSync(p, 'utf8');
         const fileDir = dirname(p);
+        const declaration = p.endsWith('.d.ts');
         let rewrites = 0;
         const out = original.replace(SPECIFIER, (match, prefix, quote, spec) => {
-            const fixed = resolveSpecifier(fileDir, spec);
+            const fixed = resolveSpecifier(fileDir, spec, declaration);
             if (fixed === spec) return match;
             rewrites++;
             return `${prefix}${quote}${fixed}${quote}`;
