@@ -169,7 +169,7 @@ export class DataSerializer {
 
     /**
      * Get the TypedJSON metadata
-     * @deprecated use {@link DataSerializerUtils.getMetadata}
+     * @deprecated since 1.0.0, removed in 2.0.0 — use {@link DataSerializerUtils.getMetadata} instead
      * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
      * @param {any} proto Prototype of target
      * @returns {ObjectMetadata} Root object metadata
@@ -180,7 +180,7 @@ export class DataSerializer {
 
     /**
      * Get the root TypedJSON metadata
-     * @deprecated use {@link DataSerializerUtils.getRootMetadata}
+     * @deprecated since 1.0.0, removed in 2.0.0 — use {@link DataSerializerUtils.getRootMetadata} instead
      * @see {@link https://gist.github.com/krizka/c83fb1966dd57997a1fc02625719387d}
      * @param {any} proto Prototype of target
      * @returns {ObjectMetadata} Root object metadata
@@ -191,7 +191,7 @@ export class DataSerializer {
 
     /**
      * Find the root TypedJSON metadata
-     * @deprecated use {@link DataSerializerUtils.getRootMetadata}
+     * @deprecated since 1.0.0, removed in 2.0.0 — use {@link DataSerializerUtils.getRootMetadata} instead
      * @param {any} proto Prototype of target
      * @returns {ObjectMetadata} Root object metadata
      */

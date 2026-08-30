@@ -9,7 +9,7 @@ import { MemoryBufferNode } from './MemoryBufferNode';
  * @category Flow shape
  */
 export class TimeSyncNode<InOut extends DataFrame> extends MemoryBufferNode<InOut> {
-    private _timer: NodeJS.Timer;
+    private _timer: NodeJS.Timeout;
     protected options: TimeSyncOptions;
 
     constructor(options?: TimeSyncOptions) {
@@ -25,7 +25,7 @@ export class TimeSyncNode<InOut extends DataFrame> extends MemoryBufferNode<InOu
     }
 
     private _stopTimer(): void {
-        clearInterval(this._timer as any);
+        clearInterval(this._timer);
     }
 
     public onPush(frame: InOut, options?: PushOptions): Promise<void> {

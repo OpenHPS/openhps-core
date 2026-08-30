@@ -31,7 +31,7 @@ export class RelativeAngle extends RelativePosition<number, AngleUnit> {
 
     /**
      * Angle unit
-     * @deprecated Use [[unit]] instead
+     * @deprecated since 1.0.0, removed in 2.0.0 — use {@link RelativeAngle.unit} instead
      * @returns {AngleUnit} unit
      */
     get angleUnit(): AngleUnit {

@@ -14,7 +14,7 @@ export class GCS extends Unit {
     static readonly EARTH_ECCENTRICITY = 8.1819190842622e-2;
 
     /**
-     * @deprecated Use GCS.EARTH_RADIUS_MEAN
+     * @deprecated since 1.0.0, removed in 2.0.0 — use {@link GCS.EARTH_RADIUS_MEAN} instead
      * @returns {number} Mean earth radius
      */
     static get EARTH_RADIUS(): number {

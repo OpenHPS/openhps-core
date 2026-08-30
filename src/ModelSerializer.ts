@@ -56,7 +56,7 @@ export class ModelSerializer {
      * @param module
      * @returns
      */
-    protected static loadClasses(module: NodeModule = require.main): void {
+    protected static loadClasses(module: NodeJS.Module = require.main): void {
         if (module === undefined) {
             // Use cache instead
             Object.values(require.cache).map((m) => this.loadClasses(m));

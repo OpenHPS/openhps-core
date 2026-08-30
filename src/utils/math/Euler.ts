@@ -72,7 +72,7 @@ export class Euler extends THREE.Euler {
 
     /**
      * Convert the Euler angles to a vector
-     * @deprecated use {@link Euler.toVector}
+     * @deprecated since 1.0.0, removed in 2.0.0 — use {@link Euler.toVector} instead
      * @param {AngleUnit} [unit] Angle unit to use in vector
      * @returns {Vector3} Vector output of Euler angles
      */

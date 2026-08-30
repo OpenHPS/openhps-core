@@ -217,6 +217,7 @@ describe('DataObject', () => {
 
     it('should support conversion to sql', () => {
         const type = DataObject;
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- deliberate coverage of the deprecated shim until it is removed in 2.0.0
         const meta = DataSerializer.findRootMetaInfo(type);
         const members = [];
         meta.dataMembers.forEach((value, key) => {

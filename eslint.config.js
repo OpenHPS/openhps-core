@@ -58,7 +58,7 @@ module.exports = tseslint.config(
             '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
             '@typescript-eslint/no-require-imports': 'off',
             // Replaces the archived eslint-plugin-deprecation.
-            '@typescript-eslint/no-deprecated': 'warn',
+            '@typescript-eslint/no-deprecated': 'error',
             // Only became effective with this config: the previous setups declared the
             // rule but never loaded the TypeScript resolver, so it silently matched
             // nothing. Pre-existing cycles are therefore reported as warnings rather

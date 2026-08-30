@@ -212,6 +212,7 @@ describe('DataObjectService', () => {
             });
 
             it('should have access to the logger', () => {
+                // eslint-disable-next-line @typescript-eslint/no-deprecated -- resolves to the deprecated 2-arg overload; only asserts the method exists
                 expect(objectDataService['driver'].logger).to.not.be.undefined;
             });
         });

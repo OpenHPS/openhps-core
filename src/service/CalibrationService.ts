@@ -3,7 +3,7 @@ import type { CalibrationNode } from '../nodes';
 import { DataObjectService } from './DataObjectService';
 
 /**
- * Calibration service. This service has to be used together with a [[CalibrationNode]]
+ * Calibration service. This service has to be used together with a {@link CalibrationNode}
  * that is placed behind the source node that is used for calibration.
  *
  * When a user-calibration is started, the calibration node will intercept all data frames.

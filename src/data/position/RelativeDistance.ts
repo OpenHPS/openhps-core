@@ -25,7 +25,7 @@ export class RelativeDistance extends RelativePosition<number, LengthUnit> {
 
     /**
      * Distance unit
-     * @deprecated Use [[unit]] instead
+     * @deprecated since 1.0.0, removed in 2.0.0 — use {@link RelativeDistance.unit} instead
      * @returns {AngleUnit} unit
      */
     get distanceUnit(): LengthUnit {

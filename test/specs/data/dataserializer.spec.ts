@@ -98,6 +98,7 @@ describe('DataSerializer', () => {
         });
 
         it('should support extracting meta info', () => {
+            // eslint-disable-next-line @typescript-eslint/no-deprecated -- deliberate coverage of the deprecated shim until it is removed in 2.0.0
             const meta = DataSerializer.getRootMetadata(AbsolutePosition);
             expect(meta.dataMembers).to.not.be.undefined;
         });

@@ -102,7 +102,7 @@ export abstract class Service extends AsyncEventEmitter {
     logger(level: 'warn', message: string, data?: any): void;
     logger(level: 'error', message: string, error?: Error): void;
     /**
-     * @deprecated
+     * @deprecated since 1.0.0, removed in 2.0.0 — use the three-argument {@link Service.logger} overload instead
      * @param {string} level Logging level
      * @param {any} log Logging data or message
      */

@@ -11,7 +11,7 @@ import { DataServiceProxy } from '../../../service/_internal';
 import { PushPromise } from '../../PushPromise';
 
 /**
- * [[Model]] implementation
+ * {@link Model} implementation
  */
 @SerializableObject()
 export class ModelGraph<In extends DataFrame, Out extends DataFrame>
