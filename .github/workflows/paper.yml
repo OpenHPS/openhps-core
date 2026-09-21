@@ -17,7 +17,7 @@ jobs:
         steps:
             # Checkout the repository
             - name: Checkout repository
-              uses: actions/checkout@v3
+              uses: actions/checkout@v7
 
             - name: Build draft PDF
               uses: openjournals/openjournals-draft-action@master
