@@ -212,7 +212,12 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
         return new PullPromise<void>((resolve, reject) => {
             const callbackPromises: Array<PullPromise<void> | Promise<void>> = [];
             this.listeners('pull').forEach((callback) => {
-                callbackPromises.push(callback(options));
+                const result = (callback as (options?: PullOptions) => Promise<void> | PullPromise<void> | void)(
+                    options,
+                );
+                if (result !== undefined) {
+                    callbackPromises.push(result as Promise<void> | PullPromise<void>);
+                }
             });
 
             if (callbackPromises.length === 0) {
