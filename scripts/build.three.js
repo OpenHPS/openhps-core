@@ -52,7 +52,7 @@ function transform(directory) {
             transform(file);
         } else if (entry.endsWith('.js')) {
             const result = babel.transformFileSync(file, {
-                presets: [['@babel/preset-env', { targets: { node: 'current' } }]],
+                presets: [['@babel/preset-env', { targets: { node: 'current' }, modules: 'commonjs' }]],
             });
             fs.writeFileSync(file, result.code);
         }
