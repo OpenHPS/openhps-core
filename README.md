@@ -30,6 +30,8 @@ This repository contains the core component for OpenHPS (Open Source Hybrid Posi
 
 OpenHPS is a data processing positioning framework. It is designed to support many different use cases ranging from simple positioning such as detecting the position of a pawn on a chessboard using RFID, to indoor positioning methods using multiple cameras. Already have a hybrid mobile application that you wish to expand with a positioning system? No problem, OpenHPS integrates well into any hybrid mobile applications!
 
+Maintained by [MVdW-Software](https://mvdw-software.com).
+
 ## Features
 
 - 🌍 **2D, 3D and Geographical positioning.**
