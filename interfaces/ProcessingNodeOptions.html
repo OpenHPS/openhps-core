@@ -11,7 +11,7 @@
 <li><a href="" aria-current="page">ProcessingNodeOptions</a></li></ul>
 <h1>Interface ProcessingNodeOptions</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">ProcessingNodeOptions</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#framefilter">frameFilter</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">frame</span><span class="tsd-signature-symbol">:</span> <a href="../classes/DataFrame.html" class="tsd-signature-type tsd-kind-class">DataFrame</a><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#name">name</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#uid">uid</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="16665">
+<section class="tsd-panel tsd-hierarchy" data-refl="16992">
 <h4>Hierarchy (<a href="../hierarchy.html#ProcessingNodeOptions">View Summary</a>)</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><a href="NodeOptions.html" class="tsd-signature-type tsd-kind-interface">NodeOptions</a>
@@ -19,9 +19,10 @@
 <li class="tsd-hierarchy-item"><span class="tsd-hierarchy-target">ProcessingNodeOptions</span>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><a href="MergeShapeOptions.html" class="tsd-signature-type tsd-kind-interface">MergeShapeOptions</a></li>
+<li class="tsd-hierarchy-item"><a href="WindowNodeOptions.html" class="tsd-signature-type tsd-kind-interface">WindowNodeOptions</a></li>
 <li class="tsd-hierarchy-item"><a href="ObjectProcessingNodeOptions.html" class="tsd-signature-type tsd-kind-interface">ObjectProcessingNodeOptions</a></li></ul></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/a1cf4a1bdf3370ead4441bff61cb50c67161a7cb/src/nodes/ProcessingNode.ts#L140">src/nodes/ProcessingNode.ts:140</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f870366b8f07d23495562d84817f569425635f94/src/nodes/ProcessingNode.ts#L140">src/nodes/ProcessingNode.ts:140</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -42,7 +43,7 @@
 <div class="tsd-comment tsd-typography"><p>Frame filter to specify what frames are processed by this node</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/a1cf4a1bdf3370ead4441bff61cb50c67161a7cb/src/nodes/ProcessingNode.ts#L144">src/nodes/ProcessingNode.ts:144</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f870366b8f07d23495562d84817f569425635f94/src/nodes/ProcessingNode.ts#L144">src/nodes/ProcessingNode.ts:144</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited">
 <h3 class="tsd-anchor-link" id="name"><code class="tsd-tag">Optional</code><span>name</span><a href="#name" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">name</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -51,7 +52,7 @@ Used for querying a node by its name.</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="NodeOptions.html">NodeOptions</a>.<a href="NodeOptions.html#name">name</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/a1cf4a1bdf3370ead4441bff61cb50c67161a7cb/src/Node.ts#L82">src/Node.ts:82</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f870366b8f07d23495562d84817f569425635f94/src/Node.ts#L82">src/Node.ts:82</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited">
 <h3 class="tsd-anchor-link" id="uid"><code class="tsd-tag">Optional</code><span>uid</span><a href="#uid" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">uid</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -59,7 +60,7 @@ Used for querying a node by its name.</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="NodeOptions.html">NodeOptions</a>.<a href="NodeOptions.html#uid">uid</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/a1cf4a1bdf3370ead4441bff61cb50c67161a7cb/src/Node.ts#L77">src/Node.ts:77</a></li></ul></aside></section></section></details></div>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-core/blob/f870366b8f07d23495562d84817f569425635f94/src/Node.ts#L77">src/Node.ts:77</a></li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
