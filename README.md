@@ -291,7 +291,7 @@ Before submitting a PR, make sure to test the code using `npm run test` and to f
 
 ## License
 
-Copyright (C) 2019-2025 Maxim Van de Wynckel & Vrije Universiteit Brussel
+Copyright (C) 2019-2026 Maxim Van de Wynckel & Vrije Universiteit Brussel
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
