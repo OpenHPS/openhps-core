@@ -1,0 +1,123 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Model and nodes | @openhps/core</title><meta name="description" content="Documentation for @openhps/core"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">@openhps/core</a>
+<div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb" aria-label="Breadcrumb">
+<li><a href="" aria-current="page">Model and nodes</a></li></ul></div>
+<div class="tsd-panel tsd-typography"><h1 id="model-and-nodes" class="tsd-anchor-link">Model and nodes<a href="#model-and-nodes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>A positioning system in OpenHPS is a <em>model</em>: a directed graph of nodes that
+<a href="../classes/index.DataFrame.html" class="tsd-kind-class"> DataFrame</a>s travel through. The graph is assembled with
+<a href="../classes/index.ModelBuilder.html" class="tsd-kind-class"> ModelBuilder</a> and, once built, is driven either by pulling from the sink
+end or pushing from the source end.</p>
+<h2 id="building-a-graph" class="tsd-anchor-link">Building a graph<a href="#building-a-graph" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">ModelBuilder</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@openhps/core&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">model</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">ModelBuilder</span><span class="hl-1">.</span><span class="hl-0">create</span><span class="hl-1">()</span><br/><span class="hl-1">    .</span><span class="hl-0">from</span><span class="hl-1">(</span><span class="hl-5">sourceNode</span><span class="hl-1">) </span><span class="hl-8">// one or more source nodes</span><br/><span class="hl-1">    .</span><span class="hl-0">via</span><span class="hl-1">(</span><span class="hl-5">processingNode</span><span class="hl-1">) </span><span class="hl-8">// zero or more processing nodes</span><br/><span class="hl-1">    .</span><span class="hl-0">to</span><span class="hl-1">(</span><span class="hl-5">sinkNode</span><span class="hl-1">) </span><span class="hl-8">// one or more sink nodes</span><br/><span class="hl-1">    .</span><span class="hl-0">build</span><span class="hl-1">();</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>from()</code> with no argument creates a graph that only accepts pushed frames.
+Several sources or sinks may be given to the same call, in which case frames are
+merged or fanned out respectively.</p>
+<h2 id="push-and-pull" class="tsd-anchor-link">Push and pull<a href="#push-and-pull" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The two directions are independent, and a node may support either or both.</p>
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Started by</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Push</td>
+<td><code>model.push(frame)</code></td>
+<td>A frame is available and should be processed</td>
+</tr>
+<tr>
+<td>Pull</td>
+<td><code>model.pull()</code></td>
+<td>Something wants a frame, ask the sources to produce one</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="typescript"><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">model</span><span class="hl-1">.</span><span class="hl-0">push</span><span class="hl-1">(</span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">DataFrame</span><span class="hl-1">(</span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">DataObject</span><span class="hl-1">(</span><span class="hl-2">&#39;phone&#39;</span><span class="hl-1">)));</span><br/><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">model</span><span class="hl-1">.</span><span class="hl-0">pull</span><span class="hl-1">();</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>push()</code> resolves once the frame has reached the sinks. Errors raised anywhere in
+the graph propagate back to the caller.</p>
+<h2 id="node-categories" class="tsd-anchor-link">Node categories<a href="#node-categories" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="source-nodes" class="tsd-anchor-link">Source nodes<a href="#source-nodes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Produce frames. <a href="../classes/index.CallbackSourceNode.html" class="tsd-kind-class"> CallbackSourceNode</a> builds one from a function,
+<a href="../classes/index.ListSourceNode.html" class="tsd-kind-class"> ListSourceNode</a> replays a fixed list, and <a href="../classes/index.SourceMergeNode.html" class="tsd-kind-class"> SourceMergeNode</a>
+combines several sources into one stream.</p>
+<h3 id="processing-nodes" class="tsd-anchor-link">Processing nodes<a href="#processing-nodes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Transform frames in flight. <a href="../classes/index.ObjectProcessingNode.html" class="tsd-kind-class"> ObjectProcessingNode</a> handles one data object
+at a time, while <a href="../classes/index.RelativePositionProcessing.html" class="tsd-kind-class"> RelativePositionProcessing</a> collects the relative
+positions of an object and computes an absolute position from them —
+<a href="../classes/index.MultilaterationNode.html" class="tsd-kind-class"> MultilaterationNode</a> (from distances) and <a href="../classes/index.TriangulationNode.html" class="tsd-kind-class"> TriangulationNode</a> (from
+angles) are both built on it.</p>
+<h3 id="sink-nodes" class="tsd-anchor-link">Sink nodes<a href="#sink-nodes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Consume frames. <a href="../classes/index.CallbackSinkNode.html" class="tsd-kind-class"> CallbackSinkNode</a> hands each frame to a function and
+<a href="../classes/index.LoggingSinkNode.html" class="tsd-kind-class"> LoggingSinkNode</a> logs it.</p>
+<h3 id="flow-shape-nodes" class="tsd-anchor-link">Flow shape nodes<a href="#flow-shape-nodes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Change the shape of the stream rather than its contents: buffering, throttling,
+merging and splitting. These live in <code>nodes/shapes</code> and are excluded from the
+<code>lite</code> build.</p>
+<h2 id="services" class="tsd-anchor-link">Services<a href="#services" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Services are attached to the model rather than to a node, and any node can reach
+them. They hold the state that outlives a single frame — stored data objects,
+recorded trajectories, calibration data.</p>
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">ModelBuilder</span><span class="hl-1">, </span><span class="hl-5">DataObjectService</span><span class="hl-1">, </span><span class="hl-5">MemoryDataService</span><span class="hl-1">, </span><span class="hl-5">DataObject</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@openhps/core&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">model</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">ModelBuilder</span><span class="hl-1">.</span><span class="hl-0">create</span><span class="hl-1">()</span><br/><span class="hl-1">    .</span><span class="hl-0">addService</span><span class="hl-1">(</span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">DataObjectService</span><span class="hl-1">(</span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">MemoryDataService</span><span class="hl-1">(</span><span class="hl-5">DataObject</span><span class="hl-1">)))</span><br/><span class="hl-1">    .</span><span class="hl-0">from</span><span class="hl-1">(</span><span class="hl-5">sourceNode</span><span class="hl-1">)</span><br/><span class="hl-1">    .</span><span class="hl-0">to</span><span class="hl-1">(</span><span class="hl-5">sinkNode</span><span class="hl-1">)</span><br/><span class="hl-1">    .</span><span class="hl-0">build</span><span class="hl-1">();</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">service</span><span class="hl-1"> = </span><span class="hl-5">model</span><span class="hl-1">.</span><span class="hl-0">findDataService</span><span class="hl-1">(</span><span class="hl-5">DataObject</span><span class="hl-1">);</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a href="../classes/index.MemoryDataService.html" class="tsd-kind-class"> MemoryDataService</a> keeps everything in memory. Other packages supply
+persistent drivers, for example <code>@openhps/mongodb</code> and <code>@openhps/localstorage</code>.</p>
+<h2 id="workers" class="tsd-anchor-link">Workers<a href="#workers" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><a href="../classes/index.WorkerNode.html" class="tsd-kind-class"> WorkerNode</a> runs part of a graph on a worker thread. The code given to it
+is serialized and rebuilt inside the worker, so it cannot close over variables
+from the surrounding scope — anything it needs must be passed through the node's
+options or fetched from a service.</p>
+<h2 id="shutting-down" class="tsd-anchor-link">Shutting down<a href="#shutting-down" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="typescript"><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">model</span><span class="hl-1">.</span><span class="hl-0">emitAsync</span><span class="hl-1">(</span><span class="hl-2">&#39;destroy&#39;</span><span class="hl-1">);</span>
+</code><button type="button">Copy</button></pre>
+
+<p>This releases services and terminates any worker threads. A model that is not
+destroyed keeps the process alive.</p>
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div>
+<div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>On This Page</h3></summary>
+<div class="tsd-accordion-details"><a href="#model-and-nodes"><span>Model and nodes</span></a>
+<ul>
+<li><a href="#building-a-graph"><span>Building a graph</span></a></li>
+<li><a href="#push-and-pull"><span>Push and pull</span></a></li>
+<li><a href="#node-categories"><span>Node categories</span></a></li>
+<li>
+<ul>
+<li><a href="#source-nodes"><span>Source nodes</span></a></li>
+<li><a href="#processing-nodes"><span>Processing nodes</span></a></li>
+<li><a href="#sink-nodes"><span>Sink nodes</span></a></li>
+<li><a href="#flow-shape-nodes"><span>Flow shape nodes</span></a></li></ul></li>
+<li><a href="#services"><span>Services</span></a></li>
+<li><a href="#workers"><span>Workers</span></a></li>
+<li><a href="#shutting-down"><span>Shutting down</span></a></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="../modules.html">@openhps/core</a>
+<ul class="tsd-small-nested-navigation" id="tsd-nav-container">
+<li>Loading...</li></ul></nav></div></div></div><footer></footer>
+<div class="overlay"></div></body></html>

@@ -35,6 +35,7 @@
 <br />
 <p>This repository contains the core component for OpenHPS (Open Source Hybrid Positioning System). It includes concepts for creating the model, nodes and data object definitions. The core component acts as the main repository for OpenHPS. However, additional modules expand OpenHPS with additional data storage techniques, positioning algorithms and enable the interoperability of the data produced by systems created with OpenHPS.</p>
 <p>OpenHPS is a data processing positioning framework. It is designed to support many different use cases ranging from simple positioning such as detecting the position of a pawn on a chessboard using RFID, to indoor positioning methods using multiple cameras. Already have a hybrid mobile application that you wish to expand with a positioning system? No problem, OpenHPS integrates well into any hybrid mobile applications!</p>
+<p>Maintained by <a href="https://mvdw-software.com">MVdW-Software</a>.</p>
 <h2 id="features" class="tsd-anchor-link">Features<a href="#features" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <ul>
 <li>🌍 <strong>2D, 3D and Geographical positioning.</strong></li>
@@ -98,6 +99,18 @@ of a new model that starts <code>from</code> a source node and passed <code>via<
 </code><button type="button">Copy</button></pre>
 
 <p><em>See <a href="https://openhps.org/docs/tutorials/mouse/">https://openhps.org/docs/tutorials/mouse/</a> for the implementation of the source and sink node</em></p>
+<h3 id="modules" class="tsd-anchor-link">Modules<a href="#modules" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>@openhps/core</code> ships both a CommonJS and an ECMAScript module build. The right
+one is picked automatically through the package <code>exports</code> map.</p>
+<pre><code class="typescript"><span class="hl-8">// ECMAScript modules and TypeScript</span><br/><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">ModelBuilder</span><span class="hl-1">, </span><span class="hl-5">DataObject</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@openhps/core&#39;</span><span class="hl-1">;</span>
+</code><button type="button">Copy</button></pre>
+
+<pre><code class="javascript"><span class="hl-8">// CommonJS</span><br/><span class="hl-3">const</span><span class="hl-1"> { </span><span class="hl-6">ModelBuilder</span><span class="hl-1">, </span><span class="hl-6">DataObject</span><span class="hl-1"> } = </span><span class="hl-0">require</span><span class="hl-1">(</span><span class="hl-2">&#39;@openhps/core&#39;</span><span class="hl-1">);</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Besides the main entry point, <code>@openhps/core/lite</code> provides a reduced build for
+embedded systems and <code>@openhps/core/worker</code> the entry point used inside a worker
+thread.</p>
 <h3 id="browser" class="tsd-anchor-link">Browser<a href="#browser" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul>
 <li><code>openhps-core.js</code>: UMD</li>
@@ -105,8 +118,19 @@ of a new model that starts <code>from</code> a source node and passed <code>via<
 <li><code>worker.openhps-core.js</code>: UMD worker</li>
 <li><code>openhps-core-lite.js</code>: UMD lite version for embedded systems</li>
 </ul>
+<pre><code class="html"><span class="hl-10">&lt;</span><span class="hl-11">script</span><span class="hl-12"> </span><span class="hl-13">type</span><span class="hl-12">=</span><span class="hl-14">&quot;module&quot;</span><span class="hl-10">&gt;</span><br/><span class="hl-12">    </span><span class="hl-4">import</span><span class="hl-12"> { </span><span class="hl-5">ModelBuilder</span><span class="hl-12">, </span><span class="hl-5">DataObject</span><span class="hl-12"> } </span><span class="hl-4">from</span><span class="hl-12"> </span><span class="hl-2">&#39;./openhps-core.es.js&#39;</span><span class="hl-12">;</span><br/><span class="hl-10">&lt;/</span><span class="hl-11">script</span><span class="hl-10">&gt;</span>
+</code><button type="button">Copy</button></pre>
+
 <h2 id="documentation" class="tsd-anchor-link">Documentation<a href="#documentation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>The documentation for OpenHPS can be found <a href="https://openhps.org">online</a> on the website.</p>
+<p>The documentation for OpenHPS can be found <a href="https://openhps.org">online</a> on the website.
+The narrative documentation in <code>docs/pages/</code> is included in the generated API
+reference (<code>npm run build:typedoc</code>):</p>
+<ul>
+<li><a href="documents/Getting_Started.html">Getting Started</a></li>
+<li><a href="documents/Model_and_nodes.html">Model and nodes</a></li>
+<li><a href="documents/Data_objects_and_positioning.html">Data objects and positioning</a></li>
+<li><a href="documents/Serialization.html">Serialization</a></li>
+</ul>
 <h3 id="joss-paper" class="tsd-anchor-link">JOSS Paper<a href="#joss-paper" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>The JOSS paper can be found here: <code>/docs/paper/paper.md</code>.</p>
 <h3 id="publications" class="tsd-anchor-link">Publications<a href="#publications" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
@@ -203,7 +227,7 @@ If you want to contribute to the core of OpenHPS, you will want to build the rep
 </ol>
 <p>Before submitting a PR, make sure to test the code using <code>npm run test</code> and to fix any linting issues using <code>npm run lint -- --fix</code></p>
 <h2 id="license" class="tsd-anchor-link">License<a href="#license" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>Copyright (C) 2019-2025 Maxim Van de Wynckel &amp; Vrije Universiteit Brussel</p>
+<p>Copyright (C) 2019-2026 Maxim Van de Wynckel &amp; Vrije Universiteit Brussel</p>
 <p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the License. You may obtain a copy of the License at</p>
 <p><a href="https://www.apache.org/licenses/LICENSE-2.0">https://www.apache.org/licenses/LICENSE-2.0</a></p>
 <p>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</p>
@@ -231,6 +255,7 @@ If you want to contribute to the core of OpenHPS, you will want to build the rep
 <li><a href="#smartphone"><span>Smartphone</span></a></li>
 <li><a href="#misc"><span>Misc</span></a></li></ul><a href="#getting-started"><span>Getting <wbr/>Started</span></a><a href="#usage"><span>Usage</span></a>
 <ul>
+<li><a href="#modules"><span>Modules</span></a></li>
 <li><a href="#browser"><span>Browser</span></a></li></ul><a href="#documentation"><span>Documentation</span></a>
 <ul>
 <li><a href="#joss-paper"><span>JOSS <wbr/>Paper</span></a></li>

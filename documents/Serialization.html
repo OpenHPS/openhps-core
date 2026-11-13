@@ -1,0 +1,115 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Serialization | @openhps/core</title><meta name="description" content="Documentation for @openhps/core"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">@openhps/core</a>
+<div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb" aria-label="Breadcrumb">
+<li><a href="" aria-current="page">Serialization</a></li></ul></div>
+<div class="tsd-panel tsd-typography"><h1 id="serialization" class="tsd-anchor-link">Serialization<a href="#serialization" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>Everything that travels through a model can be converted to and from plain JSON.
+This is what makes it possible to persist data objects, send frames to a remote
+model, or hand them to a worker thread.</p>
+<p>Serialization is driven by decorators, so a class describes its own mapping.</p>
+<h2 id="making-a-class-serializable" class="tsd-anchor-link">Making a class serializable<a href="#making-a-class-serializable" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">DataObject</span><span class="hl-1">, </span><span class="hl-5">SerializableObject</span><span class="hl-1">, </span><span class="hl-5">SerializableMember</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@openhps/core&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">@</span><span class="hl-0">SerializableObject</span><span class="hl-1">()</span><br/><span class="hl-3">class</span><span class="hl-1"> </span><span class="hl-9">Room</span><span class="hl-1"> </span><span class="hl-3">extends</span><span class="hl-1"> </span><span class="hl-9">DataObject</span><span class="hl-1"> {</span><br/><span class="hl-1">    @</span><span class="hl-0">SerializableMember</span><span class="hl-1">()</span><br/><span class="hl-1">    </span><span class="hl-5">floor</span><span class="hl-1">: </span><span class="hl-9">number</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">DataSerializer</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@openhps/core&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">room</span><span class="hl-1"> = </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">Room</span><span class="hl-1">(</span><span class="hl-2">&#39;room-a&#39;</span><span class="hl-1">);</span><br/><span class="hl-5">room</span><span class="hl-1">.</span><span class="hl-5">floor</span><span class="hl-1"> = </span><span class="hl-7">3</span><span class="hl-1">;</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">json</span><span class="hl-1"> = </span><span class="hl-5">DataSerializer</span><span class="hl-1">.</span><span class="hl-0">serialize</span><span class="hl-1">(</span><span class="hl-5">room</span><span class="hl-1">);</span><br/><span class="hl-8">// {</span><br/><span class="hl-8">//   createdTimestamp: 1788085056090748,</span><br/><span class="hl-8">//   uid: &#39;room-a&#39;,</span><br/><span class="hl-8">//   relativePositions: [],</span><br/><span class="hl-8">//   floor: 3,</span><br/><span class="hl-8">//   __type: &#39;Room&#39;</span><br/><span class="hl-8">// }</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">restored</span><span class="hl-1"> = </span><span class="hl-5">DataSerializer</span><span class="hl-1">.</span><span class="hl-0">deserialize</span><span class="hl-1">(</span><span class="hl-5">json</span><span class="hl-1">);</span><br/><span class="hl-5">restored</span><span class="hl-1"> </span><span class="hl-3">instanceof</span><span class="hl-1"> </span><span class="hl-9">Room</span><span class="hl-1">; </span><span class="hl-8">// true</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The <code>__type</code> hint is what allows <a href="../classes/index.DataSerializer.html#deserialize" class="tsd-kind-method"> DataSerializer.deserialize</a> to rebuild
+the original subclass rather than a plain object. Because of it, a
+<a href="../classes/index.DataFrame.html" class="tsd-kind-class"> DataFrame</a> holding a mix of <code>DataObject</code> subclasses round trips with each
+object keeping its own type.</p>
+<h2 id="members" class="tsd-anchor-link">Members<a href="#members" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>@SerializableMember</code> covers single values. Collections have their own
+decorators, because the element type cannot be recovered from reflection alone.</p>
+<table>
+<thead>
+<tr>
+<th>Decorator</th>
+<th>For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../functions/index.SerializableMember.html" class="tsd-kind-function"> SerializableMember</a></td>
+<td>A single value</td>
+</tr>
+<tr>
+<td><a href="../functions/index.SerializableArrayMember.html" class="tsd-kind-function"> SerializableArrayMember</a></td>
+<td>Arrays</td>
+</tr>
+<tr>
+<td><a href="../functions/index.SerializableMapMember.html" class="tsd-kind-function"> SerializableMapMember</a></td>
+<td><code>Map</code>s</td>
+</tr>
+<tr>
+<td><a href="../functions/index.SerializableSetMember.html" class="tsd-kind-function"> SerializableSetMember</a></td>
+<td><code>Set</code>s</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="typescript"><span class="hl-1">@</span><span class="hl-0">SerializableObject</span><span class="hl-1">()</span><br/><span class="hl-3">class</span><span class="hl-1"> </span><span class="hl-9">Floor</span><span class="hl-1"> </span><span class="hl-3">extends</span><span class="hl-1"> </span><span class="hl-9">DataObject</span><span class="hl-1"> {</span><br/><span class="hl-1">    @</span><span class="hl-0">SerializableArrayMember</span><span class="hl-1">(</span><span class="hl-5">Room</span><span class="hl-1">)</span><br/><span class="hl-1">    </span><span class="hl-5">rooms</span><span class="hl-1">: </span><span class="hl-9">Room</span><span class="hl-1">[] = [];</span><br/><br/><span class="hl-1">    @</span><span class="hl-0">SerializableMapMember</span><span class="hl-1">(</span><span class="hl-5">String</span><span class="hl-1">, </span><span class="hl-5">Room</span><span class="hl-1">)</span><br/><span class="hl-1">    </span><span class="hl-5">byName</span><span class="hl-1">: </span><span class="hl-9">Map</span><span class="hl-1">&lt;</span><span class="hl-9">string</span><span class="hl-1">, </span><span class="hl-9">Room</span><span class="hl-1">&gt; = </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">Map</span><span class="hl-1">();</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Useful options:</p>
+<pre><code class="typescript"><span class="hl-1">@</span><span class="hl-0">SerializableMember</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">name:</span><span class="hl-1"> </span><span class="hl-2">&#39;storedName&#39;</span><span class="hl-1">,   </span><span class="hl-8">// key used in the JSON</span><br/><span class="hl-1">    </span><span class="hl-5">isRequired:</span><span class="hl-1"> </span><span class="hl-3">true</span><span class="hl-1">,     </span><span class="hl-8">// fail deserialization when absent</span><br/><span class="hl-1">    </span><span class="hl-5">numberType:</span><span class="hl-1"> </span><span class="hl-5">NumberType</span><span class="hl-1">.</span><span class="hl-6">DECIMAL</span><span class="hl-1">,</span><br/><span class="hl-1">})</span><br/><span class="hl-15">value</span><span class="hl-1">: </span><span class="hl-5">number</span><span class="hl-1">;</span>
+</code><button type="button">Copy</button></pre>
+
+<blockquote>
+<p>Renaming a member with <code>name</code> in a subclass changes only that subclass. The
+super type keeps its own key.</p>
+</blockquote>
+<h2 id="numbers" class="tsd-anchor-link">Numbers<a href="#numbers" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>numberType</code> controls how a number is stored, which matters for size and for
+precision when frames are sent over a network or written to a binary format.</p>
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">NumberType</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@openhps/core&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-1">@</span><span class="hl-0">SerializableMember</span><span class="hl-1">({ </span><span class="hl-5">numberType:</span><span class="hl-1"> </span><span class="hl-5">NumberType</span><span class="hl-1">.</span><span class="hl-6">DECIMAL</span><span class="hl-1"> })</span><br/><span class="hl-15">x</span><span class="hl-1">: </span><span class="hl-5">number</span><span class="hl-1">;</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="serializing-a-whole-model" class="tsd-anchor-link">Serializing a whole model<a href="#serializing-a-whole-model" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><a href="../classes/index.ModelSerializer.html" class="tsd-kind-class"> ModelSerializer</a> does for a graph what <a href="../classes/index.DataSerializer.html" class="tsd-kind-class"> DataSerializer</a> does for
+data: it converts nodes and their configuration to JSON so a model can be rebuilt
+elsewhere — this is how <a href="../classes/index.WorkerNode.html" class="tsd-kind-class"> WorkerNode</a> moves part of a graph onto a thread.</p>
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">ModelSerializer</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@openhps/core&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">json</span><span class="hl-1"> = </span><span class="hl-5">ModelSerializer</span><span class="hl-1">.</span><span class="hl-0">serializeNode</span><span class="hl-1">(</span><span class="hl-5">node</span><span class="hl-1">);</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">rebuilt</span><span class="hl-1"> = </span><span class="hl-5">ModelSerializer</span><span class="hl-1">.</span><span class="hl-0">deserializeNode</span><span class="hl-1">(</span><span class="hl-5">json</span><span class="hl-1">);</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="metadata" class="tsd-anchor-link">Metadata<a href="#metadata" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><a href="../classes/index.DataSerializerUtils.html" class="tsd-kind-class"> DataSerializerUtils</a> exposes the mapping itself — which members a class
+has, their types and their options. It is what other OpenHPS modules use to
+generate storage schemas, for example mapping a data object onto MongoDB
+documents or RDF triples.</p>
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">DataSerializerUtils</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@openhps/core&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">metadata</span><span class="hl-1"> = </span><span class="hl-5">DataSerializerUtils</span><span class="hl-1">.</span><span class="hl-0">getMetadata</span><span class="hl-1">(</span><span class="hl-5">Room</span><span class="hl-1">);</span><br/><span class="hl-5">metadata</span><span class="hl-1">.</span><span class="hl-5">dataMembers</span><span class="hl-1">.</span><span class="hl-0">forEach</span><span class="hl-1">((</span><span class="hl-5">member</span><span class="hl-1">, </span><span class="hl-5">key</span><span class="hl-1">) </span><span class="hl-3">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">key</span><span class="hl-1">, </span><span class="hl-5">member</span><span class="hl-1">.</span><span class="hl-5">name</span><span class="hl-1">);</span><br/><span class="hl-1">});</span>
+</code><button type="button">Copy</button></pre>
+
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div>
+<div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>On This Page</h3></summary>
+<div class="tsd-accordion-details"><a href="#serialization"><span>Serialization</span></a>
+<ul>
+<li><a href="#making-a-class-serializable"><span>Making a class serializable</span></a></li>
+<li><a href="#members"><span>Members</span></a></li>
+<li><a href="#numbers"><span>Numbers</span></a></li>
+<li><a href="#serializing-a-whole-model"><span>Serializing a whole model</span></a></li>
+<li><a href="#metadata"><span>Metadata</span></a></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="../modules.html">@openhps/core</a>
+<ul class="tsd-small-nested-navigation" id="tsd-nav-container">
+<li>Loading...</li></ul></nav></div></div></div><footer></footer>
+<div class="overlay"></div></body></html>
