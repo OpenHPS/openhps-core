@@ -16,7 +16,8 @@ export class MemoryQueryEvaluator {
         } else if (key.includes('.')) {
             result = result && MemoryQueryEvaluator.evaluatePath(object, key, query);
         } else if (MemoryQueryEvaluator.isRegexQuery(query)) {
-            result = result && (value as string).match(query) ? true : false;
+            // Only string values can match a regular expression
+            result = result && (typeof value === 'string' && value.match(query) ? true : false);
         } else if (typeof query === 'object') {
             result = result && MemoryQueryEvaluator.evaluateSelector(value, query);
         } else {
@@ -127,7 +128,7 @@ export class MemoryQueryEvaluator {
     }
 
     protected static evaluateOp<T>(key: string, object: T, subquery: Array<FilterQuery<T>>): boolean {
-        let result;
+        let result: boolean;
         switch (key) {
             case '$and':
                 result = true;
@@ -141,6 +142,9 @@ export class MemoryQueryEvaluator {
                     result = result || MemoryQueryEvaluator.evaluate(object, query);
                 }
                 break;
+            default:
+                // Unknown operator: explicitly no match instead of an undefined result
+                result = false;
         }
         return result;
     }

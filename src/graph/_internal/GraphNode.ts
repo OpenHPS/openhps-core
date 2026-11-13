@@ -268,7 +268,12 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
                         resolve();
                         completed();
                     })
-                    .catch(reject);
+                    .catch((ex) => {
+                        // Restore availability so onceAvailable() resolves again
+                        this._available = true;
+                        this.emit('available');
+                        reject(ex);
+                    });
             }
         });
     }
@@ -296,19 +301,20 @@ export abstract class GraphNode<In extends DataFrame, Out extends DataFrame>
      */
     onceCompleted(frameUID: string): Promise<PushEvent> {
         return new Promise((resolve, reject) => {
-            const completedListener = function (event: PushEvent) {
+            // Bind once so the exact same reference can be removed again
+            const listener = function (event: PushEvent) {
                 if (event.frameUID === frameUID) {
-                    this.removeListener('completed', completedListener);
-                    this.removeListener('error', completedListener);
+                    this.removeListener('completed', listener);
+                    this.removeListener('error', listener);
                     if ((event as any).error) {
                         reject(event);
                     } else {
                         resolve(event);
                     }
                 }
-            };
-            this.on('completed', completedListener.bind(this));
-            this.on('error', completedListener.bind(this));
+            }.bind(this);
+            this.on('completed', listener);
+            this.on('error', listener);
         });
     }
 

@@ -88,7 +88,8 @@ export class DataFrame {
             this.createdTimestamp = data.createdTimestamp;
             this.phenomenonTimestamp = data.phenomenonTimestamp;
             this.uid = data.uid;
-            this._objects = data._objects;
+            // Copy the object map so objects added to the copy do not mutate the original
+            this._objects = new Map(data._objects);
             this.source = data.source;
         } else if (data instanceof DataObject) {
             this.source = data;

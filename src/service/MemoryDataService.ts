@@ -42,14 +42,14 @@ export class MemoryDataService<I, T> extends DataServiceDriver<I, T> {
         return new Promise<T[]>((resolve) => {
             options.limit = options.limit || this._data.size;
             let data: T[] = [];
-            this._data.forEach((object) => {
+            for (const object of this._data.values()) {
                 if (MemoryQueryEvaluator.evaluate(object, query)) {
                     data.push(object);
                     if (!options.sort && data.length >= options.limit) {
-                        return;
+                        break;
                     }
                 }
-            });
+            }
             if (options.sort) {
                 data = data
                     .sort((a, b) =>
