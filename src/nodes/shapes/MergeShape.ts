@@ -73,11 +73,16 @@ export abstract class MergeShape<InOut extends DataFrame> extends ProcessingNode
             const frames = Array.from(queue.frames.values());
             try {
                 // Merge node
-                this.outlets.forEach((outlet) => outlet.push(this.merge(frames, queue.key as string)));
+                const pushPromise = Promise.all(
+                    this.outlets.map((outlet) => outlet.push(this.merge(frames, queue.key as string))),
+                );
                 this._queue.delete(queue.key);
                 // Resolve pending promises
                 queue.promises.forEach((fn) => {
                     fn(undefined);
+                });
+                pushPromise.catch((ex) => {
+                    this.emit('error', new PushError(frames[0].uid, this.uid, ex));
                 });
             } catch (ex) {
                 this.emit('error', new PushError(frames[0].uid, this.uid, ex));

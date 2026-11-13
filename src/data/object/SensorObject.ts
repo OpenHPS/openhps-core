@@ -8,8 +8,8 @@ import { DataObject } from './DataObject';
  * Sensor calibration data
  */
 @SerializableObject()
+// eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
 export class SensorCalibrationData<T = SensorValue | Object | Orientation> {
-    // eslint-disable-line
     @SerializableMember(() => Unit)
     unit?: Unit;
     @SerializableMember()
@@ -22,8 +22,8 @@ export class SensorCalibrationData<T = SensorValue | Object | Orientation> {
  * A sensor object is a {@link DataObject} that is a sensor with a value.
  */
 @SerializableObject()
+// eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
 export abstract class SensorObject<T = SensorValue | Object | Orientation> extends DataObject {
-    // eslint-disable-line
     /**
      * Value of the sensor
      */

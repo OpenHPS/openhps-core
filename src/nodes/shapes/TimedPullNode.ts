@@ -16,7 +16,7 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
     constructor(interval: number, intervalUnit = TimeUnit.MILLISECOND, options?: TimedPullOptions) {
         super(options);
         this._interval = intervalUnit.convert(interval, TimeUnit.MILLISECOND);
-        this.options.autoStart = this.options.autoStart || true;
+        this.options.autoStart = this.options.autoStart ?? true;
 
         this.on('push', this._onPush.bind(this));
         if (this.options.autoStart) {
@@ -48,12 +48,14 @@ export class TimedPullNode<InOut extends DataFrame> extends Node<InOut, InOut> {
 
     private _intervalFn(): void {
         if ((this._pushFinished && this._pullFinished) || !this.options.throttlePull) {
-            this._pullFinished = true;
+            // Mark the pull as in-flight so the guard actually throttles
+            this._pullFinished = false;
             Promise.all(this.inlets.map((inlet) => inlet.pull(this.options.pullOptions)))
                 .then(() => {
                     this._pullFinished = true;
                 })
                 .catch((ex) => {
+                    this._pullFinished = true;
                     this.logger('error', ex.message, ex);
                 });
         }

@@ -41,100 +41,100 @@ export class WorkerBase {
     }
 
     init(config: WorkerData): Promise<void> {
-        return new Promise(async (resolve, reject) => { // eslint-disable-line
-            this.config = config;
-            const importFn: (file: string) => Promise<any> =
-                typeof process !== 'object'
-                    ? config.type === 'module'
-                        ? (file: string) => import(/* webpackIgnore: true */ file) // ES6
-                        : (file: string) => Promise.resolve(importScripts(/* webpackIgnore: true */ file)) // CJS
-                    : (file: string) => Promise.resolve(require(/* webpackIgnore: true */ file));
-
-            // Set global dir name
-
-            __dirname = config.directory; // eslint-disable-line
-            // Load external scripts
-            if (config.imports && config.imports.length > 0) {
-                config.imports.forEach((importFile) => {
-                    importFn(importFile);
-                });
-            }
-
-            // Create model
-            const modelBuilder = ModelBuilder.create();
-            // Add remote worker services if not already added
-            this.config.services.forEach((service) => {
-                if (service.dataType) {
-                    const DataType = DataSerializer.findTypeByName(service.dataType);
-                    modelBuilder.addService(
-                        new DummyDataService(service.uid, DataType),
-                        new WorkerServiceProxy({
-                            uid: service.uid,
-                            callObservable: this.serviceOutputCall,
-                            responseObservable: this.serviceOutputResponse,
-                        }),
-                    );
-                } else {
-                    modelBuilder.addService(
-                        new DummyService(service.uid),
-                        new WorkerServiceProxy({
-                            uid: service.uid,
-                            callObservable: this.serviceOutputCall,
-                            responseObservable: this.serviceOutputResponse,
-                        }),
-                    );
-                }
-            });
-
-            this._initModel(modelBuilder);
-
-            // eslint-disable-next-line
-            const path = this.config.imports.length > 0 ? undefined : (typeof process !== 'object' ? undefined : require('path'));
-
-            try {
-                if (this.config.serialized) {
-                    const traversalBuilder = modelBuilder.from();
-                    const modelOrNode = ModelSerializer.deserializeNode(this.config.serialized);
-                    traversalBuilder.via(modelOrNode as Node<any, any>);
-                    traversalBuilder.to();
-                } else if (this.config.builder) {
-                    const traversalBuilder = modelBuilder.from();
-
-                    const builderCallback = eval(this.config.builder);
-                    builderCallback(traversalBuilder, modelBuilder, this.config.args);
-                    traversalBuilder.to();
-                } else if (this.config.shape) {
-                    const graph = await importFn(path ? path.join(__dirname, this.config.shape) : this.config.shape);
-                    if (graph) {
-                        modelBuilder.addShape(graph.default);
-                    }
-                } else if (this.shape) {
-                    modelBuilder.addShape(this.shape);
-                }
-            } catch (ex) {
-                // Error deserializing, did you import the nodes?
-                reject(ex);
-                return;
-            }
-
-            modelBuilder
-                .build()
-                .then((m) => {
-                    this.model = m;
-                    // Load methods
-                    this.config.methods.forEach((serializedMethod) => {
-                        const method = eval(serializedMethod.handlerFn);
-                        this.customMethods.set(
-                            serializedMethod.name,
-                            (model: Model<any, any>, ...args: any[]): Promise<any> => {
-                                return Promise.resolve(method(model, ...args)) as Promise<any>;
-                            },
-                        );
-                    });
-                    resolve();
-                })
-                .catch(reject);
+        // Do not use an async executor: a throw inside it would reject the inner
+        // promise and leave init() pending forever.
+        return new Promise((resolve, reject) => {
+            this._init(config, resolve, reject).catch(reject);
         });
+    }
+
+    private async _init(config: WorkerData, resolve: (value?: any) => void, reject: (ex?: any) => void): Promise<void> {
+        this.config = config;
+        const importFn: (file: string) => Promise<any> =
+            typeof process !== 'object'
+                ? config.type === 'module'
+                    ? (file: string) => import(/* webpackIgnore: true */ file) // ES6
+                    : (file: string) => Promise.resolve(importScripts(/* webpackIgnore: true */ file)) // CJS
+                : (file: string) => Promise.resolve(require(/* webpackIgnore: true */ file));
+
+        // Set global dir name
+
+        __dirname = config.directory; // eslint-disable-line
+        // Load external scripts
+        if (config.imports && config.imports.length > 0) {
+            config.imports.forEach((importFile) => {
+                importFn(importFile);
+            });
+        }
+
+        // Create model
+        const modelBuilder = ModelBuilder.create();
+        // Add remote worker services if not already added
+        this.config.services.forEach((service) => {
+            if (service.dataType) {
+                const DataType = DataSerializer.findTypeByName(service.dataType);
+                modelBuilder.addService(
+                    new DummyDataService(service.uid, DataType),
+                    new WorkerServiceProxy({
+                        uid: service.uid,
+                        callObservable: this.serviceOutputCall,
+                        responseObservable: this.serviceOutputResponse,
+                    }),
+                );
+            } else {
+                modelBuilder.addService(
+                    new DummyService(service.uid),
+                    new WorkerServiceProxy({
+                        uid: service.uid,
+                        callObservable: this.serviceOutputCall,
+                        responseObservable: this.serviceOutputResponse,
+                    }),
+                );
+            }
+        });
+
+        this._initModel(modelBuilder);
+
+        const path =
+            this.config.imports.length > 0 ? undefined : typeof process !== 'object' ? undefined : require('path');
+
+        if (this.config.serialized) {
+            const traversalBuilder = modelBuilder.from();
+            const modelOrNode = ModelSerializer.deserializeNode(this.config.serialized);
+            traversalBuilder.via(modelOrNode as Node<any, any>);
+            traversalBuilder.to();
+        } else if (this.config.builder) {
+            const traversalBuilder = modelBuilder.from();
+
+            const builderCallback = eval(this.config.builder);
+            builderCallback(traversalBuilder, modelBuilder, this.config.args);
+            traversalBuilder.to();
+        } else if (this.config.shape) {
+            const graph = await importFn(path ? path.join(__dirname, this.config.shape) : this.config.shape);
+            if (graph) {
+                modelBuilder.addShape(graph.default);
+            }
+        } else if (this.shape) {
+            modelBuilder.addShape(this.shape);
+        }
+
+        return modelBuilder
+            .build()
+            .then((m) => {
+                this.model = m;
+                // Load methods
+                this.config.methods.forEach((serializedMethod) => {
+                    const method = eval(serializedMethod.handlerFn);
+                    this.customMethods.set(
+                        serializedMethod.name,
+                        (model: Model<any, any>, ...args: any[]): Promise<any> => {
+                            return Promise.resolve(method(model, ...args)) as Promise<any>;
+                        },
+                    );
+                });
+                resolve();
+            })
+            .catch(reject);
     }
 
     invokeMethod(methodName: string, ...args: any[]): Promise<any> {
@@ -227,8 +227,8 @@ export class WorkerBase {
         return new Promise((resolve, reject) => {
             const service: Service =
                 this.model.findDataService(call.serviceUID) || this.model.findService(call.serviceUID);
-            if ((service as any)[call.method]) {
-                const serializedParams = call.parameters;
+            if (service && (service as any)[call.method]) {
+                const serializedParams = call.parameters || [];
                 const params: any[] = [];
                 serializedParams.forEach((param: any) => {
                     if (param['__type']) {
@@ -254,6 +254,13 @@ export class WorkerBase {
                     .catch((ex) => {
                         reject({ id: call.id, success: false, result: ex });
                     });
+            } else {
+                // Reject unknown services/methods instead of leaving the promise pending
+                reject({
+                    id: call.id,
+                    success: false,
+                    result: new Error(`Service '${call.serviceUID}' or method '${call.method}' not found!`),
+                });
             }
         });
     }

@@ -27,7 +27,10 @@ export class BalanceNode<InOut extends DataFrame> extends Node<InOut, InOut> {
                     outlet
                         .push(frame)
                         .then(() => {
-                            this._busyNodes.splice(this._busyNodes.indexOf(outlet), 1);
+                            const busyIndex = this._busyNodes.indexOf(outlet);
+                            if (busyIndex !== -1) {
+                                this._busyNodes.splice(busyIndex, 1);
+                            }
                             this._updateQueue();
                             resolve();
                         })
@@ -55,10 +58,16 @@ export class BalanceNode<InOut extends DataFrame> extends Node<InOut, InOut> {
                         resolve: () => void;
                         reject: (ex?: any) => void;
                     } = this._queue.pop();
+                    // Mark the outlet as busy before the queued push so a second
+                    // queued frame cannot be assigned to the same outlet
+                    this._busyNodes.push(outlet);
                     outlet
                         .push(queue.frame)
                         .then(() => {
-                            this._busyNodes.splice(this._busyNodes.indexOf(outlet), 1);
+                            const busyIndex = this._busyNodes.indexOf(outlet);
+                            if (busyIndex !== -1) {
+                                this._busyNodes.splice(busyIndex, 1);
+                            }
                             this._updateQueue();
                             queue.resolve();
                         })

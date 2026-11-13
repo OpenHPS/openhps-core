@@ -1,7 +1,7 @@
 import { AnyT, Constructor, IndexedObject, JsonObjectMetadata, Serializable } from 'typedjson';
 import { ObjectMetadata } from './decorators/metadata';
 import { SerializableMemberOptions, SerializableObjectOptions } from './decorators/options';
-import { cloneDeep, isObject } from './decorators/utils';
+import { cloneDeep, mergeDeep } from './decorators/utils';
 
 /**
  * Data serializer utilities for managing the ORM mapping
@@ -330,29 +330,3 @@ export class ConcreteTypeDescriptor extends TypeDescriptor {
 }
 
 export type { ArrayTypeDescriptor, MapTypeDescriptor, SetTypeDescriptor } from 'typedjson/lib/types/type-descriptor';
-
-/**
- * Deep merge objects
- * @param {any} target Target object
- * @param {any} source Source object
- * @returns {any} Merged object
- */
-function mergeDeep(target: any, source: any): any {
-    const output = cloneDeep(target);
-    if (isObject(target) && isObject(source)) {
-        Object.keys(source).forEach((key) => {
-            if (Array.isArray(source[key])) {
-                output[key] = source[key];
-                const targetProperty =
-                    target[key] !== undefined ? (Array.isArray(target[key]) ? target[key] : [target[key]]) : [];
-                output[key].push(...targetProperty.filter((val: any) => !source[key].includes(val)));
-            } else if (isObject(source[key])) {
-                if (!(key in target)) Object.assign(output, { [key]: source[key] });
-                else output[key] = mergeDeep(target[key], source[key]);
-            } else {
-                Object.assign(output, { [key]: source[key] });
-            }
-        });
-    }
-    return output;
-}

@@ -29,7 +29,11 @@ export class KalmanFilterNode<InOut extends DataFrame> extends PropertyFilterPro
 
     filter<T extends number | Vector3>(object: DataObject, value: T, filter: any): Promise<T> {
         return new Promise<T>((resolve) => {
-            const kf = new KalmanFilter(filter.R, filter.Q, filter.A, filter.B, filter.C, filter.x, filter.cov);
+            // Reuse the filter instance stored in the node data instead of constructing a new one per frame
+            const kf =
+                filter.kalman ||
+                new KalmanFilter(filter.R, filter.Q, filter.A, filter.B, filter.C, filter.x, filter.cov);
+            filter.kalman = kf;
             const numeric = typeof value === 'number';
             if (numeric) {
                 kf.filter(new Vector3(value as number, 0, 0));

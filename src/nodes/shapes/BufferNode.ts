@@ -33,8 +33,11 @@ export class BufferNode<InOut extends DataFrame> extends Node<InOut, InOut> {
             this.shift()
                 .then((frame) => {
                     if (frame) {
-                        this.outlets.forEach((outlet) => outlet.push(frame, options as GraphOptions));
+                        return Promise.all(this.outlets.map((outlet) => outlet.push(frame, options as GraphOptions)));
                     }
+                    return undefined;
+                })
+                .then(() => {
                     resolve();
                 })
                 .catch(reject);

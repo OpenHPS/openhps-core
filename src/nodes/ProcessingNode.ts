@@ -78,11 +78,18 @@ export abstract class ProcessingNode<In extends DataFrame = DataFrame, Out exten
                         }
                     });
                     if (output.length > 0) {
-                        this.outlets.forEach((outlet) =>
-                            outlet.push(output.length === 1 ? output[0] : output, options),
-                        );
+                        Promise.all(
+                            this.outlets.map((outlet) =>
+                                outlet.push(output.length === 1 ? output[0] : output, options),
+                            ),
+                        )
+                            .then(() => {
+                                resolve();
+                            })
+                            .catch(reject);
+                    } else {
+                        resolve();
                     }
-                    resolve();
                 })
                 .catch((ex) => {
                     if (ex === undefined) {

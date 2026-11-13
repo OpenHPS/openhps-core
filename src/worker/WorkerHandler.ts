@@ -36,8 +36,10 @@ export class WorkerHandler extends AsyncEventEmitter {
     build(): Promise<void> {
         return new Promise<void>((resolve) => {
             if (typeof process.env.NODE_ENV === 'undefined') {
-                // eslint-disable-next-line
-                const NativeWorker = typeof __non_webpack_require__ === "function" ? __non_webpack_require__("worker_threads").Worker : eval("require")("worker_threads").Worker;
+                const NativeWorker =
+                    typeof __non_webpack_require__ === 'function'
+                        ? __non_webpack_require__('worker_threads').Worker
+                        : eval('require')('worker_threads').Worker;
                 if (NativeWorker) {
                     // NodeJS
                     NativeWorker.defaultMaxListeners = 0;
@@ -269,8 +271,14 @@ export class WorkerHandler extends AsyncEventEmitter {
     private _onWorkerService(threadId: number, value: WorkerServiceCall): void {
         const service: Service =
             this.model.findDataService(value.serviceUID) || this.model.findService(value.serviceUID);
-        if ((service as any)[value.method]) {
-            const serializedParams = value.parameters;
+        const respond: (response: WorkerServiceResponse) => void = (response) => {
+            const output = this._serviceOutputResponse.get(threadId);
+            if (output) {
+                output(response);
+            }
+        };
+        if (service && (service as any)[value.method]) {
+            const serializedParams = value.parameters || [];
             const params: any[] = [];
             serializedParams.forEach((param: any) => {
                 if (param['__type']) {
@@ -287,15 +295,22 @@ export class WorkerHandler extends AsyncEventEmitter {
                         _.forEach((r) => {
                             result.push(DataSerializer.serialize(r));
                         });
-                        this._serviceOutputResponse.get(threadId)({ id: value.id, success: true, result });
+                        respond({ id: value.id, success: true, result });
                     } else {
                         const result = DataSerializer.serialize(_);
-                        this._serviceOutputResponse.get(threadId)({ id: value.id, success: true, result });
+                        respond({ id: value.id, success: true, result });
                     }
                 })
                 .catch((ex) => {
-                    this._serviceOutputResponse.get(threadId)({ id: value.id, success: false, result: ex });
+                    respond({ id: value.id, success: false, result: ex });
                 });
+        } else {
+            // Respond to unknown services/methods instead of silently dropping the call
+            respond({
+                id: value.id,
+                success: false,
+                result: new Error(`Service '${value.serviceUID}' or method '${value.method}' not found!`),
+            });
         }
     }
 

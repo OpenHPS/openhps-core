@@ -3,6 +3,7 @@ import { Node, NodeOptions } from '../Node';
 import { GraphBuilder, GraphShapeBuilder } from '../graph/builders/GraphBuilder';
 import { ModelBuilder } from '../ModelBuilder';
 import { PullOptions, PushOptions } from '../graph/options';
+import { PushError } from '../graph/events';
 import { WorkerOptions } from '../worker/WorkerOptions';
 import { WorkerHandler } from '../worker';
 
@@ -125,7 +126,9 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
      * @param {PullOptions} options Pull options
      */
     private _onWorkerPull(options?: PullOptions): void {
-        this.inlets.forEach((inlet) => inlet.pull(options));
+        Promise.all(this.inlets.map((inlet) => inlet.pull(options))).catch((ex) => {
+            this.emit('error', ex);
+        });
     }
 
     /**
@@ -134,7 +137,9 @@ export class WorkerNode<In extends DataFrame, Out extends DataFrame> extends Nod
      * @param {PushOptions} options Push options
      */
     private _onWorkerPush(frame: DataFrame, options?: PushOptions): void {
-        this.outlets.forEach((outlet) => outlet.push(frame as any, options));
+        Promise.all(this.outlets.map((outlet) => outlet.push(frame as any, options))).catch((ex) => {
+            this.emit('error', new PushError(frame.uid, this.uid, ex));
+        });
     }
 
     /**

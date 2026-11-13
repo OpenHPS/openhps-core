@@ -63,10 +63,13 @@ export class RemoteNode<In extends DataFrame, Out extends DataFrame, S extends R
     }
 
     private _onLocalPush(frame: any, options?: RemotePushOptions): Promise<void> {
-        return new Promise<void>((resolve) => {
+        return new Promise<void>((resolve, reject) => {
             const frameDeserialized = frame instanceof DataFrame ? frame : this.options.deserialize(frame, options);
-            this.outlets.forEach((outlet) => outlet.push(frameDeserialized as any, options));
-            resolve();
+            Promise.all(this.outlets.map((outlet) => outlet.push(frameDeserialized as any, options)))
+                .then(() => {
+                    resolve();
+                })
+                .catch(reject);
         });
     }
 

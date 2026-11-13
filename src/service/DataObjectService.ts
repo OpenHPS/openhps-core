@@ -19,18 +19,9 @@ export class DataObjectService<T extends DataObject> extends DataService<string,
      * @returns {DataObject} Inserted object
      */
     insertObject(object: T): Promise<T> {
-        return this.insert(object.uid, object);
-    }
-
-    insert(id: string, object: T): Promise<T> {
-        return new Promise((resolve, reject) => {
-            this.driver
-                .insert(id, object)
-                .then((obj) => {
-                    resolve(obj);
-                })
-                .catch(reject);
-        });
+        // Data object services are created with keepChangelog: false, so the
+        // base implementation (and its changelog wrapping) resolves the raw object
+        return this.insert(object.uid, object) as Promise<T>;
     }
 
     /**

@@ -33,7 +33,9 @@ export class TimeSyncNode<InOut extends DataFrame> extends MemoryBufferNode<InOu
             if (frame.createdTimestamp <= TimeService.now()) {
                 this.triggerUpdate()
                     .then(() => {
-                        this.outlets.forEach((outlet) => outlet.push(frame, options));
+                        return Promise.all(this.outlets.map((outlet) => outlet.push(frame, options)));
+                    })
+                    .then(() => {
                         resolve();
                     })
                     .catch(reject);
@@ -53,8 +55,9 @@ export class TimeSyncNode<InOut extends DataFrame> extends MemoryBufferNode<InOu
             this.shift()
                 .then((frame) => {
                     if (frame) {
-                        this.outlets.forEach((outlet) => outlet.push(frame));
-                        return this.triggerUpdate();
+                        return Promise.all(this.outlets.map((outlet) => outlet.push(frame))).then(() =>
+                            this.triggerUpdate(),
+                        );
                     } else {
                         resolve();
                     }

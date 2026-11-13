@@ -100,16 +100,24 @@ export abstract class DataService<I, T> extends Service {
         return this;
     }
 
+    /**
+     * Wrap a result in a changelog when the driver is configured to keep one
+     * @param {any} object Object to wrap
+     * @returns {any} Wrapped or original object
+     */
+    protected wrap(object: any): T | (T & SerializableChangelog) {
+        if (this.driver && this.driverOptions.keepChangelog) {
+            return typeof object === 'object' ? createChangeLog(object) : object;
+        }
+        return object;
+    }
+
     findByUID(uid: I): Promise<T | (T & SerializableChangelog)> {
         return new Promise((resolve, reject) => {
             this.driver
                 .findByUID(uid)
                 .then((object) => {
-                    if (this.driver && this.driverOptions.keepChangelog) {
-                        resolve(typeof object === 'object' ? createChangeLog(object) : object);
-                    } else {
-                        resolve(object);
-                    }
+                    resolve(this.wrap(object));
                 })
                 .catch(reject);
         });
@@ -120,11 +128,7 @@ export abstract class DataService<I, T> extends Service {
             this.driver
                 .findOne(query, options)
                 .then((object) => {
-                    if (this.driver && this.driverOptions.keepChangelog) {
-                        resolve(typeof object === 'object' ? createChangeLog(object) : object);
-                    } else {
-                        resolve(object);
-                    }
+                    resolve(this.wrap(object));
                 })
                 .catch(reject);
         });
@@ -135,11 +139,7 @@ export abstract class DataService<I, T> extends Service {
             this.driver
                 .findAll(query, options)
                 .then((objects) => {
-                    if (this.driver && this.driverOptions.keepChangelog) {
-                        resolve(objects.map((o) => (typeof o === 'object' ? createChangeLog(o) : o)));
-                    } else {
-                        resolve(objects);
-                    }
+                    resolve(objects.map((o) => this.wrap(o)));
                 })
                 .catch(reject);
         });
@@ -150,11 +150,7 @@ export abstract class DataService<I, T> extends Service {
             this.driver
                 .insert(id, object)
                 .then((object) => {
-                    if (this.driver && this.driverOptions.keepChangelog) {
-                        resolve(typeof object === 'object' ? createChangeLog(object) : object);
-                    } else {
-                        resolve(object);
-                    }
+                    resolve(this.wrap(object));
                 })
                 .catch(reject);
         });

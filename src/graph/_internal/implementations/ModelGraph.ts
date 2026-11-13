@@ -266,7 +266,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
                 if (Array.isArray(frame)) {
                     frame.forEach((f) => {
                         // Update the frame
-                        servicePromises.push(frameService.insert(f.uid, frame));
+                        servicePromises.push(frameService.insert(f.uid, f));
                     });
                 } else {
                     // Update the frame
@@ -277,7 +277,7 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
             Promise.all(servicePromises)
                 .then(() => {
                     const completedFrames = new Set<string>();
-                    this.once('completed', (e) => {
+                    const onCompleted = (e) => {
                         if (Array.isArray(frame)) {
                             frame.forEach((f) => {
                                 if (e.frameUID === f.uid) {
@@ -286,13 +286,16 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
                             });
                             if (completedFrames.size === frame.length) {
                                 completed();
+                                this.removeListener('completed', onCompleted);
                             }
                         } else {
                             if (e.frameUID === frame.uid) {
                                 completed();
+                                this.removeListener('completed', onCompleted);
                             }
                         }
-                    });
+                    };
+                    this.on('completed', onCompleted);
                     const promise = this.internalSource.push(frame, options);
                     return promise;
                 })

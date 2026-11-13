@@ -389,8 +389,9 @@ export class MultilaterationNode<InOut extends DataFrame> extends RelativePositi
     }
 
     private _calculateError(point: number[], spheres: Array<Sphere<any>>): number {
+        const pointVector = new Vector3(...point);
         return spheres
-            .map((sphere) => (new Vector3(...point).distanceTo(sphere.center) - sphere.radius) ** 2)
+            .map((sphere) => (pointVector.distanceTo(sphere.center) - sphere.radius) ** 2)
             .reduce((a, b) => a + b);
     }
 }

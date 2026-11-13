@@ -193,6 +193,7 @@ export abstract class AbsolutePosition implements Position<LengthUnit> {
         const position = new (this.constructor as new () => this)();
         position.unit = this.unit;
         position._accuracy = this._accuracy ? this._accuracy.clone() : undefined;
+        position._probability = this._probability;
         position.orientation = this.orientation ? this.orientation.clone() : undefined;
         position.velocity = this.velocity ? this.velocity.clone() : undefined;
         position.timestamp = this.timestamp;
