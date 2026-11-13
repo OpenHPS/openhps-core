@@ -24,6 +24,14 @@ export interface MappedTypeConverters<T> {
     members?: Partial<Record<keyof T, SerializableMemberOptions | IndexedObject>>;
 }
 
+/**
+ * Registry of functions that were serialized in this process, keyed by their
+ * serialized source string. Deserialization only looks functions up in this
+ * registry and never evaluates JSON-supplied source, so untrusted payloads
+ * can at most reference a callback that was registered locally.
+ */
+const serializedFunctions: Map<string, (...args: any[]) => any> = new Map();
+
 JsonObjectMetadata.getFromConstructor = function (ctor) {
     if (!ctor) {
         return;
@@ -137,14 +145,19 @@ export class DataSerializer {
             serializer: (object) => ({
                 ...Object.keys(object)
                     .map((key) => {
+                        const value = object[key];
+                        if (typeof value === 'function') {
+                            // Register the function so it can be restored on deserialization
+                            serializedFunctions.set(value.toString(), value);
+                        }
                         return {
                             [key]:
-                                typeof object[key] === 'function'
+                                typeof value === 'function'
                                     ? {
-                                          function: object[key].toString(),
+                                          function: value.toString(),
                                           __type: 'Function',
                                       }
-                                    : DataSerializer.serialize(object[key]),
+                                    : DataSerializer.serialize(value),
                         };
                     })
                     .reduce((a, b) => ({ ...a, ...b }), {}),
@@ -156,13 +169,15 @@ export class DataSerializer {
                         if (key === '__type') {
                             return {};
                         }
+                        const value = objectJson[key];
                         return {
                             [key]:
                                 // Security: never evaluate function source from (untrusted) payloads.
-                                // Return the raw function source string instead of reconstructing the function.
-                                typeof objectJson[key] === 'object' && objectJson[key].__type === 'Function'
-                                    ? objectJson[key].function
-                                    : DataSerializer.deserialize(objectJson[key]),
+                                // Only functions registered by a local serialization are restored,
+                                // unregistered sources deserialize to undefined.
+                                typeof value === 'object' && value !== null && value.__type === 'Function'
+                                    ? serializedFunctions.get(value.function)
+                                    : DataSerializer.deserialize(value),
                         };
                     })
                     .reduce((a, b) => ({ ...a, ...b }), {}),

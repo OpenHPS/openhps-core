@@ -26,13 +26,20 @@ export function SerializableMemberFunction(options: SerializableMemberOptions = 
         };
         // Security: do not eval the serialized function source. Only functions
         // that were registered by a local serialization are restored.
+        // Unregistered payloads clear the member (null) so they do not
+        // silently fall back to the constructor default.
         options.deserializer = (fnStr) => {
             if (typeof fnStr === 'string' && serializedFunctions.has(fnStr)) {
                 return serializedFunctions.get(fnStr);
             }
-            return undefined;
+            return null;
         };
-        const finalOptions = DataSerializerUtils.mergeMemberOptions(target, propertyKey, options);
+        const finalOptions = DataSerializerUtils.mergeMemberOptions(target, propertyKey, {
+            ...options,
+            // Preserve the null produced by the deserializer so the member is
+            // explicitly cleared instead of keeping the constructor default
+            preserveNull: true,
+        });
         SerializableMember(finalOptions)(target, propertyKey);
         DataSerializerUtils.updateMemberOptions(target, propertyKey, finalOptions);
     };

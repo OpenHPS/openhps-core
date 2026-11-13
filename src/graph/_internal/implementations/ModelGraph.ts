@@ -6,6 +6,7 @@ import { GraphShape } from './GraphShape';
 import { Model } from '../../../Model';
 import { ServiceProxy } from '../../../service/_internal/ServiceProxy';
 import { PushOptions } from '../../options';
+import { PushCompletedEvent, PushError } from '../../events';
 import { Serializable, SerializableMapMember, SerializableMember, SerializableObject } from '../../../data/decorators';
 import { DataServiceProxy } from '../../../service/_internal';
 import { PushPromise } from '../../PushPromise';
@@ -260,49 +261,91 @@ export class ModelGraph<In extends DataFrame, Out extends DataFrame>
             const servicePromises: Array<Promise<unknown>> = [];
 
             // Merge the changes in the frame service
-            const frameService = this.findDataService(frame.constructor.name);
+            // (look up the service by the frame's type, not the array's)
+            const frames: In[] = Array.isArray(frame) ? frame : [frame];
+            const frameService = this.findDataService(frames[0]?.constructor.name);
 
             if (frameService) {
-                if (Array.isArray(frame)) {
-                    frame.forEach((f) => {
-                        // Update the frame
-                        servicePromises.push(frameService.insert(f.uid, f));
-                    });
-                } else {
+                frames.forEach((f) => {
                     // Update the frame
-                    servicePromises.push(frameService.insert((frame as In).uid, frame));
-                }
+                    servicePromises.push(frameService.insert(f.uid, f));
+                });
             }
+
+            let finished = false;
+            let onCompleted: ((e: PushCompletedEvent) => void) | undefined;
+            let onPushError: ((e: PushError) => void) | undefined;
+            // Remove the per-push listeners on all paths so that a push
+            // never leaves listeners behind on the model
+            const cleanup = () => {
+                if (onCompleted !== undefined) {
+                    this.removeListener('completed', onCompleted);
+                    onCompleted = undefined;
+                }
+                if (onPushError !== undefined) {
+                    this.removeListener('error', onPushError);
+                    onPushError = undefined;
+                }
+            };
+            // Fire the completion callback once, when every frame has settled
+            const finish = () => {
+                if (finished) {
+                    return;
+                }
+                finished = true;
+                completed();
+                cleanup();
+            };
 
             Promise.all(servicePromises)
                 .then(() => {
-                    const completedFrames = new Set<string>();
-                    const onCompleted = (e) => {
-                        if (Array.isArray(frame)) {
-                            frame.forEach((f) => {
-                                if (e.frameUID === f.uid) {
-                                    completedFrames.add(f.uid);
-                                }
-                            });
-                            if (completedFrames.size === frame.length) {
-                                completed();
-                                this.removeListener('completed', onCompleted);
-                            }
-                        } else {
-                            if (e.frameUID === frame.uid) {
-                                completed();
-                                this.removeListener('completed', onCompleted);
-                            }
+                    const settledFrames = new Set<string>();
+                    // Settle the push once every frame has either completed or errored
+                    const settleFrame = (frameUID: string) => {
+                        if (frames.some((f) => f.uid === frameUID)) {
+                            settledFrames.add(frameUID);
+                        }
+                        if (settledFrames.size === frames.length) {
+                            finish();
                         }
                     };
-                    this.on('completed', onCompleted);
+                    // An empty push can never emit a completed event, so no
+                    // listeners need to be (and may be) registered for it
+                    if (frames.length > 0) {
+                        onCompleted = (e: PushCompletedEvent) => {
+                            settleFrame(e.frameUID);
+                        };
+                        // Frames that fail downstream emit an error event instead
+                        // of a completed event, so account for them as well
+                        onPushError = (e: PushError) => {
+                            settleFrame(e.frameUID);
+                        };
+                        this.on('completed', onCompleted);
+                        this.on('error', onPushError);
+                    }
                     const promise = this.internalSource.push(frame, options);
+                    // The push promise's completed callback fires once the frame(s)
+                    // have fully traversed the graph, so settle frames that never
+                    // emit a completed event (e.g. when the sink does not emit one)
+                    if (frames.length > 0) {
+                        promise.completed(() => {
+                            frames.forEach((f) => {
+                                settledFrames.add(f.uid);
+                            });
+                            if (settledFrames.size === frames.length) {
+                                finish();
+                            }
+                        });
+                    }
                     return promise;
                 })
                 .then(() => {
                     resolve();
                 })
-                .catch(reject);
+                .catch((ex) => {
+                    cleanup();
+                    reject(ex);
+                });
         });
     }
 
