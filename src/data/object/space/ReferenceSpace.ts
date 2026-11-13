@@ -152,6 +152,7 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
 
     public reset(): ReferenceSpace {
         this._transformationMatrix.identity();
+        this._translationMatrix.identity();
         this._scaleMatrix = new Matrix4();
         this._rotation = new Quaternion();
         return this;
@@ -163,8 +164,10 @@ export class ReferenceSpace extends DataObject implements TransformationSpace {
     }
 
     public translation(dX: number, dY: number, dZ = 0): ReferenceSpace {
+        // Accumulate the translation so the serialized translation matrix keeps the total offset,
+        // while applying the delta to the transformation matrix only once
         this._translationMatrix.multiply(new Matrix4().makeTranslation(dX, dY, dZ));
-        this._transformationMatrix.multiply(this._translationMatrix);
+        this._transformationMatrix.multiply(new Matrix4().makeTranslation(dX, dY, dZ));
         return this;
     }
 

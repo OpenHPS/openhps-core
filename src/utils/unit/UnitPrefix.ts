@@ -57,11 +57,11 @@ export class UnitPrefix {
     }
 
     get namePattern(): RegExp {
-        return new RegExp(`/^${this.name}/g`);
+        return new RegExp(`^${this.name}`);
     }
 
     get abbrevationPattern(): RegExp {
-        return new RegExp(`/^${this.abbrevation}/g`);
+        return new RegExp(`^${this.abbrevation}`);
     }
 }
 

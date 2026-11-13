@@ -158,8 +158,10 @@ export class DataSerializer {
                         }
                         return {
                             [key]:
+                                // Security: never evaluate function source from (untrusted) payloads.
+                                // Return the raw function source string instead of reconstructing the function.
                                 typeof objectJson[key] === 'object' && objectJson[key].__type === 'Function'
-                                    ? eval(objectJson[key].function)
+                                    ? objectJson[key].function
                                     : DataSerializer.deserialize(objectJson[key]),
                         };
                     })

@@ -8,7 +8,8 @@ import { DataObject } from './DataObject';
  * Sensor calibration data
  */
 @SerializableObject()
-export class SensorCalibrationData<T = SensorValue | Object | Orientation> { // eslint-disable-line
+export class SensorCalibrationData<T = SensorValue | Object | Orientation> {
+    // eslint-disable-line
     @SerializableMember(() => Unit)
     unit?: Unit;
     @SerializableMember()
@@ -21,7 +22,8 @@ export class SensorCalibrationData<T = SensorValue | Object | Orientation> { // 
  * A sensor object is a {@link DataObject} that is a sensor with a value.
  */
 @SerializableObject()
-export abstract class SensorObject<T = SensorValue | Object | Orientation> extends DataObject { // eslint-disable-line
+export abstract class SensorObject<T = SensorValue | Object | Orientation> extends DataObject {
+    // eslint-disable-line
     /**
      * Value of the sensor
      */
@@ -77,8 +79,8 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
                 return this.value;
             }
         } else if (typeof this.value === 'number') {
-            const offset = this.calibrationData.offset as unknown as number;
-            const multiplier = this.calibrationData.multiplier as unknown as number;
+            const offset = this.calibrationData?.offset as unknown as number;
+            const multiplier = this.calibrationData?.multiplier as unknown as number;
             return (this.value / (multiplier ?? 1) - (offset ?? 0)) as unknown as T;
         } else {
             return this.value;
@@ -101,8 +103,8 @@ export abstract class SensorObject<T = SensorValue | Object | Orientation> exten
                 this.value = value;
             }
         } else if (typeof value === 'number') {
-            const offset = this.calibrationData.offset as unknown as number;
-            const multiplier = this.calibrationData.multiplier as unknown as number;
+            const offset = this.calibrationData?.offset as unknown as number;
+            const multiplier = this.calibrationData?.multiplier as unknown as number;
             this.value = ((value + (offset ?? 0)) * (multiplier ?? 1)) as unknown as T;
         } else {
             this.value = value;
